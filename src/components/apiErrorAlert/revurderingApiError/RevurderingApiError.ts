@@ -150,7 +150,7 @@ enum Gjenopptak {
 
 enum Avsluttet {
     REVURDERINGEN_ER_ALLEREDE_AVSLUTTET = 'revurderingen_er_allerede_avsluttet',
-    REVURDERINGER_ER_TIL_ATTESTERING = ' ',
+    REVURDERINGER_ER_TIL_ATTESTERING = 'revurdering_er_til_attestering',
     REVURDERINGEN_ER_IVERKSATT = 'revurderingen_er_iverksatt',
     REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV = 'revurdering_er_ikke_forhåndsvarslet_for_å_vise_brev',
     FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL = 'fritekst_er_fyllt_ut_uten_forhåndsvarsel',

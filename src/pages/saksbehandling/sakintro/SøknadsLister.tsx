@@ -57,7 +57,7 @@ export const ÅpneSøknader = (props: {
                     const senesteAttestering = pipe(attesteringer, last, toNullable);
 
                     return (
-                        <div key={s.id}>
+                        <li key={s.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
@@ -90,7 +90,7 @@ export const ÅpneSøknader = (props: {
                                     </div>
                                 </div>
                             </Panel>
-                        </div>
+                        </li>
                     );
                 })}
             </ol>

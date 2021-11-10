@@ -12,16 +12,14 @@ import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { BeslutningEtterForhåndsvarsling, Revurdering } from '~types/Revurdering';
+import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
 
 import messages from './oppsummeringPageForms-nb';
 import styles from './oppsummeringPageForms.module.less';
 
-const OppsummeringsBrevInput = (
-    props: { sakId: string; revurderingId: string } & Omit<BrevInputProps, 'placeholder' | 'intl'>
-) => {
+const OppsummeringsBrevInput = (props: Omit<BrevInputProps, 'placeholder' | 'intl'>) => {
     const { intl } = useI18n({ messages });
     return (
         <BrevInput placeholder={intl.formatMessage({ id: 'brevInput.innhold.placeholder' })} intl={intl} {...props} />
@@ -139,8 +137,6 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     name="tekstTilVedtaksbrev"
                     render={({ field, fieldState }) => (
                         <OppsummeringsBrevInput
-                            sakId={props.sakId}
-                            revurderingId={props.revurderingId}
                             tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
@@ -162,8 +158,6 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     name="tekstTilAvsluttRevurderingBrev"
                     render={({ field, fieldState }) => (
                         <OppsummeringsBrevInput
-                            sakId={props.sakId}
-                            revurderingId={props.revurderingId}
                             tittel={intl.formatMessage({ id: 'brevInput.tekstTilAvsluttRevurdering.tittel' })}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForAvslutningAvRevurdering({
@@ -264,8 +258,6 @@ export const VelgForhåndsvarselForm = (props: {
                     render={({ field, fieldState }) =>
                         revurderingshandling === Revurderingshandling.Forhåndsvarsle ? (
                             <OppsummeringsBrevInput
-                                sakId={props.sakId}
-                                revurderingId={props.revurderingId}
                                 tittel={intl.formatMessage({ id: 'brevInput.tekstTilForhåndsvarsel.tittel' })}
                                 onVisBrevClick={() =>
                                     pdfApi.fetchBrevutkastForForhåndsvarsel(
@@ -280,8 +272,6 @@ export const VelgForhåndsvarselForm = (props: {
                             />
                         ) : (
                             <OppsummeringsBrevInput
-                                sakId={props.sakId}
-                                revurderingId={props.revurderingId}
                                 tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
                                 onVisBrevClick={() =>
                                     pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
@@ -316,7 +306,7 @@ export const VelgForhåndsvarselForm = (props: {
 };
 
 export const SendTilAttesteringForm = (props: {
-    revurdering: Revurdering;
+    revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
     brevsending: 'aldriSende' | 'alltidSende' | 'kanVelge';
@@ -370,8 +360,6 @@ export const SendTilAttesteringForm = (props: {
                     name="tekstTilVedtaksbrev"
                     render={({ field, fieldState }) => (
                         <OppsummeringsBrevInput
-                            sakId={props.revurdering.tilRevurdering.sakId}
-                            revurderingId={props.revurdering.id}
                             tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({

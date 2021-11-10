@@ -22,7 +22,7 @@ import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
+import { BosituasjonRequest, InformasjonsRevurdering, Revurdering } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -185,10 +185,10 @@ const DelerSøkerBoligForm = (props: { control: Control<BosituasjonFormData>; in
 
 const BosituasjonForm = (props: {
     sakId: string;
-    revurdering: Revurdering;
+    revurdering: InformasjonsRevurdering;
     gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forrigeUrl: string;
-    nesteUrl: (revurdering: Revurdering) => string;
+    nesteUrl: (revurdering: InformasjonsRevurdering) => string;
 }) => {
     const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [epsAlder, setEpsAlder] = useState<Nullable<number>>(null);

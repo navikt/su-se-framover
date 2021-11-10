@@ -34,6 +34,7 @@ export default {
     'revurdering.undertittel': 'Revurdering',
     'revurdering.opprettet': 'Opprettet:',
     'revurdering.iverksattDato': 'Iverksatt dato:',
+    'revurdering.seOppsummering': 'Se oppsummering',
     'revurdering.type': 'Type: ',
     'revurdering.type.stansGjenoppta.label': 'Stans/Gjenoppta av utbetaling',
 

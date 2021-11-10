@@ -27,7 +27,7 @@ interface AvvistProps {
     validateForm: () => Promise<FormikErrors<LukkSøknadOgAvsluttSøknadsbehandlingFormData>>;
     avvistFormData: AvvistFormData;
     søknadLukketStatus: ApiResult<Sak, string>;
-    feilmeldinger: FormikErrors<AvvistFormData>;
+    feilmeldinger?: FormikErrors<AvvistFormData>;
     onValueChange: (value: AvvistFormData) => void;
 }
 
@@ -36,13 +36,28 @@ const Avvist = (props: AvvistProps) => {
 
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(søknadApi.hentLukketSøknadsBrevutkast);
 
+    const handleHentBrevClick = () => {
+        hentBrev({
+            søknadId: props.søknadId,
+            body: {
+                type: LukkSøknadBegrunnelse.Avvist,
+                brevConfig: props.avvistFormData.typeBrev
+                    ? {
+                          brevtype: props.avvistFormData.typeBrev,
+                          fritekst: props.avvistFormData.fritekst,
+                      }
+                    : null,
+            },
+        });
+    };
+
     return (
         <div className={styles.avvistContainer}>
             <div className={styles.radioContainer}>
                 <BooleanRadioGroup
                     name="skalSendesBrev"
                     legend={formatMessage('avvist.skalSendesBrevTilSøker')}
-                    error={props.feilmeldinger.skalSendesBrev}
+                    error={props.feilmeldinger?.skalSendesBrev}
                     value={props.avvistFormData.skalSendesBrev}
                     onChange={(val) => {
                         props.onValueChange({ skalSendesBrev: val, typeBrev: null, fritekst: null });
@@ -77,7 +92,7 @@ const Avvist = (props: AvvistProps) => {
                         label={formatMessage('avvist.fritekst')}
                         name="fritekst"
                         value={props.avvistFormData.fritekst ?? ''}
-                        error={props.feilmeldinger.fritekst}
+                        error={props.feilmeldinger?.fritekst}
                         onChange={(e) => props.onValueChange({ ...props.avvistFormData, fritekst: e.target.value })}
                     />
                 </div>
@@ -92,20 +107,7 @@ const Avvist = (props: AvvistProps) => {
                             onClick={() => {
                                 props.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
-                                        hentBrev({
-                                            søknadId: props.søknadId,
-                                            body: {
-                                                type: LukkSøknadBegrunnelse.Avvist,
-                                                //Vi har en use-state som sjekker at verdi ikke er null
-                                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                                brevConfig: props.avvistFormData.typeBrev
-                                                    ? {
-                                                          brevtype: props.avvistFormData.typeBrev,
-                                                          fritekst: props.avvistFormData.fritekst,
-                                                      }
-                                                    : null,
-                                            },
-                                        });
+                                        handleHentBrevClick();
                                     }
                                 });
                             }}

@@ -99,9 +99,9 @@ export default {
     'gjenopptak.åpen.revurdering.eksisterer': 'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
     'gjenopptak.iverksetting.feilutbetaling': 'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
 
-    'avsluttet.revurderingen.er.allerede.avsluttet': 'Revurderingen er allerede blitt avsluttet',
+    'avsluttet.revurderingen.er.allerede.avsluttet': 'Revurderingen er allerede avsluttet',
     'avsluttet.revurderingen.er.til.attestering': 'Revurderingen er til attestering',
-    'avsluttet.revurderingen.er.iverksatt': 'Revurderingen er Iverksatt',
+    'avsluttet.revurderingen.er.iverksatt': 'Revurderingen er iverksatt',
     'avsluttet.revurderingen.er.ikke.forhåndsvarslet.for.å.vise.brev':
         'Revurderingen er ikke forhåndsvarslet for å vise brev',
     'avsluttet.fritekst.fyllt.ut.uten.forhåndsvarsel':

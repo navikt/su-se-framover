@@ -9,7 +9,7 @@ import StansOppsummeringsblokk from '~components/revurdering/oppsummering/stanso
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
-import { AbstraktRevurdering } from '~types/Revurdering';
+import { Revurdering } from '~types/Revurdering';
 
 import messages from '../stans-nb';
 import styles from '../stans.module.less';
@@ -24,7 +24,7 @@ interface Input {
     verdi: string;
 }
 interface Props {
-    revurdering: AbstraktRevurdering;
+    revurdering: Revurdering;
     knapper?: { tilbake?: KnappProps; neste?: KnappProps };
     error?: Nullable<ApiError<string>>;
     inputs: Input[];

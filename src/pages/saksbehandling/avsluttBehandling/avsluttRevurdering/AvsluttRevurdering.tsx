@@ -13,8 +13,8 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { AbstraktRevurdering } from '~types/Revurdering';
-import { erForhåndsvarselSendtEllerBesluttet, erRevurdering } from '~utils/revurdering/revurderingUtils';
+import { Revurdering } from '~types/Revurdering';
+import { erForhåndsvarselSendtEllerBesluttet, erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
 
 import messages from './avsluttRevurdering-nb';
 import styles from './avsluttRevurdering.module.less';
@@ -29,7 +29,7 @@ const schema = yup.object<AvsluttRevurderingFormData>({
     begrunnelse: yup.string().required(),
 });
 
-const AvsluttRevurdering = (props: { sakId: string; revurdering: AbstraktRevurdering }) => {
+const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) => {
     const history = useHistory();
     const { formatMessage } = useI18n({ messages });
 
@@ -59,7 +59,7 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: AbstraktRevurde
 
     return (
         <form onSubmit={handleSubmit(avsluttRevurderingSubmitHandler)}>
-            {erRevurdering(props.revurdering) && erForhåndsvarselSendtEllerBesluttet(props.revurdering) && (
+            {erInformasjonsRevurdering(props.revurdering) && erForhåndsvarselSendtEllerBesluttet(props.revurdering) && (
                 <ForhåndsvarsletRevurderingForm
                     sakId={props.sakId}
                     revurderingId={props.revurdering.id}
@@ -109,9 +109,9 @@ const ForhåndsvarsletRevurderingForm = (props: {
                     name={'fritekst'}
                     render={({ field, fieldState }) => (
                         <Textarea
+                            {...field}
                             label={formatMessage('form.fritekst.label')}
                             value={field.value ?? ''}
-                            onChange={field.onChange}
                             error={fieldState.error?.message}
                         />
                     )}
@@ -129,6 +129,7 @@ const ForhåndsvarsletRevurderingForm = (props: {
                 }
             >
                 {formatMessage('knapp.seBrev')}
+                {RemoteData.isPending(brevStatus) && <Loader />}
             </Button>
             {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
         </div>

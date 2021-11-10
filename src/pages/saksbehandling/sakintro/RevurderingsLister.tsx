@@ -10,7 +10,7 @@ import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/Under
 import { useUserContext } from '~context/userContext';
 import { pipe } from '~lib/fp';
 import * as Routes from '~lib/routes';
-import { AbstraktRevurdering, RevurderingsStatus } from '~types/Revurdering';
+import { Revurdering, RevurderingsStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
 
@@ -22,14 +22,14 @@ import {
     finnNesteRevurderingsteg,
     erRevurderingStans,
     erRevurderingGjenopptak,
-    erRevurdering,
+    erInformasjonsRevurdering,
 } from '../../../utils/revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
 import { AvsluttOgStartFortsettButtons } from './Sakintro';
 import styles from './sakintro.module.less';
 
-export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: AbstraktRevurdering[]; intl: IntlShape }) => {
+export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Revurdering[]; intl: IntlShape }) => {
     if (props.åpneRevurderinger.length === 0) return null;
 
     return (
@@ -42,7 +42,7 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Abstra
                     const vedtakForBehandling = props.sak.vedtak.find((v) => v.behandlingId === r.id);
                     const underkjenteRevurderinger = r.attesteringer.filter((a) => a.underkjennelse !== null);
                     return (
-                        <div key={r.id}>
+                        <li key={r.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
@@ -50,7 +50,7 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Abstra
                                             <Heading level="3" size="small" spacing>
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
                                             </Heading>
-                                            {erRevurdering(r) && erForhåndsvarselSendt(r) && (
+                                            {erInformasjonsRevurdering(r) && erForhåndsvarselSendt(r) && (
                                                 <Tag variant="info" className={styles.etikett}>
                                                     {props.intl.formatMessage({
                                                         id: 'revurdering.label.forhåndsvarselSendt',
@@ -58,7 +58,7 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Abstra
                                                 </Tag>
                                             )}
                                         </div>
-                                        {!erRevurdering(r) && (
+                                        {!erInformasjonsRevurdering(r) && (
                                             <div className={styles.informasjonsTekst}>
                                                 <Label>{props.intl.formatMessage({ id: 'revurdering.type' })} </Label>
                                                 <BodyShort>
@@ -83,7 +83,7 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Abstra
                                             </div>
                                         )}
                                         {underkjenteRevurderinger.length > 0 &&
-                                            erRevurdering(r) &&
+                                            erInformasjonsRevurdering(r) &&
                                             !erRevurderingIverksatt(r) && (
                                                 <div className={styles.underkjenteAttesteringerContainer}>
                                                     <UnderkjenteAttesteringer attesteringer={r.attesteringer} />
@@ -100,7 +100,7 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Abstra
                                     </div>
                                 </div>
                             </Panel>
-                        </div>
+                        </li>
                     );
                 })}
             </ol>
@@ -110,7 +110,7 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Abstra
 
 const RevurderingStartetKnapper = (props: {
     sakId: string;
-    revurdering: AbstraktRevurdering;
+    revurdering: Revurdering;
     vedtak: Vedtak[];
     intl: IntlShape;
 }) => {
@@ -120,31 +120,31 @@ const RevurderingStartetKnapper = (props: {
 
     return (
         <div className={styles.behandlingContainer}>
-            {erRevurdering(revurdering) &&
+            {erInformasjonsRevurdering(revurdering) &&
                 erRevurderingTilAttestering(revurdering) &&
                 (!user.isAttestant || user.navIdent === revurdering.saksbehandler) && (
                     <div className={styles.ikonContainer}>
                         <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
-                        <p>
+                        <BodyShort>
                             {props.intl.formatMessage({
                                 id: 'attestering.tilAttestering',
                             })}
-                        </p>
+                        </BodyShort>
                     </div>
                 )}
 
-            {erRevurdering(revurdering) && erRevurderingIverksatt(revurdering) && vedtak && (
+            {erInformasjonsRevurdering(revurdering) && erRevurderingIverksatt(revurdering) && vedtak && (
                 <LinkAsButton
                     variant="secondary"
                     href={Routes.vedtaksoppsummering.createURL({ sakId: props.sakId, vedtakId: vedtak.id })}
                     size="small"
                 >
-                    Se oppsummering
+                    {props.intl.formatMessage({ id: 'revurdering.seOppsummering' })}
                 </LinkAsButton>
             )}
 
             <div className={styles.knapper}>
-                {erRevurdering(revurdering) &&
+                {erInformasjonsRevurdering(revurdering) &&
                 erRevurderingTilAttestering(revurdering) &&
                 user.isAttestant &&
                 user.navIdent !== revurdering.saksbehandler ? (
@@ -197,7 +197,7 @@ const RevurderingStartetKnapper = (props: {
                         intl={props.intl}
                     />
                 ) : (
-                    erRevurdering(revurdering) &&
+                    erInformasjonsRevurdering(revurdering) &&
                     !erRevurderingTilAttestering(revurdering) &&
                     !erRevurderingIverksatt(revurdering) &&
                     user.navIdent !== pipe(revurdering.attesteringer, last, toNullable)?.attestant && (
@@ -224,7 +224,7 @@ const RevurderingStartetKnapper = (props: {
     );
 };
 
-export const AvsluttedeRevurderinger = (props: { avsluttedeRevurderinger: AbstraktRevurdering[]; intl: IntlShape }) => {
+export const AvsluttedeRevurderinger = (props: { avsluttedeRevurderinger: Revurdering[]; intl: IntlShape }) => {
     if (props.avsluttedeRevurderinger.length === 0) return null;
 
     return (

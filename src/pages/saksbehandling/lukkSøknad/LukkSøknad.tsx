@@ -129,16 +129,8 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                     søknadId={props.søknad.id}
                     søknadLukketStatus={søknadLukketStatus}
                     validateForm={() => formik.validateForm()}
-                    avvistFormData={{
-                        skalSendesBrev: formik.values.avvist.skalSendesBrev,
-                        typeBrev: formik.values.avvist.typeBrev,
-                        fritekst: formik.values.avvist.fritekst,
-                    }}
-                    feilmeldinger={{
-                        skalSendesBrev: formik.errors.avvist?.skalSendesBrev,
-                        typeBrev: formik.errors.avvist?.typeBrev,
-                        fritekst: formik.errors.avvist?.fritekst,
-                    }}
+                    avvistFormData={formik.values.avvist}
+                    feilmeldinger={formik.errors.avvist}
                     onValueChange={(val) =>
                         formik.setValues((values) => ({
                             ...values,

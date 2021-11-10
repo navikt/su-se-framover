@@ -4,19 +4,23 @@ import * as React from 'react';
 import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
 import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
 import { useI18n } from '~lib/i18n';
-import { AbstraktRevurdering, harBeregninger, harSimulering, RevurderingsStatus } from '~types/Revurdering';
-import { erGregulering, erRevurdering, erRevurderingIngenEndring } from '~utils/revurdering/revurderingUtils';
+import { Revurdering, harBeregninger, harSimulering, RevurderingsStatus } from '~types/Revurdering';
+import {
+    erGregulering,
+    erInformasjonsRevurdering,
+    erRevurderingIngenEndring,
+} from '~utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
 import messages from './beregningblokk-nb';
 import styles from './beregningblokk.module.less';
 
-const Beregningblokk = (props: { revurdering: AbstraktRevurdering }) => {
+const Beregningblokk = (props: { revurdering: Revurdering }) => {
     const { intl } = useI18n({ messages });
 
     const alert = React.useMemo(() => {
-        if (erRevurdering(props.revurdering) && erRevurderingIngenEndring(props.revurdering)) {
+        if (erInformasjonsRevurdering(props.revurdering) && erRevurderingIngenEndring(props.revurdering)) {
             return erGregulering(props.revurdering.årsak)
                 ? {
                       tittel: intl.formatMessage({ id: 'revurdering.ingenEndring.gregulering.tittel' }),
@@ -56,7 +60,7 @@ const Beregningblokk = (props: { revurdering: AbstraktRevurdering }) => {
                         {intl.formatMessage({ id: 'heading.beregning' })}
                     </Heading>
                     <Panel border>
-                        {erRevurdering(props.revurdering) && harBeregninger(props.revurdering) ? (
+                        {erInformasjonsRevurdering(props.revurdering) && harBeregninger(props.revurdering) ? (
                             <VisBeregning beregning={props.revurdering.beregning} utenTittel />
                         ) : (
                             intl.formatMessage({ id: 'error.ingenBeregning' })

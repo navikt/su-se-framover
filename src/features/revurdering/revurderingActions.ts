@@ -18,10 +18,10 @@ import {
     OpprettetRevurderingGrunn,
     BeslutningEtterForhåndsvarsling,
     InformasjonSomRevurderes,
-    Revurdering,
     BosituasjonRequest,
     FormuegrunnlagRequest,
-    AbstraktRevurdering,
+    Revurdering,
+    InformasjonsRevurdering,
 } from '~types/Revurdering';
 import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
@@ -283,7 +283,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
 });
 
 export const lagreFradragsgrunnlag = createAsyncThunk<
-    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    { revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] },
     {
         sakId: string;
         revurderingId: string;
@@ -299,7 +299,7 @@ export const lagreFradragsgrunnlag = createAsyncThunk<
 });
 
 export const lagreBosituasjonsgrunnlag = createAsyncThunk<
-    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    { revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] },
     BosituasjonRequest,
     { rejectValue: ApiError }
 >('revurdering/grunnlag/bosituasjon/lagre', async (arg, thunkApi) => {
@@ -318,7 +318,7 @@ export const lagreBosituasjonsgrunnlag = createAsyncThunk<
 });
 
 export const lagreFormuegrunnlag = createAsyncThunk<
-    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    { revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] },
     FormuegrunnlagRequest,
     { rejectValue: ApiError }
 >('revurdering/grunnlag/formue/lagre', async (arg, thunkApi) => {
@@ -349,7 +349,7 @@ export const hentGjeldendeGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
 });
 
 export const avsluttRevurdering = createAsyncThunk<
-    AbstraktRevurdering,
+    Revurdering,
     { sakId: string; revurderingId: string; begrunnelse: string; fritekst: Nullable<string> },
     { rejectValue: ApiError }
 >('revurdering/avsluttRevurdering', async (arg, thunkApi) => {

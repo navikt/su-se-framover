@@ -22,7 +22,7 @@ import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { erRevurderingTilAttestering, erGregulering, erRevurdering } from '~utils/revurdering/revurderingUtils';
+import { erRevurderingTilAttestering, erGregulering } from '~utils/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
 
@@ -150,7 +150,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         );
     }
 
-    if (!erRevurdering(revurdering) || !erRevurderingTilAttestering(revurdering)) {
+    if (!erRevurderingTilAttestering(revurdering)) {
         return (
             <div className={styles.advarselContainer}>
                 <Alert variant="error">{intl.formatMessage({ id: 'feil.ikkeTilAttestering' })}</Alert>

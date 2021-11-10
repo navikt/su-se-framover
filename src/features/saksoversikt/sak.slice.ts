@@ -19,7 +19,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkå
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
 import { Restans } from '~types/Restans';
-import { AbstraktRevurdering } from '~types/Revurdering';
+import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -630,17 +630,11 @@ export default createSlice({
         });
 
         builder.addCase(lukkSøknad.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({ ...sak, ...action.payload }))
-            );
+            state.sak = RemoteData.success(action.payload);
         });
 
         builder.addCase(avslagManglendeDokSøknad.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({ ...sak, ...action.payload }))
-            );
+            state.sak = RemoteData.success(action.payload);
         });
 
         builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {
@@ -736,7 +730,7 @@ export default createSlice({
     },
 });
 
-function oppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revurdering: AbstraktRevurdering) {
+function oppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revurdering: Revurdering) {
     return pipe(
         sak,
         RemoteData.map((s) => ({

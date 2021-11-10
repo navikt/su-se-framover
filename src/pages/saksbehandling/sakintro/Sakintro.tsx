@@ -18,9 +18,8 @@ import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Søknad } from '~types/Søknad';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
+import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
-
-import { getAvsluttedeOgIkkeAvsluttedeRevurderinger } from '../../../utils/revurdering/revurderingUtils';
 
 import { AvsluttedeRevurderinger, ÅpneRevurderinger } from './RevurderingsLister';
 import messages from './sakintro-nb';
@@ -56,9 +55,7 @@ const Sakintro = (props: { sak: Sak }) => {
 
     const avslåtteSøknader = getIverksatteAvslåtteSøknader(props.sak);
 
-    const { avsluttedeRevurderinger, åpneRevurderinger } = getAvsluttedeOgIkkeAvsluttedeRevurderinger(
-        props.sak.revurderinger
-    );
+    const { avsluttedeRevurderinger, åpneRevurderinger } = splittAvsluttedeOgÅpneRevurderinger(props.sak.revurderinger);
 
     const kanRevurderes = !isEmpty(props.sak.utbetalinger);
 

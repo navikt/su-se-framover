@@ -16,10 +16,10 @@ import {
     OpprettetRevurderingGrunn,
     BeslutningEtterForhåndsvarsling,
     InformasjonSomRevurderes,
-    Revurdering,
     BosituasjonRequest,
     FormuegrunnlagRequest,
-    AbstraktRevurdering,
+    Revurdering,
+    InformasjonsRevurdering,
 } from '~types/Revurdering';
 import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
@@ -269,7 +269,7 @@ export async function lagreFradragsgrunnlag(
     sakId: string,
     revurderingId: string,
     fradrag: Fradrag[]
-): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
+): Promise<ApiClientResult<{ revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/fradrag`,
         method: 'POST',
@@ -281,7 +281,7 @@ export async function lagreFradragsgrunnlag(
 
 export async function lagreBosituasjonsgrunnlag(
     data: BosituasjonRequest
-): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
+): Promise<ApiClientResult<{ revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
         url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/bosituasjongrunnlag`,
         method: 'POST',
@@ -296,7 +296,7 @@ export async function lagreBosituasjonsgrunnlag(
 
 export async function lagreFormuegrunnlag(
     data: FormuegrunnlagRequest
-): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
+): Promise<ApiClientResult<{ revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
         url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/formuegrunnlag`,
         method: 'POST',
@@ -329,7 +329,7 @@ export async function avsluttRevurdering(args: {
     revurderingId: string;
     begrunnelse: string;
     fritekst: Nullable<string>;
-}): Promise<ApiClientResult<AbstraktRevurdering>> {
+}): Promise<ApiClientResult<Revurdering>> {
     return apiClient<Revurdering>({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/avslutt`,
         method: 'POST',
