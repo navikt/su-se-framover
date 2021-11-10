@@ -15,7 +15,7 @@ import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useAsyncActionCreator } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -74,7 +74,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-    const [hentPdfStatus, setHentPdfStatus] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
+    const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurdering);
     const [sendtBeslutning, setSendtBeslutning] = useState<
         RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
     >(RemoteData.initial);
@@ -159,14 +159,9 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     }
 
     const handleShowBrevClick = async () => {
-        setHentPdfStatus(RemoteData.pending);
-        const res = await PdfApi.fetchBrevutkastForRevurdering(props.sak.id, revurdering.id);
-        if (res.status === 'ok') {
-            setHentPdfStatus(RemoteData.success(null));
-            window.open(URL.createObjectURL(res.data));
-        } else {
-            setHentPdfStatus(RemoteData.failure(res.error));
-        }
+        hentPdf({ sakId: props.sak.id, revurderingId: revurdering.id }, (data) => {
+            window.open(URL.createObjectURL(data));
+        });
     };
 
     return (

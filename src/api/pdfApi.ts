@@ -35,12 +35,12 @@ export async function fetchSøknadutskrift(søknadId: string): Promise<ApiClient
     });
 }
 
-export async function fetchBrevutkastForRevurdering(
-    sakId: string,
-    revurderingId: string
-): Promise<ApiClientResult<Blob>> {
+export async function fetchBrevutkastForRevurdering(args: {
+    sakId: string;
+    revurderingId: string;
+}): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkast`,
+        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkast`,
         method: 'GET',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
         bodyTransformer: (res) => res.blob(),

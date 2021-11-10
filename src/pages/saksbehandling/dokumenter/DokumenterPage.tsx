@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { FileContent } from '@navikt/ds-icons';
+import { Back, FileContent } from '@navikt/ds-icons';
 import { Alert, Button, Heading, Ingress, LinkPanel, Loader, Tag } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
@@ -59,9 +59,12 @@ const DokumenterPage = (props: { sak: Sak }) => {
                 <div className={styles.contentContainer}>
                     {pipe(
                         dokumenterState,
-                        RemoteData.fold(
-                            () => <Loader />,
-                            () => <Loader />,
+                        RemoteData.fold3(
+                            () => (
+                                <div className={styles.loaderContainer}>
+                                    <Loader size="xlarge" title={formatMessage('loader.henterBrev')} />
+                                </div>
+                            ),
                             (err) => (
                                 <Alert variant="error">{err?.body?.message ?? formatMessage('feil.ukjent')}</Alert>
                             ),
@@ -110,14 +113,17 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                 )
                         )
                     )}
-                    <Button
-                        variant="secondary"
-                        onClick={() => {
-                            history.goBack();
-                        }}
-                    >
-                        {formatMessage('knapp.tilbake')}
-                    </Button>
+                    <div>
+                        <Button
+                            variant="secondary"
+                            onClick={() => {
+                                history.goBack();
+                            }}
+                        >
+                            <Back />
+                            {formatMessage('knapp.tilbake')}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
