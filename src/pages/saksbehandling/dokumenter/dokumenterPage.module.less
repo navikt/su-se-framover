@@ -44,12 +44,19 @@
 }
 
 .contentContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-l;
     padding: @spacing-l;
+}
+
+.loaderContainer {
+    display: flex;
+    justify-content: center;
 }
 
 .dokumentliste {
     width: 100%;
-    margin-bottom: @spacing-l;
 
     > li:not(:last-child) {
         margin-bottom: @spacing-xs;
