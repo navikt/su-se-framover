@@ -16,7 +16,7 @@ import { useI18n } from '~lib/i18n';
 import { keyOf, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { opprettetRevurderingGrunn } from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { FormValues } from '~pages/saksbehandling/revurdering/revurderingIntro/EndreRevurderingPage';
+import { FormValues } from '~pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage';
 import {
     gyldigeÅrsaker,
     InformasjonSomRevurderes,

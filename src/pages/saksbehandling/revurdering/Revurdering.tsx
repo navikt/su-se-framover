@@ -31,7 +31,7 @@ import messages, { stegmessages } from './revurdering-nb';
 import styles from './revurdering.module.less';
 
 const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
-const EndreRevurderingPage = React.lazy(() => import('./revurderingIntro/EndreRevurderingPage'));
+const EndreRevurderingPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
 const Bosituasjon = React.lazy(() => import('./bosituasjon/BosituasjonForm'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
 const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));

@@ -21,7 +21,7 @@ export interface FormValues {
     begrunnelse: string;
 }
 
-const EndreRevurderingPage = (props: {
+const RevurderingIntroPage = (props: {
     sakId: string;
     utbetalinger: Utbetalingsperiode[];
     informasjonsRevurdering: InformasjonsRevurdering | undefined;
@@ -77,4 +77,4 @@ const EndreRevurderingPage = (props: {
     );
 };
 
-export default EndreRevurderingPage;
+export default RevurderingIntroPage;
