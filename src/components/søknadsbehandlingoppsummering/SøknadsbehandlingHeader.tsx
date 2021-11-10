@@ -94,7 +94,11 @@ const Tilleggsinfo = (props: {
         }
     }, [props.behandling.id]);
 
-    const lastNedBrevStatus = RemoteData.combine(hentDokumenterStatus, hentBrevutkastStatus);
+    const hentBrevError = RemoteData.isFailure(hentBrevutkastStatus)
+        ? hentBrevutkastStatus.error
+        : RemoteData.isFailure(hentDokumenterStatus)
+        ? hentDokumenterStatus.error
+        : null;
 
     return (
         <div>
@@ -147,17 +151,16 @@ const Tilleggsinfo = (props: {
                         </Label>
                         <Button variant="secondary" size="small" type="button" onClick={hentBrev}>
                             {props.intl.formatMessage({ id: 'knapp.vis' })}
-                            {RemoteData.isPending(lastNedBrevStatus) && <Loader />}
+                            {(RemoteData.isPending(hentBrevutkastStatus) ||
+                                RemoteData.isPending(hentDokumenterStatus)) && <Loader />}
                         </Button>
+                        {hentBrevError && (
+                            <Alert variant="error" size="small" className={styles.brevutkastFeil}>
+                                {hentBrevError?.body?.message ??
+                                    props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
+                            </Alert>
+                        )}
                     </div>
-                )}
-            </div>
-            <div className={styles.brevutkastFeil}>
-                {RemoteData.isFailure(lastNedBrevStatus) && (
-                    <Alert variant="error">
-                        {lastNedBrevStatus.error?.body?.message ??
-                            props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
-                    </Alert>
                 )}
             </div>
         </div>
