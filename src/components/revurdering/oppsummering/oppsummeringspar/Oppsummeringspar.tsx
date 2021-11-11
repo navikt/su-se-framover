@@ -1,4 +1,5 @@
 import { BodyShort, Label } from '@navikt/ds-react';
+import classNames from 'classnames';
 import React from 'react';
 
 import styles from './oppsummeringspar.module.less';
@@ -10,7 +11,7 @@ interface Props {
 }
 
 export const OppsummeringPar = ({ label, verdi, className = '' }: Props) => (
-    <div className={`${styles.oppsummeringspar} ${className}`}>
+    <div className={classNames(styles.oppsummeringspar, className)}>
         <BodyShort>{label}</BodyShort>
         <Label>{verdi ?? ''}</Label>
     </div>

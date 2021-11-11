@@ -4,11 +4,11 @@ import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeri
 import { useI18n } from '~lib/i18n';
 import { Utenlandsopphold } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 
-import messages from './utenlandsoppsummering-nb';
+import messages, { utenlandsoppholdStatusMessages } from './utenlandsoppsummering-nb';
 import styles from './utenlandsoppsummering.module.less';
 
 export const Utenlandsoppsummering = ({ utenlandsopphold }: { utenlandsopphold: Utenlandsopphold }) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...utenlandsoppholdStatusMessages } });
 
     return (
         <div className={styles.utenlandsoppsummering}>

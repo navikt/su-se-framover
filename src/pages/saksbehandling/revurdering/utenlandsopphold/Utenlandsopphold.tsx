@@ -5,11 +5,11 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { Utenlandsoppsummering } from '~components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import * as revurderingActions from '~features/revurdering/revurderingActions';
+import { lagreUtenlandsopphold } from '~features/revurdering/revurderingActions';
+import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -19,8 +19,7 @@ import { StegProps } from '~pages/saksbehandling/revurdering/common';
 import stegmessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import sharedStyles from '~pages/saksbehandling/revurdering/revurdering.module.less';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
-import { useAppDispatch } from '~redux/Store';
-import { Revurdering, Utenlandsoppholdstatus } from '~types/Revurdering';
+import { Utenlandsoppholdstatus } from '~types/Revurdering';
 
 import messages from './utenlandsopphold-nb';
 
@@ -36,7 +35,6 @@ const schemaValidation = yup.object<UtenlandsoppholdFormData>({
 
 const Utenlandsopphold = (props: StegProps) => {
     const { formatMessage } = useI18n({ messages: { ...stegmessages, ...messages } });
-    const dispatch = useAppDispatch();
     const history = useHistory();
     const form = useForm<UtenlandsoppholdFormData>({
         resolver: yupResolver(schemaValidation),
@@ -45,37 +43,24 @@ const Utenlandsopphold = (props: StegProps) => {
             begrunnelse: props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.begrunnelse ?? null,
         },
     });
-    const [status, setStatus] = React.useState<
-        RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
-    >(RemoteData.initial);
+    const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
     const [trykketKnapp, setTrykketKnapp] = useState<'neste' | 'hjem' | undefined>(undefined);
 
     const handleSubmit = async (form: UtenlandsoppholdFormData, gåtil: 'neste' | 'hjem') => {
         setTrykketKnapp(gåtil);
-        setStatus(RemoteData.pending);
-
-        const res = await dispatch(
-            revurderingActions.lagreUtenlandsopphold({
+        lagre(
+            {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 status: form.status!,
                 begrunnelse: form.begrunnelse,
-            })
-        );
-
-        if (revurderingActions.lagreUtenlandsopphold.fulfilled.match(res)) {
-            setStatus(RemoteData.success(res.payload));
-            if (res.payload.feilmeldinger.length === 0) {
+            },
+            () =>
                 history.push(
                     gåtil === 'neste' ? props.nesteUrl : Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
-                );
-            }
-        }
-        if (revurderingActions.lagreUtenlandsopphold.rejected.match(res)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            setStatus(RemoteData.failure(res.payload!));
-        }
+                )
+        );
     };
 
     return (
