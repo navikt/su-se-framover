@@ -7,6 +7,7 @@ import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 import { Vedtak } from './Vedtak';
 
+//Dette er feltene som deles av backends 'abstrakte' revurdering. Hadde vært fint å skille på dem litt mer, både bak og fram
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
     status: T;
@@ -15,58 +16,76 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     tilRevurdering: Vedtak;
     saksbehandler: string;
     attesteringer: Attestering[];
-    fritekstTilBrev: string;
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
-    forhåndsvarsel: Nullable<Forhåndsvarsel>;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    forhåndsvarsel: Nullable<Forhåndsvarsel>;
+}
+
+/**
+ * Dette gjelder revurdering av Grunnlagsdata, vilkårssett, og potensielt utbetaling (endring fører til utbetaling. ingen endring fører ikke til utbetaling)
+ * eksempler som ikke inngår, stans og gjenoppta av utbetaling, siden dem kun endrer utbetaling
+ */
+export interface InformasjonsRevurdering<T extends RevurderingsStatus = RevurderingsStatus> extends Revurdering {
+    status: T;
+    fritekstTilBrev: string;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
 
-interface Beregninger {
+/**
+ * Dette gjelder kun de revurderingene som kun endrer på utbetalingene
+ * eksempler: stans og gjenoppta
+ */
+export interface UtbetalingsRevurdering<T extends RevurderingsStatus> extends Revurdering {
+    status: T;
+}
+
+export type OpprettetRevurdering = InformasjonsRevurdering<RevurderingsStatus.OPPRETTET>;
+
+export interface BeregnetInnvilget extends InformasjonsRevurdering<RevurderingsStatus.BEREGNET_INNVILGET> {
     beregning: Beregning;
-    revurdert: Beregning;
 }
 
-export type OpprettetRevurdering = Revurdering<RevurderingsStatus.OPPRETTET>;
-
-export interface BeregnetInnvilget extends Revurdering<RevurderingsStatus.BEREGNET_INNVILGET> {
-    beregninger: Beregninger;
-}
-
-export interface BeregnetIngenEndring extends Revurdering<RevurderingsStatus.BEREGNET_INGEN_ENDRING> {
-    beregninger: Beregninger;
+export interface BeregnetIngenEndring extends InformasjonsRevurdering<RevurderingsStatus.BEREGNET_INGEN_ENDRING> {
+    beregning: Beregning;
 }
 
 export interface SimulertRevurdering
-    extends Revurdering<RevurderingsStatus.SIMULERT_INNVILGET | RevurderingsStatus.SIMULERT_OPPHØRT> {
-    beregninger: Beregninger;
+    extends InformasjonsRevurdering<RevurderingsStatus.SIMULERT_INNVILGET | RevurderingsStatus.SIMULERT_OPPHØRT> {
+    beregning: Beregning;
     simulering: Simulering;
 }
 
 export interface RevurderingTilAttestering
-    extends Revurdering<RevurderingsStatus.TIL_ATTESTERING_INNVILGET | RevurderingsStatus.TIL_ATTESTERING_OPPHØRT> {
-    beregninger: Beregninger;
+    extends InformasjonsRevurdering<
+        RevurderingsStatus.TIL_ATTESTERING_INNVILGET | RevurderingsStatus.TIL_ATTESTERING_OPPHØRT
+    > {
+    beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
 
 export interface IverksattRevurdering
-    extends Revurdering<RevurderingsStatus.IVERKSATT_INNVILGET | RevurderingsStatus.IVERKSATT_OPPHØRT> {
-    beregninger: Beregninger;
+    extends InformasjonsRevurdering<RevurderingsStatus.IVERKSATT_INNVILGET | RevurderingsStatus.IVERKSATT_OPPHØRT> {
+    beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
 
 export interface UnderkjentRevurdering
-    extends Revurdering<RevurderingsStatus.UNDERKJENT_INNVILGET | RevurderingsStatus.UNDERKJENT_OPPHØRT> {
-    beregninger: Beregninger;
+    extends InformasjonsRevurdering<RevurderingsStatus.UNDERKJENT_INNVILGET | RevurderingsStatus.UNDERKJENT_OPPHØRT> {
+    beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
 
-export function harBeregninger(r: Revurdering): r is Revurdering & { beregninger: Beregninger } {
-    return 'beregninger' in r;
+export interface AvsluttetRevurdering extends InformasjonsRevurdering<RevurderingsStatus.AVSLUTTET> {
+    beregning: Nullable<Beregning>;
+    simulering: Nullable<Simulering>;
+}
+
+export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: Beregning } {
+    return 'beregning' in r;
 }
 export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
     return 'simulering' in r && (r as SimulertRevurdering).simulering !== null;
@@ -103,6 +122,7 @@ export enum RevurderingsStatus {
     SIMULERT_OPPHØRT = 'SIMULERT_OPPHØRT',
     SIMULERT_INNVILGET = 'SIMULERT_INNVILGET',
     SIMULERT_STANS = 'SIMULERT_STANS',
+    AVSLUTTET_STANS = 'AVSLUTTET_STANS',
     SIMULERT_GJENOPPTAK = 'SIMULERT_GJENOPPTAK',
     TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
     TIL_ATTESTERING_OPPHØRT = 'TIL_ATTESTERING_OPPHØRT',
@@ -111,10 +131,12 @@ export enum RevurderingsStatus {
     IVERKSATT_OPPHØRT = 'IVERKSATT_OPPHØRT',
     IVERKSATT_INGEN_ENDRING = 'IVERKSATT_INGEN_ENDRING',
     IVERKSATT_STANS = 'IVERKSATT_STANS',
+    AVSLUTTET_GJENOPPTAK = 'AVSLUTTET_GJENOPPTAK',
     IVERKSATT_GJENOPPTAK = 'IVERKSATT_GJENOPPTAK',
     UNDERKJENT_INNVILGET = 'UNDERKJENT_INNVILGET',
     UNDERKJENT_OPPHØRT = 'UNDERKJENT_OPPHØRT',
     UNDERKJENT_INGEN_ENDRING = 'UNDERKJENT_INGEN_ENDRING',
+    AVSLUTTET = 'AVSLUTTET',
 }
 
 export enum OpprettetRevurderingGrunn {
@@ -178,5 +200,5 @@ export interface RevurderingProps {
     revurdering: Revurdering;
     gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forrigeUrl: string;
-    nesteUrl: (revurdering: Revurdering) => string;
+    nesteUrl: (revurdering: InformasjonsRevurdering) => string;
 }

@@ -5,14 +5,14 @@ import { useHistory } from 'react-router-dom';
 import { oppdaterRevurderingsPeriode as oppdaterRevurdering } from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
+import { InformasjonSomRevurderes, InformasjonsRevurdering, OpprettetRevurderingGrunn } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
 import { finnNesteRevurderingsteg } from '~utils/revurdering/revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
-const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering }) => {
+const EndreRevurderingPage = (props: { sak: Sak; revurdering: InformasjonsRevurdering }) => {
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
     const history = useHistory();
 

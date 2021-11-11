@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Heading, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, Heading, Link, Loader } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
@@ -16,9 +16,10 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Revurdering, Vurderingstatus } from '~types/Revurdering';
+import { InformasjonsRevurdering, Vurderingstatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import {
+    erInformasjonsRevurdering,
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
 } from '~utils/revurdering/revurderingUtils';
@@ -60,6 +61,17 @@ const RevurderingPage = (props: { sak: Sak }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
     const påbegyntRevurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
+
+    if (påbegyntRevurdering && !erInformasjonsRevurdering(påbegyntRevurdering)) {
+        return (
+            <div>
+                <BodyLong>{intl.formatMessage({ id: 'feil.feilRevurderingsId' })}</BodyLong>
+                <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                    {intl.formatMessage({ id: 'link.tilbakeTilSaksoversikt' })}
+                </Link>
+            </div>
+        );
+    }
 
     const dispatch = useAppDispatch();
     const grunnlag = useAppSelector(
@@ -118,7 +130,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
         url: createRevurderingsPath(steg),
     }));
 
-    const aktiveSteg = (revurdering: Revurdering) =>
+    const aktiveSteg = (revurdering: InformasjonsRevurdering) =>
         pipe(
             alleSteg,
             A.filterMap((steg) =>
@@ -171,7 +183,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
                                 const forrigeUrl =
                                     aktiveSteg(påbegyntRevurdering)[idx - 1]?.url ??
                                     createRevurderingsPath(RevurderingSteg.Periode);
-                                const nesteUrl = (revurdering: Revurdering) =>
+                                const nesteUrl = (revurdering: InformasjonsRevurdering) =>
                                     aktiveSteg(revurdering)[idx + 1]?.url ??
                                     createRevurderingsPath(RevurderingSteg.Oppsummering);
                                 return (
@@ -213,9 +225,9 @@ const RevurderingPage = (props: { sak: Sak }) => {
 const RevurderingstegPage = (props: {
     steg: RevurderingSteg;
     forrigeUrl: string;
-    nesteUrl: (revurdering: Revurdering) => string;
+    nesteUrl: (revurdering: InformasjonsRevurdering) => string;
     sakId: string;
-    revurdering: Revurdering;
+    revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
     return pipe(

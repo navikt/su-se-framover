@@ -29,7 +29,8 @@ export type RevurderingErrorCodes =
     | UtfallSomIkkeStøttes
     | Brev
     | Stans
-    | Gjenopptak;
+    | Gjenopptak
+    | Avsluttet;
 
 type VilkårErrorCodes = OpprettelseOgOppdatering | Uføre | Bosituasjon | Formue | Fradrag;
 
@@ -147,6 +148,15 @@ enum Gjenopptak {
     IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
 }
 
+enum Avsluttet {
+    REVURDERINGEN_ER_ALLEREDE_AVSLUTTET = 'revurderingen_er_allerede_avsluttet',
+    REVURDERINGER_ER_TIL_ATTESTERING = 'revurdering_er_til_attestering',
+    REVURDERINGEN_ER_IVERKSATT = 'revurderingen_er_iverksatt',
+    REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV = 'revurdering_er_ikke_forhåndsvarslet_for_å_vise_brev',
+    FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL = 'fritekst_er_fyllt_ut_uten_forhåndsvarsel',
+    FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN = 'fant_ikke_person_eller_saksbehandler_navn',
+}
+
 const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof typeof messages | undefined } = {
     [Generell.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'generell.gregulering.kan.ikke.føre.til.opphør',
     [Generell.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]:
@@ -240,4 +250,12 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Gjenopptak.KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER]: 'gjenopptak.kan.ikke.gjenoppta.opphørte.utbetalinger',
     [Gjenopptak.ÅPEN_REVURDERING_EKSISTERER]: 'gjenopptak.åpen.revurdering.eksisterer',
     [Gjenopptak.IVERKSETTING_FØRER_TIL_FEILUTBETALING]: 'gjenopptak.iverksetting.feilutbetaling',
+
+    [Avsluttet.REVURDERINGEN_ER_ALLEREDE_AVSLUTTET]: 'avsluttet.revurderingen.er.allerede.avsluttet',
+    [Avsluttet.REVURDERINGER_ER_TIL_ATTESTERING]: 'avsluttet.revurderingen.er.til.attestering',
+    [Avsluttet.REVURDERINGEN_ER_IVERKSATT]: 'avsluttet.revurderingen.er.iverksatt',
+    [Avsluttet.REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV]:
+        'avsluttet.revurderingen.er.ikke.forhåndsvarslet.for.å.vise.brev',
+    [Avsluttet.FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL]: 'avsluttet.fritekst.fyllt.ut.uten.forhåndsvarsel',
+    [Avsluttet.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'avsluttet.fant.ikke.person.eller.saksbehandler.navn',
 };

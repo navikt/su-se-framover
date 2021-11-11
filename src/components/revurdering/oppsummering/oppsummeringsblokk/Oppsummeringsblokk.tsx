@@ -5,7 +5,7 @@ import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/Under
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/i18n';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Revurdering } from '~types/Revurdering';
+import { InformasjonsRevurdering, Revurdering } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
@@ -56,7 +56,7 @@ const Intro = (props: { revurdering: Revurdering }) => {
 };
 
 const Oppsummeringsblokk = (props: {
-    revurdering: Revurdering;
+    revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const { intl } = useI18n({ messages });

@@ -15,7 +15,7 @@ import { customFormikSubmit } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
 import { keyOf, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
+import { InformasjonSomRevurderes, InformasjonsRevurdering, OpprettetRevurderingGrunn } from '~types/Revurdering';
 import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -56,7 +56,7 @@ interface RevurderingIntroFormProps {
     onNesteClick: (arg: FormValues) => void;
     onLagreOgFortsettSenereClick: (arg: FormValues) => void;
     tilbakeUrl: string;
-    revurdering?: Revurdering;
+    revurdering?: InformasjonsRevurdering;
     minFraOgMed: Date;
     maxFraOgMed: Date;
     nesteClickStatus: RemoteData.RemoteData<ApiError, null>;

@@ -4,14 +4,16 @@ export default {
 
     'knapp.seBrev': 'Forhåndsvis brev',
 
+    'avslutt.button.label': 'Avslutt revurdering',
+
     'sendTilAttestering.button.label': 'Send til attestering',
     'sendForhåndsvarsel.button.label': 'Send forhåndsvarsel',
     'fortsett.button.label': 'Fortsett',
 
     'brevInput.tekstTilVedtaksbrev.tittel': 'Tekst til vedtaksbrev',
-    'brevInput.tekstTilVedtaksbrev.placeholder': 'Skriv teksten her',
     'brevInput.tekstTilForhåndsvarsel.tittel': 'Tekst til forhåndsvarsel',
-    'brevInput.tekstTilForhåndsvarsel.placeholder': 'Skriv teksten her',
+    'brevInput.tekstTilAvsluttRevurdering.tittel': 'Tekst til Avslutting av revurderings-brev',
+    'brevInput.innhold.placeholder': 'Skriv teksten her',
 
     'sendTilAttestering.skalFøreTilBrev': 'Send vedtaksbrev til bruker',
 

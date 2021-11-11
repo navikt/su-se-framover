@@ -4,8 +4,12 @@ import * as React from 'react';
 import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
 import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
 import { useI18n } from '~lib/i18n';
-import { harBeregninger, harSimulering, Revurdering, RevurderingsStatus } from '~types/Revurdering';
-import { erGregulering, erRevurderingIngenEndring } from '~utils/revurdering/revurderingUtils';
+import { Revurdering, harBeregninger, harSimulering, RevurderingsStatus } from '~types/Revurdering';
+import {
+    erGregulering,
+    erInformasjonsRevurdering,
+    erRevurderingIngenEndring,
+} from '~utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
@@ -16,7 +20,7 @@ const Beregningblokk = (props: { revurdering: Revurdering }) => {
     const { intl } = useI18n({ messages });
 
     const alert = React.useMemo(() => {
-        if (erRevurderingIngenEndring(props.revurdering)) {
+        if (erInformasjonsRevurdering(props.revurdering) && erRevurderingIngenEndring(props.revurdering)) {
             return erGregulering(props.revurdering.årsak)
                 ? {
                       tittel: intl.formatMessage({ id: 'revurdering.ingenEndring.gregulering.tittel' }),
@@ -56,8 +60,8 @@ const Beregningblokk = (props: { revurdering: Revurdering }) => {
                         {intl.formatMessage({ id: 'heading.beregning' })}
                     </Heading>
                     <Panel border>
-                        {harBeregninger(props.revurdering) ? (
-                            <VisBeregning beregning={props.revurdering.beregninger.revurdert} utenTittel />
+                        {erInformasjonsRevurdering(props.revurdering) && harBeregninger(props.revurdering) ? (
+                            <VisBeregning beregning={props.revurdering.beregning} utenTittel />
                         ) : (
                             intl.formatMessage({ id: 'error.ingenBeregning' })
                         )}

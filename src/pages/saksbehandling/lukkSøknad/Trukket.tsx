@@ -1,60 +1,38 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Datepicker } from '@navikt/ds-datepicker';
 import { Button, Label, Loader, Tag } from '@navikt/ds-react';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 
-import { ApiError } from '~api/apiClient';
-import { hentLukketSøknadBrevutkast } from '~features/saksoversikt/sak.slice';
+import * as søknadApi from '~api/søknadApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import { ApiResult, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
-import { useAppDispatch } from '~redux/Store';
+import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
 
 interface TrukketProps {
-    lukkSøknadBegrunnelse: LukkSøknadBegrunnelse;
     søknadOpprettet: string;
     søknadId: string;
     datoSøkerTrakkSøknad: string | null;
     onDatoSøkerTrakkSøknadChange: (dato: string) => void;
     feilmelding: string | undefined;
-    lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
-    søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
+    søknadLukketStatus: ApiResult<Sak, string>;
 }
 
 const Trukket = (props: TrukketProps) => {
-    const dispatch = useAppDispatch();
     const [clickedViewLetter, setClickedViewLetter] = useState<boolean>(false);
-    const { intl } = useI18n({ messages: nb });
+    const { formatMessage } = useI18n({ messages: nb });
 
-    const onSeBrevClick = useCallback(() => {
-        if (RemoteData.isPending(props.lukketSøknadBrevutkastStatus)) {
-            return;
-        }
-
-        if (props.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Trukket && props.datoSøkerTrakkSøknad) {
-            dispatch(
-                hentLukketSøknadBrevutkast({
-                    søknadId: props.søknadId,
-                    body: {
-                        type: props.lukkSøknadBegrunnelse,
-                        datoSøkerTrakkSøknad: props.datoSøkerTrakkSøknad,
-                    },
-                })
-            ).then((action) => {
-                if (hentLukketSøknadBrevutkast.fulfilled.match(action)) {
-                    window.open(action.payload.objectUrl);
-                }
-            });
-        }
-    }, [props]);
+    const [brevStatus, hentBrev] = useBrevForhåndsvisning(søknadApi.hentLukketSøknadsBrevutkast);
 
     return (
         <div className={styles.trukketContainer}>
             <div className={styles.datoContainer}>
                 <Label as="label" htmlFor={'datoSøkerTrakkSøknad'}>
-                    {intl.formatMessage({ id: 'display.trekking.datoSøkerTrakkSøknad' })}
+                    {formatMessage('trekking.datoSøkerTrakkSøknad')}
                 </Label>
                 <Datepicker
                     inputProps={{
@@ -76,7 +54,7 @@ const Trukket = (props: TrukketProps) => {
                 />
                 {props.feilmelding && <Tag variant="error">{props.feilmelding}</Tag>}
                 {clickedViewLetter && props.datoSøkerTrakkSøknad === null && (
-                    <Tag variant="error">{intl.formatMessage({ id: 'display.feil.feltMåFyllesUt' })}</Tag>
+                    <Tag variant="error">{formatMessage('feil.feltMåFyllesUt')}</Tag>
                 )}
             </div>
             <div className={styles.buttonsContainer}>
@@ -86,17 +64,26 @@ const Trukket = (props: TrukketProps) => {
                     type="button"
                     onClick={() => {
                         setClickedViewLetter(true);
-                        onSeBrevClick();
+                        hentBrev({
+                            søknadId: props.søknadId,
+                            body: {
+                                type: LukkSøknadBegrunnelse.Trukket,
+                                //Vi har en use-state som sjekker at verdi ikke er null
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                datoSøkerTrakkSøknad: props.datoSøkerTrakkSøknad!,
+                            },
+                        });
                     }}
                 >
-                    {intl.formatMessage({ id: 'knapp.seBrev' })}
-                    {RemoteData.isPending(props.lukketSøknadBrevutkastStatus) && <Loader />}
+                    {formatMessage('knapp.seBrev')}
+                    {RemoteData.isPending(brevStatus) && <Loader />}
                 </Button>
-                <Button variant="danger">
-                    {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
+                <Button variant="danger" type="submit">
+                    {formatMessage('knapp.lukkSøknad')}
                     {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
                 </Button>
             </div>
+            <div>{RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}</div>
         </div>
     );
 };

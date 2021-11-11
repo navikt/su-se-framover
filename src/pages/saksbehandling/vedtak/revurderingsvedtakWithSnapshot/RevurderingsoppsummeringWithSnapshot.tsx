@@ -7,10 +7,10 @@ import { hentTidligereGrunnlagsdataForVedtak } from '~api/revurderingApi';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import { pipe } from '~lib/fp';
 import { useApiCall } from '~lib/hooks';
-import { Revurdering } from '~types/Revurdering';
+import { InformasjonsRevurdering } from '~types/Revurdering';
 
 const RevurderingsoppsummeringWithSnapshot = (props: {
-    revurdering: Revurdering;
+    revurdering: InformasjonsRevurdering;
     sakId: string;
     vedtakId: string;
     intl: IntlShape;

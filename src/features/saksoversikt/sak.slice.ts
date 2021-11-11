@@ -7,25 +7,7 @@ import * as dokumentApi from '~api/dokumentApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~api/søknadApi';
-import {
-    beregnOgSimuler,
-    iverksettRevurdering,
-    oppdaterRevurderingsPeriode,
-    lagreUføregrunnlag as lagreUføregrunnlagForRevurdering,
-    hentGjeldendeGrunnlagsdataOgVilkårsvurderinger,
-    opprettRevurdering,
-    sendRevurderingTilAttestering,
-    underkjennRevurdering,
-    forhåndsvarsleEllerSendTilAttestering,
-    fortsettEtterForhåndsvarsel,
-    lagreFradragsgrunnlag,
-    lagreBosituasjonsgrunnlag,
-    lagreFormuegrunnlag,
-    opprettStans,
-    oppdaterStans,
-    gjenoppta,
-    oppdaterGjenopptak,
-} from '~features/revurdering/revurderingActions';
+import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
@@ -343,8 +325,6 @@ interface SakState {
     simuleringStatus: RemoteData.RemoteData<ApiError, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
-    søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
-    lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
     oppdaterRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
 }
@@ -359,8 +339,6 @@ const initialState: SakState = {
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
-    søknadLukketStatus: RemoteData.initial,
-    lukketSøknadBrevutkastStatus: RemoteData.initial,
     opprettRevurderingStatus: RemoteData.initial,
     oppdaterRevurderingStatus: RemoteData.initial,
 };
@@ -603,35 +581,7 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, lukkSøknad, {
-            pending: (state) => {
-                state.søknadLukketStatus = RemoteData.pending;
-                state.lukketSøknadBrevutkastStatus = RemoteData.initial;
-            },
-            fulfilled: (state, action) => {
-                state.søknadLukketStatus = RemoteData.success(null);
-
-                state.sak = RemoteData.success(action.payload);
-            },
-            rejected: (state, action) => {
-                state.søknadLukketStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, hentLukketSøknadBrevutkast, {
-            pending: (state) => {
-                state.lukketSøknadBrevutkastStatus = RemoteData.pending;
-                state.søknadLukketStatus = RemoteData.initial;
-            },
-            fulfilled: (state) => {
-                state.lukketSøknadBrevutkastStatus = RemoteData.success(null);
-            },
-            rejected: (state, action) => {
-                state.lukketSøknadBrevutkastStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, opprettRevurdering, {
+        handleAsyncThunk(builder, revurderingActions.opprettRevurdering, {
             pending: (state) => {
                 state.opprettRevurderingStatus = RemoteData.pending;
             },
@@ -651,7 +601,7 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, oppdaterRevurderingsPeriode, {
+        handleAsyncThunk(builder, revurderingActions.oppdaterRevurderingsPeriode, {
             pending: (state) => {
                 state.oppdaterRevurderingStatus = RemoteData.pending;
             },
@@ -666,7 +616,7 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, hentGjeldendeGrunnlagsdataOgVilkårsvurderinger, {
+        handleAsyncThunk(builder, revurderingActions.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger, {
             pending: (state, action) => {
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.pending;
             },
@@ -679,11 +629,12 @@ export default createSlice({
             },
         });
 
+        builder.addCase(lukkSøknad.fulfilled, (state, action) => {
+            state.sak = RemoteData.success(action.payload);
+        });
+
         builder.addCase(avslagManglendeDokSøknad.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({ ...sak, ...action.payload }))
-            );
+            state.sak = RemoteData.success(action.payload);
         });
 
         builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {
@@ -706,7 +657,7 @@ export default createSlice({
             );
         });
 
-        builder.addCase(opprettStans.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.opprettStans.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
@@ -716,7 +667,7 @@ export default createSlice({
             );
         });
 
-        builder.addCase(gjenoppta.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.gjenoppta.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
@@ -726,50 +677,54 @@ export default createSlice({
             );
         });
 
-        builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.lagreUføregrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
-        builder.addCase(lagreFradragsgrunnlag.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.lagreFradragsgrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
-        builder.addCase(lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
-        builder.addCase(lagreFormuegrunnlag.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.lagreFormuegrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
-        builder.addCase(beregnOgSimuler.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.beregnOgSimuler.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
-        builder.addCase(sendRevurderingTilAttestering.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.sendRevurderingTilAttestering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
-        builder.addCase(iverksettRevurdering.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.iverksettRevurdering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
-        builder.addCase(underkjennRevurdering.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
-        });
-
-        builder.addCase(forhåndsvarsleEllerSendTilAttestering.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.underkjennRevurdering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
-        builder.addCase(fortsettEtterForhåndsvarsel.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.forhåndsvarsleEllerSendTilAttestering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
-        builder.addCase(oppdaterStans.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.fortsettEtterForhåndsvarsel.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
-        builder.addCase(oppdaterGjenopptak.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.oppdaterStans.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(revurderingActions.oppdaterGjenopptak.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(revurderingActions.avsluttRevurdering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
     },

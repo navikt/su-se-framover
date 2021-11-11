@@ -74,7 +74,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-    const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurdering);
+    const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
     const [sendtBeslutning, setSendtBeslutning] = useState<
         RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
     >(RemoteData.initial);
@@ -159,7 +159,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     }
 
     const handleShowBrevClick = async () => {
-        hentPdf({ sakId: props.sak.id, revurderingId: revurdering.id }, (data) => {
+        hentPdf({ sakId: props.sak.id, revurderingId: revurdering.id, fritekst: null }, (data) => {
             window.open(URL.createObjectURL(data));
         });
     };

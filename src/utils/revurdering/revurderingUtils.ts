@@ -1,9 +1,10 @@
+import * as A from 'fp-ts/Array';
+import { pipe } from 'fp-ts/lib/function';
+
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import {
-    Revurdering,
     SimulertRevurdering,
     RevurderingsStatus,
-    OpprettetRevurdering,
     RevurderingTilAttestering,
     IverksattRevurdering,
     BeregnetIngenEndring,
@@ -12,13 +13,16 @@ import {
     OpprettetRevurderingGrunn,
     InformasjonSomRevurderes,
     Vurderingstatus,
+    Revurdering,
+    InformasjonsRevurdering,
 } from '~types/Revurdering';
 import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
 import { RevurderingSteg } from '../../pages/saksbehandling/types';
 
-export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering =>
-    r.status === RevurderingsStatus.OPPRETTET;
+export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
+    return 'fritekstTilBrev' in r && 'informasjonSomRevurderes' in r;
+};
 
 export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
     r.status === RevurderingsStatus.SIMULERT_INNVILGET ||
@@ -30,6 +34,9 @@ export const erBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndrin
 
 export const erRevurderingForhåndsvarslet = (r: Revurdering) =>
     erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r) || erIngenForhåndsvarsel(r);
+
+export const erForhåndsvarselSendtEllerBesluttet = (r: Revurdering) =>
+    erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r);
 export const erForhåndsvarselSendt = (r: Revurdering) => r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesSendt;
 export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
     r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
@@ -67,6 +74,11 @@ export const erRevurderingGjenopptak = (r: Revurdering): r is Gjenopptak =>
 
 export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
     årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;
+
+export const erRevurderingAvsluttet = (r: Revurdering): boolean =>
+    r.status === RevurderingsStatus.AVSLUTTET ||
+    r.status === RevurderingsStatus.AVSLUTTET_GJENOPPTAK ||
+    r.status === RevurderingsStatus.AVSLUTTET_STANS;
 
 export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn): keyof typeof sharedMessages {
     switch (årsak) {
@@ -127,4 +139,13 @@ export const finnNesteRevurderingsteg = (
     });
 
     return førsteIkkeVurderteSteg ?? RevurderingSteg.Oppsummering;
+};
+
+export const splittAvsluttedeOgÅpneRevurderinger = (
+    revurderinger: Revurdering[]
+): { avsluttedeRevurderinger: Revurdering[]; åpneRevurderinger: Revurdering[] } => {
+    return pipe(revurderinger, A.partition(erRevurderingAvsluttet), ({ left, right }) => ({
+        åpneRevurderinger: left,
+        avsluttedeRevurderinger: right,
+    }));
 };

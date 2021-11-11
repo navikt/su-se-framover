@@ -12,52 +12,17 @@ import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { BeslutningEtterForhåndsvarsling, Revurdering } from '~types/Revurdering';
+import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
 
 import messages from './oppsummeringPageForms-nb';
 import styles from './oppsummeringPageForms.module.less';
 
-const VedtaksbrevInput = (
-    props: { sakId: string; revurderingId: string } & Omit<BrevInputProps, 'tittel' | 'placeholder' | 'onVisBrevClick'>
-) => {
+const OppsummeringsBrevInput = (props: Omit<BrevInputProps, 'placeholder' | 'intl'>) => {
     const { intl } = useI18n({ messages });
-
     return (
-        <BrevInput
-            tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
-            placeholder={intl.formatMessage({
-                id: 'brevInput.tekstTilVedtaksbrev.placeholder',
-            })}
-            onVisBrevClick={() =>
-                pdfApi.fetchBrevutkastForRevurderingWithFritekst({
-                    sakId: props.sakId,
-                    revurderingId: props.revurderingId,
-                    fritekst: props.tekst,
-                })
-            }
-            {...props}
-        />
-    );
-};
-
-const ForhåndsvarselbrevInput = (
-    props: { sakId: string; revurderingId: string } & Omit<BrevInputProps, 'tittel' | 'placeholder' | 'onVisBrevClick'>
-) => {
-    const { intl } = useI18n({ messages });
-
-    return (
-        <BrevInput
-            tittel={intl.formatMessage({ id: 'brevInput.tekstTilForhåndsvarsel.tittel' })}
-            placeholder={intl.formatMessage({
-                id: 'brevInput.tekstTilForhåndsvarsel.placeholder',
-            })}
-            onVisBrevClick={() =>
-                pdfApi.fetchBrevutkastForForhåndsvarsel(props.sakId, props.revurderingId, props.tekst)
-            }
-            {...props}
-        />
+        <BrevInput placeholder={intl.formatMessage({ id: 'brevInput.innhold.placeholder' })} intl={intl} {...props} />
     );
 };
 
@@ -68,7 +33,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
     submitStatus: ApiResult<unknown>;
     onSubmit(args: {
         resultatEtterForhåndsvarsel: BeslutningEtterForhåndsvarsling;
-        tekstTilVedtaksbrev: string;
+        brevTekst: string;
         begrunnelse: string;
     }): void;
 }) => {
@@ -77,6 +42,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
     interface FormData {
         resultatEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
         tekstTilVedtaksbrev: string;
+        tekstTilAvsluttRevurderingBrev: string;
         begrunnelse: string;
     }
 
@@ -84,6 +50,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
         defaultValues: {
             resultatEtterForhåndsvarsel: null,
             tekstTilVedtaksbrev: '',
+            tekstTilAvsluttRevurderingBrev: '',
             begrunnelse: '',
         },
         resolver: yupResolver(
@@ -94,11 +61,13 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
                         .required(),
                     tekstTilVedtaksbrev: yup.string(),
-                    begrunnelse: yup.string(),
+                    tekstTilAvsluttRevurderingBrev: yup.string(),
+                    begrunnelse: yup.string().required(),
                 })
                 .required()
         ),
     });
+
     const resultatEtterForhåndsvarsel = form.watch('resultatEtterForhåndsvarsel');
     return (
         <form
@@ -107,7 +76,10 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     begrunnelse: values.begrunnelse,
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     resultatEtterForhåndsvarsel: values.resultatEtterForhåndsvarsel!,
-                    tekstTilVedtaksbrev: values.tekstTilVedtaksbrev,
+                    brevTekst:
+                        values.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger
+                            ? values.tekstTilVedtaksbrev
+                            : values.tekstTilAvsluttRevurderingBrev,
                 })
             )}
             className={styles.form}
@@ -138,7 +110,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                                 id: 'etterForhåndsvarsel.radio.andreOpplysninger',
                             })}
                         </Radio>
-                        <Radio value={BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer} disabled={true}>
+                        <Radio value={BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer}>
                             {intl.formatMessage({
                                 id: 'etterForhåndsvarsel.radio.avsluttesUtenEndring',
                             })}
@@ -149,28 +121,54 @@ export const ResultatEtterForhåndsvarselform = (props: {
             <Controller
                 control={form.control}
                 name="begrunnelse"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                     <div className={styles.etterForhåndsvarselBegrunnelseContainer}>
                         <Textarea
                             label={intl.formatMessage({ id: 'etterForhåndsvarsel.begrunnelse.label' })}
                             {...field}
+                            error={fieldState.error?.message}
                         />
                     </div>
                 )}
             />
-            {(resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger ||
-                resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer) && (
+            {resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger && (
                 <Controller
                     control={form.control}
                     name="tekstTilVedtaksbrev"
                     render={({ field, fieldState }) => (
-                        <VedtaksbrevInput
-                            sakId={props.sakId}
-                            revurderingId={props.revurderingId}
+                        <OppsummeringsBrevInput
+                            tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
+                            onVisBrevClick={() =>
+                                pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                                    sakId: props.sakId,
+                                    revurderingId: props.revurderingId,
+                                    fritekst: field.value,
+                                })
+                            }
                             tekst={field.value}
-                            feil={fieldState.error}
                             onChange={field.onChange}
-                            intl={intl}
+                            feil={fieldState.error}
+                        />
+                    )}
+                />
+            )}
+            {resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer && (
+                <Controller
+                    control={form.control}
+                    name="tekstTilAvsluttRevurderingBrev"
+                    render={({ field, fieldState }) => (
+                        <OppsummeringsBrevInput
+                            tittel={intl.formatMessage({ id: 'brevInput.tekstTilAvsluttRevurdering.tittel' })}
+                            onVisBrevClick={() =>
+                                pdfApi.fetchBrevutkastForAvslutningAvRevurdering({
+                                    sakId: props.sakId,
+                                    revurderingId: props.revurderingId,
+                                    fritekst: field.value,
+                                })
+                            }
+                            tekst={field.value}
+                            onChange={field.onChange}
+                            feil={fieldState.error}
                         />
                     )}
                 />
@@ -181,6 +179,8 @@ export const ResultatEtterForhåndsvarselform = (props: {
                 nesteKnappTekst={
                     resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger
                         ? intl.formatMessage({ id: 'fortsett.button.label' })
+                        : resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer
+                        ? intl.formatMessage({ id: 'avslutt.button.label' })
                         : intl.formatMessage({ id: 'sendTilAttestering.button.label' })
                 }
                 onNesteClickSpinner={RemoteData.isPending(props.submitStatus)}
@@ -257,22 +257,32 @@ export const VelgForhåndsvarselForm = (props: {
                     name="fritekstTilBrev"
                     render={({ field, fieldState }) =>
                         revurderingshandling === Revurderingshandling.Forhåndsvarsle ? (
-                            <ForhåndsvarselbrevInput
-                                sakId={props.sakId}
-                                revurderingId={props.revurderingId}
+                            <OppsummeringsBrevInput
+                                tittel={intl.formatMessage({ id: 'brevInput.tekstTilForhåndsvarsel.tittel' })}
+                                onVisBrevClick={() =>
+                                    pdfApi.fetchBrevutkastForForhåndsvarsel(
+                                        props.sakId,
+                                        props.revurderingId,
+                                        field.value ?? ''
+                                    )
+                                }
                                 tekst={field.value ?? ''}
                                 onChange={field.onChange}
                                 feil={fieldState.error}
-                                intl={intl}
                             />
                         ) : (
-                            <VedtaksbrevInput
-                                sakId={props.sakId}
-                                revurderingId={props.revurderingId}
+                            <OppsummeringsBrevInput
+                                tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
+                                onVisBrevClick={() =>
+                                    pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                                        sakId: props.sakId,
+                                        revurderingId: props.revurderingId,
+                                        fritekst: field.value,
+                                    })
+                                }
                                 tekst={field.value ?? ''}
                                 onChange={field.onChange}
                                 feil={fieldState.error}
-                                intl={intl}
                             />
                         )
                     }
@@ -296,7 +306,7 @@ export const VelgForhåndsvarselForm = (props: {
 };
 
 export const SendTilAttesteringForm = (props: {
-    revurdering: Revurdering;
+    revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
     brevsending: 'aldriSende' | 'alltidSende' | 'kanVelge';
@@ -349,13 +359,18 @@ export const SendTilAttesteringForm = (props: {
                     control={form.control}
                     name="tekstTilVedtaksbrev"
                     render={({ field, fieldState }) => (
-                        <VedtaksbrevInput
-                            sakId={props.revurdering.tilRevurdering.sakId}
-                            revurderingId={props.revurdering.id}
-                            tekst={field.value}
-                            feil={fieldState.error}
+                        <OppsummeringsBrevInput
+                            tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
+                            onVisBrevClick={() =>
+                                pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                                    sakId: props.revurdering.tilRevurdering.sakId,
+                                    revurderingId: props.revurdering.id,
+                                    fritekst: field.value,
+                                })
+                            }
+                            tekst={field.value ?? ''}
                             onChange={field.onChange}
-                            intl={intl}
+                            feil={fieldState.error}
                         />
                     )}
                 />

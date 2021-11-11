@@ -3,38 +3,12 @@
 .knapper {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-
-    > :not(:last-child) {
-        margin-right: @spacing;
-    }
 }
 
 .suksessStatuserContainer {
     display: flex;
     padding-left: 10rem;
     margin-top: @spacing-xs;
-}
-
-.søknadsbehandlingKnapperContainer {
-    display: flex;
-    flex-direction: column;
-
-    .søknadsbehandlingKnapper {
-        align-self: flex-end;
-        display: flex;
-        flex-wrap: wrap;
-
-        button {
-            margin-right: @spacing-xs;
-            margin-top: @spacing-xxs;
-            margin-bottom: @spacing-xxs;
-        }
-
-        > :last-child {
-            margin-right: 0;
-        }
-    }
 }
 
 .sakintroContainer {
@@ -105,6 +79,10 @@
                 display: flex;
             }
 
+            .informasjonsTekst {
+                display: flex;
+            }
+
             .underkjenteAttesteringerContainer {
                 margin-top: @spacing-xs;
             }
@@ -122,10 +100,6 @@
 
 .startBehandlingKnapp {
     margin-right: @spacing-xs;
-}
-
-.flexColumn {
-    flex-direction: column;
 }
 
 .ikonContainer {
@@ -158,4 +132,10 @@
 
 .dokumenterLinkIcon {
     margin-right: @spacing-xs;
+}
+
+.avsluttOgStartFortsettKnapperContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
 }

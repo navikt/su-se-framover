@@ -1,35 +1,37 @@
 export default {
-    'display.begrunnelseForLukking': 'Begrunnelse for å lukke søknad',
-    'display.brev.kunneIkkeViseBrev': 'Kunne ikke vise brev',
+    'avslutt.manglendeDokumentasjon': 'Avslutt pga manglende dokumentasjon',
+    'avslutt.behandlingHarBlittAvsluttet': 'Behandling av søknad av blitt avsluttet',
 
-    'display.avvist.sendBrevTilSøker': 'Skal det sendes brev til søker?',
-    'display.avvist.typeBrev': 'Type brev',
-    'display.avvist.fritekst': 'Fritekst',
+    'avvist.skalSendesBrevTilSøker': 'Skal det sendes brev til søker?',
+    'avvist.typeBrev': 'Type brev',
+    'avvist.fritekst': 'Fritekst',
+    'avvist.brevType.vedtaksbrev': 'Vedtaksbrev',
+    'avvist.brevType.fritekstbrev': 'Fritekst',
 
-    'display.avvist.brevType.vedtaksbrev': 'Vedtaksbrev',
-    'display.avvist.brevType.fritekstbrev': 'Fritekst',
-
-    'display.feil.feltMåFyllesUt': 'Feltet må fylles ut',
+    'brev.kunneIkkeViseBrev': 'Kunne ikke vise brev',
 
     'display.saksnummer': 'Saksnummer:',
 
-    'display.selector.velgBegrunnelse': 'Velg begrunnelse',
+    'feil.feltMåFyllesUt': 'Feltet må fylles ut',
 
-    'display.søknadId': 'Søknad id:',
+    'selector.velgBegrunnelse': 'Velg begrunnelse',
 
-    'display.søknad.fantIkkeSøknad': 'Fant ikke søknad med søknad id: ',
-    'display.søknad.harBlittLukket': 'Søknaden har blitt lukket',
-    'display.søknad.KunneIkkeLukkeSøknad': 'Kunne ikke lukke søknad',
+    'søknad.søknadId': 'Søknad id:',
 
-    'display.trekking.datoSøkerTrakkSøknad': 'Dato søker trakk søknad',
+    'trekking.datoSøkerTrakkSøknad': 'Dato søker trakk søknad',
 
-    'display.tilSaksoversikt': 'Til saksoversikt',
-
-    'knapp.tilbake': 'Tilbake',
     'knapp.lukkSøknad': 'Lukk søknad',
     'knapp.seBrev': 'Se brev',
+
+    'link.tilbake': 'Tilbake',
 
     'lukking.begrunnelse.trukket': 'Trukket',
     'lukking.begrunnelse.bortfalt': 'Bortfalt',
     'lukking.begrunnelse.avvist': 'Avvist',
+
+    'lukking.søknad.fantIkkeSøknad': 'Fant ikke søknad med søknad id: ',
+    'lukking.søknad.harBlittLukket': 'Søknaden har blitt lukket',
+    'lukking.søknad.KunneIkkeLukkeSøknad': 'Kunne ikke lukke søknad',
+
+    'lukkSøknadOgAvsluttSøknadsbehandling.begrunnelseForAvsluttelse': 'Begrunnelse for å avslutte behandling av søknad',
 };

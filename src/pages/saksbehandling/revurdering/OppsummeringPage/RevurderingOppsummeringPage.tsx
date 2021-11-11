@@ -17,7 +17,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkå
 import {
     BeregnetIngenEndring,
     BeslutningEtterForhåndsvarsling,
-    Revurdering,
+    InformasjonsRevurdering,
     SimulertRevurdering,
     UnderkjentRevurdering,
 } from '~types/Revurdering';
@@ -131,15 +131,25 @@ const OppsummeringshandlingForm = (props: {
             };
         },
         (args) => {
-            if (args.beslutningEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger) {
-                history.push(props.førsteRevurderingstegUrl);
-            } else {
-                history.push(
-                    Routes.createSakIntroLocation(
-                        intl.formatMessage({ id: 'notification.sendtTilAttestering' }),
-                        props.sakId
-                    )
-                );
+            switch (args.beslutningEtterForhåndsvarsel) {
+                case BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger:
+                    history.push(props.førsteRevurderingstegUrl);
+                    break;
+                case BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger:
+                    history.push(
+                        Routes.createSakIntroLocation(
+                            intl.formatMessage({ id: 'notification.sendtTilAttestering' }),
+                            props.sakId
+                        )
+                    );
+                    break;
+                case BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer:
+                    history.push(
+                        Routes.createSakIntroLocation(
+                            intl.formatMessage({ id: 'notification.avsluttetRevurdering' }),
+                            props.sakId
+                        )
+                    );
             }
         }
     );
@@ -216,7 +226,7 @@ const OppsummeringshandlingForm = (props: {
                     onSubmit={(args) =>
                         fortsettEtterForhåndsvarsel({
                             beslutningEtterForhåndsvarsel: args.resultatEtterForhåndsvarsel,
-                            brevtekst: args.tekstTilVedtaksbrev,
+                            brevtekst: args.brevTekst,
                             begrunnelse: args.begrunnelse,
                         })
                     }
@@ -230,7 +240,7 @@ const RevurderingOppsummeringPage = (props: {
     sakId: string;
     forrigeUrl: string;
     førsteRevurderingstegUrl: string;
-    revurdering: Revurdering;
+    revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
     const dispatch = useAppDispatch();

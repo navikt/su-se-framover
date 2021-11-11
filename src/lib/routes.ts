@@ -73,20 +73,12 @@ export const vedtaksoppsummering: Route<{ sakId: string; vedtakId: string }> = {
 };
 
 //---------------Søknadsbehandling & revurdering------
-export const avsluttSøknadsbehandling: Route<{
+export const avsluttBehandling: Route<{
     sakId: string;
-    soknadId: string;
+    id: string;
 }> = {
-    path: '/saksoversikt/:sakId/:soknadId/avsluttSoknadsbehandling/',
-    createURL: (args) => `/saksoversikt/${args.sakId}/${args.soknadId}/avsluttSoknadsbehandling`,
-};
-
-export const avslagManglendeDokSøknadsbehandling: Route<{
-    sakId: string;
-    soknadId: string;
-}> = {
-    path: '/saksoversikt/:sakId/:soknadId/avslagManglendeDokSoknadsbehandling/',
-    createURL: (args) => `/saksoversikt/${args.sakId}/${args.soknadId}/avslagManglendeDokSoknadsbehandling`,
+    path: '/saksoversikt/:sakId/:id/avsluttBehandling/',
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.id}/avsluttBehandling`,
 };
 
 export const saksoversiktValgtBehandling: Route<{

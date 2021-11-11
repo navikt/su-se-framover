@@ -9,7 +9,7 @@ import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import { useI18n } from '~lib/i18n';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Revurdering, Vurderingstatus, InformasjonSomRevurderes } from '~types/Revurdering';
+import { Vurderingstatus, InformasjonSomRevurderes, InformasjonsRevurdering } from '~types/Revurdering';
 import { regnUtFormuegrunnlag } from '~utils/revurdering/formue/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -198,7 +198,7 @@ const Fradragblokk = (props: {
 };
 
 const Vedtaksinformasjon = (props: {
-    revurdering: Revurdering;
+    revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const { intl } = useI18n({ messages });
