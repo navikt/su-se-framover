@@ -31,7 +31,7 @@ import messages, { stegmessages } from './revurdering-nb';
 import styles from './revurdering.module.less';
 
 const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
-const EndreRevurderingPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
+const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
 const Bosituasjon = React.lazy(() => import('./bosituasjon/BosituasjonForm'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
 const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
@@ -129,10 +129,10 @@ const RevurderingPage = (props: {
                         sakId: props.sakId,
                     })}
                 >
-                    <EndreRevurderingPage
+                    <RevurderingIntroPage
                         sakId={props.sakId}
                         utbetalinger={props.utbetalinger}
-                        informasjonsRevurdering={null}
+                        informasjonsRevurdering={undefined}
                     />
                 </Route>
                 {!påbegyntRevurdering ? (
@@ -149,7 +149,7 @@ const RevurderingPage = (props: {
                                 revurderingId: påbegyntRevurdering.id,
                             })}
                         >
-                            <EndreRevurderingPage
+                            <RevurderingIntroPage
                                 sakId={props.sakId}
                                 utbetalinger={props.utbetalinger}
                                 informasjonsRevurdering={påbegyntRevurdering}
@@ -243,9 +243,10 @@ const RevurderingstegPage = (props: {
                             <Bosituasjon
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
-                                nesteUrl={props.nesteUrl}
+                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                avsluttUrl={props.avsluttUrl}
                             />
                         );
                     case RevurderingSteg.Formue:
@@ -253,9 +254,10 @@ const RevurderingstegPage = (props: {
                             <Formue
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
-                                nesteUrl={props.nesteUrl}
+                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                avsluttUrl={props.avsluttUrl}
                             />
                         );
                     case RevurderingSteg.EndringAvFradrag:

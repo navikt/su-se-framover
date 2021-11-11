@@ -21,8 +21,7 @@ import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { BosituasjonRequest, InformasjonsRevurdering, Revurdering } from '~types/Revurdering';
+import { BosituasjonRequest, Revurdering, RevurderingStegProps } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -183,13 +182,7 @@ const DelerSøkerBoligForm = (props: { control: Control<BosituasjonFormData>; in
     );
 };
 
-const BosituasjonForm = (props: {
-    sakId: string;
-    revurdering: InformasjonsRevurdering;
-    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-    forrigeUrl: string;
-    nesteUrl: (revurdering: InformasjonsRevurdering) => string;
-}) => {
+const BosituasjonForm = (props: RevurderingStegProps) => {
     const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [epsAlder, setEpsAlder] = useState<Nullable<number>>(null);
     const [status, setStatus] = React.useState<
@@ -250,10 +243,7 @@ const BosituasjonForm = (props: {
         formState: { errors, isSubmitted },
         ...form
     } = useForm<BosituasjonFormData>({
-        defaultValues: getDefaultValues(
-            props.revurdering,
-            props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon
-        ),
+        defaultValues: getDefaultValues(props.revurdering, props.grunnlagsdataOgVilkårsvurderinger.bosituasjon),
         resolver: yupResolver(schema),
     });
 
@@ -283,7 +273,7 @@ const BosituasjonForm = (props: {
         };
     }
 
-    const handleSubmit = async (data: BosituasjonFormData) => {
+    const handleSubmit = async (data: BosituasjonFormData, gåtil: 'neste' | 'avbryt') => {
         setStatus(RemoteData.pending);
 
         const res = await dispatch(
@@ -305,7 +295,7 @@ const BosituasjonForm = (props: {
         if (revurderingActions.lagreBosituasjonsgrunnlag.fulfilled.match(res)) {
             setStatus(RemoteData.success(res.payload));
             if (res.payload.feilmeldinger.length === 0) {
-                history.push(props.nesteUrl(res.payload.revurdering));
+                history.push(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl);
             }
         }
         if (revurderingActions.lagreBosituasjonsgrunnlag.rejected.match(res)) {
@@ -354,7 +344,7 @@ const BosituasjonForm = (props: {
                 left: (
                     <form
                         className={classNames(sharedStyles.revurderingContainer, styles.container)}
-                        onSubmit={form.handleSubmit(handleSubmit)}
+                        onSubmit={form.handleSubmit((values) => handleSubmit(values, 'neste'))}
                     >
                         <Controller
                             control={form.control}
@@ -394,12 +384,14 @@ const BosituasjonForm = (props: {
                         {RemoteData.isSuccess(status) && (
                             <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
                         )}
-                        <RevurderingBunnknapper tilbakeUrl={props.forrigeUrl} loading={RemoteData.isPending(status)} />
+                        <RevurderingBunnknapper
+                            tilbakeUrl={props.forrigeUrl}
+                            loading={RemoteData.isPending(status)}
+                            onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'avbryt'))}
+                        />
                     </form>
                 ),
-                right: (
-                    <GjeldendeBosituasjon bosituasjon={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon} />
-                ),
+                right: <GjeldendeBosituasjon bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon} />,
             }}
         </ToKolonner>
     );

@@ -24,12 +24,11 @@ import yup, {
     hookFormErrorsTilFeiloppsummering,
     validateStringAsNonNegativeNumber,
 } from '~lib/validering';
-import { StegProps } from '~pages/saksbehandling/revurdering/common';
 import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { OpprettetRevurdering } from '~types/Revurdering';
+import { OpprettetRevurdering, RevurderingStegProps } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 import * as FormatUtils from '~utils/format/formatUtils';
 import { erGregulering } from '~utils/revurdering/revurderingUtils';
@@ -279,7 +278,7 @@ const Uføreperiodevurdering = (props: {
     );
 };
 
-const UførhetForm = (props: StegProps) => {
+const UførhetForm = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -478,7 +477,7 @@ const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVil
     );
 };
 
-const Uførhet = (props: StegProps) => (
+const Uførhet = (props: RevurderingStegProps) => (
     <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
         {{
             left: <UførhetForm {...props} />,

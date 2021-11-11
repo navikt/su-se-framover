@@ -232,10 +232,11 @@ export interface FormuegrunnlagRequest {
     formue: FormuegrunnlagFormue;
 }
 
-export interface RevurderingProps {
+export interface RevurderingStegProps {
     sakId: string;
-    revurdering: Revurdering;
-    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    revurdering: InformasjonsRevurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forrigeUrl: string;
-    nesteUrl: (revurdering: InformasjonsRevurdering) => string;
+    nesteUrl: string;
+    avsluttUrl: string;
 }

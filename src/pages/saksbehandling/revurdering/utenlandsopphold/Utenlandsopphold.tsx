@@ -16,11 +16,11 @@ import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import yup, { getDateErrorMessage } from '~lib/validering';
 import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
-import { StegProps } from '~pages/saksbehandling/revurdering/common';
 import revurderingmessages, { stegmessages } from '~pages/saksbehandling/revurdering/revurdering-nb';
 import sharedStyles from '~pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { RevurderingStegProps } from '~types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~utils/date/dateUtils';
 
 import messages from './utenlandsopphold-nb';
@@ -59,7 +59,7 @@ const schemaValidation = yup.object<UtenlandsoppholdForm>({
         .required(),
 });
 
-const Utenlandsopphold = (props: StegProps) => {
+const Utenlandsopphold = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...stegmessages, ...revurderingmessages } });
     const history = useHistory();
     const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger ?? [
@@ -80,7 +80,7 @@ const Utenlandsopphold = (props: StegProps) => {
     });
     const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
 
-    const handleSubmit = async (form: UtenlandsoppholdForm, gåtil: 'neste' | 'hjem') => {
+    const handleSubmit = async (form: UtenlandsoppholdForm, gåtil: 'neste' | 'avbryt') => {
         lagre(
             {
                 sakId: props.sakId,
@@ -231,7 +231,7 @@ const Utenlandsopphold = (props: StegProps) => {
                         <RevurderingBunnknapper
                             tilbakeUrl={props.forrigeUrl}
                             loading={RemoteData.isPending(status)}
-                            onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'hjem'))}
+                            onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'avbryt'))}
                         />
                     </form>
                 ),

@@ -21,10 +21,9 @@ import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { StegProps } from '~pages/saksbehandling/revurdering/common';
 import { useAppDispatch } from '~redux/Store';
 import { Fradrag, FradragTilhører } from '~types/Fradrag';
-import { Revurdering } from '~types/Revurdering';
+import { Revurdering, RevurderingStegProps } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -54,7 +53,7 @@ const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
     );
 };
 
-const EndringAvFradrag = (props: StegProps) => {
+const EndringAvFradrag = (props: RevurderingStegProps) => {
     const { intl } = useI18n({
         messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...fradragstypeMessages },
     });
