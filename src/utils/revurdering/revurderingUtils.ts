@@ -145,7 +145,7 @@ export const splittAvsluttedeOgÅpneRevurderinger = (
     revurderinger: Revurdering[]
 ): { avsluttedeRevurderinger: Revurdering[]; åpneRevurderinger: Revurdering[] } => {
     return pipe(revurderinger, A.partition(erRevurderingAvsluttet), ({ left, right }) => ({
-        avsluttedeRevurderinger: left,
-        åpneRevurderinger: right,
+        åpneRevurderinger: left,
+        avsluttedeRevurderinger: right,
     }));
 };
