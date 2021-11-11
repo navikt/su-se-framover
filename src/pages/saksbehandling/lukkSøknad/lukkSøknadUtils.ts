@@ -17,25 +17,6 @@ export interface LukkSøknadOgAvsluttSøknadsbehandlingFormData {
     };
 }
 
-export interface TopkekFormData {
-    begrunnelse: Nullable<LukkSøknadOgAvsluttSøknadsbehandlingType>;
-    form: TrukketFormData | AvvistFormData | ManglendeDok;
-}
-
-interface TrukketFormData {
-    datoSøkerTrakkSøknad: Nullable<string>;
-}
-
-interface AvvistFormData {
-    skalSendesBrev: Nullable<boolean>;
-    typeBrev: Nullable<AvvistBrevtyper>;
-    fritekst: Nullable<string>;
-}
-
-interface ManglendeDok {
-    fritekst: Nullable<string>;
-}
-
 export const lukkSøknadInitialValues = {
     begrunnelse: null,
     trukket: {

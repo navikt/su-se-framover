@@ -91,12 +91,12 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                     <option value="velgBegrunnelse">{formatMessage('selector.velgBegrunnelse')}</option>
                     {Object.values(LukkSøknadBegrunnelse).map((begrunnelse) => (
                         <option value={begrunnelse} key={begrunnelse}>
-                            {formatMessage(lukkSøknadBegrunnelseI18nId(begrunnelse))}
+                            {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
                         </option>
                     ))}
                     {Object.values(AvsluttSøknadsbehandlingBegrunnelse).map((begrunnelse) => (
                         <option value={begrunnelse} key={begrunnelse}>
-                            {formatMessage(lukkSøknadBegrunnelseI18nId(begrunnelse))}
+                            {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
                         </option>
                     ))}
                 </Select>
@@ -201,17 +201,11 @@ function hentOpprettetDatoFraSøknad(søknad: Søknad) {
     return søknad.opprettet;
 }
 
-const lukkSøknadBegrunnelseI18nId = (type: LukkSøknadOgAvsluttSøknadsbehandlingType): keyof typeof nb => {
-    switch (type) {
-        case LukkSøknadBegrunnelse.Trukket:
-            return 'lukking.begrunnelse.trukket';
-        case LukkSøknadBegrunnelse.Bortfalt:
-            return 'lukking.begrunnelse.bortfalt';
-        case LukkSøknadBegrunnelse.Avvist:
-            return 'lukking.begrunnelse.avvist';
-        case AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok:
-            return 'avslutt.manglendeDokumentasjon';
-    }
+const lukkSøknadBegrunnelseI18nId: { [key in LukkSøknadOgAvsluttSøknadsbehandlingType]: keyof typeof nb } = {
+    TRUKKET: 'lukking.begrunnelse.trukket',
+    BORTFALT: 'lukking.begrunnelse.bortfalt',
+    AVVIST: 'lukking.begrunnelse.avvist',
+    MANGLENDE_DOK: 'avslutt.manglendeDokumentasjon',
 };
 
 export default LukkSøknadOgAvsluttBehandling;
