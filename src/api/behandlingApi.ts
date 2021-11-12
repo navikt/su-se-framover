@@ -1,6 +1,6 @@
 import { Nullable } from '~lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
-import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { Behandlingsinformasjon, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
@@ -183,6 +183,22 @@ export async function underkjenn(arg: {
         body: {
             grunn: arg.grunn,
             kommentar: arg.kommentar,
+        },
+    });
+}
+
+export async function lagreUtenlandsopphold(arg: {
+    sakId: string;
+    behandlingId: string;
+    status: OppholdIUtlandetStatus;
+    begrunnelse: Nullable<string>;
+}): Promise<ApiClientResult<Behandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/vilkår/oppholdIUtlandet`,
+        method: 'POST',
+        body: {
+            status: arg.status,
+            begrunnelse: arg.begrunnelse,
         },
     });
 }

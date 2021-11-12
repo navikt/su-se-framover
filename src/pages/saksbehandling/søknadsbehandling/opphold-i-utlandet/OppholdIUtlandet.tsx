@@ -54,9 +54,7 @@ const schema = yup
     .required();
 
 const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
-    const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
-        sakSlice.lagreBehandlingsinformasjon
-    );
+    const [lagreUtenlandsoppholdStatus, lagreUtenlandsopphold] = useAsyncActionCreator(sakSlice.lagreUtenlandsopphold);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
@@ -89,16 +87,12 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        await lagreBehandlingsinformasjon(
+        await lagreUtenlandsopphold(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    oppholdIUtlandet: {
-                        status: values.status,
-                        begrunnelse: values.begrunnelse,
-                    },
-                },
+                status: values.status,
+                begrunnelse: values.begrunnelse,
             },
             () => {
                 clearDraft();
@@ -157,7 +151,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                             />
                         </div>
                         {pipe(
-                            lagreBehandlingsinformasjonStatus,
+                            lagreUtenlandsoppholdStatus,
                             RemoteData.fold(
                                 () => null,
                                 () => <Loader title={formatMessage('display.lagre.lagrer')} />,
