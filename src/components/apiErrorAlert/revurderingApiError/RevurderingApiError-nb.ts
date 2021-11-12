@@ -46,7 +46,6 @@ export default {
     'bosituasjon.eps.alder.er.null': 'Alder til EPS er Null',
     'bosituasjon.kunne.ikke.slå.opp.eps': 'Kunne ikke slå opp EPS',
 
-    'formue.depositum.høyere.enn.innskudd': 'Depositum kan ikke være høyere enn innskudd',
     'formue.kan.ikke.ha.negative.verdier': 'Kan ikke sende inn negative verdier',
     'formue.periode.utenfor.behandlingsperiode': 'Ikke lov med formueperiode utenfor behandlingsperioden',
     'formue.periode.utenfor.bosituasjonsperiode': 'Ikke lov med formueperiode utenfor bosituasjonperioder',

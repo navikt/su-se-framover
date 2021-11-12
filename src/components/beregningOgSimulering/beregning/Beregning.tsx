@@ -158,10 +158,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     };
 
     const lagreFradragOgBeregn = (values: FormData, onSuccess: (behandling: Behandling) => void) => {
-        if (!props.behandling.behandlingsinformasjon.utledetSats) {
-            return;
-        }
-
         if (eqBeregningFormData.equals(values, initialFormData)) {
             clearDraft();
         }

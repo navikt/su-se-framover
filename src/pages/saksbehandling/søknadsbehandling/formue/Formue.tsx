@@ -174,7 +174,6 @@ const Formue = (props: {
             //Validering fanger denne
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             verdier: formDataVerdierTilFormueVerdier(values.verdier!),
-            borSøkerMedEPS: values.borSøkerMedEPS,
             //Validering fanger denne
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             epsVerdier: values.borSøkerMedEPS ? formDataVerdierTilFormueVerdier(values.epsVerdier!) : null,
@@ -205,7 +204,8 @@ const Formue = (props: {
                         behandlingId: props.behandling.id,
                         behandlingsinformasjon: { formue: formueValues },
                     },
-                    () => {
+                    (s) => {
+                        console.log(s);
                         clearDraft();
                         history.push(nesteUrl);
                     }

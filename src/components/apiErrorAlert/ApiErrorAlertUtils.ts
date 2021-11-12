@@ -60,7 +60,7 @@ enum Vurderingsperiode {
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
 }
 
-type VilkårErrors = Uføre | Bostiuasjon | Fradrag;
+type VilkårErrors = Uføre | Bostiuasjon | Formue | Fradrag;
 
 enum Uføre {
     UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE = 'uføregrad_må_være_mellom_en_og_hundre',
@@ -70,6 +70,13 @@ enum Uføre {
 
 enum Bostiuasjon {
     KUNNE_IKKE_LEGGE_TIL_BOSITUASJONSGRUNNLAG = 'kunne_ikke_legge_til_bosituasjonsgrunnlag',
+    FRADRAG_FOR_EPS_UTEN_EPS = 'fradrag_for_eps_uten_eps',
+    FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE = 'fradragsperiode_utenfor_bosituasjonperiode',
+    MÅ_HA_BOSITUASJON_FØR_FRADRAG = 'må_ha_bosituasjon_før_fradrag',
+}
+
+enum Formue {
+    DEPOSITUM_IKKE_MINDRE_ENN_INNSKUDD = 'depositum_ikke_mindre_enn_innskudd',
 }
 
 enum Fradrag {
@@ -123,6 +130,11 @@ const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof 
     [Uføre.PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG]: 'uføre.grunnlag.og.vurdering.forskjellige',
 
     [Bostiuasjon.KUNNE_IKKE_LEGGE_TIL_BOSITUASJONSGRUNNLAG]: 'bosituasjon.kunne.ikke.legge.til',
+    [Bostiuasjon.FRADRAG_FOR_EPS_UTEN_EPS]: 'bosituasjon.fradrag.for.eps.uten.eps',
+    [Bostiuasjon.FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE]: 'bosituasjon.fradragsperiode.utenfor.bosituasjonsperiode',
+    [Bostiuasjon.MÅ_HA_BOSITUASJON_FØR_FRADRAG]: 'bosituasjon.må.ha.bosituasjon.før.fradrag',
+
+    [Formue.DEPOSITUM_IKKE_MINDRE_ENN_INNSKUDD]: 'formue.depositum.ikke.mindre.enn.innskudd',
 
     [Fradrag.KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG]: 'fradrag.kunne.ikke.legge.til',
     [Fradrag.fradrag_mangler_periode]: 'fradrag.mangler.periode',

@@ -1,8 +1,6 @@
 import { Person } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
-import { Sats } from './Sats';
-
 export interface Behandlingsinformasjon {
     uførhet: Nullable<Uførhet>;
     flyktning: Nullable<Flyktning>;
@@ -12,7 +10,6 @@ export interface Behandlingsinformasjon {
     oppholdIUtlandet: Nullable<OppholdIUtlandet>;
     formue: Nullable<Formue>;
     personligOppmøte: Nullable<PersonligOppmøte>;
-    utledetSats: Nullable<Sats>;
 }
 
 export interface Uførhet {
@@ -80,7 +77,6 @@ export enum OppholdIUtlandetStatus {
 export interface Formue {
     status: FormueStatus;
     verdier: Nullable<FormueVerdier>;
-    borSøkerMedEPS: boolean;
     epsVerdier: Nullable<FormueVerdier>;
     begrunnelse: Nullable<string>;
 }

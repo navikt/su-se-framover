@@ -60,7 +60,7 @@ interface Enslig extends FullstendigBosituasjonBase<BosituasjonTyper.ENSLIG> {
 // Ufullstendig bostituasjonstyper
 interface HarEps extends UfullstendigBosituasjonBase<BosituasjonTyper.UFULLSTENDIG_HAR_EPS> {
     fnr: string;
-    delerBolig: true;
+    delerBolig: null;
     ektemakeEllerSamboerUførFlyktning: null;
 }
 

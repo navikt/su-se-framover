@@ -21,8 +21,8 @@ export default {
     'stønadsperiode.overlapper.eksisterende': 'Stønadsperioden overlapper med en eksisterende stønadsperiode',
     'stønadsperiode.senere.periode.eksisterer': 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
 
-    'formue.ugyldige.verdier': 'Ugyldige formueverdier',
     'formue.har.ikke.ektefelle': 'Har ikke ektefelle',
+    'formue.eps.verdier.uten.eps': 'Formue for EPS er fyllt ut, men det er ikke lagt til at søker bor med EPS',
 
     'fradrag.ugyldig.type': 'Ugyldig fradragstype',
     'fradrag.mangler.periode': 'Fradrag mangler periode',

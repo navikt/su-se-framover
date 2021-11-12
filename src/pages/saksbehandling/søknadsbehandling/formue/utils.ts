@@ -5,6 +5,10 @@ import * as S from 'fp-ts/string';
 import { DelerBoligMed } from '~features/søknad/types';
 import { eqNullable, Nullable } from '~lib/types';
 import { Behandlingsinformasjon, Formue, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
+import {
+    Bosituasjon,
+    BosituasjonTyper,
+} from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -25,7 +29,7 @@ export function getFormueInitialValues(
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger
 ) {
     const behandlingsFormue = behandlingsInfo.formue;
-
+    const epsInformasjon = borSøkerMedEPSOgHentFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
     return {
         verdier: getInitialVerdier(behandlingsInfo.formue?.verdier ?? null, søknadsInnhold.formue),
         epsVerdier: getInitialVerdier(
@@ -34,15 +38,34 @@ export function getFormueInitialValues(
         ),
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
-        borSøkerMedEPS:
-            !!hentBosituasjongrunnlag(grunnlagsdata)?.fnr ??
-            søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
-        epsFnr:
-            hentBosituasjongrunnlag(grunnlagsdata)?.fnr ??
-            søknadsInnhold.boforhold.ektefellePartnerSamboer?.fnr ??
-            null,
+        borSøkerMedEPS: epsInformasjon?.borSøkerMedEPS,
+        epsFnr: epsInformasjon?.epsFnr,
     };
 }
+
+const borSøkerMedEPSOgHentFnr = (
+    b: Nullable<Bosituasjon>,
+    søknadsinnhold: SøknadInnhold
+): { borSøkerMedEPS: boolean; epsFnr: Nullable<string> } => {
+    if (!b) {
+        return {
+            borSøkerMedEPS: søknadsinnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
+            epsFnr: søknadsinnhold.boforhold.ektefellePartnerSamboer?.fnr ?? null,
+        };
+    }
+    switch (b.type) {
+        case BosituasjonTyper.DELER_BOLIG_MED_VOKSNE:
+        case BosituasjonTyper.UFULLSTENDIG_HAR_IKKE_EPS:
+        case BosituasjonTyper.ENSLIG:
+            return { borSøkerMedEPS: false, epsFnr: null };
+
+        case BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING:
+        case BosituasjonTyper.EPS_OVER_67:
+        case BosituasjonTyper.EPS_UFØR_FLYKTNING:
+        case BosituasjonTyper.UFULLSTENDIG_HAR_EPS:
+            return { borSøkerMedEPS: true, epsFnr: b.fnr };
+    }
+};
 
 export const formDataVerdierTilFormueVerdier = (verdier: VerdierFormData): FormueVerdier => {
     const parsedVerdier = Object.fromEntries(
