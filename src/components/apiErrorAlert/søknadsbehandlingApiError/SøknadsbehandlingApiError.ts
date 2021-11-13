@@ -41,7 +41,7 @@ enum Stønadsperiode {
 }
 
 enum Formue {
-    EPS_VERDIER_UTEN_EPS = 'eps_verdier_uten_eps',
+    BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE = 'bosituasjon_samsvarer_ikke_med_formue',
     HAR_IKKE_EKTEFELLE = 'har_ikke_ektefelle',
 }
 
@@ -84,7 +84,7 @@ const søknadsbehandlingErrorCodeMessageIdMap: {
     [Stønadsperiode.SENERE_STØNADSPERIODE_EKSISTERER]: 'stønadsperiode.senere.periode.eksisterer',
 
     [Formue.HAR_IKKE_EKTEFELLE]: 'formue.har.ikke.ektefelle',
-    [Formue.EPS_VERDIER_UTEN_EPS]: 'formue.eps.verdier.uten.eps',
+    [Formue.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'formue.bosituasjon.samsvarer.ikke',
 
     [Fradrag.FRADRAG_UGYLDIG_FRADRAGSTYPE]: 'fradrag.ugyldig.type',
     [Fradrag.PERIODE_MANGLER]: 'fradrag.mangler.periode',
