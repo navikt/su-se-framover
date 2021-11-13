@@ -29,7 +29,7 @@ export function getFormueInitialValues(
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger
 ) {
     const behandlingsFormue = behandlingsInfo.formue;
-    const epsInformasjon = borSøkerMedEPSOgHentFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
+    const epsInformasjon = hentOmSøkerBorMedEpsOgEpsFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
     return {
         verdier: getInitialVerdier(behandlingsInfo.formue?.verdier ?? null, søknadsInnhold.formue),
         epsVerdier: getInitialVerdier(
@@ -43,7 +43,7 @@ export function getFormueInitialValues(
     };
 }
 
-const borSøkerMedEPSOgHentFnr = (
+const hentOmSøkerBorMedEpsOgEpsFnr = (
     b: Nullable<Bosituasjon>,
     søknadsinnhold: SøknadInnhold
 ): { borSøkerMedEPS: boolean; epsFnr: Nullable<string> } => {

@@ -204,8 +204,7 @@ const Formue = (props: {
                         behandlingId: props.behandling.id,
                         behandlingsinformasjon: { formue: formueValues },
                     },
-                    (s) => {
-                        console.log(s);
+                    () => {
                         clearDraft();
                         history.push(nesteUrl);
                     }
