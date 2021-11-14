@@ -1,7 +1,7 @@
 export default {
     'alert.revurderingErForhåndsvarslet': 'Revurderingen er forhåndsvarslet',
 
-    'form.begrunnelse.label': 'Begrunnelse for avslutning',
+    'form.begrunnelse.label': 'Begrunnelse for avslutting',
     'form.fritekst.label': 'Fritekst',
 
     'knapp.avsluttRevurdering': 'Avslutt revurdering',
