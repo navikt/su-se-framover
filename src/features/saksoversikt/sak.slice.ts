@@ -708,7 +708,7 @@ export default createSlice({
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
-        builder.addCase(revurderingActions.forhåndsvarsleEllerSendTilAttestering.fulfilled, (state, action) => {
+        builder.addCase(revurderingActions.lagreForhåndsvarsel.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 

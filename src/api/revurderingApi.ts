@@ -169,22 +169,22 @@ export async function beregnOgSimuler(
     });
 }
 
-export enum Revurderingshandling {
-    SendTilAttestering = 'SEND_TIL_ATTESTERING',
+export enum Forhåndsvarselhandling {
+    IngenForhåndsvarsel = 'INGEN_FORHÅNDSVARSEL',
     Forhåndsvarsle = 'FORHÅNDSVARSLE',
 }
 
-export async function forhåndsvarsleEllerSendTilAttestering(
+export async function lagreForhåndsvarsel(
     sakId: string,
     revurderingId: string,
-    revurderingshandling: Revurderingshandling,
+    forhåndsvarselhandling: Forhåndsvarselhandling,
     fritekstTilBrev: string
 ): Promise<ApiClientResult<SimulertRevurdering, RevurderingErrorCodes>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsleEllerSendTilAttestering`,
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsel`,
         method: 'POST',
         body: {
-            revurderingshandling,
+            forhåndsvarselhandling,
             fritekst: fritekstTilBrev,
         },
     });
