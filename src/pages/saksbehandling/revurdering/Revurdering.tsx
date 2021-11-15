@@ -59,7 +59,7 @@ const RevurderingPage = (props: {
     utbetalinger: Utbetalingsperiode[];
     informasjonsRevurderinger: InformasjonsRevurdering[];
 }) => {
-    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
@@ -93,12 +93,12 @@ const RevurderingPage = (props: {
         return (
             <div className={styles.revurderingContainer}>
                 <Heading level="1" size="xlarge" className={styles.tittel}>
-                    {intl.formatMessage({ id: 'revurdering.tittel' })}
+                    {formatMessage('revurdering.tittel')}
                 </Heading>
                 <div className={styles.mainContentContainer}>
                     <div>
                         <SkjemaelementFeilmelding className={styles.feilmelding}>
-                            {intl.formatMessage({ id: 'feil.kanIkkeRevurdere' })}
+                            {formatMessage('feil.kanIkkeRevurdere')}
                         </SkjemaelementFeilmelding>
                     </div>
                     <div className={styles.knappContainer}>
@@ -106,7 +106,7 @@ const RevurderingPage = (props: {
                             variant="secondary"
                             href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                         >
-                            {intl.formatMessage({ id: 'knapp.avslutt' })}
+                            {formatMessage('knapp.avslutt')}
                         </LinkAsButton>
                     </div>
                 </div>
@@ -116,7 +116,7 @@ const RevurderingPage = (props: {
 
     const alleSteg = revurderingstegrekkefølge.map((steg) => ({
         id: steg,
-        label: intl.formatMessage({ id: stegTilTekstId(steg) }),
+        label: formatMessage(stegTilTekstId(steg)),
         erKlikkbar: false,
         status: Linjestatus.Ingenting,
         url: createRevurderingsPath(steg),
@@ -149,11 +149,11 @@ const RevurderingPage = (props: {
                     <NyRevurderingPage sakId={props.sakId} utbetalinger={props.utbetalinger} />
                 </Route>
                 {!påbegyntRevurdering ? (
-                    <Alert variant="error">{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</Alert>
+                    <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>
                 ) : (
                     <>
                         <Heading level="1" size="xlarge" className={styles.tittel}>
-                            {intl.formatMessage({ id: 'revurdering.tittel' })}
+                            {formatMessage('revurdering.tittel')}
                         </Heading>
                         <Route
                             path={Routes.revurderValgtRevurdering.createURL({
