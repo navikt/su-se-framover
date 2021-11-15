@@ -6,8 +6,5 @@ export default {
     'steg.formue': 'Formue',
     'steg.oppsummering': 'Oppsummering',
 
-    'feil.feilRevurderingsId':
-        'Hvis du ser denne meldingen, så har noe virkelig gått galt, eller så har du brukt en feil revurderings-id',
-
-    'link.tilbakeTilSaksoversikt': 'Tilbake til saksoversikt',
+    'feil.fantIkkeRevurdering': 'Fant ikke revurdering',
 };

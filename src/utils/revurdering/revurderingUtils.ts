@@ -2,9 +2,9 @@ import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { Beregning } from '~types/Beregning';
 import {
     SimulertRevurdering,
-    RevurderingsStatus,
     RevurderingTilAttestering,
     IverksattRevurdering,
     BeregnetIngenEndring,
@@ -15,8 +15,12 @@ import {
     Vurderingstatus,
     Revurdering,
     InformasjonsRevurdering,
+    Gjenopptak,
+    StansAvYtelse,
+    InformasjonsRevurderingStatus,
+    UtbetalingsRevurderingStatus,
 } from '~types/Revurdering';
-import { Gjenopptak, StansAvYtelse } from '~types/Stans';
+import { Simulering } from '~types/Simulering';
 
 import { RevurderingSteg } from '../../pages/saksbehandling/types';
 
@@ -25,60 +29,72 @@ export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevu
 };
 
 export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
-    r.status === RevurderingsStatus.SIMULERT_INNVILGET ||
-    r.status === RevurderingsStatus.SIMULERT_OPPHØRT ||
-    r.status === RevurderingsStatus.SIMULERT_STANS;
+    r.status === InformasjonsRevurderingStatus.SIMULERT_INNVILGET ||
+    r.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT ||
+    r.status === UtbetalingsRevurderingStatus.SIMULERT_STANS;
 
 export const erBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
-    r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING;
+    r.status === InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING;
 
 export const erRevurderingForhåndsvarslet = (r: Revurdering) =>
     erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r) || erIngenForhåndsvarsel(r);
 
 export const erForhåndsvarselSendtEllerBesluttet = (r: Revurdering) =>
     erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r);
+
 export const erForhåndsvarselSendt = (r: Revurdering) => r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesSendt;
+
 export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
     r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
+
 export const erIngenForhåndsvarsel = (r: Revurdering) =>
     r.forhåndsvarsel?.type === Forhåndsvarseltype.IngenForhåndsvarsel;
 
 export const erRevurderingIngenEndring = (
     r: Revurdering
 ): r is BeregnetIngenEndring | UnderkjentRevurdering | IverksattRevurdering | RevurderingTilAttestering =>
-    r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING ||
-    r.status === RevurderingsStatus.UNDERKJENT_INGEN_ENDRING ||
-    r.status === RevurderingsStatus.IVERKSATT_INGEN_ENDRING ||
-    r.status === RevurderingsStatus.TIL_ATTESTERING_INGEN_ENDRING;
+    r.status === InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING ||
+    r.status === InformasjonsRevurderingStatus.UNDERKJENT_INGEN_ENDRING ||
+    r.status === InformasjonsRevurderingStatus.IVERKSATT_INGEN_ENDRING ||
+    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_INGEN_ENDRING;
 
 export const erRevurderingTilAttestering = (r: Revurdering): r is RevurderingTilAttestering =>
-    r.status === RevurderingsStatus.TIL_ATTESTERING_INNVILGET ||
-    r.status === RevurderingsStatus.TIL_ATTESTERING_OPPHØRT ||
-    r.status === RevurderingsStatus.TIL_ATTESTERING_INGEN_ENDRING;
+    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_INNVILGET ||
+    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT ||
+    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_INGEN_ENDRING;
 
 export const erRevurderingIverksatt = (r: Revurdering): r is IverksattRevurdering =>
-    r.status === RevurderingsStatus.IVERKSATT_INNVILGET ||
-    r.status === RevurderingsStatus.IVERKSATT_OPPHØRT ||
-    r.status === RevurderingsStatus.IVERKSATT_INGEN_ENDRING;
+    r.status === InformasjonsRevurderingStatus.IVERKSATT_INNVILGET ||
+    r.status === InformasjonsRevurderingStatus.IVERKSATT_OPPHØRT ||
+    r.status === InformasjonsRevurderingStatus.IVERKSATT_INGEN_ENDRING;
 
 export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurdering =>
-    r.status === RevurderingsStatus.UNDERKJENT_INNVILGET ||
-    r.status === RevurderingsStatus.UNDERKJENT_OPPHØRT ||
-    r.status === RevurderingsStatus.UNDERKJENT_INGEN_ENDRING;
+    r.status === InformasjonsRevurderingStatus.UNDERKJENT_INNVILGET ||
+    r.status === InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT ||
+    r.status === InformasjonsRevurderingStatus.UNDERKJENT_INGEN_ENDRING;
 
 export const erRevurderingStans = (r: Revurdering): r is StansAvYtelse =>
-    r.status === RevurderingsStatus.SIMULERT_STANS || r.status === RevurderingsStatus.IVERKSATT_STANS;
+    r.status === UtbetalingsRevurderingStatus.SIMULERT_STANS ||
+    r.status === UtbetalingsRevurderingStatus.IVERKSATT_STANS;
 
 export const erRevurderingGjenopptak = (r: Revurdering): r is Gjenopptak =>
-    r.status === RevurderingsStatus.SIMULERT_GJENOPPTAK || r.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK;
+    r.status === UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK ||
+    r.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK;
 
 export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
     årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;
 
 export const erRevurderingAvsluttet = (r: Revurdering): boolean =>
-    r.status === RevurderingsStatus.AVSLUTTET ||
-    r.status === RevurderingsStatus.AVSLUTTET_GJENOPPTAK ||
-    r.status === RevurderingsStatus.AVSLUTTET_STANS;
+    r.status === InformasjonsRevurderingStatus.AVSLUTTET ||
+    r.status === UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK ||
+    r.status === UtbetalingsRevurderingStatus.AVSLUTTET_STANS;
+
+export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: Beregning } {
+    return 'beregning' in r;
+}
+export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
+    return 'simulering' in r && (r as SimulertRevurdering).simulering !== null;
+}
 
 export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn): keyof typeof sharedMessages {
     switch (årsak) {

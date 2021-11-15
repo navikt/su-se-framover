@@ -9,6 +9,7 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
 
 import messages from './attestering-nb';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
@@ -45,7 +46,11 @@ const Attestering = () => {
                             <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
                         </Route>
                         <Route path={Routes.attesterRevurdering.path}>
-                            <AttesterRevurdering sak={sakValue} søker={søkerValue} />
+                            <AttesterRevurdering
+                                sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
+                                søker={søkerValue}
+                                informasjonsRevurderinger={sakValue.revurderinger.filter(erInformasjonsRevurdering)}
+                            />
                         </Route>
                     </Switch>
                 );

@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyLong, Heading, Link, Loader } from '@navikt/ds-react';
+import { Alert, Heading, Loader } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
@@ -17,9 +17,8 @@ import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
+import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 import {
-    erInformasjonsRevurdering,
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
 } from '~utils/revurdering/revurderingUtils';
@@ -55,23 +54,16 @@ const stegTilTekstId = (steg: RevurderingSteg) => {
     }
 };
 
-const RevurderingPage = (props: { sak: Sak }) => {
+const RevurderingPage = (props: {
+    sakId: string;
+    utbetalinger: Utbetalingsperiode[];
+    informasjonsRevurderinger: InformasjonsRevurdering[];
+}) => {
     const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
-    const påbegyntRevurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
-
-    if (påbegyntRevurdering && !erInformasjonsRevurdering(påbegyntRevurdering)) {
-        return (
-            <div>
-                <BodyLong>{intl.formatMessage({ id: 'feil.feilRevurderingsId' })}</BodyLong>
-                <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
-                    {intl.formatMessage({ id: 'link.tilbakeTilSaksoversikt' })}
-                </Link>
-            </div>
-        );
-    }
+    const påbegyntRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
 
     const dispatch = useAppDispatch();
     const grunnlag = useAppSelector(
@@ -82,7 +74,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
         if (RemoteData.isInitial(grunnlag) && påbegyntRevurdering) {
             dispatch(
                 revurderingActions.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger({
-                    sakId: props.sak.id,
+                    sakId: props.sakId,
                     revurderingId: påbegyntRevurdering.id,
                 })
             );
@@ -91,13 +83,13 @@ const RevurderingPage = (props: { sak: Sak }) => {
 
     const createRevurderingsPath = (steg: RevurderingSteg) => {
         return Routes.revurderValgtRevurdering.createURL({
-            sakId: props.sak.id,
+            sakId: props.sakId,
             steg: steg,
             revurderingId: urlParams.revurderingId,
         });
     };
 
-    if (props.sak.utbetalinger.length === 0) {
+    if (props.utbetalinger.length === 0) {
         return (
             <div className={styles.revurderingContainer}>
                 <Heading level="1" size="xlarge" className={styles.tittel}>
@@ -112,7 +104,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
                     <div className={styles.knappContainer}>
                         <LinkAsButton
                             variant="secondary"
-                            href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}
+                            href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                         >
                             {intl.formatMessage({ id: 'knapp.avslutt' })}
                         </LinkAsButton>
@@ -151,13 +143,13 @@ const RevurderingPage = (props: { sak: Sak }) => {
             <Switch>
                 <Route
                     path={Routes.revurderValgtSak.createURL({
-                        sakId: props.sak.id,
+                        sakId: props.sakId,
                     })}
                 >
-                    <NyRevurderingPage sak={props.sak} />
+                    <NyRevurderingPage sakId={props.sakId} utbetalinger={props.utbetalinger} />
                 </Route>
                 {!påbegyntRevurdering ? (
-                    <Alert variant="error">Fant ikke revurdering</Alert>
+                    <Alert variant="error">{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</Alert>
                 ) : (
                     <>
                         <Heading level="1" size="xlarge" className={styles.tittel}>
@@ -165,12 +157,16 @@ const RevurderingPage = (props: { sak: Sak }) => {
                         </Heading>
                         <Route
                             path={Routes.revurderValgtRevurdering.createURL({
-                                sakId: props.sak.id,
+                                sakId: props.sakId,
                                 steg: RevurderingSteg.Periode,
                                 revurderingId: påbegyntRevurdering.id,
                             })}
                         >
-                            <EndreRevurderingPage sak={props.sak} revurdering={påbegyntRevurdering} />
+                            <EndreRevurderingPage
+                                sakId={props.sakId}
+                                utbetalinger={props.utbetalinger}
+                                informasjonsRevurdering={påbegyntRevurdering}
+                            />
                         </Route>
                         <div className={styles.sideMedFramdriftsindikatorContainer}>
                             <Route path={alleSteg.map((s) => s.url)}>
@@ -190,8 +186,8 @@ const RevurderingPage = (props: { sak: Sak }) => {
                                     <Route path={el.url} key={el.id}>
                                         <RevurderingstegPage
                                             steg={el.id}
-                                            sakId={props.sak.id}
-                                            revurdering={påbegyntRevurdering}
+                                            sakId={props.sakId}
+                                            informasjonsRevurdering={påbegyntRevurdering}
                                             grunnlagsdataOgVilkårsvurderinger={grunnlag}
                                             forrigeUrl={forrigeUrl}
                                             nesteUrl={nesteUrl}
@@ -202,7 +198,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
                         </div>
                         <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
                             <RevurderingOppsummeringPage
-                                sakId={props.sak.id}
+                                sakId={props.sakId}
                                 revurdering={påbegyntRevurdering}
                                 forrigeUrl={
                                     aktiveSteg(påbegyntRevurdering)[aktiveSteg(påbegyntRevurdering).length - 1]?.url ??
@@ -227,7 +223,7 @@ const RevurderingstegPage = (props: {
     forrigeUrl: string;
     nesteUrl: (revurdering: InformasjonsRevurdering) => string;
     sakId: string;
-    revurdering: InformasjonsRevurdering;
+    informasjonsRevurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
     return pipe(
@@ -246,17 +242,17 @@ const RevurderingstegPage = (props: {
                         return (
                             <Uførhet
                                 sakId={props.sakId}
-                                revurdering={props.revurdering}
+                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
-                                nesteUrl={props.nesteUrl(props.revurdering)}
+                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
                             />
                         );
                     case RevurderingSteg.Bosituasjon:
                         return (
                             <Bosituasjon
                                 sakId={props.sakId}
-                                revurdering={props.revurdering}
+                                revurdering={props.informasjonsRevurdering}
                                 gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
                                 nesteUrl={props.nesteUrl}
@@ -266,7 +262,7 @@ const RevurderingstegPage = (props: {
                         return (
                             <Formue
                                 sakId={props.sakId}
-                                revurdering={props.revurdering}
+                                revurdering={props.informasjonsRevurdering}
                                 gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
                                 nesteUrl={props.nesteUrl}
@@ -276,10 +272,10 @@ const RevurderingstegPage = (props: {
                         return (
                             <EndringAvFradrag
                                 sakId={props.sakId}
-                                revurdering={props.revurdering}
+                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
-                                nesteUrl={props.nesteUrl(props.revurdering)}
+                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
                             />
                         );
                     default:

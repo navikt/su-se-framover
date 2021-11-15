@@ -6,13 +6,12 @@ import { opprettRevurdering } from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { InformasjonSomRevurderes, OpprettetRevurderingGrunn } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
-import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
+import { compareUtbetalingsperiode, Utbetalingsperiode } from '~types/Utbetalingsperiode';
 import { finnNesteRevurderingsteg } from '~utils/revurdering/revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
-const NyRevurderingPage = (props: { sak: Sak }) => {
+const NyRevurderingPage = (props: { sakId: string; utbetalinger: Utbetalingsperiode[] }) => {
     const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
     const history = useHistory();
 
@@ -25,7 +24,7 @@ const NyRevurderingPage = (props: { sak: Sak }) => {
     }) => {
         const response = await dispatch(
             opprettRevurdering({
-                sakId: props.sak.id,
+                sakId: props.sakId,
                 ...arg,
             })
         );
@@ -33,7 +32,7 @@ const NyRevurderingPage = (props: { sak: Sak }) => {
         if (opprettRevurdering.fulfilled.match(response)) {
             history.push(
                 Routes.revurderValgtRevurdering.createURL({
-                    sakId: props.sak.id,
+                    sakId: props.sakId,
                     revurderingId: response.payload.id,
                     steg: finnNesteRevurderingsteg(response.payload.informasjonSomRevurderes),
                 })
@@ -49,17 +48,17 @@ const NyRevurderingPage = (props: { sak: Sak }) => {
     }) => {
         const response = await dispatch(
             opprettRevurdering({
-                sakId: props.sak.id,
+                sakId: props.sakId,
                 ...arg,
             })
         );
 
         if (opprettRevurdering.fulfilled.match(response)) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
         }
     };
 
-    const sorterteUtbetalinger = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
+    const sorterteUtbetalinger = [...props.utbetalinger].sort(compareUtbetalingsperiode);
     const [førsteUtbetaling, sisteUtbetaling] = [
         sorterteUtbetalinger[0],
         sorterteUtbetalinger[sorterteUtbetalinger.length - 1],
@@ -69,7 +68,7 @@ const NyRevurderingPage = (props: { sak: Sak }) => {
         <RevurderingIntroForm
             onNesteClick={handleNesteClick}
             onLagreOgFortsettSenereClick={handleLagreOgFortsettSenereClick}
-            tilbakeUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}
+            tilbakeUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
             revurdering={undefined}
             maxFraOgMed={DateFns.parseISO(sisteUtbetaling.tilOgMed)}
             minFraOgMed={DateFns.parseISO(førsteUtbetaling.fraOgMed)}

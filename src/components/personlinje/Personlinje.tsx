@@ -10,7 +10,6 @@ import { fetchPerson, Kjønn, Person, Sivilstand as ISivilstand, SivilstandTyper
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Sak } from '~types/Sak';
 import { showName, formatFnr } from '~utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
@@ -25,7 +24,7 @@ const Separator = () => (
     </BodyShort>
 );
 
-const Personlinje = (props: { søker: Person; sak: Sak }) => {
+const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnummer: number } }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -34,28 +33,28 @@ const Personlinje = (props: { søker: Person; sak: Sak }) => {
                 <span className={styles.icon}>
                     <GenderIcon kjønn={props.søker.kjønn ?? Kjønn.Ukjent} />
                 </span>
-                <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakInfo.sakId })}>
                     <BodyShort as="span" className={styles.navn}>
                         {showName(props.søker.navn)}
                     </BodyShort>
                 </Link>
                 <Separator />
                 <CopyToClipboard
-                    copyText={props.sak.fnr}
+                    copyText={props.søker.fnr}
                     popoverText={formatMessage('ariaLabel.kopierteFnr')}
                     size="small"
                 >
-                    {formatFnr(props.sak.fnr)}
+                    {formatFnr(props.søker.fnr)}
                 </CopyToClipboard>
                 <Separator />
                 <span className={styles.saksnummer}>
                     <BodyShort as="span">{formatMessage('label.saksnummer')}&nbsp;</BodyShort>
                     <CopyToClipboard
-                        copyText={props.sak.saksnummer.toString()}
+                        copyText={props.sakInfo.saksnummer.toString()}
                         popoverText={formatMessage('ariaLabel.kopierteSaksnummer')}
                         size="small"
                     >
-                        {props.sak.saksnummer.toString()}
+                        {props.sakInfo.saksnummer}
                     </CopyToClipboard>
                 </span>
                 {props.søker.sivilstand && (

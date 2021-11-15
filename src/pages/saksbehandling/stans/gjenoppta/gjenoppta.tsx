@@ -13,9 +13,8 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { Revurdering, OpprettetRevurderingGrunn } from '~types/Revurdering';
+import { Revurdering, OpprettetRevurderingGrunn, Gjenopptak } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { Gjenopptak } from '~types/Stans';
 import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
 import messages from './gjenoppta-nb';

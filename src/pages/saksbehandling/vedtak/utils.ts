@@ -3,7 +3,7 @@ import { Behandling } from '~types/Behandling';
 import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
-import { erInformasjonsRevurdering, erRevurderingIverksatt } from '~utils/revurdering/revurderingUtils';
+import { erRevurderingIverksatt } from '~utils/revurdering/revurderingUtils';
 
 interface Søknadsbehandlingsoppsummering {
     behandling: Behandling;
@@ -26,7 +26,7 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
     }
 
     const revurdering = sak.revurderinger.find((r) => r.id === vedtak.behandlingId);
-    if (revurdering && erInformasjonsRevurdering(revurdering) && erRevurderingIverksatt(revurdering)) {
+    if (revurdering && erRevurderingIverksatt(revurdering)) {
         return {
             revurdering: revurdering,
             type: 'revurdering',

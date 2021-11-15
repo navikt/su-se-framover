@@ -23,42 +23,61 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
 }
 
 /**
+ * Dette gjelder kun de revurderingene som kun endrer på utbetalingene
+ * eksempler: stans og gjenoppta
+ */
+export interface UtbetalingsRevurdering<T extends UtbetalingsRevurderingStatus = UtbetalingsRevurderingStatus>
+    extends Revurdering {
+    status: T;
+}
+
+export interface StansAvYtelse
+    extends UtbetalingsRevurdering<
+        UtbetalingsRevurderingStatus.SIMULERT_STANS | UtbetalingsRevurderingStatus.IVERKSATT_STANS
+    > {
+    simulering: Simulering;
+}
+
+export interface Gjenopptak
+    extends UtbetalingsRevurdering<
+        UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK | UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK
+    > {
+    simulering: Simulering;
+}
+
+/**
  * Dette gjelder revurdering av Grunnlagsdata, vilkårssett, og potensielt utbetaling (endring fører til utbetaling. ingen endring fører ikke til utbetaling)
  * eksempler som ikke inngår, stans og gjenoppta av utbetaling, siden dem kun endrer utbetaling
  */
-export interface InformasjonsRevurdering<T extends RevurderingsStatus = RevurderingsStatus> extends Revurdering {
+export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus = InformasjonsRevurderingStatus>
+    extends Revurdering {
     status: T;
     fritekstTilBrev: string;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
 
-/**
- * Dette gjelder kun de revurderingene som kun endrer på utbetalingene
- * eksempler: stans og gjenoppta
- */
-export interface UtbetalingsRevurdering<T extends RevurderingsStatus> extends Revurdering {
-    status: T;
-}
+export type OpprettetRevurdering = InformasjonsRevurdering<InformasjonsRevurderingStatus.OPPRETTET>;
 
-export type OpprettetRevurdering = InformasjonsRevurdering<RevurderingsStatus.OPPRETTET>;
-
-export interface BeregnetInnvilget extends InformasjonsRevurdering<RevurderingsStatus.BEREGNET_INNVILGET> {
+export interface BeregnetInnvilget extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INNVILGET> {
     beregning: Beregning;
 }
 
-export interface BeregnetIngenEndring extends InformasjonsRevurdering<RevurderingsStatus.BEREGNET_INGEN_ENDRING> {
+export interface BeregnetIngenEndring
+    extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING> {
     beregning: Beregning;
 }
 
 export interface SimulertRevurdering
-    extends InformasjonsRevurdering<RevurderingsStatus.SIMULERT_INNVILGET | RevurderingsStatus.SIMULERT_OPPHØRT> {
+    extends InformasjonsRevurdering<
+        InformasjonsRevurderingStatus.SIMULERT_INNVILGET | InformasjonsRevurderingStatus.SIMULERT_OPPHØRT
+    > {
     beregning: Beregning;
     simulering: Simulering;
 }
 
 export interface RevurderingTilAttestering
     extends InformasjonsRevurdering<
-        RevurderingsStatus.TIL_ATTESTERING_INNVILGET | RevurderingsStatus.TIL_ATTESTERING_OPPHØRT
+        InformasjonsRevurderingStatus.TIL_ATTESTERING_INNVILGET | InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT
     > {
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
@@ -66,29 +85,26 @@ export interface RevurderingTilAttestering
 }
 
 export interface IverksattRevurdering
-    extends InformasjonsRevurdering<RevurderingsStatus.IVERKSATT_INNVILGET | RevurderingsStatus.IVERKSATT_OPPHØRT> {
+    extends InformasjonsRevurdering<
+        InformasjonsRevurderingStatus.IVERKSATT_INNVILGET | InformasjonsRevurderingStatus.IVERKSATT_OPPHØRT
+    > {
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
 
 export interface UnderkjentRevurdering
-    extends InformasjonsRevurdering<RevurderingsStatus.UNDERKJENT_INNVILGET | RevurderingsStatus.UNDERKJENT_OPPHØRT> {
+    extends InformasjonsRevurdering<
+        InformasjonsRevurderingStatus.UNDERKJENT_INNVILGET | InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT
+    > {
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
 
-export interface AvsluttetRevurdering extends InformasjonsRevurdering<RevurderingsStatus.AVSLUTTET> {
+export interface AvsluttetRevurdering extends InformasjonsRevurdering<InformasjonsRevurderingStatus.AVSLUTTET> {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
-}
-
-export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: Beregning } {
-    return 'beregning' in r;
-}
-export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
-    return 'simulering' in r && (r as SimulertRevurdering).simulering !== null;
 }
 
 export enum Forhåndsvarseltype {
@@ -115,28 +131,37 @@ export interface Besluttet extends ForhåndsvarselBase<Forhåndsvarseltype.SkalV
 
 export type Forhåndsvarsel = Ingen | Sendt | Besluttet;
 
-export enum RevurderingsStatus {
+export type RevurderingsStatus = InformasjonsRevurderingStatus | UtbetalingsRevurderingStatus;
+
+export enum InformasjonsRevurderingStatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
     BEREGNET_INGEN_ENDRING = 'BEREGNET_INGEN_ENDRING',
     SIMULERT_OPPHØRT = 'SIMULERT_OPPHØRT',
     SIMULERT_INNVILGET = 'SIMULERT_INNVILGET',
-    SIMULERT_STANS = 'SIMULERT_STANS',
-    AVSLUTTET_STANS = 'AVSLUTTET_STANS',
-    SIMULERT_GJENOPPTAK = 'SIMULERT_GJENOPPTAK',
+
     TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
     TIL_ATTESTERING_OPPHØRT = 'TIL_ATTESTERING_OPPHØRT',
     TIL_ATTESTERING_INGEN_ENDRING = 'TIL_ATTESTERING_INGEN_ENDRING',
     IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
     IVERKSATT_OPPHØRT = 'IVERKSATT_OPPHØRT',
     IVERKSATT_INGEN_ENDRING = 'IVERKSATT_INGEN_ENDRING',
-    IVERKSATT_STANS = 'IVERKSATT_STANS',
-    AVSLUTTET_GJENOPPTAK = 'AVSLUTTET_GJENOPPTAK',
-    IVERKSATT_GJENOPPTAK = 'IVERKSATT_GJENOPPTAK',
+
     UNDERKJENT_INNVILGET = 'UNDERKJENT_INNVILGET',
     UNDERKJENT_OPPHØRT = 'UNDERKJENT_OPPHØRT',
     UNDERKJENT_INGEN_ENDRING = 'UNDERKJENT_INGEN_ENDRING',
     AVSLUTTET = 'AVSLUTTET',
+}
+
+export enum UtbetalingsRevurderingStatus {
+    SIMULERT_STANS = 'SIMULERT_STANS',
+    SIMULERT_GJENOPPTAK = 'SIMULERT_GJENOPPTAK',
+
+    AVSLUTTET_STANS = 'AVSLUTTET_STANS',
+    AVSLUTTET_GJENOPPTAK = 'AVSLUTTET_GJENOPPTAK',
+
+    IVERKSATT_STANS = 'IVERKSATT_STANS',
+    IVERKSATT_GJENOPPTAK = 'IVERKSATT_GJENOPPTAK',
 }
 
 export enum OpprettetRevurderingGrunn {
