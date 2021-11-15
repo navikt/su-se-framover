@@ -12,11 +12,12 @@ import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
-import { Behandlingsinformasjon, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
+import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from '~types/Periode';
 import { Restans } from '~types/Restans';
 import { Revurdering } from '~types/Revurdering';
@@ -131,7 +132,7 @@ export const lagreUtenlandsopphold = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        status: OppholdIUtlandetStatus;
+        status: Utenlandsoppholdstatus;
         begrunnelse: Nullable<string>;
     },
     { rejectValue: ApiError }

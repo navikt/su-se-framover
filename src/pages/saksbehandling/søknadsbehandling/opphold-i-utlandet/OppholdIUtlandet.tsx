@@ -20,7 +20,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
+import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -31,7 +31,7 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './oppholdIUtlandet-nb';
 
 interface FormData {
-    status: Nullable<OppholdIUtlandetStatus>;
+    status: Nullable<Utenlandsoppholdstatus>;
     begrunnelse: Nullable<string>;
 }
 
@@ -46,7 +46,7 @@ const schema = yup
             .mixed()
             .defined()
             .oneOf(
-                Object.values(OppholdIUtlandetStatus),
+                Object.values(Utenlandsoppholdstatus),
                 'Du må velge om søker har planlagt å oppholde seg for lenge i utlandet'
             ),
         begrunnelse: yup.string().defined(),
@@ -59,8 +59,8 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
     const initialValues = {
-        status: props.behandling.behandlingsinformasjon.oppholdIUtlandet?.status ?? null,
-        begrunnelse: props.behandling.behandlingsinformasjon.oppholdIUtlandet?.begrunnelse ?? null,
+        status: props.behandling.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet?.status ?? null,
+        begrunnelse: props.behandling.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet?.begrunnelse ?? null,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
@@ -123,14 +123,14 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                     <Radio
                                         id={field.name}
                                         ref={field.ref}
-                                        value={OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet}
+                                        value={Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet}
                                     >
                                         {formatMessage('radio.label.ja')}
                                     </Radio>
-                                    <Radio value={OppholdIUtlandetStatus.SkalHoldeSegINorge}>
+                                    <Radio value={Utenlandsoppholdstatus.SkalHoldeSegINorge}>
                                         {formatMessage('radio.label.nei')}
                                     </Radio>
-                                    <Radio value={OppholdIUtlandetStatus.Uavklart}>
+                                    <Radio value={Utenlandsoppholdstatus.Uavklart}>
                                         {formatMessage('radio.label.uavklart')}
                                     </Radio>
                                 </RadioGroup>

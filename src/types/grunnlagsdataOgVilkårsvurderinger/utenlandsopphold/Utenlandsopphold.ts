@@ -1,8 +1,13 @@
 import { Nullable } from '~lib/types';
-import { Utenlandsoppholdstatus } from '~types/Revurdering';
 
 export interface Utenlandsopphold {
     begrunnelse: Nullable<string>;
     status: Utenlandsoppholdstatus;
     vilkår: string;
+}
+
+export enum Utenlandsoppholdstatus {
+    SkalVæreMerEnn90DagerIUtlandet = 'SkalVæreMerEnn90DagerIUtlandet',
+    SkalHoldeSegINorge = 'SkalHoldeSegINorge',
+    Uavklart = 'Uavklart',
 }

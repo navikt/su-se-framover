@@ -4,9 +4,11 @@ import React from 'react';
 
 import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
-import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { SøknadInnhold } from '~types/Søknad';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';
-import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/opphold-i-utlandet/oppholdIUtlandet-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
@@ -14,7 +16,13 @@ import Faktablokk, { customFakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import styles from './faktablokker.module.less';
-import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
+import { FaktablokkProps } from './faktablokkUtils';
+
+export interface UtenlandsoppholdVilkårsblokkPros {
+    info: Vilkårsinformasjon;
+    søknadInnhold: SøknadInnhold;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}
 
 export const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
     const { intl } = useI18n({
@@ -68,7 +76,7 @@ function formatDate(date: string) {
     return DateFns.parseISO(date).toLocaleDateString();
 }
 
-export const UtenlandsoppholdVilkårsblokk = (props: VilkårsblokkProps<'oppholdIUtlandet'>) => {
+export const UtenlandsoppholdVilkårsblokk = (props: UtenlandsoppholdVilkårsblokkPros) => {
     const { intl } = useI18n({
         messages: {
             ...messages,
@@ -81,7 +89,7 @@ export const UtenlandsoppholdVilkårsblokk = (props: VilkårsblokkProps<'opphold
             status={props.info.status}
             søknadfaktablokk={<UtenlandsOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.behandlingsinformasjon === null ? (
+                props.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet === null ? (
                     <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
                 ) : (
                     <Faktablokk
@@ -92,11 +100,11 @@ export const UtenlandsoppholdVilkårsblokk = (props: VilkårsblokkProps<'opphold
                                     id: keyOf<typeof saksbehandlingMessages>('radio.oppholdIUtland.legend'),
                                 }),
                                 verdi:
-                                    props.behandlingsinformasjon.status ===
-                                    OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet
+                                    props.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.status ===
+                                    Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.behandlingsinformasjon.status ===
-                                          OppholdIUtlandetStatus.SkalHoldeSegINorge
+                                        : props.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.status ===
+                                          Utenlandsoppholdstatus.SkalHoldeSegINorge
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({
                                               id: 'fraSøknad.uavklart',

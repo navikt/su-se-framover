@@ -224,7 +224,7 @@ const Vedtaksinformasjon = (props: {
                     gamleData={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             )}
-            {props.revurdering.informasjonSomRevurderes.UtenlandsoppholdOver90Dager === Vurderingstatus.Vurdert && (
+            {props.revurdering.informasjonSomRevurderes.OppholdIUtlandet === Vurderingstatus.Vurdert && (
                 <Utenlandsblokk
                     nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet}
                     gamleData={props.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet}

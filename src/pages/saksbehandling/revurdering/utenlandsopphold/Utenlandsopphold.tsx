@@ -19,7 +19,7 @@ import { StegProps } from '~pages/saksbehandling/revurdering/common';
 import stegmessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import sharedStyles from '~pages/saksbehandling/revurdering/revurdering.module.less';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
-import { Utenlandsoppholdstatus } from '~types/Revurdering';
+import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 
 import messages from './utenlandsopphold-nb';
 
@@ -39,8 +39,8 @@ const Utenlandsopphold = (props: StegProps) => {
     const form = useForm<UtenlandsoppholdFormData>({
         resolver: yupResolver(schemaValidation),
         defaultValues: {
-            status: props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.status,
-            begrunnelse: props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.begrunnelse ?? null,
+            status: props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet?.status,
+            begrunnelse: props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet?.begrunnelse ?? null,
         },
     });
     const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
@@ -80,10 +80,13 @@ const Utenlandsopphold = (props: StegProps) => {
                                     error={fieldState.error?.message}
                                     {...field}
                                 >
-                                    <Radio value={Utenlandsoppholdstatus.Utenlands} ref={field.ref}>
+                                    <Radio
+                                        value={Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet}
+                                        ref={field.ref}
+                                    >
                                         {formatMessage('radiobutton.utenlands')}
                                     </Radio>
-                                    <Radio value={Utenlandsoppholdstatus.Innenlands}>
+                                    <Radio value={Utenlandsoppholdstatus.SkalHoldeSegINorge}>
                                         {formatMessage('radiobutton.innenlands')}
                                     </Radio>
                                 </RadioGroup>

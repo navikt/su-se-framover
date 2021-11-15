@@ -29,8 +29,10 @@ const vilkårstatusTilLinjestatus = (s: VilkårVurderingStatus): Linjestatus => 
 };
 
 const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: Behandling; vilkår: Vilkårtype }) => {
-    const { behandlingsinformasjon } = props.behandling;
-    const vilkårrekkefølge = mapToVilkårsinformasjon(behandlingsinformasjon);
+    const vilkårrekkefølge = mapToVilkårsinformasjon(
+        props.behandling.behandlingsinformasjon,
+        props.behandling.grunnlagsdataOgVilkårsvurderinger
+    );
     const beregningsrekkefølge = vilkårsinformasjonForBeregningssteg(props.behandling);
     const { intl } = useI18n({ messages });
     const { isDraftDirty } = useSøknadsbehandlingDraftContext();

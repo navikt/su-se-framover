@@ -1,8 +1,9 @@
-import { Utenlandsoppholdstatus } from '~types/Revurdering';
+import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 
 export const utenlandsoppholdStatusMessages: { [key in Utenlandsoppholdstatus]: string } = {
-    [Utenlandsoppholdstatus.Utenlands]: 'Ja',
-    [Utenlandsoppholdstatus.Innenlands]: 'Nei',
+    [Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet]: 'Ja',
+    [Utenlandsoppholdstatus.SkalHoldeSegINorge]: 'Nei',
+    [Utenlandsoppholdstatus.Uavklart]: 'Uavklart',
 };
 
 export default {
