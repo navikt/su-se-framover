@@ -59,7 +59,7 @@
         "@sentry/cli": "^1.71.0",
         "@types/jest": "^27.0.2",
         "@types/react-collapse": "^5.0.1",
-        "@types/react-datepicker": "^4.1.7",
+        "@types/react-datepicker": "^4.3.0",
         "amplitude-js": "^8.9.1",
         "autoprefixer": "^10.4.0",
         "babel-polyfill": "^6.26.0",
