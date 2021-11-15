@@ -20,8 +20,12 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
+import {
+    InformasjonsRevurdering,
+    InformasjonsRevurderingStatus,
+    IverksattRevurdering,
+    UnderkjentRevurdering,
+} from '~types/Revurdering';
 import { erRevurderingTilAttestering, erGregulering } from '~utils/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
@@ -67,10 +71,14 @@ const schema = yup.object<FormData>({
     }),
 });
 
-const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
+const AttesterRevurdering = (props: {
+    sakInfo: { sakId: string; saksnummer: number };
+    informasjonsRevurderinger: InformasjonsRevurdering[];
+    søker: Person;
+}) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
     const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
-    const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
+    const revurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
@@ -88,7 +96,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         }
         hentGrunnlagsdataOgVilkårsvurderinger({
             revurderingId: revurdering.id,
-            sakId: props.sak.id,
+            sakId: props.sakInfo.sakId,
         });
     }, [revurdering?.id]);
 
@@ -99,15 +107,15 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 setSendtBeslutning(RemoteData.pending);
                 const res = await dispatch(
                     RevurderingActions.iverksettRevurdering({
-                        sakId: props.sak.id,
+                        sakId: props.sakInfo.sakId,
                         revurderingId: urlParams.revurderingId,
                     })
                 );
 
                 if (RevurderingActions.iverksettRevurdering.fulfilled.match(res)) {
-                    dispatch(sakSlice.fetchSak({ saksnummer: props.sak.saksnummer.toString() }));
+                    dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.saksnummer.toString() }));
                     const message = intl.formatMessage({ id: 'attester.iverksatt' });
-                    history.push(Routes.createSakIntroLocation(message, props.sak.id));
+                    history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
                 }
 
                 if (RevurderingActions.iverksettRevurdering.rejected.match(res)) {
@@ -120,7 +128,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 setSendtBeslutning(RemoteData.pending);
                 const res = await dispatch(
                     RevurderingActions.underkjennRevurdering({
-                        sakId: props.sak.id,
+                        sakId: props.sakInfo.sakId,
                         revurderingId: urlParams.revurderingId,
                         grunn: values.grunn,
                         kommentar: values.kommentar,
@@ -129,7 +137,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
 
                 if (RevurderingActions.underkjennRevurdering.fulfilled.match(res)) {
                     const message = intl.formatMessage({ id: 'attester.sendtTilbake' });
-                    history.push(Routes.createSakIntroLocation(message, props.sak.id));
+                    history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
                 }
 
                 if (RevurderingActions.underkjennRevurdering.rejected.match(res)) {
@@ -159,14 +167,14 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     }
 
     const handleShowBrevClick = async () => {
-        hentPdf({ sakId: props.sak.id, revurderingId: revurdering.id, fritekst: null }, (data) => {
+        hentPdf({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id, fritekst: null }, (data) => {
             window.open(URL.createObjectURL(data));
         });
     };
 
     return (
         <div className={SharedStyles.container}>
-            <Personlinje søker={props.søker} sak={props.sak} />
+            <Personlinje søker={props.søker} sakInfo={props.sakInfo} />
             <Heading level="1" size="xlarge" className={SharedStyles.tittel}>
                 {intl.formatMessage({ id: 'page.tittel' })}
             </Heading>
@@ -201,7 +209,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                                 </Alert>
                             )}
 
-                            {revurdering.status === RevurderingsStatus.TIL_ATTESTERING_OPPHØRT && (
+                            {revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT && (
                                 <div className={styles.opphørsadvarsel}>
                                     <Alert variant="warning">{intl.formatMessage({ id: 'info.opphør' })}</Alert>
                                 </div>

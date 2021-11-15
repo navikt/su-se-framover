@@ -11,7 +11,7 @@ import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch } from '~redux/Store';
-import { RevurderingsStatus } from '~types/Revurdering';
+import { UtbetalingsRevurderingStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
@@ -52,7 +52,7 @@ const GjenopptaOppsummering = (props: Props) => {
             history.push(Routes.createSakIntroLocation(formatMessage({ id: 'gjenoppta.notification' }), props.sak.id));
         });
     };
-    const erIverksatt = revurdering.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK;
+    const erIverksatt = revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK;
     const oppsummeringsinputs = [
         {
             label: formatMessage({ id: 'gjenoppta.årsak.tittel' }),

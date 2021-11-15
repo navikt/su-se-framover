@@ -20,8 +20,9 @@ import {
     FormuegrunnlagRequest,
     Revurdering,
     InformasjonsRevurdering,
+    StansAvYtelse,
+    Gjenopptak,
 } from '~types/Revurdering';
-import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 

@@ -10,7 +10,7 @@ import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/Under
 import { useUserContext } from '~context/userContext';
 import { pipe } from '~lib/fp';
 import * as Routes from '~lib/routes';
-import { Revurdering, RevurderingsStatus } from '~types/Revurdering';
+import { Revurdering, UtbetalingsRevurderingStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
 
@@ -50,7 +50,7 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Revurd
                                             <Heading level="3" size="small" spacing>
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
                                             </Heading>
-                                            {erInformasjonsRevurdering(r) && erForhåndsvarselSendt(r) && (
+                                            {erForhåndsvarselSendt(r) && (
                                                 <Tag variant="info" className={styles.etikett}>
                                                     {props.intl.formatMessage({
                                                         id: 'revurdering.label.forhåndsvarselSendt',
@@ -82,22 +82,18 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Revurd
                                                 </BodyShort>
                                             </div>
                                         )}
-                                        {underkjenteRevurderinger.length > 0 &&
-                                            erInformasjonsRevurdering(r) &&
-                                            !erRevurderingIverksatt(r) && (
-                                                <div className={styles.underkjenteAttesteringerContainer}>
-                                                    <UnderkjenteAttesteringer attesteringer={r.attesteringer} />
-                                                </div>
-                                            )}
+                                        {underkjenteRevurderinger.length > 0 && !erRevurderingIverksatt(r) && (
+                                            <div className={styles.underkjenteAttesteringerContainer}>
+                                                <UnderkjenteAttesteringer attesteringer={r.attesteringer} />
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className={styles.knapper}>
-                                        <RevurderingStartetKnapper
-                                            sakId={props.sak.id}
-                                            vedtak={props.sak.vedtak}
-                                            revurdering={r}
-                                            intl={props.intl}
-                                        />
-                                    </div>
+                                    <RevurderingStartetKnapper
+                                        sakId={props.sak.id}
+                                        vedtak={props.sak.vedtak}
+                                        revurdering={r}
+                                        intl={props.intl}
+                                    />
                                 </div>
                             </Panel>
                         </li>
@@ -119,21 +115,8 @@ const RevurderingStartetKnapper = (props: {
     const vedtak = props.vedtak.find((v) => v.behandlingId === revurdering.id);
 
     return (
-        <div className={styles.behandlingContainer}>
-            {erInformasjonsRevurdering(revurdering) &&
-                erRevurderingTilAttestering(revurdering) &&
-                (!user.isAttestant || user.navIdent === revurdering.saksbehandler) && (
-                    <div className={styles.ikonContainer}>
-                        <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
-                        <BodyShort>
-                            {props.intl.formatMessage({
-                                id: 'attestering.tilAttestering',
-                            })}
-                        </BodyShort>
-                    </div>
-                )}
-
-            {erInformasjonsRevurdering(revurdering) && erRevurderingIverksatt(revurdering) && vedtak && (
+        <div className={styles.knapper}>
+            {erRevurderingIverksatt(revurdering) && vedtak && (
                 <LinkAsButton
                     variant="secondary"
                     href={Routes.vedtaksoppsummering.createURL({ sakId: props.sakId, vedtakId: vedtak.id })}
@@ -143,11 +126,8 @@ const RevurderingStartetKnapper = (props: {
                 </LinkAsButton>
             )}
 
-            <div className={styles.knapper}>
-                {erInformasjonsRevurdering(revurdering) &&
-                erRevurderingTilAttestering(revurdering) &&
-                user.isAttestant &&
-                user.navIdent !== revurdering.saksbehandler ? (
+            {erRevurderingTilAttestering(revurdering) ? (
+                user.isAttestant && user.navIdent !== revurdering.saksbehandler ? (
                     <LinkAsButton
                         variant="secondary"
                         size="small"
@@ -160,66 +140,79 @@ const RevurderingStartetKnapper = (props: {
                             id: 'attestering.attester',
                         })}
                     </LinkAsButton>
-                ) : erRevurderingStans(revurdering) ? (
-                    <AvsluttOgStartFortsettButtons
-                        sakId={props.sakId}
-                        behandlingsId={revurdering.id}
-                        primaryButtonTekst={
-                            revurdering.status === RevurderingsStatus.IVERKSATT_STANS
-                                ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
-                                : props.intl.formatMessage({ id: 'revurdering.fortsett' })
-                        }
-                        usePrimaryAsLink={{
-                            url: Routes.stansOppsummeringRoute.createURL({
-                                sakId: props.sakId,
-                                revurderingId: revurdering.id,
-                            }),
-                        }}
-                        hideSecondaryButton={revurdering.status === RevurderingsStatus.IVERKSATT_STANS}
-                        intl={props.intl}
-                    />
-                ) : erRevurderingGjenopptak(revurdering) ? (
-                    <AvsluttOgStartFortsettButtons
-                        sakId={props.sakId}
-                        behandlingsId={revurdering.id}
-                        primaryButtonTekst={
-                            revurdering.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK
-                                ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
-                                : props.intl.formatMessage({ id: 'revurdering.fortsett' })
-                        }
-                        usePrimaryAsLink={{
-                            url: Routes.gjenopptaStansOppsummeringRoute.createURL({
-                                sakId: props.sakId,
-                                revurderingId: revurdering.id,
-                            }),
-                        }}
-                        hideSecondaryButton={revurdering.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK}
-                        intl={props.intl}
-                    />
                 ) : (
-                    erInformasjonsRevurdering(revurdering) &&
-                    !erRevurderingTilAttestering(revurdering) &&
-                    !erRevurderingIverksatt(revurdering) &&
-                    user.navIdent !== pipe(revurdering.attesteringer, last, toNullable)?.attestant && (
-                        <AvsluttOgStartFortsettButtons
-                            sakId={props.sakId}
-                            behandlingsId={revurdering.id}
-                            primaryButtonTekst={props.intl.formatMessage({ id: 'revurdering.fortsett' })}
-                            usePrimaryAsLink={{
-                                url: Routes.revurderValgtRevurdering.createURL({
-                                    sakId: props.sakId,
-                                    steg: erRevurderingSimulert(revurdering)
-                                        ? RevurderingSteg.Oppsummering
-                                        : finnNesteRevurderingsteg(revurdering.informasjonSomRevurderes),
-                                    revurderingId: revurdering.id,
-                                }),
-                            }}
-                            hideSecondaryButton={false}
-                            intl={props.intl}
-                        />
-                    )
+                    <div className={styles.ikonContainer}>
+                        <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                        <BodyShort>
+                            {props.intl.formatMessage({
+                                id: 'attestering.tilAttestering',
+                            })}
+                        </BodyShort>
+                    </div>
+                )
+            ) : null}
+
+            {erRevurderingStans(revurdering) && (
+                <AvsluttOgStartFortsettButtons
+                    sakId={props.sakId}
+                    behandlingsId={revurdering.id}
+                    primaryButtonTekst={
+                        revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_STANS
+                            ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
+                            : props.intl.formatMessage({ id: 'revurdering.fortsett' })
+                    }
+                    usePrimaryAsLink={{
+                        url: Routes.stansOppsummeringRoute.createURL({
+                            sakId: props.sakId,
+                            revurderingId: revurdering.id,
+                        }),
+                    }}
+                    hideSecondaryButton={revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_STANS}
+                    intl={props.intl}
+                />
+            )}
+
+            {erRevurderingGjenopptak(revurdering) && (
+                <AvsluttOgStartFortsettButtons
+                    sakId={props.sakId}
+                    behandlingsId={revurdering.id}
+                    primaryButtonTekst={
+                        revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK
+                            ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
+                            : props.intl.formatMessage({ id: 'revurdering.fortsett' })
+                    }
+                    usePrimaryAsLink={{
+                        url: Routes.gjenopptaStansOppsummeringRoute.createURL({
+                            sakId: props.sakId,
+                            revurderingId: revurdering.id,
+                        }),
+                    }}
+                    hideSecondaryButton={revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK}
+                    intl={props.intl}
+                />
+            )}
+
+            {erInformasjonsRevurdering(revurdering) &&
+                !erRevurderingTilAttestering(revurdering) &&
+                !erRevurderingIverksatt(revurdering) &&
+                user.navIdent !== pipe(revurdering.attesteringer, last, toNullable)?.attestant && (
+                    <AvsluttOgStartFortsettButtons
+                        sakId={props.sakId}
+                        behandlingsId={revurdering.id}
+                        primaryButtonTekst={props.intl.formatMessage({ id: 'revurdering.fortsett' })}
+                        usePrimaryAsLink={{
+                            url: Routes.revurderValgtRevurdering.createURL({
+                                sakId: props.sakId,
+                                steg: erRevurderingSimulert(revurdering)
+                                    ? RevurderingSteg.Oppsummering
+                                    : finnNesteRevurderingsteg(revurdering.informasjonSomRevurderes),
+                                revurderingId: revurdering.id,
+                            }),
+                        }}
+                        hideSecondaryButton={false}
+                        intl={props.intl}
+                    />
                 )}
-            </div>
         </div>
     );
 };

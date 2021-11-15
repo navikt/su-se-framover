@@ -14,6 +14,7 @@ import { pipe } from '~lib/fp';
 import { useI18n, Languages } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
 
 import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
@@ -102,7 +103,10 @@ const Saksoversikt = () => {
                                 ),
                             ([søker, sak]) => (
                                 <>
-                                    <Personlinje søker={søker} sak={sak} />
+                                    <Personlinje
+                                        søker={søker}
+                                        sakInfo={{ sakId: sak.id, saksnummer: sak.saksnummer }}
+                                    />
                                     <div className={styles.container}>
                                         <Switch>
                                             <Route path={Routes.stansRoute.path}>
@@ -122,12 +126,24 @@ const Saksoversikt = () => {
                                             </Route>
                                             <Route path={Routes.revurderValgtSak.path}>
                                                 <div className={styles.mainContent}>
-                                                    <Revurdering sak={sak} />
+                                                    <Revurdering
+                                                        sakId={sak.id}
+                                                        utbetalinger={sak.utbetalinger}
+                                                        informasjonsRevurderinger={sak.revurderinger.filter(
+                                                            erInformasjonsRevurdering
+                                                        )}
+                                                    />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.revurderValgtRevurdering.path}>
                                                 <div className={styles.mainContent}>
-                                                    <Revurdering sak={sak} />
+                                                    <Revurdering
+                                                        sakId={sak.id}
+                                                        utbetalinger={sak.utbetalinger}
+                                                        informasjonsRevurderinger={sak.revurderinger.filter(
+                                                            erInformasjonsRevurdering
+                                                        )}
+                                                    />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.vedtaksoppsummering.path}>

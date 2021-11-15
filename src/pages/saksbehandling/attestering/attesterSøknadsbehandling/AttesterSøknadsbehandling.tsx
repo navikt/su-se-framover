@@ -127,7 +127,7 @@ const Attesteringsinnhold = ({
 
     return (
         <div className={SharedStyles.container}>
-            <Personlinje søker={props.søker} sak={props.sak} />
+            <Personlinje søker={props.søker} sakInfo={{ sakId: props.sak.id, saksnummer: props.sak.saksnummer }} />
             <div>
                 <Søknadsbehandlingoppsummering
                     sak={props.sak}

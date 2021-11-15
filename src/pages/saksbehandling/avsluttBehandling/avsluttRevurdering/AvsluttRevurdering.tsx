@@ -14,7 +14,7 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { Revurdering } from '~types/Revurdering';
-import { erForhåndsvarselSendtEllerBesluttet, erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
+import { erForhåndsvarselSendtEllerBesluttet } from '~utils/revurdering/revurderingUtils';
 
 import messages from './avsluttRevurdering-nb';
 import styles from './avsluttRevurdering.module.less';
@@ -59,7 +59,7 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
 
     return (
         <form onSubmit={handleSubmit(avsluttRevurderingSubmitHandler)}>
-            {erInformasjonsRevurdering(props.revurdering) && erForhåndsvarselSendtEllerBesluttet(props.revurdering) && (
+            {erForhåndsvarselSendtEllerBesluttet(props.revurdering) && (
                 <ForhåndsvarsletRevurderingForm
                     sakId={props.sakId}
                     revurderingId={props.revurdering.id}
