@@ -174,7 +174,6 @@ const Formue = (props: {
             //Validering fanger denne
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             verdier: formDataVerdierTilFormueVerdier(values.verdier!),
-            borSøkerMedEPS: values.borSøkerMedEPS,
             //Validering fanger denne
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             epsVerdier: values.borSøkerMedEPS ? formDataVerdierTilFormueVerdier(values.epsVerdier!) : null,

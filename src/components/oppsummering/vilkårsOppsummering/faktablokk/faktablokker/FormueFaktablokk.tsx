@@ -125,6 +125,7 @@ function søknadsfakta(innhold: SøknadInnhold, formatMessage: MessageFormatter<
 
 function saksbehandlingfakta(
     info: Behandlingsinformasjon['formue'],
+    harEktefelle: boolean,
     formatMessage: MessageFormatter<typeof messages>
 ): Fakta[] {
     return [
@@ -170,7 +171,7 @@ function saksbehandlingfakta(
         },
     ].map((f) =>
         formuelinje({
-            harEktefelle: info?.borSøkerMedEPS ?? false,
+            harEktefelle: harEktefelle,
             tittel: f.tittel,
             verdi: f.verdi ?? 0,
             epsVerdi: f.epsVerdi ?? 0,
@@ -219,7 +220,7 @@ export const FormueVilkårsblokk = (props: {
         }
         const søkersFormueFraSøknad = regnUtFormueVerdier(props.formue.verdier);
 
-        if (props.formue.borSøkerMedEPS && props.formue.epsVerdier) {
+        if (props.ektefelle.fnr && props.formue.epsVerdier) {
             return søkersFormueFraSøknad + regnUtFormueVerdier(props.formue.epsVerdier);
         }
 
@@ -251,7 +252,7 @@ export const FormueVilkårsblokk = (props: {
                                             <span className={styles.søker}>
                                                 {formatMessage('formue.heading.søker')}
                                             </span>
-                                            {props.formue.borSøkerMedEPS && (
+                                            {props.ektefelle.fnr && (
                                                 <span className={classNames(styles.eps, styles.breakPls)}>
                                                     {formatMessage('formue.heading.eps')}
                                                 </span>
@@ -259,7 +260,7 @@ export const FormueVilkårsblokk = (props: {
                                         </div>
                                     ),
                                 },
-                                ...saksbehandlingfakta(props.formue, formatMessage),
+                                ...saksbehandlingfakta(props.formue, props.ektefelle.fnr !== null, formatMessage),
                                 FaktaSpacing,
                                 {
                                     tittel: formatMessage('formue.totalt'),
@@ -268,7 +269,7 @@ export const FormueVilkårsblokk = (props: {
                                 FaktaSpacing,
                                 {
                                     tittel: formatMessage('input.label.borSøkerMedEktefelle'),
-                                    verdi: props.formue.borSøkerMedEPS ? 'Ja' : 'Nei',
+                                    verdi: props.ektefelle.fnr !== null ? 'Ja' : 'Nei',
                                 },
                                 ...(props.ektefelle.fnr
                                     ? [

@@ -41,7 +41,7 @@ enum Stønadsperiode {
 }
 
 enum Formue {
-    UGYLDIGE_VERDIER_PÅ_FORMUE = 'ugyldige_verdier_på_formue',
+    BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE = 'bosituasjon_samsvarer_ikke_med_formue',
     HAR_IKKE_EKTEFELLE = 'har_ikke_ektefelle',
 }
 
@@ -83,8 +83,8 @@ const søknadsbehandlingErrorCodeMessageIdMap: {
     [Stønadsperiode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]: 'stønadsperiode.overlapper.eksisterende',
     [Stønadsperiode.SENERE_STØNADSPERIODE_EKSISTERER]: 'stønadsperiode.senere.periode.eksisterer',
 
-    [Formue.UGYLDIGE_VERDIER_PÅ_FORMUE]: 'formue.ugyldige.verdier',
     [Formue.HAR_IKKE_EKTEFELLE]: 'formue.har.ikke.ektefelle',
+    [Formue.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'formue.bosituasjon.samsvarer.ikke',
 
     [Fradrag.FRADRAG_UGYLDIG_FRADRAGSTYPE]: 'fradrag.ugyldig.type',
     [Fradrag.PERIODE_MANGLER]: 'fradrag.mangler.periode',

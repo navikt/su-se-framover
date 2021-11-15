@@ -24,6 +24,11 @@ export default {
         'Det er ikke samsvar mellom perioden for vurdering og perioden for grunnlaget',
 
     'bosituasjon.kunne.ikke.legge.til': 'Kunne ikke legge til bosituasjonsgrunnlaget',
+    'bosituasjon.fradrag.for.eps.uten.eps': 'Det finnes fradrag for EPS, men søker har ikke EPS',
+    'bosituasjon.fradragsperiode.utenfor.bosituasjonsperiode': 'Fradragsperioden er utenfor bosituasjonsperioden',
+    'bosituasjon.må.ha.bosituasjon.før.fradrag': 'Bosituasjon må legges inn før fradrag',
+
+    'formue.depositum.ikke.mindre.enn.innskudd': 'Depositum kan ikke være høyere enn innskudd',
 
     'fradrag.kunne.ikke.legge.til': 'Kunne ikke legge til fradragsgrunnlaget',
     'fradrag.mangler.periode': 'Fradrag mangler periode',

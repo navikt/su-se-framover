@@ -21,8 +21,8 @@ export default {
     'stønadsperiode.overlapper.eksisterende': 'Stønadsperioden overlapper med en eksisterende stønadsperiode',
     'stønadsperiode.senere.periode.eksisterer': 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
 
-    'formue.ugyldige.verdier': 'Ugyldige formueverdier',
     'formue.har.ikke.ektefelle': 'Har ikke ektefelle',
+    'formue.bosituasjon.samsvarer.ikke': 'Informasjon i bosituasjon samsvarer ikke med formue',
 
     'fradrag.ugyldig.type': 'Ugyldig fradragstype',
     'fradrag.mangler.periode': 'Fradrag mangler periode',
