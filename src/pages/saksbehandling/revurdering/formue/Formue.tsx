@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import { Panel, Accordion, Button, Loader, Textarea, TextField, Heading, Label, BodyShort } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     Control,
     Controller,
@@ -11,7 +11,7 @@ import {
     useFieldArray,
     useForm,
     UseFormTrigger,
-    useWatch,
+    UseFormWatch,
 } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -62,6 +62,7 @@ const Formue = (props: RevurderingProps) => {
         control,
         trigger,
         handleSubmit,
+        watch,
         formState: { errors, isValid, isSubmitted },
     } = useForm<FormueFormData>({
         defaultValues: getDefaultValues(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue, epsFnr),
@@ -89,10 +90,13 @@ const Formue = (props: RevurderingProps) => {
     };
 
     useEffect(() => {
+        if (RemoteData.isSuccess(epsStatus) && epsStatus.value.fnr === epsFnr) {
+            return;
+        }
         if (epsFnr) {
             hentEPS(epsFnr);
         }
-    }, [epsFnr]);
+    }, [epsFnr, hentEPS, epsStatus]);
 
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
@@ -115,6 +119,7 @@ const Formue = (props: RevurderingProps) => {
                                             triggerValidation={trigger}
                                             onSlettClick={() => formueArray.remove(index)}
                                             formuegrenser={formuegrenser}
+                                            watch={watch}
                                         />
                                     </Panel>
                                 </li>
@@ -177,6 +182,7 @@ const FormueBlokk = (props: {
     formController: Control<FormueFormData>;
     triggerValidation: UseFormTrigger<FormueFormData>;
     onSlettClick: (index: number) => void;
+    watch: UseFormWatch<FormueFormData>;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const blokkName = `formue.${props.blokkIndex}` as const;
@@ -187,10 +193,7 @@ const FormueBlokk = (props: {
         regnUtFormDataVerdier(props.blokkField.epsFormue)
     );
 
-    const watch = useWatch({
-        name: blokkName,
-        control: props.formController,
-    });
+    const watch = props.watch().formue[props.blokkIndex];
 
     const erVilkårOppfylt = erFormueVilkårOppfylt(
         søkersBekreftetFormue,
@@ -289,6 +292,7 @@ const FormueBlokk = (props: {
                         setBekreftetFormue={setSøkersBekreftetFormue}
                         formController={props.formController}
                         triggerValidation={props.triggerValidation}
+                        watch={props.watch}
                     />
                     {props.eps && (
                         <FormuePanel
@@ -298,6 +302,7 @@ const FormueBlokk = (props: {
                             setBekreftetFormue={setEPSBekreftetFormue}
                             formController={props.formController}
                             triggerValidation={props.triggerValidation}
+                            watch={props.watch}
                         />
                     )}
                 </Accordion>
@@ -334,23 +339,21 @@ const FormuePanel = (props: {
     setBekreftetFormue: (formue: number) => void;
     formController: Control<FormueFormData>;
     triggerValidation: UseFormTrigger<FormueFormData>;
+    watch: UseFormWatch<FormueFormData>;
 }) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedFormueMessages } });
     const [åpen, setÅpen] = useState<boolean>(false);
     const formueTilhører = props.tilhører === 'Søkers' ? 'søkersFormue' : 'epsFormue';
     const panelName = `formue.${props.blokkIndex}.${formueTilhører}` as const;
 
-    const formueVerdier = useWatch({
-        name: panelName,
-        control: props.formController,
-    });
+    const watch = props.watch();
+    const formueVerdier = watch.formue[props.blokkIndex]?.[formueTilhører];
 
     const handlePanelKlikk = () => (åpen ? handleBekreftClick() : setÅpen(true));
 
-    let utregnetFormue = regnUtFormDataVerdier(formueVerdier);
-    useEffect(() => {
-        utregnetFormue = regnUtFormDataVerdier(formueVerdier);
-    }, [formueVerdier]);
+    const utregnetFormue = useMemo(() => {
+        return regnUtFormDataVerdier(formueVerdier);
+    }, [watch]);
 
     const handleBekreftClick = () => {
         props.triggerValidation(panelName).then((isPanelValid) => {
