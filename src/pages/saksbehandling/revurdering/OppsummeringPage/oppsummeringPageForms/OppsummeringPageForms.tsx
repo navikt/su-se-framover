@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import * as pdfApi from '~api/pdfApi';
-import { Revurderingshandling } from '~api/revurderingApi';
+import { Forhåndsvarselhandling } from '~api/revurderingApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput, BrevInputProps } from '~components/brevInput/BrevInput';
 import { ApiResult } from '~lib/hooks';
@@ -191,13 +191,13 @@ export const ResultatEtterForhåndsvarselform = (props: {
 
 export const VelgForhåndsvarselForm = (props: {
     sakId: string;
-    revurderingId: string;
+    revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
-    onSubmit(args: { revurderingshandling: Revurderingshandling; fritekstTilBrev: string }): void;
+    onSubmit(args: { forhåndsvarselhandling: Forhåndsvarselhandling; fritekstTilBrev: string }): void;
 }) => {
     interface FormData {
-        revurderingshandling: Nullable<Revurderingshandling>;
+        forhåndsvarselhandling: Nullable<Forhåndsvarselhandling>;
         fritekstTilBrev: Nullable<string>;
     }
 
@@ -205,20 +205,24 @@ export const VelgForhåndsvarselForm = (props: {
 
     const form = useForm<FormData>({
         defaultValues: {
-            revurderingshandling: null,
+            forhåndsvarselhandling: null,
             fritekstTilBrev: null,
         },
         resolver: yupResolver(
             yup
                 .object<FormData>({
-                    revurderingshandling: yup.mixed().required().defined().oneOf(Object.values(Revurderingshandling)),
+                    forhåndsvarselhandling: yup
+                        .mixed()
+                        .required()
+                        .defined()
+                        .oneOf(Object.values(Forhåndsvarselhandling), 'Du må velge om bruker skal forhåndsvarsles'),
                     fritekstTilBrev: yup.string().nullable().required(),
                 })
                 .required()
         ),
     });
 
-    const revurderingshandling = form.watch('revurderingshandling');
+    const forhåndsvarselhandling = form.watch('forhåndsvarselhandling');
 
     return (
         <form
@@ -226,43 +230,43 @@ export const VelgForhåndsvarselForm = (props: {
                 props.onSubmit({
                     fritekstTilBrev: values.fritekstTilBrev ?? '',
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    revurderingshandling: values.revurderingshandling!,
+                    forhåndsvarselhandling: values.forhåndsvarselhandling!,
                 })
             )}
             className={styles.form}
         >
             <Controller
                 control={form.control}
-                name="revurderingshandling"
+                name="forhåndsvarselhandling"
                 render={({ field, fieldState }) => (
                     <RadioGroup
                         legend={intl.formatMessage({ id: 'velgForhåndsvarsel.handling.legend' })}
                         error={fieldState.error?.message}
                         name={field.name}
                         onChange={(val) => field.onChange(val)}
-                        value={field.value ?? undefined}
+                        value={field.value ?? ''}
                     >
-                        <Radio id={field.name} ref={field.ref} value={Revurderingshandling.Forhåndsvarsle}>
+                        <Radio id={field.name} ref={field.ref} value={Forhåndsvarselhandling.Forhåndsvarsle}>
                             {intl.formatMessage({ id: 'ja' })}
                         </Radio>
-                        <Radio value={Revurderingshandling.SendTilAttestering}>
+                        <Radio value={Forhåndsvarselhandling.IngenForhåndsvarsel}>
                             {intl.formatMessage({ id: 'nei' })}
                         </Radio>
                     </RadioGroup>
                 )}
             />
-            {revurderingshandling !== null && (
+            {forhåndsvarselhandling !== null && (
                 <Controller
                     control={form.control}
                     name="fritekstTilBrev"
                     render={({ field, fieldState }) =>
-                        revurderingshandling === Revurderingshandling.Forhåndsvarsle ? (
+                        forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle ? (
                             <OppsummeringsBrevInput
                                 tittel={intl.formatMessage({ id: 'brevInput.tekstTilForhåndsvarsel.tittel' })}
                                 onVisBrevClick={() =>
                                     pdfApi.fetchBrevutkastForForhåndsvarsel(
                                         props.sakId,
-                                        props.revurderingId,
+                                        props.revurdering.id,
                                         field.value ?? ''
                                     )
                                 }
@@ -276,7 +280,7 @@ export const VelgForhåndsvarselForm = (props: {
                                 onVisBrevClick={() =>
                                     pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                         sakId: props.sakId,
-                                        revurderingId: props.revurderingId,
+                                        revurderingId: props.revurdering.id,
                                         fritekst: field.value,
                                     })
                                 }
@@ -288,13 +292,11 @@ export const VelgForhåndsvarselForm = (props: {
                     }
                 />
             )}
-
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
-
             <RevurderingBunnknapper
                 onNesteClick="submit"
                 nesteKnappTekst={
-                    revurderingshandling === Revurderingshandling.Forhåndsvarsle
+                    forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle
                         ? intl.formatMessage({ id: 'sendForhåndsvarsel.button.label' })
                         : intl.formatMessage({ id: 'sendTilAttestering.button.label' })
                 }

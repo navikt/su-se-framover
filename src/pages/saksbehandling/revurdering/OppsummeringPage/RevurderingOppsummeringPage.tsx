@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
-import { Revurderingshandling } from '~api/revurderingApi';
+import { Forhåndsvarselhandling } from '~api/revurderingApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
@@ -77,39 +77,39 @@ const OppsummeringshandlingForm = (props: {
         }
     );
 
-    const [forhåndsvarsleEllerSendTilAttesteringState, forhåndsvarsleEllerSendTilAttestering] =
-        useAsyncActionCreatorWithArgsTransformer(
-            RevurderingActions.forhåndsvarsleEllerSendTilAttestering,
-            (args: { revurderingshandling: Revurderingshandling; brevtekst: string }) => {
-                if (props.feilmeldinger.length > 0) {
-                    feilRef.current?.focus();
-                    return;
-                }
-                return {
-                    sakId: props.sakId,
-                    revurderingId: props.revurdering.id,
-                    revurderingshandling: args.revurderingshandling,
-                    fritekstTilBrev: args.brevtekst,
-                };
-            },
-            (args) => {
-                if (args.revurderingshandling === Revurderingshandling.Forhåndsvarsle) {
+    const [lagreForhåndsvarselState, lagreForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
+        RevurderingActions.lagreForhåndsvarsel,
+        (args: { forhåndsvarselhandling: Forhåndsvarselhandling; brevtekst: string }) => {
+            if (props.feilmeldinger.length > 0) {
+                feilRef.current?.focus();
+                return;
+            }
+            return {
+                sakId: props.sakId,
+                revurderingId: props.revurdering.id,
+                forhåndsvarselhandling: args.forhåndsvarselhandling,
+                fritekstTilBrev: args.brevtekst,
+            };
+        },
+        (args) => {
+            switch (args.forhåndsvarselhandling) {
+                case Forhåndsvarselhandling.Forhåndsvarsle:
                     history.push(
                         Routes.createSakIntroLocation(
                             intl.formatMessage({ id: 'notification.sendtForhåndsvarsel' }),
                             props.sakId
                         )
                     );
-                } else {
-                    history.push(
-                        Routes.createSakIntroLocation(
-                            intl.formatMessage({ id: 'notification.sendtTilAttestering' }),
-                            props.sakId
-                        )
-                    );
-                }
+                    return;
+                case Forhåndsvarselhandling.IngenForhåndsvarsel:
+                    sendTilAttestering({
+                        vedtaksbrevtekst: args.brevtekst,
+                        skalFøreTilBrevutsending: true,
+                    });
+                    return;
             }
-        );
+        }
+    );
 
     const [fortsettEtterForhåndsvarselState, fortsettEtterForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
         RevurderingActions.fortsettEtterForhåndsvarsel,
@@ -197,13 +197,17 @@ const OppsummeringshandlingForm = (props: {
             ) : !erRevurderingForhåndsvarslet(props.revurdering) ? (
                 <VelgForhåndsvarselForm
                     sakId={props.sakId}
-                    revurderingId={props.revurdering.id}
+                    revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
-                    submitStatus={forhåndsvarsleEllerSendTilAttesteringState}
+                    submitStatus={
+                        RemoteData.isInitial(sendTilAttesteringState)
+                            ? lagreForhåndsvarselState
+                            : RemoteData.combine(lagreForhåndsvarselState, sendTilAttesteringState)
+                    }
                     onSubmit={(args) =>
-                        forhåndsvarsleEllerSendTilAttestering({
+                        lagreForhåndsvarsel({
                             brevtekst: args.fritekstTilBrev,
-                            revurderingshandling: args.revurderingshandling,
+                            forhåndsvarselhandling: args.forhåndsvarselhandling,
                         })
                     }
                 />

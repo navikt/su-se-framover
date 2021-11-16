@@ -167,22 +167,17 @@ export const beregnOgSimuler = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const forhåndsvarsleEllerSendTilAttestering = createAsyncThunk<
+export const lagreForhåndsvarsel = createAsyncThunk<
     SimulertRevurdering,
     {
         sakId: string;
         revurderingId: string;
-        revurderingshandling: revurderingApi.Revurderingshandling;
+        forhåndsvarselhandling: revurderingApi.Forhåndsvarselhandling;
         fritekstTilBrev: string;
     },
     { rejectValue: ApiError<RevurderingErrorCodes> }
->('revurdering/forhandsvarsle', async ({ sakId, revurderingId, revurderingshandling, fritekstTilBrev }, thunkApi) => {
-    const res = await revurderingApi.forhåndsvarsleEllerSendTilAttestering(
-        sakId,
-        revurderingId,
-        revurderingshandling,
-        fritekstTilBrev
-    );
+>('revurdering/forhandsvarsle', async ({ sakId, revurderingId, forhåndsvarselhandling, fritekstTilBrev }, thunkApi) => {
+    const res = await revurderingApi.lagreForhåndsvarsel(sakId, revurderingId, forhåndsvarselhandling, fritekstTilBrev);
     if (res.status === 'ok') {
         return res.data;
     }
