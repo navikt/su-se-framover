@@ -30,6 +30,7 @@ const HomePage = React.lazy(() => import('~pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~pages/saksbehandling/Saksoversikt'));
 const Soknad = React.lazy(() => import('~pages/søknad'));
 const Nøkkeltall = React.lazy(() => import('~pages/nøkkeltall'));
+const Klage = React.lazy(() => import('~pages/klage'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -69,6 +70,9 @@ const Root = () => {
                                         </Route>
                                         <Route path={routes.nøkkeltall.path}>
                                             <WithDocTitle title="Nøkkeltall" Page={Nøkkeltall} />
+                                        </Route>
+                                        <Route path={routes.klageRoute.path}>
+                                            <WithDocTitle title="Klage" Page={Klage} />
                                         </Route>
                                         <Route>404</Route>
                                     </Switch>

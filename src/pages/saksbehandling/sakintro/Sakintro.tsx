@@ -80,6 +80,13 @@ const Sakintro = (props: { sak: Sak }) => {
                             {intl.formatMessage({ id: 'knapp.revurder' })}
                         </LinkAsButton>
                     )}
+                    <LinkAsButton
+                        href={Routes.klageRoute.createURL({ sakId: props.sak.id })}
+                        className={styles.headerKnapp}
+                        variant="secondary"
+                    >
+                        Klage
+                    </LinkAsButton>
                 </div>
             </div>
             {props.sak.søknader.length > 0 ? (

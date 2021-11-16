@@ -167,6 +167,11 @@ export const gjenopptaStansOppsummeringRoute: Route<{ sakId: string; revurdering
     path: '/saksoversikt/:sakId/gjenoppta/:revurderingId/oppsummering',
     createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/gjenoppta/${revurderingId}/oppsummering`,
 };
+//---------------Klage------------------------------
+export const klageRoute: Route<{ sakId: string }> = {
+    path: '/klage/:sakId',
+    createURL: ({ sakId }) => `/klage/${sakId}`,
+};
 
 export interface SuccessNotificationState {
     notification?: string;
