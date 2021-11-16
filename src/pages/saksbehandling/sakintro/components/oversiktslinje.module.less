@@ -1,0 +1,25 @@
+@import '~/styles/variables.less';
+
+.container {
+    .entry {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: @spacing-xxs;
+        padding-top: @spacing-s;
+        padding-bottom: @spacing-s;
+        width: 100%;
+
+        .informasjonslinje {
+            display: flex;
+            width: 100%;
+            flex-flow: row wrap;
+            gap: @spacing-xxs;
+        }
+    }
+
+    .knapper {
+        display: flex;
+        align-items: center;
+    }
+}

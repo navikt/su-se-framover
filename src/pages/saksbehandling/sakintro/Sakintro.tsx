@@ -21,6 +21,7 @@ import { erIverksatt } from '~utils/behandling/behandlingUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
+import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import { AvsluttedeRevurderinger, ÅpneRevurderinger } from './RevurderingsLister';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
@@ -113,6 +114,21 @@ const Sakintro = (props: { sak: Sak }) => {
                     <AvslåtteSøknader sak={props.sak} avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                     <AvsluttedeRevurderinger avsluttedeRevurderinger={avsluttedeRevurderinger} intl={intl} />
+                    <Oversiktslinje kategoriTekst="Klager" entries={props.sak.klager} tittel="Åpen klage">
+                        {{
+                            oversiktsinformasjon: (entry) => (
+                                <>
+                                    <Informasjonslinje label="Opprettet" value={() => entry.opprettet} />
+                                    <Informasjonslinje label="id" value={() => entry.id} />
+                                </>
+                            ),
+                            knapper: (entry) => (
+                                <LinkAsButton variant="secondary" href="#">
+                                    Vurder vilkår
+                                </LinkAsButton>
+                            ),
+                        }}
+                    </Oversiktslinje>
                     <div>
                         <LinkPanel
                             href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
