@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField, Button, Select } from '@navikt/ds-react';
+import { TextField, Button, Select, Ingress } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -8,8 +8,10 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { Sak } from '~types/Sak';
+import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './klage-nb';
+import styles from './klage.module.less';
 
 interface Props {
     sak: Sak;
@@ -52,15 +54,18 @@ const VurderFormkrav = (props: Props) => {
     });
 
     return (
-        <form onSubmit={handleSubmit((values) => console.log(values))}>
+        <form className={styles.formkrav} onSubmit={handleSubmit((values) => console.log(values))}>
+            <Ingress>Vurder formkrav</Ingress>
             <Controller
                 control={control}
                 name="vedtakId"
                 render={({ field, fieldState }) => (
                     <Select label="Velg vedtak" error={fieldState.error?.message} {...field}>
-                        <option>Inget relevant vedtak</option>
+                        <option>{formatMessage('formkrav.vedtak.option.default')}</option>
                         {props.sak.vedtak.map((v) => (
-                            <option key={v.id}>{`${formatMessage(v.type)} ${v.opprettet}`}</option>
+                            <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
+                                v.opprettet
+                            )}`}</option>
                         ))}
                     </Select>
                 )}
@@ -70,7 +75,11 @@ const VurderFormkrav = (props: Props) => {
                 control={control}
                 name="innenforFristen"
                 render={({ field, fieldState }) => (
-                    <BooleanRadioGroup legend="Innenfor fristen" error={fieldState.error?.message} {...field} />
+                    <BooleanRadioGroup
+                        legend={formatMessage('formkrav.innenforFrist.label')}
+                        error={fieldState.error?.message}
+                        {...field}
+                    />
                 )}
             />
 
@@ -79,7 +88,7 @@ const VurderFormkrav = (props: Props) => {
                 name="klagesDetPåKonkreteElementerIVedtaket"
                 render={({ field, fieldState }) => (
                     <BooleanRadioGroup
-                        legend="klages det på konkrete ting"
+                        legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
                         error={fieldState.error?.message}
                         {...field}
                     />
@@ -90,7 +99,11 @@ const VurderFormkrav = (props: Props) => {
                 control={control}
                 name="signert"
                 render={({ field, fieldState }) => (
-                    <BooleanRadioGroup legend="signert?" error={fieldState.error?.message} {...field} />
+                    <BooleanRadioGroup
+                        legend={formatMessage('formkrav.signert.label')}
+                        error={fieldState.error?.message}
+                        {...field}
+                    />
                 )}
             />
 

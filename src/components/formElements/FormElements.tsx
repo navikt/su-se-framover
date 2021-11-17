@@ -28,7 +28,7 @@ export const BooleanRadioGroup: React.ForwardRefExoticComponent<
 > = React.forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, ...props }, ref) => {
     const { formatMessage } = useI18n({ messages: nb });
     return (
-        <RadioGroup {...props} value={value?.toString()} onChange={(val) => onChange(val === true.toString())}>
+        <RadioGroup {...props} defaultValue={value?.toString()} onChange={(val) => onChange(val === true.toString())}>
             <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
                 {labels?.true ?? formatMessage('label.ja')}
             </Radio>

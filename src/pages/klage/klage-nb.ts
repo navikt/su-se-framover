@@ -11,5 +11,10 @@ const vedtakMessages: { [key in VedtakType]: string } = {
 };
 
 export default {
+    'formkrav.innenforFrist.label': 'Er klagefristen overholdt?',
+    'formkrav.klagesPåKonkreteElementer.label': 'Klages det på konkrete elementer i vedtaket?',
+    'formkrav.signert.label': 'Er klagen signert?',
+    'formkrav.vedtak.label': 'Vedtaket som er påklagd',
+    'formkrav.vedtak.option.default': 'Velg vedtak',
     ...vedtakMessages,
 };
