@@ -1,9 +1,12 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField, Button, Select, Ingress } from '@navikt/ds-react';
+import { TextField, Button, Select, Ingress, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import * as klageApi from '~api/klageApi';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
+import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -36,6 +39,7 @@ const schema = yup.object<FormData>({
 const VurderFormkrav = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.klageVurderFormkrav>();
     const { formatMessage } = useI18n({ messages });
+    const [vilkårsvurderingStatus, vilkårsvurder] = useApiCall(klageApi.vilkårsvurder);
     const klage = props.sak.klager.find((klage) => klage.id === urlParams.klageId);
 
     if (!klage) {
@@ -54,8 +58,21 @@ const VurderFormkrav = (props: Props) => {
     });
 
     return (
-        <form className={styles.form} onSubmit={handleSubmit((values) => console.log(values))}>
-            <Ingress>Vurder formkrav</Ingress>
+        <form
+            className={styles.form}
+            onSubmit={handleSubmit((values) =>
+                vilkårsvurder({
+                    sakId: urlParams.sakId,
+                    klageId: urlParams.klageId,
+                    vedtakId: values.vedtakId,
+                    innenforFristen: values.innenforFristen,
+                    klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
+                    erUnderskrevet: values.signert,
+                    begrunnelse: values.begrunnelse,
+                })
+            )}
+        >
+            <Ingress>{formatMessage('formkrav.tittel')}</Ingress>
             <Controller
                 control={control}
                 name="vedtakId"
@@ -108,7 +125,10 @@ const VurderFormkrav = (props: Props) => {
             />
 
             <TextField {...register('begrunnelse')} error={formState.errors.begrunnelse?.message} label="Begrunnelse" />
-            <Button>Submit</Button>
+            <Button>
+                {formatMessage('formkrav.vedtak.button.submit')}
+                {RemoteData.isPending(vilkårsvurderingStatus) && <Loader />}
+            </Button>
         </form>
     );
 };

@@ -14,10 +14,12 @@ export default {
     'opprett.button.submit': 'Registrer',
     'opprett.success.notification': 'Ny klage ble registrert',
 
+    'formkrav.tittel': 'Vurder formkrav',
     'formkrav.innenforFrist.label': 'Er klagefristen overholdt?',
     'formkrav.klagesPåKonkreteElementer.label': 'Klages det på konkrete elementer i vedtaket?',
     'formkrav.signert.label': 'Er klagen signert?',
     'formkrav.vedtak.label': 'Vedtaket som er påklagd',
     'formkrav.vedtak.option.default': 'Velg vedtak',
+    'formkrav.vedtak.button.submit': 'Bekreft og fortsett',
     ...vedtakMessages,
 };
