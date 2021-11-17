@@ -1,0 +1,30 @@
+@import '~/styles/variables.less';
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+
+    .periodeOgSlett {
+        position: relative;
+
+        .søppelbøtte {
+            height: fit-content;
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin-left: auto;
+        }
+
+        .periode {
+            display: flex;
+            gap: @spacing-xs @spacing;
+            flex-wrap: wrap;
+
+            .dato {
+                min-width: 2rem;
+                max-width: 10rem;
+            }
+        }
+    }
+}

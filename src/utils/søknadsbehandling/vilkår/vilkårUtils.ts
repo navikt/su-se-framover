@@ -137,17 +137,17 @@ export const mapToVilkårsinformasjon = (
             erStartet: institusjonsopphold !== null,
         },
         {
-            status:
-                grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.status === Utenlandsoppholdstatus.Uavklart
-                    ? VilkårVurderingStatus.Uavklart
-                    : grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.status ===
-                      Utenlandsoppholdstatus.SkalHoldeSegINorge
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: !grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0].status
+                ? VilkårVurderingStatus.IkkeVurdert
+                : grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0].status ===
+                  Utenlandsoppholdstatus.Uavklart
+                ? VilkårVurderingStatus.Uavklart
+                : grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0].status ===
+                  Utenlandsoppholdstatus.SkalHoldeSegINorge
+                ? VilkårVurderingStatus.Ok
+                : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.OppholdIUtlandet,
-            begrunnelse: grunnlagsdataOgVilkårsvurderinger?.oppholdIUtlandet?.begrunnelse ?? null,
+            begrunnelse: grunnlagsdataOgVilkårsvurderinger?.utenlandsopphold.vurderinger[0]?.begrunnelse ?? null,
             erStartet: grunnlagsdataOgVilkårsvurderinger !== null,
         },
         {

@@ -7,6 +7,7 @@ export const utenlandsoppholdStatusMessages: { [key in Utenlandsoppholdstatus]: 
 };
 
 export default {
+    'periode.label': 'Gjeldende periode',
     'status.label': 'Skal søkeren oppholde seg mer enn 90 dager i utlandet?',
     'begrunnelse.label': 'Begrunnelse',
 };

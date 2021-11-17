@@ -11,5 +11,5 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];
     formue: FormueVilkår;
-    oppholdIUtlandet: Utenlandsopphold;
+    utenlandsopphold: Utenlandsopphold;
 }

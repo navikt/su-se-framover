@@ -134,6 +134,7 @@ export const lagreUtenlandsopphold = createAsyncThunk<
         behandlingId: string;
         status: Utenlandsoppholdstatus;
         begrunnelse: Nullable<string>;
+        periode: Periode<string>;
     },
     { rejectValue: ApiError }
 >('behandling/vilkår/utenlandsopphold', async (arg, thunkApi) => {

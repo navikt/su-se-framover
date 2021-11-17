@@ -3,7 +3,7 @@ import { Nullable } from '~lib/types';
 import { Attestering } from './Behandling';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Utenlandsoppholdstatus } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { UtenlandsPeriode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 import { Vedtak } from './Vedtak';
@@ -181,7 +181,7 @@ export enum InformasjonSomRevurderes {
     Inntekt = 'Inntekt',
     Bosituasjon = 'Bosituasjon',
     Formue = 'Formue',
-    Utenlandsopphold = 'OppholdIUtlandet',
+    Utenlandsopphold = 'Utenlandsopphold',
 }
 
 export enum Vurderingstatus {
@@ -201,8 +201,7 @@ export interface BosituasjonRequest {
 export interface UtenlandsoppholdRequest {
     sakId: string;
     revurderingId: string;
-    status: Utenlandsoppholdstatus;
-    begrunnelse: Nullable<string>;
+    utenlandsopphold: UtenlandsPeriode[];
 }
 
 export interface FormuegrunnlagVerdier {

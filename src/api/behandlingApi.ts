@@ -193,13 +193,15 @@ export async function lagreUtenlandsopphold(arg: {
     behandlingId: string;
     status: Utenlandsoppholdstatus;
     begrunnelse: Nullable<string>;
+    periode: Periode<string>;
 }): Promise<ApiClientResult<Behandling>> {
     return apiClient({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/vilkår/oppholdIUtlandet`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/utenlandsopphold`,
         method: 'POST',
         body: {
             status: arg.status,
             begrunnelse: arg.begrunnelse,
+            periode: arg.periode,
         },
     });
 }

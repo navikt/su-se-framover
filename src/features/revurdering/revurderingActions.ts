@@ -322,8 +322,7 @@ export const lagreUtenlandsopphold = createAsyncThunk<
     const res = await revurderingApi.lagreUtenlandsopphold({
         sakId: arg.sakId,
         revurderingId: arg.revurderingId,
-        status: arg.status,
-        begrunnelse: arg.begrunnelse,
+        utenlandsopphold: arg.utenlandsopphold,
     });
     if (res.status === 'ok') {
         return res.data;

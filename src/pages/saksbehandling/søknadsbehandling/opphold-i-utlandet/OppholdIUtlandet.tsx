@@ -22,6 +22,7 @@ import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
+import { sluttenAvMåneden, toIsoDateOnlyString } from '~utils/date/dateUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
@@ -59,8 +60,9 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
     const initialValues = {
-        status: props.behandling.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet?.status ?? null,
-        begrunnelse: props.behandling.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet?.begrunnelse ?? null,
+        status: props.behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0]?.status ?? null,
+        begrunnelse:
+            props.behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0]?.begrunnelse ?? null,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
@@ -93,6 +95,12 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                 behandlingId: props.behandling.id,
                 status: values.status,
                 begrunnelse: values.begrunnelse,
+                periode: {
+                    fraOgMed: props.behandling.stønadsperiode?.periode.fraOgMed ?? toIsoDateOnlyString(new Date()),
+                    tilOgMed:
+                        props.behandling.stønadsperiode?.periode.tilOgMed ??
+                        toIsoDateOnlyString(sluttenAvMåneden(new Date())),
+                },
             },
             () => {
                 clearDraft();
