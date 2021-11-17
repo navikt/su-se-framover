@@ -18,6 +18,7 @@ import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Søknad } from '~types/Søknad';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
+import { formatDate } from '~utils/date/dateUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
@@ -118,7 +119,7 @@ const Sakintro = (props: { sak: Sak }) => {
                         {{
                             oversiktsinformasjon: (entry) => (
                                 <>
-                                    <Informasjonslinje label="Opprettet" value={() => entry.opprettet} />
+                                    <Informasjonslinje label="Opprettet" value={() => formatDate(entry.opprettet)} />
                                     <Informasjonslinje label="id" value={() => entry.id} />
                                 </>
                             ),

@@ -25,6 +25,10 @@ export const Informasjonslinje = <T extends object>(props: Oversiktsinformasjon<
 );
 
 const Oversiktslinje = <T extends { id: string }>(props: Props<T>) => {
+    if (props.entries.length === 0) {
+        return null;
+    }
+
     return (
         <div className={styles.container}>
             <Heading level="2" size="medium" spacing>

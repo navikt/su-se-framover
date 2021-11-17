@@ -11,6 +11,9 @@ const vedtakMessages: { [key in VedtakType]: string } = {
 };
 
 export default {
+    'opprett.button.submit': 'Registrer',
+    'opprett.success.notification': 'Ny klage ble registrert',
+
     'formkrav.innenforFrist.label': 'Er klagefristen overholdt?',
     'formkrav.klagesPåKonkreteElementer.label': 'Klages det på konkrete elementer i vedtaket?',
     'formkrav.signert.label': 'Er klagen signert?',

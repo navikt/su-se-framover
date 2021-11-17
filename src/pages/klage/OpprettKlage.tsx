@@ -1,13 +1,19 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField } from '@navikt/ds-react';
+import { Button, Ingress, Loader, TextField } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 
 import * as klageApi from '~api/klageApi';
 import { useApiCall } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useRouteParams } from '~lib/routes';
 import yup from '~lib/validering';
+
+import messages from './klage-nb';
+import styles from './klage.module.less';
 
 interface FormData {
     journalpostId: string;
@@ -18,29 +24,46 @@ const schema = yup.object<FormData>({
 
 const OpprettKlage = () => {
     const urlParams = useRouteParams<typeof Routes.klageRoute>();
-    const [, opprettKlage] = useApiCall(klageApi.opprettKlage);
+    const [opprettKlageStatus, opprettKlage] = useApiCall(klageApi.opprettKlage);
     const { handleSubmit, register, formState } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: {
             journalpostId: '',
         },
     });
+    const history = useHistory();
+    const { formatMessage } = useI18n({ messages });
 
     return (
         <form
+            className={styles.form}
             onSubmit={handleSubmit((values) =>
-                opprettKlage({
-                    sakId: urlParams.sakId,
-                    journalpostId: values.journalpostId,
-                })
+                opprettKlage(
+                    {
+                        sakId: urlParams.sakId,
+                        journalpostId: values.journalpostId,
+                    },
+                    () => {
+                        history.push(
+                            Routes.createSakIntroLocation(
+                                formatMessage('opprett.success.notification'),
+                                urlParams.sakId
+                            )
+                        );
+                    }
+                )
             )}
         >
+            <Ingress>Opprett klage </Ingress>
             <TextField
                 {...register('journalpostId')}
                 error={formState.errors.journalpostId?.message}
                 label="JournalpostId"
             />
-            <Button>Opprett Klage</Button>
+            <Button>
+                {formatMessage('opprett.button.submit')}
+                {RemoteData.isPending(opprettKlageStatus) && <Loader />}
+            </Button>
         </form>
     );
 };

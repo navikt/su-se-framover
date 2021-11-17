@@ -54,7 +54,7 @@ const VurderFormkrav = (props: Props) => {
     });
 
     return (
-        <form className={styles.formkrav} onSubmit={handleSubmit((values) => console.log(values))}>
+        <form className={styles.form} onSubmit={handleSubmit((values) => console.log(values))}>
             <Ingress>Vurder formkrav</Ingress>
             <Controller
                 control={control}
