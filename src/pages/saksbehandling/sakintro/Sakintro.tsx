@@ -82,7 +82,7 @@ const Sakintro = (props: { sak: Sak }) => {
                         </LinkAsButton>
                     )}
                     <LinkAsButton
-                        href={Routes.klageRoute.createURL({ sakId: props.sak.id })}
+                        href={Routes.klageOpprett.createURL({ sakId: props.sak.id })}
                         className={styles.headerKnapp}
                         variant="secondary"
                     >
@@ -123,7 +123,13 @@ const Sakintro = (props: { sak: Sak }) => {
                                 </>
                             ),
                             knapper: (entry) => (
-                                <LinkAsButton variant="secondary" href="#">
+                                <LinkAsButton
+                                    variant="secondary"
+                                    href={Routes.klageVurderFormkrav.createURL({
+                                        sakId: props.sak.id,
+                                        klageId: entry.id,
+                                    })}
+                                >
                                     Vurder vilkår
                                 </LinkAsButton>
                             ),

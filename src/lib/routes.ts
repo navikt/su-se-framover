@@ -173,6 +173,15 @@ export const klageRoute: Route<{ sakId: string }> = {
     createURL: ({ sakId }) => `/klage/${sakId}`,
 };
 
+export const klageOpprett: Route<{ sakId: string }> = {
+    path: '/klage/:sakId/opprett',
+    createURL: ({ sakId }) => `/klage/${sakId}/opprett`,
+};
+export const klageVurderFormkrav: Route<{ sakId: string; klageId: string }> = {
+    path: '/klage/:sakId/:klageId/formkrav',
+    createURL: ({ sakId, klageId }) => `/klage/${sakId}/${klageId}/formkrav`,
+};
+
 export interface SuccessNotificationState {
     notification?: string;
 }

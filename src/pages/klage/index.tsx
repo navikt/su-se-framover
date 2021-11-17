@@ -1,47 +1,44 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField } from '@navikt/ds-react';
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { pipe } from 'fp-ts/lib/function';
+import React, { useEffect } from 'react';
+import { Route, Switch } from 'react-router-dom';
 
-import * as klageApi from '~api/klageApi';
-import { useApiCall } from '~lib/hooks';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as Routes from '~lib/routes';
-import { useRouteParams } from '~lib/routes';
-import yup from '~lib/validering';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
 
-interface FormData {
-    journalpostId: string;
-}
-const schema = yup.object<FormData>({
-    journalpostId: yup.string().trim().required(),
-});
+import OpprettKlage from './OpprettKlage';
+import VurderFormkrav from './VurderFormkrav';
 
 const Klage = () => {
-    const urlParams = useRouteParams<typeof Routes.klageRoute>();
-    const [, opprettKlage] = useApiCall(klageApi.opprettKlage);
-    const { handleSubmit, register, formState } = useForm<FormData>({
-        resolver: yupResolver(schema),
-        defaultValues: {
-            journalpostId: '',
-        },
-    });
+    const urlParams = Routes.useRouteParams<typeof Routes.klageRoute>();
 
-    return (
-        <form
-            onSubmit={handleSubmit((values) =>
-                opprettKlage({
-                    sakId: urlParams.sakId,
-                    journalpostId: values.journalpostId,
-                })
-            )}
-        >
-            <TextField
-                {...register('journalpostId')}
-                error={formState.errors.journalpostId?.message}
-                label="JournalpostId"
-            />
-            <Button>Opprett Klage</Button>
-        </form>
+    const { sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (RemoteData.isInitial(sak)) {
+            dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
+        }
+    }, [sak._tag]);
+
+    return pipe(
+        sak,
+        RemoteData.fold(
+            () => null,
+            () => null,
+            () => null,
+            (s) => (
+                <Switch>
+                    <Route path={Routes.klageOpprett.path}>
+                        <OpprettKlage />
+                    </Route>
+                    <Route path={Routes.klageVurderFormkrav.path}>
+                        <VurderFormkrav sak={s} />
+                    </Route>
+                </Switch>
+            )
+        )
     );
 };
 

@@ -17,14 +17,15 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
         true: string;
         false: string;
     };
-    ref?: React.Ref<HTMLInputElement>;
     onChange(val: boolean): void;
 }
 
 /**
  * Første radioboks (true-alternativet) vil få `id = props.id ?? props.name`, og ref vil også bli gitt til denne.
  */
-export const BooleanRadioGroup = ({ ref, labels, value, onChange, ...props }: BooleanRadioGroupProps) => {
+export const BooleanRadioGroup: React.ForwardRefExoticComponent<
+    BooleanRadioGroupProps & React.RefAttributes<HTMLInputElement>
+> = React.forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, ...props }, ref) => {
     const { formatMessage } = useI18n({ messages: nb });
     return (
         <RadioGroup {...props} value={value?.toString()} onChange={(val) => onChange(val === true.toString())}>
@@ -34,7 +35,7 @@ export const BooleanRadioGroup = ({ ref, labels, value, onChange, ...props }: Bo
             <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>
         </RadioGroup>
     );
-};
+});
 
 export const CollapsableFormElementDescription = (props: { title: string; children: React.ReactNode }) => {
     const [visMer, setVisMer] = useState(false);
