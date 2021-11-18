@@ -89,7 +89,7 @@ export const UtenlandsoppholdVilkårsblokk = (props: UtenlandsoppholdVilkårsblo
             status={props.info.status}
             søknadfaktablokk={<UtenlandsOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                (props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0]?.status ?? null) === null ? (
+                (props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]?.status ?? null) === null ? (
                     <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
                 ) : (
                     <Faktablokk
@@ -100,10 +100,10 @@ export const UtenlandsoppholdVilkårsblokk = (props: UtenlandsoppholdVilkårsblo
                                     id: keyOf<typeof saksbehandlingMessages>('radio.oppholdIUtland.legend'),
                                 }),
                                 verdi:
-                                    props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0].status ===
+                                    props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status ===
                                     Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0]
+                                        : props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]
                                               .status === Utenlandsoppholdstatus.SkalHoldeSegINorge
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({

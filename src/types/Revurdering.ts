@@ -3,7 +3,7 @@ import { Nullable } from '~lib/types';
 import { Attestering } from './Behandling';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { UtenlandsPeriode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 import { Vedtak } from './Vedtak';
@@ -201,7 +201,7 @@ export interface BosituasjonRequest {
 export interface UtenlandsoppholdRequest {
     sakId: string;
     revurderingId: string;
-    utenlandsopphold: UtenlandsPeriode[];
+    utenlandsopphold: Utenlandsperiode[];
 }
 
 export interface FormuegrunnlagVerdier {

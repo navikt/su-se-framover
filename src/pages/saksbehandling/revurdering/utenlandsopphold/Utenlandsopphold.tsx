@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ISODateStringToUTCDate } from '@navikt/ds-datepicker/lib/utils/dateFormatUtils';
 import { Delete } from '@navikt/ds-icons';
 import { Button, Heading, Panel, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import React, { useState } from 'react';
@@ -23,7 +22,7 @@ import revurderingmessages, { stegmessages } from '~pages/saksbehandling/revurde
 import sharedStyles from '~pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { sluttenAvMåneden, toIsoDateOnlyString } from '~utils/date/dateUtils';
+import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~utils/date/dateUtils';
 
 import messages from './utenlandsopphold-nb';
 import styles from './utenlandsopphold.module.less';
@@ -64,16 +63,18 @@ const schemaValidation = yup.object<UtenlandsoppholdForm>({
 const Utenlandsopphold = (props: StegProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...stegmessages, ...revurderingmessages } });
     const history = useHistory();
-    const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger;
+    const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger ?? [
+        { status: undefined, begrunnelse: null, periode: props.revurdering.periode },
+    ];
     const form = useForm<UtenlandsoppholdForm>({
         resolver: yupResolver(schemaValidation),
         defaultValues: {
             utenlandsopphold: vurderinger.map((vurdering) => ({
-                status: vurdering?.status,
-                begrunnelse: vurdering?.begrunnelse ?? null,
+                status: vurdering.status,
+                begrunnelse: vurdering.begrunnelse ?? null,
                 periode: {
-                    fraOgMed: ISODateStringToUTCDate(vurdering?.periode.fraOgMed),
-                    tilOgMed: ISODateStringToUTCDate(vurdering?.periode.tilOgMed),
+                    fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
+                    tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
                 },
             })),
         },
@@ -248,9 +249,11 @@ const Utenlandsopphold = (props: StegProps) => {
                         <Heading level="2" size="large" spacing>
                             {formatMessage('eksisterende.vedtakinfo.tittel')}
                         </Heading>
-                        <Utenlandsoppsummering
-                            utenlandsopphold={props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
-                        />
+                        {props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold && (
+                            <Utenlandsoppsummering
+                                utenlandsopphold={props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
+                            />
+                        )}
                     </div>
                 ),
             }}

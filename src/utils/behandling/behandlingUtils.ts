@@ -86,7 +86,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
         behandling.behandlingsinformasjon.lovligOpphold?.status === LovligOppholdStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.fastOppholdINorge?.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.institusjonsopphold?.status === InstitusjonsoppholdStatus.VilkårIkkeOppfylt ||
-        behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0]?.status ===
+        behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]?.status ===
             Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet ||
         behandling.behandlingsinformasjon.formue?.status === FormueStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.personligOppmøte?.status === PersonligOppmøteStatus.IkkeMøttPersonlig

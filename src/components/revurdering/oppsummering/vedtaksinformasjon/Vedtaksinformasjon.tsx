@@ -6,6 +6,7 @@ import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
 import { Utenlandsoppsummering } from '~components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import { useI18n } from '~lib/i18n';
+import { Nullable } from '~lib/types';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -159,14 +160,18 @@ const Fradragblokk = (props: {
     );
 };
 
-const Utenlandsblokk = (props: { nyeData: Utenlandsopphold; gamleData: Utenlandsopphold }) => {
+const Utenlandsblokk = (props: { nyeData: Nullable<Utenlandsopphold>; gamleData: Nullable<Utenlandsopphold> }) => {
     const { formatMessage } = useI18n({ messages });
+
+    if (props.nyeData === null) {
+        return null;
+    }
 
     return (
         <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
             {{
                 venstre: <Utenlandsoppsummering utenlandsopphold={props.nyeData} />,
-                høyre: <Utenlandsoppsummering utenlandsopphold={props.gamleData} />,
+                høyre: props.gamleData ? <Utenlandsoppsummering utenlandsopphold={props.gamleData} /> : null,
             }}
         </Rad>
     );

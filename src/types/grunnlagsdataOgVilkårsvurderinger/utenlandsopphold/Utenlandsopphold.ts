@@ -1,14 +1,14 @@
 import { Nullable } from '~lib/types';
 import { Periode } from '~types/Periode';
 
-export interface UtenlandsPeriode {
+export interface Utenlandsperiode {
     status: Utenlandsoppholdstatus;
     periode: Periode<string>;
     begrunnelse: Nullable<string>;
 }
 
 export interface Utenlandsopphold {
-    vurderinger: UtenlandsPeriode[];
+    vurderinger: Utenlandsperiode[];
 }
 
 export enum Utenlandsoppholdstatus {

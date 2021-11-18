@@ -60,9 +60,9 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
     const initialValues = {
-        status: props.behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0]?.status ?? null,
+        status: props.behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]?.status ?? null,
         begrunnelse:
-            props.behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold.vurderinger[0]?.begrunnelse ?? null,
+            props.behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]?.begrunnelse ?? null,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
