@@ -13,6 +13,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { Klage } from '~types/Klage';
 import { Sak } from '~types/Sak';
 import { formatDateTime } from '~utils/date/dateUtils';
 
@@ -21,6 +22,7 @@ import styles from './klage.module.less';
 
 interface Props {
     sak: Sak;
+    klage: Klage;
 }
 
 interface FormData {
@@ -40,23 +42,17 @@ const schema = yup.object<FormData>({
 });
 
 const VurderFormkrav = (props: Props) => {
-    const urlParams = Routes.useRouteParams<typeof Routes.klageVurderFormkrav>();
     const { formatMessage } = useI18n({ messages });
     const [vilkårsvurderingStatus, vilkårsvurder] = useApiCall(klageApi.vilkårsvurder);
-    const klage = props.sak.klager.find((klage) => klage.id === urlParams.klageId);
-
-    if (!klage) {
-        return <div>404</div>;
-    }
 
     const { handleSubmit, register, formState, control } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: {
-            vedtakId: klage.vedtakId ?? '',
-            innenforFristen: klage.innenforFristen,
-            klagesDetPåKonkreteElementerIVedtaket: klage.klagesDetPåKonkreteElementerIVedtaket,
-            signert: klage.erUnderskrevet,
-            begrunnelse: klage.begrunnelse,
+            vedtakId: props.klage.vedtakId ?? '',
+            innenforFristen: props.klage.innenforFristen,
+            klagesDetPåKonkreteElementerIVedtaket: props.klage.klagesDetPåKonkreteElementerIVedtaket,
+            signert: props.klage.erUnderskrevet,
+            begrunnelse: props.klage.begrunnelse,
         },
     });
 
@@ -67,8 +63,8 @@ const VurderFormkrav = (props: Props) => {
                 console.log(values);
 
                 vilkårsvurder({
-                    sakId: urlParams.sakId,
-                    klageId: urlParams.klageId,
+                    sakId: props.sak.id,
+                    klageId: props.klage.id,
                     vedtakId: values.vedtakId,
                     innenforFristen: values.innenforFristen,
                     klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
@@ -85,9 +81,7 @@ const VurderFormkrav = (props: Props) => {
                     <Select label="Velg vedtak" error={fieldState.error?.message} {...field}>
                         <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
                         {props.sak.vedtak.map((v) => (
-                            <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
-                                v.opprettet
-                            )}`}</option>
+                            <option key={v.id} value={v.id}>{`lol ${formatDateTime(v.opprettet)}`}</option>
                         ))}
                     </Select>
                 )}
@@ -131,10 +125,7 @@ const VurderFormkrav = (props: Props) => {
 
             <TextField {...register('begrunnelse')} error={formState.errors.begrunnelse?.message} label="Begrunnelse" />
             <div className={styles.buttons}>
-                <LinkAsButton
-                    variant="secondary"
-                    href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })}
-                >
+                <LinkAsButton variant="secondary" href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
                     {formatMessage('formkrav.button.tilbake')}
                 </LinkAsButton>
                 <Button>

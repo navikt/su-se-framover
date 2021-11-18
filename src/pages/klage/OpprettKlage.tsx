@@ -11,8 +11,8 @@ import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { useRouteParams } from '~lib/routes';
 import yup from '~lib/validering';
+import { Sak } from '~types/Sak';
 
 import messages from './klage-nb';
 import styles from './klage.module.less';
@@ -24,8 +24,7 @@ const schema = yup.object<FormData>({
     journalpostId: yup.string().trim().required(),
 });
 
-const OpprettKlage = () => {
-    const urlParams = useRouteParams<typeof Routes.klageRoute>();
+const OpprettKlage = (props: { sak: Sak }) => {
     const [opprettKlageStatus, opprettKlage] = useApiCall(klageApi.opprettKlage);
     const { handleSubmit, register, formState } = useForm<FormData>({
         resolver: yupResolver(schema),
@@ -42,15 +41,12 @@ const OpprettKlage = () => {
             onSubmit={handleSubmit((values) =>
                 opprettKlage(
                     {
-                        sakId: urlParams.sakId,
+                        sakId: props.sak.id,
                         journalpostId: values.journalpostId,
                     },
                     () => {
                         history.push(
-                            Routes.createSakIntroLocation(
-                                formatMessage('opprett.success.notification'),
-                                urlParams.sakId
-                            )
+                            Routes.createSakIntroLocation(formatMessage('opprett.success.notification'), props.sak.id)
                         );
                     }
                 )
@@ -63,10 +59,7 @@ const OpprettKlage = () => {
                 label="JournalpostId"
             />
             <div className={styles.buttons}>
-                <LinkAsButton
-                    variant="secondary"
-                    href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })}
-                >
+                <LinkAsButton variant="secondary" href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
                     {formatMessage('opprett.button.tilbake')}
                 </LinkAsButton>
                 <Button>

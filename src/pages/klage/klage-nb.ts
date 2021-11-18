@@ -25,4 +25,6 @@ export default {
     'formkrav.button.tilbake': 'Tilbake',
     'formkrav.button.submit': 'Bekreft og fortsett',
     ...vedtakMessages,
+
+    'feil.fantIkkeKlage': 'Fant ikke klage',
 };

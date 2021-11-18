@@ -1,47 +1,44 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { pipe } from 'fp-ts/lib/function';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { KlageSteg } from '~pages/saksbehandling/types';
+import { Sak } from '~types/Sak';
 
-import styles from './klage.module.less';
-import OpprettKlage from './OpprettKlage';
+import BehandlingAvKlage from './behandlingAvKlage/BehandlingAvKlage';
+//import OpprettKlage from './OpprettKlage';
+import messages from './klage-nb';
 import VurderFormkrav from './VurderFormkrav';
 
-const Klage = () => {
-    const urlParams = Routes.useRouteParams<typeof Routes.klageRoute>();
+const Klage = (props: { sak: Sak }) => {
+    const urlParams = Routes.useRouteParams<typeof Routes.klage>();
+    const klage = props.sak.klager.find((klage) => klage.id === urlParams.klageId);
+    const { formatMessage } = useI18n({ messages });
 
-    const { sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
-    const dispatch = useAppDispatch();
+    if (!klage) {
+        return <div>{formatMessage('feil.fantIkkeKlage')}</div>;
+    }
 
-    useEffect(() => {
-        if (RemoteData.isInitial(sak)) {
-            dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
-        }
-    }, [sak._tag]);
-
-    return pipe(
-        sak,
-        RemoteData.fold(
-            () => null,
-            () => null,
-            () => null,
-            (s) => (
-                <div className={styles.container}>
-                    <Switch>
-                        <Route path={Routes.klageOpprett.path}>
-                            <OpprettKlage />
-                        </Route>
-                        <Route path={Routes.klageVurderFormkrav.path}>
-                            <VurderFormkrav sak={s} />
-                        </Route>
-                    </Switch>
-                </div>
-            )
-        )
+    return (
+        <div>
+            <Switch>
+                <Route
+                    path={Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: KlageSteg.Formkrav })}
+                >
+                    <VurderFormkrav sak={props.sak} klage={klage} />
+                </Route>
+                <Route
+                    path={Routes.klage.createURL({
+                        sakId: props.sak.id,
+                        klageId: klage.id,
+                        steg: KlageSteg.Behandling,
+                    })}
+                >
+                    <BehandlingAvKlage sak={props.sak} klage={klage} />
+                </Route>
+            </Switch>
+        </div>
     );
 };
 

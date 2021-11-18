@@ -22,6 +22,8 @@ import { formatDate } from '~utils/date/dateUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
+import { KlageSteg } from '../types';
+
 import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import { AvsluttedeRevurderinger, ÅpneRevurderinger } from './RevurderingsLister';
 import messages from './sakintro-nb';
@@ -136,9 +138,10 @@ const Sakintro = (props: { sak: Sak }) => {
                             knapper: (entry) => (
                                 <LinkAsButton
                                     variant="secondary"
-                                    href={Routes.klageVurderFormkrav.createURL({
+                                    href={Routes.klage.createURL({
                                         sakId: props.sak.id,
                                         klageId: entry.id,
+                                        steg: KlageSteg.Formkrav,
                                     })}
                                 >
                                     Vurder vilkår
