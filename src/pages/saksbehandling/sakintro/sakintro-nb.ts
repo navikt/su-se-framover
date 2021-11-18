@@ -23,7 +23,10 @@ export default {
     'søknad.godkjenteSøknader.tittel': 'Godkjente søknader',
     'søknad.åpneSøknader.tittel': 'Åpne søknader',
 
-    'knapp.revurder': 'Revurder',
+    'select.label': 'Start en behandling',
+    'select.option.default': 'Velg behandling',
+    'select.option.klage': 'Klage',
+    'select.option.revurder': 'Revurder',
     'knapp.stoppUtbetaling': 'Stopp utbetaling',
 
     'link.dokumenter': 'Brev sendt fra SU',

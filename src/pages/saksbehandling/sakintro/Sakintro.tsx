@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, LinkPanel, Loader } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Loader, Select } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import React from 'react';
 import { IntlShape } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { FeatureToggle } from '~api/featureToggleApi';
 import { ÅpentBrev } from '~assets/Illustrations';
@@ -36,6 +36,11 @@ const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotifica
     );
 };
 
+enum NyBehandling {
+    REVURDER = 'REVURDER',
+    KLAGE = 'KLAGE',
+}
+
 const Sakintro = (props: { sak: Sak }) => {
     const locationState = useNotificationFromLocation();
     const { intl } = useI18n({ messages });
@@ -48,6 +53,7 @@ const Sakintro = (props: { sak: Sak }) => {
         .sort((a: Søknad, b: Søknad) => {
             return Date.parse(a.opprettet) - Date.parse(b.opprettet);
         });
+    const history = useHistory();
 
     const iverksatteInnvilgedeSøknader = getIverksatteInnvilgedeSøknader(props.sak);
 
@@ -63,32 +69,36 @@ const Sakintro = (props: { sak: Sak }) => {
 
     const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) && kanRevurderes;
 
+    const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
+        switch (nyBehandling) {
+            case NyBehandling.REVURDER:
+                return Routes.revurderValgtSak.createURL({ sakId: props.sak.id });
+            case NyBehandling.KLAGE:
+                return Routes.klageOpprett.createURL({ sakId: props.sak.id });
+        }
+        return assertNever(nyBehandling);
+    };
+
     return (
         <div className={styles.sakintroContainer}>
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
-                <Heading level="1" size="xlarge" className={styles.tittel}>
-                    {intl.formatMessage({ id: 'saksoversikt.tittel' })}: {props.sak.saksnummer}
-                </Heading>
                 <div className={styles.headerKnapper}>
-                    {revurderingToggle && (
-                        <LinkAsButton
-                            href={Routes.revurderValgtSak.createURL({
-                                sakId: props.sak.id,
-                            })}
-                            className={styles.headerKnapp}
-                            variant="secondary"
-                        >
-                            {intl.formatMessage({ id: 'knapp.revurder' })}
-                        </LinkAsButton>
-                    )}
-                    <LinkAsButton
-                        href={Routes.klageOpprett.createURL({ sakId: props.sak.id })}
-                        className={styles.headerKnapp}
-                        variant="secondary"
+                    <Select
+                        label={intl.formatMessage({ id: 'select.label' })}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                            const val = e.target.value;
+                            if (val in NyBehandling) {
+                                history.push(nyBehandlingTilRoute(val as NyBehandling));
+                            }
+                        }}
                     >
-                        Klage
-                    </LinkAsButton>
+                        <option value={undefined}>{intl.formatMessage({ id: 'select.option.default' })}</option>
+                        <option value={NyBehandling.KLAGE}>{intl.formatMessage({ id: 'select.option.klage' })}</option>
+                        <option value={NyBehandling.REVURDER}>
+                            {intl.formatMessage({ id: 'select.option.revurder' })}
+                        </option>
+                    </Select>
                 </div>
             </div>
             {props.sak.søknader.length > 0 ? (
@@ -203,3 +213,7 @@ export const AvsluttOgStartFortsettButtons = (props: {
 };
 
 export default Sakintro;
+
+function assertNever(x: never): never {
+    throw new Error(`Unexpected object: ${x}`);
+}

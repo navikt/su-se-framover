@@ -7,6 +7,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
+import styles from './klage.module.less';
 import OpprettKlage from './OpprettKlage';
 import VurderFormkrav from './VurderFormkrav';
 
@@ -29,14 +30,16 @@ const Klage = () => {
             () => null,
             () => null,
             (s) => (
-                <Switch>
-                    <Route path={Routes.klageOpprett.path}>
-                        <OpprettKlage />
-                    </Route>
-                    <Route path={Routes.klageVurderFormkrav.path}>
-                        <VurderFormkrav sak={s} />
-                    </Route>
-                </Switch>
+                <div className={styles.container}>
+                    <Switch>
+                        <Route path={Routes.klageOpprett.path}>
+                            <OpprettKlage />
+                        </Route>
+                        <Route path={Routes.klageVurderFormkrav.path}>
+                            <VurderFormkrav sak={s} />
+                        </Route>
+                    </Switch>
+                </div>
             )
         )
     );
