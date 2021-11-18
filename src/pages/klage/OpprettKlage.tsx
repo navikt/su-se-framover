@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 
 import * as klageApi from '~api/klageApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
@@ -55,7 +56,7 @@ const OpprettKlage = () => {
                 )
             )}
         >
-            <Ingress>Opprett klage </Ingress>
+            <Ingress>{formatMessage('opprett.tittel')}</Ingress>
             <TextField
                 {...register('journalpostId')}
                 error={formState.errors.journalpostId?.message}
@@ -73,6 +74,7 @@ const OpprettKlage = () => {
                     {RemoteData.isPending(opprettKlageStatus) && <Loader />}
                 </Button>
             </div>
+            {RemoteData.isFailure(opprettKlageStatus) && <ApiErrorAlert error={opprettKlageStatus.error} />}
         </form>
     );
 };

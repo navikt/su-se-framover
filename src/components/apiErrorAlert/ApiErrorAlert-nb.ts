@@ -52,5 +52,8 @@ export default {
     'utbetaling.kontrollsimulering.ulik.saksbehandlers.simulering':
         'Kontrollsimuleringen er ulik saksbehandlers simulering',
 
+    'klage.vedtak.fantIkke': 'Fant ikke vedtak',
+    'klage.fantIkke': 'Fant ikke klage',
+
     'feil.ukjentFeil': 'Ukjent feil',
 };

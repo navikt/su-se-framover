@@ -11,6 +11,7 @@ const vedtakMessages: { [key in VedtakType]: string } = {
 };
 
 export default {
+    'opprett.tittel': 'Opprett klage',
     'opprett.button.tilbake': 'Tilbake',
     'opprett.button.submit': 'Registrer',
     'opprett.success.notification': 'Ny klage ble registrert',

@@ -5,6 +5,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import * as klageApi from '~api/klageApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useApiCall } from '~lib/hooks';
@@ -62,7 +63,9 @@ const VurderFormkrav = (props: Props) => {
     return (
         <form
             className={styles.form}
-            onSubmit={handleSubmit((values) =>
+            onSubmit={handleSubmit((values) => {
+                console.log(values);
+
                 vilkårsvurder({
                     sakId: urlParams.sakId,
                     klageId: urlParams.klageId,
@@ -71,8 +74,8 @@ const VurderFormkrav = (props: Props) => {
                     klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
                     erUnderskrevet: values.signert,
                     begrunnelse: values.begrunnelse,
-                })
-            )}
+                });
+            })}
         >
             <Ingress>{formatMessage('formkrav.tittel')}</Ingress>
             <Controller
@@ -80,7 +83,7 @@ const VurderFormkrav = (props: Props) => {
                 name="vedtakId"
                 render={({ field, fieldState }) => (
                     <Select label="Velg vedtak" error={fieldState.error?.message} {...field}>
-                        <option>{formatMessage('formkrav.vedtak.option.default')}</option>
+                        <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
                         {props.sak.vedtak.map((v) => (
                             <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
                                 v.opprettet
@@ -139,6 +142,7 @@ const VurderFormkrav = (props: Props) => {
                     {RemoteData.isPending(vilkårsvurderingStatus) && <Loader />}
                 </Button>
             </div>
+            {RemoteData.isFailure(vilkårsvurderingStatus) && <ApiErrorAlert error={vilkårsvurderingStatus.error} />}
         </form>
     );
 };

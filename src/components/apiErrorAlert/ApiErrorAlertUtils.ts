@@ -33,7 +33,15 @@ const feilresponsTilFeilmeldingInternal = (
     return formatMessage(error ?? 'feil.ukjentFeil');
 };
 
-type FeilresponsErrorCodes = Generell | Periode | Vurderingsperiode | VilkårErrors | Simulering | Brev | Utbetaling;
+type FeilresponsErrorCodes =
+    | Generell
+    | Periode
+    | Vurderingsperiode
+    | VilkårErrors
+    | Simulering
+    | Brev
+    | Utbetaling
+    | Klage;
 
 enum Generell {
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
@@ -106,6 +114,11 @@ enum Utbetaling {
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
 }
 
+enum Klage {
+    FANT_IKKE_KLAGE = 'fant_ikke_klage',
+    FANT_IKKE_VEDTAK = 'fant_ikke_vedtak',
+}
+
 const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof typeof feilresponsMessages } = {
     [Generell.FANT_IKKE_BEHANDLING]: 'generell.fant.ikke.behandling',
     [Generell.FANT_IKKE_AKTØR_ID]: 'generell.fant.ikke.aktør.id',
@@ -154,4 +167,7 @@ const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof 
     [Utbetaling.KUNNE_IKKE_UTBETALE]: 'utbetaling.kunne.ikke.utbetale',
     [Utbetaling.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
         'utbetaling.kontrollsimulering.ulik.saksbehandlers.simulering',
+
+    [Klage.FANT_IKKE_KLAGE]: 'klage.fantIkke',
+    [Klage.FANT_IKKE_VEDTAK]: 'klage.vedtak.fantIkke',
 };
