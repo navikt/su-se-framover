@@ -1,37 +1,49 @@
-export default {
-    'generell.feil.ved.henting.av.saksbehandler.eller.attestant': 'Feil ved henting av saksbehandler eller attestant',
-    'generell.finner.ikke.utbetaling': 'Finner ikke utbetaling',
-    'generell.attestant.samme.som.saksbehandler': 'Attestant er samme som saksbehandler',
-    'generell.mangler.begrunnelse': 'Mangler begrunnelse',
-    'generell.har.allerede.en.åpen.søknadsbehandling':
+import {
+    Formue,
+    Fradrag,
+    Generell,
+    Lukk,
+    PDL,
+    Stønadsperiode,
+    SøknadsbehandlingErrorCodes,
+} from './SøknadsbehandlingApiError';
+
+const messages: { [key in SøknadsbehandlingErrorCodes]: string } = {
+    [Generell.FEIL_VED_HENTING_AV_SAKSBEHANDLER_ELLER_ATTESTANT]: 'Feil ved henting av saksbehandler eller attestant',
+    [Generell.FINNER_IKKE_UTBETALING]: 'Finner ikke utbetaling',
+    [Generell.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',
+    [Generell.MANGLER_BEGRUNNELSE]: 'Mangler begrunnelse',
+    [Generell.HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING]:
         'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
-    'generell.har.allerede.en.aktiv.behandling':
+    [Generell.HAR_ALLEREDE_EN_AKTIV_BEHANDLING]:
         'Det finnes allerede en åpen søknadsbehandling. Du må fullføre denne før du kan avslå en annen',
-    'generell.fant.ikke.søknad': 'Fant ikke søknad',
-    'generell.søknad.mangler.oppgave': 'Søknad mangler oppgave',
-    'generell.søknad.har.behandling': 'Søknad har allerede en behandling',
-    'generell.søknad.er.lukket': 'Søknad er lukket',
+    [Generell.FANT_IKKE_SØKNAD]: 'Fant ikke søknad',
+    [Generell.SØKNAD_MANGLER_OPPGAVE]: 'Søknad mangler oppgave',
+    [Generell.SØKNAD_HAR_BEHANDLING]: 'Søknad har allerede en behandling',
+    [Generell.SØKNAD_ER_LUKKET]: 'Søknad er lukket',
 
-    'pdl.ikke.tilgang.til.person': 'Du har ikke tilgang til å se informasjon om denne brukeren',
-    'pdl.feil.ved.oppslag.av.person': 'PDL svarer med en generell feil, prøv igjen senere',
+    [PDL.IKKE_TILGANG_TIL_PERSON]: 'Du har ikke tilgang til å se informasjon om denne brukeren',
+    [PDL.FEIL_VED_OPPSLAG_AV_PERSON]: 'PDL svarer med en generell feil, prøv igjen senere',
 
-    'stønadsperiode.oppdatering.av.periode': 'Feil ved oppdatering av stønadsperiode',
-    'stønadsperiode.periode.før.2021': 'Stønadsperiode kan ikke starte før Januar 2021',
-    'stønadsperiode.periode.maks.12.måneder': 'En stønadsperiode kan være maks 12 måneder',
-    'stønadsperiode.overlapper.eksisterende': 'Stønadsperioden overlapper med en eksisterende stønadsperiode',
-    'stønadsperiode.senere.periode.eksisterer': 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
+    [Stønadsperiode.OPPDATERING_AV_STØNADSPERIODE]: 'Feil ved oppdatering av stønadsperiode',
+    [Stønadsperiode.STØNADSPERIODE_FØR_2021]: 'Stønadsperiode kan ikke starte før Januar 2021',
+    [Stønadsperiode.STØNADSPERIODE_MAX_12MND]: 'En stønadsperiode kan være maks 12 måneder',
+    [Stønadsperiode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]:
+        'Stønadsperioden overlapper med en eksisterende stønadsperiode',
+    [Stønadsperiode.SENERE_STØNADSPERIODE_EKSISTERER]: 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
 
-    'formue.har.ikke.ektefelle': 'Har ikke ektefelle',
-    'formue.bosituasjon.samsvarer.ikke': 'Informasjon i bosituasjon samsvarer ikke med formue',
+    [Formue.HAR_IKKE_EKTEFELLE]: 'Har ikke ektefelle',
+    [Formue.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'Informasjon i bosituasjon samsvarer ikke med formue',
 
-    'fradrag.ugyldig.type': 'Ugyldig fradragstype',
-    'fradrag.mangler.periode': 'Fradrag mangler periode',
+    [Fradrag.FRADRAG_UGYLDIG_FRADRAGSTYPE]: 'Ugyldig fradragstype',
+    [Fradrag.PERIODE_MANGLER]: 'Fradrag mangler periode',
 
-    'lukk.dato.ugyldig': 'Ugyldig dato',
-    'lukk.input.ugyldig': 'Ugyldig input',
-    'lukk.søknad.alleredeLukket': 'Søknaden er allerede lukket',
-    'lukk.søknadsbehandling.alleredeLukket': 'Kan ikke lukke en allerede lukket søknadsbehandling',
-    'lukk.søknadsbehandling.iverksatt': 'Kan ikke lukke en iverksatt søknadsbehandling',
-    'lukk.søknadsbehandling.tilAttestering': 'Kan ikke lukke en søknadsbehandling til attestering',
-    'lukk.dokument.generer': 'En feil skjedde under forhåndsvisning av brev',
+    [Lukk.UGYLDIG_DATO]: 'Ugyldig dato',
+    [Lukk.UGYLDIG_INPUT]: 'Ugyldig input',
+    [Lukk.SØKNAD_ALLEREDE_LUKKET]: 'Søknaden er allerede lukket',
+    [Lukk.KAN_IKKE_LUKKE_EN_ALLEREDE_LUKKET_SØKNADSBEHANDLING]: 'Kan ikke lukke en allerede lukket søknadsbehandling',
+    [Lukk.KAN_IKKE_LUKKE_EN_IVERKSATT_SØKNADSBEHANDLING]: 'Kan ikke lukke en iverksatt søknadsbehandling',
+    [Lukk.KAN_IKKE_LUKKE_EN_SØKNADSBEHANDLING_TIL_ATTESTERING]: 'Kan ikke lukke en søknadsbehandling til attestering',
 };
+
+export default messages;
