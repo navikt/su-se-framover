@@ -9,6 +9,7 @@ import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { Sak } from '~types/Sak';
 import { formatDateTime } from '~utils/date/dateUtils';
@@ -25,15 +26,15 @@ interface FormData {
     innenforFristen: boolean;
     klagesDetPåKonkreteElementerIVedtaket: boolean;
     signert: boolean;
-    begrunnelse: string;
+    begrunnelse: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
-    vedtakId: yup.string(),
-    innenforFristen: yup.boolean(),
-    klagesDetPåKonkreteElementerIVedtaket: yup.boolean(),
-    signert: yup.boolean(),
-    begrunnelse: yup.string(),
+    vedtakId: yup.string().typeError('Feltet må fylles ut').required(),
+    innenforFristen: yup.boolean().typeError('Feltet må fylles ut').required(),
+    klagesDetPåKonkreteElementerIVedtaket: yup.boolean().typeError('Feltet må fylles ut').required(),
+    signert: yup.boolean().typeError('Feltet må fylles ut').required(),
+    begrunnelse: yup.string().defined(),
 });
 
 const VurderFormkrav = (props: Props) => {
@@ -49,11 +50,11 @@ const VurderFormkrav = (props: Props) => {
     const { handleSubmit, register, formState, control } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: {
-            vedtakId: '',
-            innenforFristen: undefined,
-            klagesDetPåKonkreteElementerIVedtaket: undefined,
-            signert: undefined,
-            begrunnelse: '',
+            vedtakId: klage.vedtakId ?? '',
+            innenforFristen: klage.innenforFristen,
+            klagesDetPåKonkreteElementerIVedtaket: klage.klagesDetPåKonkreteElementerIVedtaket,
+            signert: klage.erUnderskrevet,
+            begrunnelse: klage.begrunnelse,
         },
     });
 
