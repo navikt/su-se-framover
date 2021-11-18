@@ -13,6 +13,7 @@ export default {
     'periode.ugyldig.fom': 'Perioder kan kun starte første dagen i måneden',
     'periode.ugyldig.tom': 'Perioder kan kun slutte siste dagen i måneden',
     'periode.ugyldig.start.slutt': 'Startmåned må være før, eller lik sluttmåned',
+    'periode.ugyldig.heleperioden': 'Hele perioden må vurderes',
 
     'vurderingsperiode.overlappende.vurderingsperioder': 'Perioder kan ikke overlappe',
     'vurderingsperiode.vurdering.utenfor.revurderingsperioden':

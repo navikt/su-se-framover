@@ -53,6 +53,7 @@ enum Periode {
     UGYLDIG_PERIODE_FOM = 'ugyldig_periode_fom',
     UGYLDIG_PERIODE_TOM = 'ugyldig_periode_tom',
     UGYLDIG_PERIODE_START_SLUTT = 'ugyldig_periode_start_slutt',
+    MÅ_VURDERE_HELE_PERIODEN = 'må_vurdere_hele_perioden',
 }
 
 enum Vurderingsperiode {
@@ -120,6 +121,7 @@ const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof 
     [Periode.UGYLDIG_PERIODE_FOM]: 'periode.ugyldig.fom',
     [Periode.UGYLDIG_PERIODE_TOM]: 'periode.ugyldig.tom',
     [Periode.UGYLDIG_PERIODE_START_SLUTT]: 'periode.ugyldig.start.slutt',
+    [Periode.MÅ_VURDERE_HELE_PERIODEN]: 'periode.ugyldig.heleperioden',
 
     [Vurderingsperiode.OVERLAPPENDE_VURDERINGSPERIODER]: 'vurderingsperiode.overlappende.vurderingsperioder',
     [Vurderingsperiode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:

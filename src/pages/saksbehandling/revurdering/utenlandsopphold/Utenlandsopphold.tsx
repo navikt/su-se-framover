@@ -21,7 +21,7 @@ import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnkn
 import { StegProps } from '~pages/saksbehandling/revurdering/common';
 import revurderingmessages, { stegmessages } from '~pages/saksbehandling/revurdering/revurdering-nb';
 import sharedStyles from '~pages/saksbehandling/revurdering/revurdering.module.less';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
+import RevurderingsperiodeHeader from '~pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { sluttenAvMåneden, toIsoDateOnlyString } from '~utils/date/dateUtils';
 
@@ -90,8 +90,7 @@ const Utenlandsopphold = (props: StegProps) => {
                 utenlandsopphold: form.utenlandsopphold.map((vurdering) => ({
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     status: vurdering.status!,
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    begrunnelse: vurdering.begrunnelse!,
+                    begrunnelse: vurdering.begrunnelse,
                     periode: {
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         fraOgMed: toIsoDateOnlyString(vurdering.periode.fraOgMed!),
@@ -112,8 +111,13 @@ const Utenlandsopphold = (props: StegProps) => {
         control: form.control,
     });
 
+    const revurderingsperiode = {
+        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
+    };
+
     return (
-        <ToKolonner tittel={formatMessage(RevurderingSteg.Utenlandsopphold)}>
+        <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
                     <form
@@ -150,6 +154,8 @@ const Utenlandsopphold = (props: StegProps) => {
                                                     autoComplete="off"
                                                     value={field.value}
                                                     onChange={(date: Date | null) => field.onChange(date)}
+                                                    minDate={revurderingsperiode.fraOgMed}
+                                                    maxDate={revurderingsperiode.tilOgMed}
                                                     feil={getDateErrorMessage(fieldState.error)}
                                                 />
                                             )}
@@ -168,6 +174,8 @@ const Utenlandsopphold = (props: StegProps) => {
                                                     autoComplete="off"
                                                     value={field.value}
                                                     onChange={(date: Date | null) => field.onChange(date)}
+                                                    minDate={revurderingsperiode.fraOgMed}
+                                                    maxDate={revurderingsperiode.tilOgMed}
                                                     feil={getDateErrorMessage(fieldState.error)}
                                                 />
                                             )}
@@ -210,6 +218,7 @@ const Utenlandsopphold = (props: StegProps) => {
                             </Panel>
                         ))}
                         <Button
+                            className={styles.nyPeriodeKnapp}
                             variant="secondary"
                             onClick={() =>
                                 append({
