@@ -3,10 +3,15 @@
 .container {
     display: flex;
     margin: @spacing-s 0;
-}
 
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: @spacing-s;
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: @spacing-s;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-evenly;
+    }
 }

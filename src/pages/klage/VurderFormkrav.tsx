@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import * as klageApi from '~api/klageApi';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
@@ -126,10 +127,18 @@ const VurderFormkrav = (props: Props) => {
             />
 
             <TextField {...register('begrunnelse')} error={formState.errors.begrunnelse?.message} label="Begrunnelse" />
-            <Button>
-                {formatMessage('formkrav.vedtak.button.submit')}
-                {RemoteData.isPending(vilkårsvurderingStatus) && <Loader />}
-            </Button>
+            <div className={styles.buttons}>
+                <LinkAsButton
+                    variant="secondary"
+                    href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })}
+                >
+                    {formatMessage('formkrav.button.tilbake')}
+                </LinkAsButton>
+                <Button>
+                    {formatMessage('formkrav.button.submit')}
+                    {RemoteData.isPending(vilkårsvurderingStatus) && <Loader />}
+                </Button>
+            </div>
         </form>
     );
 };

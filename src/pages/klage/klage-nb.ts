@@ -11,6 +11,7 @@ const vedtakMessages: { [key in VedtakType]: string } = {
 };
 
 export default {
+    'opprett.button.tilbake': 'Tilbake',
     'opprett.button.submit': 'Registrer',
     'opprett.success.notification': 'Ny klage ble registrert',
 
@@ -20,6 +21,7 @@ export default {
     'formkrav.signert.label': 'Er klagen signert?',
     'formkrav.vedtak.label': 'Vedtaket som er påklagd',
     'formkrav.vedtak.option.default': 'Velg vedtak',
-    'formkrav.vedtak.button.submit': 'Bekreft og fortsett',
+    'formkrav.button.tilbake': 'Tilbake',
+    'formkrav.button.submit': 'Bekreft og fortsett',
     ...vedtakMessages,
 };
