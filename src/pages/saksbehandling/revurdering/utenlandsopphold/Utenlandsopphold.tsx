@@ -190,6 +190,7 @@ const Utenlandsopphold = (props: StegProps) => {
                                         <RadioGroup
                                             legend={formatMessage('radiobutton.tittel')}
                                             error={fieldState.error?.message}
+                                            className={styles.radioGroup}
                                             {...field}
                                         >
                                             <Radio

@@ -18,6 +18,7 @@ export default {
     'vurderingsperiode.overlappende.vurderingsperioder': 'Perioder kan ikke overlappe',
     'vurderingsperiode.vurdering.utenfor.revurderingsperioden':
         'Vurdering av vilkår må gjøres innenfor revurderingsperioden',
+    'vurderingsperiode.ugyldig.resultat': 'Periodene kan ikke inneholde forskjellige resultater',
 
     'uføre.uføregrad.må.være.mellom.en.og.hundre': 'Uføregraden må være mellom 1 og 100',
     'uføre.grad.og.forventetinntekt.mangler': 'Uføregrad og/eller forventet inntekt mangler',

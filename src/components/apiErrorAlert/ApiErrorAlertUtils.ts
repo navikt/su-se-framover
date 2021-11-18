@@ -58,6 +58,7 @@ enum Periode {
 
 enum Vurderingsperiode {
     OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
+    FORSKJELLIG_RESULTAT = 'vurderingsperiode_kan_ikke_inneholde_forskjellige_resultater',
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
 }
 
@@ -126,6 +127,7 @@ const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof 
     [Vurderingsperiode.OVERLAPPENDE_VURDERINGSPERIODER]: 'vurderingsperiode.overlappende.vurderingsperioder',
     [Vurderingsperiode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
         'vurderingsperiode.vurdering.utenfor.revurderingsperioden',
+    [Vurderingsperiode.FORSKJELLIG_RESULTAT]: 'vurderingsperiode.ugyldig.resultat',
 
     [Uføre.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'uføre.uføregrad.må.være.mellom.en.og.hundre',
     [Uføre.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'uføre.grad.og.forventetinntekt.mangler',
