@@ -13,10 +13,12 @@ export default {
     'periode.ugyldig.fom': 'Perioder kan kun starte første dagen i måneden',
     'periode.ugyldig.tom': 'Perioder kan kun slutte siste dagen i måneden',
     'periode.ugyldig.start.slutt': 'Startmåned må være før, eller lik sluttmåned',
+    'periode.ugyldig.heleperioden': 'Hele perioden må vurderes',
 
     'vurderingsperiode.overlappende.vurderingsperioder': 'Perioder kan ikke overlappe',
     'vurderingsperiode.vurdering.utenfor.revurderingsperioden':
         'Vurdering av vilkår må gjøres innenfor revurderingsperioden',
+    'vurderingsperiode.ugyldig.resultat': 'Periodene kan ikke inneholde forskjellige resultater',
 
     'uføre.uføregrad.må.være.mellom.en.og.hundre': 'Uføregraden må være mellom 1 og 100',
     'uføre.grad.og.forventetinntekt.mangler': 'Uføregrad og/eller forventet inntekt mangler',

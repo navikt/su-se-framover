@@ -53,10 +53,12 @@ enum Periode {
     UGYLDIG_PERIODE_FOM = 'ugyldig_periode_fom',
     UGYLDIG_PERIODE_TOM = 'ugyldig_periode_tom',
     UGYLDIG_PERIODE_START_SLUTT = 'ugyldig_periode_start_slutt',
+    MÅ_VURDERE_HELE_PERIODEN = 'må_vurdere_hele_perioden',
 }
 
 enum Vurderingsperiode {
     OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
+    FORSKJELLIG_RESULTAT = 'vurderingsperiode_kan_ikke_inneholde_forskjellige_resultater',
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
 }
 
@@ -120,10 +122,12 @@ const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof 
     [Periode.UGYLDIG_PERIODE_FOM]: 'periode.ugyldig.fom',
     [Periode.UGYLDIG_PERIODE_TOM]: 'periode.ugyldig.tom',
     [Periode.UGYLDIG_PERIODE_START_SLUTT]: 'periode.ugyldig.start.slutt',
+    [Periode.MÅ_VURDERE_HELE_PERIODEN]: 'periode.ugyldig.heleperioden',
 
     [Vurderingsperiode.OVERLAPPENDE_VURDERINGSPERIODER]: 'vurderingsperiode.overlappende.vurderingsperioder',
     [Vurderingsperiode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
         'vurderingsperiode.vurdering.utenfor.revurderingsperioden',
+    [Vurderingsperiode.FORSKJELLIG_RESULTAT]: 'vurderingsperiode.ugyldig.resultat',
 
     [Uføre.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'uføre.uføregrad.må.være.mellom.en.og.hundre',
     [Uføre.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'uføre.grad.og.forventetinntekt.mangler',

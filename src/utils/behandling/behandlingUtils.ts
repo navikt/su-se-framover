@@ -9,10 +9,10 @@ import {
     FormueStatus,
     InstitusjonsoppholdStatus,
     LovligOppholdStatus,
-    OppholdIUtlandetStatus,
     PersonligOppmøteStatus,
     UførhetStatus,
 } from '~types/Behandlingsinformasjon';
+import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import {
@@ -86,15 +86,18 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
         behandling.behandlingsinformasjon.lovligOpphold?.status === LovligOppholdStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.fastOppholdINorge?.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.institusjonsopphold?.status === InstitusjonsoppholdStatus.VilkårIkkeOppfylt ||
-        behandling.behandlingsinformasjon.oppholdIUtlandet?.status ===
-            OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]?.status ===
+            Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet ||
         behandling.behandlingsinformasjon.formue?.status === FormueStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.personligOppmøte?.status === PersonligOppmøteStatus.IkkeMøttPersonlig
     );
 };
 
 const hentSaksbehandlingssteger = (behandling: Behandling) => {
-    const vilkårsinformasjon = mapToVilkårsinformasjon(behandling.behandlingsinformasjon);
+    const vilkårsinformasjon = mapToVilkårsinformasjon(
+        behandling.behandlingsinformasjon,
+        behandling.grunnlagsdataOgVilkårsvurderinger
+    );
     const satsOgBeregningssteg = vilkårsinformasjonForBeregningssteg(behandling);
     return [...vilkårsinformasjon, ...satsOgBeregningssteg];
 };
