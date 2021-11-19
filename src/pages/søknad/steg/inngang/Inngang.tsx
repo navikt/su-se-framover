@@ -17,55 +17,74 @@ import søknadSlice from '~features/søknad/søknad.slice';
 import { useAsyncActionCreator, useApiCall } from '~lib/hooks';
 import { MessageFormatter, useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { BegrensetSakinfo } from '~types/Sak';
+import { Periode } from '~types/Periode';
 import { Søknadstype } from '~types/Søknad';
 import { formatDate } from '~utils/date/dateUtils';
+import { er66EllerEldre } from '~utils/person/personUtils';
 
 import nb from './inngang-nb';
 import styles from './inngang.module.less';
 
 const SakinfoAlert = ({
-    info,
+    harÅpenSøknad,
+    iverksattInnvilgetStønadsperiode,
+    aldervarsel,
     formatMessage,
 }: {
-    info: BegrensetSakinfo;
+    harÅpenSøknad: boolean;
+    iverksattInnvilgetStønadsperiode: Nullable<Periode<string>>;
+    aldervarsel: boolean;
     formatMessage: MessageFormatter<typeof nb>;
-}) => (
-    <Alert className={styles.åpenSøknadContainer} variant="warning">
-        {info.harÅpenSøknad && (
-            <>
-                {info.iverksattInnvilgetStønadsperiode && (
-                    <Heading level="2" size="small" spacing>
-                        {formatMessage('heading.åpenSøknad')}
-                    </Heading>
-                )}
-                <BodyLong spacing={info.iverksattInnvilgetStønadsperiode !== null}>
-                    {formatMessage('feil.harÅpenSøknad')}
-                </BodyLong>
-            </>
-        )}
-        {info.iverksattInnvilgetStønadsperiode && (
-            <>
-                {info.harÅpenSøknad && (
-                    <Heading level="2" size="small" spacing>
-                        {formatMessage('heading.løpendeYtelse')}
-                    </Heading>
-                )}
-                <BodyLong>
-                    {formatMessage('åpenSøknad.løpendeYtelse', {
-                        løpendePeriode: `${formatDate(info.iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
-                            info.iverksattInnvilgetStønadsperiode.tilOgMed
-                        )}`,
-                        tidligestNyPeriode: formatDate(
-                            DateFns.startOfMonth(new Date(info.iverksattInnvilgetStønadsperiode.tilOgMed)).toString()
-                        ),
-                    })}
-                </BodyLong>
-            </>
-        )}
-    </Alert>
-);
+}) => {
+    const visTittel = [harÅpenSøknad, iverksattInnvilgetStønadsperiode, aldervarsel].filter(Boolean).length > 1;
+    return (
+        <Alert className={styles.åpenSøknadContainer} variant="warning">
+            {harÅpenSøknad && (
+                <div>
+                    {visTittel && (
+                        <Heading level="2" size="small" spacing>
+                            {formatMessage('heading.åpenSøknad')}
+                        </Heading>
+                    )}
+                    <BodyLong spacing={iverksattInnvilgetStønadsperiode !== null}>
+                        {formatMessage('feil.harÅpenSøknad')}
+                    </BodyLong>
+                </div>
+            )}
+            {iverksattInnvilgetStønadsperiode && (
+                <div>
+                    {visTittel && (
+                        <Heading level="2" size="small" spacing>
+                            {formatMessage('heading.løpendeYtelse')}
+                        </Heading>
+                    )}
+                    <BodyLong>
+                        {formatMessage('åpenSøknad.løpendeYtelse', {
+                            løpendePeriode: `${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
+                                iverksattInnvilgetStønadsperiode.tilOgMed
+                            )}`,
+                            tidligestNyPeriode: formatDate(
+                                DateFns.startOfMonth(new Date(iverksattInnvilgetStønadsperiode.tilOgMed)).toString()
+                            ),
+                        })}
+                    </BodyLong>
+                </div>
+            )}
+            {aldervarsel && (
+                <div>
+                    {visTittel && (
+                        <Heading level="2" size="small" spacing>
+                            {formatMessage('heading.advarsel.alder')}
+                        </Heading>
+                    )}
+                    <BodyLong>{formatMessage('advarsel.alder')}</BodyLong>
+                </div>
+            )}
+        </Alert>
+    );
+};
 
 const index = (props: { nesteUrl: string }) => {
     const { søker } = useAppSelector((s) => s.søker);
@@ -190,11 +209,16 @@ const index = (props: { nesteUrl: string }) => {
                         }
                     />
                     {pipe(
-                        sakinfo,
+                        RemoteData.combine(sakinfo, hentPersonStatus),
                         RemoteData.map(
-                            (info) =>
-                                (info.harÅpenSøknad || info.iverksattInnvilgetStønadsperiode) && (
-                                    <SakinfoAlert info={info} formatMessage={formatMessage} />
+                            ([{ harÅpenSøknad, iverksattInnvilgetStønadsperiode }, { alder }]) =>
+                                (harÅpenSøknad || iverksattInnvilgetStønadsperiode || er66EllerEldre(alder)) && (
+                                    <SakinfoAlert
+                                        harÅpenSøknad={harÅpenSøknad}
+                                        iverksattInnvilgetStønadsperiode={iverksattInnvilgetStønadsperiode}
+                                        aldervarsel={er66EllerEldre(alder)}
+                                        formatMessage={formatMessage}
+                                    />
                                 )
                         ),
                         RemoteData.getOrElse(() => null as React.ReactNode)
