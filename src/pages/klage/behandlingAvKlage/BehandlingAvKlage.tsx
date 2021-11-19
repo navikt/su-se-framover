@@ -246,7 +246,7 @@ const OmgjørVedtakForm = (props: { control: Control<BehandlingAvKlageFormData> 
                         <option value="">{formatMessage('form.omgjørVedtak.årsak.velgÅrsak')}</option>
                         {Object.values(OmgjørVedtakÅrsak).map((årsak) => (
                             <option value={årsak} key={årsak}>
-                                {formatMessage(omgjørVedtakÅrsakMessages[årsak])}
+                                {formatMessage(årsak)}
                             </option>
                         ))}
                     </Select>
@@ -265,7 +265,7 @@ const OmgjørVedtakForm = (props: { control: Control<BehandlingAvKlageFormData> 
                     >
                         {Object.values(OmgjørVedtakGunst).map((gunst) => (
                             <Radio value={gunst} key={gunst}>
-                                {formatMessage(omgjørVedtakGunstMessages[gunst])}
+                                {formatMessage(gunst)}
                             </Radio>
                         ))}
                     </RadioGroup>
@@ -293,7 +293,7 @@ const OpprettholdVedtakForm = (props: { control: Control<BehandlingAvKlageFormDa
                         <option value="">{formatMessage('form.opprettholdVedtak.hjemmel.velgHjemmel')}</option>
                         {Object.values(OpprettholdVedtakHjemmel).map((hjemmel) => (
                             <option value={hjemmel} key={hjemmel}>
-                                {formatMessage(OpprettholdVedtakHjemmelMessages[hjemmel])}
+                                {formatMessage(hjemmel)}
                             </option>
                         ))}
                     </Select>
@@ -301,24 +301,6 @@ const OpprettholdVedtakForm = (props: { control: Control<BehandlingAvKlageFormDa
             />
         </div>
     );
-};
-
-const omgjørVedtakÅrsakMessages: { [key in OmgjørVedtakÅrsak]: keyof typeof messages } = {
-    [OmgjørVedtakÅrsak.FEIL_LOVANVENDELSE]: 'form.omgjørVedtak.årsak.feilLovanvendelse',
-    [OmgjørVedtakÅrsak.SAKSBEHADNLINGSFEIL]: 'form.omgjørVedtak.årsak.saksbehandlingsfeil',
-    [OmgjørVedtakÅrsak.ULIK_SKJØNNSVURDERING]: 'form.omgjørVedtak.årsak.ulikSkjønnsvurdering',
-    [OmgjørVedtakÅrsak.NYTT_FAKTUM]: 'form.omgjørVedtak.årsak.nyttFaktum',
-};
-const omgjørVedtakGunstMessages: { [key in OmgjørVedtakGunst]: keyof typeof messages } = {
-    [OmgjørVedtakGunst.TIL_GUNST]: 'form.omgjørVedtak.gunst.tilGunst',
-    [OmgjørVedtakGunst.TIL_UGUNST]: 'form.omgjørVedtak.gunst.tilUgunst',
-    [OmgjørVedtakGunst.DELVIS_OMGJØR_TIL_GUNST]: 'form.omgjørVedtak.gunst.delvisOmgjørTilGunst',
-};
-
-const OpprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: keyof typeof messages } = {
-    [OpprettholdVedtakHjemmel.Hjemmel1]: 'form.opprettholdVedtak.hjemmel.1',
-    [OpprettholdVedtakHjemmel.Hjemmel2]: 'form.opprettholdVedtak.hjemmel.2',
-    [OpprettholdVedtakHjemmel.Hjemmel3]: 'form.opprettholdVedtak.hjemmel.3',
 };
 
 export default BehandlingAvKlage;
