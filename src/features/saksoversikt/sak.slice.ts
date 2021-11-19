@@ -18,6 +18,7 @@ import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Klage } from '~types/Klage';
 import { Periode } from '~types/Periode';
 import { Restans } from '~types/Restans';
 import { Revurdering } from '~types/Revurdering';
@@ -729,14 +730,22 @@ export default createSlice({
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
-        builder.addCase(klageActions.lagreBehandlingAvKlage.fulfilled, (state, action) => {
+        builder.addCase(klageActions.opprettKlage.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((s) => ({
                     ...s,
-                    klager: s.klager.map((k) => (k.id === action.payload.id ? action.payload : k)),
+                    klager: [...s.klager, action.payload],
                 }))
             );
+        });
+
+        builder.addCase(klageActions.vurderFormkrav.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
+        builder.addCase(klageActions.lagreBehandlingAvKlage.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
     },
 });
@@ -747,6 +756,16 @@ function oppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revu
         RemoteData.map((s) => ({
             ...s,
             revurderinger: s.revurderinger.map((r) => (r.id === revurdering.id ? revurdering : r)),
+        }))
+    );
+}
+
+function oppdaterKlageISak(sak: RemoteData.RemoteData<ApiError, Sak>, klage: Klage) {
+    return pipe(
+        sak,
+        RemoteData.map((s) => ({
+            ...s,
+            klager: s.klager.map((k) => (k.id === klage.id ? klage : k)),
         }))
     );
 }

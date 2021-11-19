@@ -5,13 +5,14 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 
-import * as klageApi from '~api/klageApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { useApiCall } from '~lib/hooks';
+import * as klageActions from '~features/klage/klageActions';
+import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
+import { KlageSteg } from '~pages/saksbehandling/types';
 import { Sak } from '~types/Sak';
 
 import messages from './klage-nb';
@@ -25,7 +26,7 @@ const schema = yup.object<FormData>({
 });
 
 const OpprettKlage = (props: { sak: Sak }) => {
-    const [opprettKlageStatus, opprettKlage] = useApiCall(klageApi.opprettKlage);
+    const [opprettKlageStatus, opprettKlage] = useAsyncActionCreator(klageActions.opprettKlage);
     const { handleSubmit, register, formState } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -44,9 +45,9 @@ const OpprettKlage = (props: { sak: Sak }) => {
                         sakId: props.sak.id,
                         journalpostId: values.journalpostId,
                     },
-                    () => {
+                    (klage) => {
                         history.push(
-                            Routes.createSakIntroLocation(formatMessage('opprett.success.notification'), props.sak.id)
+                            Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: KlageSteg.Formkrav })
                         );
                     }
                 )

@@ -5,11 +5,11 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 
-import * as klageApi from '~api/klageApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { useApiCall } from '~lib/hooks';
+import * as klageActions from '~features/klage/klageActions';
+import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -46,7 +46,7 @@ const schema = yup.object<FormData>({
 const VurderFormkrav = (props: Props) => {
     const history = useHistory();
     const { formatMessage } = useI18n({ messages });
-    const [vilkårsvurderingStatus, vilkårsvurder] = useApiCall(klageApi.vilkårsvurder);
+    const [vilkårsvurderingStatus, vilkårsvurder] = useAsyncActionCreator(klageActions.vurderFormkrav);
 
     const { handleSubmit, register, formState, control } = useForm<FormData>({
         resolver: yupResolver(schema),
@@ -63,8 +63,6 @@ const VurderFormkrav = (props: Props) => {
         <form
             className={styles.form}
             onSubmit={handleSubmit((values) => {
-                console.log(values);
-
                 vilkårsvurder(
                     {
                         sakId: props.sak.id,

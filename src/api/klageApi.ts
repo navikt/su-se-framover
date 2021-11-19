@@ -4,7 +4,7 @@ import { Klage } from '~types/Klage';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function opprettKlage(arg: { sakId: string; journalpostId: string }): Promise<ApiClientResult<unknown>> {
+export async function opprettKlage(arg: { sakId: string; journalpostId: string }): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager`,
         method: 'POST',
@@ -22,7 +22,7 @@ export async function vilkårsvurder(arg: {
     klagesDetPåKonkreteElementerIVedtaket: boolean;
     erUnderskrevet: boolean;
     begrunnelse: Nullable<string>;
-}): Promise<ApiClientResult<unknown>> {
+}): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/vilkår/vurderinger`,
         method: 'POST',
