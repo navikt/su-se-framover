@@ -147,7 +147,9 @@ const Tilleggsinfo = (props: {
                 {props.medBrevutkastknapp && (
                     <div>
                         <Label size="small" spacing>
-                            {props.intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}
+                            {erIverksatt(props.behandling)
+                                ? props.intl.formatMessage({ id: 'brev.vedtaksbrev' })
+                                : props.intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}
                         </Label>
                         <Button variant="secondary" size="small" type="button" onClick={hentBrev}>
                             {props.intl.formatMessage({ id: 'knapp.vis' })}
