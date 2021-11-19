@@ -81,7 +81,9 @@ const VurderFormkrav = (props: Props) => {
                     <Select label="Velg vedtak" error={fieldState.error?.message} {...field}>
                         <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
                         {props.sak.vedtak.map((v) => (
-                            <option key={v.id} value={v.id}>{`lol ${formatDateTime(v.opprettet)}`}</option>
+                            <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
+                                v.opprettet
+                            )}`}</option>
                         ))}
                     </Select>
                 )}
