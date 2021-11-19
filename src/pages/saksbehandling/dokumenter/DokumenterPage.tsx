@@ -5,9 +5,10 @@ import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
+import * as kontrollsamtaleApi from '~api/kontrollsamtaleApi';
 import { ÅpentBrev } from '~assets/Illustrations';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useAsyncActionCreator } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { MessageFormatter, useI18n } from '~lib/i18n';
 import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
 import { Sak } from '~types/Sak';
@@ -37,6 +38,7 @@ const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typ
 
 const DokumenterPage = (props: { sak: Sak }) => {
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
+    const [kontrollsamtale, kallInnTilKontrollsamtale] = useApiCall(kontrollsamtaleApi.kallInnTilKontrollsamtale);
     const history = useHistory();
 
     const { formatMessage } = useI18n({ messages });
@@ -50,6 +52,15 @@ const DokumenterPage = (props: { sak: Sak }) => {
 
     const handleDokumentClick = (dokument: Dokument) => {
         window.open(URL.createObjectURL(getBlob(dokument)));
+    };
+
+    const handleKontrollsamtaleClick = () => {
+        kallInnTilKontrollsamtale(props.sak.id, () => {
+            fetchDokumenter({
+                id: props.sak.id,
+                idType: DokumentIdType.Sak,
+            });
+        });
     };
 
     return (
@@ -70,7 +81,7 @@ const DokumenterPage = (props: { sak: Sak }) => {
                             ),
                             (dokumenter) =>
                                 dokumenter.length === 0 ? (
-                                    <Alert variant="error">{formatMessage('feil.ingenBrev')}</Alert>
+                                    <Alert variant="info">{formatMessage('feil.ingenBrev')}</Alert>
                                 ) : (
                                     <ol className={styles.dokumentliste}>
                                         {dokumenter.map((d) => (
@@ -113,7 +124,7 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                 )
                         )
                     )}
-                    <div>
+                    <div className={styles.buttonContainer}>
                         <Button
                             variant="secondary"
                             onClick={() => {
@@ -123,7 +134,19 @@ const DokumenterPage = (props: { sak: Sak }) => {
                             <Back />
                             {formatMessage('knapp.tilbake')}
                         </Button>
+
+                        <Button
+                            onClick={() => {
+                                handleKontrollsamtaleClick();
+                            }}
+                        >
+                            {formatMessage('knapp.kontrollsamtale.kallInn')}
+                            {RemoteData.isPending(kontrollsamtale) && <Loader />}
+                        </Button>
                     </div>
+                    {RemoteData.isFailure(kontrollsamtale) && (
+                        <Alert variant="error">{formatMessage('feil.kontrollsamtale.kunneIkkeKalleInn')}</Alert>
+                    )}
                 </div>
             </div>
         </div>

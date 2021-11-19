@@ -34,3 +34,13 @@ export async function hentRestanser(): Promise<ApiClientResult<Restans[]>> {
 export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<BegrensetSakinfo>> {
     return apiClient({ url: `/saker/info/${fnr}`, method: 'GET' });
 }
+
+export async function kallInnTilKontrollsamtale(sakId: string) {
+    return apiClient({
+        url: `/kontrollsamtale/kallInn`,
+        method: 'POST',
+        body: {
+            sakId: sakId,
+        },
+    });
+}
