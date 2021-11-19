@@ -14,9 +14,16 @@ export enum OmgjørVedtakGunst {
 }
 
 export enum OpprettholdVedtakHjemmel {
-    'Hjemmel1' = '1',
-    'Hjemmel2' = '2',
-    'Hjemmel3' = '3',
+    'H_3' = '3',
+    'H_4' = '4',
+    'H_5' = '5',
+    'H_6' = '6',
+    'H_8' = '8',
+    'H_9' = '9',
+    'H_10' = '10',
+    'H_12' = '12',
+    'H_13' = '13',
+    'H_18' = '18',
 }
 
 interface Omgjør {
@@ -25,7 +32,7 @@ interface Omgjør {
 }
 
 interface Oppretthold {
-    hjemmel: OpprettholdVedtakHjemmel;
+    hjemmel: OpprettholdVedtakHjemmel[];
 }
 
 export interface VurderingRequest {

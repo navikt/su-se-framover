@@ -13,9 +13,16 @@ const omgjørVedtakGunstMessages: { [key in OmgjørVedtakGunst]: string } = {
 };
 
 const OpprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: string } = {
-    [OpprettholdVedtakHjemmel.Hjemmel1]: '1',
-    [OpprettholdVedtakHjemmel.Hjemmel2]: '2',
-    [OpprettholdVedtakHjemmel.Hjemmel3]: '2',
+    [OpprettholdVedtakHjemmel.H_3]: '§ 3',
+    [OpprettholdVedtakHjemmel.H_4]: '§ 4',
+    [OpprettholdVedtakHjemmel.H_5]: '§ 5',
+    [OpprettholdVedtakHjemmel.H_6]: '§ 6',
+    [OpprettholdVedtakHjemmel.H_8]: '§ 8',
+    [OpprettholdVedtakHjemmel.H_9]: '§ 9',
+    [OpprettholdVedtakHjemmel.H_10]: '§ 10',
+    [OpprettholdVedtakHjemmel.H_12]: '§ 12',
+    [OpprettholdVedtakHjemmel.H_13]: '§ 13',
+    [OpprettholdVedtakHjemmel.H_18]: '§ 18',
 };
 
 export default {

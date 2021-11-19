@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField, Button, Select, Ingress, Loader } from '@navikt/ds-react';
+import { TextField, Button, Select, Loader, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -85,7 +85,7 @@ const VurderFormkrav = (props: Props) => {
                 );
             })}
         >
-            <Ingress>{formatMessage('formkrav.tittel')}</Ingress>
+            <Heading size="medium">{formatMessage('formkrav.tittel')}</Heading>
             <Controller
                 control={control}
                 name="vedtakId"

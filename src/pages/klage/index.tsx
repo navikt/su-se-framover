@@ -46,29 +46,30 @@ const Klage = (props: { sak: Sak }) => {
                 {formatMessage('page.tittel')}
             </Heading>
             <div className={styles.klageContainerMedFramdriftsindikator}>
-                <div>
-                    <Framdriftsindikator aktivId={urlParams.steg} elementer={linjer} />
+                <Framdriftsindikator aktivId={urlParams.steg} elementer={linjer} />
+
+                <div className={styles.klageStegContainer}>
+                    <Switch>
+                        <Route
+                            path={Routes.klage.createURL({
+                                sakId: props.sak.id,
+                                klageId: klage.id,
+                                steg: KlageSteg.Formkrav,
+                            })}
+                        >
+                            <VurderFormkrav sak={props.sak} klage={klage} />
+                        </Route>
+                        <Route
+                            path={Routes.klage.createURL({
+                                sakId: props.sak.id,
+                                klageId: klage.id,
+                                steg: KlageSteg.Behandling,
+                            })}
+                        >
+                            <BehandlingAvKlage sak={props.sak} klage={klage} />
+                        </Route>
+                    </Switch>
                 </div>
-                <Switch>
-                    <Route
-                        path={Routes.klage.createURL({
-                            sakId: props.sak.id,
-                            klageId: klage.id,
-                            steg: KlageSteg.Formkrav,
-                        })}
-                    >
-                        <VurderFormkrav sak={props.sak} klage={klage} />
-                    </Route>
-                    <Route
-                        path={Routes.klage.createURL({
-                            sakId: props.sak.id,
-                            klageId: klage.id,
-                            steg: KlageSteg.Behandling,
-                        })}
-                    >
-                        <BehandlingAvKlage sak={props.sak} klage={klage} />
-                    </Route>
-                </Switch>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Heading, Radio, RadioGroup, Select, Textarea } from '@navikt/ds-react';
+import { Button, Checkbox, CheckboxGroup, Heading, Radio, RadioGroup, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 
@@ -33,7 +33,7 @@ interface OmgjørFormData {
 }
 
 interface HjemmelFormData {
-    hjemmel: Nullable<OpprettholdVedtakHjemmel>;
+    hjemmel: OpprettholdVedtakHjemmel[];
 }
 
 interface BehandlingAvKlageFormData {
@@ -55,23 +55,8 @@ const schema = yup.object<BehandlingAvKlageFormData>({
         .when('vedtakHandling', {
             is: VedtakHandling.OMGJØR,
             then: yup.object({
-                årsak: yup
-                    .string()
-                    .oneOf([
-                        OmgjørVedtakÅrsak.FEIL_LOVANVENDELSE,
-                        OmgjørVedtakÅrsak.SAKSBEHADNLINGSFEIL,
-                        OmgjørVedtakÅrsak.ULIK_SKJØNNSVURDERING,
-                        OmgjørVedtakÅrsak.NYTT_FAKTUM,
-                    ])
-                    .typeError('Feltet må fylles ut'),
-                utfall: yup
-                    .string()
-                    .oneOf([
-                        OmgjørVedtakGunst.TIL_GUNST,
-                        OmgjørVedtakGunst.TIL_UGUNST,
-                        OmgjørVedtakGunst.DELVIS_OMGJØR_TIL_GUNST,
-                    ])
-                    .typeError('Feltet må fylles ut'),
+                årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).typeError('Feltet må fylles ut'),
+                utfall: yup.string().oneOf(Object.values(OmgjørVedtakGunst)).typeError('Feltet må fylles ut'),
             }),
             otherwise: yup.object(),
         }),
@@ -81,14 +66,7 @@ const schema = yup.object<BehandlingAvKlageFormData>({
         .when('vedtakHandling', {
             is: VedtakHandling.OPPRETTHOLD,
             then: yup.object({
-                hjemmel: yup
-                    .string()
-                    .oneOf([
-                        OpprettholdVedtakHjemmel.Hjemmel1,
-                        OpprettholdVedtakHjemmel.Hjemmel2,
-                        OpprettholdVedtakHjemmel.Hjemmel3,
-                    ])
-                    .typeError('Feltet må fylles ut'),
+                hjemmel: yup.array().of(yup.string()).required(),
             }),
             otherwise: yup.object(),
         }),
@@ -113,7 +91,7 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                 utfall: null,
             },
             oppretthold: {
-                hjemmel: null,
+                hjemmel: [],
             },
             vurdering: null,
             fritekst: null,
@@ -152,7 +130,7 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
 
     return (
         <form onSubmit={handleSubmit(handleBehandlingAvKlageSubmit)}>
-            <Heading size="2xlarge">{formatMessage('page.tittel')}</Heading>
+            <Heading size="medium">{formatMessage('page.tittel')}</Heading>
             <div className={styles.vedtakHandlingContainer}>
                 <Controller
                     control={control}
@@ -284,19 +262,20 @@ const OpprettholdVedtakForm = (props: { control: Control<BehandlingAvKlageFormDa
                 control={props.control}
                 name={'oppretthold.hjemmel'}
                 render={({ field, fieldState }) => (
-                    <Select
+                    <CheckboxGroup
                         {...field}
-                        label={formatMessage('form.opprettholdVedtak.hjemmel.label')}
-                        value={field.value ?? ''}
+                        legend={formatMessage('form.opprettholdVedtak.hjemmel.label')}
+                        value={[...(field.value ?? '')]}
                         error={fieldState.error?.message}
                     >
-                        <option value="">{formatMessage('form.opprettholdVedtak.hjemmel.velgHjemmel')}</option>
-                        {Object.values(OpprettholdVedtakHjemmel).map((hjemmel) => (
-                            <option value={hjemmel} key={hjemmel}>
-                                {formatMessage(hjemmel)}
-                            </option>
-                        ))}
-                    </Select>
+                        <div className={styles.hjemmelCheckboxgroup}>
+                            {Object.values(OpprettholdVedtakHjemmel).map((hjemmel) => (
+                                <Checkbox value={hjemmel} key={hjemmel}>
+                                    {formatMessage(hjemmel)}
+                                </Checkbox>
+                            ))}
+                        </div>
+                    </CheckboxGroup>
                 )}
             />
         </div>
