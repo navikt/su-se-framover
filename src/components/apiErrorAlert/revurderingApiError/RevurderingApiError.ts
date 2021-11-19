@@ -1,6 +1,5 @@
 export type RevurderingErrorCodes =
     | Generell
-    | Vurderingsperiode
     | VilkårErrorCodes
     | Beregning
     | Forhåndsvarsling
@@ -16,19 +15,21 @@ export enum Generell {
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
     FEILUTBETALING_STØTTES_IKKE = 'feilutbetalinger_støttes_ikke',
+    INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
 
     FANT_IKKE_SAK = 'fant_ikke_sak',
     FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
+    FANT_IKKE_VEDTAK = 'fant_ikke_vedtak',
+    FANT_IKKE_TIDLIGERE_GRUNNLAGSDATA = 'fant_ikke_tidligere_grunnlagsdata',
+    FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN = 'fant_ikke_person_eller_saksbehandler_navn',
 
     UGYLDIG_PERIODE = 'ugyldig_periode',
     UGYLDIG_ÅRSAK = 'ugyldig_årsak',
+    REVURDERINGSÅRSAK_UGYLDIG_BEGRUNNELSE = 'revurderingsårsak_ugyldig_begrunnelse',
+    REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK = 'revurderingsårsak_ugyldig_årsak',
 
     KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
     UKJENT_FEIL = 'ukjent_feil',
-}
-
-export enum Vurderingsperiode {
-    INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
 }
 
 export enum Forhåndsvarsling {
@@ -75,11 +76,11 @@ export enum Formue {
     IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE = 'ikke_lov_med_formueperiode_utenfor_bosituasjonperiode',
     IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN = 'ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
     IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS = 'ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
+    FORMUELISTE_KAN_IKKE_VÆRE_TOM = 'formueliste_kan_ikke_være_tom',
 }
 
 export enum Fradrag {
     KUNNE_IKKE_LAGE_FRADRAG = 'kunne_ikke_lage_fradrag',
-    KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
 }
 
 export enum Beregning {
@@ -96,9 +97,6 @@ export enum Brev {
 
 export enum Stans {
     KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_stans_ugyldig_tilstand',
-    FEIL_VED_KONTROLL_AV_SIMULERING = 'feil_ved_kontroll_av_simulering',
-    SENDING_TIL_OPPDRAG_FEILET = 'sending_til_oppdrag_feilet',
-    FEIL_VED_SIMULERING_AV_STANS = 'feil_ved_simulering_av_stans',
     KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_STANS = 'kunne_ikke_opprette_revurdering_for_stans',
     UGYLDIG_TILSTAND_FOR_OPPDATERING = 'ugyldig_tilstand_for_oppdatering',
     FANT_INGEN_UTBETALINGER = 'fant_ingen_utbetalinger',
@@ -112,13 +110,8 @@ export enum Stans {
 }
 
 export enum Gjenopptak {
+    KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_GJENOPPTAK = 'kunne_ikke_opprette_revurdering_for_gjenopptak',
     KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_gjenopptak_ugyldig_tilstand',
-    INGEN_TIDLIGERE_VEDTAK = 'ingen_tidligere_vedtak',
-    UGYLDIG_TYPE_FOR_OPPDATERING_AV_GJENOPPTAK = 'ugyldig_type_for_oppdatering_av_gjenopptak',
-    KUNNE_IKKE_OPPRETTE_REVURDERING = 'kunne_ikke_opprette_revurdering',
-    FEIL_VED_SIMULERING_AV_GJENOPPTAK = 'feil_ved_simulering_av_gjenopptak',
-    SENDING_TIL_OPPDRAG_FEILET = 'sending_til_oppdrag_feilet',
-    FEIL_VED_KONTROLL_AV_SIMULERING = 'feil_ved_kontroll_av_simulering',
     SISTE_VEDTAK_IKKE_STANS = 'siste_vedtak_ikke_stans',
     SISTE_UTBETALING_ER_IKKE_STANS = 'siste_utbetaling_er_ikke_stans',
     KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER = 'kan_ikke_gjenoppta_opphørte_utbetalinger',
@@ -132,5 +125,4 @@ export enum Avsluttet {
     REVURDERINGEN_ER_IVERKSATT = 'revurderingen_er_iverksatt',
     REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV = 'revurdering_er_ikke_forhåndsvarslet_for_å_vise_brev',
     FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL = 'fritekst_er_fyllt_ut_uten_forhåndsvarsel',
-    FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN = 'fant_ikke_person_eller_saksbehandler_navn',
 }

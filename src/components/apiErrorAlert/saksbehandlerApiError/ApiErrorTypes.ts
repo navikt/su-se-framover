@@ -5,16 +5,20 @@ export type FeilresponsErrorCodes =
     | VilkårErrors
     | Simulering
     | Brev
-    | Utbetaling;
+    | Utbetaling
+    | Person;
 
 export enum Generell {
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_PERSON = 'fant_ikke_person',
+    SAKSNUMMER_IKKE_GYLDIG = 'saksnummer_ikke_gyldig',
     PERSONEN_HAR_INGEN_SAK = 'fant_ikke_sak_for_person',
+    MANGLER_SAKSNUMMER_FØDSELSNUMMER = 'mangler_saksnummer_fødselsnummer',
 
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
+    KUNNE_IKKE_LAGE_PDF = 'kunne_ikke_lage_pdf',
 
     UGYLDIG_BODY = 'ugyldig_body',
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
@@ -57,7 +61,7 @@ export enum Formue {
 
 export enum Fradrag {
     KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG = 'kunne_ikke_legge_til_fradragsgrunnlag',
-    fradrag_mangler_periode = 'fradrag_mangler_periode',
+    FRADRAG_MANGLER_PERIODE = 'fradrag_mangler_periode',
 
     UTENLANDSK_INNTEKT_NEGATIVT_BELØP = 'utenlandsk_inntekt_negativt_beløp',
     UTENLANDSK_INNTEKT_MANGLER_VALUTA = 'utenlandsk_inntekt_mangler_valuta',
@@ -75,9 +79,26 @@ export enum Simulering {
 export enum Brev {
     KUNNE_IKKE_GENERERE_BREV = 'kunne_ikke_generere_brev',
     FEIL_VED_GENERERING_AV_DOKUMENT = 'feil_ved_generering_av_dokument',
+    UKJENT_BREVTYPE = 'ukjent_brevtype',
 }
 
 export enum Utbetaling {
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
+}
+
+export enum Avstemming {
+    UGYLDIG_PARAMETER = 'ugyldig_parameter', //Parameter 'fraOgMed' mangler
+    AVSTEMMING_FEILET = 'avstemming_feilet',
+}
+
+export enum Dokument {
+    MANGLER_ID = 'mangler_id', // Parameter for id mangler
+    MANGLER_IDTYPE = 'mangler_idType', // Parameter for idType mangler
+    UGYLDIG_PARAMETER_ID = 'ugyldig_parameter_id',
+    UGYLDIG_PARAMETER_IDTYPE = 'ugyldig_parameter_idType',
+}
+
+export enum Person {
+    IKKE_GYLDIG_FØDSELSNUMMER = 'ikke_gyldig_fødselsnummer',
 }

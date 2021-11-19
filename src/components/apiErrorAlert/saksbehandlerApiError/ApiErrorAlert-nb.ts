@@ -6,6 +6,7 @@ import {
     Fradrag,
     Generell,
     Periode,
+    Person,
     Simulering,
     Uføre,
     Utbetaling,
@@ -13,13 +14,15 @@ import {
 } from './ApiErrorTypes';
 
 const messages: { [key in FeilresponsErrorCodes]: string } & { [key: string]: string } = {
+    [Generell.MANGLER_SAKSNUMMER_FØDSELSNUMMER]: 'Må oppgi enten saksnummer eller fødselsnummer',
+    [Generell.SAKSNUMMER_IKKE_GYLDIG]: 'Saksnnummer er ikke gyldig',
     [Generell.FANT_IKKE_BEHANDLING]: 'Fant ikke behandlingen',
     [Generell.FANT_IKKE_AKTØR_ID]: 'Fant ikke AktørID',
     [Generell.FANT_IKKE_PERSON]: 'Fant ikke personen',
     [Generell.PERSONEN_HAR_INGEN_SAK]: 'Personen har ingen sak',
     [Generell.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'Kunne ikke opprette oppgave',
     [Generell.KUNNE_IKKE_UTBETALE]: 'Kunne ikke utbetale',
-
+    [Generell.KUNNE_IKKE_LAGE_PDF]: 'Kunne ikke lage pdf',
     [Generell.UGYLDIG_BODY]: 'Ugyldig data som ble innsendt',
     [Generell.UGYLDIG_TILSTAND]: 'Ugyldig tilstand',
     [Generell.UGYLDIG_FØDSELSNUMMER]: 'Ugyldig fødselsnummer',
@@ -48,7 +51,7 @@ const messages: { [key in FeilresponsErrorCodes]: string } & { [key: string]: st
     [Formue.DEPOSITUM_IKKE_MINDRE_ENN_INNSKUDD]: 'Depositum kan ikke være høyere enn innskudd',
 
     [Fradrag.KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG]: 'Kunne ikke legge til fradragsgrunnlaget',
-    [Fradrag.fradrag_mangler_periode]: 'Fradrag mangler periode',
+    [Fradrag.FRADRAG_MANGLER_PERIODE]: 'Fradrag mangler periode',
     [Fradrag.UTENLANDSK_INNTEKT_NEGATIVT_BELØP]: 'Fradrag har negativt utenlandsbeløp',
     [Fradrag.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'Fradrag mangler valuta',
     [Fradrag.UTENLANDSK_INNTEKT_NEGATIV_KURS]: 'Fradrag har negativ kurs',
@@ -64,10 +67,12 @@ const messages: { [key in FeilresponsErrorCodes]: string } & { [key: string]: st
 
     [Brev.KUNNE_IKKE_GENERERE_BREV]: 'Kunne ikke generere brev',
     [Brev.FEIL_VED_GENERERING_AV_DOKUMENT]: 'Feil ved generering av dokument',
+    [Brev.UKJENT_BREVTYPE]: 'Ukjent brevtype',
 
     [Utbetaling.KUNNE_IKKE_UTBETALE]: 'Kunne ikke utbetale',
     [Utbetaling.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
         'Kontrollsimuleringen er ulik saksbehandlers simulering',
+    [Person.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
 };
 
 export default messages;
