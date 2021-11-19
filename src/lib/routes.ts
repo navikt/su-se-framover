@@ -172,7 +172,7 @@ export const klageOpprett: Route<{
     sakId: string;
 }> = {
     path: 'saksoversikt/:sakId/klage/opprett',
-    createURL: ({ sakId }) => `/saksoversikt/${sakId}/klage/${KlageSteg.Opprett}`,
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/klage/opprett`,
 };
 export const klage: Route<{
     sakId: string;

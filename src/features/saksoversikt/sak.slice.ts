@@ -7,6 +7,7 @@ import * as dokumentApi from '~api/dokumentApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~api/søknadApi';
+import * as klageActions from '~features/klage/klageActions';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -726,6 +727,16 @@ export default createSlice({
 
         builder.addCase(revurderingActions.avsluttRevurdering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(klageActions.lagreBehandlingAvKlage.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((s) => ({
+                    ...s,
+                    klager: s.klager.map((k) => (k.id === action.payload.id ? action.payload : k)),
+                }))
+            );
         });
     },
 });

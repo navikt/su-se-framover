@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField, Button, Select, Ingress, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 
 import * as klageApi from '~api/klageApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
@@ -13,6 +14,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
 import { Sak } from '~types/Sak';
 import { formatDateTime } from '~utils/date/dateUtils';
@@ -42,6 +44,7 @@ const schema = yup.object<FormData>({
 });
 
 const VurderFormkrav = (props: Props) => {
+    const history = useHistory();
     const { formatMessage } = useI18n({ messages });
     const [vilkårsvurderingStatus, vilkårsvurder] = useApiCall(klageApi.vilkårsvurder);
 
@@ -62,15 +65,26 @@ const VurderFormkrav = (props: Props) => {
             onSubmit={handleSubmit((values) => {
                 console.log(values);
 
-                vilkårsvurder({
-                    sakId: props.sak.id,
-                    klageId: props.klage.id,
-                    vedtakId: values.vedtakId,
-                    innenforFristen: values.innenforFristen,
-                    klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
-                    erUnderskrevet: values.signert,
-                    begrunnelse: values.begrunnelse,
-                });
+                vilkårsvurder(
+                    {
+                        sakId: props.sak.id,
+                        klageId: props.klage.id,
+                        vedtakId: values.vedtakId,
+                        innenforFristen: values.innenforFristen,
+                        klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
+                        erUnderskrevet: values.signert,
+                        begrunnelse: values.begrunnelse,
+                    },
+                    () => {
+                        history.push(
+                            Routes.klage.createURL({
+                                sakId: props.sak.id,
+                                klageId: props.klage.id,
+                                steg: KlageSteg.Behandling,
+                            })
+                        );
+                    }
+                );
             })}
         >
             <Ingress>{formatMessage('formkrav.tittel')}</Ingress>

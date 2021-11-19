@@ -1,4 +1,6 @@
 import { Nullable } from '~lib/types';
+import { VurderingRequest } from '~pages/klage/klageUtils';
+import { Klage } from '~types/Klage';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -30,6 +32,19 @@ export async function vilkårsvurder(arg: {
             klagesDetPåKonkreteElementerIVedtaket: arg.klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet: arg.erUnderskrevet,
             begrunnelse: arg.begrunnelse,
+        },
+    });
+}
+
+export async function lagreBehandlingAvKlage(arg: VurderingRequest): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/vurderinger`,
+        method: 'POST',
+        body: {
+            omgjør: arg.omgjør,
+            oppretthold: arg.oppretthold,
+            vurdering: arg.vurdering,
+            fritekstTilBrev: arg.fritekstTilBrev,
         },
     });
 }

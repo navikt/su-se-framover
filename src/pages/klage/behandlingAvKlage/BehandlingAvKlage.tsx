@@ -1,16 +1,23 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Radio, RadioGroup, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 //import * as pdfApi from '~api/pdfApi';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-//import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
+import * as klageActions from '~features/klage/klageActions';
+import { useAsyncActionCreator /* useBrevForhåndsvisning */ } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
+import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
 import { Sak } from '~types/Sak';
+
+import { OmgjørVedtakGunst, OmgjørVedtakÅrsak, OpprettholdVedtakHjemmel } from '../klageUtils';
 
 import messages from './behandlingAvKlage-nb';
 import styles from './behandlingAvKlage.module.less';
@@ -20,51 +27,90 @@ enum VedtakHandling {
     OPPRETTHOLD = 'oppretthold_vedtak',
 }
 
-enum OmgjørVedtakÅrsak {
-    FEIL_LOVANVENDELSE = 'feil_lovanvendelse',
-    ULIK_SKJØNNSVURDERING = 'ulik_skjønnsvurdering',
-    SAKSBEHADNLINGSFEIL = 'saksbehadnlingsfeil',
-    NYTT_FAKTUM = 'nytt_faktum',
+interface OmgjørFormData {
+    årsak: Nullable<OmgjørVedtakÅrsak>;
+    utfall: Nullable<OmgjørVedtakGunst>;
 }
 
-enum OmgjørVedtakGunst {
-    TIL_GUNST = 'til_gunst',
-    TIL_UGUNST = 'til_ugunst',
-    DELVIS_OMGJØR_TIL_GUNST = 'delvis_omgjør_til_gunst',
-}
-
-enum OpprettholdVedtakHjemmel {
-    'Hjemmel1' = '1',
-    'Hjemmel2' = '2',
-    'Hjemmel3' = '3',
+interface HjemmelFormData {
+    hjemmel: Nullable<OpprettholdVedtakHjemmel>;
 }
 
 interface BehandlingAvKlageFormData {
     vedtakHandling: Nullable<VedtakHandling>;
-    omgjør: {
-        årsak: Nullable<OmgjørVedtakÅrsak>;
-        gunst: Nullable<OmgjørVedtakGunst>;
-    };
-    oppretthold: {
-        hjemmel: Nullable<OpprettholdVedtakHjemmel>;
-    };
+    omgjør: OmgjørFormData;
+    oppretthold: HjemmelFormData;
     vurdering: Nullable<string>;
     fritekst: Nullable<string>;
 }
 
+const schema = yup.object<BehandlingAvKlageFormData>({
+    vedtakHandling: yup
+        .string()
+        .defined()
+        .oneOf([VedtakHandling.OMGJØR, VedtakHandling.OPPRETTHOLD], 'Feltet må fylles ut'),
+    omgjør: yup
+        .object<OmgjørFormData>()
+        .defined()
+        .when('vedtakHandling', {
+            is: VedtakHandling.OMGJØR,
+            then: yup.object({
+                årsak: yup
+                    .string()
+                    .oneOf([
+                        OmgjørVedtakÅrsak.FEIL_LOVANVENDELSE,
+                        OmgjørVedtakÅrsak.SAKSBEHADNLINGSFEIL,
+                        OmgjørVedtakÅrsak.ULIK_SKJØNNSVURDERING,
+                        OmgjørVedtakÅrsak.NYTT_FAKTUM,
+                    ])
+                    .typeError('Feltet må fylles ut'),
+                utfall: yup
+                    .string()
+                    .oneOf([
+                        OmgjørVedtakGunst.TIL_GUNST,
+                        OmgjørVedtakGunst.TIL_UGUNST,
+                        OmgjørVedtakGunst.DELVIS_OMGJØR_TIL_GUNST,
+                    ])
+                    .typeError('Feltet må fylles ut'),
+            }),
+            otherwise: yup.object(),
+        }),
+    oppretthold: yup
+        .object<HjemmelFormData>()
+        .defined()
+        .when('vedtakHandling', {
+            is: VedtakHandling.OPPRETTHOLD,
+            then: yup.object({
+                hjemmel: yup
+                    .string()
+                    .oneOf([
+                        OpprettholdVedtakHjemmel.Hjemmel1,
+                        OpprettholdVedtakHjemmel.Hjemmel2,
+                        OpprettholdVedtakHjemmel.Hjemmel3,
+                    ])
+                    .typeError('Feltet må fylles ut'),
+            }),
+            otherwise: yup.object(),
+        }),
+    vurdering: yup.string().required().typeError('Feltet må fylles ut'),
+    fritekst: yup.string().nullable().defined(),
+});
+
 const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
     const { formatMessage } = useI18n({ messages });
 
-    //TODO
-    //const [lagreBehandlingAvKlageStatus, lagreBehandlingAvKlage] = useAsyncActionCreator();
+    const [lagreBehandlingAvKlageStatus, lagreBehandlingAvKlage] = useAsyncActionCreator(
+        klageActions.lagreBehandlingAvKlage
+    );
     //const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi);
 
     const { handleSubmit, watch, control } = useForm<BehandlingAvKlageFormData>({
+        resolver: yupResolver(schema),
         defaultValues: {
             vedtakHandling: null,
             omgjør: {
                 årsak: null,
-                gunst: null,
+                utfall: null,
             },
             oppretthold: {
                 hjemmel: null,
@@ -75,7 +121,33 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
     });
 
     const handleBehandlingAvKlageSubmit = (data: BehandlingAvKlageFormData) => {
-        console.log(data);
+        lagreBehandlingAvKlage(
+            {
+                sakId: props.sak.id,
+                klageId: props.klage.id,
+                //valdiering sikrer at feltet ikke er null
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                omgjør:
+                    data.vedtakHandling === VedtakHandling.OMGJØR
+                        ? {
+                              årsak: data.omgjør.årsak!,
+                              utfall: data.omgjør.utfall!,
+                          }
+                        : null,
+                oppretthold:
+                    data.vedtakHandling === VedtakHandling.OPPRETTHOLD
+                        ? {
+                              hjemmel: data.oppretthold.hjemmel!,
+                          }
+                        : null,
+                vurdering: data.vurdering!,
+                /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                fritekstTilBrev: data.fritekst,
+            },
+            () => {
+                console.log('success!');
+            }
+        );
     };
 
     return (
@@ -89,7 +161,7 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                         <RadioGroup
                             {...field}
                             legend={formatMessage('form.vedtakHandling.legend')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             value={field.value ?? undefined}
                         >
                             <Radio value={VedtakHandling.OMGJØR}>
@@ -115,7 +187,7 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                             {...field}
                             label={formatMessage('form.vurdering.label')}
                             value={field.value ?? ''}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                         />
                     )}
                 />
@@ -129,7 +201,7 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                             {...field}
                             label={formatMessage('form.fritekst.label')}
                             value={field.value ?? ''}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                         />
                     )}
                 />
@@ -149,6 +221,9 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                 </LinkAsButton>
                 <Button>{formatMessage('knapp.neste')}</Button>
             </div>
+            {RemoteData.isFailure(lagreBehandlingAvKlageStatus) && (
+                <ApiErrorAlert error={lagreBehandlingAvKlageStatus.error} />
+            )}
         </form>
     );
 };
@@ -160,13 +235,13 @@ const OmgjørVedtakForm = (props: { control: Control<BehandlingAvKlageFormData> 
         <div className={styles.formContainer}>
             <Controller
                 control={props.control}
-                name={'vedtakHandling'}
+                name={'omgjør.årsak'}
                 render={({ field, fieldState }) => (
                     <Select
                         {...field}
                         label={formatMessage('form.omgjørVedtak.årsak.label')}
                         value={field.value ?? ''}
-                        error={fieldState.error}
+                        error={fieldState.error?.message}
                     >
                         <option value="">{formatMessage('form.omgjørVedtak.årsak.velgÅrsak')}</option>
                         {Object.values(OmgjørVedtakÅrsak).map((årsak) => (
@@ -179,13 +254,13 @@ const OmgjørVedtakForm = (props: { control: Control<BehandlingAvKlageFormData> 
             />
             <Controller
                 control={props.control}
-                name={'omgjør.gunst'}
+                name={'omgjør.utfall'}
                 render={({ field, fieldState }) => (
                     <RadioGroup
                         legend=""
                         hideLegend
                         {...field}
-                        error={fieldState.error}
+                        error={fieldState.error?.message}
                         value={field.value ?? undefined}
                     >
                         {Object.values(OmgjørVedtakGunst).map((gunst) => (
@@ -213,7 +288,7 @@ const OpprettholdVedtakForm = (props: { control: Control<BehandlingAvKlageFormDa
                         {...field}
                         label={formatMessage('form.opprettholdVedtak.hjemmel.label')}
                         value={field.value ?? ''}
-                        error={fieldState.error}
+                        error={fieldState.error?.message}
                     >
                         <option value="">{formatMessage('form.opprettholdVedtak.hjemmel.velgHjemmel')}</option>
                         {Object.values(OpprettholdVedtakHjemmel).map((hjemmel) => (
