@@ -30,7 +30,7 @@ import { Nullable } from '~lib/types';
 import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';
-import { RevurderingProps } from '~types/Revurdering';
+import { RevurderingStegProps } from '~types/Revurdering';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import { regnUtFormDataVerdier, verdierId } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 import sharedFormueMessages from '~utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
@@ -50,8 +50,8 @@ import {
     revurderFormueSchema,
 } from './formueUtils';
 
-const Formue = (props: RevurderingProps) => {
-    const formuegrenser = props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
+const Formue = (props: RevurderingStegProps) => {
+    const formuegrenser = props.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
     const history = useHistory();
     const { formatMessage } = useI18n({ messages });
     const [epsStatus, hentEPS] = useApiCall(personApi.fetchPerson);
@@ -74,7 +74,7 @@ const Formue = (props: RevurderingProps) => {
         control: control,
     });
 
-    const lagreFormuegrunnlaget = (data: FormueFormData) => {
+    const lagreFormuegrunnlaget = (data: FormueFormData, gåtil: 'neste' | 'avbryt') => {
         lagreFormuegrunnlagAction(
             {
                 sakId: props.sakId,
@@ -83,7 +83,7 @@ const Formue = (props: RevurderingProps) => {
             },
             (res) => {
                 if (res.feilmeldinger.length === 0) {
-                    history.push(props.nesteUrl(res.revurdering));
+                    history.push(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl);
                 }
             }
         );
@@ -102,7 +102,10 @@ const Formue = (props: RevurderingProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form onSubmit={handleSubmit(lagreFormuegrunnlaget)} className={styles.container}>
+                    <form
+                        onSubmit={handleSubmit((values) => lagreFormuegrunnlaget(values, 'neste'))}
+                        className={styles.container}
+                    >
                         {RemoteData.isPending(epsStatus) && <Loader />}
                         {RemoteData.isFailure(epsStatus) && <ApiErrorAlert error={epsStatus.error} />}
                         <ul className={styles.formueBlokkContainer}>
@@ -149,9 +152,11 @@ const Formue = (props: RevurderingProps) => {
                             <UtfallSomIkkeStøttes feilmeldinger={lagreFormuegrunnlagStatus.value.feilmeldinger} />
                         )}
                         <RevurderingBunnknapper
-                            onNesteClick="submit"
                             tilbakeUrl={props.forrigeUrl}
-                            onNesteClickSpinner={RemoteData.isPending(lagreFormuegrunnlagStatus)}
+                            loading={RemoteData.isPending(lagreFormuegrunnlagStatus)}
+                            onLagreOgFortsettSenereClick={handleSubmit((values) =>
+                                lagreFormuegrunnlaget(values, 'avbryt')
+                            )}
                         />
                     </form>
                 ),
@@ -162,9 +167,7 @@ const Formue = (props: RevurderingProps) => {
                                 {formatMessage('eksisterende.vedtakinfo.tittel')}
                             </Heading>
                         </div>
-                        <FormuevilkårOppsummering
-                            gjeldendeFormue={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue}
-                        />
+                        <FormuevilkårOppsummering gjeldendeFormue={props.grunnlagsdataOgVilkårsvurderinger.formue} />
                     </div>
                 ),
             }}

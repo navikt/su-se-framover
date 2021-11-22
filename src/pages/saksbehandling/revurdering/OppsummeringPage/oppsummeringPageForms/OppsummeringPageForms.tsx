@@ -175,7 +175,6 @@ export const ResultatEtterForhåndsvarselform = (props: {
             )}
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
             <RevurderingBunnknapper
-                onNesteClick="submit"
                 nesteKnappTekst={
                     resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger
                         ? intl.formatMessage({ id: 'fortsett.button.label' })
@@ -183,7 +182,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         ? intl.formatMessage({ id: 'avslutt.button.label' })
                         : intl.formatMessage({ id: 'sendTilAttestering.button.label' })
                 }
-                onNesteClickSpinner={RemoteData.isPending(props.submitStatus)}
+                loading={RemoteData.isPending(props.submitStatus)}
             />
         </form>
     );
@@ -294,14 +293,13 @@ export const VelgForhåndsvarselForm = (props: {
             )}
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
             <RevurderingBunnknapper
-                onNesteClick="submit"
                 nesteKnappTekst={
                     forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle
                         ? intl.formatMessage({ id: 'sendForhåndsvarsel.button.label' })
                         : intl.formatMessage({ id: 'sendTilAttestering.button.label' })
                 }
                 tilbakeUrl={props.forrigeUrl}
-                onNesteClickSpinner={RemoteData.isPending(props.submitStatus)}
+                loading={RemoteData.isPending(props.submitStatus)}
             />
         </form>
     );
@@ -381,10 +379,9 @@ export const SendTilAttesteringForm = (props: {
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
 
             <RevurderingBunnknapper
-                onNesteClick="submit"
                 nesteKnappTekst={intl.formatMessage({ id: 'sendTilAttestering.button.label' })}
                 tilbakeUrl={props.forrigeUrl}
-                onNesteClickSpinner={RemoteData.isPending(props.submitStatus)}
+                loading={RemoteData.isPending(props.submitStatus)}
             />
         </form>
     );
