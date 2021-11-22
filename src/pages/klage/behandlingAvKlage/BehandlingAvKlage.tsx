@@ -22,7 +22,7 @@ import { OmgjørVedtakGunst, OmgjørVedtakÅrsak, OpprettholdVedtakHjemmel } fro
 import messages from './behandlingAvKlage-nb';
 import styles from './behandlingAvKlage.module.less';
 
-enum VedtakHandling {
+enum vedtakVurdering {
     OMGJØR = 'omgjør_vedtak',
     OPPRETTHOLD = 'oppretthold_vedtak',
 }
@@ -37,10 +37,9 @@ interface HjemmelFormData {
 }
 
 interface BehandlingAvKlageFormData {
-    vedtakHandling: Nullable<VedtakHandling>;
+    vedtakHandling: Nullable<vedtakVurdering>;
     omgjør: OmgjørFormData;
     oppretthold: HjemmelFormData;
-    vurdering: Nullable<string>;
     fritekst: Nullable<string>;
 }
 
@@ -48,12 +47,12 @@ const schema = yup.object<BehandlingAvKlageFormData>({
     vedtakHandling: yup
         .string()
         .defined()
-        .oneOf([VedtakHandling.OMGJØR, VedtakHandling.OPPRETTHOLD], 'Feltet må fylles ut'),
+        .oneOf([vedtakVurdering.OMGJØR, vedtakVurdering.OPPRETTHOLD], 'Feltet må fylles ut'),
     omgjør: yup
         .object<OmgjørFormData>()
         .defined()
         .when('vedtakHandling', {
-            is: VedtakHandling.OMGJØR,
+            is: vedtakVurdering.OMGJØR,
             then: yup.object({
                 årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).typeError('Feltet må fylles ut'),
                 utfall: yup.string().oneOf(Object.values(OmgjørVedtakGunst)).typeError('Feltet må fylles ut'),
@@ -64,13 +63,12 @@ const schema = yup.object<BehandlingAvKlageFormData>({
         .object<HjemmelFormData>()
         .defined()
         .when('vedtakHandling', {
-            is: VedtakHandling.OPPRETTHOLD,
+            is: vedtakVurdering.OPPRETTHOLD,
             then: yup.object({
                 hjemmel: yup.array().of(yup.string()).required(),
             }),
             otherwise: yup.object(),
         }),
-    vurdering: yup.string().required().typeError('Feltet må fylles ut'),
     fritekst: yup.string().nullable().defined(),
 });
 
@@ -93,7 +91,6 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
             oppretthold: {
                 hjemmel: [],
             },
-            vurdering: null,
             fritekst: null,
         },
     });
@@ -106,19 +103,18 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                 //valdiering sikrer at feltet ikke er null
                 /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 omgjør:
-                    data.vedtakHandling === VedtakHandling.OMGJØR
+                    data.vedtakHandling === vedtakVurdering.OMGJØR
                         ? {
                               årsak: data.omgjør.årsak!,
                               utfall: data.omgjør.utfall!,
                           }
                         : null,
                 oppretthold:
-                    data.vedtakHandling === VedtakHandling.OPPRETTHOLD
+                    data.vedtakHandling === vedtakVurdering.OPPRETTHOLD
                         ? {
                               hjemmel: data.oppretthold.hjemmel!,
                           }
                         : null,
-                vurdering: data.vurdering!,
                 /* eslint-enable @typescript-eslint/no-non-null-assertion */
                 fritekstTilBrev: data.fritekst,
             },
@@ -142,10 +138,10 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                             error={fieldState.error?.message}
                             value={field.value ?? undefined}
                         >
-                            <Radio value={VedtakHandling.OMGJØR}>
+                            <Radio value={vedtakVurdering.OMGJØR}>
                                 {formatMessage('form.vedtakHandling.omgjørVedtak')}
                             </Radio>
-                            <Radio value={VedtakHandling.OPPRETTHOLD}>
+                            <Radio value={vedtakVurdering.OPPRETTHOLD}>
                                 {formatMessage('form.vedtakHandling.opprettholdVedtak')}
                             </Radio>
                         </RadioGroup>
@@ -153,23 +149,9 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                 />
             </div>
 
-            {watch('vedtakHandling') === VedtakHandling.OMGJØR && <OmgjørVedtakForm control={control} />}
-            {watch('vedtakHandling') === VedtakHandling.OPPRETTHOLD && <OpprettholdVedtakForm control={control} />}
+            {watch('vedtakHandling') === vedtakVurdering.OMGJØR && <OmgjørVedtakForm control={control} />}
+            {watch('vedtakHandling') === vedtakVurdering.OPPRETTHOLD && <OpprettholdVedtakForm control={control} />}
 
-            <div className={styles.vurderingContainer}>
-                <Controller
-                    control={control}
-                    name={'vurdering'}
-                    render={({ field, fieldState }) => (
-                        <Textarea
-                            {...field}
-                            label={formatMessage('form.vurdering.label')}
-                            value={field.value ?? ''}
-                            error={fieldState.error?.message}
-                        />
-                    )}
-                />
-            </div>
             <div className={styles.fritesktOgVisBrevContainer}>
                 <Controller
                     control={control}

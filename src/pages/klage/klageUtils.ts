@@ -40,6 +40,5 @@ export interface VurderingRequest {
     klageId: string;
     omgjør: Nullable<Omgjør>;
     oppretthold: Nullable<Oppretthold>;
-    vurdering: string;
     fritekstTilBrev: Nullable<string>;
 }

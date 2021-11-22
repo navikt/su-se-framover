@@ -43,7 +43,6 @@ export async function lagreBehandlingAvKlage(arg: VurderingRequest): Promise<Api
         body: {
             omgjør: arg.omgjør,
             oppretthold: arg.oppretthold,
-            vurdering: arg.vurdering,
             fritekstTilBrev: arg.fritekstTilBrev,
         },
     });
