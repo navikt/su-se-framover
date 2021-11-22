@@ -13,6 +13,7 @@ export default {
     'behandling.iverksattDato': 'Iverksatt dato',
 
     'brev.utkastVedtaksbrev': 'Utkast til vedtaksbrev',
+    'brev.vedtaksbrev': 'Vedtaksbrev',
 
     'feilmelding.ikkeGjortEnBeregning': 'Det er ikke gjort en beregning',
     'feilmelding.ukjentFeil': 'Ukjent feil',

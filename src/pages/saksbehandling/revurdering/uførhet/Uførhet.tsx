@@ -18,7 +18,6 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, {
     getDateErrorMessage,
@@ -29,7 +28,7 @@ import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-
 import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { OpprettetRevurdering, Revurdering } from '~types/Revurdering';
+import { OpprettetRevurdering, RevurderingStegProps } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 import * as FormatUtils from '~utils/format/formatUtils';
 import { erGregulering } from '~utils/revurdering/revurderingUtils';
@@ -279,12 +278,11 @@ const Uføreperiodevurdering = (props: {
     );
 };
 
-const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: string; nesteUrl: string }) => {
+const UførhetForm = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const history = useHistory();
 
-    const [pressedButton, setPressedButton] = React.useState<'ingen' | 'neste' | 'lagre'>('ingen');
     const [savingState, setSavingState] = React.useState<
         RemoteData.RemoteData<ApiError, { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] }>
     >(RemoteData.initial);
@@ -309,9 +307,9 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
         name: 'grunnlag',
     });
 
-    const save = async (values: FormData) => {
+    const save = async (values: FormData, onSuccess: () => void) => {
         if (RemoteData.isPending(savingState)) {
-            return false;
+            return;
         }
         setSavingState(RemoteData.pending);
 
@@ -336,32 +334,12 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
 
         if (revurderingActions.lagreUføregrunnlag.fulfilled.match(res)) {
             setSavingState(RemoteData.success(res.payload));
-            if (res.payload.feilmeldinger.length > 0) {
-                return false;
+            if (res.payload.feilmeldinger.length === 0) {
+                onSuccess();
             }
-            return true;
         } else if (revurderingActions.lagreUføregrunnlag.rejected.match(res)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             setSavingState(RemoteData.failure(res.payload!));
-        }
-        return false;
-    };
-
-    const handleSubmit = async (values: FormData) => {
-        setPressedButton('neste');
-        const res = await save(values);
-        setPressedButton('ingen');
-        if (res) {
-            history.push(props.nesteUrl);
-        }
-    };
-
-    const handleLagreOgFortsettSenereClick = async (values: FormData) => {
-        setPressedButton('lagre');
-        const res = await save(values);
-        setPressedButton('ingen');
-        if (res) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
         }
     };
 
@@ -375,7 +353,12 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
     const valdieringsFeil = hookFormErrorsTilFeiloppsummering(errors);
 
     return (
-        <form onSubmit={form.handleSubmit(handleSubmit, focusAfterTimeout(feiloppsummeringRef))}>
+        <form
+            onSubmit={form.handleSubmit(
+                async (values) => await save(values, () => history.push(props.nesteUrl)),
+                focusAfterTimeout(feiloppsummeringRef)
+            )}
+        >
             <ul className={styles.periodeliste}>
                 {grunnlagValues.fields.map((item, idx) => (
                     <Uføreperiodevurdering
@@ -435,11 +418,11 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
             )}
             <RevurderingBunnknapper
-                onNesteClick="submit"
                 tilbakeUrl={props.forrigeUrl}
-                onLagreOgFortsettSenereClick={form.handleSubmit(handleLagreOgFortsettSenereClick)}
-                onNesteClickSpinner={pressedButton === 'neste' && RemoteData.isPending(savingState)}
-                onLagreOgFortsettSenereClickSpinner={pressedButton === 'lagre' && RemoteData.isPending(savingState)}
+                onLagreOgFortsettSenereClick={form.handleSubmit((values: FormData) =>
+                    save(values, () => history.push(props.avsluttUrl))
+                )}
+                loading={RemoteData.isPending(savingState)}
             />
         </form>
     );
@@ -494,28 +477,13 @@ const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVil
     );
 };
 
-const Uførhet = (props: {
-    sakId: string;
-    revurdering: Revurdering;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-    forrigeUrl: string;
-    nesteUrl: string;
-}) => {
-    return (
-        <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
-            {{
-                left: (
-                    <UførhetForm
-                        sakId={props.sakId}
-                        revurdering={props.revurdering}
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={props.nesteUrl}
-                    />
-                ),
-                right: <GjeldendeGrunnlagsdata vilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger} />,
-            }}
-        </ToKolonner>
-    );
-};
+const Uførhet = (props: RevurderingStegProps) => (
+    <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
+        {{
+            left: <UførhetForm {...props} />,
+            right: <GjeldendeGrunnlagsdata vilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger} />,
+        }}
+    </ToKolonner>
+);
 
 export default Uførhet;
