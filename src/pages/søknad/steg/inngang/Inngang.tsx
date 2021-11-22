@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Attachment } from '@navikt/ds-icons';
-import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Tag } from '@navikt/ds-react';
+import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { pipe } from 'fp-ts/function';
 import * as React from 'react';
@@ -22,7 +22,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Periode } from '~types/Periode';
 import { Søknadstype } from '~types/Søknad';
 import { formatDate } from '~utils/date/dateUtils';
-import { er66EllerEldre } from '~utils/person/personUtils';
+import { er67EllerEldre } from '~utils/person/personUtils';
 
 import nb from './inngang-nb';
 import styles from './inngang.module.less';
@@ -39,6 +39,8 @@ const SakinfoAlert = ({
     formatMessage: MessageFormatter<typeof nb>;
 }) => {
     const visTittel = [harÅpenSøknad, iverksattInnvilgetStønadsperiode, aldervarsel].filter(Boolean).length > 1;
+    const suAlderUrl =
+        'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-personer-over-sekstisyv-ar';
     return (
         <Alert className={styles.åpenSøknadContainer} variant="warning">
             {harÅpenSøknad && (
@@ -79,7 +81,15 @@ const SakinfoAlert = ({
                             {formatMessage('heading.advarsel.alder')}
                         </Heading>
                     )}
-                    <BodyLong>{formatMessage('advarsel.alder')}</BodyLong>
+                    <BodyLong>
+                        {formatMessage('advarsel.alder', {
+                            navLink: (tekst) => (
+                                <Link target="_blank" href={suAlderUrl}>
+                                    {tekst}
+                                </Link>
+                            ),
+                        })}
+                    </BodyLong>
                 </div>
             )}
         </Alert>
@@ -212,11 +222,11 @@ const index = (props: { nesteUrl: string }) => {
                         RemoteData.combine(sakinfo, hentPersonStatus),
                         RemoteData.map(
                             ([{ harÅpenSøknad, iverksattInnvilgetStønadsperiode }, { alder }]) =>
-                                (harÅpenSøknad || iverksattInnvilgetStønadsperiode || er66EllerEldre(alder)) && (
+                                (harÅpenSøknad || iverksattInnvilgetStønadsperiode || er67EllerEldre(alder)) && (
                                     <SakinfoAlert
                                         harÅpenSøknad={harÅpenSøknad}
                                         iverksattInnvilgetStønadsperiode={iverksattInnvilgetStønadsperiode}
-                                        aldervarsel={er66EllerEldre(alder)}
+                                        aldervarsel={er67EllerEldre(alder)}
                                         formatMessage={formatMessage}
                                     />
                                 )
