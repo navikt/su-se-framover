@@ -47,7 +47,7 @@
         "@formatjs/intl-datetimeformat": "^4.2.5",
         "@formatjs/intl-numberformat": "^7.2.5",
         "@hookform/resolvers": "^2.8.3",
-        "@navikt/ds-css": "^0.11.3",
+        "@navikt/ds-css": "^0.11.4",
         "@navikt/ds-css-internal": "^0.6.0",
         "@navikt/ds-datepicker": "^1.0.4",
         "@navikt/ds-icons": "^0.6.3",
