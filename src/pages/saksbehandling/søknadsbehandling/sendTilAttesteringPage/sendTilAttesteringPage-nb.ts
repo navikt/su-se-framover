@@ -5,6 +5,7 @@ export default {
     'behandling.søknadsdato': 'Søknadsdato',
 
     'brev.utkastVedtaksbrev': 'Utkast til vedtaksbrev',
+    'brev.vedtaksbrev': 'Vedtaksbrev',
 
     'feilmelding.errorkode': 'Error kode:',
     'feilmelding.fantIkkeBehandlingsId': 'Fant ikke behandlingsid',
