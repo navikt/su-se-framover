@@ -28,6 +28,7 @@ const schema = yup.object<FormData>({
     type: yup.string().required() as yup.Schema<Søknadstype.Papirsøknad>,
     mottaksdatoForSøknad: yup
         .date()
+        .max(new Date(), 'Mottaksdato kan ikke være i fremtiden')
         .nullable()
         .required('Fyll ut mottaksdatoen for søknaden') as unknown as yup.Schema<string>,
     grunnForPapirinnsending: yup
@@ -95,6 +96,9 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                             'aria-invalid': formik.errors.mottaksdatoForSøknad ? true : false,
                         }}
                         value={formik.values.mottaksdatoForSøknad ?? undefined}
+                        limitations={{
+                            maxDate: new Date().toISOString(),
+                        }}
                         inputId="mottaksdato"
                         onChange={(value) => {
                             formik.setValues((v) => ({ ...v, mottaksdatoForSøknad: value ?? null }));

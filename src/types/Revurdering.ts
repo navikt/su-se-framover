@@ -176,6 +176,10 @@ export enum OpprettetRevurderingGrunn {
     MOTTATT_KONTROLLERKLÆRING = 'MOTTATT_KONTROLLERKLÆRING',
 }
 
+export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
+    (x) => x !== OpprettetRevurderingGrunn.MIGRERT
+);
+
 export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',
     Inntekt = 'Inntekt',
@@ -228,10 +232,11 @@ export interface FormuegrunnlagRequest {
     formue: FormuegrunnlagFormue;
 }
 
-export interface RevurderingProps {
+export interface RevurderingStegProps {
     sakId: string;
-    revurdering: Revurdering;
-    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    revurdering: InformasjonsRevurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forrigeUrl: string;
-    nesteUrl: (revurdering: InformasjonsRevurdering) => string;
+    nesteUrl: string;
+    avsluttUrl: string;
 }

@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import { Button, Heading, Panel, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -13,15 +13,14 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreUtenlandsopphold } from '~features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { getDateErrorMessage } from '~lib/validering';
 import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
-import { StegProps } from '~pages/saksbehandling/revurdering/common';
 import revurderingmessages, { stegmessages } from '~pages/saksbehandling/revurdering/revurdering-nb';
 import sharedStyles from '~pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { RevurderingStegProps } from '~types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~utils/date/dateUtils';
 
 import messages from './utenlandsopphold-nb';
@@ -60,7 +59,7 @@ const schemaValidation = yup.object<UtenlandsoppholdForm>({
         .required(),
 });
 
-const Utenlandsopphold = (props: StegProps) => {
+const Utenlandsopphold = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...stegmessages, ...revurderingmessages } });
     const history = useHistory();
     const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger ?? [
@@ -80,10 +79,8 @@ const Utenlandsopphold = (props: StegProps) => {
         },
     });
     const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
-    const [trykketKnapp, setTrykketKnapp] = useState<'neste' | 'hjem' | undefined>(undefined);
 
-    const handleSubmit = async (form: UtenlandsoppholdForm, gåtil: 'neste' | 'hjem') => {
-        setTrykketKnapp(gåtil);
+    const handleSubmit = async (form: UtenlandsoppholdForm, gåtil: 'neste' | 'avbryt') => {
         lagre(
             {
                 sakId: props.sakId,
@@ -100,10 +97,7 @@ const Utenlandsopphold = (props: StegProps) => {
                     },
                 })),
             },
-            () =>
-                history.push(
-                    gåtil === 'neste' ? props.nesteUrl : Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
-                )
+            () => history.push(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
         );
     };
 
@@ -235,13 +229,9 @@ const Utenlandsopphold = (props: StegProps) => {
                         </Button>
                         {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                         <RevurderingBunnknapper
-                            onNesteClick="submit"
                             tilbakeUrl={props.forrigeUrl}
-                            onNesteClickSpinner={trykketKnapp === 'neste' && RemoteData.isPending(status)}
-                            onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'hjem'))}
-                            onLagreOgFortsettSenereClickSpinner={
-                                trykketKnapp === 'hjem' && RemoteData.isPending(status)
-                            }
+                            loading={RemoteData.isPending(status)}
+                            onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'avbryt'))}
                         />
                     </form>
                 ),
