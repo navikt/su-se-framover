@@ -19,5 +19,5 @@ export enum RevurderingSteg {
 
 export enum KlageSteg {
     Formkrav = 'formkrav',
-    Behandling = 'behandling',
+    Vurdering = 'vurdering',
 }

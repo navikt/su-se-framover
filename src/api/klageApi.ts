@@ -36,7 +36,7 @@ export async function vilkårsvurder(arg: {
     });
 }
 
-export async function lagreBehandlingAvKlage(arg: VurderingRequest): Promise<ApiClientResult<Klage>> {
+export async function lagreVurderingAvKlage(arg: VurderingRequest): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/vurderinger`,
         method: 'POST',

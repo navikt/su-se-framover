@@ -10,20 +10,19 @@ export enum OmgjørVedtakÅrsak {
 export enum OmgjørVedtakGunst {
     TIL_GUNST = 'til_gunst',
     TIL_UGUNST = 'til_ugunst',
-    DELVIS_OMGJØR_TIL_GUNST = 'delvis_omgjør_til_gunst',
 }
 
 export enum OpprettholdVedtakHjemmel {
-    'H_3' = '3',
-    'H_4' = '4',
-    'H_5' = '5',
-    'H_6' = '6',
-    'H_8' = '8',
-    'H_9' = '9',
-    'H_10' = '10',
-    'H_12' = '12',
-    'H_13' = '13',
-    'H_18' = '18',
+    'SU_paragraf_3' = 'SU_paragraf_3',
+    'SU_paragraf_4' = 'SU_paragraf_4',
+    'SU_paragraf_5' = 'SU_paragraf_5',
+    'SU_paragraf_6' = 'SU_paragraf_6',
+    'SU_paragraf_8' = 'SU_paragraf_8',
+    'SU_paragraf_9' = 'SU_paragraf_9',
+    'SU_paragraf_10' = 'SU_paragraf_10',
+    'SU_paragraf_12' = 'SU_paragraf_12',
+    'SU_paragraf_13' = 'SU_paragraf_13',
+    'SU_paragraf_18' = 'SU_paragraf_18',
 }
 
 interface Omgjør {

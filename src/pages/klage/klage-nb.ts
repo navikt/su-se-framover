@@ -28,5 +28,8 @@ export default {
     'formkrav.button.submit': 'Bekreft og fortsett',
     ...vedtakMessages,
 
+    'framdriftsindikator.formkrav': 'Formkrav',
+    'framdriftsindikator.vurdering': 'Vurdering',
+
     'feil.fantIkkeKlage': 'Fant ikke klage',
 };

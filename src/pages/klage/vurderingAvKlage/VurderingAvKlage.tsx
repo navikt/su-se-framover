@@ -19,8 +19,8 @@ import { Sak } from '~types/Sak';
 
 import { OmgjørVedtakGunst, OmgjørVedtakÅrsak, OpprettholdVedtakHjemmel } from '../klageUtils';
 
-import messages from './behandlingAvKlage-nb';
-import styles from './behandlingAvKlage.module.less';
+import messages from './VurderingAvKlage-nb';
+import styles from './vurderingAvKlage.module.less';
 
 enum vedtakVurdering {
     OMGJØR = 'omgjør_vedtak',
@@ -36,14 +36,14 @@ interface HjemmelFormData {
     hjemmel: OpprettholdVedtakHjemmel[];
 }
 
-interface BehandlingAvKlageFormData {
+interface VurderingAvKlageFormData {
     vedtakHandling: Nullable<vedtakVurdering>;
     omgjør: OmgjørFormData;
     oppretthold: HjemmelFormData;
     fritekst: Nullable<string>;
 }
 
-const schema = yup.object<BehandlingAvKlageFormData>({
+const schema = yup.object<VurderingAvKlageFormData>({
     vedtakHandling: yup
         .string()
         .defined()
@@ -72,15 +72,15 @@ const schema = yup.object<BehandlingAvKlageFormData>({
     fritekst: yup.string().nullable().defined(),
 });
 
-const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
+const VurderingAvKlage = (props: { sak: Sak; klage: Klage }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const [lagreBehandlingAvKlageStatus, lagreBehandlingAvKlage] = useAsyncActionCreator(
-        klageActions.lagreBehandlingAvKlage
+    const [lagreVurderingAvKlageStatus, lagreVurderingAvKlage] = useAsyncActionCreator(
+        klageActions.lagreVurderingAvKlage
     );
     //const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi);
 
-    const { handleSubmit, watch, control } = useForm<BehandlingAvKlageFormData>({
+    const { handleSubmit, watch, control } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
             vedtakHandling: null,
@@ -95,8 +95,8 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
         },
     });
 
-    const handleBehandlingAvKlageSubmit = (data: BehandlingAvKlageFormData) => {
-        lagreBehandlingAvKlage(
+    const handleVurderingAvKlageSubmit = (data: VurderingAvKlageFormData) => {
+        lagreVurderingAvKlage(
             {
                 sakId: props.sak.id,
                 klageId: props.klage.id,
@@ -125,7 +125,7 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(handleBehandlingAvKlageSubmit)}>
+        <form onSubmit={handleSubmit(handleVurderingAvKlageSubmit)}>
             <Heading size="medium">{formatMessage('page.tittel')}</Heading>
             <div className={styles.vedtakHandlingContainer}>
                 <Controller
@@ -181,14 +181,14 @@ const BehandlingAvKlage = (props: { sak: Sak; klage: Klage }) => {
                 </LinkAsButton>
                 <Button>{formatMessage('knapp.neste')}</Button>
             </div>
-            {RemoteData.isFailure(lagreBehandlingAvKlageStatus) && (
-                <ApiErrorAlert error={lagreBehandlingAvKlageStatus.error} />
+            {RemoteData.isFailure(lagreVurderingAvKlageStatus) && (
+                <ApiErrorAlert error={lagreVurderingAvKlageStatus.error} />
             )}
         </form>
     );
 };
 
-const OmgjørVedtakForm = (props: { control: Control<BehandlingAvKlageFormData> }) => {
+const OmgjørVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -235,7 +235,7 @@ const OmgjørVedtakForm = (props: { control: Control<BehandlingAvKlageFormData> 
     );
 };
 
-const OpprettholdVedtakForm = (props: { control: Control<BehandlingAvKlageFormData> }) => {
+const OpprettholdVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -264,4 +264,4 @@ const OpprettholdVedtakForm = (props: { control: Control<BehandlingAvKlageFormDa
     );
 };
 
-export default BehandlingAvKlage;
+export default VurderingAvKlage;

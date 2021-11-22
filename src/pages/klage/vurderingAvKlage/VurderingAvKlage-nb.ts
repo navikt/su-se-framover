@@ -9,20 +9,19 @@ const omgjørVedtakÅrsakMessages: { [key in OmgjørVedtakÅrsak]: string } = {
 const omgjørVedtakGunstMessages: { [key in OmgjørVedtakGunst]: string } = {
     [OmgjørVedtakGunst.TIL_GUNST]: 'Til gunst',
     [OmgjørVedtakGunst.TIL_UGUNST]: 'Til ugunst',
-    [OmgjørVedtakGunst.DELVIS_OMGJØR_TIL_GUNST]: 'Delvis omgjør, til gunst',
 };
 
 const OpprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: string } = {
-    [OpprettholdVedtakHjemmel.H_3]: '§ 3',
-    [OpprettholdVedtakHjemmel.H_4]: '§ 4',
-    [OpprettholdVedtakHjemmel.H_5]: '§ 5',
-    [OpprettholdVedtakHjemmel.H_6]: '§ 6',
-    [OpprettholdVedtakHjemmel.H_8]: '§ 8',
-    [OpprettholdVedtakHjemmel.H_9]: '§ 9',
-    [OpprettholdVedtakHjemmel.H_10]: '§ 10',
-    [OpprettholdVedtakHjemmel.H_12]: '§ 12',
-    [OpprettholdVedtakHjemmel.H_13]: '§ 13',
-    [OpprettholdVedtakHjemmel.H_18]: '§ 18',
+    [OpprettholdVedtakHjemmel.SU_paragraf_3]: '§ 3',
+    [OpprettholdVedtakHjemmel.SU_paragraf_4]: '§ 4',
+    [OpprettholdVedtakHjemmel.SU_paragraf_5]: '§ 5',
+    [OpprettholdVedtakHjemmel.SU_paragraf_6]: '§ 6',
+    [OpprettholdVedtakHjemmel.SU_paragraf_8]: '§ 8',
+    [OpprettholdVedtakHjemmel.SU_paragraf_9]: '§ 9',
+    [OpprettholdVedtakHjemmel.SU_paragraf_10]: '§ 10',
+    [OpprettholdVedtakHjemmel.SU_paragraf_12]: '§ 12',
+    [OpprettholdVedtakHjemmel.SU_paragraf_13]: '§ 13',
+    [OpprettholdVedtakHjemmel.SU_paragraf_18]: '§ 18',
 };
 
 export default {

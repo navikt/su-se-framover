@@ -66,10 +66,10 @@ export const vurderFormkrav = createAsyncThunk<
     }
 );
 
-export const lagreBehandlingAvKlage = createAsyncThunk<Klage, VurderingRequest, { rejectValue: ApiError }>(
-    'klage/lagreBehandlingAvKlage',
+export const lagreVurderingAvKlage = createAsyncThunk<Klage, VurderingRequest, { rejectValue: ApiError }>(
+    'klage/lagreVurderingAvKlage',
     async ({ sakId, klageId, omgjør, oppretthold, fritekstTilBrev }, thunkApi) => {
-        const res = await klageApi.lagreBehandlingAvKlage({
+        const res = await klageApi.lagreVurderingAvKlage({
             sakId,
             klageId,
             omgjør,

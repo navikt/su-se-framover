@@ -744,7 +744,7 @@ export default createSlice({
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
 
-        builder.addCase(klageActions.lagreBehandlingAvKlage.fulfilled, (state, action) => {
+        builder.addCase(klageActions.lagreVurderingAvKlage.fulfilled, (state, action) => {
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
     },

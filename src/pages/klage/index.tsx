@@ -8,10 +8,10 @@ import * as Routes from '~lib/routes';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Sak } from '~types/Sak';
 
-import BehandlingAvKlage from './behandlingAvKlage/BehandlingAvKlage';
 import messages from './klage-nb';
 import styles from './klage.module.less';
 import VurderFormkrav from './VurderFormkrav';
+import VurderingAvKlage from './vurderingAvKlage/VurderingAvKlage';
 
 const Klage = (props: { sak: Sak }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.klage>();
@@ -22,23 +22,13 @@ const Klage = (props: { sak: Sak }) => {
         return <div>{formatMessage('feil.fantIkkeKlage')}</div>;
     }
 
-    //TODO - gjør litt mapping, og fortell pc'en at den skal være smart
-    const linjer = [
-        {
-            id: KlageSteg.Formkrav,
-            status: Linjestatus.Ingenting,
-            label: 'Formkrav',
-            url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: KlageSteg.Formkrav }),
-            erKlikkbar: false,
-        },
-        {
-            id: KlageSteg.Behandling,
-            status: Linjestatus.Ingenting,
-            label: 'Vurdering',
-            url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: KlageSteg.Behandling }),
-            erKlikkbar: false,
-        },
-    ];
+    const linjer = Object.values(KlageSteg).map((verdi) => ({
+        id: verdi,
+        status: Linjestatus.Ingenting,
+        label: formatMessage(`framdriftsindikator.${verdi}`),
+        url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: verdi }),
+        erKlikkbar: false,
+    }));
 
     return (
         <div className={styles.pageContainer}>
@@ -63,10 +53,10 @@ const Klage = (props: { sak: Sak }) => {
                             path={Routes.klage.createURL({
                                 sakId: props.sak.id,
                                 klageId: klage.id,
-                                steg: KlageSteg.Behandling,
+                                steg: KlageSteg.Vurdering,
                             })}
                         >
-                            <BehandlingAvKlage sak={props.sak} klage={klage} />
+                            <VurderingAvKlage sak={props.sak} klage={klage} />
                         </Route>
                     </Switch>
                 </div>

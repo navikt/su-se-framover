@@ -78,7 +78,7 @@ const VurderFormkrav = (props: Props) => {
                             Routes.klage.createURL({
                                 sakId: props.sak.id,
                                 klageId: props.klage.id,
-                                steg: KlageSteg.Behandling,
+                                steg: KlageSteg.Vurdering,
                             })
                         );
                     }
