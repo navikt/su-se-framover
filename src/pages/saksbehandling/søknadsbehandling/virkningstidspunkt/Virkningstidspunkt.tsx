@@ -13,6 +13,7 @@ import { ApiError, ErrorCode } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import Faktablokk from '~components/oppsummering/vilkårsOppsummering/faktablokk/Faktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as SakSlice from '~features/saksoversikt/sak.slice';
@@ -24,6 +25,7 @@ import yup, { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~li
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import * as DateUtils from '~utils/date/dateUtils';
+import { formatDate } from '~utils/date/dateUtils';
 import { er67EllerEldre } from '~utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
@@ -255,7 +257,19 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                         </form>
                     </>
                 ),
-                right: <div />,
+                right: RemoteData.isSuccess(søker) ? (
+                    <Faktablokk
+                        tittel={formatMessage('søker.personalia')}
+                        fakta={[
+                            {
+                                tittel: formatMessage('søker.fødselsdato'),
+                                verdi: søker.value.fødselsdato ? formatDate(søker.value.fødselsdato) : '',
+                            },
+                        ]}
+                    />
+                ) : (
+                    <></>
+                ),
             }}
         </ToKolonner>
     );

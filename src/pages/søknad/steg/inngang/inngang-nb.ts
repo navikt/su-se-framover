@@ -17,7 +17,7 @@ export default {
 
     'heading.advarsel.alder': 'Alder',
     'advarsel.alder':
-        'Du kan får supplerende stønad for uføre flyktninger hvis du er under 67 år. Er du over 67 år kan du søke <navLink>Supplerende stønad for personer med kort botid i Norge</navLink>. Har du akkurat fylt 67 år kan du ha rett på etterbetaling for supplerende stønad for uføre flyktninger. Da må du fylle ut to søknader, en som ufør flyktning under 67 år og en som person med kort botid i Norge.',
+        'Du kan få supplerende stønad for uføre flyktninger hvis du er under 67 år. Er du over 67 år kan du søke <navLink>Supplerende stønad for personer med kort botid i Norge</navLink>. Har du akkurat fylt 67 år kan du ha rett på etterbetaling for supplerende stønad for uføre flyktninger. Da må du fylle ut to søknader, en som ufør flyktning under 67 år og en som person med kort botid i Norge.',
 
     'finnSøker.tittel': 'Finn søker',
     'finnSøker.tekst': 'For å starte søknaden, må du skrive inn fødselsnummeret til søkeren',
