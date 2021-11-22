@@ -194,6 +194,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                 render={({ field, fieldState }) => (
                                     <DatePicker
                                         {...field}
+                                        className={styles.dato}
                                         id="fraOgMed"
                                         label={formatMessage('datovelger.fom.label')}
                                         dateFormat="MM/yyyy"
@@ -212,6 +213,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                 render={({ field, fieldState }) => (
                                     <DatePicker
                                         {...field}
+                                        className={styles.dato}
                                         id="tilOgMed"
                                         label={formatMessage('datovelger.tom.label')}
                                         dateFormat="MM/yyyy"
