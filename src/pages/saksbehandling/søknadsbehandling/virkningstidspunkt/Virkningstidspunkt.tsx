@@ -24,7 +24,7 @@ import yup, { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~li
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import * as DateUtils from '~utils/date/dateUtils';
-import { er66EllerEldre } from '~utils/person/personUtils';
+import { er67EllerEldre } from '~utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -180,7 +180,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             {{
                 left: (
                     <>
-                        {RemoteData.isSuccess(søker) && er66EllerEldre(søker.value.alder) && (
+                        {RemoteData.isSuccess(søker) && er67EllerEldre(søker.value.alder) && (
                             <Alert className={styles.alert} variant="warning">
                                 {formatMessage('advarsel.alder')}
                             </Alert>
