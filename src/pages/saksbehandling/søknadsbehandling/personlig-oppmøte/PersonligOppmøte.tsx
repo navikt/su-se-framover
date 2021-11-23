@@ -26,6 +26,7 @@ import {
     PersonligOppmøte as PersonligOppmøteType,
     Behandlingsinformasjon,
 } from '~types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
 import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -182,19 +183,23 @@ const toPersonligOppmøteStatus = (formData: FormData): Nullable<PersonligOppmø
 
 const tilOppdatertVilkårsinformasjon = (
     values: FormData,
-    behandlingsinformasjon: Behandlingsinformasjon
+    behandlingsinformasjon: Behandlingsinformasjon,
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] | 'personligOppmøteIkkeVurdert' => {
     const s = toPersonligOppmøteStatus(values);
     if (!s) {
         return 'personligOppmøteIkkeVurdert';
     }
-    return mapToVilkårsinformasjon({
-        ...behandlingsinformasjon,
-        personligOppmøte: {
-            status: s,
-            begrunnelse: values.begrunnelse,
+    return mapToVilkårsinformasjon(
+        {
+            ...behandlingsinformasjon,
+            personligOppmøte: {
+                status: s,
+                begrunnelse: values.begrunnelse,
+            },
         },
-    });
+        grunnlagsdataOgVilkårsvurderinger
+    );
 };
 
 const erAlleVilkårVurdert = (vilkårsinformasjon: Vilkårsinformasjon[]): boolean =>
@@ -244,8 +249,13 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const watch = form.watch();
 
     const oppdatertVilkårsinformasjon = useMemo(
-        () => tilOppdatertVilkårsinformasjon(watch, props.behandling.behandlingsinformasjon),
-        [watch, props.behandling.behandlingsinformasjon]
+        () =>
+            tilOppdatertVilkårsinformasjon(
+                watch,
+                props.behandling.behandlingsinformasjon,
+                props.behandling.grunnlagsdataOgVilkårsvurderinger
+            ),
+        [watch, props.behandling.behandlingsinformasjon, props.behandling.grunnlagsdataOgVilkårsvurderinger]
     );
 
     useEffect(() => {
@@ -299,7 +309,11 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(values, props.behandling.behandlingsinformasjon);
+        const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(
+            values,
+            props.behandling.behandlingsinformasjon,
+            props.behandling.grunnlagsdataOgVilkårsvurderinger
+        );
 
         if (
             vilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&

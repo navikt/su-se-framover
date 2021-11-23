@@ -18,6 +18,7 @@ import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Klage } from '~types/Klage';
 import { Periode } from '~types/Periode';
 import { Restans } from '~types/Restans';
@@ -122,6 +123,24 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/informasjon', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreBehandlingsinformasjon(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreUtenlandsopphold = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        status: Utenlandsoppholdstatus;
+        begrunnelse: Nullable<string>;
+        periode: Periode<string>;
+    },
+    { rejectValue: ApiError }
+>('behandling/vilkår/utenlandsopphold', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreUtenlandsopphold(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -649,6 +668,16 @@ export default createSlice({
             );
         });
 
+        builder.addCase(lagreUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
         builder.addCase(lagreFradrag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
@@ -688,6 +717,10 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
+        builder.addCase(revurderingActions.lagreUtenlandsopphold.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 

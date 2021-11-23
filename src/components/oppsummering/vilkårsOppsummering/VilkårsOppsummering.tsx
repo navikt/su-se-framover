@@ -40,7 +40,10 @@ const VilkårsOppsummering = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const { intl } = useI18n({ messages });
-    const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandlingsinformasjon);
+    const vilkårsinformasjon = mapToVilkårsinformasjon(
+        props.behandlingsinformasjon,
+        props.grunnlagsdataOgVilkårsvurderinger
+    );
 
     return (
         <div>
@@ -120,7 +123,7 @@ const Vilkårsting = (props: {
                 <UtenlandsoppholdVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.oppholdIUtlandet}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             );
         case Vilkårtype.Formue:
