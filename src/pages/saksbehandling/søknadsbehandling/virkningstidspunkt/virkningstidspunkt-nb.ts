@@ -11,4 +11,7 @@ export default {
 
     'state.lagrer': 'Lagrer...',
     'state.lagringFeilet': 'Lagring feilet',
+
+    'søker.personalia': 'Søkers personalia',
+    'søker.fødselsdato': 'Fødselsdato',
 };
