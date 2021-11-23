@@ -10,8 +10,8 @@ import {
     InstitusjonsoppholdStatus,
     LovligOppholdStatus,
     PersonligOppmøteStatus,
-    UførhetStatus,
 } from '~types/Behandlingsinformasjon';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -81,7 +81,8 @@ export const erUnderkjent = (behandling: Behandling) => {
 export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
     return (
         behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
-        behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger[0]?.resultat ===
+            UføreResultat.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.flyktning?.status === FlyktningStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.lovligOpphold?.status === LovligOppholdStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.fastOppholdINorge?.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt ||

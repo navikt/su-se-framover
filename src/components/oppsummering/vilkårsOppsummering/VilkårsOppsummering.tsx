@@ -83,7 +83,7 @@ const Vilkårsting = (props: {
                 <UførhetVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.uførhet}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             );
         case Vilkårtype.Flyktning:

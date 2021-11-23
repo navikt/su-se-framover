@@ -10,10 +10,10 @@ import {
     PersonligOppmøteStatus,
     PersonligOppmøte,
     InstitusjonsoppholdStatus,
-    UførhetStatus,
 } from '~types/Behandlingsinformasjon';
 import { erBosituasjonFullstendig } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -67,22 +67,23 @@ export const mapToVilkårsinformasjon = (
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
-    const { uførhet, flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, formue, personligOppmøte } =
+    const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, formue, personligOppmøte } =
         behandlingsinformasjon;
 
     return [
         {
             status:
-                uførhet === null
+                grunnlagsdataOgVilkårsvurderinger.uføre === null
                     ? VilkårVurderingStatus.IkkeVurdert
-                    : uførhet.status === UførhetStatus.HarUføresakTilBehandling
+                    : grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger[0].resultat ===
+                      UføreResultat.HarUføresakTilBehandling
                     ? VilkårVurderingStatus.Uavklart
-                    : uførhet.status === UførhetStatus.VilkårOppfylt
+                    : grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger[0].resultat === UføreResultat.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,
-            begrunnelse: uførhet?.begrunnelse ?? null,
-            erStartet: uførhet !== null,
+            begrunnelse: grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger[0]?.begrunnelse ?? null,
+            erStartet: grunnlagsdataOgVilkårsvurderinger.uføre !== null,
         },
         {
             status:
@@ -137,18 +138,19 @@ export const mapToVilkårsinformasjon = (
             erStartet: institusjonsopphold !== null,
         },
         {
-            status: !grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status
-                ? VilkårVurderingStatus.IkkeVurdert
-                : grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status ===
-                  Utenlandsoppholdstatus.Uavklart
-                ? VilkårVurderingStatus.Uavklart
-                : grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status ===
-                  Utenlandsoppholdstatus.SkalHoldeSegINorge
-                ? VilkårVurderingStatus.Ok
-                : VilkårVurderingStatus.IkkeOk,
+            status:
+                grunnlagsdataOgVilkårsvurderinger.utenlandsopphold === null
+                    ? VilkårVurderingStatus.IkkeVurdert
+                    : grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status ===
+                      Utenlandsoppholdstatus.Uavklart
+                    ? VilkårVurderingStatus.Uavklart
+                    : grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status ===
+                      Utenlandsoppholdstatus.SkalHoldeSegINorge
+                    ? VilkårVurderingStatus.Ok
+                    : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.OppholdIUtlandet,
             begrunnelse: grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]?.begrunnelse ?? null,
-            erStartet: grunnlagsdataOgVilkårsvurderinger !== null,
+            erStartet: grunnlagsdataOgVilkårsvurderinger.utenlandsopphold !== null,
         },
         {
             status:

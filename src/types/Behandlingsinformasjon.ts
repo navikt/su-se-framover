@@ -2,25 +2,12 @@ import { Person } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
 export interface Behandlingsinformasjon {
-    uførhet: Nullable<Uførhet>;
     flyktning: Nullable<Flyktning>;
     lovligOpphold: Nullable<LovligOpphold>;
     fastOppholdINorge: Nullable<FastOppholdINorge>;
     institusjonsopphold: Nullable<Institusjonsopphold>;
     formue: Nullable<Formue>;
     personligOppmøte: Nullable<PersonligOppmøte>;
-}
-
-export interface Uførhet {
-    status: UførhetStatus;
-    uføregrad: Nullable<number>;
-    forventetInntekt: Nullable<number>;
-    begrunnelse: Nullable<string>;
-}
-export enum UførhetStatus {
-    VilkårOppfylt = 'VilkårOppfylt',
-    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
-    HarUføresakTilBehandling = 'HarUføresakTilBehandling',
 }
 
 export interface Flyktning {
