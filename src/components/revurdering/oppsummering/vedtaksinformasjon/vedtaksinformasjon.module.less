@@ -63,25 +63,7 @@
         }
 
         .info {
-            display: flex;
-
-            &:not(:last-child) {
-                margin-bottom: @spacing-xxs;
-            }
-
-            .infolabel,
-            .infoverdi {
-                width: 50%;
-            }
-
-            .infoverdi {
-                display: flex;
-                align-items: flex-end;
-            }
-
-            .infolabel {
-                margin-right: @spacing-s;
-            }
+            margin-bottom: @spacing-xxs;
         }
     }
 }
@@ -94,10 +76,4 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin-bottom: @spacing;
-}
-
-.begrunnelseContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: @spacing-xs;
 }

@@ -1,3 +1,13 @@
+import { InformasjonSomRevurderes } from '~types/Revurdering';
+
+export const informasjonSomRevurderes: { [key in InformasjonSomRevurderes]: string } = {
+    [InformasjonSomRevurderes.Uførhet]: 'Uførhet',
+    [InformasjonSomRevurderes.Inntekt]: 'Inntekt',
+    [InformasjonSomRevurderes.Bosituasjon]: 'Bosituasjon',
+    [InformasjonSomRevurderes.Formue]: 'Formue',
+    [InformasjonSomRevurderes.Utenlandsopphold]: 'Utenlandsopphold',
+};
+
 export default {
     'datovelger.fom.legend': 'Fra',
     'datovelger.tom.legend': 'Til',
@@ -6,11 +16,5 @@ export default {
     'input.årsak.value.default': 'Velg årsak',
     'input.begrunnelse.label': 'Begrunnelse',
     'input.informasjonSomRevurderes.label': 'Hva vil du revurdere?',
-
-    'informasjonSomRevurderes.uførhet': 'Uførhet',
-    'informasjonSomRevurderes.inntekt': 'Inntekt',
-    'informasjonSomRevurderes.bosituasjon': 'Bosituasjon',
-    'informasjonSomRevurderes.formue': 'Formue',
-
     'info.bosituasjon': 'Ved boforhold kan det være relevant å endre inntekt og formue også',
 };

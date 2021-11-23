@@ -3,6 +3,7 @@ import { Nullable } from '~lib/types';
 import { Attestering } from './Behandling';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 import { Vedtak } from './Vedtak';
@@ -169,17 +170,27 @@ export enum OpprettetRevurderingGrunn {
     INFORMASJON_FRA_KONTROLLSAMTALE = 'INFORMASJON_FRA_KONTROLLSAMTALE',
     DØDSFALL = 'DØDSFALL',
     ANDRE_KILDER = 'ANDRE_KILDER',
-    MIGRERT = 'MIGRERT',
     REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
+    MIGRERT = 'MIGRERT',
     MANGLENDE_KONTROLLERKLÆRING = 'MANGLENDE_KONTROLLERKLÆRING',
     MOTTATT_KONTROLLERKLÆRING = 'MOTTATT_KONTROLLERKLÆRING',
 }
+
+export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
+    (x) =>
+        ![
+            OpprettetRevurderingGrunn.MIGRERT,
+            OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING,
+            OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING,
+        ].includes(x)
+);
 
 export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',
     Inntekt = 'Inntekt',
     Bosituasjon = 'Bosituasjon',
     Formue = 'Formue',
+    Utenlandsopphold = 'Utenlandsopphold',
 }
 
 export enum Vurderingstatus {
@@ -194,6 +205,12 @@ export interface BosituasjonRequest {
     erEPSUførFlyktning: Nullable<boolean>;
     delerBolig: Nullable<boolean>;
     begrunnelse: Nullable<string>;
+}
+
+export interface UtenlandsoppholdRequest {
+    sakId: string;
+    revurderingId: string;
+    utenlandsopphold: Utenlandsperiode[];
 }
 
 export interface FormuegrunnlagVerdier {
@@ -220,10 +237,11 @@ export interface FormuegrunnlagRequest {
     formue: FormuegrunnlagFormue;
 }
 
-export interface RevurderingProps {
+export interface RevurderingStegProps {
     sakId: string;
-    revurdering: Revurdering;
-    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    revurdering: InformasjonsRevurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forrigeUrl: string;
-    nesteUrl: (revurdering: InformasjonsRevurdering) => string;
+    nesteUrl: string;
+    avsluttUrl: string;
 }

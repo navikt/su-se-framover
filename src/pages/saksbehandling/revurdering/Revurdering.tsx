@@ -27,39 +27,22 @@ import SkjemaelementFeilmelding from '../../../components/formElements/Skjemaele
 import { RevurderingSteg } from '../types';
 
 import Formue from './formue/Formue';
-import messages from './revurdering-nb';
+import messages, { stegmessages } from './revurdering-nb';
 import styles from './revurdering.module.less';
 
-const NyRevurderingPage = React.lazy(() => import('./revurderingIntro/NyRevurderingPage'));
-const EndreRevurderingPage = React.lazy(() => import('./revurderingIntro/EndreRevurderingPage'));
-const Bosituasjon = React.lazy(() => import('./bosituasjon/BosituasjonForm'));
+const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
+const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
+const BosituasjonFormPage = React.lazy(() => import('./bosituasjon/BosituasjonFormPage'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
 const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
-
-const stegTilTekstId = (steg: RevurderingSteg) => {
-    switch (steg) {
-        case RevurderingSteg.Periode:
-            return 'steg.periode';
-        case RevurderingSteg.Uførhet:
-            return 'steg.uførhet';
-        case RevurderingSteg.Bosituasjon:
-            return 'steg.bosituasjon';
-        case RevurderingSteg.EndringAvFradrag:
-            return 'steg.fradrag';
-        case RevurderingSteg.Formue:
-            return 'steg.formue';
-        case RevurderingSteg.Oppsummering:
-            return 'steg.oppsummering';
-    }
-};
 
 const RevurderingPage = (props: {
     sakId: string;
     utbetalinger: Utbetalingsperiode[];
     informasjonsRevurderinger: InformasjonsRevurdering[];
 }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages, ...stegmessages } });
 
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
@@ -116,7 +99,7 @@ const RevurderingPage = (props: {
 
     const alleSteg = revurderingstegrekkefølge.map((steg) => ({
         id: steg,
-        label: formatMessage(stegTilTekstId(steg)),
+        label: formatMessage(steg),
         erKlikkbar: false,
         status: Linjestatus.Ingenting,
         url: createRevurderingsPath(steg),
@@ -146,7 +129,11 @@ const RevurderingPage = (props: {
                         sakId: props.sakId,
                     })}
                 >
-                    <NyRevurderingPage sakId={props.sakId} utbetalinger={props.utbetalinger} />
+                    <RevurderingIntroPage
+                        sakId={props.sakId}
+                        utbetalinger={props.utbetalinger}
+                        informasjonsRevurdering={undefined}
+                    />
                 </Route>
                 {!påbegyntRevurdering ? (
                     <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>
@@ -162,7 +149,7 @@ const RevurderingPage = (props: {
                                 revurderingId: påbegyntRevurdering.id,
                             })}
                         >
-                            <EndreRevurderingPage
+                            <RevurderingIntroPage
                                 sakId={props.sakId}
                                 utbetalinger={props.utbetalinger}
                                 informasjonsRevurdering={påbegyntRevurdering}
@@ -191,6 +178,7 @@ const RevurderingPage = (props: {
                                             grunnlagsdataOgVilkårsvurderinger={grunnlag}
                                             forrigeUrl={forrigeUrl}
                                             nesteUrl={nesteUrl}
+                                            avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                                         />
                                     </Route>
                                 );
@@ -222,6 +210,7 @@ const RevurderingstegPage = (props: {
     steg: RevurderingSteg;
     forrigeUrl: string;
     nesteUrl: (revurdering: InformasjonsRevurdering) => string;
+    avsluttUrl: string;
     sakId: string;
     informasjonsRevurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
@@ -246,16 +235,18 @@ const RevurderingstegPage = (props: {
                                 grunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                avsluttUrl={props.avsluttUrl}
                             />
                         );
                     case RevurderingSteg.Bosituasjon:
                         return (
-                            <Bosituasjon
+                            <BosituasjonFormPage
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
-                                nesteUrl={props.nesteUrl}
+                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                avsluttUrl={props.avsluttUrl}
                             />
                         );
                     case RevurderingSteg.Formue:
@@ -263,9 +254,10 @@ const RevurderingstegPage = (props: {
                             <Formue
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
-                                nesteUrl={props.nesteUrl}
+                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                avsluttUrl={props.avsluttUrl}
                             />
                         );
                     case RevurderingSteg.EndringAvFradrag:
@@ -276,6 +268,18 @@ const RevurderingstegPage = (props: {
                                 grunnlagsdataOgVilkårsvurderinger={value}
                                 forrigeUrl={props.forrigeUrl}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                avsluttUrl={props.avsluttUrl}
+                            />
+                        );
+                    case RevurderingSteg.Utenlandsopphold:
+                        return (
+                            <UtenlandsoppholdPage
+                                sakId={props.sakId}
+                                revurdering={props.informasjonsRevurdering}
+                                grunnlagsdataOgVilkårsvurderinger={value}
+                                forrigeUrl={props.forrigeUrl}
+                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                avsluttUrl={props.avsluttUrl}
                             />
                         );
                     default:

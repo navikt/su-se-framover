@@ -60,7 +60,7 @@ export interface Person {
     aktorId: string;
     navn: Navn;
     kjønn: Nullable<Kjønn>;
-    fødselsdato: Nullable<Date>;
+    fødselsdato: Nullable<string>;
     alder: Nullable<number>;
     telefonnummer: {
         landskode: string;

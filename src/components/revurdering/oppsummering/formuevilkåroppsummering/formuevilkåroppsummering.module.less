@@ -1,18 +1,17 @@
 @import '~/styles/variables.less';
 
 .gjeldendePeriode {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     margin-bottom: @spacing-xs;
 }
 
 .oppsummeringsContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: @spacing;
+    > div {
+        margin-bottom: @spacing-xxs;
+    }
 }
 
 .formueVerdiTittel {
+    margin-left: 50%;
     margin-bottom: @spacing-xxs;
 }
 
@@ -28,7 +27,7 @@
     align-items: flex-end;
 }
 
-.søkerOgEPSContainer {
+.epsContainer {
     display: flex;
 
     > :not(:last-child) {

@@ -22,6 +22,7 @@ import {
     InformasjonsRevurdering,
     StansAvYtelse,
     Gjenopptak,
+    UtenlandsoppholdRequest,
 } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
@@ -291,6 +292,18 @@ export async function lagreBosituasjonsgrunnlag(
             erEPSUførFlyktning: data.erEPSUførFlyktning,
             delerBolig: data.delerBolig,
             begrunnelse: data.begrunnelse,
+        },
+    });
+}
+
+export async function lagreUtenlandsopphold(
+    data: UtenlandsoppholdRequest
+): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
+    return apiClient({
+        url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/utenlandsopphold`,
+        method: 'POST',
+        body: {
+            utenlandsopphold: data.utenlandsopphold,
         },
     });
 }

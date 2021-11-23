@@ -64,7 +64,7 @@ const SendTilAttesteringPage = (props: Props) => {
     };
 
     const sisteVurderteVilkår = behandling
-        ? mapToVilkårsinformasjon(behandling.behandlingsinformasjon)
+        ? mapToVilkårsinformasjon(behandling.behandlingsinformasjon, behandling.grunnlagsdataOgVilkårsvurderinger)
               .reverse()
               .find((vilkår) => vilkår.status !== VilkårVurderingStatus.IkkeVurdert)
         : undefined;

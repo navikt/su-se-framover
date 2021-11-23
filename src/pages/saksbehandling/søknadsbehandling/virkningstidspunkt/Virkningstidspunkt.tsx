@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Loader, Textarea } from '@navikt/ds-react';
+import { Alert, Loader, Textarea } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
@@ -13,6 +13,7 @@ import { ApiError, ErrorCode } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import Faktablokk from '~components/oppsummering/vilkårsOppsummering/faktablokk/Faktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as SakSlice from '~features/saksoversikt/sak.slice';
@@ -21,9 +22,11 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import * as DateUtils from '~utils/date/dateUtils';
+import { formatDate } from '~utils/date/dateUtils';
+import { er67EllerEldre } from '~utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -88,6 +91,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
     const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();
+    const søker = useAppSelector((state) => state.søker.søker);
     const initialValues = {
         fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
         tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
@@ -177,76 +181,97 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <form onSubmit={form.handleSubmit(handleSubmit)} className={styles.container}>
-                        <Controller
-                            control={form.control}
-                            name="fraOgMed"
-                            render={({ field, fieldState }) => (
-                                <DatePicker
-                                    {...field}
-                                    id="fraOgMed"
-                                    label={formatMessage('datovelger.fom.label')}
-                                    dateFormat="MM/yyyy"
-                                    showMonthYearPicker
-                                    isClearable
-                                    selectsEnd
-                                    autoComplete="off"
-                                    minDate={TIDLIGST_MULIG_START_DATO}
-                                    feil={getDateErrorMessage(fieldState.error)}
-                                />
-                            )}
-                        />
-                        <Controller
-                            control={form.control}
-                            name="tilOgMed"
-                            render={({ field, fieldState }) => (
-                                <DatePicker
-                                    {...field}
-                                    id="tilOgMed"
-                                    label={formatMessage('datovelger.tom.label')}
-                                    dateFormat="MM/yyyy"
-                                    showMonthYearPicker
-                                    isClearable
-                                    selectsEnd
-                                    autoComplete="off"
-                                    feil={getDateErrorMessage(fieldState.error)}
-                                />
-                            )}
-                        />
-                        <Controller
-                            name="begrunnelse"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    {...field}
-                                    label={formatMessage('begrunnelse.label')}
-                                    error={fieldState.error?.message}
-                                />
-                            )}
-                        />
-                        {pipe(
-                            savingState,
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader title={formatMessage('state.lagrer')} />,
-                                (err) => <ApiErrorAlert error={err} />,
-                                () => null
-                            )
+                    <>
+                        {RemoteData.isSuccess(søker) && er67EllerEldre(søker.value.alder) && (
+                            <Alert className={styles.alert} variant="warning">
+                                {formatMessage('advarsel.alder')}
+                            </Alert>
                         )}
-                        <Feiloppsummering
-                            tittel={formatMessage('feiloppsummering.title')}
-                            hidden={!isSubmitted || isValid}
-                            feil={hookFormErrorsTilFeiloppsummering(errors)}
-                        />
-                        <Vurderingknapper
-                            onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
-                            }}
-                            onLagreOgFortsettSenereClick={form.handleSubmit(handleLagreOgFortsettSenereClick)}
-                        />
-                    </form>
+                        <form onSubmit={form.handleSubmit(handleSubmit)} className={styles.container}>
+                            <Controller
+                                control={form.control}
+                                name="fraOgMed"
+                                render={({ field, fieldState }) => (
+                                    <DatePicker
+                                        {...field}
+                                        className={styles.dato}
+                                        id="fraOgMed"
+                                        label={formatMessage('datovelger.fom.label')}
+                                        dateFormat="MM/yyyy"
+                                        showMonthYearPicker
+                                        isClearable
+                                        selectsEnd
+                                        autoComplete="off"
+                                        minDate={TIDLIGST_MULIG_START_DATO}
+                                        feil={getDateErrorMessage(fieldState.error)}
+                                    />
+                                )}
+                            />
+                            <Controller
+                                control={form.control}
+                                name="tilOgMed"
+                                render={({ field, fieldState }) => (
+                                    <DatePicker
+                                        {...field}
+                                        className={styles.dato}
+                                        id="tilOgMed"
+                                        label={formatMessage('datovelger.tom.label')}
+                                        dateFormat="MM/yyyy"
+                                        showMonthYearPicker
+                                        isClearable
+                                        selectsEnd
+                                        autoComplete="off"
+                                        feil={getDateErrorMessage(fieldState.error)}
+                                    />
+                                )}
+                            />
+                            <Controller
+                                name="begrunnelse"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Textarea
+                                        {...field}
+                                        label={formatMessage('begrunnelse.label')}
+                                        error={fieldState.error?.message}
+                                    />
+                                )}
+                            />
+                            {pipe(
+                                savingState,
+                                RemoteData.fold(
+                                    () => null,
+                                    () => <Loader title={formatMessage('state.lagrer')} />,
+                                    (err) => <ApiErrorAlert error={err} />,
+                                    () => null
+                                )
+                            )}
+                            <Feiloppsummering
+                                tittel={formatMessage('feiloppsummering.title')}
+                                hidden={!isSubmitted || isValid}
+                                feil={hookFormErrorsTilFeiloppsummering(errors)}
+                            />
+                            <Vurderingknapper
+                                onTilbakeClick={() => {
+                                    history.push(props.forrigeUrl);
+                                }}
+                                onLagreOgFortsettSenereClick={form.handleSubmit(handleLagreOgFortsettSenereClick)}
+                            />
+                        </form>
+                    </>
                 ),
-                right: <div />,
+                right: RemoteData.isSuccess(søker) ? (
+                    <Faktablokk
+                        tittel={formatMessage('søker.personalia')}
+                        fakta={[
+                            {
+                                tittel: formatMessage('søker.fødselsdato'),
+                                verdi: søker.value.fødselsdato ? formatDate(søker.value.fødselsdato) : '',
+                            },
+                        ]}
+                    />
+                ) : (
+                    <></>
+                ),
             }}
         </ToKolonner>
     );
