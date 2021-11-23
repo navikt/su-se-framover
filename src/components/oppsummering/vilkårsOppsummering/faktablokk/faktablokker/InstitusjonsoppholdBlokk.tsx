@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
-import { InstitusjonsoppholdStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~types/Behandlingsinformasjon';
 import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/institusjonsopphold/institusjonsopphold-nb';
@@ -81,10 +81,9 @@ export const InstitusjonsoppholdVilkårsblokk = (props: VilkårsblokkProps<'inst
                                     ),
                                 }),
                                 verdi:
-                                    props.behandlingsinformasjon.status === InstitusjonsoppholdStatus.VilkårOppfylt
+                                    props.behandlingsinformasjon.status === Vilkårstatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
-                                        : props.behandlingsinformasjon.status ===
-                                          InstitusjonsoppholdStatus.VilkårIkkeOppfylt
+                                        : props.behandlingsinformasjon.status === Vilkårstatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
                                         : intl.formatMessage({
                                               id: 'fraSøknad.uavklart',

@@ -95,15 +95,15 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
 
-    const initialFormData = useMemo<FormData>(
-        () => ({
+    const initialFormData = useMemo<FormData>(() => {
+        const uføreGrunnlag = props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger[0].grunnlag;
+        return {
             status: props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat ?? null,
-            uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
-            forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
-            begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse || null,
-        }),
-        [props.behandling.behandlingsinformasjon]
-    );
+            uføregrad: uføreGrunnlag?.uføregrad?.toString() ?? null,
+            forventetInntekt: uføreGrunnlag?.forventetInntekt?.toString() ?? null,
+            begrunnelse: uføreGrunnlag?.begrunnelse || null,
+        };
+    }, [props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre]);
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Uførhet,

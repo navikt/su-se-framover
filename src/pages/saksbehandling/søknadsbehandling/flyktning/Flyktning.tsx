@@ -21,7 +21,8 @@ import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Behandlingsstatus } from '~types/Behandling';
-import { FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~types/Behandlingsinformasjon';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
 
@@ -33,7 +34,7 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './flyktning-nb';
 
 interface FormData {
-    status: Nullable<FlyktningStatus>;
+    status: Nullable<Vilkårstatus>;
     begrunnelse: Nullable<string>;
 }
 
@@ -48,7 +49,7 @@ const schema = yup
             .mixed()
             .defined()
             .oneOf(
-                [FlyktningStatus.VilkårOppfylt, FlyktningStatus.VilkårIkkeOppfylt, FlyktningStatus.Uavklart],
+                [Vilkårstatus.VilkårOppfylt, Vilkårstatus.VilkårIkkeOppfylt, Vilkårstatus.Uavklart],
                 'Du må velge om vilkåret er oppfylt'
             ),
         begrunnelse: yup.string().defined(),
@@ -157,12 +158,12 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
 
     const watchStatus = form.watch('status');
 
-    const vilGiTidligAvslag = useMemo(() => {
-        return (
-            props.behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
-            watchStatus === FlyktningStatus.VilkårIkkeOppfylt
-        );
-    }, [watchStatus, props.behandling.behandlingsinformasjon.uførhet]);
+    const vilGiTidligAvslag = useMemo(
+        () =>
+            props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
+            watchStatus === Vilkårstatus.VilkårIkkeOppfylt,
+        [watchStatus, props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre]
+    );
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -183,22 +184,22 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     <Radio
                                         id={field.name}
                                         name={field.name}
-                                        value={FlyktningStatus.VilkårOppfylt}
+                                        value={Vilkårstatus.VilkårOppfylt}
                                         ref={field.ref}
                                     >
                                         {formatMessage('radio.label.ja')}
                                     </Radio>
                                     <Radio
                                         name={field.name}
-                                        onChange={() => field.onChange(FlyktningStatus.VilkårIkkeOppfylt)}
-                                        value={FlyktningStatus.VilkårIkkeOppfylt}
+                                        onChange={() => field.onChange(Vilkårstatus.VilkårIkkeOppfylt)}
+                                        value={Vilkårstatus.VilkårIkkeOppfylt}
                                     >
                                         {formatMessage('radio.label.nei')}
                                     </Radio>
                                     <Radio
                                         name={field.name}
-                                        onChange={() => field.onChange(FlyktningStatus.Uavklart)}
-                                        value={FlyktningStatus.Uavklart}
+                                        onChange={() => field.onChange(Vilkårstatus.Uavklart)}
+                                        value={Vilkårstatus.Uavklart}
                                     >
                                         {formatMessage('radio.label.uavklart')}
                                     </Radio>

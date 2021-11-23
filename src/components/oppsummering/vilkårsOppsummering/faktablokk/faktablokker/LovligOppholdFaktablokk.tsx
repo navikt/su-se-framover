@@ -5,7 +5,7 @@ import { IntlShape } from 'react-intl';
 import { useI18n } from '~lib/i18n';
 import { keyOf, Nullable } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
-import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~types/Behandlingsinformasjon';
 import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/lovlig-opphold-i-norge/lovligOppholdINorge-nb';
@@ -111,9 +111,9 @@ export const LovligOppholdVilkårsblokk = (props: VilkårsblokkProps<'lovligOpph
                                     id: keyOf<typeof saksbehandlingMessages>('radio.lovligOpphold.legend'),
                                 }),
                                 verdi:
-                                    props.behandlingsinformasjon.status === LovligOppholdStatus.VilkårOppfylt
+                                    props.behandlingsinformasjon.status === Vilkårstatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.behandlingsinformasjon.status === LovligOppholdStatus.VilkårIkkeOppfylt
+                                        : props.behandlingsinformasjon.status === Vilkårstatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({ id: 'fraSøknad.uavklart' }),
                             },

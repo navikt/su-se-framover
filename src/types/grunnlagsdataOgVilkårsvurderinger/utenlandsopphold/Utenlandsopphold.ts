@@ -9,6 +9,7 @@ export interface Utenlandsperiode {
 
 export interface Utenlandsopphold {
     vurderinger: Utenlandsperiode[];
+    status: Utenlandsoppholdstatus;
 }
 
 export enum Utenlandsoppholdstatus {
