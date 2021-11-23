@@ -13,16 +13,16 @@ export enum OmgjørVedtakGunst {
 }
 
 export enum OpprettholdVedtakHjemmel {
-    'SU_paragraf_3' = 'SU_paragraf_3',
-    'SU_paragraf_4' = 'SU_paragraf_4',
-    'SU_paragraf_5' = 'SU_paragraf_5',
-    'SU_paragraf_6' = 'SU_paragraf_6',
-    'SU_paragraf_8' = 'SU_paragraf_8',
-    'SU_paragraf_9' = 'SU_paragraf_9',
-    'SU_paragraf_10' = 'SU_paragraf_10',
-    'SU_paragraf_12' = 'SU_paragraf_12',
-    'SU_paragraf_13' = 'SU_paragraf_13',
-    'SU_paragraf_18' = 'SU_paragraf_18',
+    'SU_PARAGRAF_3' = 'SU_PARAGRAF_3',
+    'SU_PARAGRAF_4' = 'SU_PARAGRAF_4',
+    'SU_PARAGRAF_5' = 'SU_PARAGRAF_5',
+    'SU_PARAGRAF_6' = 'SU_PARAGRAF_6',
+    'SU_PARAGRAF_8' = 'SU_PARAGRAF_8',
+    'SU_PARAGRAF_9' = 'SU_PARAGRAF_9',
+    'SU_PARAGRAF_10' = 'SU_PARAGRAF_10',
+    'SU_PARAGRAF_12' = 'SU_PARAGRAF_12',
+    'SU_PARAGRAF_13' = 'SU_PARAGRAF_13',
+    'SU_PARAGRAF_18' = 'SU_PARAGRAF_18',
 }
 
 interface Omgjør {
@@ -31,7 +31,7 @@ interface Omgjør {
 }
 
 interface Oppretthold {
-    hjemmel: OpprettholdVedtakHjemmel[];
+    hjemler: OpprettholdVedtakHjemmel[];
 }
 
 export interface VurderingRequest {

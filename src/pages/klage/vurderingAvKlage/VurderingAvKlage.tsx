@@ -112,7 +112,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 oppretthold:
                     data.vedtaksVurdering === vedtakVurdering.OPPRETTHOLD
                         ? {
-                              hjemmel: data.oppretthold.hjemmel!,
+                              hjemler: data.oppretthold.hjemmel!,
                           }
                         : null,
                 /* eslint-enable @typescript-eslint/no-non-null-assertion */
