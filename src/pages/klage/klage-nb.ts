@@ -24,12 +24,14 @@ export default {
     'formkrav.signert.label': 'Er klagen signert?',
     'formkrav.vedtak.label': 'Vedtaket som er påklagd',
     'formkrav.vedtak.option.default': 'Velg vedtak',
+    'formkrav.begrunnelse.label': 'Begrunnelse',
     'formkrav.button.tilbake': 'Tilbake',
     'formkrav.button.submit': 'Bekreft og fortsett',
     ...vedtakMessages,
 
     'framdriftsindikator.formkrav': 'Formkrav',
     'framdriftsindikator.vurdering': 'Vurdering',
+    'framdriftsindikator.oppsummering': 'Oppsummering',
 
     'feil.fantIkkeKlage': 'Fant ikke klage',
 };

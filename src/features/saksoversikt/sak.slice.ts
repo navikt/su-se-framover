@@ -747,6 +747,10 @@ export default createSlice({
         builder.addCase(klageActions.lagreVurderingAvKlage.fulfilled, (state, action) => {
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
+
+        builder.addCase(klageActions.sendTilAttestering.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
     },
 });
 

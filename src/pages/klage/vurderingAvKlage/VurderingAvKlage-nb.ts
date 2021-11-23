@@ -25,9 +25,9 @@ const OpprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: str
 };
 
 export default {
-    'form.vedtakHandling.legend': 'Velg',
-    'form.vedtakHandling.omgjørVedtak': 'Omgjør vedtak',
-    'form.vedtakHandling.opprettholdVedtak': 'Oppretthold vedtak',
+    'form.vedtaksVurdering.legend': 'Hvordan vedtaket skal vurderes',
+    'form.vedtaksVurdering.omgjørVedtak': 'Omgjør vedtak',
+    'form.vedtaksVurdering.opprettholdVedtak': 'Oppretthold vedtak',
 
     'form.omgjørVedtak.årsak.label': 'Årsak',
     'form.omgjørVedtak.årsak.velgÅrsak': 'Velg årsak',

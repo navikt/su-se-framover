@@ -47,3 +47,10 @@ export async function lagreVurderingAvKlage(arg: VurderingRequest): Promise<ApiC
         },
     });
 }
+
+export async function sendTilAttestering(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/vurderinger`,
+        method: 'POST',
+    });
+}

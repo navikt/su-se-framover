@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField, Button, Select, Loader, Heading } from '@navikt/ds-react';
+import { TextField, Button, Select, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -8,6 +8,7 @@ import { useHistory } from 'react-router';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as klageActions from '~features/klage/klageActions';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
@@ -16,14 +17,15 @@ import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
-import { Sak } from '~types/Sak';
+import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './klage-nb';
 import styles from './klage.module.less';
 
 interface Props {
-    sak: Sak;
+    sakId: string;
+    vedtaker: Vedtak[];
     klage: Klage;
 }
 
@@ -60,95 +62,110 @@ const VurderFormkrav = (props: Props) => {
     });
 
     return (
-        <form
-            className={styles.form}
-            onSubmit={handleSubmit((values) => {
-                vilkårsvurder(
-                    {
-                        sakId: props.sak.id,
-                        klageId: props.klage.id,
-                        vedtakId: values.vedtakId,
-                        innenforFristen: values.innenforFristen,
-                        klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
-                        erUnderskrevet: values.signert,
-                        begrunnelse: values.begrunnelse,
-                    },
-                    () => {
-                        history.push(
-                            Routes.klage.createURL({
-                                sakId: props.sak.id,
-                                klageId: props.klage.id,
-                                steg: KlageSteg.Vurdering,
-                            })
-                        );
-                    }
-                );
-            })}
-        >
-            <Heading size="medium">{formatMessage('formkrav.tittel')}</Heading>
-            <Controller
-                control={control}
-                name="vedtakId"
-                render={({ field, fieldState }) => (
-                    <Select label="Velg vedtak" error={fieldState.error?.message} {...field}>
-                        <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
-                        {props.sak.vedtak.map((v) => (
-                            <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
-                                v.opprettet
-                            )}`}</option>
-                        ))}
-                    </Select>
-                )}
-            />
+        <ToKolonner tittel={formatMessage('formkrav.tittel')}>
+            {{
+                left: (
+                    <form
+                        className={styles.form}
+                        onSubmit={handleSubmit((values) => {
+                            vilkårsvurder(
+                                {
+                                    sakId: props.sakId,
+                                    klageId: props.klage.id,
+                                    vedtakId: values.vedtakId,
+                                    innenforFristen: values.innenforFristen,
+                                    klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
+                                    erUnderskrevet: values.signert,
+                                    begrunnelse: values.begrunnelse,
+                                },
+                                () => {
+                                    history.push(
+                                        Routes.klage.createURL({
+                                            sakId: props.sakId,
+                                            klageId: props.klage.id,
+                                            steg: KlageSteg.Vurdering,
+                                        })
+                                    );
+                                }
+                            );
+                        })}
+                    >
+                        <Controller
+                            control={control}
+                            name="vedtakId"
+                            render={({ field, fieldState }) => (
+                                <Select label="Velg vedtak" error={fieldState.error?.message} {...field}>
+                                    <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
+                                    {props.vedtaker.map((v) => (
+                                        <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
+                                            v.opprettet
+                                        )}`}</option>
+                                    ))}
+                                </Select>
+                            )}
+                        />
 
-            <Controller
-                control={control}
-                name="innenforFristen"
-                render={({ field, fieldState }) => (
-                    <BooleanRadioGroup
-                        legend={formatMessage('formkrav.innenforFrist.label')}
-                        error={fieldState.error?.message}
-                        {...field}
-                    />
-                )}
-            />
+                        <Controller
+                            control={control}
+                            name="innenforFristen"
+                            render={({ field, fieldState }) => (
+                                <BooleanRadioGroup
+                                    legend={formatMessage('formkrav.innenforFrist.label')}
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                />
+                            )}
+                        />
 
-            <Controller
-                control={control}
-                name="klagesDetPåKonkreteElementerIVedtaket"
-                render={({ field, fieldState }) => (
-                    <BooleanRadioGroup
-                        legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
-                        error={fieldState.error?.message}
-                        {...field}
-                    />
-                )}
-            />
+                        <Controller
+                            control={control}
+                            name="klagesDetPåKonkreteElementerIVedtaket"
+                            render={({ field, fieldState }) => (
+                                <BooleanRadioGroup
+                                    legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                />
+                            )}
+                        />
 
-            <Controller
-                control={control}
-                name="signert"
-                render={({ field, fieldState }) => (
-                    <BooleanRadioGroup
-                        legend={formatMessage('formkrav.signert.label')}
-                        error={fieldState.error?.message}
-                        {...field}
-                    />
-                )}
-            />
+                        <Controller
+                            control={control}
+                            name="signert"
+                            render={({ field, fieldState }) => (
+                                <BooleanRadioGroup
+                                    legend={formatMessage('formkrav.signert.label')}
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                />
+                            )}
+                        />
 
-            <TextField {...register('begrunnelse')} error={formState.errors.begrunnelse?.message} label="Begrunnelse" />
-            <div className={styles.buttons}>
-                <LinkAsButton variant="secondary" href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
-                    {formatMessage('formkrav.button.tilbake')}
-                </LinkAsButton>
-                <Button>
-                    {formatMessage('formkrav.button.submit')}
-                    {RemoteData.isPending(vilkårsvurderingStatus) && <Loader />}
-                </Button>
-            </div>
-            {RemoteData.isFailure(vilkårsvurderingStatus) && <ApiErrorAlert error={vilkårsvurderingStatus.error} />}
-        </form>
+                        <TextField
+                            {...register('begrunnelse')}
+                            error={formState.errors.begrunnelse?.message}
+                            label={formatMessage('formkrav.begrunnelse.label')}
+                        />
+                        <div className={styles.buttons}>
+                            <LinkAsButton
+                                variant="secondary"
+                                href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+                            >
+                                {formatMessage('formkrav.button.tilbake')}
+                            </LinkAsButton>
+                            <Button>
+                                {formatMessage('formkrav.button.submit')}
+                                {RemoteData.isPending(vilkårsvurderingStatus) && <Loader />}
+                            </Button>
+                        </div>
+                        {RemoteData.isFailure(vilkårsvurderingStatus) && (
+                            <ApiErrorAlert error={vilkårsvurderingStatus.error} />
+                        )}
+                    </form>
+                ),
+                right: <></>,
+            }}
+        </ToKolonner>
     );
 };
 

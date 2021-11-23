@@ -1,12 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Checkbox, CheckboxGroup, Heading, Radio, RadioGroup, Select, Textarea } from '@navikt/ds-react';
+import { Button, Checkbox, CheckboxGroup, Radio, RadioGroup, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 //import * as pdfApi from '~api/pdfApi';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as klageActions from '~features/klage/klageActions';
 import { useAsyncActionCreator /* useBrevForhåndsvisning */ } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
@@ -15,7 +16,6 @@ import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
-import { Sak } from '~types/Sak';
 
 import { OmgjørVedtakGunst, OmgjørVedtakÅrsak, OpprettholdVedtakHjemmel } from '../klageUtils';
 
@@ -37,21 +37,21 @@ interface HjemmelFormData {
 }
 
 interface VurderingAvKlageFormData {
-    vedtakHandling: Nullable<vedtakVurdering>;
+    vedtaksVurdering: Nullable<vedtakVurdering>;
     omgjør: OmgjørFormData;
     oppretthold: HjemmelFormData;
     fritekst: Nullable<string>;
 }
 
 const schema = yup.object<VurderingAvKlageFormData>({
-    vedtakHandling: yup
+    vedtaksVurdering: yup
         .string()
         .defined()
         .oneOf([vedtakVurdering.OMGJØR, vedtakVurdering.OPPRETTHOLD], 'Feltet må fylles ut'),
     omgjør: yup
         .object<OmgjørFormData>()
         .defined()
-        .when('vedtakHandling', {
+        .when('vedtaksVurdering', {
             is: vedtakVurdering.OMGJØR,
             then: yup.object({
                 årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).typeError('Feltet må fylles ut'),
@@ -62,7 +62,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
     oppretthold: yup
         .object<HjemmelFormData>()
         .defined()
-        .when('vedtakHandling', {
+        .when('vedtaksVurdering', {
             is: vedtakVurdering.OPPRETTHOLD,
             then: yup.object({
                 hjemmel: yup.array().of(yup.string()).required(),
@@ -72,7 +72,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
     fritekst: yup.string().nullable().defined(),
 });
 
-const VurderingAvKlage = (props: { sak: Sak; klage: Klage }) => {
+const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const { formatMessage } = useI18n({ messages });
 
     const [lagreVurderingAvKlageStatus, lagreVurderingAvKlage] = useAsyncActionCreator(
@@ -83,7 +83,7 @@ const VurderingAvKlage = (props: { sak: Sak; klage: Klage }) => {
     const { handleSubmit, watch, control } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
-            vedtakHandling: null,
+            vedtaksVurdering: null,
             omgjør: {
                 årsak: null,
                 utfall: null,
@@ -98,19 +98,19 @@ const VurderingAvKlage = (props: { sak: Sak; klage: Klage }) => {
     const handleVurderingAvKlageSubmit = (data: VurderingAvKlageFormData) => {
         lagreVurderingAvKlage(
             {
-                sakId: props.sak.id,
+                sakId: props.sakId,
                 klageId: props.klage.id,
                 //valdiering sikrer at feltet ikke er null
                 /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 omgjør:
-                    data.vedtakHandling === vedtakVurdering.OMGJØR
+                    data.vedtaksVurdering === vedtakVurdering.OMGJØR
                         ? {
                               årsak: data.omgjør.årsak!,
                               utfall: data.omgjør.utfall!,
                           }
                         : null,
                 oppretthold:
-                    data.vedtakHandling === vedtakVurdering.OPPRETTHOLD
+                    data.vedtaksVurdering === vedtakVurdering.OPPRETTHOLD
                         ? {
                               hjemmel: data.oppretthold.hjemmel!,
                           }
@@ -125,66 +125,74 @@ const VurderingAvKlage = (props: { sak: Sak; klage: Klage }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(handleVurderingAvKlageSubmit)}>
-            <Heading size="medium">{formatMessage('page.tittel')}</Heading>
-            <div className={styles.vedtakHandlingContainer}>
-                <Controller
-                    control={control}
-                    name={'vedtakHandling'}
-                    render={({ field, fieldState }) => (
-                        <RadioGroup
-                            {...field}
-                            legend={formatMessage('form.vedtakHandling.legend')}
-                            error={fieldState.error?.message}
-                            value={field.value ?? undefined}
-                        >
-                            <Radio value={vedtakVurdering.OMGJØR}>
-                                {formatMessage('form.vedtakHandling.omgjørVedtak')}
-                            </Radio>
-                            <Radio value={vedtakVurdering.OPPRETTHOLD}>
-                                {formatMessage('form.vedtakHandling.opprettholdVedtak')}
-                            </Radio>
-                        </RadioGroup>
-                    )}
-                />
-            </div>
+        <ToKolonner tittel={formatMessage('page.tittel')}>
+            {{
+                left: (
+                    <form onSubmit={handleSubmit(handleVurderingAvKlageSubmit)}>
+                        <div className={styles.vedtakHandlingContainer}>
+                            <Controller
+                                control={control}
+                                name={'vedtaksVurdering'}
+                                render={({ field, fieldState }) => (
+                                    <RadioGroup
+                                        {...field}
+                                        legend={formatMessage('form.vedtaksVurdering.legend')}
+                                        error={fieldState.error?.message}
+                                        value={field.value ?? undefined}
+                                    >
+                                        <Radio value={vedtakVurdering.OMGJØR}>
+                                            {formatMessage('form.vedtaksVurdering.omgjørVedtak')}
+                                        </Radio>
+                                        <Radio value={vedtakVurdering.OPPRETTHOLD}>
+                                            {formatMessage('form.vedtaksVurdering.opprettholdVedtak')}
+                                        </Radio>
+                                    </RadioGroup>
+                                )}
+                            />
+                        </div>
 
-            {watch('vedtakHandling') === vedtakVurdering.OMGJØR && <OmgjørVedtakForm control={control} />}
-            {watch('vedtakHandling') === vedtakVurdering.OPPRETTHOLD && <OpprettholdVedtakForm control={control} />}
+                        {watch('vedtaksVurdering') === vedtakVurdering.OMGJØR && <OmgjørVedtakForm control={control} />}
+                        {watch('vedtaksVurdering') === vedtakVurdering.OPPRETTHOLD && (
+                            <OpprettholdVedtakForm control={control} />
+                        )}
 
-            <div className={styles.fritesktOgVisBrevContainer}>
-                <Controller
-                    control={control}
-                    name={'fritekst'}
-                    render={({ field, fieldState }) => (
-                        <Textarea
-                            {...field}
-                            label={formatMessage('form.fritekst.label')}
-                            value={field.value ?? ''}
-                            error={fieldState.error?.message}
-                        />
-                    )}
-                />
-                <Button variant="secondary">{formatMessage('knapp.seBrev')}</Button>
-            </div>
+                        <div className={styles.fritesktOgVisBrevContainer}>
+                            <Controller
+                                control={control}
+                                name={'fritekst'}
+                                render={({ field, fieldState }) => (
+                                    <Textarea
+                                        {...field}
+                                        label={formatMessage('form.fritekst.label')}
+                                        value={field.value ?? ''}
+                                        error={fieldState.error?.message}
+                                    />
+                                )}
+                            />
+                            <Button variant="secondary">{formatMessage('knapp.seBrev')}</Button>
+                        </div>
 
-            <div className={styles.knapperContainer}>
-                <LinkAsButton
-                    variant="secondary"
-                    href={Routes.klage.createURL({
-                        sakId: props.sak.id,
-                        klageId: props.klage.id,
-                        steg: KlageSteg.Formkrav,
-                    })}
-                >
-                    {formatMessage('knapp.tilbake')}
-                </LinkAsButton>
-                <Button>{formatMessage('knapp.neste')}</Button>
-            </div>
-            {RemoteData.isFailure(lagreVurderingAvKlageStatus) && (
-                <ApiErrorAlert error={lagreVurderingAvKlageStatus.error} />
-            )}
-        </form>
+                        <div className={styles.knapperContainer}>
+                            <LinkAsButton
+                                variant="secondary"
+                                href={Routes.klage.createURL({
+                                    sakId: props.sakId,
+                                    klageId: props.klage.id,
+                                    steg: KlageSteg.Formkrav,
+                                })}
+                            >
+                                {formatMessage('knapp.tilbake')}
+                            </LinkAsButton>
+                            <Button>{formatMessage('knapp.neste')}</Button>
+                        </div>
+                        {RemoteData.isFailure(lagreVurderingAvKlageStatus) && (
+                            <ApiErrorAlert error={lagreVurderingAvKlageStatus.error} />
+                        )}
+                    </form>
+                ),
+                right: <></>,
+            }}
+        </ToKolonner>
     );
 };
 

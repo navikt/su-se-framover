@@ -3,6 +3,7 @@ export interface Klage {
     sakid: string;
     opprettet: string;
     journalpostId: string;
+    saksbehandler: string;
     status: string;
     vedtakId?: string;
     innenforFristen?: boolean;

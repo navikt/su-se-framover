@@ -82,3 +82,18 @@ export const lagreVurderingAvKlage = createAsyncThunk<Klage, VurderingRequest, {
         return thunkApi.rejectWithValue(res.error);
     }
 );
+
+export const sendTilAttestering = createAsyncThunk<
+    Klage,
+    { sakId: string; klageId: string },
+    { rejectValue: ApiError }
+>('klage/sendTilAttestering', async ({ sakId, klageId }, thunkApi) => {
+    const res = await klageApi.sendTilAttestering({
+        sakId,
+        klageId,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});

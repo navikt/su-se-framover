@@ -10,6 +10,7 @@ import { Sak } from '~types/Sak';
 
 import messages from './klage-nb';
 import styles from './klage.module.less';
+import OppsummeringAvKlage from './oppsummeringAvKlage/OppsummeringAvKlage';
 import VurderFormkrav from './VurderFormkrav';
 import VurderingAvKlage from './vurderingAvKlage/VurderingAvKlage';
 
@@ -30,16 +31,30 @@ const Klage = (props: { sak: Sak }) => {
         erKlikkbar: false,
     }));
 
+    const pathsForFramdriftsindikator = linjer
+        .filter(
+            (l) =>
+                l.url !==
+                Routes.klage.createURL({
+                    sakId: props.sak.id,
+                    klageId: klage.id,
+                    steg: KlageSteg.Oppsummering,
+                })
+        )
+        .map((l) => l.url);
+
     return (
         <div className={styles.pageContainer}>
-            <Heading level="1" size="xlarge" className={styles.pageTittel}>
-                {formatMessage('page.tittel')}
-            </Heading>
-            <div className={styles.klageContainerMedFramdriftsindikator}>
-                <Framdriftsindikator aktivId={urlParams.steg} elementer={linjer} />
+            <Switch>
+                <>
+                    <Heading level="1" size="xlarge" className={styles.pageTittel}>
+                        {formatMessage('page.tittel')}
+                    </Heading>
+                    <div className={styles.klageContainerMedFramdriftsindikator}>
+                        <Route path={pathsForFramdriftsindikator}>
+                            <Framdriftsindikator aktivId={urlParams.steg} elementer={linjer} />
+                        </Route>
 
-                <div className={styles.klageStegContainer}>
-                    <Switch>
                         <Route
                             path={Routes.klage.createURL({
                                 sakId: props.sak.id,
@@ -47,7 +62,7 @@ const Klage = (props: { sak: Sak }) => {
                                 steg: KlageSteg.Formkrav,
                             })}
                         >
-                            <VurderFormkrav sak={props.sak} klage={klage} />
+                            <VurderFormkrav sakId={props.sak.id} vedtaker={props.sak.vedtak} klage={klage} />
                         </Route>
                         <Route
                             path={Routes.klage.createURL({
@@ -56,11 +71,21 @@ const Klage = (props: { sak: Sak }) => {
                                 steg: KlageSteg.Vurdering,
                             })}
                         >
-                            <VurderingAvKlage sak={props.sak} klage={klage} />
+                            <VurderingAvKlage sakId={props.sak.id} klage={klage} />
                         </Route>
-                    </Switch>
-                </div>
-            </div>
+                    </div>
+
+                    <Route
+                        path={Routes.klage.createURL({
+                            sakId: props.sak.id,
+                            klageId: klage.id,
+                            steg: KlageSteg.Oppsummering,
+                        })}
+                    >
+                        <OppsummeringAvKlage sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
+                    </Route>
+                </>
+            </Switch>
         </div>
     );
 };
