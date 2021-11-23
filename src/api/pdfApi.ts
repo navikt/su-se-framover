@@ -84,3 +84,14 @@ export async function fetchBrevutkastForAvslutningAvRevurdering(args: {
         bodyTransformer: (res) => res.blob(),
     });
 }
+
+export async function hentBrevutkastForOppretthold(arg: {
+    sakId: string;
+    klageId: string;
+}): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/brevutkast`,
+        method: 'GET',
+        bodyTransformer: (res) => res.blob(),
+    });
+}

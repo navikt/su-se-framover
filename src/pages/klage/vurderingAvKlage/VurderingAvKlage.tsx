@@ -1,15 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Checkbox, CheckboxGroup, Radio, RadioGroup, Select, Textarea } from '@navikt/ds-react';
+import { Button, Checkbox, CheckboxGroup, Radio, Loader, RadioGroup, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 
+import * as pdfApi from '~api/pdfApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-//import * as pdfApi from '~api/pdfApi';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator /* useBrevForhåndsvisning */ } from '~lib/hooks';
+import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -78,7 +78,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const [lagreVurderingAvKlageStatus, lagreVurderingAvKlage] = useAsyncActionCreator(
         klageActions.lagreVurderingAvKlage
     );
-    //const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi);
+    const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForOppretthold);
 
     const { handleSubmit, watch, control } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
@@ -169,7 +169,14 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                     />
                                 )}
                             />
-                            <Button variant="secondary">{formatMessage('knapp.seBrev')}</Button>
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => hentBrev({ sakId: props.sakId, klageId: props.klage.id })}
+                            >
+                                {formatMessage('knapp.seBrev')}
+                                {RemoteData.isPending(brevStatus) && <Loader />}
+                            </Button>
                         </div>
 
                         <div className={styles.knapperContainer}>
