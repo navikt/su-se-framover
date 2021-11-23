@@ -170,14 +170,19 @@ export enum OpprettetRevurderingGrunn {
     INFORMASJON_FRA_KONTROLLSAMTALE = 'INFORMASJON_FRA_KONTROLLSAMTALE',
     DØDSFALL = 'DØDSFALL',
     ANDRE_KILDER = 'ANDRE_KILDER',
-    MIGRERT = 'MIGRERT',
     REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
+    MIGRERT = 'MIGRERT',
     MANGLENDE_KONTROLLERKLÆRING = 'MANGLENDE_KONTROLLERKLÆRING',
     MOTTATT_KONTROLLERKLÆRING = 'MOTTATT_KONTROLLERKLÆRING',
 }
 
 export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
-    (x) => x !== OpprettetRevurderingGrunn.MIGRERT
+    (x) =>
+        ![
+            OpprettetRevurderingGrunn.MIGRERT,
+            OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING,
+            OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING,
+        ].includes(x)
 );
 
 export enum InformasjonSomRevurderes {
