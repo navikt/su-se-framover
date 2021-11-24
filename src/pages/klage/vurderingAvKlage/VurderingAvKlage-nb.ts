@@ -1,4 +1,4 @@
-import { OmgjørVedtakGunst, OmgjørVedtakÅrsak, OpprettholdVedtakHjemmel } from '../klageUtils';
+import { OmgjørVedtakÅrsak, OmgjørVedtakUtfall, OpprettholdVedtakHjemmel } from '~types/Klage';
 
 const omgjørVedtakÅrsakMessages: { [key in OmgjørVedtakÅrsak]: string } = {
     [OmgjørVedtakÅrsak.FEIL_LOVANVENDELSE]: 'Feil lovanvendelse',
@@ -6,9 +6,9 @@ const omgjørVedtakÅrsakMessages: { [key in OmgjørVedtakÅrsak]: string } = {
     [OmgjørVedtakÅrsak.ULIK_SKJØNNSVURDERING]: 'Ulik skjønnsvurdering',
     [OmgjørVedtakÅrsak.NYTT_FAKTUM]: 'Nytt faktum',
 };
-const omgjørVedtakGunstMessages: { [key in OmgjørVedtakGunst]: string } = {
-    [OmgjørVedtakGunst.TIL_GUNST]: 'Til gunst',
-    [OmgjørVedtakGunst.TIL_UGUNST]: 'Til ugunst',
+const omgjørVedtakGunstMessages: { [key in OmgjørVedtakUtfall]: string } = {
+    [OmgjørVedtakUtfall.TIL_GUNST]: 'Til gunst',
+    [OmgjørVedtakUtfall.TIL_UGUNST]: 'Til ugunst',
 };
 
 const OpprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: string } = {
@@ -25,9 +25,9 @@ const OpprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: str
 };
 
 export default {
-    'form.vedtaksVurdering.legend': 'Skal vedtaket omgjøres, eller opprettholdes?',
-    'form.vedtaksVurdering.omgjørVedtak': 'Omgjør vedtak',
-    'form.vedtaksVurdering.opprettholdVedtak': 'Oppretthold vedtak',
+    'form.klageVurderingType.legend': 'Skal vedtaket omgjøres, eller opprettholdes?',
+    'form.klageVurderingType.omgjørVedtak': 'Omgjør vedtak',
+    'form.klageVurderingType.opprettholdVedtak': 'Oppretthold vedtak',
 
     'form.omgjørVedtak.årsak.label': 'Årsak',
     'form.omgjørVedtak.årsak.velgÅrsak': 'Velg årsak',

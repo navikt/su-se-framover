@@ -15,21 +15,20 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
-import { Klage } from '~types/Klage';
-
-import { OmgjørVedtakGunst, OmgjørVedtakÅrsak, OpprettholdVedtakHjemmel } from '../klageUtils';
+import {
+    Klage,
+    OmgjørVedtakUtfall,
+    OmgjørVedtakÅrsak,
+    OpprettholdVedtakHjemmel,
+    KlageVurderingType,
+} from '~types/Klage';
 
 import messages from './VurderingAvKlage-nb';
 import styles from './vurderingAvKlage.module.less';
 
-enum vedtakVurdering {
-    OMGJØR = 'omgjør_vedtak',
-    OPPRETTHOLD = 'oppretthold_vedtak',
-}
-
 interface OmgjørFormData {
     årsak: Nullable<OmgjørVedtakÅrsak>;
-    utfall: Nullable<OmgjørVedtakGunst>;
+    utfall: Nullable<OmgjørVedtakUtfall>;
 }
 
 interface HjemmelFormData {
@@ -37,33 +36,33 @@ interface HjemmelFormData {
 }
 
 interface VurderingAvKlageFormData {
-    vedtaksVurdering: Nullable<vedtakVurdering>;
+    klageVurderingType: Nullable<KlageVurderingType>;
     omgjør: OmgjørFormData;
     oppretthold: HjemmelFormData;
     fritekst: Nullable<string>;
 }
 
 const schema = yup.object<VurderingAvKlageFormData>({
-    vedtaksVurdering: yup
+    klageVurderingType: yup
         .string()
         .defined()
-        .oneOf([vedtakVurdering.OMGJØR, vedtakVurdering.OPPRETTHOLD], 'Feltet må fylles ut'),
+        .oneOf([KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD], 'Feltet må fylles ut'),
     omgjør: yup
         .object<OmgjørFormData>()
         .defined()
-        .when('vedtaksVurdering', {
-            is: vedtakVurdering.OMGJØR,
+        .when('KlageVurderingType', {
+            is: KlageVurderingType.OMGJØR,
             then: yup.object({
                 årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).typeError('Feltet må fylles ut'),
-                utfall: yup.string().oneOf(Object.values(OmgjørVedtakGunst)).typeError('Feltet må fylles ut'),
+                utfall: yup.string().oneOf(Object.values(OmgjørVedtakUtfall)).typeError('Feltet må fylles ut'),
             }),
             otherwise: yup.object(),
         }),
     oppretthold: yup
         .object<HjemmelFormData>()
         .defined()
-        .when('vedtaksVurdering', {
-            is: vedtakVurdering.OPPRETTHOLD,
+        .when('KlageVurderingType', {
+            is: KlageVurderingType.OPPRETTHOLD,
             then: yup.object({
                 hjemmel: yup.array().of(yup.string()).required(),
             }),
@@ -83,7 +82,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const { handleSubmit, watch, control } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
-            vedtaksVurdering: null,
+            klageVurderingType: null,
             omgjør: {
                 årsak: null,
                 utfall: null,
@@ -103,14 +102,14 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 //valdiering sikrer at feltet ikke er null
                 /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 omgjør:
-                    data.vedtaksVurdering === vedtakVurdering.OMGJØR
+                    data.klageVurderingType === KlageVurderingType.OMGJØR
                         ? {
                               årsak: data.omgjør.årsak!,
                               utfall: data.omgjør.utfall!,
                           }
                         : null,
                 oppretthold:
-                    data.vedtaksVurdering === vedtakVurdering.OPPRETTHOLD
+                    data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
                         ? {
                               hjemler: data.oppretthold.hjemmel!,
                           }
@@ -132,27 +131,29 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                         <div className={styles.vedtakHandlingContainer}>
                             <Controller
                                 control={control}
-                                name={'vedtaksVurdering'}
+                                name={'klageVurderingType'}
                                 render={({ field, fieldState }) => (
                                     <RadioGroup
                                         {...field}
-                                        legend={formatMessage('form.vedtaksVurdering.legend')}
+                                        legend={formatMessage('form.klageVurderingType.legend')}
                                         error={fieldState.error?.message}
                                         value={field.value ?? undefined}
                                     >
-                                        <Radio value={vedtakVurdering.OMGJØR}>
-                                            {formatMessage('form.vedtaksVurdering.omgjørVedtak')}
+                                        <Radio value={KlageVurderingType.OMGJØR}>
+                                            {formatMessage('form.klageVurderingType.omgjørVedtak')}
                                         </Radio>
-                                        <Radio value={vedtakVurdering.OPPRETTHOLD}>
-                                            {formatMessage('form.vedtaksVurdering.opprettholdVedtak')}
+                                        <Radio value={KlageVurderingType.OPPRETTHOLD}>
+                                            {formatMessage('form.klageVurderingType.opprettholdVedtak')}
                                         </Radio>
                                     </RadioGroup>
                                 )}
                             />
                         </div>
 
-                        {watch('vedtaksVurdering') === vedtakVurdering.OMGJØR && <OmgjørVedtakForm control={control} />}
-                        {watch('vedtaksVurdering') === vedtakVurdering.OPPRETTHOLD && (
+                        {watch('klageVurderingType') === KlageVurderingType.OMGJØR && (
+                            <OmgjørVedtakForm control={control} />
+                        )}
+                        {watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD && (
                             <OpprettholdVedtakForm control={control} />
                         )}
 
@@ -238,9 +239,9 @@ const OmgjørVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }
                         error={fieldState.error?.message}
                         value={field.value ?? undefined}
                     >
-                        {Object.values(OmgjørVedtakGunst).map((gunst) => (
-                            <Radio value={gunst} key={gunst}>
-                                {formatMessage(gunst)}
+                        {Object.values(OmgjørVedtakUtfall).map((utfall) => (
+                            <Radio value={utfall} key={utfall}>
+                                {formatMessage(utfall)}
                             </Radio>
                         ))}
                     </RadioGroup>

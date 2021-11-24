@@ -30,10 +30,10 @@ interface Props {
 }
 
 interface FormData {
-    vedtakId: string;
-    innenforFristen: boolean;
-    klagesDetPåKonkreteElementerIVedtaket: boolean;
-    signert: boolean;
+    vedtakId: Nullable<string>;
+    innenforFristen: Nullable<boolean>;
+    klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
+    signert: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
 
@@ -53,7 +53,7 @@ const VurderFormkrav = (props: Props) => {
     const { handleSubmit, register, formState, control } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: {
-            vedtakId: props.klage.vedtakId ?? '',
+            vedtakId: props.klage.vedtakId,
             innenforFristen: props.klage.innenforFristen,
             klagesDetPåKonkreteElementerIVedtaket: props.klage.klagesDetPåKonkreteElementerIVedtaket,
             signert: props.klage.erUnderskrevet,
@@ -72,10 +72,14 @@ const VurderFormkrav = (props: Props) => {
                                 {
                                     sakId: props.sakId,
                                     klageId: props.klage.id,
-                                    vedtakId: values.vedtakId,
-                                    innenforFristen: values.innenforFristen,
-                                    klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
-                                    erUnderskrevet: values.signert,
+                                    //valdiering sikrer at feltet ikke er null
+                                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                                    vedtakId: values.vedtakId!,
+                                    innenforFristen: values.innenforFristen!,
+                                    klagesDetPåKonkreteElementerIVedtaket:
+                                        values.klagesDetPåKonkreteElementerIVedtaket!,
+                                    erUnderskrevet: values.signert!,
+                                    /* eslint-enable @typescript-eslint/no-non-null-assertion */
                                     begrunnelse: values.begrunnelse,
                                 },
                                 () => {
@@ -94,7 +98,12 @@ const VurderFormkrav = (props: Props) => {
                             control={control}
                             name="vedtakId"
                             render={({ field, fieldState }) => (
-                                <Select label="Velg vedtak" error={fieldState.error?.message} {...field}>
+                                <Select
+                                    label="Velg vedtak"
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                    value={field.value ?? ''}
+                                >
                                     <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
                                     {props.vedtaker.map((v) => (
                                         <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
