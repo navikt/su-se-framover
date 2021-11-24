@@ -5,6 +5,7 @@ import {
     Formue,
     Fradrag,
     Generell,
+    Klage,
     Periode,
     Person,
     Simulering,
@@ -73,6 +74,12 @@ const messages: { [key in FeilresponsErrorCodes]: string } & { [key: string]: st
     [Utbetaling.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
         'Kontrollsimuleringen er ulik saksbehandlers simulering',
     [Person.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
+
+    [Klage.FANT_IKKE_KLAGE]: 'Fant ikke klage',
+    [Klage.KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD]: 'Kan ikke velge både omgjør og oppretthold',
+    [Klage.UGYLDIG_OMGJØRINGSUTFALL]: 'Ugyldig omgjøringsutfall',
+    [Klage.UGYLDIG_OMGJØRINGSÅRSAK]: 'Ugyldig omgjøringsårsak',
+    [Klage.UGYLDIG_OPPRETTHOLDESESHJEMLER]: 'Ugyldig opprettholdelseshjemler',
 };
 
 export default messages;

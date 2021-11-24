@@ -6,7 +6,8 @@ export type FeilresponsErrorCodes =
     | Simulering
     | Brev
     | Utbetaling
-    | Person;
+    | Person
+    | Klage;
 
 export enum Generell {
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
@@ -101,4 +102,12 @@ export enum Dokument {
 
 export enum Person {
     IKKE_GYLDIG_FØDSELSNUMMER = 'ikke_gyldig_fødselsnummer',
+}
+
+export enum Klage {
+    FANT_IKKE_KLAGE = 'fant_ikke_klage',
+    KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD = 'kan_ikke_velge_både_omgjør_og_oppretthold',
+    UGYLDIG_OMGJØRINGSUTFALL = 'ugyldig_omgjøringsutfall',
+    UGYLDIG_OMGJØRINGSÅRSAK = 'ugyldig_omgjøringsårsak',
+    UGYLDIG_OPPRETTHOLDESESHJEMLER = 'ugyldig_opprettholdeseshjemler',
 }
