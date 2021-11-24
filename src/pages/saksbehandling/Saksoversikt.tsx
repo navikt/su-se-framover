@@ -32,7 +32,7 @@ const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
 const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter/DokumenterPage'));
 const StansPage = React.lazy(() => import('./stans/Stans'));
 const KlageOpprett = React.lazy(() => import('~pages/klage/OpprettKlage'));
-const Klage = React.lazy(() => import('~pages/klage'));
+const Klage = React.lazy(() => import('~pages/klage/Klage'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
