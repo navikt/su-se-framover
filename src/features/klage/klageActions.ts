@@ -2,9 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import * as klageApi from '~api/klageApi';
-import { Nullable } from '~lib/types';
-import { VurderingRequest } from '~pages/klage/klageUtils';
 import { Klage } from '~types/Klage';
+import { FormkravRequest, VurderingRequest } from '~utils/klage/klageUtils';
 
 export const opprettKlage = createAsyncThunk<
     Klage,
@@ -24,19 +23,7 @@ export const opprettKlage = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const vurderFormkrav = createAsyncThunk<
-    Klage,
-    {
-        sakId: string;
-        klageId: string;
-        vedtakId: string;
-        innenforFristen: boolean;
-        klagesDetPåKonkreteElementerIVedtaket: boolean;
-        erUnderskrevet: boolean;
-        begrunnelse: Nullable<string>;
-    },
-    { rejectValue: ApiError }
->(
+export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectValue: ApiError }>(
     'klage/vurderFormkrav',
     async (
         {

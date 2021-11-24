@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Checkbox, CheckboxGroup, Radio, Loader, RadioGroup, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 
 import * as pdfApi from '~api/pdfApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
@@ -39,7 +40,7 @@ interface VurderingAvKlageFormData {
     klageVurderingType: Nullable<KlageVurderingType>;
     omgjør: OmgjørFormData;
     oppretthold: HjemmelFormData;
-    fritekst: Nullable<string>;
+    fritekstTilBrev: Nullable<string>;
 }
 
 const schema = yup.object<VurderingAvKlageFormData>({
@@ -68,10 +69,11 @@ const schema = yup.object<VurderingAvKlageFormData>({
             }),
             otherwise: yup.object(),
         }),
-    fritekst: yup.string().nullable().defined(),
+    fritekstTilBrev: yup.string().nullable().defined(),
 });
 
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
+    const history = useHistory();
     const { formatMessage } = useI18n({ messages });
 
     const [lagreVurderingAvKlageStatus, lagreVurderingAvKlage] = useAsyncActionCreator(
@@ -82,15 +84,15 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const { handleSubmit, watch, control } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
-            klageVurderingType: null,
+            klageVurderingType: props.klage.vedtaksvurdering?.type,
             omgjør: {
-                årsak: null,
-                utfall: null,
+                årsak: props.klage.vedtaksvurdering?.omgjør?.årsak,
+                utfall: props.klage.vedtaksvurdering?.omgjør?.utfall,
             },
             oppretthold: {
-                hjemmel: [],
+                hjemmel: props.klage.vedtaksvurdering?.oppretthold?.hjemler,
             },
-            fritekst: null,
+            fritekstTilBrev: props.klage.fritekstTilBrev,
         },
     });
 
@@ -115,10 +117,16 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                           }
                         : null,
                 /* eslint-enable @typescript-eslint/no-non-null-assertion */
-                fritekstTilBrev: data.fritekst,
+                fritekstTilBrev: data.fritekstTilBrev,
             },
             () => {
-                console.log('success!');
+                history.push(
+                    Routes.klage.createURL({
+                        sakId: props.sakId,
+                        klageId: props.klage.id,
+                        steg: KlageSteg.Oppsummering,
+                    })
+                );
             }
         );
     };
@@ -140,10 +148,10 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         value={field.value ?? undefined}
                                     >
                                         <Radio value={KlageVurderingType.OMGJØR}>
-                                            {formatMessage('form.klageVurderingType.omgjørVedtak')}
+                                            {formatMessage(KlageVurderingType.OMGJØR)}
                                         </Radio>
                                         <Radio value={KlageVurderingType.OPPRETTHOLD}>
-                                            {formatMessage('form.klageVurderingType.opprettholdVedtak')}
+                                            {formatMessage(KlageVurderingType.OPPRETTHOLD)}
                                         </Radio>
                                     </RadioGroup>
                                 )}
@@ -160,7 +168,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                         <div className={styles.fritesktOgVisBrevContainer}>
                             <Controller
                                 control={control}
-                                name={'fritekst'}
+                                name={'fritekstTilBrev'}
                                 render={({ field, fieldState }) => (
                                     <Textarea
                                         {...field}

@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField, Button, Select, Loader } from '@navikt/ds-react';
+import { Button, Select, Loader, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -50,7 +50,7 @@ const VurderFormkrav = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     const [vilkårsvurderingStatus, vilkårsvurder] = useAsyncActionCreator(klageActions.vurderFormkrav);
 
-    const { handleSubmit, register, formState, control } = useForm<FormData>({
+    const { handleSubmit, control } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: {
             vedtakId: props.klage.vedtakId,
@@ -150,11 +150,19 @@ const VurderFormkrav = (props: Props) => {
                             )}
                         />
 
-                        <TextField
-                            {...register('begrunnelse')}
-                            error={formState.errors.begrunnelse?.message}
-                            label={formatMessage('formkrav.begrunnelse.label')}
+                        <Controller
+                            control={control}
+                            name="begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    label={formatMessage('formkrav.begrunnelse.label')}
+                                />
+                            )}
                         />
+
                         <div className={styles.buttons}>
                             <LinkAsButton
                                 variant="secondary"

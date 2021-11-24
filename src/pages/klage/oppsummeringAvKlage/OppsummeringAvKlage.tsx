@@ -18,6 +18,7 @@ import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import * as DateUtils from '~utils/date/dateUtils';
+import { erKlageOmgjort, erKlageOpprettholdt } from '~utils/klage/klageUtils';
 
 import formkravMessages from '../klage-nb';
 import vurderingMessages from '../vurderingAvKlage/VurderingAvKlage-nb';
@@ -174,11 +175,9 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
                 </div>
             </div>
 
-            <div className={styles.informasjonsContainerContent}>
-                <div>
-                    <Label>{formatMessage('formkrav.begrunnelse.label')}</Label>
-                    <BodyShort>{props.klage.begrunnelse}</BodyShort>
-                </div>
+            <div>
+                <Label>{formatMessage('formkrav.begrunnelse.label')}</Label>
+                <BodyShort>{props.klage.begrunnelse}</BodyShort>
             </div>
         </div>
     );
@@ -189,28 +188,37 @@ const VurderInfo = (props: { klage: Klage }) => {
         messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
     });
 
-    console.log(props.klage);
-
     return (
         <div className={styles.informasjonsContainer}>
             <div className={styles.informasjonsContainerContent}>
                 <div>
                     <Label>{formatMessage('form.vurdering.label')}</Label>
-                    <BodyShort>TODO</BodyShort>
+                    {/* Vurderingstypen skal finnes når man kommer til oppsummeringen */}
+                    {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+                    <BodyShort>{formatMessage(props.klage.vedtaksvurdering!.type)}</BodyShort>
                 </div>
 
-                <div>
-                    <Label>{formatMessage('form.omgjørVedtak.årsak.label')}</Label>
-                    <BodyShort>TODO</BodyShort>
-                </div>
-                <div>
-                    <Label>{formatMessage('label.årsaksutfall')}</Label>
-                    <BodyShort>TODO</BodyShort>
-                </div>
-                <div>
-                    <Label>{formatMessage('form.opprettholdVedtak.hjemmel.label')}</Label>
-                    <BodyShort>TODO</BodyShort>
-                </div>
+                {erKlageOmgjort(props.klage) ? (
+                    <>
+                        <div>
+                            <Label>{formatMessage('form.omgjørVedtak.årsak.label')}</Label>
+                            <BodyShort>{formatMessage(props.klage.vedtaksvurdering.omgjør.årsak)}</BodyShort>
+                        </div>
+                        <div>
+                            <Label>{formatMessage('label.årsaksutfall')}</Label>
+                            <BodyShort>{formatMessage(props.klage.vedtaksvurdering.omgjør.utfall)}</BodyShort>
+                        </div>
+                    </>
+                ) : erKlageOpprettholdt(props.klage) ? (
+                    <div>
+                        <Label>{formatMessage('form.opprettholdVedtak.hjemmel.label')}</Label>
+                        <div className={styles.hjemlerContainer}>
+                            {props.klage.vedtaksvurdering.oppretthold.hjemler.map((hjemel) => (
+                                <BodyShort key={hjemel}>{formatMessage(hjemel)}</BodyShort>
+                            ))}
+                        </div>
+                    </div>
+                ) : null}
             </div>
         </div>
     );

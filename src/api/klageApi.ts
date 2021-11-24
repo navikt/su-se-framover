@@ -1,6 +1,6 @@
 import { Nullable } from '~lib/types';
-import { VurderingRequest } from '~pages/klage/klageUtils';
 import { Klage } from '~types/Klage';
+import { VurderingRequest } from '~utils/klage/klageUtils';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
