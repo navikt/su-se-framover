@@ -44,30 +44,27 @@ interface VurderingAvKlageFormData {
 }
 
 const schema = yup.object<VurderingAvKlageFormData>({
-    klageVurderingType: yup
-        .string()
-        .defined()
-        .oneOf([KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD], 'Feltet må fylles ut'),
+    klageVurderingType: yup.string().required().oneOf([KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD]),
     omgjør: yup
         .object<OmgjørFormData>()
         .defined()
-        .when('KlageVurderingType', {
+        .when('klageVurderingType', {
             is: KlageVurderingType.OMGJØR,
             then: yup.object({
-                årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).typeError('Feltet må fylles ut'),
-                utfall: yup.string().oneOf(Object.values(OmgjørVedtakUtfall)).typeError('Feltet må fylles ut'),
+                årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).required(),
+                utfall: yup.string().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
             }),
-            otherwise: yup.object(),
+            otherwise: yup.object().nullable(),
         }),
     oppretthold: yup
         .object<HjemmelFormData>()
         .defined()
-        .when('KlageVurderingType', {
+        .when('klageVurderingType', {
             is: KlageVurderingType.OPPRETTHOLD,
-            then: yup.object({
-                hjemmel: yup.array().of(yup.string()).required(),
+            then: yup.object<HjemmelFormData>({
+                hjemmel: yup.array<OpprettholdVedtakHjemmel>().required(),
             }),
-            otherwise: yup.object(),
+            otherwise: yup.object().nullable(),
         }),
     fritekstTilBrev: yup.string().nullable().defined(),
 });
@@ -81,7 +78,12 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     );
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForOppretthold);
 
-    const { handleSubmit, watch, control } = useForm<VurderingAvKlageFormData>({
+    const {
+        handleSubmit,
+        watch,
+        control,
+        formState: { errors },
+    } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
             klageVurderingType: props.klage.vedtaksvurdering?.type,
@@ -96,6 +98,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         },
     });
 
+    console.log(errors);
     const handleVurderingAvKlageSubmit = (data: VurderingAvKlageFormData) => {
         lagreVurderingAvKlage(
             {
@@ -199,7 +202,10 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             >
                                 {formatMessage('knapp.tilbake')}
                             </LinkAsButton>
-                            <Button>{formatMessage('knapp.neste')}</Button>
+                            <Button>
+                                {formatMessage('knapp.neste')}
+                                {RemoteData.isPending(lagreVurderingAvKlageStatus) && <Loader />}
+                            </Button>
                         </div>
                         {RemoteData.isFailure(lagreVurderingAvKlageStatus) && (
                             <ApiErrorAlert error={lagreVurderingAvKlageStatus.error} />
