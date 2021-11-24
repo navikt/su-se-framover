@@ -1,6 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Checkbox, CheckboxGroup, Radio, Loader, RadioGroup, Select, Textarea } from '@navikt/ds-react';
+import { struct } from 'fp-ts/Eq';
+import * as A from 'fp-ts/lib/Array';
+import * as S from 'fp-ts/string';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -13,7 +16,7 @@ import * as klageActions from '~features/klage/klageActions';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import {
@@ -42,6 +45,22 @@ interface VurderingAvKlageFormData {
     oppretthold: HjemmelFormData;
     fritekstTilBrev: Nullable<string>;
 }
+
+const eqOmgjør = struct<OmgjørFormData>({
+    årsak: eqNullable(S.Eq),
+    utfall: eqNullable(S.Eq),
+});
+
+const eqOppretthold = struct<HjemmelFormData>({
+    hjemmel: A.getEq(S.Eq),
+});
+
+const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
+    klageVurderingType: eqNullable(S.Eq),
+    omgjør: eqOmgjør,
+    oppretthold: eqOppretthold,
+    fritekstTilBrev: eqNullable(S.Eq),
+});
 
 const schema = yup.object<VurderingAvKlageFormData>({
     klageVurderingType: yup.string().required().oneOf([KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD]),
@@ -78,28 +97,35 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     );
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForOppretthold);
 
-    const {
-        handleSubmit,
-        watch,
-        control,
-        formState: { errors },
-    } = useForm<VurderingAvKlageFormData>({
-        resolver: yupResolver(schema),
-        defaultValues: {
-            klageVurderingType: props.klage.vedtaksvurdering?.type,
-            omgjør: {
-                årsak: props.klage.vedtaksvurdering?.omgjør?.årsak,
-                utfall: props.klage.vedtaksvurdering?.omgjør?.utfall,
-            },
-            oppretthold: {
-                hjemmel: props.klage.vedtaksvurdering?.oppretthold?.hjemler,
-            },
-            fritekstTilBrev: props.klage.fritekstTilBrev,
+    const initialValues = {
+        klageVurderingType: props.klage.vedtaksvurdering?.type ?? null,
+        omgjør: {
+            årsak: props.klage.vedtaksvurdering?.omgjør?.årsak ?? null,
+            utfall: props.klage.vedtaksvurdering?.omgjør?.utfall ?? null,
         },
+        oppretthold: {
+            hjemmel: props.klage.vedtaksvurdering?.oppretthold?.hjemler ?? [],
+        },
+        fritekstTilBrev: props.klage.fritekstTilBrev,
+    };
+
+    const { handleSubmit, watch, control } = useForm<VurderingAvKlageFormData>({
+        resolver: yupResolver(schema),
+        defaultValues: initialValues,
     });
 
-    console.log(errors);
     const handleVurderingAvKlageSubmit = (data: VurderingAvKlageFormData) => {
+        if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
+            history.push(
+                Routes.klage.createURL({
+                    sakId: props.sakId,
+                    klageId: props.klage.id,
+                    steg: KlageSteg.Oppsummering,
+                })
+            );
+            return;
+        }
+
         lagreVurderingAvKlage(
             {
                 sakId: props.sakId,

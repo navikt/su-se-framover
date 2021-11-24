@@ -1,6 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Select, Loader, Textarea } from '@navikt/ds-react';
+import { struct } from 'fp-ts/Eq';
+import * as B from 'fp-ts/lib/boolean';
+import * as S from 'fp-ts/string';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -13,7 +16,7 @@ import * as klageActions from '~features/klage/klageActions';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
@@ -22,6 +25,14 @@ import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './klage-nb';
 import styles from './klage.module.less';
+
+const eqFormData = struct<FormData>({
+    vedtakId: eqNullable(S.Eq),
+    innenforFristen: eqNullable(B.Eq),
+    klagesDetPåKonkreteElementerIVedtaket: eqNullable(B.Eq),
+    signert: eqNullable(B.Eq),
+    begrunnelse: eqNullable(S.Eq),
+});
 
 interface Props {
     sakId: string;
@@ -50,50 +61,61 @@ const VurderFormkrav = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     const [vilkårsvurderingStatus, vilkårsvurder] = useAsyncActionCreator(klageActions.vurderFormkrav);
 
+    const initialValues = {
+        vedtakId: props.klage.vedtakId,
+        innenforFristen: props.klage.innenforFristen,
+        klagesDetPåKonkreteElementerIVedtaket: props.klage.klagesDetPåKonkreteElementerIVedtaket,
+        signert: props.klage.erUnderskrevet,
+        begrunnelse: props.klage.begrunnelse,
+    };
+
     const { handleSubmit, control } = useForm<FormData>({
         resolver: yupResolver(schema),
-        defaultValues: {
-            vedtakId: props.klage.vedtakId,
-            innenforFristen: props.klage.innenforFristen,
-            klagesDetPåKonkreteElementerIVedtaket: props.klage.klagesDetPåKonkreteElementerIVedtaket,
-            signert: props.klage.erUnderskrevet,
-            begrunnelse: props.klage.begrunnelse,
-        },
+        defaultValues: initialValues,
     });
+
+    const handleFormkravSubmit = (values: FormData) => {
+        if (eqFormData.equals(values, initialValues)) {
+            history.push(
+                Routes.klage.createURL({
+                    sakId: props.sakId,
+                    klageId: props.klage.id,
+                    steg: KlageSteg.Vurdering,
+                })
+            );
+            return;
+        }
+
+        vilkårsvurder(
+            {
+                sakId: props.sakId,
+                klageId: props.klage.id,
+                //valdiering sikrer at feltet ikke er null
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                vedtakId: values.vedtakId!,
+                innenforFristen: values.innenforFristen!,
+                klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket!,
+                erUnderskrevet: values.signert!,
+                /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                begrunnelse: values.begrunnelse,
+            },
+            () => {
+                history.push(
+                    Routes.klage.createURL({
+                        sakId: props.sakId,
+                        klageId: props.klage.id,
+                        steg: KlageSteg.Vurdering,
+                    })
+                );
+            }
+        );
+    };
 
     return (
         <ToKolonner tittel={formatMessage('formkrav.tittel')}>
             {{
                 left: (
-                    <form
-                        className={styles.form}
-                        onSubmit={handleSubmit((values) => {
-                            vilkårsvurder(
-                                {
-                                    sakId: props.sakId,
-                                    klageId: props.klage.id,
-                                    //valdiering sikrer at feltet ikke er null
-                                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                                    vedtakId: values.vedtakId!,
-                                    innenforFristen: values.innenforFristen!,
-                                    klagesDetPåKonkreteElementerIVedtaket:
-                                        values.klagesDetPåKonkreteElementerIVedtaket!,
-                                    erUnderskrevet: values.signert!,
-                                    /* eslint-enable @typescript-eslint/no-non-null-assertion */
-                                    begrunnelse: values.begrunnelse,
-                                },
-                                () => {
-                                    history.push(
-                                        Routes.klage.createURL({
-                                            sakId: props.sakId,
-                                            klageId: props.klage.id,
-                                            steg: KlageSteg.Vurdering,
-                                        })
-                                    );
-                                }
-                            );
-                        })}
-                    >
+                    <form className={styles.form} onSubmit={handleSubmit(handleFormkravSubmit)}>
                         <Controller
                             control={control}
                             name="vedtakId"
