@@ -1,4 +1,5 @@
 import { Nullable } from '~lib/types';
+import { OpprettholdVedtakHjemmel } from '~types/Klage';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -88,10 +89,16 @@ export async function fetchBrevutkastForAvslutningAvRevurdering(args: {
 export async function hentBrevutkastForOppretthold(arg: {
     sakId: string;
     klageId: string;
+    fritekst: string;
+    hjemler: OpprettholdVedtakHjemmel[];
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/brevutkast`,
-        method: 'GET',
+        method: 'POST',
+        body: {
+            fritekst: arg.fritekst,
+            hjemler: arg.hjemler,
+        },
         bodyTransformer: (res) => res.blob(),
     });
 }

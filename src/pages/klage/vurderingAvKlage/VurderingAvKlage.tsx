@@ -109,7 +109,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         fritekstTilBrev: props.klage.fritekstTilBrev,
     };
 
-    const { handleSubmit, watch, control } = useForm<VurderingAvKlageFormData>({
+    const { handleSubmit, watch, control, ...form } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
@@ -210,7 +210,16 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             <Button
                                 type="button"
                                 variant="secondary"
-                                onClick={() => hentBrev({ sakId: props.sakId, klageId: props.klage.id })}
+                                onClick={() => {
+                                    const values = form.getValues();
+
+                                    hentBrev({
+                                        sakId: props.sakId,
+                                        klageId: props.klage.id,
+                                        fritekst: values.fritekstTilBrev ?? '',
+                                        hjemler: values.oppretthold.hjemmel,
+                                    });
+                                }}
                             >
                                 {formatMessage('knapp.seBrev')}
                                 {RemoteData.isPending(brevStatus) && <Loader />}
