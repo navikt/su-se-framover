@@ -51,13 +51,15 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
         intl.formatMessage({
             id: s,
         });
+
+    const { uføre } = props.grunnlagsdataOgVilkårsvurderinger;
     return (
         <Vilkårsblokk
             tittel={vilkårTittelFormatted(props.info.vilkårtype)}
             status={props.info.status}
             søknadfaktablokk={<UførhetFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.grunnlagsdataOgVilkårsvurderinger.uføre === null ? (
+                uføre === null ? (
                     <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
                 ) : (
                     <Faktablokk
@@ -66,28 +68,22 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
                             {
                                 tittel: saksbehandlingMessage('radio.uførhet.legend'),
                                 verdi:
-                                    props.grunnlagsdataOgVilkårsvurderinger.uføre.resultat ===
-                                    UføreResultat.VilkårOppfylt
+                                    uføre.resultat === UføreResultat.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.grunnlagsdataOgVilkårsvurderinger.uføre.resultat ===
-                                          UføreResultat.VilkårIkkeOppfylt
+                                        : uføre.resultat === UføreResultat.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' }),
                             },
-                            ...(props.grunnlagsdataOgVilkårsvurderinger.uføre.resultat === UføreResultat.VilkårOppfylt
+                            ...(uføre.resultat === UføreResultat.VilkårOppfylt
                                 ? [
                                       FaktaSpacing,
                                       {
                                           tittel: saksbehandlingMessage('input.label.uføregrad'),
-                                          verdi:
-                                              props.grunnlagsdataOgVilkårsvurderinger.uføre.vurderinger[0].grunnlag?.uføregrad?.toString() ??
-                                              '-',
+                                          verdi: uføre.vurderinger[0]?.grunnlag?.uføregrad?.toString() ?? '-',
                                       },
                                       {
                                           tittel: saksbehandlingMessage('input.label.forventetInntekt'),
-                                          verdi:
-                                              props.grunnlagsdataOgVilkårsvurderinger.uføre.vurderinger[0].grunnlag?.forventetInntekt?.toString() ??
-                                              '-',
+                                          verdi: uføre.vurderinger[0].grunnlag?.forventetInntekt?.toString() ?? '-',
                                       },
                                   ]
                                 : []),
