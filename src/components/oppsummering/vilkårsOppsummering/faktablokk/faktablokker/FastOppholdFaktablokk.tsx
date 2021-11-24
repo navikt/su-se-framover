@@ -7,7 +7,7 @@ import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import boOgOppholdSøknadMessages from '~pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import flyktningstatusSøknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
-import { FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 import { formatAdresse } from '~utils/format/formatUtils';
 import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -100,10 +100,9 @@ export const FastOppholdVilkårsblokk = (props: VilkårsblokkProps<'fastOppholdI
                                     id: keyOf<typeof saksbehandlingMessages>('radio.fastOpphold.legend'),
                                 }),
                                 verdi:
-                                    props.behandlingsinformasjon.status === FastOppholdINorgeStatus.VilkårOppfylt
+                                    props.behandlingsinformasjon.status === Vilkårstatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.behandlingsinformasjon.status ===
-                                          FastOppholdINorgeStatus.VilkårIkkeOppfylt
+                                        : props.behandlingsinformasjon.status === Vilkårstatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({ id: 'fraSøknad.uavklart' }),
                             },

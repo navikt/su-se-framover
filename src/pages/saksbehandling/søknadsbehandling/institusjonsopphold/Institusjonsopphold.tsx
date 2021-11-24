@@ -20,7 +20,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { InstitusjonsoppholdStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~types/Behandlingsinformasjon';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -31,7 +31,7 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './institusjonsopphold-nb';
 
 interface InstitusjonsoppholdFormData {
-    status: Nullable<InstitusjonsoppholdStatus>;
+    status: Nullable<Vilkårstatus>;
     begrunnelse: Nullable<string>;
 }
 
@@ -45,10 +45,7 @@ const schema = yup
         status: yup
             .mixed()
             .defined()
-            .oneOf(
-                Object.values(InstitusjonsoppholdStatus),
-                'Du må velge om institusjonsoppholdet skal føre til avslag'
-            ),
+            .oneOf(Object.values(Vilkårstatus), 'Du må velge om institusjonsoppholdet skal føre til avslag'),
         begrunnelse: yup.string().defined(),
     })
     .required();
@@ -126,19 +123,11 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                                     value={field.value ?? undefined}
                                     onChange={field.onChange}
                                 >
-                                    <Radio
-                                        id={field.name}
-                                        value={InstitusjonsoppholdStatus.VilkårIkkeOppfylt}
-                                        ref={field.ref}
-                                    >
+                                    <Radio id={field.name} value={Vilkårstatus.VilkårIkkeOppfylt} ref={field.ref}>
                                         {formatMessage('radio.label.ja')}
                                     </Radio>
-                                    <Radio value={InstitusjonsoppholdStatus.VilkårOppfylt}>
-                                        {formatMessage('radio.label.nei')}
-                                    </Radio>
-                                    <Radio value={InstitusjonsoppholdStatus.Uavklart}>
-                                        {formatMessage('radio.label.uavklart')}
-                                    </Radio>
+                                    <Radio value={Vilkårstatus.VilkårOppfylt}>{formatMessage('radio.label.nei')}</Radio>
+                                    <Radio value={Vilkårstatus.Uavklart}>{formatMessage('radio.label.uavklart')}</Radio>
                                 </RadioGroup>
                             )}
                         />

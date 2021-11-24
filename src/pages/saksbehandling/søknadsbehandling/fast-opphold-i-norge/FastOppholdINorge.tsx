@@ -20,7 +20,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~types/Behandlingsinformasjon';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -31,7 +31,7 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './fastOppholdINorge-nb';
 
 interface FormData {
-    status: Nullable<FastOppholdINorgeStatus>;
+    status: Nullable<Vilkårstatus>;
     begrunnelse: Nullable<string>;
 }
 
@@ -43,9 +43,9 @@ const eqFormData = struct<FormData>({
 const schema = yup
     .object<FormData>({
         status: yup
-            .mixed<FastOppholdINorgeStatus>()
+            .mixed<Vilkårstatus>()
             .defined()
-            .oneOf(Object.values(FastOppholdINorgeStatus), 'Du må velge om søker oppholder seg fast i norge'),
+            .oneOf(Object.values(Vilkårstatus), 'Du må velge om søker oppholder seg fast i norge'),
         begrunnelse: yup.string().defined(),
     })
     .required();
@@ -124,15 +124,13 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                     onChange={field.onChange}
                                     name={field.name}
                                 >
-                                    <Radio id={field.name} value={FastOppholdINorgeStatus.VilkårOppfylt}>
+                                    <Radio id={field.name} value={Vilkårstatus.VilkårOppfylt}>
                                         {formatMessage('radio.label.ja')}
                                     </Radio>
-                                    <Radio value={FastOppholdINorgeStatus.VilkårIkkeOppfylt}>
+                                    <Radio value={Vilkårstatus.VilkårIkkeOppfylt}>
                                         {formatMessage('radio.label.nei')}
                                     </Radio>
-                                    <Radio value={FastOppholdINorgeStatus.Uavklart}>
-                                        {formatMessage('radio.label.uavklart')}
-                                    </Radio>
+                                    <Radio value={Vilkårstatus.Uavklart}>{formatMessage('radio.label.uavklart')}</Radio>
                                 </RadioGroup>
                             )}
                         />

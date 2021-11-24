@@ -3,17 +3,14 @@ import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     Behandlingsinformasjon,
-    FlyktningStatus,
-    LovligOppholdStatus,
-    FastOppholdINorgeStatus,
     FormueStatus,
     PersonligOppmøteStatus,
     PersonligOppmøte,
-    InstitusjonsoppholdStatus,
-    UførhetStatus,
+    Vilkårstatus,
 } from '~types/Behandlingsinformasjon';
 import { erBosituasjonFullstendig } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -63,92 +60,75 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
     }
 };
 
+const getBehandlingsinformasjonStatus = <VilkårKey extends keyof Behandlingsinformasjon>(
+    vilkår: Behandlingsinformasjon[VilkårKey]
+) =>
+    vilkår === null
+        ? VilkårVurderingStatus.IkkeVurdert
+        : vilkår.status === Vilkårstatus.VilkårIkkeOppfylt
+        ? VilkårVurderingStatus.Uavklart
+        : vilkår.status === Vilkårstatus.VilkårOppfylt
+        ? VilkårVurderingStatus.Ok
+        : VilkårVurderingStatus.IkkeOk;
+
 export const mapToVilkårsinformasjon = (
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
-    const { uførhet, flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, formue, personligOppmøte } =
+    const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, formue, personligOppmøte } =
         behandlingsinformasjon;
+    const { uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
 
     return [
         {
             status:
-                uførhet === null
+                uføre === null
                     ? VilkårVurderingStatus.IkkeVurdert
-                    : uførhet.status === UførhetStatus.HarUføresakTilBehandling
+                    : uføre?.resultat === UføreResultat.HarUføresakTilBehandling
                     ? VilkårVurderingStatus.Uavklart
-                    : uførhet.status === UførhetStatus.VilkårOppfylt
+                    : uføre?.resultat === UføreResultat.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,
-            begrunnelse: uførhet?.begrunnelse ?? null,
-            erStartet: uførhet !== null,
+            begrunnelse: uføre?.vurderinger[0]?.begrunnelse ?? null,
+            erStartet: uføre !== null,
         },
         {
-            status:
-                flyktning === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : flyktning.status === FlyktningStatus.Uavklart
-                    ? VilkårVurderingStatus.Uavklart
-                    : flyktning.status === FlyktningStatus.VilkårOppfylt
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: getBehandlingsinformasjonStatus(flyktning),
             vilkårtype: Vilkårtype.Flyktning,
             begrunnelse: behandlingsinformasjon.flyktning?.begrunnelse ?? null,
             erStartet: flyktning !== null,
         },
         {
-            status:
-                lovligOpphold === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : lovligOpphold.status === LovligOppholdStatus.Uavklart
-                    ? VilkårVurderingStatus.Uavklart
-                    : lovligOpphold.status === LovligOppholdStatus.VilkårOppfylt
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: getBehandlingsinformasjonStatus(lovligOpphold),
             vilkårtype: Vilkårtype.LovligOpphold,
             begrunnelse: behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
             erStartet: lovligOpphold !== null,
         },
         {
-            status:
-                fastOppholdINorge === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : fastOppholdINorge.status === FastOppholdINorgeStatus.Uavklart
-                    ? VilkårVurderingStatus.Uavklart
-                    : fastOppholdINorge.status === FastOppholdINorgeStatus.VilkårOppfylt
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: getBehandlingsinformasjonStatus(fastOppholdINorge),
             vilkårtype: Vilkårtype.FastOppholdINorge,
             begrunnelse: behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
             erStartet: fastOppholdINorge !== null,
         },
         {
-            status:
-                institusjonsopphold === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : institusjonsopphold.status === InstitusjonsoppholdStatus.Uavklart
-                    ? VilkårVurderingStatus.Uavklart
-                    : institusjonsopphold.status === InstitusjonsoppholdStatus.VilkårOppfylt
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: getBehandlingsinformasjonStatus(institusjonsopphold),
             vilkårtype: Vilkårtype.Institusjonsopphold,
             begrunnelse: behandlingsinformasjon.institusjonsopphold?.begrunnelse ?? null,
             erStartet: institusjonsopphold !== null,
         },
         {
-            status: !grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status
-                ? VilkårVurderingStatus.IkkeVurdert
-                : grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status ===
-                  Utenlandsoppholdstatus.Uavklart
-                ? VilkårVurderingStatus.Uavklart
-                : grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0].status ===
-                  Utenlandsoppholdstatus.SkalHoldeSegINorge
-                ? VilkårVurderingStatus.Ok
-                : VilkårVurderingStatus.IkkeOk,
+            status:
+                utenlandsopphold === null
+                    ? VilkårVurderingStatus.IkkeVurdert
+                    : utenlandsopphold?.status === Utenlandsoppholdstatus.Uavklart
+                    ? VilkårVurderingStatus.Uavklart
+                    : utenlandsopphold?.status === Utenlandsoppholdstatus.SkalHoldeSegINorge
+                    ? VilkårVurderingStatus.Ok
+                    : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.OppholdIUtlandet,
-            begrunnelse: grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]?.begrunnelse ?? null,
-            erStartet: grunnlagsdataOgVilkårsvurderinger !== null,
+            begrunnelse: utenlandsopphold?.vurderinger[0]?.begrunnelse ?? null,
+            erStartet: utenlandsopphold !== null,
         },
         {
             status:
@@ -231,9 +211,5 @@ const erSatsStartet = (b: Behandling) => {
         return false;
     }
 
-    if (erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger))) {
-        return true;
-    }
-
-    return false;
+    return !!erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger));
 };
