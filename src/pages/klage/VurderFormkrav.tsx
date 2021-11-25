@@ -19,7 +19,7 @@ import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
-import { Klage } from '~types/Klage';
+import { Klage, KlageStatus } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
 
@@ -59,7 +59,8 @@ const schema = yup.object<FormData>({
 const VurderFormkrav = (props: Props) => {
     const history = useHistory();
     const { formatMessage } = useI18n({ messages });
-    const [vilkårsvurderingStatus, vilkårsvurder] = useAsyncActionCreator(klageActions.vurderFormkrav);
+    const [lagreStatus, lagre] = useAsyncActionCreator(klageActions.vurderFormkrav);
+    const [bekreftStatus, bekreft] = useAsyncActionCreator(klageActions.bekreftFormkrav);
 
     const initialValues = {
         vedtakId: props.klage.vedtakId,
@@ -74,7 +75,7 @@ const VurderFormkrav = (props: Props) => {
         defaultValues: initialValues,
     });
 
-    const handleFormkravSubmit = (values: FormData) => {
+    const handleLagreFormkrav = (values: FormData) => {
         if (eqFormData.equals(values, initialValues)) {
             history.push(
                 Routes.klage.createURL({
@@ -86,18 +87,25 @@ const VurderFormkrav = (props: Props) => {
             return;
         }
 
-        vilkårsvurder(
+        lagre({
+            sakId: props.sakId,
+            klageId: props.klage.id,
+            //validering sikrer at feltet ikke er null
+            /* eslint-disable @typescript-eslint/no-non-null-assertion */
+            vedtakId: values.vedtakId!,
+            innenforFristen: values.innenforFristen!,
+            klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket!,
+            erUnderskrevet: values.signert!,
+            /* eslint-enable @typescript-eslint/no-non-null-assertion */
+            begrunnelse: values.begrunnelse,
+        });
+    };
+
+    const handleBekreftOgFortsettClick = () => {
+        bekreft(
             {
                 sakId: props.sakId,
                 klageId: props.klage.id,
-                //valdiering sikrer at feltet ikke er null
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                vedtakId: values.vedtakId!,
-                innenforFristen: values.innenforFristen!,
-                klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket!,
-                erUnderskrevet: values.signert!,
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
-                begrunnelse: values.begrunnelse,
             },
             () => {
                 history.push(
@@ -115,7 +123,7 @@ const VurderFormkrav = (props: Props) => {
         <ToKolonner tittel={formatMessage('formkrav.tittel')}>
             {{
                 left: (
-                    <form className={styles.form} onSubmit={handleSubmit(handleFormkravSubmit)}>
+                    <form className={styles.form} onSubmit={handleSubmit(handleLagreFormkrav)}>
                         <Controller
                             control={control}
                             name="vedtakId"
@@ -193,13 +201,19 @@ const VurderFormkrav = (props: Props) => {
                                 {formatMessage('formkrav.button.tilbake')}
                             </LinkAsButton>
                             <Button>
-                                {formatMessage('formkrav.button.submit')}
-                                {RemoteData.isPending(vilkårsvurderingStatus) && <Loader />}
+                                {formatMessage('formkrav.button.lagre')}
+                                {RemoteData.isPending(lagreStatus) && <Loader />}
+                            </Button>
+                            <Button
+                                type="button"
+                                disabled={props.klage.status == KlageStatus.VILKÅRSVURDERT_PÅBEGYNT}
+                                onClick={() => handleBekreftOgFortsettClick()}
+                            >
+                                {formatMessage('formkrav.button.bekreftOgFortsett')}
+                                {RemoteData.isPending(bekreftStatus) && <Loader />}
                             </Button>
                         </div>
-                        {RemoteData.isFailure(vilkårsvurderingStatus) && (
-                            <ApiErrorAlert error={vilkårsvurderingStatus.error} />
-                        )}
+                        {RemoteData.isFailure(lagreStatus) && <ApiErrorAlert error={lagreStatus.error} />}
                     </form>
                 ),
                 right: <></>,
