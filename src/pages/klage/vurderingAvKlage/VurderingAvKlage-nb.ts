@@ -45,7 +45,8 @@ export default {
     'form.fritekst.label': 'Fritekst',
 
     'knapp.seBrev': 'Se brev',
-    'knapp.neste': 'Neste',
+    'knapp.lagre': 'Lagre',
+    'knapp.bekreftOgFortsett': 'Bekreft og fortsett',
     'knapp.tilbake': 'Tilbake',
 
     'page.tittel': 'Behandle klage',

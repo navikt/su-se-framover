@@ -25,6 +25,7 @@ import {
     OmgjørVedtakÅrsak,
     OpprettholdVedtakHjemmel,
     KlageVurderingType,
+    KlageStatus,
 } from '~types/Klage';
 
 import messages from './VurderingAvKlage-nb';
@@ -95,6 +96,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const [lagreVurderingAvKlageStatus, lagreVurderingAvKlage] = useAsyncActionCreator(
         klageActions.lagreVurderingAvKlage
     );
+    const [bekreftVurderingerStatus, bekreftVurderinger] = useAsyncActionCreator(klageActions.bekreftVurderinger);
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForOppretthold);
 
     const initialValues = {
@@ -116,6 +118,34 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
 
     const handleVurderingAvKlageSubmit = (data: VurderingAvKlageFormData) => {
         if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
+            return;
+        }
+
+        lagreVurderingAvKlage({
+            sakId: props.sakId,
+            klageId: props.klage.id,
+            //valdiering sikrer at feltet ikke er null
+            /* eslint-disable @typescript-eslint/no-non-null-assertion */
+            omgjør:
+                data.klageVurderingType === KlageVurderingType.OMGJØR
+                    ? {
+                          årsak: data.omgjør.årsak!,
+                          utfall: data.omgjør.utfall!,
+                      }
+                    : null,
+            oppretthold:
+                data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
+                    ? {
+                          hjemler: data.oppretthold.hjemmel!,
+                      }
+                    : null,
+            /* eslint-enable @typescript-eslint/no-non-null-assertion */
+            fritekstTilBrev: data.fritekstTilBrev,
+        });
+    };
+
+    const handleBekreftOgFortsettClick = () => {
+        /*  if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
             history.push(
                 Routes.klage.createURL({
                     sakId: props.sakId,
@@ -124,29 +154,12 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 })
             );
             return;
-        }
+        }*/
 
-        lagreVurderingAvKlage(
+        bekreftVurderinger(
             {
                 sakId: props.sakId,
                 klageId: props.klage.id,
-                //valdiering sikrer at feltet ikke er null
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                omgjør:
-                    data.klageVurderingType === KlageVurderingType.OMGJØR
-                        ? {
-                              årsak: data.omgjør.årsak!,
-                              utfall: data.omgjør.utfall!,
-                          }
-                        : null,
-                oppretthold:
-                    data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
-                        ? {
-                              hjemler: data.oppretthold.hjemmel!,
-                          }
-                        : null,
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
-                fritekstTilBrev: data.fritekstTilBrev,
             },
             () => {
                 history.push(
@@ -237,13 +250,27 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             >
                                 {formatMessage('knapp.tilbake')}
                             </LinkAsButton>
-                            <Button>
-                                {formatMessage('knapp.neste')}
+                            <Button variant="secondary">
+                                {formatMessage('knapp.lagre')}
                                 {RemoteData.isPending(lagreVurderingAvKlageStatus) && <Loader />}
+                            </Button>
+                            <Button
+                                type="button"
+                                disabled={
+                                    props.klage.status !== KlageStatus.VURDERT_UTFYLT &&
+                                    props.klage.status !== KlageStatus.VURDERT_BEKREFTET
+                                }
+                                onClick={() => handleBekreftOgFortsettClick()}
+                            >
+                                {formatMessage('knapp.bekreftOgFortsett')}
+                                {RemoteData.isPending(bekreftVurderingerStatus) && <Loader />}
                             </Button>
                         </div>
                         {RemoteData.isFailure(lagreVurderingAvKlageStatus) && (
                             <ApiErrorAlert error={lagreVurderingAvKlageStatus.error} />
+                        )}
+                        {RemoteData.isFailure(bekreftVurderingerStatus) && (
+                            <ApiErrorAlert error={bekreftVurderingerStatus.error} />
                         )}
                     </form>
                 ),

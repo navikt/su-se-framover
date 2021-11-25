@@ -6,14 +6,25 @@ export interface Klage {
     opprettet: string;
     journalpostId: string;
     saksbehandler: string;
-    status: string;
+    status: KlageStatus;
     vedtakId: Nullable<string>;
     innenforFristen: Nullable<boolean>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
     erUnderskrevet: Nullable<boolean>;
     begrunnelse: Nullable<string>;
-    fritekstTilBrev: Nullable<string>;
     vedtaksvurdering: Nullable<Vedtaksvurdering>;
+    fritekstTilBrev: Nullable<string>;
+}
+
+export enum KlageStatus {
+    OPPRETTET = 'OPPRETTET',
+    VILKÅRSVURDERT_PÅBEGYNT = 'VILKÅRSVURDERT_PÅBEGYNT',
+    VILKÅRSVURDERT_UTFYLT = 'VILKÅRSVURDERT_UTFYLT',
+    VURDERT_PÅBEGYNT = 'VURDERT_PÅBEGYNT',
+    VURDERT_UTFYLT = 'VURDERT_UTFYLT',
+    VURDERT_BEKREFTET = 'VURDERT_BEKREFTET',
+    TIL_ATTESTERING = 'TIL_ATTESTERING',
+    IVERKSATT = 'IVERKSATT',
 }
 
 interface Vedtaksvurdering {
