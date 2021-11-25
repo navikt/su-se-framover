@@ -11,11 +11,4 @@ export default {
 
     'label.ja': 'Ja',
     'label.nei': 'Nei',
-
-    'knapp.tilbake': 'Tilbake',
-    'knapp.sendTilAttestering': 'Send til attestering',
-
-    'feil.fantIkkeVedtakForKlage': 'Fant ikke tilhørende vedtak for klage',
-
-    'notification.sendtTilAttestering': 'Klage er sendt til attestering',
 };

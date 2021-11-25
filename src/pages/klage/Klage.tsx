@@ -10,7 +10,7 @@ import { Sak } from '~types/Sak';
 
 import messages from './klage-nb';
 import styles from './klage.module.less';
-import OppsummeringAvKlage from './oppsummeringAvKlage/OppsummeringAvKlage';
+import SendKlageTilAttestering from './sendKlageTilAttestering/SendKlageTilAttestering';
 import VurderFormkrav from './VurderFormkrav';
 import VurderingAvKlage from './vurderingAvKlage/VurderingAvKlage';
 
@@ -82,7 +82,7 @@ const Klage = (props: { sak: Sak }) => {
                             steg: KlageSteg.Oppsummering,
                         })}
                     >
-                        <OppsummeringAvKlage sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
+                        <SendKlageTilAttestering sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
                     </Route>
                 </>
             </Switch>

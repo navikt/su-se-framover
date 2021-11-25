@@ -111,7 +111,14 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         fritekstTilBrev: props.klage.fritekstTilBrev,
     };
 
-    const { handleSubmit, watch, control, ...form } = useForm<VurderingAvKlageFormData>({
+    const {
+        handleSubmit,
+        watch,
+        control,
+        formState: { isDirty, isSubmitSuccessful },
+        reset,
+        ...form
+    } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
@@ -121,31 +128,46 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             return;
         }
 
-        lagreVurderingAvKlage({
-            sakId: props.sakId,
-            klageId: props.klage.id,
-            //valdiering sikrer at feltet ikke er null
-            /* eslint-disable @typescript-eslint/no-non-null-assertion */
-            omgjør:
-                data.klageVurderingType === KlageVurderingType.OMGJØR
-                    ? {
-                          årsak: data.omgjør.årsak!,
-                          utfall: data.omgjør.utfall!,
-                      }
-                    : null,
-            oppretthold:
-                data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
-                    ? {
-                          hjemler: data.oppretthold.hjemmel!,
-                      }
-                    : null,
-            /* eslint-enable @typescript-eslint/no-non-null-assertion */
-            fritekstTilBrev: data.fritekstTilBrev,
-        });
+        lagreVurderingAvKlage(
+            {
+                sakId: props.sakId,
+                klageId: props.klage.id,
+                //valdiering sikrer at feltet ikke er null
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                omgjør:
+                    data.klageVurderingType === KlageVurderingType.OMGJØR
+                        ? {
+                              årsak: data.omgjør.årsak!,
+                              utfall: data.omgjør.utfall!,
+                          }
+                        : null,
+                oppretthold:
+                    data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
+                        ? {
+                              hjemler: data.oppretthold.hjemmel!,
+                          }
+                        : null,
+                /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                fritekstTilBrev: data.fritekstTilBrev,
+            },
+            (klage) => {
+                reset({
+                    klageVurderingType: klage.vedtaksvurdering?.type ?? null,
+                    omgjør: {
+                        årsak: klage.vedtaksvurdering?.omgjør?.årsak ?? null,
+                        utfall: klage.vedtaksvurdering?.omgjør?.utfall ?? null,
+                    },
+                    oppretthold: {
+                        hjemmel: klage.vedtaksvurdering?.oppretthold?.hjemler ?? [],
+                    },
+                    fritekstTilBrev: klage.fritekstTilBrev,
+                });
+            }
+        );
     };
 
     const handleBekreftOgFortsettClick = () => {
-        /*  if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
+        if (props.klage.status === KlageStatus.VURDERT_BEKREFTET) {
             history.push(
                 Routes.klage.createURL({
                     sakId: props.sakId,
@@ -154,7 +176,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 })
             );
             return;
-        }*/
+        }
 
         bekreftVurderinger(
             {
@@ -257,8 +279,9 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             <Button
                                 type="button"
                                 disabled={
-                                    props.klage.status !== KlageStatus.VURDERT_UTFYLT &&
-                                    props.klage.status !== KlageStatus.VURDERT_BEKREFTET
+                                    (props.klage.status !== KlageStatus.VURDERT_UTFYLT &&
+                                        props.klage.status !== KlageStatus.VURDERT_BEKREFTET) ||
+                                    (isDirty && !isSubmitSuccessful)
                                 }
                                 onClick={() => handleBekreftOgFortsettClick()}
                             >

@@ -1,6 +1,7 @@
 import { Nullable } from '~lib/types';
 import {
     Klage,
+    KlageStatus,
     KlageVurderingType,
     Omgjør,
     OmgjørVedtakUtfall,
@@ -26,6 +27,8 @@ export interface VurderingRequest {
     oppretthold: Nullable<Oppretthold>;
     fritekstTilBrev: Nullable<string>;
 }
+
+export const erKlageTilAttestering = (k: Klage): boolean => k.status === KlageStatus.TIL_ATTESTERING;
 
 export const erKlageOmgjort = (
     k: Klage

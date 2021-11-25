@@ -7,6 +7,9 @@ export default {
     'behandling.startBehandling': 'Start behandling',
     'behandling.avsluttBehandling': 'Avslutt behandling',
 
+    'klage.attester': 'Attester',
+    'klage.fortsettBehandling': 'Fortsett behandling',
+
     'saksoversikt.tittel': 'Saksnummer',
 
     'søknad.avslått': 'Avslått',

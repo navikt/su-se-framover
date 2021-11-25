@@ -1,107 +1,40 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Button, Label } from '@navikt/ds-react';
+import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
-import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
-import * as DateUtils from '~utils/date/dateUtils';
 import { erKlageOmgjort, erKlageOpprettholdt } from '~utils/klage/klageUtils';
 
-import formkravMessages from '../klage-nb';
-import vurderingMessages from '../vurderingAvKlage/VurderingAvKlage-nb';
+import formkravMessages from '../../pages/klage/klage-nb';
+import vurderingMessages from '../../pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
+import * as DateUtils from '../../utils/date/dateUtils';
 
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
 import styles from './oppsummeringAvKlage.module.less';
 
-const OppsummeringAvKlage = (props: { sakId: string; klage: Klage; vedtaker: Vedtak[] }) => {
-    const history = useHistory();
+const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({
-        messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
+        messages: oppsummeringMessages,
     });
-
-    const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(klageActions.sendTilAttestering);
-
-    const handleSendTilAttesteringClick = () => {
-        sendtilAttestering(
-            {
-                sakId: props.sakId,
-                klageId: props.klage.id,
-            },
-            () => {
-                history.push(
-                    Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId)
-                );
-            }
-        );
-    };
-
-    const klagensVedtak = props.vedtaker.find((v) => v.id === props.klage.vedtakId);
-
-    if (!klagensVedtak) {
-        return (
-            <div className={styles.fantIkkevedtakFeilContainer}>
-                <Alert variant="error">{formatMessage('feil.fantIkkeVedtakForKlage')}</Alert>
-                <Link
-                    to={Routes.klage.createURL({
-                        sakId: props.sakId,
-                        klageId: props.klage.id,
-                        steg: KlageSteg.Vurdering,
-                    })}
-                >
-                    {formatMessage('knapp.tilbake')}
-                </Link>
-            </div>
-        );
-    }
-
     return (
-        <div className={styles.oppsummeringPage}>
-            <div className={styles.oppsummeringPanelContainer}>
-                <Oppsummeringspanel
-                    tittel={formatMessage('oppsummering.heading')}
-                    farge={Oppsummeringsfarge.Lilla}
-                    ikon={Oppsummeringsikon.Liste}
-                >
-                    <div className={styles.panelInnholdContainer}>
-                        <KlageInfo klage={props.klage} />
-                        <FormkravInfo klage={props.klage} klagensVedtak={klagensVedtak} />
-                        <VurderInfo klage={props.klage} />
-                    </div>
-                </Oppsummeringspanel>
-            </div>
-            <div className={styles.knappContainer}>
-                <Button
-                    variant="secondary"
-                    onClick={() =>
-                        history.push(
-                            Routes.klage.createURL({
-                                sakId: props.sakId,
-                                klageId: props.klage.id,
-                                steg: KlageSteg.Vurdering,
-                            })
-                        )
-                    }
-                >
-                    {formatMessage('knapp.tilbake')}
-                </Button>
-                <Button variant="primary" onClick={() => handleSendTilAttesteringClick()}>
-                    {formatMessage('knapp.sendTilAttestering')}
-                </Button>
-            </div>
-            {RemoteData.isFailure(sendTilAttesteringStatus) && <ApiErrorAlert error={sendTilAttesteringStatus.error} />}
+        <div className={styles.oppsummeringPanelContainer}>
+            <Oppsummeringspanel
+                tittel={formatMessage('oppsummering.heading')}
+                farge={Oppsummeringsfarge.Lilla}
+                ikon={Oppsummeringsikon.Liste}
+            >
+                <div className={styles.panelInnholdContainer}>
+                    <KlageInfo klage={props.klage} />
+                    <FormkravInfo klage={props.klage} klagensVedtak={props.klagensVedtak} />
+                    <VurderInfo klage={props.klage} />
+                </div>
+            </Oppsummeringspanel>
         </div>
     );
 };

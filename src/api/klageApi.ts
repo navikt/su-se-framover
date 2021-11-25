@@ -50,7 +50,7 @@ export async function lagreVurderingAvKlage(arg: VurderingRequest): Promise<ApiC
 
 export async function bekreftVurderinger(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
     return apiClient({
-        url: `/saker/${arg.sakId}/klager/${arg.klageId}/bekreftVurderinger`,
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/vurderinger/bekreft`,
         method: 'POST',
     });
 }

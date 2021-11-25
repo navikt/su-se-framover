@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, LinkPanel, Loader, Select } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, LinkPanel, Loader, Select } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
+import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { ÅpentBrev } from '~assets/Illustrations';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
+import { useUserContext } from '~context/userContext';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { ApiResult, useNotificationFromLocation } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
@@ -19,6 +21,7 @@ import { Sak } from '~types/Sak';
 import { Søknad } from '~types/Søknad';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
 import { formatDate } from '~utils/date/dateUtils';
+import { erKlageTilAttestering } from '~utils/klage/klageUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
@@ -46,6 +49,7 @@ enum NyBehandling {
 const Sakintro = (props: { sak: Sak }) => {
     const locationState = useNotificationFromLocation();
     const { intl } = useI18n({ messages });
+    const user = useUserContext();
 
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
@@ -135,18 +139,44 @@ const Sakintro = (props: { sak: Sak }) => {
                                     <Informasjonslinje label="id" value={() => entry.id} />
                                 </>
                             ),
-                            knapper: (entry) => (
-                                <LinkAsButton
-                                    variant="secondary"
-                                    href={Routes.klage.createURL({
-                                        sakId: props.sak.id,
-                                        klageId: entry.id,
-                                        steg: KlageSteg.Formkrav,
-                                    })}
-                                >
-                                    Vurder vilkår
-                                </LinkAsButton>
-                            ),
+                            knapper: (klage) => {
+                                if (erKlageTilAttestering(klage)) {
+                                    return user.isAttestant && user.navIdent !== klage.saksbehandler ? (
+                                        <LinkAsButton
+                                            variant="secondary"
+                                            size="small"
+                                            href={Routes.attesterKlage.createURL({
+                                                sakId: props.sak.id,
+                                                klageId: klage.id,
+                                            })}
+                                        >
+                                            {intl.formatMessage({ id: 'klage.attester' })}
+                                        </LinkAsButton>
+                                    ) : (
+                                        <div className={styles.ikonContainer}>
+                                            <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                                            <BodyShort>
+                                                {intl.formatMessage({
+                                                    id: 'attestering.tilAttestering',
+                                                })}
+                                            </BodyShort>
+                                        </div>
+                                    );
+                                }
+                                return (
+                                    <LinkAsButton
+                                        variant="secondary"
+                                        size="small"
+                                        href={Routes.klage.createURL({
+                                            sakId: props.sak.id,
+                                            klageId: klage.id,
+                                            steg: KlageSteg.Formkrav,
+                                        })}
+                                    >
+                                        {intl.formatMessage({ id: 'klage.fortsettBehandling' })}
+                                    </LinkAsButton>
+                                );
+                            },
                         }}
                     </Oversiktslinje>
                     <div>

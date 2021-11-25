@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
 
 import messages from './attestering-nb';
+import AttesterKlage from './attesterKlage/AttesterKlage';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
 import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';
 
@@ -39,22 +40,31 @@ const Attestering = () => {
             () => null,
             () => <Loader />,
             (_err) => <Alert variant="error">{intl.formatMessage({ id: 'feil.generisk' })}</Alert>,
-            ([sakValue, søkerValue]) => {
-                return (
-                    <Switch>
-                        <Route path={Routes.attesterSøknadsbehandling.path}>
-                            <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
-                        </Route>
-                        <Route path={Routes.attesterRevurdering.path}>
-                            <AttesterRevurdering
-                                sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
-                                søker={søkerValue}
-                                informasjonsRevurderinger={sakValue.revurderinger.filter(erInformasjonsRevurdering)}
-                            />
-                        </Route>
-                    </Switch>
-                );
-            }
+            ([sakValue, søkerValue]) => (
+                <Switch>
+                    <Route path={Routes.attesterSøknadsbehandling.path}>
+                        <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
+                    </Route>
+                    <Route path={Routes.attesterRevurdering.path}>
+                        <AttesterRevurdering
+                            sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
+                            søker={søkerValue}
+                            informasjonsRevurderinger={sakValue.revurderinger.filter(erInformasjonsRevurdering)}
+                        />
+                    </Route>
+                    <Route path={Routes.attesterKlage.path}>
+                        <AttesterKlage
+                            sakInfo={{
+                                sakId: sakValue.id,
+                                saksnummer: sakValue.saksnummer,
+                            }}
+                            søker={søkerValue}
+                            klager={sakValue.klager}
+                            vedtaker={sakValue.vedtak}
+                        />
+                    </Route>
+                </Switch>
+            )
         )
     );
 };
