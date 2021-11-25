@@ -36,6 +36,16 @@ export async function vilkårsvurder(arg: {
     });
 }
 
+export async function bekreftVilkårsvurderinger(arg: {
+    sakId: string;
+    klageId: string;
+}): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/vilkår/vurderinger/bekreft`,
+        method: 'POST',
+    });
+}
+
 export async function lagreVurderingAvKlage(arg: VurderingRequest): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/vurderinger`,

@@ -26,7 +26,8 @@ export default {
     'formkrav.vedtak.option.default': 'Velg vedtak',
     'formkrav.begrunnelse.label': 'Begrunnelse',
     'formkrav.button.tilbake': 'Tilbake',
-    'formkrav.button.submit': 'Bekreft og fortsett',
+    'formkrav.button.lagre': 'Lagre',
+    'formkrav.button.bekreftOgFortsett': 'Bekreft og fortsett',
     ...vedtakMessages,
 
     'framdriftsindikator.formkrav': 'Formkrav',
