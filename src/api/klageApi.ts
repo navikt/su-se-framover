@@ -1,4 +1,5 @@
 import { Nullable } from '~lib/types';
+import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Klage } from '~types/Klage';
 import { VurderingRequest } from '~utils/klage/klageUtils';
 
@@ -69,5 +70,28 @@ export async function sendTilAttestering(arg: { sakId: string; klageId: string }
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/tilAttestering`,
         method: 'POST',
+    });
+}
+
+export async function iverksett(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/iverksett`,
+        method: 'POST',
+    });
+}
+
+export async function underkjenn(arg: {
+    sakId: string;
+    klageId: string;
+    grunn: UnderkjennelseGrunn;
+    kommentar: string;
+}): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/underkjenn`,
+        method: 'POST',
+        body: {
+            grunn: arg.grunn,
+            kommentar: arg.kommentar,
+        },
     });
 }
