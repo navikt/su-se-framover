@@ -368,7 +368,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                         : null,
                             }));
                         }}
-                        value={formik.values.delerBoligMed?.toString()}
+                        defaultValue={formik.values.delerBoligMed?.toString()}
                     >
                         {[
                             {
@@ -425,7 +425,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                   }),
                         }));
                     }}
-                    value={formik.values.borPåAdresse?.adresselinje ?? formik.values.ingenAdresseGrunn ?? undefined}
+                    defaultValue={
+                        formik.values.borPåAdresse?.adresselinje ?? formik.values.ingenAdresseGrunn ?? undefined
+                    }
                 >
                     {adresser.map((a, idx) => (
                         <Radio

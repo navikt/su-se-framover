@@ -30,6 +30,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
     const harVedtakFraStore = useAppSelector((s) => s.soknad.harUførevedtak);
     const dispatch = useAppDispatch();
     const history = useHistory();
+
     const formik = useFormik<FormData>({
         initialValues: {
             harUførevedtak: harVedtakFraStore,

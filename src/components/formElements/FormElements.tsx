@@ -27,7 +27,11 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
 export const BooleanRadioGroup = ({ ref, labels, value, onChange, ...props }: BooleanRadioGroupProps) => {
     const { formatMessage } = useI18n({ messages: nb });
     return (
-        <RadioGroup {...props} value={value?.toString()} onChange={(val) => onChange(val === true.toString())}>
+        <RadioGroup
+            {...props}
+            defaultValue={value?.toString() ?? undefined}
+            onChange={(val) => onChange(val === true.toString())}
+        >
             <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
                 {labels?.true ?? formatMessage('label.ja')}
             </Radio>
