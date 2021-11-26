@@ -62,14 +62,18 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
 
 const getBehandlingsinformasjonStatus = <VilkårKey extends keyof Behandlingsinformasjon>(
     vilkår: Behandlingsinformasjon[VilkårKey]
-) =>
-    vilkår === null
-        ? VilkårVurderingStatus.IkkeVurdert
-        : vilkår.status === Vilkårstatus.VilkårIkkeOppfylt
-        ? VilkårVurderingStatus.Uavklart
-        : vilkår.status === Vilkårstatus.VilkårOppfylt
-        ? VilkårVurderingStatus.Ok
-        : VilkårVurderingStatus.IkkeOk;
+) => {
+    switch (vilkår?.status) {
+        case Vilkårstatus.Uavklart:
+            return VilkårVurderingStatus.Uavklart;
+        case Vilkårstatus.VilkårOppfylt:
+            return VilkårVurderingStatus.Ok;
+        case Vilkårstatus.VilkårIkkeOppfylt:
+            return VilkårVurderingStatus.IkkeOk;
+        default:
+            return VilkårVurderingStatus.IkkeVurdert;
+    }
+};
 
 export const mapToVilkårsinformasjon = (
     behandlingsinformasjon: Behandlingsinformasjon,
