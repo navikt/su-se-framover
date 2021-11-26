@@ -120,7 +120,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                     error={fieldState.error?.message}
                                     onBlur={field.onBlur}
                                     onChange={field.onChange}
-                                    value={field.value ?? undefined}
+                                    defaultValue={field.value ?? undefined}
                                 >
                                     <Radio id={field.name} value={Vilkårstatus.VilkårOppfylt} ref={field.ref}>
                                         {formatMessage('radio.label.ja')}

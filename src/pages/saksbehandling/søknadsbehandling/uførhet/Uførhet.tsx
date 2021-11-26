@@ -184,7 +184,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                         error={fieldState.error?.message}
                                         onBlur={field.onBlur}
                                         onChange={(val) => field.onChange(val)}
-                                        value={field.value ?? undefined}
+                                        defaultValue={field.value ?? undefined}
                                     >
                                         <Radio id={field.name} value={UføreResultat.VilkårOppfylt} ref={field.ref}>
                                             {formatMessage('radio.label.ja')}
@@ -209,7 +209,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                                 inputName="uføregrad"
                                                 inputTekst="%"
                                                 feil={fieldState.error?.message}
-                                                {...field}
+                                                onChange={field.onChange}
                                                 value={field.value ?? ''}
                                             />
                                         )}
@@ -223,7 +223,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                                 inputName="forventetInntekt"
                                                 inputTekst=" NOK"
                                                 feil={fieldState.error?.message}
-                                                {...field}
+                                                onChange={field.onChange}
                                                 value={field.value ?? ''}
                                             />
                                         )}

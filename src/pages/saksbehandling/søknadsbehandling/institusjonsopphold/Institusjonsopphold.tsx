@@ -120,7 +120,7 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                                     error={fieldState.error?.message}
                                     onBlur={field.onBlur}
                                     name={field.name}
-                                    value={field.value ?? undefined}
+                                    defaultValue={field.value ?? undefined}
                                     onChange={field.onChange}
                                 >
                                     <Radio id={field.name} value={Vilkårstatus.VilkårIkkeOppfylt} ref={field.ref}>

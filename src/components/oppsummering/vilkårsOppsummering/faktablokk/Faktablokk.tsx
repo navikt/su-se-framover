@@ -53,7 +53,7 @@ const Faktaliste = (props: { fakta: Fakta[] }) => (
                     <BodyShort size="small" className={styles.tittel}>
                         {f.tittel}
                     </BodyShort>
-                    <Label size="small" className={styles.verdi}>
+                    <Label as={typeof f.verdi === 'string' ? 'p' : 'div'} size="small" className={styles.verdi}>
                         {f.verdi}
                     </Label>
                 </li>

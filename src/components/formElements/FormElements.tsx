@@ -2,6 +2,7 @@ import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
+import { RefCallBack } from 'react-hook-form/dist/types';
 
 import { useI18n } from '~lib/i18n';
 import { trackEvent } from '~lib/tracking/amplitude';
@@ -17,7 +18,7 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
         true: string;
         false: string;
     };
-    ref?: React.Ref<HTMLInputElement>;
+    ref?: React.Ref<HTMLInputElement> | RefCallBack;
     onChange(val: boolean): void;
 }
 
