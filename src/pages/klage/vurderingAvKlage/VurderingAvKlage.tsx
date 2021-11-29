@@ -151,6 +151,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 fritekstTilBrev: data.fritekstTilBrev,
             },
             (klage) => {
+                //vi resetter formet, slik at tilstandssjekken til isDirty, og isSubmitSuccessful har den nye dataen
                 reset({
                     klageVurderingType: klage.vedtaksvurdering?.type ?? null,
                     omgjør: {
@@ -192,6 +193,14 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                     })
                 );
             }
+        );
+    };
+
+    const iGyldigTilstandForÅBekrefteOgFortsette = () => {
+        return (
+            (props.klage.status !== KlageStatus.VURDERT_UTFYLT &&
+                props.klage.status !== KlageStatus.VURDERT_BEKREFTET) ||
+            (isDirty && !isSubmitSuccessful)
         );
     };
 
@@ -278,11 +287,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             </Button>
                             <Button
                                 type="button"
-                                disabled={
-                                    (props.klage.status !== KlageStatus.VURDERT_UTFYLT &&
-                                        props.klage.status !== KlageStatus.VURDERT_BEKREFTET) ||
-                                    (isDirty && !isSubmitSuccessful)
-                                }
+                                disabled={iGyldigTilstandForÅBekrefteOgFortsette()}
                                 onClick={() => handleBekreftOgFortsettClick()}
                             >
                                 {formatMessage('knapp.bekreftOgFortsett')}

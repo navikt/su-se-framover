@@ -70,38 +70,58 @@ const VurderFormkrav = (props: Props) => {
         begrunnelse: props.klage.begrunnelse,
     };
 
-    const { handleSubmit, control } = useForm<FormData>({
+    const {
+        handleSubmit,
+        control,
+        reset,
+        formState: { isDirty, isSubmitSuccessful },
+    } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
 
     const handleLagreFormkrav = (values: FormData) => {
         if (eqFormData.equals(values, initialValues)) {
+            return;
+        }
+
+        lagre(
+            {
+                sakId: props.sakId,
+                klageId: props.klage.id,
+                //validering sikrer at feltet ikke er null
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                vedtakId: values.vedtakId!,
+                innenforFristen: values.innenforFristen!,
+                klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket!,
+                erUnderskrevet: values.signert!,
+                /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                begrunnelse: values.begrunnelse,
+            },
+            (klage) => {
+                //vi resetter formet, slik at tilstandssjekken til isDirty, og isSubmitSuccessful har den nye dataen
+                reset({
+                    vedtakId: klage.vedtakId,
+                    innenforFristen: klage.innenforFristen,
+                    klagesDetPåKonkreteElementerIVedtaket: klage.klagesDetPåKonkreteElementerIVedtaket,
+                    signert: klage.erUnderskrevet,
+                    begrunnelse: klage.begrunnelse,
+                });
+            }
+        );
+    };
+
+    const handleBekreftOgFortsettClick = () => {
+        if (props.klage.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET) {
             history.push(
                 Routes.klage.createURL({
                     sakId: props.sakId,
                     klageId: props.klage.id,
-                    steg: KlageSteg.Vurdering,
+                    steg: KlageSteg.Oppsummering,
                 })
             );
             return;
         }
-
-        lagre({
-            sakId: props.sakId,
-            klageId: props.klage.id,
-            //validering sikrer at feltet ikke er null
-            /* eslint-disable @typescript-eslint/no-non-null-assertion */
-            vedtakId: values.vedtakId!,
-            innenforFristen: values.innenforFristen!,
-            klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket!,
-            erUnderskrevet: values.signert!,
-            /* eslint-enable @typescript-eslint/no-non-null-assertion */
-            begrunnelse: values.begrunnelse,
-        });
-    };
-
-    const handleBekreftOgFortsettClick = () => {
         bekreft(
             {
                 sakId: props.sakId,
@@ -116,6 +136,14 @@ const VurderFormkrav = (props: Props) => {
                     })
                 );
             }
+        );
+    };
+
+    const iGyldigTilstandForÅBekrefteOgFortsette = () => {
+        return (
+            (props.klage.status !== KlageStatus.VILKÅRSVURDERT_UTFYLT &&
+                props.klage.status !== KlageStatus.VURDERT_BEKREFTET) ||
+            (isDirty && !isSubmitSuccessful)
         );
     };
 
@@ -206,7 +234,7 @@ const VurderFormkrav = (props: Props) => {
                             </Button>
                             <Button
                                 type="button"
-                                disabled={props.klage.status == KlageStatus.VILKÅRSVURDERT_PÅBEGYNT}
+                                disabled={iGyldigTilstandForÅBekrefteOgFortsette()}
                                 onClick={() => handleBekreftOgFortsettClick()}
                             >
                                 {formatMessage('formkrav.button.bekreftOgFortsett')}

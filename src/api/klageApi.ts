@@ -5,12 +5,17 @@ import { VurderingRequest } from '~utils/klage/klageUtils';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function opprettKlage(arg: { sakId: string; journalpostId: string }): Promise<ApiClientResult<Klage>> {
+export async function opprettKlage(arg: {
+    sakId: string;
+    journalpostId: string;
+    datoKlageMottatt: string;
+}): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager`,
         method: 'POST',
         body: {
             journalpostId: arg.journalpostId,
+            datoKlageMottatt: arg.datoKlageMottatt,
         },
     });
 }

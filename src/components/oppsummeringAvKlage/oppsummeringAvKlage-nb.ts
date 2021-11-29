@@ -3,7 +3,7 @@ export default {
 
     'label.journalpostId': 'Journalpost-id',
     'label.saksbehandler': 'Saksbehandler',
-    'label.opprettet': 'Klage opprettet',
+    'label.klageMottatt': 'Klage opprettet',
     'label.årsaksutfall': 'Utfall',
 
     'label.vedtak.type': 'Type vedtak',

@@ -6,6 +6,7 @@ export interface Klage {
     opprettet: string;
     journalpostId: string;
     saksbehandler: string;
+    datoKlageMottatt: string;
     status: KlageStatus;
     vedtakId: Nullable<string>;
     innenforFristen: Nullable<boolean>;
@@ -18,12 +19,17 @@ export interface Klage {
 
 export enum KlageStatus {
     OPPRETTET = 'OPPRETTET',
+
     VILKÅRSVURDERT_PÅBEGYNT = 'VILKÅRSVURDERT_PÅBEGYNT',
     VILKÅRSVURDERT_UTFYLT = 'VILKÅRSVURDERT_UTFYLT',
+    VILKÅRSVURDERT_BEKREFTET = 'VILKÅRSVURDERT_BEKREFTET',
+
     VURDERT_PÅBEGYNT = 'VURDERT_PÅBEGYNT',
     VURDERT_UTFYLT = 'VURDERT_UTFYLT',
     VURDERT_BEKREFTET = 'VURDERT_BEKREFTET',
+
     TIL_ATTESTERING = 'TIL_ATTESTERING',
+
     IVERKSATT = 'IVERKSATT',
 }
 

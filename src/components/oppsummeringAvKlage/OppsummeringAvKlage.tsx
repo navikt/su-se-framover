@@ -54,8 +54,8 @@ const KlageInfo = (props: { klage: Klage }) => {
                     verdi: props.klage.journalpostId,
                 },
                 {
-                    tittel: intl.formatMessage({ id: 'label.opprettet' }),
-                    verdi: DateUtils.formatDateTime(props.klage.opprettet),
+                    tittel: intl.formatMessage({ id: 'label.klageMottatt' }),
+                    verdi: DateUtils.formatDate(props.klage.datoKlageMottatt),
                 },
             ].map((item) => (
                 <div key={item.tittel}>

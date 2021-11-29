@@ -17,6 +17,7 @@ export default {
     'opprett.button.tilbake': 'Tilbake',
     'opprett.button.submit': 'Registrer',
     'opprett.success.notification': 'Ny klage ble registrert',
+    'opprett.klageMottatt.label': 'Klage mottatt',
 
     'formkrav.tittel': 'Vurder formkrav',
     'formkrav.innenforFrist.label': 'Er klagefristen overholdt?',
