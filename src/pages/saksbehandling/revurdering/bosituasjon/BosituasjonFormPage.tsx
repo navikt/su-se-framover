@@ -75,7 +75,9 @@ const BosituasjonFormPage = (props: RevurderingStegProps) => {
                                 <BooleanRadioGroup
                                     legend={formatMessage('form.harSøkerEPS')}
                                     error={fieldState.error?.message}
-                                    {...field}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    name={field.name}
                                 />
                             )}
                         />
@@ -95,7 +97,9 @@ const BosituasjonFormPage = (props: RevurderingStegProps) => {
                                     <BooleanRadioGroup
                                         legend={formatMessage('form.delerSøkerBolig')}
                                         error={fieldState.error?.message}
-                                        {...field}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        name={field.name}
                                     />
                                 )}
                             />

@@ -239,7 +239,9 @@ const Uføreperiodevurdering = (props: {
                         <BooleanRadioGroup
                             legend={intl.formatMessage({ id: 'input.erVilkårOppfylt.label' })}
                             error={fieldState.error?.message}
-                            {...field}
+                            value={field.value}
+                            onChange={field.onChange}
+                            name={field.name}
                         />
                     )}
                 />
