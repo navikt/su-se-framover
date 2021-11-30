@@ -306,9 +306,7 @@ const Formue = (props: {
                                     <BooleanRadioGroup
                                         legend={formatMessage('input.label.borSøkerMedEktefelle')}
                                         error={fieldState.error?.message}
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        name={field.name}
+                                        {...field}
                                     />
                                 )}
                             />

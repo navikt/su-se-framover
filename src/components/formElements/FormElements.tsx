@@ -1,8 +1,7 @@
 import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Collapse } from 'react-collapse';
-import { RefCallBack } from 'react-hook-form';
 
 import { useI18n } from '~lib/i18n';
 import { trackEvent } from '~lib/tracking/amplitude';
@@ -18,14 +17,15 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
         true: string;
         false: string;
     };
-    ref?: React.Ref<HTMLInputElement> | RefCallBack;
     onChange(val: boolean): void;
 }
 
 /**
  * Første radioboks (true-alternativet) vil få `id = props.id ?? props.name`, og ref vil også bli gitt til denne.
  */
-export const BooleanRadioGroup = ({ ref, labels, value, onChange, ...props }: BooleanRadioGroupProps) => {
+export const BooleanRadioGroup: React.ForwardRefExoticComponent<
+    BooleanRadioGroupProps & React.RefAttributes<HTMLInputElement>
+> = forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, ...props }, ref) => {
     const { formatMessage } = useI18n({ messages: nb });
     return (
         <RadioGroup {...props} value={value?.toString() ?? ''} onChange={(val) => onChange(val === true.toString())}>
@@ -35,7 +35,8 @@ export const BooleanRadioGroup = ({ ref, labels, value, onChange, ...props }: Bo
             <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>
         </RadioGroup>
     );
-};
+});
+BooleanRadioGroup.displayName = 'BooleanRadioGroup';
 
 export const CollapsableFormElementDescription = (props: { title: string; children: React.ReactNode }) => {
     const [visMer, setVisMer] = useState(false);
