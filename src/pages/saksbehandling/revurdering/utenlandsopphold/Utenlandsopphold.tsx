@@ -185,7 +185,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                             legend={formatMessage('radiobutton.tittel')}
                                             error={fieldState.error?.message}
                                             className={styles.radioGroup}
-                                            defaultValue={field.value}
+                                            value={field.value ?? ''}
                                             onChange={field.onChange}
                                             name={field.name}
                                         >

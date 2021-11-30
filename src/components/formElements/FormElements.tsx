@@ -2,7 +2,7 @@ import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
-import { RefCallBack } from 'react-hook-form/dist/types';
+import { RefCallBack } from 'react-hook-form';
 
 import { useI18n } from '~lib/i18n';
 import { trackEvent } from '~lib/tracking/amplitude';
@@ -28,11 +28,7 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
 export const BooleanRadioGroup = ({ ref, labels, value, onChange, ...props }: BooleanRadioGroupProps) => {
     const { formatMessage } = useI18n({ messages: nb });
     return (
-        <RadioGroup
-            {...props}
-            defaultValue={value?.toString() ?? undefined}
-            onChange={(val) => onChange(val === true.toString())}
-        >
+        <RadioGroup {...props} value={value?.toString() ?? ''} onChange={(val) => onChange(val === true.toString())}>
             <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
                 {labels?.true ?? formatMessage('label.ja')}
             </Radio>

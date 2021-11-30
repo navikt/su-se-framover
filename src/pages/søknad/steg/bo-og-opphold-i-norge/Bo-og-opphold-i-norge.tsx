@@ -425,9 +425,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                   }),
                         }));
                     }}
-                    defaultValue={
-                        formik.values.borPåAdresse?.adresselinje ?? formik.values.ingenAdresseGrunn ?? undefined
-                    }
+                    value={formik.values.borPåAdresse?.adresselinje ?? formik.values.ingenAdresseGrunn ?? ''}
                 >
                     {adresser.map((a, idx) => (
                         <Radio

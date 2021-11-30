@@ -120,7 +120,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                     legend={formatMessage('radio.fastOpphold.legend')}
                                     error={fieldState.error?.message}
                                     onBlur={field.onBlur}
-                                    defaultValue={field.value ?? undefined}
+                                    value={field.value ?? ''}
                                     onChange={field.onChange}
                                     name={field.name}
                                 >

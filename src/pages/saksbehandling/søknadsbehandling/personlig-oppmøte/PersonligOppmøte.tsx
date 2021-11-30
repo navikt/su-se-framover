@@ -388,7 +388,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                         error={fieldState.error?.message}
                                         onBlur={field.onBlur}
                                         name={field.name}
-                                        defaultValue={field.value ?? undefined}
+                                        value={field.value ?? ''}
                                         onChange={field.onChange}
                                     >
                                         <Radio id={field.name} value={HarMøttPersonlig.Ja} ref={field.ref}>
@@ -413,7 +413,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                             error={fieldState.error?.message}
                                             onBlur={field.onBlur}
                                             name={field.name}
-                                            defaultValue={field.value ?? undefined}
+                                            value={field.value ?? ''}
                                             onChange={field.onChange}
                                         >
                                             {[
