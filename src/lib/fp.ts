@@ -1,8 +1,21 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import * as F from 'fp-ts/function';
 import * as Option from 'fp-ts/Option';
 
 export const pipe = F.pipe;
 export const combineOptions = Option.sequenceArray;
+
+/**
+ * Plukker den første som ikke er `initial`.
+ *
+ * Defaulter til `r1` dersom begge er `initial`.
+ */
+export function pickRemoteData<E, A, B>(
+    r1: RemoteData.RemoteData<E, A>,
+    r2: RemoteData.RemoteData<E, B>
+): RemoteData.RemoteData<E, A | B> {
+    return RemoteData.isInitial(r2) ? r1 : r2;
+}
 
 export function nullableMap<T, U>(arg: T | null, f: (x: T) => U): U | null;
 export function nullableMap<T, U>(f: (x: T) => U): (arg: T | null) => U | null;
