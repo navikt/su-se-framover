@@ -142,7 +142,7 @@ const VurderFormkrav = (props: Props) => {
     const iGyldigTilstandForÅBekrefteOgFortsette = () => {
         return (
             (props.klage.status !== KlageStatus.VILKÅRSVURDERT_UTFYLT &&
-                props.klage.status !== KlageStatus.VURDERT_BEKREFTET) ||
+                props.klage.status !== KlageStatus.VILKÅRSVURDERT_BEKREFTET) ||
             (isDirty && !isSubmitSuccessful)
         );
     };

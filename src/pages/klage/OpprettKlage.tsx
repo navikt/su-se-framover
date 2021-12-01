@@ -76,6 +76,7 @@ const OpprettKlage = (props: { sak: Sak }) => {
                         feil={fieldState.error?.message}
                         maxDate={new Date()}
                         value={field.value}
+                        autoComplete="off"
                     />
                 )}
             />
