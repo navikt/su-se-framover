@@ -11,6 +11,8 @@ export default {
     'personer.tittel': 'Om brukerne',
     'personer.antall': 'Antall personer som har sendt inn søknad',
 
+    'saker.løpende': 'Løpende saker',
+
     'knapp.tilbake': 'Tilbake',
 
     ukjentFeil: 'Ukjent feil',
