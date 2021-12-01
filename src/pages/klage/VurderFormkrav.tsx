@@ -1,5 +1,4 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Select, Loader, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as B from 'fp-ts/lib/boolean';
@@ -17,7 +16,6 @@ import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
-import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage, KlageStatus } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
@@ -48,13 +46,13 @@ interface FormData {
     begrunnelse: Nullable<string>;
 }
 
-const schema = yup.object<FormData>({
+/*const schema = yup.object<FormData>({
     vedtakId: yup.string().typeError('Feltet må fylles ut').required(),
     innenforFristen: yup.boolean().typeError('Feltet må fylles ut').required(),
     klagesDetPåKonkreteElementerIVedtaket: yup.boolean().typeError('Feltet må fylles ut').required(),
     signert: yup.boolean().typeError('Feltet må fylles ut').required(),
     begrunnelse: yup.string().defined(),
-});
+}); */
 
 const VurderFormkrav = (props: Props) => {
     const history = useHistory();
@@ -76,7 +74,7 @@ const VurderFormkrav = (props: Props) => {
         reset,
         formState: { isDirty, isSubmitSuccessful },
     } = useForm<FormData>({
-        resolver: yupResolver(schema),
+        //resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
 

@@ -1,5 +1,4 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Checkbox, CheckboxGroup, Radio, Loader, RadioGroup, Select, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as A from 'fp-ts/lib/Array';
@@ -17,7 +16,6 @@ import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
-import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import {
     Klage,
@@ -63,7 +61,7 @@ const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
     fritekstTilBrev: eqNullable(S.Eq),
 });
 
-const schema = yup.object<VurderingAvKlageFormData>({
+/* const schema = yup.object<VurderingAvKlageFormData>({
     klageVurderingType: yup.string().required().oneOf([KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD]),
     omgjør: yup
         .object<OmgjørFormData>()
@@ -87,7 +85,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
             otherwise: yup.object().nullable(),
         }),
     fritekstTilBrev: yup.string().nullable().defined(),
-});
+});*/
 
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const history = useHistory();
@@ -119,7 +117,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         reset,
         ...form
     } = useForm<VurderingAvKlageFormData>({
-        resolver: yupResolver(schema),
+        //resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
 
