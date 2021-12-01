@@ -1,5 +1,7 @@
 import { Nullable } from '~lib/types';
 
+import { Attestering } from './Behandling';
+
 export interface Klage {
     id: string;
     sakid: string;
@@ -15,6 +17,7 @@ export interface Klage {
     begrunnelse: Nullable<string>;
     vedtaksvurdering: Nullable<Vedtaksvurdering>;
     fritekstTilBrev: Nullable<string>;
+    attesteringer: Attestering[];
 }
 
 export enum KlageStatus {

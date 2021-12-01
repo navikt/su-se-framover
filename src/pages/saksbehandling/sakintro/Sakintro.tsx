@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Button, LinkPanel, Loader, Select } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Loader, Select } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
-import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -9,7 +8,6 @@ import { Link, useHistory } from 'react-router-dom';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { ÅpentBrev } from '~assets/Illustrations';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { useUserContext } from '~context/userContext';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { ApiResult, useNotificationFromLocation } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
@@ -20,14 +18,10 @@ import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Søknad } from '~types/Søknad';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
-import { formatDate } from '~utils/date/dateUtils';
-import { erKlageTilAttestering } from '~utils/klage/klageUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
-import { KlageSteg } from '../types';
-
-import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
+import KlageLister from './KlageLister';
 import { AvsluttedeRevurderinger, ÅpneRevurderinger } from './RevurderingsLister';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
@@ -49,7 +43,6 @@ enum NyBehandling {
 const Sakintro = (props: { sak: Sak }) => {
     const locationState = useNotificationFromLocation();
     const { intl } = useI18n({ messages });
-    const user = useUserContext();
 
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
@@ -74,6 +67,8 @@ const Sakintro = (props: { sak: Sak }) => {
     const kanRevurderes = !isEmpty(props.sak.utbetalinger);
 
     const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) && kanRevurderes;
+
+    const klageToggle = useFeatureToggle(FeatureToggle.Klage) && !isEmpty(props.sak.vedtak);
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {
@@ -131,54 +126,7 @@ const Sakintro = (props: { sak: Sak }) => {
                     <AvslåtteSøknader sak={props.sak} avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                     <AvsluttedeRevurderinger avsluttedeRevurderinger={avsluttedeRevurderinger} intl={intl} />
-                    <Oversiktslinje kategoriTekst="Klager" entries={props.sak.klager} tittel="Åpen klage">
-                        {{
-                            oversiktsinformasjon: (entry) => (
-                                <>
-                                    <Informasjonslinje label="Opprettet" value={() => formatDate(entry.opprettet)} />
-                                    <Informasjonslinje label="id" value={() => entry.id} />
-                                </>
-                            ),
-                            knapper: (klage) => {
-                                if (erKlageTilAttestering(klage)) {
-                                    return user.isAttestant && user.navIdent !== klage.saksbehandler ? (
-                                        <LinkAsButton
-                                            variant="secondary"
-                                            size="small"
-                                            href={Routes.attesterKlage.createURL({
-                                                sakId: props.sak.id,
-                                                klageId: klage.id,
-                                            })}
-                                        >
-                                            {intl.formatMessage({ id: 'klage.attester' })}
-                                        </LinkAsButton>
-                                    ) : (
-                                        <div className={styles.ikonContainer}>
-                                            <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
-                                            <BodyShort>
-                                                {intl.formatMessage({
-                                                    id: 'attestering.tilAttestering',
-                                                })}
-                                            </BodyShort>
-                                        </div>
-                                    );
-                                }
-                                return (
-                                    <LinkAsButton
-                                        variant="secondary"
-                                        size="small"
-                                        href={Routes.klage.createURL({
-                                            sakId: props.sak.id,
-                                            klageId: klage.id,
-                                            steg: KlageSteg.Formkrav,
-                                        })}
-                                    >
-                                        {intl.formatMessage({ id: 'klage.fortsettBehandling' })}
-                                    </LinkAsButton>
-                                );
-                            },
-                        }}
-                    </Oversiktslinje>
+                    {klageToggle && <KlageLister sakId={props.sak.id} klager={props.sak.klager} />}
                     <div>
                         <LinkPanel
                             href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
