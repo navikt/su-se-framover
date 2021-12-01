@@ -95,15 +95,17 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
 
-    const initialFormData = useMemo<FormData>(
-        () => ({
-            status: props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat ?? null,
-            uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
-            forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
-            begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse || null,
-        }),
-        [props.behandling.behandlingsinformasjon]
-    );
+    const { uføre } = props.behandling.grunnlagsdataOgVilkårsvurderinger;
+
+    const initialFormData = useMemo<FormData>(() => {
+        const uføreGrunnlag = uføre?.vurderinger[0].grunnlag;
+        return {
+            status: uføre?.resultat ?? null,
+            uføregrad: uføreGrunnlag?.uføregrad?.toString() ?? null,
+            forventetInntekt: uføreGrunnlag?.forventetInntekt?.toString() ?? null,
+            begrunnelse: uføreGrunnlag?.begrunnelse || null,
+        };
+    }, [uføre]);
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Uførhet,
@@ -182,7 +184,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                         error={fieldState.error?.message}
                                         onBlur={field.onBlur}
                                         onChange={(val) => field.onChange(val)}
-                                        value={field.value ?? undefined}
+                                        value={field.value ?? ''}
                                     >
                                         <Radio id={field.name} value={UføreResultat.VilkårOppfylt} ref={field.ref}>
                                             {formatMessage('radio.label.ja')}
@@ -207,7 +209,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                                 inputName="uføregrad"
                                                 inputTekst="%"
                                                 feil={fieldState.error?.message}
-                                                {...field}
+                                                onChange={field.onChange}
                                                 value={field.value ?? ''}
                                             />
                                         )}
@@ -221,7 +223,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                                 inputName="forventetInntekt"
                                                 inputTekst=" NOK"
                                                 feil={fieldState.error?.message}
-                                                {...field}
+                                                onChange={field.onChange}
                                                 value={field.value ?? ''}
                                             />
                                         )}

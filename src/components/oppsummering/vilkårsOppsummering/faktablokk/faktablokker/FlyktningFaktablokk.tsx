@@ -4,7 +4,7 @@ import React from 'react';
 import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
-import { FlyktningStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~types/Behandlingsinformasjon';
 import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/flyktning/flyktning-nb';
@@ -61,9 +61,9 @@ export const FlyktningVilkårsblokk = (props: VilkårsblokkProps<'flyktning'>) =
                                     id: keyOf<typeof saksbehandlingMessages>('radio.flyktning.legend'),
                                 }),
                                 verdi:
-                                    props.behandlingsinformasjon.status === FlyktningStatus.VilkårOppfylt
+                                    props.behandlingsinformasjon.status === Vilkårstatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.behandlingsinformasjon.status === FlyktningStatus.VilkårIkkeOppfylt
+                                        : props.behandlingsinformasjon.status === Vilkårstatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({ id: 'fraSøknad.uavklart' }),
                             },

@@ -1,7 +1,8 @@
+// eslint-disable-next-line
+import { hot } from 'react-hot-loader';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading, Link, Loader } from '@navikt/ds-react';
 import React, { useEffect, Suspense } from 'react';
-import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 
@@ -9,18 +10,18 @@ import { ErrorCode } from '~/api/apiClient';
 import Config from '~/config';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { UserProvider } from '~context/userContext';
+import { FeatureToggleProvider, useFeatureToggle } from '~lib/featureToggles';
+import { pipe } from '~lib/fp';
 import enableHotjar from '~lib/tracking/hotjar';
+import { LoggedInUser } from '~types/LoggedInUser';
 
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import Header from './components/header/Header';
 import WithDocTitle from './components/WithDocTitle';
 import * as meSlice from './features/me/me.slice';
-import { FeatureToggleProvider, useFeatureToggle } from './lib/featureToggles';
-import { pipe } from './lib/fp';
 import * as routes from './lib/routes';
 import Store, { useAppDispatch, useAppSelector } from './redux/Store';
 import styles from './root.module.less';
-import { LoggedInUser } from './types/LoggedInUser';
 
 import './externalStyles';
 

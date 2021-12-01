@@ -43,12 +43,10 @@ const Infoside = (props: { nesteUrl: string }) => {
                     {formatMessage('henterInnInfo.ingress')}
                 </Heading>
                 <BodyLong>{formatMessage('henterInnInfo.viHenterInfo')}</BodyLong>
-                <BodyLong spacing>
-                    <ul className={styles.list}>
-                        <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.personinfo')}</li>
-                        <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.arbeidsforhold')}</li>
-                        <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.flyktningsstatus')}</li>
-                    </ul>
+                <BodyLong spacing as="ul" className={styles.list}>
+                    <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.personinfo')}</li>
+                    <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.arbeidsforhold')}</li>
+                    <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.flyktningsstatus')}</li>
                 </BodyLong>
                 <BodyLong spacing>{formatMessage('henterInnInfo.brukerTidligereOpplysninger')}</BodyLong>
 

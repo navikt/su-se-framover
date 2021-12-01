@@ -1,341 +1,23 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, ContentContainer, Heading, Ingress, Loader } from '@navikt/ds-react';
-import classNames from 'classnames';
-import Stegindikator from 'nav-frontend-stegindikator';
+import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
-import { useEffect } from 'react';
-import { useParams, useHistory, Switch, Route } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
-import { fetchMe } from '~api/meApi';
-import { Person } from '~api/personApi';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { Personkort } from '~components/personkort/Personkort';
-import { useUserContext } from '~context/userContext';
-import { SøknadState } from '~features/søknad/søknad.slice';
-import { DelerBoligMed } from '~features/søknad/types';
-import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
 import * as routes from '~lib/routes';
-import { trackEvent } from '~lib/tracking/amplitude';
-import { søknadNesteSteg } from '~lib/tracking/trackingEvents';
-import { useAppSelector } from '~redux/Store';
-import { Rolle } from '~types/LoggedInUser';
-import { Søknadstype } from '~types/Søknad';
+import { StartUtfylling } from '~pages/søknad/steg/start-utfylling/StartUtfylling';
 
 import styles from './index.module.less';
 import Kvittering from './kvittering/Kvittering';
 import messages from './nb';
-import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
-import FlyktningstatusOppholdstillatelse from './steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';
-import ForVeileder from './steg/for-veileder/ForVeileder';
-import EktefellesFormue from './steg/formue/epsFormue/EktefellesFormue';
-import Formue from './steg/formue/søkersFormue/DinFormue';
-import InformasjonOmPapirsøknad from './steg/informasjon-om-papirsøknad/InformasjonOmPapirsøknad';
 import Infoside from './steg/infoside/Infoside';
 import Inngang from './steg/inngang/Inngang';
-import EktefellesInntekt from './steg/inntekt/epsInntekt/EktefellesInntekt';
-import Inntekt from './steg/inntekt/søkersInntekt/Inntekt';
-import Oppsummering from './steg/oppsummering/Oppsummering';
-import Uførevedtak from './steg/uførevedtak/Uførevedtak';
-import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import { Søknadsteg } from './types';
 
-const Steg = (props: {
-    title: string;
-    step: Søknadsteg;
-    søknad: SøknadState;
-    søker: Person;
-    erSaksbehandler: boolean;
-    hjelpetekst?: string;
-}) => {
-    const sectionRef = React.useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (sectionRef.current) {
-            sectionRef.current.focus();
-        }
-    }, [props.step]);
-
-    return (
-        <section aria-labelledby="steg-heading">
-            <div className={styles.stegHeadingContainer} ref={sectionRef} tabIndex={-1}>
-                <Heading id="steg-heading" level="1" size="large" spacing>
-                    {props.title}
-                </Heading>
-                <Ingress>{props.hjelpetekst}</Ingress>
-            </div>
-            {showSteg(props.step, props.søknad, props.søker, props.erSaksbehandler)}
-        </section>
-    );
-};
-
-const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person, erSaksbehandler: boolean) => {
-    const avbrytUrl =
-        søknad.forVeileder.type === Søknadstype.Papirsøknad && erSaksbehandler
-            ? routes.soknadPersonSøk.createURL({ papirsøknad: true })
-            : routes.soknad.createURL();
-
-    switch (step) {
-        case Søknadsteg.Uførevedtak:
-            return (
-                <Uførevedtak
-                    forrigeUrl={avbrytUrl}
-                    nesteUrl={routes.soknadsutfylling.createURL({
-                        step: Søknadsteg.FlyktningstatusOppholdstillatelse,
-                    })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.FlyktningstatusOppholdstillatelse:
-            return (
-                <FlyktningstatusOppholdstillatelse
-                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.BoOgOppholdINorge:
-            return (
-                <BoOgOppholdINorge
-                    forrigeUrl={routes.soknadsutfylling.createURL({
-                        step: Søknadsteg.FlyktningstatusOppholdstillatelse,
-                    })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinFormue })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.DinFormue:
-            return (
-                <Formue
-                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinInntekt })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.DinInntekt:
-            return (
-                <Inntekt
-                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinFormue })}
-                    nesteUrl={
-                        søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-                            ? routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesFormue })
-                            : routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })
-                    }
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.EktefellesFormue:
-            return (
-                <EktefellesFormue
-                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinInntekt })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesInntekt })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.EktefellesInntekt:
-            return (
-                <EktefellesInntekt
-                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesFormue })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.ReiseTilUtlandet:
-            return (
-                <Utenlandsopphold
-                    forrigeUrl={
-                        søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-                            ? routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesInntekt })
-                            : routes.soknadsutfylling.createURL({ step: Søknadsteg.DinInntekt })
-                    }
-                    nesteUrl={routes.soknadsutfylling.createURL({
-                        step:
-                            søknad.forVeileder.type === Søknadstype.DigitalSøknad
-                                ? Søknadsteg.ForVeileder
-                                : Søknadsteg.InformasjonOmPapirsøknad,
-                    })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.ForVeileder:
-            return (
-                <ForVeileder
-                    søker={søker}
-                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Oppsummering })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.InformasjonOmPapirsøknad:
-            return (
-                <InformasjonOmPapirsøknad
-                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Oppsummering })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
-        case Søknadsteg.Oppsummering:
-            return (
-                <Oppsummering
-                    forrigeUrl={routes.soknadsutfylling.createURL({
-                        step:
-                            søknad.forVeileder.type === Søknadstype.DigitalSøknad
-                                ? Søknadsteg.ForVeileder
-                                : Søknadsteg.InformasjonOmPapirsøknad,
-                    })}
-                    nesteUrl={routes.søkandskvittering.createURL()}
-                    avbrytUrl={avbrytUrl}
-                    søker={søker}
-                />
-            );
-    }
-};
-
-const StartUtfylling = () => {
-    const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
-    const søknad = useAppSelector((s) => s.soknad);
-    const { step } = useParams<{ step: Søknadsteg }>();
-    const { intl } = useI18n({ messages });
-    const user = useUserContext();
-    const history = useHistory();
-
-    useEffect(() => {
-        // check that user is still logged in first
-        fetchMe().then(() => {
-            if (!RemoteData.isSuccess(søkerFraStore)) {
-                return;
-            }
-
-            trackEvent(
-                søknadNesteSteg({
-                    ident: søkerFraStore.value.aktorId,
-                    steg: step,
-                })
-            );
-        });
-    }, [step]);
-
-    const steg = [
-        {
-            label: intl.formatMessage({ id: 'steg.uforevedtak' }),
-            step: Søknadsteg.Uførevedtak,
-        },
-        {
-            label: intl.formatMessage({ id: 'steg.flyktningstatus' }),
-            step: Søknadsteg.FlyktningstatusOppholdstillatelse,
-        },
-        {
-            label: intl.formatMessage({ id: 'steg.boOgOppholdINorge' }),
-            step: Søknadsteg.BoOgOppholdINorge,
-        },
-        {
-            label: intl.formatMessage({ id: 'steg.formue' }),
-            step: Søknadsteg.DinFormue,
-        },
-        {
-            label: intl.formatMessage({ id: 'steg.inntekt' }),
-            step: Søknadsteg.DinInntekt,
-            hjelpetekst: intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' }),
-        },
-        {
-            label: intl.formatMessage({ id: 'steg.ektefellesFormue' }),
-            step: Søknadsteg.EktefellesFormue,
-            onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
-        },
-        {
-            label: intl.formatMessage({ id: 'steg.ektefellesInntekt' }),
-            step: Søknadsteg.EktefellesInntekt,
-            onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
-            hjelpetekst: intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' }),
-        },
-        {
-            label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
-            step: Søknadsteg.ReiseTilUtlandet,
-        },
-        søknad.forVeileder.type === Søknadstype.Papirsøknad && user.roller.includes(Rolle.Saksbehandler)
-            ? {
-                  label: intl.formatMessage({ id: 'steg.informasjonOmPapirsøknad' }),
-                  step: Søknadsteg.InformasjonOmPapirsøknad,
-              }
-            : {
-                  label: intl.formatMessage({ id: 'steg.forVeileder' }),
-                  step: Søknadsteg.ForVeileder,
-              },
-        {
-            label: intl.formatMessage({ id: 'steg.oppsummering' }),
-            step: Søknadsteg.Oppsummering,
-            hjelpetekst: intl.formatMessage({ id: 'steg.oppsummering.hjelpetekst' }),
-        },
-    ].filter((s) => (typeof s.onlyIf !== 'undefined' ? s.onlyIf : true));
-    const aktivtSteg = steg.findIndex((s) => s.step === step);
-
-    const manglendeData = () => (
-        <ContentContainer className={classNames(styles.content, styles.feilmeldingContainer)}>
-            <Alert variant="error" className={styles.feilmeldingTekst}>
-                {intl.formatMessage({ id: 'feilmelding.tekst' })}
-            </Alert>
-            <LinkAsButton variant="secondary" href={routes.soknadPersonSøk.createURL({})}>
-                {intl.formatMessage({ id: 'feilmelding.knapp' })}
-            </LinkAsButton>
-        </ContentContainer>
-    );
-
-    return (
-        <div>
-            {pipe(
-                søkerFraStore,
-                RemoteData.fold(
-                    manglendeData,
-                    () => <Loader />,
-                    manglendeData,
-                    (søker) => (
-                        <>
-                            <div className={styles.headerContainer}>
-                                <Heading level="2" size="xlarge" className={styles.personkortContainer}>
-                                    <Personkort person={søker} variant="wide" />
-                                </Heading>
-                            </div>
-                            <div className={styles.content}>
-                                <div className={styles.stegindikatorContainer}>
-                                    <Stegindikator
-                                        steg={steg.map((s, index) => ({
-                                            index,
-                                            label: s.label,
-                                        }))}
-                                        aktivtSteg={aktivtSteg}
-                                        visLabel={false}
-                                        onChange={
-                                            process.env.NODE_ENV === 'development'
-                                                ? (index) => {
-                                                      const nyttSteg = steg[index];
-                                                      if (nyttSteg) {
-                                                          history.push(
-                                                              routes.soknadsutfylling.createURL({
-                                                                  step: nyttSteg.step,
-                                                              })
-                                                          );
-                                                      }
-                                                  }
-                                                : undefined
-                                        }
-                                    />
-                                </div>
-                                <Steg
-                                    title={steg.find((s) => s.step === step)?.label || ''}
-                                    step={step}
-                                    søknad={søknad}
-                                    søker={søker}
-                                    erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
-                                    hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
-                                />
-                            </div>
-                        </>
-                    )
-                )
-            )}
-        </div>
-    );
-};
+const SøknadInfoWrapper = ({ children }: { children: React.ReactNode }) => (
+    <div className={styles.content}>
+        <div className={styles.infoContainer}>{children}</div>
+    </div>
+);
 
 const index = () => {
     const history = useHistory();
@@ -354,30 +36,32 @@ const index = () => {
                     <Route exact={true} path={routes.soknadsutfylling.path}>
                         <StartUtfylling />
                     </Route>
-                    <div className={styles.content}>
-                        <div className={styles.infoContainer}>
-                            <Switch>
-                                <Route exact={true} path={routes.soknad.path}>
-                                    <Infoside
-                                        nesteUrl={routes.soknadPersonSøk.createURL({
-                                            papirsøknad: isPapirsøknad,
-                                        })}
-                                    />
-                                </Route>
-                                <Route exact={true} path={routes.soknadPersonSøk.path}>
-                                    <Inngang
-                                        nesteUrl={routes.soknadsutfylling.createURL({
-                                            step: Søknadsteg.Uførevedtak,
-                                            papirsøknad: isPapirsøknad,
-                                        })}
-                                    />
-                                </Route>
-                                <Route exact={true} path={routes.søkandskvittering.path}>
-                                    <Kvittering />
-                                </Route>
-                            </Switch>
-                        </div>
-                    </div>
+                    <Switch>
+                        <Route exact={true} path={routes.soknad.path}>
+                            <SøknadInfoWrapper>
+                                <Infoside
+                                    nesteUrl={routes.soknadPersonSøk.createURL({
+                                        papirsøknad: isPapirsøknad,
+                                    })}
+                                />
+                            </SøknadInfoWrapper>
+                        </Route>
+                        <Route exact={true} path={routes.soknadPersonSøk.path}>
+                            <SøknadInfoWrapper>
+                                <Inngang
+                                    nesteUrl={routes.soknadsutfylling.createURL({
+                                        step: Søknadsteg.Uførevedtak,
+                                        papirsøknad: isPapirsøknad,
+                                    })}
+                                />
+                            </SøknadInfoWrapper>
+                        </Route>
+                        <Route exact={true} path={routes.søkandskvittering.path}>
+                            <SøknadInfoWrapper>
+                                <Kvittering />
+                            </SøknadInfoWrapper>
+                        </Route>
+                    </Switch>
                 </Switch>
             </div>
         </div>

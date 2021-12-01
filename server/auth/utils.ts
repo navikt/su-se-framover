@@ -108,7 +108,7 @@ export async function getOpenIdClient(issuerUrl: string) {
             Config.auth.jwks
         );
     } catch (e) {
-        logger.error('Could not discover issuer', issuerUrl);
+        logger.error(`Could not discover issuer: ${issuerUrl}`);
         throw e;
     }
 }

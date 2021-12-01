@@ -146,7 +146,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                                     harFullmektigEllerVerge: value as Vergemål,
                                 }));
                             }}
-                            value={formik.values.harFullmektigEllerVerge?.toString()}
+                            value={formik.values.harFullmektigEllerVerge?.toString() ?? ''}
                         >
                             <Radio id="harFullmektigEllerVerge" value={Vergemål.Fullmektig}>
                                 <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />

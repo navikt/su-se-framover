@@ -1,6 +1,6 @@
 import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Collapse } from 'react-collapse';
 
 import { useI18n } from '~lib/i18n';
@@ -25,10 +25,10 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
  */
 export const BooleanRadioGroup: React.ForwardRefExoticComponent<
     BooleanRadioGroupProps & React.RefAttributes<HTMLInputElement>
-> = React.forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, ...props }, ref) => {
+> = forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, ...props }, ref) => {
     const { formatMessage } = useI18n({ messages: nb });
     return (
-        <RadioGroup {...props} defaultValue={value?.toString()} onChange={(val) => onChange(val === true.toString())}>
+        <RadioGroup {...props} value={value?.toString() ?? ''} onChange={(val) => onChange(val === true.toString())}>
             <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
                 {labels?.true ?? formatMessage('label.ja')}
             </Radio>

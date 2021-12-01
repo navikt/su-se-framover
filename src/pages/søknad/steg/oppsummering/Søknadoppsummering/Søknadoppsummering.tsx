@@ -43,7 +43,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Email /> {formatMessage('steg.uforevedtak')}
+                            <Email /> {formatMessage(Søknadsteg.Uførevedtak)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -58,7 +58,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <FileContent /> {formatMessage('steg.flyktningstatus')}
+                            <FileContent /> {formatMessage(Søknadsteg.FlyktningstatusOppholdstillatelse)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -133,7 +133,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Home /> {formatMessage('steg.boOgOppholdINorge')}
+                            <Home /> {formatMessage(Søknadsteg.BoOgOppholdINorge)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -241,7 +241,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Saving /> {formatMessage('steg.formue')}
+                            <Saving /> {formatMessage(Søknadsteg.DinFormue)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -253,7 +253,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Calculator /> {formatMessage('steg.inntekt')}
+                            <Calculator /> {formatMessage(Søknadsteg.DinInntekt)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -267,7 +267,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         <Accordion.Item>
                             <Accordion.Header type="button">
                                 <div className={styles.headerContent}>
-                                    <Saving /> {formatMessage('steg.ektefellesFormue')}
+                                    <Saving /> {formatMessage(Søknadsteg.EktefellesFormue)}
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
@@ -278,7 +278,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         <Accordion.Item>
                             <Accordion.Header type="button">
                                 <div className={styles.headerContent}>
-                                    <Calculator /> {formatMessage('steg.ektefellesInntekt')}
+                                    <Calculator /> {formatMessage(Søknadsteg.EktefellesInntekt)}
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
@@ -292,7 +292,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Plane /> {formatMessage('steg.utenlandsopphold')}
+                            <Plane /> {formatMessage(Søknadsteg.ReiseTilUtlandet)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>

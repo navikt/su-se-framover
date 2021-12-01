@@ -1,15 +1,15 @@
 export default {
     'oppsummering.tittel': 'Nøkkeltall',
     'søknader.tittel': 'Søknader',
-    'søknader.iverksatt.innvilget': 'Innvilget og iverksatt',
-    'søknader.iverksatt.avslag': 'Avslått og iverksatt',
-    'søknader.påbegynt': 'Påbegynt',
-    'søknader.ikkePåbegynt': 'Ikke påbegynt',
-    'søknader.digital': 'Digital',
-    'søknader.papir': 'Papir',
+    'søknader.iverksatt.innvilget': 'Innvilgede søknader',
+    'søknader.iverksatt.avslag': 'Avslåtte søknader',
+    'søknader.påbegynt': 'Påbegynte behandlinger',
+    'søknader.ikkePåbegynt': 'Åpne søknader uten påbegynt behandling',
+    'søknader.digital': 'Søknader som er sendt inn digitalt',
+    'søknader.papir': 'Søknader som er sendt på papir',
 
     'personer.tittel': 'Om brukerne',
-    'personer.antall': 'Antall personer som har en sak',
+    'personer.antall': 'Antall personer som har sendt inn søknad',
 
     'knapp.tilbake': 'Tilbake',
 

@@ -112,7 +112,7 @@ const Kvittering = () => {
                                         {formatMessage('vedlegg.huskVedlegg')}
                                     </Heading>
 
-                                    <BodyLong spacing>
+                                    <BodyLong spacing as={'div'}>
                                         {formatMessage('vedlegg.måLeggesMed')}
                                         <ul>
                                             <li>
@@ -124,7 +124,7 @@ const Kvittering = () => {
                                         </ul>
                                     </BodyLong>
 
-                                    <BodyLong spacing>
+                                    <BodyLong spacing as={'div'}>
                                         {formatMessage('vedlegg.formueIUtlandet')}
                                         <ul>
                                             <li>

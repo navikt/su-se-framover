@@ -2,7 +2,6 @@ import { Person } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
 export interface Behandlingsinformasjon {
-    uførhet: Nullable<Uførhet>;
     flyktning: Nullable<Flyktning>;
     lovligOpphold: Nullable<LovligOpphold>;
     fastOppholdINorge: Nullable<FastOppholdINorge>;
@@ -11,56 +10,30 @@ export interface Behandlingsinformasjon {
     personligOppmøte: Nullable<PersonligOppmøte>;
 }
 
-export interface Uførhet {
-    status: UførhetStatus;
-    uføregrad: Nullable<number>;
-    forventetInntekt: Nullable<number>;
-    begrunnelse: Nullable<string>;
-}
-export enum UførhetStatus {
+export enum Vilkårstatus {
     VilkårOppfylt = 'VilkårOppfylt',
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
-    HarUføresakTilBehandling = 'HarUføresakTilBehandling',
+    Uavklart = 'Uavklart',
 }
 
 export interface Flyktning {
-    status: FlyktningStatus;
+    status: Vilkårstatus;
     begrunnelse: Nullable<string>;
-}
-export enum FlyktningStatus {
-    VilkårOppfylt = 'VilkårOppfylt',
-    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
-    Uavklart = 'Uavklart',
 }
 
 export interface LovligOpphold {
-    status: LovligOppholdStatus;
+    status: Vilkårstatus;
     begrunnelse: Nullable<string>;
-}
-export enum LovligOppholdStatus {
-    VilkårOppfylt = 'VilkårOppfylt',
-    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
-    Uavklart = 'Uavklart',
 }
 
 export interface FastOppholdINorge {
-    status: FastOppholdINorgeStatus;
+    status: Vilkårstatus;
     begrunnelse: Nullable<string>;
-}
-export enum FastOppholdINorgeStatus {
-    VilkårOppfylt = 'VilkårOppfylt',
-    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
-    Uavklart = 'Uavklart',
 }
 
 export interface Institusjonsopphold {
-    status: InstitusjonsoppholdStatus;
+    status: Vilkårstatus;
     begrunnelse: Nullable<string>;
-}
-export enum InstitusjonsoppholdStatus {
-    VilkårOppfylt = 'VilkårOppfylt',
-    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
-    Uavklart = 'Uavklart',
 }
 
 export interface Formue {
