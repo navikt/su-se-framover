@@ -1,7 +1,6 @@
-import { Nullable } from '~lib/types';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Klage } from '~types/Klage';
-import { VurderingRequest } from '~utils/klage/klageUtils';
+import { FormkravRequest, VurderingRequest } from '~utils/klage/klageUtils';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -20,15 +19,7 @@ export async function opprettKlage(arg: {
     });
 }
 
-export async function vilkårsvurder(arg: {
-    sakId: string;
-    klageId: string;
-    vedtakId: string;
-    innenforFristen: boolean;
-    klagesDetPåKonkreteElementerIVedtaket: boolean;
-    erUnderskrevet: boolean;
-    begrunnelse: Nullable<string>;
-}): Promise<ApiClientResult<Klage>> {
+export async function vilkårsvurder(arg: FormkravRequest): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/vilkår/vurderinger`,
         method: 'POST',

@@ -95,7 +95,11 @@ const Sakintro = (props: { sak: Sak }) => {
                         }}
                     >
                         <option value={undefined}>{intl.formatMessage({ id: 'select.option.default' })}</option>
-                        <option value={NyBehandling.KLAGE}>{intl.formatMessage({ id: 'select.option.klage' })}</option>
+                        {klageToggle && (
+                            <option value={NyBehandling.KLAGE}>
+                                {intl.formatMessage({ id: 'select.option.klage' })}
+                            </option>
+                        )}
                         <option value={NyBehandling.REVURDER}>
                             {intl.formatMessage({ id: 'select.option.revurder' })}
                         </option>

@@ -87,13 +87,10 @@ const VurderFormkrav = (props: Props) => {
             {
                 sakId: props.sakId,
                 klageId: props.klage.id,
-                //validering sikrer at feltet ikke er null
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                vedtakId: values.vedtakId!,
-                innenforFristen: values.innenforFristen!,
-                klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket!,
-                erUnderskrevet: values.signert!,
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                vedtakId: values.vedtakId,
+                innenforFristen: values.innenforFristen,
+                klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
+                erUnderskrevet: values.signert,
                 begrunnelse: values.begrunnelse,
             },
             (klage) => {

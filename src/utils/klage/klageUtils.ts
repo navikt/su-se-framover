@@ -13,10 +13,10 @@ import {
 export interface FormkravRequest {
     sakId: string;
     klageId: string;
-    vedtakId: string;
-    innenforFristen: boolean;
-    klagesDetPåKonkreteElementerIVedtaket: boolean;
-    erUnderskrevet: boolean;
+    vedtakId: Nullable<string>;
+    innenforFristen: Nullable<boolean>;
+    klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
+    erUnderskrevet: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
 

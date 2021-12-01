@@ -130,22 +130,19 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             {
                 sakId: props.sakId,
                 klageId: props.klage.id,
-                //valdiering sikrer at feltet ikke er null
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 omgjør:
                     data.klageVurderingType === KlageVurderingType.OMGJØR
                         ? {
-                              årsak: data.omgjør.årsak!,
-                              utfall: data.omgjør.utfall!,
+                              årsak: data.omgjør.årsak,
+                              utfall: data.omgjør.utfall,
                           }
                         : null,
                 oppretthold:
                     data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
                         ? {
-                              hjemler: data.oppretthold.hjemmel!,
+                              hjemler: data.oppretthold.hjemmel,
                           }
                         : null,
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
                 fritekstTilBrev: data.fritekstTilBrev,
             },
             (klage) => {
@@ -321,7 +318,7 @@ const OmgjørVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }
                         value={field.value ?? ''}
                         error={fieldState.error?.message}
                     >
-                        <option value="">{formatMessage('form.omgjørVedtak.årsak.velgÅrsak')}</option>
+                        <option value={undefined}>{formatMessage('form.omgjørVedtak.årsak.velgÅrsak')}</option>
                         {Object.values(OmgjørVedtakÅrsak).map((årsak) => (
                             <option value={årsak} key={årsak}>
                                 {formatMessage(årsak)}

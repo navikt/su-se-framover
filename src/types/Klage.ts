@@ -73,8 +73,8 @@ export enum OpprettholdVedtakHjemmel {
 }
 
 export interface Omgjør {
-    årsak: OmgjørVedtakÅrsak;
-    utfall: OmgjørVedtakUtfall;
+    årsak: Nullable<OmgjørVedtakÅrsak>;
+    utfall: Nullable<OmgjørVedtakUtfall>;
 }
 
 export interface Oppretthold {
