@@ -7,6 +7,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import OppsummeringAvKlage from '~components/oppsummeringAvKlage/OppsummeringAvKlage';
 import Personlinje from '~components/personlinje/Personlinje';
 import * as klageActions from '~features/klage/klageActions';
@@ -153,7 +154,9 @@ const AttesterKlage = (props: {
                 {watch('beslutning') === Beslutning.UNDERKJENN && <UnderkjennelsesForm control={control} />}
 
                 <div className={styles.knapperContainer}>
-                    <Button variant="secondary">{formatMessage('knapp.tilbake')}</Button>
+                    <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakInfo.sakId })}>
+                        {formatMessage('knapp.tilbake')}
+                    </LinkAsButton>
                     <Button>{formatMessage('knapp.bekreft')}</Button>
                 </div>
                 <div className={styles.apiErrorContainer}>
