@@ -1,4 +1,6 @@
+import { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
 import { Nullable } from '~lib/types';
+import { KlageSteg } from '~pages/saksbehandling/types';
 import {
     Klage,
     KlageStatus,
@@ -54,4 +56,47 @@ export const erKlageOpprettholdt = (
     };
 } => {
     return k.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD;
+};
+
+export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage) => {
+    switch (steg) {
+        case KlageSteg.Formkrav:
+            return {
+                status:
+                    k.status === KlageStatus.OPPRETTET
+                        ? Linjestatus.Ingenting
+                        : k.status === KlageStatus.VILKÅRSVURDERT_PÅBEGYNT ||
+                          k.status === KlageStatus.VILKÅRSVURDERT_UTFYLT
+                        ? Linjestatus.Uavklart
+                        : Linjestatus.Ok,
+                erKlikkbar: true,
+            };
+        case KlageSteg.Vurdering:
+            return {
+                status:
+                    k.status === KlageStatus.OPPRETTET || k.status.startsWith('VILKÅRSVURDERT')
+                        ? Linjestatus.Ingenting
+                        : k.status === KlageStatus.VURDERT_PÅBEGYNT || k.status === KlageStatus.VURDERT_UTFYLT
+                        ? Linjestatus.Uavklart
+                        : Linjestatus.Ok,
+                erKlikkbar: k.status === KlageStatus.OPPRETTET || k.status.startsWith('VILKÅRSVURDERT') ? false : true,
+            };
+        case KlageSteg.Oppsummering:
+            return {
+                status:
+                    k.status === KlageStatus.OPPRETTET ||
+                    k.status.startsWith('VILKÅRSVURDERT') ||
+                    k.status === KlageStatus.VURDERT_PÅBEGYNT ||
+                    k.status === KlageStatus.VURDERT_UTFYLT
+                        ? Linjestatus.Ingenting
+                        : Linjestatus.Ok,
+                erKlikkbar:
+                    k.status === KlageStatus.OPPRETTET ||
+                    k.status.startsWith('VILKÅRSVURDERT') ||
+                    k.status === KlageStatus.VURDERT_PÅBEGYNT ||
+                    k.status === KlageStatus.VURDERT_UTFYLT
+                        ? false
+                        : true,
+            };
+    }
 };

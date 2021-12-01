@@ -68,7 +68,7 @@ const Sakintro = (props: { sak: Sak }) => {
 
     const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) && kanRevurderes;
 
-    const klageToggle = useFeatureToggle(FeatureToggle.Klage) && !isEmpty(props.sak.vedtak);
+    const klageToggle = true; //useFeatureToggle(FeatureToggle.Klage) && !isEmpty(props.sak.vedtak);
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {

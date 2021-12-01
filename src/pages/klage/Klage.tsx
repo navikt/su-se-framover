@@ -2,11 +2,12 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
+import Framdriftsindikator from '~components/framdriftsindikator/Framdriftsindikator';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Sak } from '~types/Sak';
+import { getPartialFramdriftsindikatorLinjeInfo } from '~utils/klage/klageUtils';
 
 import messages from './klage-nb';
 import styles from './klage.module.less';
@@ -23,13 +24,16 @@ const Klage = (props: { sak: Sak }) => {
         return <div>{formatMessage('feil.fantIkkeKlage')}</div>;
     }
 
-    const linjer = Object.values(KlageSteg).map((verdi) => ({
-        id: verdi,
-        status: Linjestatus.Ingenting,
-        label: formatMessage(`framdriftsindikator.${verdi}`),
-        url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: verdi }),
-        erKlikkbar: false,
-    }));
+    const linjer = Object.values(KlageSteg).map((verdi) => {
+        const partialLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(verdi, klage);
+        return {
+            id: verdi,
+            status: partialLinjeInfo.status,
+            label: formatMessage(`framdriftsindikator.${verdi}`),
+            url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: verdi }),
+            erKlikkbar: partialLinjeInfo.erKlikkbar,
+        };
+    });
 
     const pathsForFramdriftsindikator = linjer
         .filter(

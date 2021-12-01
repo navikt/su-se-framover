@@ -133,7 +133,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 omgjør:
                     data.klageVurderingType === KlageVurderingType.OMGJØR
                         ? {
-                              årsak: data.omgjør.årsak,
+                              årsak: data.omgjør.årsak ? data.omgjør.årsak : null,
                               utfall: data.omgjør.utfall,
                           }
                         : null,
@@ -318,7 +318,7 @@ const OmgjørVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }
                         value={field.value ?? ''}
                         error={fieldState.error?.message}
                     >
-                        <option value={undefined}>{formatMessage('form.omgjørVedtak.årsak.velgÅrsak')}</option>
+                        <option value={''}>{formatMessage('form.omgjørVedtak.årsak.velgÅrsak')}</option>
                         {Object.values(OmgjørVedtakÅrsak).map((årsak) => (
                             <option value={årsak} key={årsak}>
                                 {formatMessage(årsak)}
