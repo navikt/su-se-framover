@@ -30,6 +30,12 @@ export interface VurderingRequest {
     fritekstTilBrev: Nullable<string>;
 }
 
+export const erKlageVilkårsvurdertBekreftetEllerSenere = (k: Klage) =>
+    k.status !== KlageStatus.OPPRETTET &&
+    k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT &&
+    k.status !== KlageStatus.VILKÅRSVURDERT_UTFYLT;
+
+export const erKlageVurdertBekreftet = (k: Klage): boolean => k.status === KlageStatus.VURDERT_BEKREFTET;
 export const erKlageTilAttestering = (k: Klage): boolean => k.status === KlageStatus.TIL_ATTESTERING;
 
 export const erKlageOmgjort = (
@@ -56,6 +62,28 @@ export const erKlageOpprettholdt = (
     };
 } => {
     return k.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD;
+};
+
+export const hentSisteVurderteSteg = (k: Klage) => {
+    if (k.status === KlageStatus.VURDERT_PÅBEGYNT || k.status === KlageStatus.VURDERT_UTFYLT) {
+        return KlageSteg.Vurdering;
+    }
+
+    if (k.status === KlageStatus.VURDERT_BEKREFTET) {
+        return KlageSteg.Oppsummering;
+    }
+
+    return KlageSteg.Formkrav;
+};
+
+export const getÅpenKlage = (klager: Klage[]): Klage => {
+    const åpneKlager = klager.filter((k) => k.status !== KlageStatus.IVERKSATT);
+
+    if (åpneKlager.length > 1) {
+        throw new Error('Det finnes flere enn 1 åpen klage');
+    }
+
+    return åpneKlager[0];
 };
 
 export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage) => {

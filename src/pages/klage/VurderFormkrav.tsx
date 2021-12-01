@@ -20,6 +20,7 @@ import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage, KlageStatus } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
+import { erKlageVilkårsvurdertBekreftetEllerSenere } from '~utils/klage/klageUtils';
 
 import messages from './klage-nb';
 import styles from './klage.module.less';
@@ -107,7 +108,10 @@ const VurderFormkrav = (props: Props) => {
     };
 
     const handleBekreftOgFortsettClick = () => {
-        if (props.klage.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET) {
+        if (
+            props.klage.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET ||
+            props.klage.status === KlageStatus.VURDERT_BEKREFTET
+        ) {
             history.push(
                 Routes.klage.createURL({
                     sakId: props.sakId,
@@ -137,7 +141,7 @@ const VurderFormkrav = (props: Props) => {
     const iGyldigTilstandForÅBekrefteOgFortsette = () => {
         return (
             (props.klage.status !== KlageStatus.VILKÅRSVURDERT_UTFYLT &&
-                props.klage.status !== KlageStatus.VILKÅRSVURDERT_BEKREFTET) ||
+                !erKlageVilkårsvurdertBekreftetEllerSenere(props.klage)) ||
             (isDirty && !isSubmitSuccessful)
         );
     };

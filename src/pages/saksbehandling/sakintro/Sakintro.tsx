@@ -18,6 +18,7 @@ import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Søknad } from '~types/Søknad';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
+import { getÅpenKlage, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
@@ -74,8 +75,18 @@ const Sakintro = (props: { sak: Sak }) => {
         switch (nyBehandling) {
             case NyBehandling.REVURDER:
                 return Routes.revurderValgtSak.createURL({ sakId: props.sak.id });
-            case NyBehandling.KLAGE:
+            case NyBehandling.KLAGE: {
+                const åpenKlage = getÅpenKlage(props.sak.klager);
+
+                if (åpenKlage) {
+                    return Routes.klage.createURL({
+                        sakId: props.sak.id,
+                        klageId: åpenKlage.id,
+                        steg: hentSisteVurderteSteg(åpenKlage),
+                    });
+                }
                 return Routes.klageOpprett.createURL({ sakId: props.sak.id });
+            }
         }
         return assertNever(nyBehandling);
     };
