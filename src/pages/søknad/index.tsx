@@ -13,6 +13,12 @@ import Infoside from './steg/infoside/Infoside';
 import Inngang from './steg/inngang/Inngang';
 import { Søknadsteg } from './types';
 
+const SøknadInfoWrapper = ({ children }: { children: React.ReactNode }) => (
+    <div className={styles.content}>
+        <div className={styles.infoContainer}>{children}</div>
+    </div>
+);
+
 const index = () => {
     const history = useHistory();
     const isPapirsøknad = history.location.search.includes('papirsoknad');
@@ -30,30 +36,32 @@ const index = () => {
                     <Route exact={true} path={routes.soknadsutfylling.path}>
                         <StartUtfylling />
                     </Route>
-                    <div className={styles.content}>
-                        <div className={styles.infoContainer}>
-                            <Switch>
-                                <Route exact={true} path={routes.soknad.path}>
-                                    <Infoside
-                                        nesteUrl={routes.soknadPersonSøk.createURL({
-                                            papirsøknad: isPapirsøknad,
-                                        })}
-                                    />
-                                </Route>
-                                <Route exact={true} path={routes.soknadPersonSøk.path}>
-                                    <Inngang
-                                        nesteUrl={routes.soknadsutfylling.createURL({
-                                            step: Søknadsteg.Uførevedtak,
-                                            papirsøknad: isPapirsøknad,
-                                        })}
-                                    />
-                                </Route>
-                                <Route exact={true} path={routes.søkandskvittering.path}>
-                                    <Kvittering />
-                                </Route>
-                            </Switch>
-                        </div>
-                    </div>
+                    <Switch>
+                        <Route exact={true} path={routes.soknad.path}>
+                            <SøknadInfoWrapper>
+                                <Infoside
+                                    nesteUrl={routes.soknadPersonSøk.createURL({
+                                        papirsøknad: isPapirsøknad,
+                                    })}
+                                />
+                            </SøknadInfoWrapper>
+                        </Route>
+                        <Route exact={true} path={routes.soknadPersonSøk.path}>
+                            <SøknadInfoWrapper>
+                                <Inngang
+                                    nesteUrl={routes.soknadsutfylling.createURL({
+                                        step: Søknadsteg.Uførevedtak,
+                                        papirsøknad: isPapirsøknad,
+                                    })}
+                                />
+                            </SøknadInfoWrapper>
+                        </Route>
+                        <Route exact={true} path={routes.søkandskvittering.path}>
+                            <SøknadInfoWrapper>
+                                <Kvittering />
+                            </SøknadInfoWrapper>
+                        </Route>
+                    </Switch>
                 </Switch>
             </div>
         </div>

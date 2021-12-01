@@ -164,7 +164,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 typeOppholdstillatelse: value as TypeOppholdstillatelse,
                             });
                         }}
-                        value={formik.values.typeOppholdstillatelse?.toString()}
+                        value={formik.values.typeOppholdstillatelse?.toString() ?? ''}
                     >
                         <Radio id={keyOf<FormData>('typeOppholdstillatelse')} value={TypeOppholdstillatelse.Permanent}>
                             {formatMessage('oppholdstillatelse.permanent')}

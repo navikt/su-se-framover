@@ -179,7 +179,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     error={fieldState.error?.message}
                                     onBlur={field.onBlur}
                                     onChange={field.onChange}
-                                    value={field.value ?? undefined}
+                                    value={field.value ?? ''}
                                 >
                                     <Radio
                                         id={field.name}

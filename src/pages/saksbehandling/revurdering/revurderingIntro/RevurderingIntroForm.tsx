@@ -89,7 +89,6 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
         begrunnelse: values.begrunnelse!,
     });
 
-    console.log({ form: form.getValues() });
     return (
         <form
             className={sharedStyles.revurderingContainer}

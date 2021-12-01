@@ -126,7 +126,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                     onBlur={field.onBlur}
                                     onChange={field.onChange}
                                     name={field.name}
-                                    value={field.value ?? undefined}
+                                    value={field.value ?? ''}
                                 >
                                     <Radio
                                         id={field.name}
