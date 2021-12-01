@@ -1,6 +1,7 @@
 export interface Nøkkeltall {
     søknader: Søknader;
     antallUnikePersoner: number;
+    løpendeSaker: number;
 }
 
 interface Søknader {
