@@ -31,11 +31,11 @@ interface UtenlandsoppholdForm {
 }
 
 interface UtenlandsoppholdFormData {
-    status?: Utenlandsoppholdstatus;
+    status: Utenlandsoppholdstatus;
     begrunnelse: Nullable<string>;
     periode: {
-        fraOgMed: Nullable<Date>;
-        tilOgMed: Nullable<Date>;
+        fraOgMed: Date;
+        tilOgMed: Date;
     };
 }
 
@@ -70,7 +70,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         defaultValues: {
             utenlandsopphold: vurderinger.map((vurdering) => ({
                 status: vurdering.status,
-                begrunnelse: vurdering.begrunnelse ?? null,
+                begrunnelse: vurdering.begrunnelse,
                 periode: {
                     fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
                     tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
@@ -86,14 +86,11 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 utenlandsopphold: form.utenlandsopphold.map((vurdering) => ({
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    status: vurdering.status!,
+                    status: vurdering.status,
                     begrunnelse: vurdering.begrunnelse,
                     periode: {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        fraOgMed: toIsoDateOnlyString(vurdering.periode.fraOgMed!),
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        tilOgMed: toIsoDateOnlyString(sluttenAvMåneden(vurdering.periode.tilOgMed!)),
+                        fraOgMed: toIsoDateOnlyString(vurdering.periode.fraOgMed),
+                        tilOgMed: toIsoDateOnlyString(sluttenAvMåneden(vurdering.periode.tilOgMed)),
                     },
                 })),
             },
@@ -218,13 +215,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                         <Button
                             className={styles.nyPeriodeKnapp}
                             variant="secondary"
-                            onClick={() =>
-                                append({
-                                    status: undefined,
-                                    periode: { tilOgMed: null, fraOgMed: null },
-                                    begrunnelse: null,
-                                })
-                            }
+                            onClick={() => append({ begrunnelse: null })}
                             type={'button'}
                         >
                             Ny periode for utenlandsopphold
