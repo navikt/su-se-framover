@@ -66,10 +66,10 @@ const Sakintro = (props: { sak: Sak }) => {
     const { avsluttedeRevurderinger, åpneRevurderinger } = splittAvsluttedeOgÅpneRevurderinger(props.sak.revurderinger);
 
     const kanRevurderes = !isEmpty(props.sak.utbetalinger);
-
     const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) && kanRevurderes;
 
-    const klageToggle = true; //useFeatureToggle(FeatureToggle.Klage) && !isEmpty(props.sak.vedtak);
+    const kanOppretteKlage = !isEmpty(props.sak.vedtak);
+    const klageToggle = useFeatureToggle(FeatureToggle.Klage) && kanOppretteKlage;
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {
@@ -106,7 +106,7 @@ const Sakintro = (props: { sak: Sak }) => {
                         }}
                     >
                         <option value={undefined}>{intl.formatMessage({ id: 'select.option.default' })}</option>
-                        {klageToggle && (
+                        {kanOppretteKlage && (
                             <option value={NyBehandling.KLAGE}>
                                 {intl.formatMessage({ id: 'select.option.klage' })}
                             </option>

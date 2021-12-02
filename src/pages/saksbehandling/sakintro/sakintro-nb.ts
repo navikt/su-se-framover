@@ -9,6 +9,9 @@ export default {
 
     'klage.attester': 'Attester',
     'klage.fortsettBehandling': 'Fortsett behandling',
+    'klage.klager': 'Klager',
+    'klage.iverksatt': 'Iverksatt klage',
+    'klage.åpenKlage': 'Åpen klage',
 
     'saksoversikt.tittel': 'Saksnummer',
 

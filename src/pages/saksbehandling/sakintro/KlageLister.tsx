@@ -1,4 +1,4 @@
-import { BodyShort } from '@navikt/ds-react';
+import { BodyShort, Heading } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import Ikon from 'nav-frontend-ikoner-assets';
@@ -12,9 +12,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Klage } from '~types/Klage';
 import { formatDate } from '~utils/date/dateUtils';
-import { erKlageTilAttestering } from '~utils/klage/klageUtils';
-
-import { KlageSteg } from '../types';
+import { erKlageIverksatt, erKlageTilAttestering, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
 
 import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import messages from './sakintro-nb';
@@ -25,57 +23,66 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
     const user = useUserContext();
 
     return (
-        <Oversiktslinje kategoriTekst="Klager" entries={props.klager} tittel="Åpen klage">
-            {{
-                oversiktsinformasjon: (entry) => {
-                    const attesteringer = entry?.attesteringer ?? [];
-                    const senesteAttestering = pipe(attesteringer, last, toNullable);
-                    return (
-                        <>
-                            <Informasjonslinje label="Opprettet" value={() => formatDate(entry.opprettet)} />
-                            <Informasjonslinje label="id" value={() => entry.id} />
-                            {senesteAttestering?.underkjennelse && (
-                                <UnderkjenteAttesteringer attesteringer={attesteringer} />
-                            )}
-                        </>
-                    );
-                },
-                knapper: (klage) => {
-                    if (erKlageTilAttestering(klage)) {
-                        return user.isAttestant && user.navIdent !== klage.saksbehandler ? (
+        <div>
+            <Oversiktslinje kategoriTekst={formatMessage('klage.klager')} entries={props.klager}>
+                {{
+                    oversiktsinformasjon: (klage) => {
+                        const attesteringer = klage?.attesteringer ?? [];
+                        const senesteAttestering = pipe(attesteringer, last, toNullable);
+                        return (
+                            <>
+                                <Heading level="3" size="medium">
+                                    {erKlageIverksatt(klage)
+                                        ? formatMessage('klage.iverksatt')
+                                        : formatMessage('klage.åpenKlage')}
+                                </Heading>
+                                <Informasjonslinje label="Opprettet" value={() => formatDate(klage.opprettet)} />
+                                {senesteAttestering?.underkjennelse && (
+                                    <UnderkjenteAttesteringer attesteringer={attesteringer} />
+                                )}
+                            </>
+                        );
+                    },
+                    knapper: (klage) => {
+                        if (erKlageIverksatt(klage)) {
+                            return <></>;
+                        }
+                        if (erKlageTilAttestering(klage)) {
+                            return user.isAttestant && user.navIdent !== klage.saksbehandler ? (
+                                <LinkAsButton
+                                    variant="secondary"
+                                    size="small"
+                                    href={Routes.attesterKlage.createURL({
+                                        sakId: props.sakId,
+                                        klageId: klage.id,
+                                    })}
+                                >
+                                    {formatMessage('klage.attester')}
+                                </LinkAsButton>
+                            ) : (
+                                <div className={styles.ikonContainer}>
+                                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                                    <BodyShort>{formatMessage('attestering.tilAttestering')}</BodyShort>
+                                </div>
+                            );
+                        }
+                        return (
                             <LinkAsButton
                                 variant="secondary"
                                 size="small"
-                                href={Routes.attesterKlage.createURL({
+                                href={Routes.klage.createURL({
                                     sakId: props.sakId,
                                     klageId: klage.id,
+                                    steg: hentSisteVurderteSteg(klage),
                                 })}
                             >
-                                {formatMessage('klage.attester')}
+                                {formatMessage('klage.fortsettBehandling')}
                             </LinkAsButton>
-                        ) : (
-                            <div className={styles.ikonContainer}>
-                                <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
-                                <BodyShort>{formatMessage('attestering.tilAttestering')}</BodyShort>
-                            </div>
                         );
-                    }
-                    return (
-                        <LinkAsButton
-                            variant="secondary"
-                            size="small"
-                            href={Routes.klage.createURL({
-                                sakId: props.sakId,
-                                klageId: klage.id,
-                                steg: KlageSteg.Formkrav,
-                            })}
-                        >
-                            {formatMessage('klage.fortsettBehandling')}
-                        </LinkAsButton>
-                    );
-                },
-            }}
-        </Oversiktslinje>
+                    },
+                }}
+            </Oversiktslinje>
+        </div>
     );
 };
 

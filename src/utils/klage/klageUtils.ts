@@ -37,6 +37,7 @@ export const erKlageVilkårsvurdertBekreftetEllerSenere = (k: Klage) =>
 
 export const erKlageVurdertBekreftet = (k: Klage): boolean => k.status === KlageStatus.VURDERT_BEKREFTET;
 export const erKlageTilAttestering = (k: Klage): boolean => k.status === KlageStatus.TIL_ATTESTERING;
+export const erKlageIverksatt = (k: Klage): boolean => k.status === KlageStatus.IVERKSATT;
 
 export const erKlageOmgjort = (
     k: Klage

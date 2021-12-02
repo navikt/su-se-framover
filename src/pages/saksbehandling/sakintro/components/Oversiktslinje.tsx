@@ -6,7 +6,6 @@ import styles from './oversiktslinje.module.less';
 interface Props<T> {
     entries: T[];
     kategoriTekst: string;
-    tittel: string;
     children: {
         oversiktsinformasjon: (entry: T) => JSX.Element;
         knapper: (entry: T) => JSX.Element;
@@ -39,14 +38,7 @@ const Oversiktslinje = <T extends { id: string }>(props: Props<T>) => {
                     return (
                         <li key={v.id}>
                             <Panel border className={styles.entry}>
-                                <div className={styles.informasjonslinje}>
-                                    <div>
-                                        <Heading level="3" size="medium">
-                                            {props.tittel}
-                                        </Heading>
-                                        <div>{props.children.oversiktsinformasjon(v)}</div>
-                                    </div>
-                                </div>
+                                <div className={styles.informasjonslinje}>{props.children.oversiktsinformasjon(v)}</div>
                                 <div className={styles.knapper}>{props.children.knapper(v)}</div>
                             </Panel>
                         </li>
