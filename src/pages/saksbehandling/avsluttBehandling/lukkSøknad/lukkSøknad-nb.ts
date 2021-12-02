@@ -1,5 +1,5 @@
 export default {
-    'avslutt.manglendeDokumentasjon': 'Avslutt pga manglende dokumentasjon',
+    'avslutt.manglendeDokumentasjon': 'Avslå pga manglende dokumentasjon',
     'avslutt.behandlingHarBlittAvsluttet': 'Behandling av søknad av blitt avsluttet',
 
     'avvist.skalSendesBrevTilSøker': 'Skal det sendes brev til søker?',
@@ -20,6 +20,7 @@ export default {
 
     'trekking.datoSøkerTrakkSøknad': 'Dato søker trakk søknad',
 
+    'knapp.avslåSøknad': 'Avslå søknad',
     'knapp.lukkSøknad': 'Lukk søknad',
     'knapp.seBrev': 'Se brev',
 

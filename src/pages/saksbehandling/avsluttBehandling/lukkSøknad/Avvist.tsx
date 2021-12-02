@@ -1,20 +1,19 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Loader, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
-import { FormikErrors } from 'formik';
 import React from 'react';
+import { FieldErrors } from 'react-hook-form';
 
 import * as søknadApi from '~api/søknadApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import { ApiResult, useBrevForhåndsvisning } from '~lib/hooks';
+import { useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
-import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
-import { AvvistBrevtyper, LukkSøknadOgAvsluttSøknadsbehandlingFormData } from './lukkSøknadUtils';
+import { AvvistBrevtyper } from './lukkSøknadUtils';
 
 interface AvvistFormData {
     skalSendesBrev: Nullable<boolean>;
@@ -24,11 +23,10 @@ interface AvvistFormData {
 
 interface AvvistProps {
     søknadId: string;
-    validateForm: () => Promise<FormikErrors<LukkSøknadOgAvsluttSøknadsbehandlingFormData>>;
     avvistFormData: AvvistFormData;
-    søknadLukketStatus: ApiResult<Sak, string>;
-    feilmeldinger?: FormikErrors<AvvistFormData>;
+    feilmeldinger?: FieldErrors<AvvistFormData>;
     onValueChange: (value: AvvistFormData) => void;
+    onRequestValidate(onSuccess: () => void): void;
 }
 
 const Avvist = (props: AvvistProps) => {
@@ -37,17 +35,19 @@ const Avvist = (props: AvvistProps) => {
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(søknadApi.hentLukketSøknadsBrevutkast);
 
     const handleHentBrevClick = () => {
-        hentBrev({
-            søknadId: props.søknadId,
-            body: {
-                type: LukkSøknadBegrunnelse.Avvist,
-                brevConfig: props.avvistFormData.typeBrev
-                    ? {
-                          brevtype: props.avvistFormData.typeBrev,
-                          fritekst: props.avvistFormData.fritekst,
-                      }
-                    : null,
-            },
+        props.onRequestValidate(() => {
+            hentBrev({
+                søknadId: props.søknadId,
+                body: {
+                    type: LukkSøknadBegrunnelse.Avvist,
+                    brevConfig: props.avvistFormData.typeBrev
+                        ? {
+                              brevtype: props.avvistFormData.typeBrev,
+                              fritekst: props.avvistFormData.fritekst,
+                          }
+                        : null,
+                },
+            });
         });
     };
 
@@ -57,7 +57,7 @@ const Avvist = (props: AvvistProps) => {
                 <BooleanRadioGroup
                     name="skalSendesBrev"
                     legend={formatMessage('avvist.skalSendesBrevTilSøker')}
-                    error={props.feilmeldinger?.skalSendesBrev}
+                    error={props.feilmeldinger?.skalSendesBrev?.message}
                     value={props.avvistFormData.skalSendesBrev}
                     onChange={(val) => {
                         props.onValueChange({ skalSendesBrev: val, typeBrev: null, fritekst: null });
@@ -76,6 +76,7 @@ const Avvist = (props: AvvistProps) => {
                                 typeBrev: val as AvvistBrevtyper,
                             });
                         }}
+                        error={props.feilmeldinger?.typeBrev?.message}
                     >
                         <Radio id="typeBrev" value={AvvistBrevtyper.Vedtaksbrev}>
                             {formatMessage('avvist.brevType.vedtaksbrev')}
@@ -86,13 +87,13 @@ const Avvist = (props: AvvistProps) => {
                     </RadioGroup>
                 </div>
             )}
-            {props.avvistFormData.typeBrev && (
+            {props.avvistFormData.typeBrev === AvvistBrevtyper.Fritekstsbrev && (
                 <div className={styles.textAreaContainer}>
                     <Textarea
                         label={formatMessage('avvist.fritekst')}
                         name="fritekst"
                         value={props.avvistFormData.fritekst ?? ''}
-                        error={props.feilmeldinger?.fritekst}
+                        error={props.feilmeldinger?.fritekst?.message}
                         onChange={(e) => props.onValueChange({ ...props.avvistFormData, fritekst: e.target.value })}
                     />
                 </div>
@@ -104,22 +105,12 @@ const Avvist = (props: AvvistProps) => {
                             variant="secondary"
                             className={styles.seBrevKnapp}
                             type="button"
-                            onClick={() => {
-                                props.validateForm().then((res) => {
-                                    if (Object.keys(res).length === 0) {
-                                        handleHentBrevClick();
-                                    }
-                                });
-                            }}
+                            onClick={handleHentBrevClick}
                         >
                             {formatMessage('knapp.seBrev')}
                             {RemoteData.isPending(brevStatus) && <Loader />}
                         </Button>
                     )}
-                    <Button variant="danger" type="submit">
-                        {formatMessage('knapp.lukkSøknad')}
-                        {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
-                    </Button>
                 </div>
             )}
             <div>{RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}</div>

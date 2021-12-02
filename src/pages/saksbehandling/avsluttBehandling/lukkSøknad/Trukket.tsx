@@ -1,13 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Datepicker } from '@navikt/ds-datepicker';
-import { Button, Label, Loader, Tag } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import { Button, Label, Loader } from '@navikt/ds-react';
+import React from 'react';
 
 import * as søknadApi from '~api/søknadApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { ApiResult, useBrevForhåndsvisning } from '~lib/hooks';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
+import { useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
-import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 import nb from './lukkSøknad-nb';
@@ -19,11 +19,10 @@ interface TrukketProps {
     datoSøkerTrakkSøknad: string | null;
     onDatoSøkerTrakkSøknadChange: (dato: string) => void;
     feilmelding: string | undefined;
-    søknadLukketStatus: ApiResult<Sak, string>;
+    onRequestValidate(onSuccess: () => void): void;
 }
 
 const Trukket = (props: TrukketProps) => {
-    const [clickedViewLetter, setClickedViewLetter] = useState<boolean>(false);
     const { formatMessage } = useI18n({ messages: nb });
 
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(søknadApi.hentLukketSøknadsBrevutkast);
@@ -37,10 +36,7 @@ const Trukket = (props: TrukketProps) => {
                 <Datepicker
                     inputProps={{
                         name: 'datoSøkerTrakkSøknad',
-                        'aria-invalid':
-                            props.feilmelding || (clickedViewLetter && props.datoSøkerTrakkSøknad === null)
-                                ? true
-                                : false,
+                        'aria-invalid': props.feilmelding ? true : false,
                     }}
                     inputId={'datoSøkerTrakkSøknad'}
                     value={props.datoSøkerTrakkSøknad?.toString()}
@@ -52,37 +48,31 @@ const Trukket = (props: TrukketProps) => {
                         props.onDatoSøkerTrakkSøknadChange(value);
                     }}
                 />
-                {props.feilmelding && <Tag variant="error">{props.feilmelding}</Tag>}
-                {clickedViewLetter && props.datoSøkerTrakkSøknad === null && (
-                    <Tag variant="error">{formatMessage('feil.feltMåFyllesUt')}</Tag>
+                {props.feilmelding && (
+                    <SkjemaelementFeilmelding>
+                        {props.feilmelding ?? formatMessage('feil.feltMåFyllesUt')}
+                    </SkjemaelementFeilmelding>
                 )}
             </div>
-            <div className={styles.buttonsContainer}>
-                <Button
-                    variant="secondary"
-                    className={styles.seBrevKnapp}
-                    type="button"
-                    onClick={() => {
-                        setClickedViewLetter(true);
+            <Button
+                variant="secondary"
+                className={styles.seBrevKnapp}
+                type="button"
+                onClick={() => {
+                    props.onRequestValidate(() => {
                         hentBrev({
                             søknadId: props.søknadId,
                             body: {
                                 type: LukkSøknadBegrunnelse.Trukket,
-                                //Vi har en use-state som sjekker at verdi ikke er null
-                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                datoSøkerTrakkSøknad: props.datoSøkerTrakkSøknad!,
+                                datoSøkerTrakkSøknad: props.datoSøkerTrakkSøknad ?? '',
                             },
                         });
-                    }}
-                >
-                    {formatMessage('knapp.seBrev')}
-                    {RemoteData.isPending(brevStatus) && <Loader />}
-                </Button>
-                <Button variant="danger" type="submit">
-                    {formatMessage('knapp.lukkSøknad')}
-                    {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
-                </Button>
-            </div>
+                    });
+                }}
+            >
+                {formatMessage('knapp.seBrev')}
+                {RemoteData.isPending(brevStatus) && <Loader />}
+            </Button>
             <div>{RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}</div>
         </div>
     );
