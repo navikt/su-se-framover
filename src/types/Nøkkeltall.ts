@@ -10,6 +10,7 @@ interface Søknader {
     iverksatteInnvilget: number;
     ikkePåbegynt: number;
     påbegynt: number;
+    lukket: number;
     digitalsøknader: number;
     papirsøknader: number;
 }
