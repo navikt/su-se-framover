@@ -233,7 +233,7 @@ const VurderFormkrav = (props: Props) => {
                             </Button>
                             <Button
                                 type="button"
-                                disabled={iGyldigTilstandForÅBekrefteOgFortsette()}
+                                hidden={iGyldigTilstandForÅBekrefteOgFortsette()}
                                 onClick={() => handleBekreftOgFortsettClick()}
                             >
                                 {formatMessage('formkrav.button.bekreftOgFortsett')}

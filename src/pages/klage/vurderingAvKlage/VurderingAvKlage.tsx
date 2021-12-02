@@ -213,7 +213,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         {...field}
                                         legend={formatMessage('form.klageVurderingType.legend')}
                                         error={fieldState.error?.message}
-                                        value={field.value ?? undefined}
+                                        value={field.value ?? ''}
                                     >
                                         <Radio value={KlageVurderingType.OMGJØR}>
                                             {formatMessage(KlageVurderingType.OMGJØR)}
@@ -263,6 +263,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                 {formatMessage('knapp.seBrev')}
                                 {RemoteData.isPending(brevStatus) && <Loader />}
                             </Button>
+                            {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                         </div>
 
                         <div className={styles.knapperContainer}>
@@ -282,7 +283,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             </Button>
                             <Button
                                 type="button"
-                                disabled={iGyldigTilstandForÅBekrefteOgFortsette()}
+                                hidden={iGyldigTilstandForÅBekrefteOgFortsette()}
                                 onClick={() => handleBekreftOgFortsettClick()}
                             >
                                 {formatMessage('knapp.bekreftOgFortsett')}
@@ -336,7 +337,7 @@ const OmgjørVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }
                         hideLegend
                         {...field}
                         error={fieldState.error?.message}
-                        value={field.value ?? undefined}
+                        value={field.value ?? ''}
                     >
                         {Object.values(OmgjørVedtakUtfall).map((utfall) => (
                             <Radio value={utfall} key={utfall}>
