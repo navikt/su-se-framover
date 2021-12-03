@@ -27,8 +27,10 @@ import {
     erKlageVilkårsvurdertUtfyltEllerSenere,
 } from '~utils/klage/klageUtils';
 
-import messages from './klage-nb';
-import styles from './klage.module.less';
+import sharedStyles from '../klage.module.less';
+
+import messages from './vurderFormkrav-nb';
+import styles from './vurderFormkrav.module.less';
 
 const eqFormData = struct<FormData>({
     vedtakId: eqNullable(S.Eq),
@@ -146,7 +148,7 @@ const VurderFormkrav = (props: Props) => {
 
     if (!erKlageIGyldigTilstandForÅSaksbehandle(props.klage)) {
         return (
-            <div className={styles.fantIkkevedtakFeilContainer}>
+            <div className={sharedStyles.feilTilstandContainer}>
                 <Alert variant="error">{formatMessage('feil.ikkeRiktigTilstandForÅVilkårsvurdere')}</Alert>
                 <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
                     {formatMessage('knapp.tilbake')}

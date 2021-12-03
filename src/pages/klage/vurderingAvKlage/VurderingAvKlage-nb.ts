@@ -50,4 +50,6 @@ export default {
     'knapp.tilbake': 'Tilbake',
 
     'page.tittel': 'Behandle klage',
+
+    'feil.ikkeRiktigTilstandForÅVurdere': 'Klagen er ikke i riktig tilstand for å vurdere',
 };

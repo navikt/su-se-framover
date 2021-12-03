@@ -15,6 +15,8 @@ import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
 
+import sharedStyles from '../klage.module.less';
+
 import messages from './sendKlageTilAttestering-nb';
 import styles from './sendKlageTilAttestering.module.less';
 
@@ -40,7 +42,7 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
 
     if (!erKlageVurdertBekreftet(props.klage)) {
         return (
-            <div className={styles.fantIkkevedtakFeilContainer}>
+            <div className={sharedStyles.feilTilstandContainer}>
                 <Alert variant="error">{formatMessage('feil.klageErIkkeIRiktigTilstand')}</Alert>
                 <Link
                     to={Routes.klage.createURL({
@@ -59,7 +61,7 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
 
     if (!klagensVedtak) {
         return (
-            <div className={styles.fantIkkevedtakFeilContainer}>
+            <div className={sharedStyles.feilTilstandContainer}>
                 <Alert variant="error">{formatMessage('feil.fantIkkeVedtakForKlage')}</Alert>
                 <Link
                     to={Routes.klage.createURL({

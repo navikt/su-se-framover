@@ -1,14 +1,17 @@
 @import '~/styles/variables.less';
 
-.pageContainer {
+.container {
     display: flex;
-    flex-direction: column;
-    margin-top: @spacing;
-    width: 50%;
+    margin: @spacing-s 0;
 }
 
-.knappContainer {
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+}
+
+.buttons {
     display: flex;
     gap: @spacing;
-    margin-bottom: @spacing-xs;
 }

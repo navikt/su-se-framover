@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Checkbox, CheckboxGroup, Radio, Loader, RadioGroup, Select, Textarea } from '@navikt/ds-react';
+import { Button, Checkbox, CheckboxGroup, Radio, Loader, RadioGroup, Select, Textarea, Alert } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as A from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import * as pdfApi from '~api/pdfApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
@@ -24,7 +25,13 @@ import {
     OpprettholdVedtakHjemmel,
     KlageVurderingType,
 } from '~types/Klage';
-import { erKlageVurdertBekreftet, erKlageVurdertUtfyltEllerSenere } from '~utils/klage/klageUtils';
+import {
+    erKlageIGyldigTilstandForÅSaksbehandle,
+    erKlageVurdertBekreftet,
+    erKlageVurdertUtfyltEllerSenere,
+} from '~utils/klage/klageUtils';
+
+import sharedStyles from '../klage.module.less';
 
 import messages from './VurderingAvKlage-nb';
 import styles from './vurderingAvKlage.module.less';
@@ -194,6 +201,23 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const iGyldigTilstandForÅBekrefteOgFortsette = () => {
         return !erKlageVurdertUtfyltEllerSenere(props.klage) || (isDirty && !isSubmitSuccessful);
     };
+
+    if (!erKlageIGyldigTilstandForÅSaksbehandle(props.klage)) {
+        return (
+            <div className={sharedStyles.feilTilstandContainer}>
+                <Alert variant="error">{formatMessage('feil.ikkeRiktigTilstandForÅVurdere')}</Alert>
+                <Link
+                    to={Routes.klage.createURL({
+                        sakId: props.sakId,
+                        klageId: props.klage.id,
+                        steg: KlageSteg.Formkrav,
+                    })}
+                >
+                    {formatMessage('knapp.tilbake')}
+                </Link>
+            </div>
+        );
+    }
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>

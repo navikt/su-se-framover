@@ -11,7 +11,7 @@ import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { erKlageOmgjort, erKlageOpprettholdt } from '~utils/klage/klageUtils';
 
-import formkravMessages from '../../pages/klage/klage-nb';
+import formkravMessages from '../../pages/klage/vurderFormkrav/vurderFormkrav-nb';
 import vurderingMessages from '../../pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
 import * as DateUtils from '../../utils/date/dateUtils';
 
