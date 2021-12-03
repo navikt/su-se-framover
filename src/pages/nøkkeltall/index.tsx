@@ -75,6 +75,7 @@ const NøkkelTall = () => {
                                     label={formatMessage('søknader.ikkePåbegynt')}
                                     verdi={nøkkeltall.søknader.ikkePåbegynt}
                                 />
+                                <Rad label={formatMessage('søknader.lukket')} verdi={nøkkeltall.søknader.lukket} />
                                 <Rad
                                     label={formatMessage('søknader.digital')}
                                     verdi={nøkkeltall.søknader.digitalsøknader}
