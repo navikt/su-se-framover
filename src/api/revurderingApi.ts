@@ -1,6 +1,6 @@
 import { formatISO } from 'date-fns';
 
-import { RevurderingErrorCodes } from '~components/apiErrorAlert/revurderingApiError/RevurderingApiError';
+import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
@@ -181,7 +181,7 @@ export async function lagreForhåndsvarsel(
     revurderingId: string,
     forhåndsvarselhandling: Forhåndsvarselhandling,
     fritekstTilBrev: string
-): Promise<ApiClientResult<SimulertRevurdering, RevurderingErrorCodes>> {
+): Promise<ApiClientResult<SimulertRevurdering, ApiErrorCode>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsel`,
         method: 'POST',
@@ -197,7 +197,7 @@ export async function sendTilAttestering(
     revurderingId: string,
     fritekstTilBrev: string,
     skalFøreTilBrevutsending?: boolean
-): Promise<ApiClientResult<RevurderingTilAttestering, RevurderingErrorCodes>> {
+): Promise<ApiClientResult<RevurderingTilAttestering, ApiErrorCode>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',
