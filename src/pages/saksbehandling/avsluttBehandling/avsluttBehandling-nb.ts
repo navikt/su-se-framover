@@ -1,6 +1,5 @@
 export default {
-    'behandling.søknadsId': 'Søknads-id: ',
-    'behandling.revurderingsId': 'Revurderings-id: ',
+    heading: 'Avslutt behandling',
 
     'display.saksnummer': 'Saksnummer: ',
 

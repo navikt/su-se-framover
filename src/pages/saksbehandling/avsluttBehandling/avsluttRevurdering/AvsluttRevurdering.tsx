@@ -16,6 +16,8 @@ import yup from '~lib/validering';
 import { Revurdering } from '~types/Revurdering';
 import { erForhåndsvarselSendtEllerBesluttet } from '~utils/revurdering/revurderingUtils';
 
+import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
+
 import messages from './avsluttRevurdering-nb';
 import styles from './avsluttRevurdering.module.less';
 
@@ -81,11 +83,14 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
                     )}
                 />
             </div>
-            <Button variant="danger" className={styles.avsluttRevurderingButton}>
-                {formatMessage('knapp.avsluttRevurdering')}{' '}
-                {RemoteData.isPending(avsluttRevurderingStatus) && <Loader />}
-            </Button>
+
             {RemoteData.isFailure(avsluttRevurderingStatus) && <ApiErrorAlert error={avsluttRevurderingStatus.error} />}
+
+            <AvsluttBehandlingBunnknapper
+                sakId={props.sakId}
+                submitButtonText={formatMessage('knapp.avsluttRevurdering')}
+                isSubmitPending={RemoteData.isPending(avsluttRevurderingStatus)}
+            />
         </form>
     );
 };

@@ -37,7 +37,8 @@ export function useAsyncActionCreator<T, U, TErrorCode extends string = string>(
         args: T,
         onSuccess?: (result: U) => void | Promise<void>,
         onFailure?: (error: ApiError<TErrorCode> | undefined) => void | Promise<void>
-    ) => Promise<void>
+    ) => Promise<void>,
+    () => void
 ] {
     const [apiResult, setApiResult] = useState<ApiResult<U, TErrorCode>>(RemoteData.initial);
     const dispatch = useAppDispatch();
@@ -65,7 +66,11 @@ export function useAsyncActionCreator<T, U, TErrorCode extends string = string>(
         [apiResult, actionCreator]
     );
 
-    return [apiResult, callFn];
+    const resetToInitial = React.useCallback(() => {
+        setApiResult(RemoteData.initial);
+    }, [setApiResult]);
+
+    return [apiResult, callFn, resetToInitial];
 }
 
 /**
@@ -82,8 +87,8 @@ export function useAsyncActionCreatorWithArgsTransformer<
     actionCreator: AsyncThunk<TSuccess, TThunkArgs, { rejectValue: ApiError<TErrorCode> }>,
     argsTransformer: (args: TArgs) => TThunkArgs | undefined,
     onSuccess?: (args: TArgs, data: TSuccess) => void
-): [ApiResult<TSuccess, TErrorCode>, (args: TArgs) => void] {
-    const [apiResult, call] = useAsyncActionCreator(actionCreator);
+): [ApiResult<TSuccess, TErrorCode>, (args: TArgs) => void, () => void] {
+    const [apiResult, call, resetToInitial] = useAsyncActionCreator(actionCreator);
 
     const callFn = React.useCallback(
         (x: TArgs) => {
@@ -95,7 +100,7 @@ export function useAsyncActionCreatorWithArgsTransformer<
         [argsTransformer, call]
     );
 
-    return [apiResult, callFn];
+    return [apiResult, callFn, resetToInitial];
 }
 
 export function useApiCall<T, U>(
@@ -129,8 +134,8 @@ export function useApiCall<T, U>(
 
 export function useBrevForhåndsvisning<T>(
     fetchBrev: (args: T) => Promise<ApiClientResult<Blob, string>>
-): [ApiResult<Blob>, (args: T) => void] {
-    const [status, forhåndsvisBrev] = useApiCall(fetchBrev);
+): [ApiResult<Blob>, (args: T) => void, () => void] {
+    const [status, forhåndsvisBrev, resetToInitial] = useApiCall(fetchBrev);
 
     return [
         status,
@@ -139,5 +144,6 @@ export function useBrevForhåndsvisning<T>(
                 window.open(URL.createObjectURL(blob));
             });
         },
+        resetToInitial,
     ];
 }
