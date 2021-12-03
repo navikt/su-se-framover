@@ -178,7 +178,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                         ? formatMessage('knapp.avslåSøknad')
                         : formatMessage('knapp.lukkSøknad')
                 }
-                submitStatus={submitStatus}
+                isSubmitPending={RemoteData.isPending(submitStatus)}
             />
         </form>
     );

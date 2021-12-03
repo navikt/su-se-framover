@@ -1,4 +1,3 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { Back } from '@navikt/ds-icons';
 import { Button, Loader } from '@navikt/ds-react';
 import * as React from 'react';
@@ -11,11 +10,7 @@ import messages from '../avsluttBehandling-nb';
 
 import styles from './avsluttBehandlingBunnknapper.module.less';
 
-const AvsluttBehandlingBunnknapper = (props: {
-    submitButtonText: string;
-    submitStatus: RemoteData.RemoteData<unknown, unknown>;
-    sakId: string;
-}) => {
+const AvsluttBehandlingBunnknapper = (props: { submitButtonText: string; isSubmitPending: boolean; sakId: string }) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div className={styles.container}>
@@ -25,7 +20,7 @@ const AvsluttBehandlingBunnknapper = (props: {
             </LinkAsButton>
             <Button variant="danger" type="submit">
                 {props.submitButtonText}
-                {RemoteData.isPending(props.submitStatus) && <Loader />}
+                {props.isSubmitPending && <Loader />}
             </Button>
         </div>
     );

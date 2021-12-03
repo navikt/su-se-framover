@@ -89,7 +89,7 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
             <AvsluttBehandlingBunnknapper
                 sakId={props.sakId}
                 submitButtonText={formatMessage('knapp.avsluttRevurdering')}
-                submitStatus={avsluttRevurderingStatus}
+                isSubmitPending={RemoteData.isPending(avsluttRevurderingStatus)}
             />
         </form>
     );
