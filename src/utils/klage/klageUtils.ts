@@ -32,11 +32,20 @@ export interface VurderingRequest {
     fritekstTilBrev: Nullable<string>;
 }
 
-export const erKlageVilkårsvurdertBekreftetEllerSenere = (k: Klage) =>
-    k.status !== KlageStatus.OPPRETTET &&
-    k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT &&
-    k.status !== KlageStatus.VILKÅRSVURDERT_UTFYLT;
+export const erKlageIGyldigTilstandForÅSaksbehandle = (k: Klage) =>
+    k.status !== KlageStatus.TIL_ATTESTERING && k.status !== KlageStatus.IVERKSATT;
 
+export const erKlageVilkårsvurdertUtfyltEllerSenere = (k: Klage) =>
+    k.status !== KlageStatus.OPPRETTET && k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT;
+
+export const erKlageVurdertUtfyltEllerSenere = (k: Klage) =>
+    erKlageVurdertUtfyltEllerBekreftet(k) || erKlageTilAttestering(k) || erKlageIverksatt(k);
+
+export const erKlageVurdertUtfyltEllerBekreftet = (k: Klage) =>
+    k.status === KlageStatus.VURDERT_UTFYLT || k.status === KlageStatus.VURDERT_BEKREFTET;
+
+export const erKlageBekreftet = (k: Klage) =>
+    k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET || k.status === KlageStatus.VURDERT_BEKREFTET;
 export const erKlageVurdertBekreftet = (k: Klage): boolean => k.status === KlageStatus.VURDERT_BEKREFTET;
 export const erKlageTilAttestering = (k: Klage): boolean => k.status === KlageStatus.TIL_ATTESTERING;
 export const erKlageIverksatt = (k: Klage): boolean => k.status === KlageStatus.IVERKSATT;

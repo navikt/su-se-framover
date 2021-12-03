@@ -13,6 +13,7 @@ import * as Routes from '~lib/routes';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
+import { erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
 
 import messages from './sendKlageTilAttestering-nb';
 import styles from './sendKlageTilAttestering.module.less';
@@ -36,6 +37,23 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
             }
         );
     };
+
+    if (!erKlageVurdertBekreftet(props.klage)) {
+        return (
+            <div className={styles.fantIkkevedtakFeilContainer}>
+                <Alert variant="error">{formatMessage('feil.klageErIkkeIRiktigTilstand')}</Alert>
+                <Link
+                    to={Routes.klage.createURL({
+                        sakId: props.sakId,
+                        klageId: props.klage.id,
+                        steg: KlageSteg.Vurdering,
+                    })}
+                >
+                    {formatMessage('knapp.tilbake')}
+                </Link>
+            </div>
+        );
+    }
 
     const klagensVedtak = props.vedtaker.find((v) => v.id === props.klage.vedtakId);
 

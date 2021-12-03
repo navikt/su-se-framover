@@ -23,8 +23,8 @@ import {
     OmgjørVedtakÅrsak,
     OpprettholdVedtakHjemmel,
     KlageVurderingType,
-    KlageStatus,
 } from '~types/Klage';
+import { erKlageVurdertBekreftet, erKlageVurdertUtfyltEllerSenere } from '~utils/klage/klageUtils';
 
 import messages from './VurderingAvKlage-nb';
 import styles from './vurderingAvKlage.module.less';
@@ -163,7 +163,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     };
 
     const handleBekreftOgFortsettClick = () => {
-        if (props.klage.status === KlageStatus.VURDERT_BEKREFTET) {
+        if (erKlageVurdertBekreftet(props.klage)) {
             history.push(
                 Routes.klage.createURL({
                     sakId: props.sakId,
@@ -192,11 +192,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     };
 
     const iGyldigTilstandForÅBekrefteOgFortsette = () => {
-        return (
-            (props.klage.status !== KlageStatus.VURDERT_UTFYLT &&
-                props.klage.status !== KlageStatus.VURDERT_BEKREFTET) ||
-            (isDirty && !isSubmitSuccessful)
-        );
+        return !erKlageVurdertUtfyltEllerSenere(props.klage) || (isDirty && !isSubmitSuccessful);
     };
 
     return (

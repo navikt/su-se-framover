@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Select, Loader, Textarea, RadioGroup, Radio } from '@navikt/ds-react';
+import { Button, Select, Loader, Textarea, RadioGroup, Radio, Alert } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as B from 'fp-ts/lib/boolean';
 import * as S from 'fp-ts/string';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
@@ -17,10 +18,14 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import { KlageSteg } from '~pages/saksbehandling/types';
-import { Svarord, Klage, KlageStatus, KlageInnenforFristen, KlageSignert } from '~types/Klage';
+import { Svarord, Klage, KlageInnenforFristen, KlageSignert } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
-import { erKlageVilkårsvurdertBekreftetEllerSenere } from '~utils/klage/klageUtils';
+import {
+    erKlageBekreftet,
+    erKlageIGyldigTilstandForÅSaksbehandle,
+    erKlageVilkårsvurdertUtfyltEllerSenere,
+} from '~utils/klage/klageUtils';
 
 import messages from './klage-nb';
 import styles from './klage.module.less';
@@ -108,10 +113,7 @@ const VurderFormkrav = (props: Props) => {
     };
 
     const handleBekreftOgFortsettClick = () => {
-        if (
-            props.klage.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET ||
-            props.klage.status === KlageStatus.VURDERT_BEKREFTET
-        ) {
+        if (erKlageBekreftet(props.klage)) {
             history.push(
                 Routes.klage.createURL({
                     sakId: props.sakId,
@@ -139,12 +141,19 @@ const VurderFormkrav = (props: Props) => {
     };
 
     const iGyldigTilstandForÅBekrefteOgFortsette = () => {
-        return (
-            (props.klage.status !== KlageStatus.VILKÅRSVURDERT_UTFYLT &&
-                !erKlageVilkårsvurdertBekreftetEllerSenere(props.klage)) ||
-            (isDirty && !isSubmitSuccessful)
-        );
+        return !erKlageVilkårsvurdertUtfyltEllerSenere || (isDirty && !isSubmitSuccessful);
     };
+
+    if (!erKlageIGyldigTilstandForÅSaksbehandle(props.klage)) {
+        return (
+            <div className={styles.fantIkkevedtakFeilContainer}>
+                <Alert variant="error">{formatMessage('feil.ikkeRiktigTilstandForÅVilkårsvurdere')}</Alert>
+                <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
+                    {formatMessage('knapp.tilbake')}
+                </Link>
+            </div>
+        );
+    }
 
     return (
         <ToKolonner tittel={formatMessage('formkrav.tittel')}>
@@ -255,6 +264,7 @@ const VurderFormkrav = (props: Props) => {
                             </Button>
                         </div>
                         {RemoteData.isFailure(lagreStatus) && <ApiErrorAlert error={lagreStatus.error} />}
+                        {RemoteData.isFailure(bekreftStatus) && <ApiErrorAlert error={bekreftStatus.error} />}
                     </form>
                 ),
                 right: <></>,

@@ -11,6 +11,7 @@ export default {
     'underkjennelse.kommentar.label': 'Kommentar',
 
     'feil.fantIkkeKlageEllerVedtakensKlage': 'Fant ikke klage, eller klagens vedtak',
+    'feil.klageErIkkeTilAttestering': 'Klagen er ikke til attestering',
 
     'notification.iverksatt': 'Iverksatt klage',
     'notification.underkjent': 'Underkjent klage',

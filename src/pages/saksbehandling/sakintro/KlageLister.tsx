@@ -31,7 +31,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                         const senesteAttestering = pipe(attesteringer, last, toNullable);
                         return (
                             <>
-                                <Heading level="3" size="medium">
+                                <Heading level="3" size="small">
                                     {erKlageIverksatt(klage)
                                         ? formatMessage('klage.iverksatt')
                                         : formatMessage('klage.åpenKlage')}

@@ -88,7 +88,6 @@ const Sakintro = (props: { sak: Sak }) => {
                 return Routes.klageOpprett.createURL({ sakId: props.sak.id });
             }
         }
-        return assertNever(nyBehandling);
     };
 
     return (
@@ -209,7 +208,3 @@ export const AvsluttOgStartFortsettButtons = (props: {
 };
 
 export default Sakintro;
-
-function assertNever(x: never): never {
-    throw new Error(`Unexpected object: ${x}`);
-}

@@ -19,6 +19,7 @@ import yup from '~lib/validering';
 import { UnderkjennelseGrunn, underkjennelsesGrunnTextMapper } from '~types/Behandling';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
+import { erKlageTilAttestering } from '~utils/klage/klageUtils';
 
 import sharedStyles from '../sharedStyles.module.less';
 
@@ -82,6 +83,17 @@ const AttesterKlage = (props: {
                         sakId: props.sakInfo.sakId,
                     })}
                 >
+                    {formatMessage('knapp.tilbake')}
+                </Link>
+            </div>
+        );
+    }
+
+    if (!erKlageTilAttestering(klage)) {
+        return (
+            <div className={styles.fantIkkevedtakFeilContainer}>
+                <Alert variant="error">{formatMessage('feil.klageErIkkeTilAttestering')}</Alert>
+                <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakInfo.sakId })}>
                     {formatMessage('knapp.tilbake')}
                 </Link>
             </div>

@@ -44,5 +44,8 @@ export default {
     'framdriftsindikator.vurdering': 'Vurdering',
     'framdriftsindikator.oppsummering': 'Oppsummering',
 
+    'knapp.tilbake': 'Tilbake',
+
     'feil.fantIkkeKlage': 'Fant ikke klage',
+    'feil.ikkeRiktigTilstandForÅVilkårsvurdere': 'Klagen er ikke i riktig tilstand for å vurdere vilkår',
 };
