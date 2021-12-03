@@ -35,6 +35,9 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                         <th>
                             <Label>{formatMessage('underkjent.kommentar')}</Label>
                         </th>
+                        <th>
+                            <Label>{formatMessage('underkjent.attestant')}</Label>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,6 +53,9 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                             </td>
                             <td>
                                 <BodyShort className={styles.kommentar}>{a.underkjennelse!.kommentar}</BodyShort>
+                            </td>
+                            <td>
+                                <BodyShort className={styles.kommentar}>{a.attestant}</BodyShort>
                             </td>
                             {/* eslint-enable @typescript-eslint/no-non-null-assertion */}
                         </tr>

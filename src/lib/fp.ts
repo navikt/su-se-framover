@@ -1,5 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import * as A from 'fp-ts/Array';
 import * as F from 'fp-ts/function';
+import { Ord } from 'fp-ts/lib/Ord';
 import * as Option from 'fp-ts/Option';
 
 export const pipe = F.pipe;
@@ -15,6 +17,10 @@ export function pickRemoteData<E, A, B>(
     r2: RemoteData.RemoteData<E, B>
 ): RemoteData.RemoteData<E, A | B> {
     return RemoteData.isInitial(r2) ? r1 : r2;
+}
+
+export function maxBy<T>(ord: Ord<T>): (arr: T[]) => Option.Option<T> {
+    return F.flow(A.sortBy([ord]), A.last);
 }
 
 export function nullableMap<T, U>(arg: T | null, f: (x: T) => U): U | null;
