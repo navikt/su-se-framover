@@ -40,7 +40,6 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
     const submitStatus = pickRemoteData(søknadLukketStatus, avslagManglendeDokStatus);
 
     const handleSubmit = async (values: LukkSøknadOgAvsluttSøknadsbehandlingFormData) => {
-        console.log('handle submit');
         if (!values.begrunnelse) {
             return;
         }

@@ -26,7 +26,7 @@ interface AvvistProps {
     avvistFormData: AvvistFormData;
     feilmeldinger?: FieldErrors<AvvistFormData>;
     onValueChange: (value: AvvistFormData) => void;
-    onRequestValidate(onSuccess: () => void): void;
+    onRequestValidate: (onSuccess: () => void) => void;
 }
 
 const Avvist = (props: AvvistProps) => {
