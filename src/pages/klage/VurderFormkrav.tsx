@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Select, Loader, Textarea } from '@navikt/ds-react';
+import { Button, Select, Loader, Textarea, RadioGroup, Radio } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as B from 'fp-ts/lib/boolean';
 import * as S from 'fp-ts/string';
@@ -17,7 +17,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import { KlageSteg } from '~pages/saksbehandling/types';
-import { Klage, KlageStatus } from '~types/Klage';
+import { Svarord, Klage, KlageStatus, KlageInnenforFristen, KlageSignert } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
 import { erKlageVilkårsvurdertBekreftetEllerSenere } from '~utils/klage/klageUtils';
@@ -27,9 +27,9 @@ import styles from './klage.module.less';
 
 const eqFormData = struct<FormData>({
     vedtakId: eqNullable(S.Eq),
-    innenforFristen: eqNullable(B.Eq),
+    innenforFristen: eqNullable(S.Eq),
     klagesDetPåKonkreteElementerIVedtaket: eqNullable(B.Eq),
-    signert: eqNullable(B.Eq),
+    signert: eqNullable(S.Eq),
     begrunnelse: eqNullable(S.Eq),
 });
 
@@ -41,9 +41,9 @@ interface Props {
 
 interface FormData {
     vedtakId: Nullable<string>;
-    innenforFristen: Nullable<boolean>;
+    innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
-    signert: Nullable<boolean>;
+    signert: Nullable<KlageSignert>;
     begrunnelse: Nullable<string>;
 }
 
@@ -175,11 +175,18 @@ const VurderFormkrav = (props: Props) => {
                             control={control}
                             name="innenforFristen"
                             render={({ field, fieldState }) => (
-                                <BooleanRadioGroup
+                                <RadioGroup
+                                    {...field}
                                     legend={formatMessage('formkrav.innenforFrist.label')}
                                     error={fieldState.error?.message}
-                                    {...field}
-                                />
+                                    value={field.value ?? ''}
+                                >
+                                    {Object.values(Svarord).map((verdi) => (
+                                        <Radio value={verdi} key={verdi}>
+                                            {formatMessage(verdi)}
+                                        </Radio>
+                                    ))}
+                                </RadioGroup>
                             )}
                         />
 
@@ -199,11 +206,18 @@ const VurderFormkrav = (props: Props) => {
                             control={control}
                             name="signert"
                             render={({ field, fieldState }) => (
-                                <BooleanRadioGroup
+                                <RadioGroup
+                                    {...field}
                                     legend={formatMessage('formkrav.signert.label')}
                                     error={fieldState.error?.message}
-                                    {...field}
-                                />
+                                    value={field.value ?? ''}
+                                >
+                                    {Object.values(Svarord).map((verdi) => (
+                                        <Radio value={verdi} key={verdi}>
+                                            {formatMessage(verdi)}
+                                        </Radio>
+                                    ))}
+                                </RadioGroup>
                             )}
                         />
 

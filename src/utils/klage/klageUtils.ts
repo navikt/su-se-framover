@@ -10,15 +10,17 @@ import {
     OmgjørVedtakÅrsak,
     Oppretthold,
     OpprettholdVedtakHjemmel,
+    KlageSignert,
+    KlageInnenforFristen,
 } from '~types/Klage';
 
 export interface FormkravRequest {
     sakId: string;
     klageId: string;
     vedtakId: Nullable<string>;
-    innenforFristen: Nullable<boolean>;
+    innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
-    erUnderskrevet: Nullable<boolean>;
+    erUnderskrevet: Nullable<KlageSignert>;
     begrunnelse: Nullable<string>;
 }
 

@@ -88,9 +88,7 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
             <div className={styles.informasjonsContainerContent}>
                 <div>
                     <Label>{formatMessage('formkrav.innenforFrist.label')}</Label>
-                    <BodyShort>
-                        {props.klage.innenforFristen ? formatMessage('label.ja') : formatMessage('label.nei')}
-                    </BodyShort>
+                    <BodyShort>{props.klage.innenforFristen && formatMessage(props.klage.innenforFristen)}</BodyShort>
                 </div>
                 <div>
                     <Label>{formatMessage('formkrav.klagesPåKonkreteElementer.label')}</Label>
@@ -102,9 +100,7 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
                 </div>
                 <div>
                     <Label>{formatMessage('formkrav.signert.label')}</Label>
-                    <BodyShort>
-                        {props.klage.erUnderskrevet ? formatMessage('label.ja') : formatMessage('label.nei')}
-                    </BodyShort>
+                    <BodyShort>{props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet)}</BodyShort>
                 </div>
             </div>
 

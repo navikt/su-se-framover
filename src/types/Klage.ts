@@ -11,9 +11,9 @@ export interface Klage {
     datoKlageMottatt: string;
     status: KlageStatus;
     vedtakId: Nullable<string>;
-    innenforFristen: Nullable<boolean>;
+    innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
-    erUnderskrevet: Nullable<boolean>;
+    erUnderskrevet: Nullable<KlageSignert>;
     begrunnelse: Nullable<string>;
     vedtaksvurdering: Nullable<Vedtaksvurdering>;
     fritekstTilBrev: Nullable<string>;
@@ -41,6 +41,27 @@ interface Vedtaksvurdering {
     omgjør: Nullable<Omgjør>;
     oppretthold: Nullable<Oppretthold>;
 }
+
+export interface Omgjør {
+    årsak: Nullable<OmgjørVedtakÅrsak>;
+    utfall: Nullable<OmgjørVedtakUtfall>;
+}
+
+export interface Oppretthold {
+    hjemler: OpprettholdVedtakHjemmel[];
+}
+
+/**
+ * ord som brukes til (bekreftende eller benektende) svar
+ */
+export enum Svarord {
+    JA = 'JA',
+    NEI_MEN_SKAL_VURDERES = 'NEI_MEN_SKAL_VURDERES',
+    NEI = 'NEI',
+}
+
+export type KlageInnenforFristen = Svarord;
+export type KlageSignert = Svarord;
 
 export enum KlageVurderingType {
     OMGJØR = 'OMGJØR',
@@ -70,13 +91,4 @@ export enum OpprettholdVedtakHjemmel {
     'SU_PARAGRAF_12' = 'SU_PARAGRAF_12',
     'SU_PARAGRAF_13' = 'SU_PARAGRAF_13',
     'SU_PARAGRAF_18' = 'SU_PARAGRAF_18',
-}
-
-export interface Omgjør {
-    årsak: Nullable<OmgjørVedtakÅrsak>;
-    utfall: Nullable<OmgjørVedtakUtfall>;
-}
-
-export interface Oppretthold {
-    hjemler: OpprettholdVedtakHjemmel[];
 }
