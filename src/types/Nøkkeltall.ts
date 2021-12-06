@@ -1,6 +1,7 @@
 export interface Nøkkeltall {
     søknader: Søknader;
     antallUnikePersoner: number;
+    løpendeSaker: number;
 }
 
 interface Søknader {
@@ -9,6 +10,7 @@ interface Søknader {
     iverksatteInnvilget: number;
     ikkePåbegynt: number;
     påbegynt: number;
+    lukket: number;
     digitalsøknader: number;
     papirsøknader: number;
 }

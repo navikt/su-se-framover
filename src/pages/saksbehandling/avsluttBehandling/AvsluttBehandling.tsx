@@ -1,15 +1,14 @@
-import { Alert, Heading, Link, Panel } from '@navikt/ds-react';
+import { Alert, Heading, Panel } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
-import LukkSøknadOgAvsluttBehandling from '../lukkSøknad/LukkSøknad';
-
 import messages from './avsluttBehandling-nb';
 import styles from './avsluttBehandling.module.less';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
+import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad';
 
 const AvsluttBehandling = (props: { sak: Sak }) => {
     const { formatMessage } = useI18n({ messages });
@@ -24,30 +23,26 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
                 <Alert variant="error">
                     {formatMessage('feil.fantIkkeBehandling')} {urlParams.id}
                 </Alert>
-                <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
-                    {formatMessage('link.tilbake')}
-                </Link>
             </div>
         );
     }
 
     return (
-        <Panel className={styles.pageContainer}>
-            <Heading level="2" size="medium">
-                {formatMessage('display.saksnummer')} {props.sak.saksnummer}
+        <div className={styles.container}>
+            <Heading level="1" size="large" className={styles.tittel}>
+                {formatMessage('heading')}
             </Heading>
-            <Heading level="2" size="medium" spacing>
-                {formatMessage(søknad ? 'behandling.søknadsId' : 'behandling.revurderingsId')} {urlParams.id}
-            </Heading>
+            <Panel className={styles.contentContainer}>
+                <Heading level="2" size="medium" spacing>
+                    {formatMessage('display.saksnummer')} {props.sak.saksnummer}
+                </Heading>
 
-            <div className={styles.mainContent}>
-                {søknad && <LukkSøknadOgAvsluttBehandling sakId={props.sak.id} søknad={søknad} />}
-                {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
-            </div>
-            <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
-                {formatMessage('link.tilbake')}
-            </Link>
-        </Panel>
+                <div className={styles.mainContent}>
+                    {søknad && <LukkSøknadOgAvsluttBehandling sakId={props.sak.id} søknad={søknad} />}
+                    {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
+                </div>
+            </Panel>
+        </div>
     );
 };
 

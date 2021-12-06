@@ -75,6 +75,7 @@ const NøkkelTall = () => {
                                     label={formatMessage('søknader.ikkePåbegynt')}
                                     verdi={nøkkeltall.søknader.ikkePåbegynt}
                                 />
+                                <Rad label={formatMessage('søknader.lukket')} verdi={nøkkeltall.søknader.lukket} />
                                 <Rad
                                     label={formatMessage('søknader.digital')}
                                     verdi={nøkkeltall.søknader.digitalsøknader}
@@ -91,6 +92,7 @@ const NøkkelTall = () => {
                         <Panel border className={styles.panel}>
                             <ul className={styles.list}>
                                 <Rad label={formatMessage('personer.antall')} verdi={nøkkeltall.antallUnikePersoner} />
+                                <Rad label={formatMessage('saker.løpende')} verdi={nøkkeltall.løpendeSaker} />
                             </ul>
                         </Panel>
                     </Oppsummeringspanel>

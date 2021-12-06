@@ -1,5 +1,5 @@
 import { Nullable } from '~lib/types';
-import { AvvistBrevConfig } from '~pages/saksbehandling/lukkSøknad/lukkSøknadUtils';
+import { AvvistBrevConfig } from '~pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad, SøknadInnhold } from '~types/Søknad';
 
