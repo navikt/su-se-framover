@@ -1,9 +1,15 @@
 import { BodyShort, Label } from '@navikt/ds-react';
+import { pipe } from 'fp-ts/lib/function';
+import * as Option from 'fp-ts/Option';
+import * as Ord from 'fp-ts/Ord';
+import * as S from 'fp-ts/string';
 import * as React from 'react';
 
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { maxBy } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
+import { Attestering } from '~types/Behandling';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Revurdering } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
@@ -42,6 +48,17 @@ const Intro = (props: { revurdering: Revurdering }) => {
                     {
                         tittel: intl.formatMessage({ id: 'label.begrunnelse' }),
                         verdi: props.revurdering.begrunnelse,
+                    },
+                    {
+                        tittel: intl.formatMessage({ id: 'label.attestant' }),
+                        verdi: pipe(
+                            props.revurdering.attesteringer.filter((a) => a.underkjennelse === null),
+                            maxBy(Ord.contramap((a: Attestering) => a.opprettet)(S.Ord)),
+                            Option.fold(
+                                () => '–',
+                                (a) => a.attestant
+                            )
+                        ),
                     },
                 ].map((item) => (
                     <div className={styles.introItem} key={item.tittel}>
