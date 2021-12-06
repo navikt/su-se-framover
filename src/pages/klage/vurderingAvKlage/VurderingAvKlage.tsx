@@ -26,9 +26,9 @@ import {
     KlageVurderingType,
 } from '~types/Klage';
 import {
-    erKlageIGyldigTilstandForÅSaksbehandle,
     erKlageVurdertBekreftet,
     erKlageVurdertUtfyltEllerSenere,
+    iGyldigTilstandForÅVurdere,
 } from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
@@ -153,7 +153,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 fritekstTilBrev: data.fritekstTilBrev,
             },
             (klage) => {
-                //vi resetter formet, slik at tilstandssjekken til isDirty, og isSubmitSuccessful har den nye dataen
+                //vi resetter formet, slik at tilstandssjekken for å bekrefte og fortsette har de nye dataene
                 reset({
                     klageVurderingType: klage.vedtaksvurdering?.type ?? null,
                     omgjør: {
@@ -169,8 +169,12 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         );
     };
 
+    const iGyldigTilstandForÅBekrefteOgFortsette = () => {
+        return !erKlageVurdertUtfyltEllerSenere(props.klage) || (isDirty && !isSubmitSuccessful);
+    };
+
     const handleBekreftOgFortsettClick = () => {
-        if (erKlageVurdertBekreftet(props.klage)) {
+        if (erKlageVurdertBekreftet(props.klage) && !isDirty) {
             history.push(
                 Routes.klage.createURL({
                     sakId: props.sakId,
@@ -198,11 +202,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         );
     };
 
-    const iGyldigTilstandForÅBekrefteOgFortsette = () => {
-        return !erKlageVurdertUtfyltEllerSenere(props.klage) || (isDirty && !isSubmitSuccessful);
-    };
-
-    if (!erKlageIGyldigTilstandForÅSaksbehandle(props.klage)) {
+    if (!iGyldigTilstandForÅVurdere(props.klage)) {
         return (
             <div className={sharedStyles.feilTilstandContainer}>
                 <Alert variant="error">{formatMessage('feil.ikkeRiktigTilstandForÅVurdere')}</Alert>

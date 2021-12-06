@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Ingress, Loader, TextField } from '@navikt/ds-react';
+import { Button, Heading, Loader, TextField } from '@navikt/ds-react';
 import { formatISO } from 'date-fns';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -17,8 +17,9 @@ import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Sak } from '~types/Sak';
 
-import messages from './klage-nb';
-import styles from './klage.module.less';
+import messages from '../klage-nb';
+
+import styles from './opprettKlage.module.less';
 
 interface FormData {
     journalpostId: string;
@@ -58,7 +59,9 @@ const OpprettKlage = (props: { sak: Sak }) => {
                 )
             )}
         >
-            <Ingress>{formatMessage('opprett.tittel')}</Ingress>
+            <Heading level="2" size="medium">
+                {formatMessage('opprett.tittel')}
+            </Heading>
             <TextField
                 {...register('journalpostId')}
                 error={formState.errors.journalpostId?.message}

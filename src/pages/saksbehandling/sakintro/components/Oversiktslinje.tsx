@@ -38,7 +38,7 @@ const Oversiktslinje = <T extends { id: string }>(props: Props<T>) => {
                     return (
                         <li key={v.id}>
                             <Panel border className={styles.entry}>
-                                <div className={styles.informasjonslinje}>{props.children.oversiktsinformasjon(v)}</div>
+                                <div>{props.children.oversiktsinformasjon(v)}</div>
                                 <div className={styles.knapper}>{props.children.knapper(v)}</div>
                             </Panel>
                         </li>

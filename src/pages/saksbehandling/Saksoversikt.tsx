@@ -31,7 +31,7 @@ const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
 const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter/DokumenterPage'));
 const StansPage = React.lazy(() => import('./stans/Stans'));
-const KlageOpprett = React.lazy(() => import('~pages/klage/OpprettKlage'));
+const KlageOpprett = React.lazy(() => import('~pages/klage/opprettKlage/OpprettKlage'));
 const Klage = React.lazy(() => import('~pages/klage/Klage'));
 
 const Saksoversikt = () => {

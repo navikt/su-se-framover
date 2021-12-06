@@ -22,9 +22,9 @@ import { Svarord, Klage, KlageInnenforFristen, KlageSignert } from '~types/Klage
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
 import {
-    erKlageBekreftet,
-    erKlageIGyldigTilstandForÅSaksbehandle,
+    erKlageVilkårsvurdertBekreftetEllerSenere,
     erKlageVilkårsvurdertUtfyltEllerSenere,
+    iGyldigTilstandForÅVilkårsvurdere,
 } from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
@@ -102,7 +102,7 @@ const VurderFormkrav = (props: Props) => {
                 begrunnelse: values.begrunnelse,
             },
             (klage) => {
-                //vi resetter formet, slik at tilstandssjekken til isDirty, og isSubmitSuccessful har den nye dataen
+                //vi resetter formet, slik at tilstandssjekken for å bekrefte og fortsette har de nye dataene
                 reset({
                     vedtakId: klage.vedtakId,
                     innenforFristen: klage.innenforFristen,
@@ -114,8 +114,12 @@ const VurderFormkrav = (props: Props) => {
         );
     };
 
+    const iGyldigTilstandForÅBekrefteOgFortsette = () => {
+        return !erKlageVilkårsvurdertUtfyltEllerSenere(props.klage) || (isDirty && !isSubmitSuccessful);
+    };
+
     const handleBekreftOgFortsettClick = () => {
-        if (erKlageBekreftet(props.klage)) {
+        if (erKlageVilkårsvurdertBekreftetEllerSenere(props.klage) && !isDirty) {
             history.push(
                 Routes.klage.createURL({
                     sakId: props.sakId,
@@ -142,11 +146,7 @@ const VurderFormkrav = (props: Props) => {
         );
     };
 
-    const iGyldigTilstandForÅBekrefteOgFortsette = () => {
-        return !erKlageVilkårsvurdertUtfyltEllerSenere || (isDirty && !isSubmitSuccessful);
-    };
-
-    if (!erKlageIGyldigTilstandForÅSaksbehandle(props.klage)) {
+    if (!iGyldigTilstandForÅVilkårsvurdere(props.klage)) {
         return (
             <div className={sharedStyles.feilTilstandContainer}>
                 <Alert variant="error">{formatMessage('feil.ikkeRiktigTilstandForÅVilkårsvurdere')}</Alert>
