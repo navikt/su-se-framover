@@ -110,4 +110,5 @@ export enum Klage {
     UGYLDIG_OMGJØRINGSUTFALL = 'ugyldig_omgjøringsutfall',
     UGYLDIG_OMGJØRINGSÅRSAK = 'ugyldig_omgjøringsårsak',
     UGYLDIG_OPPRETTHOLDESESHJEMLER = 'ugyldig_opprettholdeseshjemler',
+    NEI_ER_IKKE_STØTTET = 'nei_er_ikke_støttet',
 }

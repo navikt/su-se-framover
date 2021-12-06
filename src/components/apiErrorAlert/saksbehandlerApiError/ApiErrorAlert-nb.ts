@@ -80,6 +80,7 @@ const messages: { [key in FeilresponsErrorCodes]: string } & { [key: string]: st
     [Klage.UGYLDIG_OMGJØRINGSUTFALL]: 'Ugyldig omgjøringsutfall',
     [Klage.UGYLDIG_OMGJØRINGSÅRSAK]: 'Ugyldig omgjøringsårsak',
     [Klage.UGYLDIG_OPPRETTHOLDESESHJEMLER]: 'Ugyldig opprettholdelseshjemler',
+    [Klage.NEI_ER_IKKE_STØTTET]: 'Det er ikke støtte for å svare "nei"',
 };
 
 export default messages;
