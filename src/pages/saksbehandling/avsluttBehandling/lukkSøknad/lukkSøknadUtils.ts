@@ -89,6 +89,12 @@ export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknad
                         }),
                 }),
             });
+        case AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok:
+            return yup.object({
+                manglendeDok: yup.object({
+                    fritekst: yup.string().required().typeError('Du må legge inn fritekst til brevet'),
+                }),
+            });
         default:
             return yup.object({
                 begrunnelse: yup
