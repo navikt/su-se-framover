@@ -21,6 +21,8 @@ export default {
     'formkrav.tittel': 'Vurder formkrav',
     'formkrav.innenforFrist.label': 'Er klagefristen overholdt?',
     'formkrav.klagesPåKonkreteElementer.label': 'Klages det på konkrete elementer i vedtaket?',
+    'formkrav.klagesPåKonkreteElementer.ja': 'Ja',
+    'formkrav.klagesPåKonkreteElementer.nei': 'Nei',
     'formkrav.signert.label': 'Er klagen signert?',
     'formkrav.vedtak.label': 'Vedtaket som er påklagd',
     'formkrav.vedtak.option.default': 'Velg vedtak',

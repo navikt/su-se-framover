@@ -68,32 +68,6 @@ const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
     fritekstTilBrev: eqNullable(S.Eq),
 });
 
-/* const schema = yup.object<VurderingAvKlageFormData>({
-    klageVurderingType: yup.string().required().oneOf([KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD]),
-    omgjør: yup
-        .object<OmgjørFormData>()
-        .defined()
-        .when('klageVurderingType', {
-            is: KlageVurderingType.OMGJØR,
-            then: yup.object({
-                årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).required(),
-                utfall: yup.string().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
-            }),
-            otherwise: yup.object().nullable(),
-        }),
-    oppretthold: yup
-        .object<HjemmelFormData>()
-        .defined()
-        .when('klageVurderingType', {
-            is: KlageVurderingType.OPPRETTHOLD,
-            then: yup.object<HjemmelFormData>({
-                hjemmel: yup.array<OpprettholdVedtakHjemmel>().required(),
-            }),
-            otherwise: yup.object().nullable(),
-        }),
-    fritekstTilBrev: yup.string().nullable().defined(),
-});*/
-
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const history = useHistory();
     const { formatMessage } = useI18n({ messages });
@@ -124,7 +98,6 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         reset,
         ...form
     } = useForm<VurderingAvKlageFormData>({
-        //resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
 
@@ -235,7 +208,8 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         error={fieldState.error?.message}
                                         value={field.value ?? ''}
                                     >
-                                        <Radio value={KlageVurderingType.OMGJØR}>
+                                        {/*TODO: fjern disabled når vi har støtte for omgjør */}
+                                        <Radio disabled value={KlageVurderingType.OMGJØR}>
                                             {formatMessage(KlageVurderingType.OMGJØR)}
                                         </Radio>
                                         <Radio value={KlageVurderingType.OPPRETTHOLD}>

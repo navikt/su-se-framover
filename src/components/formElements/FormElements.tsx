@@ -18,6 +18,8 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
         false: string;
     };
     onChange(val: boolean): void;
+    //TODO: kan fjernes når vi støtter nei svar i klage
+    disableNei?: boolean;
 }
 
 /**
@@ -32,7 +34,9 @@ export const BooleanRadioGroup: React.ForwardRefExoticComponent<
             <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
                 {labels?.true ?? formatMessage('label.ja')}
             </Radio>
-            <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>
+            <Radio disabled={props.disableNei} value={false.toString()}>
+                {labels?.false ?? formatMessage('label.nei')}
+            </Radio>
         </RadioGroup>
     );
 });

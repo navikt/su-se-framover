@@ -54,14 +54,6 @@ interface FormData {
     begrunnelse: Nullable<string>;
 }
 
-/*const schema = yup.object<FormData>({
-    vedtakId: yup.string().typeError('Feltet må fylles ut').required(),
-    innenforFristen: yup.boolean().typeError('Feltet må fylles ut').required(),
-    klagesDetPåKonkreteElementerIVedtaket: yup.boolean().typeError('Feltet må fylles ut').required(),
-    signert: yup.boolean().typeError('Feltet må fylles ut').required(),
-    begrunnelse: yup.string().defined(),
-}); */
-
 const VurderFormkrav = (props: Props) => {
     const history = useHistory();
     const { formatMessage } = useI18n({ messages });
@@ -82,7 +74,6 @@ const VurderFormkrav = (props: Props) => {
         reset,
         formState: { isDirty, isSubmitSuccessful },
     } = useForm<FormData>({
-        //resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
 
@@ -193,7 +184,8 @@ const VurderFormkrav = (props: Props) => {
                                     value={field.value ?? ''}
                                 >
                                     {Object.values(Svarord).map((verdi) => (
-                                        <Radio value={verdi} key={verdi}>
+                                        //fjern disabled når vi har støtte for nei
+                                        <Radio disabled={verdi === Svarord.NEI} value={verdi} key={verdi}>
                                             {formatMessage(verdi)}
                                         </Radio>
                                     ))}
@@ -209,6 +201,7 @@ const VurderFormkrav = (props: Props) => {
                                     legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
                                     error={fieldState.error?.message}
                                     {...field}
+                                    disableNei
                                 />
                             )}
                         />
@@ -224,7 +217,8 @@ const VurderFormkrav = (props: Props) => {
                                     value={field.value ?? ''}
                                 >
                                     {Object.values(Svarord).map((verdi) => (
-                                        <Radio value={verdi} key={verdi}>
+                                        //fjern disabled når vi har støtte for nei
+                                        <Radio disabled={verdi === Svarord.NEI} value={verdi} key={verdi}>
                                             {formatMessage(verdi)}
                                         </Radio>
                                     ))}
