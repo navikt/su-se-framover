@@ -124,37 +124,35 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
     switch (steg) {
         case KlageSteg.Formkrav:
             return {
-                status:
-                    k.status === KlageStatus.OPPRETTET
-                        ? Linjestatus.Ingenting
-                        : k.status === KlageStatus.VILKÅRSVURDERT_PÅBEGYNT ||
-                          k.status === KlageStatus.VILKÅRSVURDERT_UTFYLT
-                        ? Linjestatus.Uavklart
-                        : Linjestatus.Ok,
+                status: erKlageOpprettet(k)
+                    ? Linjestatus.Ingenting
+                    : k.status === KlageStatus.VILKÅRSVURDERT_PÅBEGYNT || k.status === KlageStatus.VILKÅRSVURDERT_UTFYLT
+                    ? Linjestatus.Uavklart
+                    : Linjestatus.Ok,
                 erKlikkbar: true,
             };
         case KlageSteg.Vurdering:
             return {
                 status:
-                    k.status === KlageStatus.OPPRETTET || k.status.startsWith('VILKÅRSVURDERT')
+                    erKlageOpprettet(k) || erKlageVilkårsvurdert(k)
                         ? Linjestatus.Ingenting
                         : k.status === KlageStatus.VURDERT_PÅBEGYNT || k.status === KlageStatus.VURDERT_UTFYLT
                         ? Linjestatus.Uavklart
                         : Linjestatus.Ok,
-                erKlikkbar: k.status === KlageStatus.OPPRETTET || k.status.startsWith('VILKÅRSVURDERT') ? false : true,
+                erKlikkbar: erKlageOpprettet(k) || erKlageVilkårsvurdert(k) ? false : true,
             };
         case KlageSteg.Oppsummering:
             return {
                 status:
-                    k.status === KlageStatus.OPPRETTET ||
-                    k.status.startsWith('VILKÅRSVURDERT') ||
+                    erKlageOpprettet(k) ||
+                    erKlageVilkårsvurdert(k) ||
                     k.status === KlageStatus.VURDERT_PÅBEGYNT ||
                     k.status === KlageStatus.VURDERT_UTFYLT
                         ? Linjestatus.Ingenting
                         : Linjestatus.Ok,
                 erKlikkbar:
-                    k.status === KlageStatus.OPPRETTET ||
-                    k.status.startsWith('VILKÅRSVURDERT') ||
+                    erKlageOpprettet(k) ||
+                    erKlageVilkårsvurdert(k) ||
                     k.status === KlageStatus.VURDERT_PÅBEGYNT ||
                     k.status === KlageStatus.VURDERT_UTFYLT
                         ? false

@@ -43,9 +43,7 @@ const schema = yup.object<AttesterKlageFormData>({
         is: Beslutning.UNDERKJENN,
         then: yup.string().required().oneOf(Object.values(UnderkjennelseGrunn), 'Du må velge en grunn'),
     }),
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - yup + typescript = shit. Denne virker som den skal nå
-    kommentar: yup.string().when('beslutning', {
+    kommentar: yup.string().defined().when('beslutning', {
         is: Beslutning.UNDERKJENN,
         then: yup.string().required(),
     }),

@@ -43,7 +43,7 @@ const KlageInfo = (props: { klage: Klage }) => {
     const { intl } = useI18n({ messages: oppsummeringMessages });
 
     return (
-        <div className={classNames(styles.informasjonsContainer, styles.informasjonsContainerContent)}>
+        <div className={classNames(styles.informasjonsContainer, styles.informasjonsContentContainer)}>
             {[
                 {
                     tittel: intl.formatMessage({ id: 'label.saksbehandler' }),
@@ -74,7 +74,7 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
 
     return (
         <div className={styles.informasjonsContainer}>
-            <div className={styles.informasjonsContainerContent}>
+            <div className={styles.informasjonsContentContainer}>
                 <div>
                     <Label>{formatMessage('label.vedtak.type')}</Label>
                     <BodyShort>{props.klagensVedtak.type}</BodyShort>
@@ -85,7 +85,7 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
                 </div>
             </div>
 
-            <div className={styles.informasjonsContainerContent}>
+            <div className={styles.informasjonsContentContainer}>
                 <div>
                     <Label>{formatMessage('formkrav.innenforFrist.label')}</Label>
                     <BodyShort>{props.klage.innenforFristen && formatMessage(props.klage.innenforFristen)}</BodyShort>
@@ -119,7 +119,7 @@ const VurderInfo = (props: { klage: Klage }) => {
 
     return (
         <div className={styles.informasjonsContainer}>
-            <div className={styles.informasjonsContainerContent}>
+            <div className={styles.informasjonsContentContainer}>
                 <div>
                     <Label>{formatMessage('form.vurdering.label')}</Label>
                     {/* Vurderingstypen skal finnes når man kommer til oppsummeringen */}

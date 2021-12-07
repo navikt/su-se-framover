@@ -246,12 +246,11 @@ const VurderFormkrav = (props: Props) => {
                             >
                                 {formatMessage('formkrav.button.tilbake')}
                             </LinkAsButton>
-                            <Button>
+                            <Button variant="secondary">
                                 {formatMessage('formkrav.button.lagre')}
                                 {RemoteData.isPending(lagreStatus) && <Loader />}
                             </Button>
                             <Button
-                                type="button"
                                 hidden={iGyldigTilstandForÅBekrefteOgFortsette()}
                                 onClick={() => handleBekreftOgFortsettClick()}
                             >
