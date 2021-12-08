@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
-import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
@@ -176,7 +175,7 @@ export const lagreForhåndsvarsel = createAsyncThunk<
         forhåndsvarselhandling: revurderingApi.Forhåndsvarselhandling;
         fritekstTilBrev: string;
     },
-    { rejectValue: ApiError<ApiErrorCode> }
+    { rejectValue: ApiError }
 >('revurdering/forhandsvarsle', async ({ sakId, revurderingId, forhåndsvarselhandling, fritekstTilBrev }, thunkApi) => {
     const res = await revurderingApi.lagreForhåndsvarsel(sakId, revurderingId, forhåndsvarselhandling, fritekstTilBrev);
     if (res.status === 'ok') {
@@ -188,7 +187,7 @@ export const lagreForhåndsvarsel = createAsyncThunk<
 export const sendRevurderingTilAttestering = createAsyncThunk<
     RevurderingTilAttestering,
     { sakId: string; revurderingId: string; fritekstTilBrev: string; skalFøreTilBrevutsending?: boolean },
-    { rejectValue: ApiError<ApiErrorCode> }
+    { rejectValue: ApiError }
 >(
     'revurdering/sendTilAttestering',
     async ({ sakId, revurderingId, fritekstTilBrev, skalFøreTilBrevutsending: skalFøreTilBrevutsending }, thunkApi) => {

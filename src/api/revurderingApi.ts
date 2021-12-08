@@ -1,6 +1,5 @@
 import { formatISO } from 'date-fns';
 
-import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
@@ -8,20 +7,20 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkå
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
 import {
-    OpprettetRevurdering,
-    SimulertRevurdering,
-    RevurderingTilAttestering,
-    IverksattRevurdering,
-    UnderkjentRevurdering,
-    OpprettetRevurderingGrunn,
     BeslutningEtterForhåndsvarsling,
-    InformasjonSomRevurderes,
     BosituasjonRequest,
     FormuegrunnlagRequest,
-    Revurdering,
-    InformasjonsRevurdering,
-    StansAvYtelse,
     Gjenopptak,
+    InformasjonSomRevurderes,
+    InformasjonsRevurdering,
+    IverksattRevurdering,
+    OpprettetRevurdering,
+    OpprettetRevurderingGrunn,
+    Revurdering,
+    RevurderingTilAttestering,
+    SimulertRevurdering,
+    StansAvYtelse,
+    UnderkjentRevurdering,
     UtenlandsoppholdRequest,
 } from '~types/Revurdering';
 
@@ -181,7 +180,7 @@ export async function lagreForhåndsvarsel(
     revurderingId: string,
     forhåndsvarselhandling: Forhåndsvarselhandling,
     fritekstTilBrev: string
-): Promise<ApiClientResult<SimulertRevurdering, ApiErrorCode>> {
+): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsel`,
         method: 'POST',
@@ -197,7 +196,7 @@ export async function sendTilAttestering(
     revurderingId: string,
     fritekstTilBrev: string,
     skalFøreTilBrevutsending?: boolean
-): Promise<ApiClientResult<RevurderingTilAttestering, ApiErrorCode>> {
+): Promise<ApiClientResult<RevurderingTilAttestering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',

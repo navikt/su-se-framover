@@ -215,7 +215,7 @@ export const AvsluttOgStartFortsettButtons = (props: {
     };
     usePrimaryAsButton?: {
         onClick: () => Promise<void>;
-        status: ApiResult<Behandling, string>;
+        status: ApiResult<Behandling>;
     };
     hideSecondaryButton?: boolean;
 }) => {

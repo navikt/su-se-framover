@@ -8,7 +8,7 @@ import { useI18n } from '~lib/i18n';
 
 import styles from './utfallSomIkkeStøttes.module.less';
 
-const UtfallSomIkkeStøttes = (props: { feilmeldinger: Array<ErrorMessage<ApiErrorCode | string>> }) => {
+const UtfallSomIkkeStøttes = (props: { feilmeldinger: ErrorMessage[] }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (

@@ -1,6 +1,6 @@
 import { ApiErrorCode } from './apiErrorCode';
 
-const messages: { [key in ApiErrorCode]: string } & { [key: string]: string } = {
+const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ALLEREDE_FORHÅNDSVARSLET]: 'Revurderingen er allerede blitt forhåndsvarslet',
     [ApiErrorCode.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]: 'Kan ikke attestere egen saksbehandling',
     [ApiErrorCode.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',

@@ -8,7 +8,7 @@ import messages from './ApiErrorAlert-nb';
 import styles from './apierroralert.module.less';
 import { ApiErrorCode } from './apiErrorCode';
 
-const ApiErrorAlert = ({ error }: { error?: ApiError<ApiErrorCode | string> }) => {
+const ApiErrorAlert = ({ error }: { error?: ApiError }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
