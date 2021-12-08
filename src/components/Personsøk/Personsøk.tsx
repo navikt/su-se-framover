@@ -74,6 +74,10 @@ const Personsøk = (props: PersonsøkProps) => {
         }
     };
 
+    const valideringsfeil =
+        inputErrorMessage ||
+        (fnrValidation?.status === 'invalid' ? lagFnrFeilmelding(fnrValidation.reasons[0]) : undefined);
+
     return (
         <RawIntlProvider value={intl}>
             <form
@@ -110,12 +114,9 @@ const Personsøk = (props: PersonsøkProps) => {
                             {RemoteData.isPending(props.person) && <Loader />}
                         </SearchField.Button>
                     </SearchField>
-                    <SkjemaelementFeilmelding>
-                        {hasSubmitted && fnrValidation?.status === 'invalid'
-                            ? lagFnrFeilmelding(fnrValidation.reasons[0])
-                            : undefined}
-                        {hasSubmitted && inputErrorMessage}
-                    </SkjemaelementFeilmelding>
+                    {hasSubmitted && valideringsfeil && (
+                        <SkjemaelementFeilmelding>{valideringsfeil}</SkjemaelementFeilmelding>
+                    )}
                 </div>
                 <div className={styles.personkortWrapper}>
                     {pipe(
