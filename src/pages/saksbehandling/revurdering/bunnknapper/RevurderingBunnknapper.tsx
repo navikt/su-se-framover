@@ -21,18 +21,7 @@ export const RevurderingBunnknapper = ({
     const [knappTrykket, setKnappTrykket] = useState<'neste' | 'avslutt' | undefined>(undefined);
 
     return (
-        <div>
-            <div className={styles.navigationButtonContainer}>
-                {props.tilbakeUrl && (
-                    <LinkAsButton href={props.tilbakeUrl} variant="secondary">
-                        {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </LinkAsButton>
-                )}
-                <Button onClick={() => setKnappTrykket('neste')} type={'submit'}>
-                    {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
-                    {knappTrykket === 'neste' && props.loading && <Loader />}
-                </Button>
-            </div>
+        <div className={styles.navigationButtonContainer}>
             {onLagreOgFortsettSenereClick && (
                 <Button
                     variant="secondary"
@@ -45,6 +34,15 @@ export const RevurderingBunnknapper = ({
                     {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
                     {knappTrykket === 'avslutt' && props.loading && <Loader />}
                 </Button>
+            )}
+            <Button onClick={() => setKnappTrykket('neste')} type={'submit'}>
+                {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
+                {knappTrykket === 'neste' && props.loading && <Loader />}
+            </Button>
+            {props.tilbakeUrl && (
+                <LinkAsButton href={props.tilbakeUrl} variant="secondary">
+                    {intl.formatMessage({ id: 'knapp.tilbake' })}
+                </LinkAsButton>
             )}
         </div>
     );
