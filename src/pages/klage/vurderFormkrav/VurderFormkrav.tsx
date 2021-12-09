@@ -175,6 +175,14 @@ const VurderFormkrav = (props: Props) => {
         );
     };
 
+    const fyllInRadioGruppe = () =>
+        Object.values(Svarord).map((verdi) => (
+            //fjern disabled når vi har støtte for nei
+            <Radio disabled={verdi === Svarord.NEI} value={verdi} key={verdi}>
+                {formatMessage(verdi)}
+            </Radio>
+        ));
+
     return (
         <ToKolonner tittel={formatMessage('formkrav.tittel')}>
             {{
@@ -224,12 +232,7 @@ const VurderFormkrav = (props: Props) => {
                                     error={fieldState.error?.message}
                                     value={field.value ?? ''}
                                 >
-                                    {Object.values(Svarord).map((verdi) => (
-                                        //fjern disabled når vi har støtte for nei
-                                        <Radio disabled={verdi === Svarord.NEI} value={verdi} key={verdi}>
-                                            {formatMessage(verdi)}
-                                        </Radio>
-                                    ))}
+                                    {fyllInRadioGruppe()}
                                 </RadioGroup>
                             )}
                         />
@@ -244,12 +247,7 @@ const VurderFormkrav = (props: Props) => {
                                     error={fieldState.error?.message}
                                     value={field.value ?? ''}
                                 >
-                                    {Object.values(Svarord).map((verdi) => (
-                                        //fjern disabled når vi har støtte for nei
-                                        <Radio disabled={verdi === Svarord.NEI} value={verdi} key={verdi}>
-                                            {formatMessage(verdi)}
-                                        </Radio>
-                                    ))}
+                                    {fyllInRadioGruppe()}
                                 </RadioGroup>
                             )}
                         />

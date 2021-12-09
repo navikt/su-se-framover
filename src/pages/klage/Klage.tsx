@@ -17,7 +17,7 @@ import VurderingAvKlage from './vurderingAvKlage/VurderingAvKlage';
 
 const Klage = (props: { sak: Sak }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.klage>();
-    const klage = props.sak.klager.find((klage) => klage.id === urlParams.klageId);
+    const klage = props.sak.klager.find((k) => k.id === urlParams.klageId);
     const { formatMessage } = useI18n({ messages });
 
     if (!klage) {
