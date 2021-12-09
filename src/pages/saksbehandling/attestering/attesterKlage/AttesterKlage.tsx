@@ -164,7 +164,10 @@ const AttesterKlage = (props: {
                 {watch('beslutning') === Beslutning.UNDERKJENN && <UnderkjennelsesForm control={control} />}
 
                 <div className={styles.knapperContainer}>
-                    <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakInfo.sakId })}>
+                    <LinkAsButton
+                        variant="secondary"
+                        href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakInfo.sakId })}
+                    >
                         {formatMessage('knapp.tilbake')}
                     </LinkAsButton>
                     <Button>{formatMessage('knapp.bekreft')}</Button>
@@ -188,6 +191,7 @@ const UnderkjennelsesForm = (props: { control: Control<AttesterKlageFormData> })
                 render={({ field, fieldState }) => (
                     <Select
                         {...field}
+                        className={styles.grunnContainer}
                         label={formatMessage('underkjennelse.select.label')}
                         value={field.value ?? ''}
                         error={fieldState.error?.message}
@@ -208,6 +212,7 @@ const UnderkjennelsesForm = (props: { control: Control<AttesterKlageFormData> })
                     <Textarea
                         {...field}
                         label={formatMessage('underkjennelse.kommentar.label')}
+                        placeholder={formatMessage('underkjennelse.kommentar.placeholder')}
                         value={field.value ?? ''}
                         error={fieldState.error?.message}
                     />

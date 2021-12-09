@@ -1,5 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Checkbox, CheckboxGroup, Radio, Loader, RadioGroup, Select, Textarea, Alert } from '@navikt/ds-react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import {
+    Button,
+    Checkbox,
+    CheckboxGroup,
+    Radio,
+    Loader,
+    RadioGroup,
+    Select,
+    Textarea,
+    Alert,
+    Label,
+    HelpText,
+} from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as A from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
@@ -10,6 +23,7 @@ import { Link } from 'react-router-dom';
 
 import * as pdfApi from '~api/pdfApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as klageActions from '~features/klage/klageActions';
@@ -17,6 +31,7 @@ import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
+import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import {
     Klage,
@@ -68,6 +83,39 @@ const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
     fritekstTilBrev: eqNullable(S.Eq),
 });
 
+const schema = yup.object<VurderingAvKlageFormData>({
+    klageVurderingType: yup
+        .string()
+        .defined()
+        .required()
+        .oneOf(
+            [KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD],
+            'Feltet må være "Omgjør", eller "Oppretthold"'
+        ),
+    omgjør: yup
+        .object<OmgjørFormData>()
+        .defined()
+        .when('klageVurderingType', {
+            is: KlageVurderingType.OMGJØR,
+            then: yup.object({
+                årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).required(),
+                utfall: yup.string().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
+            }),
+            otherwise: yup.object().nullable(),
+        }),
+    oppretthold: yup
+        .object<HjemmelFormData>()
+        .defined()
+        .when('klageVurderingType', {
+            is: KlageVurderingType.OPPRETTHOLD,
+            then: yup.object<HjemmelFormData>({
+                hjemmel: yup.array<OpprettholdVedtakHjemmel>().required(),
+            }),
+            otherwise: yup.object().nullable(),
+        }),
+    fritekstTilBrev: yup.string().required().typeError('Feltet må fylles ut'),
+});
+
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const history = useHistory();
     const { formatMessage } = useI18n({ messages });
@@ -94,14 +142,15 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         handleSubmit,
         watch,
         control,
-        formState: { isDirty, isSubmitSuccessful },
+        formState: { isDirty, isSubmitted },
         reset,
         ...form
     } = useForm<VurderingAvKlageFormData>({
+        resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
 
-    const handleVurderingAvKlageSubmit = (data: VurderingAvKlageFormData) => {
+    const handleLagreVurderingAvKlageClick = (data: VurderingAvKlageFormData) => {
         if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
             return;
         }
@@ -126,7 +175,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 fritekstTilBrev: data.fritekstTilBrev,
             },
             (klage) => {
-                //vi resetter formet, slik at tilstandssjekken for å bekrefte og fortsette har de nye dataene
+                //vi resetter formet, slik at tilstanden på formet er oppdatert når vi viser vår custom feilmelding skalViseTilstandsfeil()
                 reset({
                     klageVurderingType: klage.vedtaksvurdering?.type ?? null,
                     omgjør: {
@@ -142,11 +191,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         );
     };
 
-    const iGyldigTilstandForÅBekrefteOgFortsette = () => {
-        return !erKlageVurdertUtfyltEllerSenere(props.klage) || (isDirty && !isSubmitSuccessful);
-    };
-
-    const handleBekreftOgFortsettClick = () => {
+    const handleBekreftOgFortsettSubmit = () => {
         if (erKlageVurdertBekreftet(props.klage) && !isDirty) {
             history.push(
                 Routes.klage.createURL({
@@ -158,21 +203,23 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             return;
         }
 
-        bekreftVurderinger(
-            {
-                sakId: props.sakId,
-                klageId: props.klage.id,
-            },
-            () => {
-                history.push(
-                    Routes.klage.createURL({
-                        sakId: props.sakId,
-                        klageId: props.klage.id,
-                        steg: KlageSteg.Oppsummering,
-                    })
-                );
-            }
-        );
+        if (erKlageVurdertUtfyltEllerSenere(props.klage) && !isDirty) {
+            bekreftVurderinger(
+                {
+                    sakId: props.sakId,
+                    klageId: props.klage.id,
+                },
+                () => {
+                    history.push(
+                        Routes.klage.createURL({
+                            sakId: props.sakId,
+                            klageId: props.klage.id,
+                            steg: KlageSteg.Oppsummering,
+                        })
+                    );
+                }
+            );
+        }
     };
 
     if (!iGyldigTilstandForÅVurdere(props.klage)) {
@@ -192,11 +239,18 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         );
     }
 
+    const skalViseTilstandsfeil = () => {
+        return (
+            (isDirty && isSubmitted && erKlageVurdertUtfyltEllerSenere(props.klage)) ||
+            (isSubmitted && !erKlageVurdertUtfyltEllerSenere(props.klage))
+        );
+    };
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <form onSubmit={handleSubmit(handleVurderingAvKlageSubmit)}>
+                    <form onSubmit={handleSubmit(handleBekreftOgFortsettSubmit)}>
                         <div className={styles.vedtakHandlingContainer}>
                             <Controller
                                 control={control}
@@ -234,7 +288,16 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                 render={({ field, fieldState }) => (
                                     <Textarea
                                         {...field}
-                                        label={formatMessage('form.fritekst.label')}
+                                        label={
+                                            <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
+                                                <Label>{formatMessage('form.fritekst.label')}</Label>
+                                                <HelpText>
+                                                    <Label className={styles.hjelpetekst}>
+                                                        {formatMessage('form.fritekst.hjelpeTekst')}
+                                                    </Label>
+                                                </HelpText>
+                                            </div>
+                                        }
                                         value={field.value ?? ''}
                                         error={fieldState.error?.message}
                                     />
@@ -260,7 +323,25 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                         </div>
 
+                        {skalViseTilstandsfeil() && (
+                            <SkjemaelementFeilmelding className={styles.skjemaelementFeilmelding}>
+                                {formatMessage('feil.bekrefterIFeilTilstand')}
+                            </SkjemaelementFeilmelding>
+                        )}
+
                         <div className={styles.knapperContainer}>
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => handleLagreVurderingAvKlageClick(watch())}
+                            >
+                                {formatMessage('knapp.lagre')}
+                                {RemoteData.isPending(lagreVurderingAvKlageStatus) && <Loader />}
+                            </Button>
+                            <Button>
+                                {formatMessage('knapp.bekreftOgFortsett')}
+                                {RemoteData.isPending(bekreftVurderingerStatus) && <Loader />}
+                            </Button>
                             <LinkAsButton
                                 variant="secondary"
                                 href={Routes.klage.createURL({
@@ -271,18 +352,6 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             >
                                 {formatMessage('knapp.tilbake')}
                             </LinkAsButton>
-                            <Button variant="secondary">
-                                {formatMessage('knapp.lagre')}
-                                {RemoteData.isPending(lagreVurderingAvKlageStatus) && <Loader />}
-                            </Button>
-                            <Button
-                                type="button"
-                                hidden={iGyldigTilstandForÅBekrefteOgFortsette()}
-                                onClick={() => handleBekreftOgFortsettClick()}
-                            >
-                                {formatMessage('knapp.bekreftOgFortsett')}
-                                {RemoteData.isPending(bekreftVurderingerStatus) && <Loader />}
-                            </Button>
                         </div>
                         {RemoteData.isFailure(lagreVurderingAvKlageStatus) && (
                             <ApiErrorAlert error={lagreVurderingAvKlageStatus.error} />

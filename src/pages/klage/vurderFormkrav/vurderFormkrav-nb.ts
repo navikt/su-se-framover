@@ -13,7 +13,7 @@ const vedtakMessages: { [key in VedtakType]: string } = {
 
 const svarordMessages: { [key in Svarord]: string } = {
     [Svarord.JA]: 'Ja',
-    [Svarord.NEI_MEN_SKAL_VURDERES]: 'Nei, men skal likevel vurderes',
+    [Svarord.NEI_MEN_SKAL_VURDERES]: 'Nei, men skal til vurdering',
     [Svarord.NEI]: 'Nei',
 };
 
@@ -27,6 +27,7 @@ export default {
     'formkrav.vedtak.label': 'Vedtaket som er påklagd',
     'formkrav.vedtak.option.default': 'Velg vedtak',
     'formkrav.begrunnelse.label': 'Begrunnelse',
+    'formkrav.begrunnelse.placeholder': 'Unngå personsensitive opplysninger',
     'formkrav.button.tilbake': 'Tilbake',
     'formkrav.button.lagre': 'Lagre',
     'formkrav.button.bekreftOgFortsett': 'Bekreft og fortsett',
@@ -36,5 +37,6 @@ export default {
 
     'knapp.tilbake': 'Tilbake',
 
+    'feil.bekrefterIFeilTilstand': 'Vilkårene er ikke utfyllt, og lagret for å bekrefte og fortsette',
     'feil.ikkeRiktigTilstandForÅVilkårsvurdere': 'Klagen er ikke i riktig tilstand for å vilkårsvurdere',
 };

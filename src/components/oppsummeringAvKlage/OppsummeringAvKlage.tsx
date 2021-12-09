@@ -40,21 +40,21 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
 };
 
 const KlageInfo = (props: { klage: Klage }) => {
-    const { intl } = useI18n({ messages: oppsummeringMessages });
+    const { formatMessage } = useI18n({ messages: oppsummeringMessages });
 
     return (
         <div className={classNames(styles.informasjonsContainer, styles.informasjonsContentContainer)}>
             {[
                 {
-                    tittel: intl.formatMessage({ id: 'label.saksbehandler' }),
+                    tittel: formatMessage('label.saksbehandler'),
                     verdi: props.klage.saksbehandler,
                 },
                 {
-                    tittel: intl.formatMessage({ id: 'label.journalpostId' }),
+                    tittel: formatMessage('label.journalpostId'),
                     verdi: props.klage.journalpostId,
                 },
                 {
-                    tittel: intl.formatMessage({ id: 'label.klageMottatt' }),
+                    tittel: formatMessage('label.klageMottatt'),
                     verdi: DateUtils.formatDate(props.klage.datoKlageMottatt),
                 },
             ].map((item) => (

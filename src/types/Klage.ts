@@ -13,7 +13,7 @@ export interface Klage {
     vedtakId: Nullable<string>;
     innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
-    erUnderskrevet: Nullable<KlageSignert>;
+    erUnderskrevet: Nullable<KlageErUnderskrevet>;
     begrunnelse: Nullable<string>;
     vedtaksvurdering: Nullable<Vedtaksvurdering>;
     fritekstTilBrev: Nullable<string>;
@@ -61,7 +61,7 @@ export enum Svarord {
 }
 
 export type KlageInnenforFristen = Svarord;
-export type KlageSignert = Svarord;
+export type KlageErUnderskrevet = Svarord;
 
 export enum KlageVurderingType {
     OMGJØR = 'OMGJØR',

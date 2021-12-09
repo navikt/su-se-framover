@@ -9,6 +9,7 @@ export default {
     'underkjennelse.select.defaultValue': 'Velg grunn',
 
     'underkjennelse.kommentar.label': 'Kommentar',
+    'underkjennelse.kommentar.placeholder': 'Unngå personsensitive opplysninger',
 
     'feil.fantIkkeKlageEllerVedtakensKlage': 'Fant ikke klage, eller klagens vedtak',
     'feil.klageErIkkeTilAttestering': 'Klagen er ikke til attestering',

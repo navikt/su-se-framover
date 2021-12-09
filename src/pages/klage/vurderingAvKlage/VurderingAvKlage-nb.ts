@@ -42,7 +42,8 @@ export default {
     ...opprettholdVedtakHjemmelMessages,
 
     'form.vurdering.label': 'Vurdering',
-    'form.fritekst.label': 'Fritekst',
+    'form.fritekst.label': 'Brev til bruker og klageinstans',
+    'form.fritekst.hjelpeTekst': 'Skriv inn vurdering av klagen og gjengi hovedinnholdet i klagers anførsler',
 
     'knapp.seBrev': 'Se brev',
     'knapp.lagre': 'Lagre',
@@ -51,5 +52,6 @@ export default {
 
     'page.tittel': 'Behandle klage',
 
+    'feil.bekrefterIFeilTilstand': 'Vilkårene er ikke utfyllt, og lagret for å bekrefte og fortsette',
     'feil.ikkeRiktigTilstandForÅVurdere': 'Klagen er ikke i riktig tilstand for å vurdere',
 };
