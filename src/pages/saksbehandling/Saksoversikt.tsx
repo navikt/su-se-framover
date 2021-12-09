@@ -31,7 +31,7 @@ const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
 const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter/DokumenterPage'));
 const StansPage = React.lazy(() => import('./stans/Stans'));
-const KlageOpprett = React.lazy(() => import('~pages/klage/opprettKlage/OpprettKlage'));
+const OpprettKlage = React.lazy(() => import('~pages/klage/opprettKlage/OpprettKlage'));
 const Klage = React.lazy(() => import('~pages/klage/Klage'));
 
 const Saksoversikt = () => {
@@ -113,7 +113,7 @@ const Saksoversikt = () => {
                                         <Switch>
                                             <Route path={Routes.klageOpprett.createURL({ sakId: sak.id })}>
                                                 <div className={styles.mainContent}>
-                                                    <KlageOpprett sak={sak} />
+                                                    <OpprettKlage sak={sak} />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.klage.path}>

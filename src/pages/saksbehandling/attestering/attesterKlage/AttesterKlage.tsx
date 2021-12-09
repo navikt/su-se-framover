@@ -39,11 +39,11 @@ enum Beslutning {
 
 const schema = yup.object<AttesterKlageFormData>({
     beslutning: yup.string().nullable().required().oneOf([Beslutning.IVERKSETT, Beslutning.UNDERKJENN]),
-    grunn: yup.mixed<UnderkjennelseGrunn>().when('beslutning', {
+    grunn: yup.string<UnderkjennelseGrunn>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
         then: yup.string().required().oneOf(Object.values(UnderkjennelseGrunn), 'Du må velge en grunn'),
     }),
-    kommentar: yup.string().defined().when('beslutning', {
+    kommentar: yup.mixed<string>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
         then: yup.string().required(),
     }),
@@ -152,7 +152,7 @@ const AttesterKlage = (props: {
                                 {...field}
                                 legend={formatMessage('beslutning.label')}
                                 error={fieldState.error?.message}
-                                value={field.value ?? undefined}
+                                value={field.value ?? ''}
                             >
                                 <Radio value={Beslutning.IVERKSETT}>{formatMessage('beslutning.iverksett')}</Radio>
                                 <Radio value={Beslutning.UNDERKJENN}>{formatMessage('beslutning.underkjenn')}</Radio>
