@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -96,6 +96,7 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
                 </Button>
                 <Button variant="primary" onClick={() => handleSendTilAttesteringClick()}>
                     {formatMessage('knapp.sendTilAttestering')}
+                    {RemoteData.isPending(sendTilAttesteringStatus) && <Loader />}
                 </Button>
             </div>
             {RemoteData.isFailure(sendTilAttesteringStatus) && <ApiErrorAlert error={sendTilAttesteringStatus.error} />}

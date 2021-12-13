@@ -66,6 +66,16 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                                 </div>
                             );
                         }
+
+                        if (user.navIdent === pipe(klage.attesteringer, last, toNullable)?.attestant) {
+                            return (
+                                <div className={styles.ikonContainer}>
+                                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                                    <BodyShort>{formatMessage('attestering.sendtTilbakeTilBehandling')}</BodyShort>
+                                </div>
+                            );
+                        }
+
                         return (
                             <LinkAsButton
                                 variant="secondary"

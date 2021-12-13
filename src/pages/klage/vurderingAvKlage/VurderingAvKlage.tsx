@@ -262,10 +262,12 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         error={fieldState.error?.message}
                                         value={field.value ?? ''}
                                     >
-                                        {/*TODO: fjern disabled når vi har støtte for omgjør */}
-                                        <Radio disabled value={KlageVurderingType.OMGJØR}>
-                                            {formatMessage(KlageVurderingType.OMGJØR)}
-                                        </Radio>
+                                        {/*TODO: fjern false når vi har støtte for omgjør */}
+                                        {false && (
+                                            <Radio value={KlageVurderingType.OMGJØR}>
+                                                {formatMessage(KlageVurderingType.OMGJØR)}
+                                            </Radio>
+                                        )}
                                         <Radio value={KlageVurderingType.OPPRETTHOLD}>
                                             {formatMessage(KlageVurderingType.OPPRETTHOLD)}
                                         </Radio>

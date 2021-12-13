@@ -1,6 +1,7 @@
 export default {
     'attestering.attester': 'Attester',
     'attestering.tilAttestering': 'Til attestering',
+    'attestering.sendtTilbakeTilBehandling': 'Sendt tilbake til behandling',
 
     'behandling.fortsettBehandling': 'Fortsett behandling',
     'behandling.seOppsummering': 'Se oppsummering',
