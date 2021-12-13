@@ -11,13 +11,15 @@ import { Nullable } from '~lib/types';
 import nb from './formElements-nb';
 import styles from './formElements.module.less';
 
-interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChange' | 'children'> {
+interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChange' | 'children' | 'disabled'> {
     value: Nullable<boolean> | undefined;
     labels?: {
         true: string;
         false: string;
     };
     onChange(val: boolean): void;
+    //TODO: kan fjernes når vi støtter nei svar i klage
+    hideNei?: boolean;
 }
 
 /**
@@ -25,14 +27,14 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
  */
 export const BooleanRadioGroup: React.ForwardRefExoticComponent<
     BooleanRadioGroupProps & React.RefAttributes<HTMLInputElement>
-> = forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, ...props }, ref) => {
+> = forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, hideNei, ...props }, ref) => {
     const { formatMessage } = useI18n({ messages: nb });
     return (
         <RadioGroup {...props} value={value?.toString() ?? ''} onChange={(val) => onChange(val === true.toString())}>
             <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
                 {labels?.true ?? formatMessage('label.ja')}
             </Radio>
-            <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>
+            {!hideNei && <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>}
         </RadioGroup>
     );
 });

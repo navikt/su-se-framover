@@ -17,3 +17,9 @@ export enum RevurderingSteg {
     Utenlandsopphold = 'utenlandsopphold',
     Oppsummering = 'oppsummering',
 }
+
+export enum KlageSteg {
+    Formkrav = 'formkrav',
+    Vurdering = 'vurdering',
+    Oppsummering = 'oppsummering',
+}

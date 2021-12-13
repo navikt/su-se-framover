@@ -82,3 +82,11 @@ export enum UnderkjennelseGrunn {
     VEDTAKSBREVET_ER_FEIL = 'VEDTAKSBREVET_ER_FEIL',
     ANDRE_FORHOLD = 'ANDRE_FORHOLD',
 }
+
+export const underkjennelsesGrunnTextMapper: { [key in UnderkjennelseGrunn]: string } = {
+    [UnderkjennelseGrunn.ANDRE_FORHOLD]: 'Andre forhold',
+    [UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL]: 'Beregningen er feil',
+    [UnderkjennelseGrunn.DOKUMENTASJON_MANGLER]: 'Dokumentasjon mangler',
+    [UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT]: 'Ingangsvilkårene er feilvurdert',
+    [UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL]: 'Vedtaksbrev er feil',
+};

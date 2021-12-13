@@ -2,6 +2,7 @@ import { Nullable } from '~lib/types';
 import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 
 import { Behandling } from './Behandling';
+import { Klage } from './Klage';
 import { Periode } from './Periode';
 import { Revurdering } from './Revurdering';
 import { Søknad } from './Søknad';
@@ -17,6 +18,7 @@ export interface Sak {
     utbetalingerKanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
     revurderinger: Revurdering[];
     vedtak: Vedtak[];
+    klager: Klage[];
 }
 
 export enum KanStansesEllerGjenopptas {

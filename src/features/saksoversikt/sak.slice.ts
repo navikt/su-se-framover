@@ -7,6 +7,7 @@ import * as dokumentApi from '~api/dokumentApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~api/søknadApi';
+import * as klageActions from '~features/klage/klageActions';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -18,6 +19,7 @@ import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Klage } from '~types/Klage';
 import { Periode } from '~types/Periode';
 import { Restans } from '~types/Restans';
 import { Revurdering } from '~types/Revurdering';
@@ -760,6 +762,40 @@ export default createSlice({
         builder.addCase(revurderingActions.avsluttRevurdering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
+
+        builder.addCase(klageActions.opprettKlage.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((s) => ({
+                    ...s,
+                    klager: [...s.klager, action.payload],
+                }))
+            );
+        });
+
+        builder.addCase(klageActions.vurderFormkrav.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
+        builder.addCase(klageActions.lagreVurderingAvKlage.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
+        builder.addCase(klageActions.bekreftVurderinger.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
+        builder.addCase(klageActions.sendTilAttestering.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
+        builder.addCase(klageActions.oversend.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
+        builder.addCase(klageActions.underkjenn.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
     },
 });
 
@@ -769,6 +805,16 @@ function oppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revu
         RemoteData.map((s) => ({
             ...s,
             revurderinger: s.revurderinger.map((r) => (r.id === revurdering.id ? revurdering : r)),
+        }))
+    );
+}
+
+function oppdaterKlageISak(sak: RemoteData.RemoteData<ApiError, Sak>, klage: Klage) {
+    return pipe(
+        sak,
+        RemoteData.map((s) => ({
+            ...s,
+            klager: s.klager.map((k) => (k.id === klage.id ? klage : k)),
         }))
     );
 }

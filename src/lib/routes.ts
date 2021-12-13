@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import * as Routes from '~lib/routes';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-import { RevurderingSteg, SaksbehandlingMenyvalg } from '../pages/saksbehandling/types';
+import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '../pages/saksbehandling/types';
 import { Søknadsteg } from '../pages/søknad/types';
 
 interface Route<T> {
@@ -147,6 +147,11 @@ export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }
     createURL: (args) => `/attestering/${args.sakId}/revurdering/${args.revurderingId}`,
 };
 
+export const attesterKlage: Route<{ sakId: string; klageId: string }> = {
+    path: '/attestering/:sakId/klage/:klageId/',
+    createURL: (args) => `/attestering/${args.sakId}/klage/${args.klageId}`,
+};
+
 //---------------Stans------------------------------
 export const stansRoute: Route<{ sakId: string; revurderingId?: string }> = {
     path: `/saksoversikt/:sakId/stans/:revurderingId?`,
@@ -166,6 +171,21 @@ export const gjenopptaStansRoute: Route<{ sakId: string; revurderingId?: string 
 export const gjenopptaStansOppsummeringRoute: Route<{ sakId: string; revurderingId: string }> = {
     path: '/saksoversikt/:sakId/gjenoppta/:revurderingId/oppsummering',
     createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/gjenoppta/${revurderingId}/oppsummering`,
+};
+//---------------Klage------------------------------
+export const klageOpprett: Route<{
+    sakId: string;
+}> = {
+    path: 'saksoversikt/:sakId/klage/opprett',
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/klage/opprett`,
+};
+export const klage: Route<{
+    sakId: string;
+    klageId: string;
+    steg: KlageSteg;
+}> = {
+    path: '/saksoversikt/:sakId/klage/:klageId/:steg/',
+    createURL: (args) => `/saksoversikt/${args.sakId}/klage/${args.klageId}/${args.steg}/`,
 };
 
 export interface SuccessNotificationState {

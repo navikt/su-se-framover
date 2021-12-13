@@ -7,6 +7,12 @@ export default {
     'behandling.startBehandling': 'Start behandling',
     'behandling.avsluttBehandling': 'Avslutt behandling',
 
+    'klage.attester': 'Attester',
+    'klage.fortsettBehandling': 'Fortsett behandling',
+    'klage.klager': 'Klager',
+    'klage.oversendt': 'Oversendt klage',
+    'klage.åpenKlage': 'Åpen klage',
+
     'saksoversikt.tittel': 'Saksnummer',
 
     'søknad.avslått': 'Avslått',
@@ -23,7 +29,9 @@ export default {
     'søknad.godkjenteSøknader.tittel': 'Godkjente søknader',
     'søknad.åpneSøknader.tittel': 'Åpne søknader',
 
-    'knapp.revurder': 'Revurder',
+    'popover.default': 'Velg behandling',
+    'popover.option.klage': 'Klage',
+    'popover.option.revurder': 'Revurder',
     'knapp.stoppUtbetaling': 'Stopp utbetaling',
 
     'link.dokumenter': 'Brev sendt fra SU',

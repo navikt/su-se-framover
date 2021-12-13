@@ -1,0 +1,34 @@
+@import '~/styles/variables.less';
+
+.oppsummeringPage {
+    display: flex;
+    flex-direction: column;
+    margin-top: @spacing;
+    width: 50%;
+}
+
+.oppsummeringPanelContainer {
+    margin-bottom: @spacing;
+}
+
+.panelInnholdContainer {
+    .informasjonsContainer {
+        margin-bottom: @spacing;
+    }
+
+    .informasjonsContentContainer {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-bottom: @spacing-xs;
+    }
+
+    .oppsummeringspar {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.hjemlerContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}

@@ -1,0 +1,41 @@
+@import '~/styles/variables.less';
+
+.vedtakHandlingContainer {
+    margin-bottom: @spacing-xs;
+}
+
+.formContainer {
+    margin-bottom: @spacing-xs;
+}
+
+.fritesktOgVisBrevContainer {
+    margin-bottom: @spacing;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-xs;
+    }
+}
+
+.fritekstLabelOgHjelpeTekstContainer {
+    display: flex;
+    gap: @spacing-xxs;
+}
+
+.hjelpetekst {
+    max-width: 20em;
+}
+
+.skjemaelementFeilmelding {
+    margin-bottom: @spacing-xs;
+}
+
+.knapperContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 10em);
+    gap: @spacing;
+}
+
+.hjemmelCheckboxgroup {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}

@@ -31,6 +31,8 @@ const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
 const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter/DokumenterPage'));
 const StansPage = React.lazy(() => import('./stans/Stans'));
+const OpprettKlage = React.lazy(() => import('~pages/klage/opprettKlage/OpprettKlage'));
+const Klage = React.lazy(() => import('~pages/klage/Klage'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
@@ -109,6 +111,16 @@ const Saksoversikt = () => {
                                     />
                                     <div className={styles.container}>
                                         <Switch>
+                                            <Route path={Routes.klageOpprett.createURL({ sakId: sak.id })}>
+                                                <div className={styles.mainContent}>
+                                                    <OpprettKlage sak={sak} />
+                                                </div>
+                                            </Route>
+                                            <Route path={Routes.klage.path}>
+                                                <div className={styles.mainContent}>
+                                                    <Klage sak={sak} />
+                                                </div>
+                                            </Route>
                                             <Route path={Routes.stansRoute.path}>
                                                 <div className={styles.mainContent}>
                                                     <StansPage sak={sak} />
