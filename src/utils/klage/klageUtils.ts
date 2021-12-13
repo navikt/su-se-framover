@@ -53,16 +53,16 @@ export const erKlageBekreftet = (k: Klage) =>
 
 export const erKlageTilAttestering = (k: Klage): boolean => k.status === KlageStatus.TIL_ATTESTERING;
 
-export const erKlageIverksatt = (k: Klage): boolean => k.status === KlageStatus.IVERKSATT;
+export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.IVERKSATT;
 
 export const erKlageVilkårsvurdertUtfyltEllerSenere = (k: Klage) =>
     k.status !== KlageStatus.OPPRETTET && k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT;
 
 export const erKlageVilkårsvurdertBekreftetEllerSenere = (k: Klage) =>
-    erKlageVilkårsvurdertBekreftet(k) || erKlageVurdert(k) || erKlageTilAttestering(k) || erKlageIverksatt(k);
+    erKlageVilkårsvurdertBekreftet(k) || erKlageVurdert(k) || erKlageTilAttestering(k) || erKlageOversendt(k);
 
 export const erKlageVurdertUtfyltEllerSenere = (k: Klage) =>
-    erKlageVurdertUtfyltEllerBekreftet(k) || erKlageTilAttestering(k) || erKlageIverksatt(k);
+    erKlageVurdertUtfyltEllerBekreftet(k) || erKlageTilAttestering(k) || erKlageOversendt(k);
 
 export const erKlageVurdertUtfyltEllerBekreftet = (k: Klage) =>
     k.status === KlageStatus.VURDERT_UTFYLT || k.status === KlageStatus.VURDERT_BEKREFTET;

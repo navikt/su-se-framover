@@ -19,7 +19,7 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
     };
     onChange(val: boolean): void;
     //TODO: kan fjernes når vi støtter nei svar i klage
-    disableNei?: boolean;
+    hideNei?: boolean;
 }
 
 /**
@@ -27,16 +27,14 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
  */
 export const BooleanRadioGroup: React.ForwardRefExoticComponent<
     BooleanRadioGroupProps & React.RefAttributes<HTMLInputElement>
-> = forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, disableNei, ...props }, ref) => {
+> = forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, hideNei, ...props }, ref) => {
     const { formatMessage } = useI18n({ messages: nb });
     return (
         <RadioGroup {...props} value={value?.toString() ?? ''} onChange={(val) => onChange(val === true.toString())}>
             <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
                 {labels?.true ?? formatMessage('label.ja')}
             </Radio>
-            <Radio disabled={disableNei} value={false.toString()}>
-                {labels?.false ?? formatMessage('label.nei')}
-            </Radio>
+            {!hideNei && <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>}
         </RadioGroup>
     );
 });

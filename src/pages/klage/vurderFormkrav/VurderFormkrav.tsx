@@ -176,12 +176,15 @@ const VurderFormkrav = (props: Props) => {
     };
 
     const fyllInRadioGruppe = () =>
-        Object.values(Svarord).map((verdi) => (
-            //fjern disabled når vi har støtte for nei
-            <Radio disabled={verdi === Svarord.NEI} value={verdi} key={verdi}>
-                {formatMessage(verdi)}
-            </Radio>
-        ));
+        Object.values(Svarord).map(
+            (verdi) =>
+                //fjern disabled når vi har støtte for nei
+                verdi !== Svarord.NEI && (
+                    <Radio value={verdi} key={verdi}>
+                        {formatMessage(verdi)}
+                    </Radio>
+                )
+        );
 
     return (
         <ToKolonner tittel={formatMessage('formkrav.tittel')}>
@@ -217,7 +220,7 @@ const VurderFormkrav = (props: Props) => {
                                     legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
                                     error={fieldState.error?.message}
                                     {...field}
-                                    disableNei={true}
+                                    hideNei
                                 />
                             )}
                         />

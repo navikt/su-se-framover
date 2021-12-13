@@ -12,7 +12,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Klage } from '~types/Klage';
 import { formatDate } from '~utils/date/dateUtils';
-import { erKlageIverksatt, erKlageTilAttestering, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
+import { erKlageOversendt, erKlageTilAttestering, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
 
 import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import messages from './sakintro-nb';
@@ -32,8 +32,8 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                         return (
                             <>
                                 <Heading level="3" size="small">
-                                    {erKlageIverksatt(klage)
-                                        ? formatMessage('klage.iverksatt')
+                                    {erKlageOversendt(klage)
+                                        ? formatMessage('klage.oversendt')
                                         : formatMessage('klage.åpenKlage')}
                                 </Heading>
                                 <Informasjonslinje label="Opprettet" value={() => formatDate(klage.opprettet)} />
@@ -44,7 +44,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                         );
                     },
                     knapper: (klage) => {
-                        if (erKlageIverksatt(klage)) {
+                        if (erKlageOversendt(klage)) {
                             return <></>;
                         }
                         if (erKlageTilAttestering(klage)) {
