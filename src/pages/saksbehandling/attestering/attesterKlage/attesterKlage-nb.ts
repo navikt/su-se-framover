@@ -14,7 +14,7 @@ export default {
     'feil.fantIkkeKlageEllerVedtakensKlage': 'Fant ikke klage, eller klagens vedtak',
     'feil.klageErIkkeTilAttestering': 'Klagen er ikke til attestering',
 
-    'notification.iverksatt': 'Iverksatt klage',
+    'notification.oversendt': 'Oversendt klage',
     'notification.underkjent': 'Underkjent klage',
 
     'knapp.bekreft': 'Bekreft',

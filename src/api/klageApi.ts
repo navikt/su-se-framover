@@ -69,9 +69,9 @@ export async function sendTilAttestering(arg: { sakId: string; klageId: string }
     });
 }
 
-export async function iverksett(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
+export async function oversend(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
     return apiClient({
-        url: `/saker/${arg.sakId}/klager/${arg.klageId}/iverksett`,
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/oversend`,
         method: 'POST',
     });
 }

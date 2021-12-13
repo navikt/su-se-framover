@@ -53,7 +53,7 @@ export const erKlageBekreftet = (k: Klage) =>
 
 export const erKlageTilAttestering = (k: Klage): boolean => k.status === KlageStatus.TIL_ATTESTERING;
 
-export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.IVERKSATT;
+export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.OVERSENDT;
 
 export const erKlageVilkårsvurdertUtfyltEllerSenere = (k: Klage) =>
     k.status !== KlageStatus.OPPRETTET && k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT;
@@ -111,7 +111,7 @@ export const hentSisteVurderteSteg = (k: Klage) => {
 };
 
 export const getÅpenKlage = (klager: Klage[]): Klage => {
-    const åpneKlager = klager.filter((k) => k.status !== KlageStatus.IVERKSATT);
+    const åpneKlager = klager.filter((k) => k.status !== KlageStatus.OVERSENDT);
 
     if (åpneKlager.length > 1) {
         throw new Error('Det finnes flere enn 1 åpen klage');

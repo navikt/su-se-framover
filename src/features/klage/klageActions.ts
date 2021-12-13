@@ -117,10 +117,10 @@ export const sendTilAttestering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const iverksett = createAsyncThunk<Klage, { sakId: string; klageId: string }, { rejectValue: ApiError }>(
-    'klage/iverksett',
+export const oversend = createAsyncThunk<Klage, { sakId: string; klageId: string }, { rejectValue: ApiError }>(
+    'klage/oversend',
     async ({ sakId, klageId }, thunkApi) => {
-        const res = await klageApi.iverksett({
+        const res = await klageApi.oversend({
             sakId,
             klageId,
         });

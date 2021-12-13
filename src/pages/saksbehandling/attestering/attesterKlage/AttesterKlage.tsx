@@ -62,7 +62,7 @@ const AttesterKlage = (props: {
     const klage = props.klager.find((k) => k.id === urlParams.klageId);
     const klagensVedtak = props.vedtaker.find((v) => v.id === klage?.vedtakId);
 
-    const [iverksettStatus, iverksett] = useAsyncActionCreator(klageActions.iverksett);
+    const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
 
     const { control, watch, handleSubmit } = useForm<AttesterKlageFormData>({
@@ -100,14 +100,14 @@ const AttesterKlage = (props: {
 
     const handleBeslutningSubmit = (data: AttesterKlageFormData) => {
         if (data.beslutning === Beslutning.IVERKSETT) {
-            iverksett(
+            oversend(
                 {
                     sakId: props.sakInfo.sakId,
                     klageId: klage.id,
                 },
                 () => {
                     history.push(
-                        Routes.createSakIntroLocation(formatMessage('notification.iverksatt'), props.sakInfo.sakId)
+                        Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakInfo.sakId)
                     );
                 }
             );
@@ -173,7 +173,7 @@ const AttesterKlage = (props: {
                     <Button>{formatMessage('knapp.bekreft')}</Button>
                 </div>
                 <div className={styles.apiErrorContainer}>
-                    {RemoteData.isFailure(iverksettStatus) && <ApiErrorAlert error={iverksettStatus.error} />}
+                    {RemoteData.isFailure(oversendStatus) && <ApiErrorAlert error={oversendStatus.error} />}
                     {RemoteData.isFailure(underkjennStatus) && <ApiErrorAlert error={underkjennStatus.error} />}
                 </div>
             </div>

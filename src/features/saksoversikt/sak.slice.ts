@@ -789,7 +789,7 @@ export default createSlice({
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
 
-        builder.addCase(klageActions.iverksett.fulfilled, (state, action) => {
+        builder.addCase(klageActions.oversend.fulfilled, (state, action) => {
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
 

@@ -33,7 +33,7 @@ export enum KlageStatus {
 
     TIL_ATTESTERING = 'TIL_ATTESTERING',
 
-    IVERKSATT = 'IVERKSATT',
+    OVERSENDT = 'OVERSENDT',
 }
 
 interface Vedtaksvurdering {
