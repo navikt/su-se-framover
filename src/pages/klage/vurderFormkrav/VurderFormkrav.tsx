@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as klageActions from '~features/klage/klageActions';
@@ -24,11 +23,7 @@ import { KlageSteg } from '~pages/saksbehandling/types';
 import { Svarord, Klage, KlageInnenforFristen, KlageErUnderskrevet } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
-import {
-    erKlageVilkårsvurdertBekreftetEllerSenere,
-    erKlageVilkårsvurdertUtfyltEllerSenere,
-    iGyldigTilstandForÅVilkårsvurdere,
-} from '~utils/klage/klageUtils';
+import { erKlageVilkårsvurdertBekreftetEllerSenere, iGyldigTilstandForÅVilkårsvurdere } from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
 
@@ -90,9 +85,8 @@ const VurderFormkrav = (props: Props) => {
     const {
         handleSubmit,
         control,
-        reset,
         watch,
-        formState: { isDirty, isSubmitted },
+        formState: { isDirty },
     } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: initialValues,
@@ -100,6 +94,11 @@ const VurderFormkrav = (props: Props) => {
 
     const handleLagreFormkrav = (values: FormData) => {
         if (eqFormData.equals(values, initialValues)) {
+            history.push(
+                Routes.saksoversiktValgtSak.createURL({
+                    sakId: props.sakId,
+                })
+            );
             return;
         }
 
@@ -113,20 +112,17 @@ const VurderFormkrav = (props: Props) => {
                 erUnderskrevet: values.erUnderskrevet,
                 begrunnelse: values.begrunnelse,
             },
-            (klage) => {
-                //vi resetter formet, slik at tilstanden på formet er oppdatert når vi viser vår custom feilmelding skalViseTilstandsfeil()
-                reset({
-                    vedtakId: klage.vedtakId,
-                    innenforFristen: klage.innenforFristen,
-                    klagesDetPåKonkreteElementerIVedtaket: klage.klagesDetPåKonkreteElementerIVedtaket,
-                    erUnderskrevet: klage.erUnderskrevet,
-                    begrunnelse: klage.begrunnelse,
-                });
+            () => {
+                history.push(
+                    Routes.saksoversiktValgtSak.createURL({
+                        sakId: props.sakId,
+                    })
+                );
             }
         );
     };
 
-    const handleBekreftOgFortsettClick = () => {
+    const handleBekreftOgFortsettClick = (values: FormData) => {
         if (erKlageVilkårsvurdertBekreftetEllerSenere(props.klage) && !isDirty) {
             history.push(
                 Routes.klage.createURL({
@@ -138,23 +134,34 @@ const VurderFormkrav = (props: Props) => {
             return;
         }
 
-        if (erKlageVilkårsvurdertUtfyltEllerSenere(props.klage) && !isDirty) {
-            bekreft(
-                {
-                    sakId: props.sakId,
-                    klageId: props.klage.id,
-                },
-                () => {
-                    history.push(
-                        Routes.klage.createURL({
-                            sakId: props.sakId,
-                            klageId: props.klage.id,
-                            steg: KlageSteg.Vurdering,
-                        })
-                    );
-                }
-            );
-        }
+        lagre(
+            {
+                sakId: props.sakId,
+                klageId: props.klage.id,
+                vedtakId: values.vedtakId,
+                innenforFristen: values.innenforFristen,
+                klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
+                erUnderskrevet: values.erUnderskrevet,
+                begrunnelse: values.begrunnelse,
+            },
+            () => {
+                bekreft(
+                    {
+                        sakId: props.sakId,
+                        klageId: props.klage.id,
+                    },
+                    () => {
+                        history.push(
+                            Routes.klage.createURL({
+                                sakId: props.sakId,
+                                klageId: props.klage.id,
+                                steg: KlageSteg.Vurdering,
+                            })
+                        );
+                    }
+                );
+            }
+        );
     };
 
     if (!iGyldigTilstandForÅVilkårsvurdere(props.klage)) {
@@ -167,13 +174,6 @@ const VurderFormkrav = (props: Props) => {
             </div>
         );
     }
-
-    const skalViseTilstandsfeil = () => {
-        return (
-            (isDirty && isSubmitted && erKlageVilkårsvurdertUtfyltEllerSenere(props.klage)) ||
-            (isSubmitted && !erKlageVilkårsvurdertUtfyltEllerSenere(props.klage))
-        );
-    };
 
     const fyllInRadioGruppe = () =>
         Object.values(Svarord).map(
@@ -268,12 +268,6 @@ const VurderFormkrav = (props: Props) => {
                                 />
                             )}
                         />
-
-                        {skalViseTilstandsfeil() && (
-                            <SkjemaelementFeilmelding>
-                                {formatMessage('feil.bekrefterIFeilTilstand')}
-                            </SkjemaelementFeilmelding>
-                        )}
 
                         <div className={styles.buttons}>
                             <Button type="button" variant="secondary" onClick={() => handleLagreFormkrav(watch())}>

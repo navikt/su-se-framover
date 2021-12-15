@@ -46,12 +46,11 @@ export default {
     'form.fritekst.hjelpeTekst': 'Skriv inn vurdering av klagen og gjengi hovedinnholdet i klagers anførsler',
 
     'knapp.seBrev': 'Se brev',
-    'knapp.lagre': 'Lagre',
-    'knapp.bekreftOgFortsett': 'Bekreft og fortsett',
+    'knapp.lagre': 'Lagre og fortsett senere',
+    'knapp.bekreftOgFortsett': 'Bekreft',
     'knapp.tilbake': 'Tilbake',
 
     'page.tittel': 'Behandle klage',
 
-    'feil.bekrefterIFeilTilstand': 'Vilkårene er ikke utfyllt, og lagret for å bekrefte og fortsette',
     'feil.ikkeRiktigTilstandForÅVurdere': 'Klagen er ikke i riktig tilstand for å vurdere',
 };

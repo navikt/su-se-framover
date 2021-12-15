@@ -23,7 +23,6 @@ import { Link } from 'react-router-dom';
 
 import * as pdfApi from '~api/pdfApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as klageActions from '~features/klage/klageActions';
@@ -40,11 +39,7 @@ import {
     OpprettholdVedtakHjemmel,
     KlageVurderingType,
 } from '~types/Klage';
-import {
-    erKlageVurdertBekreftet,
-    erKlageVurdertUtfyltEllerSenere,
-    iGyldigTilstandForÅVurdere,
-} from '~utils/klage/klageUtils';
+import { erKlageVurdertBekreftet, iGyldigTilstandForÅVurdere } from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
 
@@ -142,8 +137,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         handleSubmit,
         watch,
         control,
-        formState: { isDirty, isSubmitted },
-        reset,
+        formState: { isDirty },
         ...form
     } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
@@ -152,6 +146,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
 
     const handleLagreVurderingAvKlageClick = (data: VurderingAvKlageFormData) => {
         if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
 
@@ -174,24 +169,13 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                         : null,
                 fritekstTilBrev: data.fritekstTilBrev,
             },
-            (klage) => {
-                //vi resetter formet, slik at tilstanden på formet er oppdatert når vi viser vår custom feilmelding skalViseTilstandsfeil()
-                reset({
-                    klageVurderingType: klage.vedtaksvurdering?.type ?? null,
-                    omgjør: {
-                        årsak: klage.vedtaksvurdering?.omgjør?.årsak ?? null,
-                        utfall: klage.vedtaksvurdering?.omgjør?.utfall ?? null,
-                    },
-                    oppretthold: {
-                        hjemmel: klage.vedtaksvurdering?.oppretthold?.hjemler ?? [],
-                    },
-                    fritekstTilBrev: klage.fritekstTilBrev,
-                });
+            () => {
+                history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             }
         );
     };
 
-    const handleBekreftOgFortsettSubmit = () => {
+    const handleBekreftOgFortsettSubmit = (data: VurderingAvKlageFormData) => {
         if (erKlageVurdertBekreftet(props.klage) && !isDirty) {
             history.push(
                 Routes.klage.createURL({
@@ -202,24 +186,43 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             );
             return;
         }
-
-        if (erKlageVurdertUtfyltEllerSenere(props.klage) && !isDirty) {
-            bekreftVurderinger(
-                {
-                    sakId: props.sakId,
-                    klageId: props.klage.id,
-                },
-                () => {
-                    history.push(
-                        Routes.klage.createURL({
-                            sakId: props.sakId,
-                            klageId: props.klage.id,
-                            steg: KlageSteg.Oppsummering,
-                        })
-                    );
-                }
-            );
-        }
+        lagreVurderingAvKlage(
+            {
+                sakId: props.sakId,
+                klageId: props.klage.id,
+                omgjør:
+                    data.klageVurderingType === KlageVurderingType.OMGJØR
+                        ? {
+                              årsak: data.omgjør.årsak ? data.omgjør.årsak : null,
+                              utfall: data.omgjør.utfall,
+                          }
+                        : null,
+                oppretthold:
+                    data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
+                        ? {
+                              hjemler: data.oppretthold.hjemmel,
+                          }
+                        : null,
+                fritekstTilBrev: data.fritekstTilBrev,
+            },
+            () => {
+                bekreftVurderinger(
+                    {
+                        sakId: props.sakId,
+                        klageId: props.klage.id,
+                    },
+                    () => {
+                        history.push(
+                            Routes.klage.createURL({
+                                sakId: props.sakId,
+                                klageId: props.klage.id,
+                                steg: KlageSteg.Oppsummering,
+                            })
+                        );
+                    }
+                );
+            }
+        );
     };
 
     if (!iGyldigTilstandForÅVurdere(props.klage)) {
@@ -238,13 +241,6 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             </div>
         );
     }
-
-    const skalViseTilstandsfeil = () => {
-        return (
-            (isDirty && isSubmitted && erKlageVurdertUtfyltEllerSenere(props.klage)) ||
-            (isSubmitted && !erKlageVurdertUtfyltEllerSenere(props.klage))
-        );
-    };
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -324,12 +320,6 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             </Button>
                             {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                         </div>
-
-                        {skalViseTilstandsfeil() && (
-                            <SkjemaelementFeilmelding className={styles.skjemaelementFeilmelding}>
-                                {formatMessage('feil.bekrefterIFeilTilstand')}
-                            </SkjemaelementFeilmelding>
-                        )}
 
                         <div className={styles.knapperContainer}>
                             <Button

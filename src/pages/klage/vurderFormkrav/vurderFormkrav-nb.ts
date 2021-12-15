@@ -29,14 +29,13 @@ export default {
     'formkrav.begrunnelse.label': 'Begrunnelse',
     'formkrav.begrunnelse.placeholder': 'Unngå personsensitive opplysninger',
     'formkrav.button.tilbake': 'Tilbake',
-    'formkrav.button.lagre': 'Lagre',
-    'formkrav.button.bekreftOgFortsett': 'Bekreft og fortsett',
+    'formkrav.button.lagre': 'Lagre og fortsett senere',
+    'formkrav.button.bekreftOgFortsett': 'Bekreft',
 
     ...vedtakMessages,
     ...svarordMessages,
 
     'knapp.tilbake': 'Tilbake',
 
-    'feil.bekrefterIFeilTilstand': 'Vilkårene er ikke utfyllt, og lagret for å bekrefte og fortsette',
     'feil.ikkeRiktigTilstandForÅVilkårsvurdere': 'Klagen er ikke i riktig tilstand for å vilkårsvurdere',
 };
