@@ -2,16 +2,31 @@
 
 .container {
     display: flex;
+    gap: @spacing-xs;
 
     .column {
         width: 50%;
-
-        &:not(:last-child) {
-            margin-right: @spacing-xs;
-        }
     }
 }
 
 .alert {
     margin-bottom: @spacing;
+}
+
+.avkorting {
+    margin-top: @spacing;
+
+    .avkortingContent {
+        margin-left: @spacing-xs;
+
+        .avkortingListe {
+            margin-top: @spacing-xs;
+
+            li {
+                display: flex;
+                flex-direction: row;
+                gap: @spacing-l;
+            }
+        }
+    }
 }

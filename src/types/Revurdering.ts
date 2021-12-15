@@ -5,7 +5,7 @@ import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
-import { Simulering } from './Simulering';
+import { Simulering, SimulertPeriode } from './Simulering';
 import { Vedtak } from './Vedtak';
 
 //Dette er feltene som deles av backends 'abstrakte' revurdering. Hadde vært fint å skille på dem litt mer, både bak og fram
@@ -74,6 +74,10 @@ export interface SimulertRevurdering
     > {
     beregning: Beregning;
     simulering: Simulering;
+    simuleringForAvkortingsvarsel: Nullable<{
+        perioder: SimulertPeriode[];
+        totalBruttoYtelse: number;
+    }>;
 }
 
 export interface RevurderingTilAttestering
