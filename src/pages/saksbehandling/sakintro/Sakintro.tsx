@@ -21,7 +21,7 @@ import { Klage } from '~types/Klage';
 import { Sak } from '~types/Sak';
 import { Søknad } from '~types/Søknad';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
-import { getÅpenKlage, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
+import { erKlageTilAttestering, getÅpenKlage, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
@@ -144,11 +144,18 @@ const NyBehandlingVelger = (props: { sakId: string; klager: Klage[]; klageToggle
                 const åpenKlage = getÅpenKlage(props.klager);
 
                 if (åpenKlage) {
-                    return Routes.klage.createURL({
-                        sakId: props.sakId,
-                        klageId: åpenKlage.id,
-                        steg: hentSisteVurderteSteg(åpenKlage),
-                    });
+                    if (erKlageTilAttestering(åpenKlage)) {
+                        return Routes.attesterKlage.createURL({
+                            sakId: props.sakId,
+                            klageId: åpenKlage.id,
+                        });
+                    } else {
+                        return Routes.klage.createURL({
+                            sakId: props.sakId,
+                            klageId: åpenKlage.id,
+                            steg: hentSisteVurderteSteg(åpenKlage),
+                        });
+                    }
                 }
                 return Routes.klageOpprett.createURL({ sakId: props.sakId });
             }
