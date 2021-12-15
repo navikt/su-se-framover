@@ -105,10 +105,13 @@ export enum Person {
 }
 
 export enum Klage {
+    FINNES_ALLEREDE_EN_ÅPEN_KLAGE = 'FINNES_ALLEREDE_EN_ÅPEN_KLAGE',
+    UGYLDIG_MOTTATT_DATO = 'ugyldig_mottatt_dato',
     FANT_IKKE_KLAGE = 'fant_ikke_klage',
     KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD = 'kan_ikke_velge_både_omgjør_og_oppretthold',
     UGYLDIG_OMGJØRINGSUTFALL = 'ugyldig_omgjøringsutfall',
     UGYLDIG_OMGJØRINGSÅRSAK = 'ugyldig_omgjøringsårsak',
     UGYLDIG_OPPRETTHOLDESESHJEMLER = 'ugyldig_opprettholdeseshjemler',
     NEI_ER_IKKE_STØTTET = 'nei_er_ikke_støttet',
+    UGYLDIG_GRUNN_FOR_UNDERKJENNING = 'ugyldig_grunn_for_underkjenning',
 }

@@ -75,12 +75,15 @@ const messages: { [key in FeilresponsErrorCodes]: string } & { [key: string]: st
         'Kontrollsimuleringen er ulik saksbehandlers simulering',
     [Person.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
 
+    [Klage.FINNES_ALLEREDE_EN_ÅPEN_KLAGE]: 'Det finnes allerede en åpen klage',
+    [Klage.UGYLDIG_MOTTATT_DATO]: 'Ugyldig mottatt dato',
     [Klage.FANT_IKKE_KLAGE]: 'Fant ikke klage',
     [Klage.KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD]: 'Kan ikke velge både omgjør og oppretthold',
     [Klage.UGYLDIG_OMGJØRINGSUTFALL]: 'Ugyldig omgjøringsutfall',
     [Klage.UGYLDIG_OMGJØRINGSÅRSAK]: 'Ugyldig omgjøringsårsak',
     [Klage.UGYLDIG_OPPRETTHOLDESESHJEMLER]: 'Ugyldig opprettholdelseshjemler',
     [Klage.NEI_ER_IKKE_STØTTET]: 'Det er ikke støtte for å svare "nei"',
+    [Klage.UGYLDIG_GRUNN_FOR_UNDERKJENNING]: 'Ugyldig underkjennelses grunn',
 };
 
 export default messages;

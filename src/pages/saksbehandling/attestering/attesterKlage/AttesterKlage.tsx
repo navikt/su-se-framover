@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Heading, Radio, RadioGroup, Select, Textarea } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Radio, RadioGroup, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { Link, useHistory } from 'react-router-dom';
@@ -170,7 +170,10 @@ const AttesterKlage = (props: {
                     >
                         {formatMessage('knapp.tilbake')}
                     </LinkAsButton>
-                    <Button>{formatMessage('knapp.bekreft')}</Button>
+                    <Button>
+                        {formatMessage('knapp.bekreft')}
+                        {(RemoteData.isPending(oversendStatus) || RemoteData.isPending(underkjennStatus)) && <Loader />}
+                    </Button>
                 </div>
                 <div className={styles.apiErrorContainer}>
                     {RemoteData.isFailure(oversendStatus) && <ApiErrorAlert error={oversendStatus.error} />}
