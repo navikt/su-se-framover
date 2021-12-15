@@ -26,7 +26,11 @@ import {
     IverksattRevurdering,
     UnderkjentRevurdering,
 } from '~types/Revurdering';
-import { erRevurderingTilAttestering, erGregulering } from '~utils/revurdering/revurderingUtils';
+import {
+    erRevurderingTilAttestering,
+    erGregulering,
+    hentAvkortingFraRevurdering,
+} from '~utils/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
 
@@ -77,7 +81,7 @@ const AttesterRevurdering = (props: {
     søker: Person;
 }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
-    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const revurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -114,8 +118,9 @@ const AttesterRevurdering = (props: {
 
                 if (RevurderingActions.iverksettRevurdering.fulfilled.match(res)) {
                     dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.saksnummer.toString() }));
-                    const message = intl.formatMessage({ id: 'attester.iverksatt' });
-                    history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
+                    history.push(
+                        Routes.createSakIntroLocation(formatMessage('attester.iverksatt'), props.sakInfo.sakId)
+                    );
                 }
 
                 if (RevurderingActions.iverksettRevurdering.rejected.match(res)) {
@@ -136,8 +141,9 @@ const AttesterRevurdering = (props: {
                 );
 
                 if (RevurderingActions.underkjennRevurdering.fulfilled.match(res)) {
-                    const message = intl.formatMessage({ id: 'attester.sendtTilbake' });
-                    history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
+                    history.push(
+                        Routes.createSakIntroLocation(formatMessage('attester.sendtTilbake'), props.sakInfo.sakId)
+                    );
                 }
 
                 if (RevurderingActions.underkjennRevurdering.rejected.match(res)) {
@@ -153,7 +159,7 @@ const AttesterRevurdering = (props: {
     if (!revurdering) {
         return (
             <div className={styles.advarselContainer}>
-                <Alert variant="error">{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</Alert>
+                <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>
             </div>
         );
     }
@@ -161,7 +167,7 @@ const AttesterRevurdering = (props: {
     if (!erRevurderingTilAttestering(revurdering)) {
         return (
             <div className={styles.advarselContainer}>
-                <Alert variant="error">{intl.formatMessage({ id: 'feil.ikkeTilAttestering' })}</Alert>
+                <Alert variant="error">{formatMessage('feil.ikkeTilAttestering')}</Alert>
             </div>
         );
     }
@@ -176,7 +182,7 @@ const AttesterRevurdering = (props: {
         <div className={SharedStyles.container}>
             <Personlinje søker={props.søker} sakInfo={props.sakInfo} />
             <Heading level="1" size="xlarge" className={SharedStyles.tittel}>
-                {intl.formatMessage({ id: 'page.tittel' })}
+                {formatMessage('page.tittel')}
             </Heading>
             {pipe(
                 grunnlagsdataOgVilkårsvurderinger,
@@ -199,19 +205,23 @@ const AttesterRevurdering = (props: {
                                     type="button"
                                     onClick={handleShowBrevClick}
                                 >
-                                    {intl.formatMessage({ id: 'knapp.brev' })}
+                                    {formatMessage('knapp.brev')}
                                     {RemoteData.isPending(hentPdfStatus) && <Loader />}
                                 </Button>
                             )}
                             {RemoteData.isFailure(hentPdfStatus) && (
                                 <Alert variant="error" className={styles.brevFeil}>
-                                    {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}
+                                    {formatMessage('feil.klarteIkkeHenteBrev')}
                                 </Alert>
                             )}
 
                             {revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT && (
                                 <div className={styles.opphørsadvarsel}>
-                                    <Alert variant="warning">{intl.formatMessage({ id: 'info.opphør' })}</Alert>
+                                    <Alert variant="warning">
+                                        {hentAvkortingFraRevurdering(revurdering)
+                                            ? formatMessage('info.opphør.og.avkorting')
+                                            : formatMessage('info.opphør')}
+                                    </Alert>
                                 </div>
                             )}
 
@@ -227,7 +237,7 @@ const AttesterRevurdering = (props: {
                                         <BooleanRadioGroup
                                             className={SharedStyles.formElement}
                                             name="beslutning"
-                                            legend={intl.formatMessage({ id: 'beslutning.tittel' })}
+                                            legend={formatMessage('beslutning.tittel')}
                                             value={formik.values.beslutning}
                                             onChange={(value) =>
                                                 formik.setValues((v) => ({
@@ -237,14 +247,14 @@ const AttesterRevurdering = (props: {
                                             }
                                             error={formik.errors.beslutning}
                                             labels={{
-                                                true: intl.formatMessage({ id: 'beslutning.godkjenn' }),
-                                                false: intl.formatMessage({ id: 'beslutning.underkjenn' }),
+                                                true: formatMessage('beslutning.godkjenn'),
+                                                false: formatMessage('beslutning.underkjenn'),
                                             }}
                                         />
                                         {formik.values.beslutning === false && (
                                             <div className={styles.selectContainer}>
                                                 <Select
-                                                    label={intl.formatMessage({ id: 'input.grunn.label' })}
+                                                    label={formatMessage('input.grunn.label')}
                                                     onChange={(event) =>
                                                         formik.setValues((v) => ({
                                                             ...v,
@@ -255,20 +265,18 @@ const AttesterRevurdering = (props: {
                                                     error={formik.errors.grunn}
                                                 >
                                                     <option value="" disabled>
-                                                        {intl.formatMessage({ id: 'input.grunn.value.default' })}
+                                                        {formatMessage('input.grunn.value.default')}
                                                     </option>
                                                     {Object.values(UnderkjennRevurderingGrunn).map((grunn, index) => (
                                                         <option value={grunn} key={index}>
-                                                            {intl.formatMessage({
-                                                                id: getTextId(grunn),
-                                                            })}
+                                                            {formatMessage(getTextId(grunn))}
                                                         </option>
                                                     ))}
                                                 </Select>
 
                                                 <div className={styles.textAreaContainer}>
                                                     <Textarea
-                                                        label={intl.formatMessage({ id: 'input.kommentar.label' })}
+                                                        label={formatMessage('input.kommentar.label')}
                                                         name="kommentar"
                                                         value={formik.values.kommentar ?? ''}
                                                         error={formik.errors.kommentar}
@@ -279,7 +287,7 @@ const AttesterRevurdering = (props: {
                                         )}
                                     </div>
                                     <Button className={styles.sendBeslutningKnapp}>
-                                        {intl.formatMessage({ id: 'knapp.tekst' })}
+                                        {formatMessage('knapp.tekst')}
                                         {RemoteData.isPending(sendtBeslutning) && <Loader />}
                                     </Button>
                                     {RemoteData.isFailure(sendtBeslutning) && (

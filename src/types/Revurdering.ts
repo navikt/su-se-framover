@@ -59,6 +59,11 @@ export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus
 
 export type OpprettetRevurdering = InformasjonsRevurdering<InformasjonsRevurderingStatus.OPPRETTET>;
 
+export type SimuleringForAvkortingsvarsel = {
+    perioder: SimulertPeriode[];
+    totalBruttoYtelse: number;
+};
+
 export interface BeregnetInnvilget extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INNVILGET> {
     beregning: Beregning;
 }
@@ -74,10 +79,7 @@ export interface SimulertRevurdering
     > {
     beregning: Beregning;
     simulering: Simulering;
-    simuleringForAvkortingsvarsel: Nullable<{
-        perioder: SimulertPeriode[];
-        totalBruttoYtelse: number;
-    }>;
+    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
 }
 
 export interface RevurderingTilAttestering
@@ -87,6 +89,7 @@ export interface RevurderingTilAttestering
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
+    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
 }
 
 export interface IverksattRevurdering
@@ -96,6 +99,7 @@ export interface IverksattRevurdering
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
+    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
 }
 
 export interface UnderkjentRevurdering
@@ -105,6 +109,7 @@ export interface UnderkjentRevurdering
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
+    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
 }
 
 export interface AvsluttetRevurdering extends InformasjonsRevurdering<InformasjonsRevurderingStatus.AVSLUTTET> {

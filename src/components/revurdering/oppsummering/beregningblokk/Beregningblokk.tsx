@@ -12,9 +12,9 @@ import { formatCurrency } from '~utils/format/formatUtils';
 import {
     erGregulering,
     erRevurderingIngenEndring,
-    erRevurderingSimulert,
     harBeregninger,
     harSimulering,
+    hentAvkortingFraRevurdering,
 } from '~utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
@@ -24,6 +24,7 @@ import styles from './beregningblokk.module.less';
 
 const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...simulertUtbetaling } });
+    const simuleringForAvkortingsvarsel = hentAvkortingFraRevurdering(revurdering);
 
     const alert = React.useMemo(() => {
         if (erRevurderingIngenEndring(revurdering)) {
@@ -38,7 +39,7 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
                   };
         }
         if (revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT) {
-            return erRevurderingSimulert(revurdering) && revurdering.simuleringForAvkortingsvarsel
+            return simuleringForAvkortingsvarsel
                 ? {
                       tittel: formatMessage('revurdering.opphør.avkorting.advarsel.tittel'),
                       tekst: formatMessage('revurdering.opphør.avkorting.advarsel'),
@@ -91,7 +92,7 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
                     </Panel>
                 </div>
             </div>
-            {erRevurderingSimulert(revurdering) && revurdering.simuleringForAvkortingsvarsel && (
+            {simuleringForAvkortingsvarsel && (
                 <div className={styles.avkorting}>
                     <Heading level="3" size="small" spacing>
                         {formatMessage('heading.avkorting')}
@@ -99,10 +100,10 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
                     <div className={styles.avkortingContent}>
                         <OppsummeringPar
                             label={formatMessage('avkorting.total')}
-                            verdi={formatCurrency(revurdering.simuleringForAvkortingsvarsel.totalBruttoYtelse)}
+                            verdi={formatCurrency(simuleringForAvkortingsvarsel.totalBruttoYtelse)}
                         />
                         <ul className={styles.avkortingListe}>
-                            {revurdering.simuleringForAvkortingsvarsel.perioder.map((periode) => (
+                            {simuleringForAvkortingsvarsel.perioder.map((periode) => (
                                 <li key={periode.fraOgMed}>
                                     <p>{formatPeriode({ fraOgMed: periode.fraOgMed, tilOgMed: periode.tilOgMed })}</p>
                                     <p>{formatMessage(periode.type)}</p>

@@ -2,6 +2,8 @@ import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { Nullable } from '~lib/types';
+import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { Beregning } from '~types/Beregning';
 import {
     SimulertRevurdering,
@@ -19,14 +21,21 @@ import {
     StansAvYtelse,
     InformasjonsRevurderingStatus,
     UtbetalingsRevurderingStatus,
+    SimuleringForAvkortingsvarsel,
 } from '~types/Revurdering';
 import { Simulering } from '~types/Simulering';
-
-import { RevurderingSteg } from '../../pages/saksbehandling/types';
 
 export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
     return 'fritekstTilBrev' in r && 'informasjonSomRevurderes' in r;
 };
+
+export const hentAvkortingFraRevurdering = (r: Revurdering): Nullable<SimuleringForAvkortingsvarsel> =>
+    erRevurderingSimulert(r) ||
+    erRevurderingIverksatt(r) ||
+    erRevurderingUnderkjent(r) ||
+    erRevurderingTilAttestering(r)
+        ? r.simuleringForAvkortingsvarsel
+        : null;
 
 export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
     r.status === InformasjonsRevurderingStatus.SIMULERT_INNVILGET ||
