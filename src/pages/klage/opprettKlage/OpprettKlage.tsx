@@ -10,6 +10,7 @@ import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import * as klageActions from '~features/klage/klageActions';
+import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
@@ -26,7 +27,13 @@ interface FormData {
     datoKlageMottatt: Date;
 }
 const schema = yup.object<FormData>({
-    journalpostId: yup.string().trim().required(),
+    journalpostId: yup
+        .string()
+        .trim()
+        .required()
+        .test('isNumeric', 'Må være et tall', function (id) {
+            return pipe(id, Number, Number.isInteger);
+        }),
     datoKlageMottatt: yup.date().required().typeError('Feltet må være en dato på formatet dd/mm/yyyy').max(new Date()),
 });
 
