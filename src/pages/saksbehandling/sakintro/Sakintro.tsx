@@ -68,7 +68,6 @@ const Sakintro = (props: { sak: Sak }) => {
     const { avsluttedeRevurderinger, åpneRevurderinger } = splittAvsluttedeOgÅpneRevurderinger(props.sak.revurderinger);
 
     const kanRevurderes = !isEmpty(props.sak.utbetalinger);
-    const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) && kanRevurderes;
 
     const kanOppretteKlage = !isEmpty(props.sak.vedtak);
     const klageToggle = useFeatureToggle(FeatureToggle.Klage) && kanOppretteKlage;
@@ -99,7 +98,7 @@ const Sakintro = (props: { sak: Sak }) => {
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
-                    {revurderingToggle && (
+                    {kanRevurderes && (
                         <ÅpneRevurderinger sak={props.sak} åpneRevurderinger={åpneRevurderinger} intl={intl} />
                     )}
                     <IverksattInnvilgedeSøknader
