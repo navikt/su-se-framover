@@ -26,7 +26,7 @@ interface Input {
 interface Props {
     revurdering: Revurdering;
     knapper?: { tilbake?: KnappProps; neste?: KnappProps };
-    error?: Nullable<ApiError<string>>;
+    error?: Nullable<ApiError>;
     inputs: Input[];
 }
 

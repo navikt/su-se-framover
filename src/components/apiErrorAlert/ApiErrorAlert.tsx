@@ -2,27 +2,18 @@ import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
 import { ApiError } from '~api/apiClient';
-import { RevurderingErrorCodes } from '~components/apiErrorAlert/revurderingApiError/RevurderingApiError';
-import { FeilresponsErrorCodes, Generell } from '~components/apiErrorAlert/saksbehandlerApiError/ApiErrorTypes';
-import { SøknadsbehandlingErrorCodes } from '~components/apiErrorAlert/søknadsbehandlingApiError/SøknadsbehandlingApiError';
 import { useI18n } from '~lib/i18n';
 
+import messages from './ApiErrorAlert-nb';
 import styles from './apierroralert.module.less';
-import revurderingsMessages from './revurderingApiError/RevurderingApiError-nb';
-import apiErrorMessages from './saksbehandlerApiError/ApiErrorAlert-nb';
-import søknadsbehandlingMessages from './søknadsbehandlingApiError/søknadsbehandlingApiError-nb';
+import { ApiErrorCode } from './apiErrorCode';
 
-const ApiErrorAlert = ({
-    error,
-}: {
-    error?: ApiError<FeilresponsErrorCodes | RevurderingErrorCodes | SøknadsbehandlingErrorCodes | string>;
-}) => {
-    const { formatMessage } = useI18n({
-        messages: Object.assign(apiErrorMessages, revurderingsMessages, søknadsbehandlingMessages),
-    });
+const ApiErrorAlert = ({ error }: { error?: ApiError }) => {
+    const { formatMessage } = useI18n({ messages });
+
     return (
         <Alert variant="error" className={styles.alertstripe}>
-            {formatMessage(error?.body?.code ?? Generell.UKJENT_FEIL)}
+            {formatMessage(error?.body?.code ?? ApiErrorCode.UKJENT_FEIL)}
         </Alert>
     );
 };
