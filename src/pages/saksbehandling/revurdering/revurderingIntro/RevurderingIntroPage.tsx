@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import * as DateFns from 'date-fns';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -27,6 +28,8 @@ const RevurderingIntroPage = (props: {
     informasjonsRevurdering: InformasjonsRevurdering | undefined;
 }) => {
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
+    const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
+    const status = RemoteData.combine(oppdaterRevurderingStatus, opprettRevurderingStatus);
     const history = useHistory();
     const dispatch = useAppDispatch();
 
@@ -71,7 +74,7 @@ const RevurderingIntroPage = (props: {
             revurdering={props.informasjonsRevurdering}
             maxFraOgMed={DateFns.parseISO(sisteUtbetaling.tilOgMed)}
             minFraOgMed={DateFns.parseISO(førsteUtbetaling.fraOgMed)}
-            nesteClickStatus={oppdaterRevurderingStatus}
+            nesteClickStatus={status}
             lagreOgFortsettSenereClickStatus={oppdaterRevurderingStatus}
         />
     );

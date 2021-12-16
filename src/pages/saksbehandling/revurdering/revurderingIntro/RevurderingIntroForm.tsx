@@ -54,7 +54,7 @@ interface RevurderingIntroFormProps {
     revurdering?: InformasjonsRevurdering;
     minFraOgMed: Date;
     maxFraOgMed: Date;
-    nesteClickStatus: RemoteData.RemoteData<ApiError, null>;
+    nesteClickStatus: RemoteData.RemoteData<ApiError, [null, null]>;
     lagreOgFortsettSenereClickStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
@@ -214,7 +214,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                     </div>
                     <Feiloppsummering
                         tittel={formatMessage('feiloppsummering.title')}
-                        hidden={form.formState.isValid || !form.formState.isSubmitted}
+                        hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                         feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                     />
                 </div>
