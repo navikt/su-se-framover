@@ -17,7 +17,6 @@ import { groupBy, groupByEq } from '~utils/array/arrayUtils';
 import { formatMonthYear } from '~utils/date/dateUtils';
 import { formatCurrency } from '~utils/format/formatUtils';
 import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
-import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import styles from './visBeregning.module.less';
 
@@ -83,20 +82,20 @@ const VisBenyttetEpsFradrag = ({
     // Hvis denne finns så eksisterer det fradrag for EPS i aktuell måned
     <DetaljertFradrag
         tittel={{
-            label: getFradragstypeString(fradrag.type, intl),
+            label: intl.formatMessage({ id: fradrag.type }),
             verdi: formatCurrency(-fradrag.beløp),
         }}
         detaljer={[
             ...epsInputFradrag.flatMap((f) => {
                 if (!f.utenlandskInntekt) {
                     return {
-                        label: getFradragstypeString(f.type, intl),
+                        label: intl.formatMessage({ id: fradrag.type }),
                         verdi: formatCurrency(-f.beløp),
                     };
                 }
                 return [
                     {
-                        label: getFradragstypeString(f.type, intl),
+                        label: intl.formatMessage({ id: fradrag.type }),
                         verdi: formatCurrency(-f.beløp),
                     },
                     {
@@ -215,7 +214,7 @@ const VisBeregning = (props: Props) => {
                                         ) : fradrag.utenlandskInntekt !== null ? (
                                             <DetaljertFradrag
                                                 tittel={{
-                                                    label: getFradragstypeString(fradrag.type, intl),
+                                                    label: intl.formatMessage({ id: fradrag.type }),
                                                     verdi: formatCurrency(-fradrag.beløp),
                                                 }}
                                                 detaljer={[
@@ -238,7 +237,7 @@ const VisBeregning = (props: Props) => {
                                             />
                                         ) : (
                                             <>
-                                                <span>{getFradragstypeString(fradrag.type, intl)}</span>
+                                                <span>{intl.formatMessage({ id: fradrag.type })}</span>
                                                 <span>{formatCurrency(-fradrag.beløp)}</span>
                                             </>
                                         )}
@@ -256,7 +255,7 @@ const VisBeregning = (props: Props) => {
                                     <DetaljertFradrag
                                         tittel={{
                                             label:
-                                                getFradragstypeString(Fradragstype.BeregnetFradragEPS, intl) +
+                                                intl.formatMessage({ id: Fradragstype.BeregnetFradragEPS }) +
                                                 ' (lavere enn fribeløp, ikke inkludert)',
                                             verdi: formatCurrency(0),
                                         }}
@@ -264,13 +263,13 @@ const VisBeregning = (props: Props) => {
                                             ...månedsberegninger[0].epsInputFradrag.flatMap((f) => {
                                                 if (!f.utenlandskInntekt) {
                                                     return {
-                                                        label: getFradragstypeString(f.type, intl),
+                                                        label: intl.formatMessage({ id: f.type }),
                                                         verdi: formatCurrency(-f.beløp),
                                                     };
                                                 }
                                                 return [
                                                     {
-                                                        label: getFradragstypeString(f.type, intl),
+                                                        label: intl.formatMessage({ id: f.type }),
                                                         verdi: formatCurrency(-f.beløp),
                                                     },
                                                     {

@@ -13,7 +13,6 @@ import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import { Fradragstype } from '~types/Fradrag';
 import { toStringDateOrNull } from '~utils/date/dateUtils';
-import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import DatePicker from '../../datePicker/DatePicker';
 
@@ -94,7 +93,7 @@ const FradragsSelection = (props: {
             .filter((type) => type !== Fradragstype.ForventetInntekt)
             .map((f) => (
                 <option value={f} key={f}>
-                    {getFradragstypeString(f, props.intl)}
+                    {props.intl.formatMessage({ id: f })}
                 </option>
             ))}
     </Select>
@@ -114,7 +113,12 @@ const utenlandskInntekt = yup
     });
 
 const velgbareFradragstyper = Object.values(Fradragstype).filter(
-    (f) => ![Fradragstype.BeregnetFradragEPS, Fradragstype.UnderMinstenivå].includes(f)
+    (f) =>
+        ![
+            Fradragstype.BeregnetFradragEPS,
+            Fradragstype.UnderMinstenivå,
+            Fradragstype.AvkortingUtenlandsopphold,
+        ].includes(f)
 );
 
 export const fradragSchema = yup.object<FradragFormData>({

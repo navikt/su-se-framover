@@ -14,8 +14,8 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import {
     FradragFormData,
-    fradragSchema,
     FradragInputs,
+    fradragSchema,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import BeregningFaktablokk from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
@@ -27,9 +27,10 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { VilkårsvurderingBaseProps } from '~pages/saksbehandling/søknadsbehandling/types';
+import { Vurderingknapper } from '~pages/saksbehandling/søknadsbehandling/Vurdering';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
-import { Beregning } from '~types/Beregning';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { kanSimuleres } from '~utils/behandling/behandlingUtils';
@@ -38,8 +39,6 @@ import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstype
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
-import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/søknadsbehandling/types';
-import { Vurderingknapper } from '../../../pages/saksbehandling/søknadsbehandling/Vurdering';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
@@ -236,6 +235,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
+                        {props.behandling.simuleringForAvkortingsvarsel && (
+                            <Alert variant={'info'} className={styles.avkortingAlert}>
+                                {intl.formatMessage({ id: 'alert.advarsel.avkorting' })}
+                            </Alert>
+                        )}
                         <Heading level="2" size="medium">
                             Fradrag
                         </Heading>
@@ -246,7 +250,9 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     null
                                 }
                                 feltnavn="fradrag"
-                                fradrag={formik.values.fradrag}
+                                fradrag={formik.values.fradrag.filter(
+                                    (fradrag) => fradrag.type !== Fradragstype.AvkortingUtenlandsopphold
+                                )}
                                 errors={formik.errors.fradrag}
                                 intl={intl}
                                 onChange={formik.handleChange}
@@ -375,6 +381,7 @@ function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormD
 
     const fradragFraBasen = fradrag
         .filter((f) => f.type !== Fradragstype.ForventetInntekt)
+        .filter((f) => f.type !== Fradragstype.AvkortingUtenlandsopphold)
         .map(fradragTilFradragFormData);
 
     return getEq(eqFradragFormData).equals(formFradrag, fradragFraBasen);

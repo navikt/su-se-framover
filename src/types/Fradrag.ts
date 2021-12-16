@@ -52,4 +52,5 @@ export enum Fradragstype {
     ForventetInntekt = 'ForventetInntekt',
     BeregnetFradragEPS = 'BeregnetFradragEPS',
     UnderMinstenivå = 'UnderMinstenivå',
+    AvkortingUtenlandsopphold = 'AvkortingUtenlandsopphold',
 }
