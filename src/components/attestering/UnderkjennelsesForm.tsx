@@ -5,11 +5,11 @@ import { Control, Controller } from 'react-hook-form';
 import { useI18n } from '~lib/i18n';
 import { UnderkjennelseGrunn, underkjennelsesGrunnTextMapper } from '~types/Behandling';
 
-import { AttesterKlageFormData } from './Attestering';
+import { AttesterFormData } from './Attestering';
 import messages from './attestering-nb';
 import styles from './attestering.module.less';
 
-const UnderkjennelsesForm = (props: { control: Control<AttesterKlageFormData> }) => {
+const UnderkjennelsesForm = (props: { control: Control<AttesterFormData> }) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div className={styles.underkjennelsesFormContainer}>

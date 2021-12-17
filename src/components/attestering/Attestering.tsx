@@ -17,7 +17,7 @@ import messages from './attestering-nb';
 import styles from './attestering.module.less';
 import UnderkjennelsesForm from './UnderkjennelsesForm';
 
-export interface AttesterKlageFormData {
+export interface AttesterFormData {
     beslutning: Nullable<Beslutning>;
     grunn: Nullable<UnderkjennelseGrunn>;
     kommentar: Nullable<string>;
@@ -28,7 +28,7 @@ enum Beslutning {
     UNDERKJENN = 'underkjenn',
 }
 
-const schema = yup.object<AttesterKlageFormData>({
+const schema = yup.object<AttesterFormData>({
     beslutning: yup.string().nullable().required().oneOf([Beslutning.IVERKSETT, Beslutning.UNDERKJENN]),
     grunn: yup.string<UnderkjennelseGrunn>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
@@ -55,7 +55,7 @@ interface Props {
 const Attestering: React.FC<Props> = ({ children, ...props }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const { control, watch, handleSubmit } = useForm<AttesterKlageFormData>({
+    const { control, watch, handleSubmit } = useForm<AttesterFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
             beslutning: null,
