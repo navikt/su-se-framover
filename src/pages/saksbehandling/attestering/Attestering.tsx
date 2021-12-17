@@ -3,6 +3,7 @@ import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
+import Personlinje from '~components/personlinje/Personlinje';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -53,15 +54,14 @@ const Attestering = () => {
                         />
                     </Route>
                     <Route path={Routes.attesterKlage.path}>
-                        <AttesterKlage
+                        <Personlinje
+                            søker={søkerValue}
                             sakInfo={{
                                 sakId: sakValue.id,
                                 saksnummer: sakValue.saksnummer,
                             }}
-                            søker={søkerValue}
-                            klager={sakValue.klager}
-                            vedtaker={sakValue.vedtak}
                         />
+                        <AttesterKlage sakId={sakValue.id} klager={sakValue.klager} vedtaker={sakValue.vedtak} />
                     </Route>
                 </Switch>
             )
