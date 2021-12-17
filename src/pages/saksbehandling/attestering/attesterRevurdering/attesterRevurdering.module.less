@@ -1,13 +1,5 @@
 @import '~/styles/variables.less';
 
-.beregningContainer {
-    display: flex;
-
-    > :not(:last-child) {
-        margin-right: @spacing-xl;
-    }
-}
-
 .oppsummeringContainer {
     width: 100%;
     margin-bottom: @spacing;
@@ -16,29 +8,6 @@
 .opphørsadvarsel {
     display: flex;
     margin-bottom: @spacing;
-}
-
-.beslutningContainer {
-    display: flex;
-    flex-direction: column;
-
-    > * {
-        width: 500px;
-    }
-
-    .selectContainer {
-        display: flex;
-        flex-direction: column;
-        gap: @spacing;
-    }
-}
-
-.textAreaContainer {
-    margin-bottom: @spacing;
-}
-
-.sendBeslutningKnapp {
-    margin-bottom: @spacing-xs;
 }
 
 .brevButton {
@@ -51,8 +20,4 @@
 
 .advarselContainer {
     margin-top: @spacing-xl;
-}
-
-.ingenEndringInfoboks {
-    margin-bottom: @spacing;
 }
