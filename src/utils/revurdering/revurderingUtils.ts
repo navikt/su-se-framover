@@ -1,7 +1,6 @@
 import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 
-import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { Beregning } from '~types/Beregning';
 import {
     SimulertRevurdering,
@@ -94,27 +93,6 @@ export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: 
 }
 export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
     return 'simulering' in r && (r as SimulertRevurdering).simulering !== null;
-}
-
-export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn): keyof typeof sharedMessages {
-    switch (årsak) {
-        case OpprettetRevurderingGrunn.MELDING_FRA_BRUKER:
-            return 'årsak.meldingFraBruker';
-        case OpprettetRevurderingGrunn.INFORMASJON_FRA_KONTROLLSAMTALE:
-            return 'årsak.informasjonFraKontrollsamtale';
-        case OpprettetRevurderingGrunn.DØDSFALL:
-            return 'årsak.dødsfall';
-        case OpprettetRevurderingGrunn.ANDRE_KILDER:
-            return 'årsak.andreKilder';
-        case OpprettetRevurderingGrunn.MIGRERT:
-            return 'årsak.migrert';
-        case OpprettetRevurderingGrunn.REGULER_GRUNNBELØP:
-            return 'årsak.gRegulering';
-        case OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING:
-            return 'årsak.manglendeKontrollerklæring';
-        case OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING:
-            return 'årsak.mottattKontrollerklæring';
-    }
 }
 
 /**

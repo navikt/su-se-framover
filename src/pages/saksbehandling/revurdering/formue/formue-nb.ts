@@ -3,8 +3,6 @@ export default {
 
     'feiloppsummering.tittel': 'For å kunne gå videre må du rette opp følgende',
 
-    'formueblokk.begrunnelse': 'Begrunnelse',
-
     'gjeldendeformue.tittel': 'Formue',
     'gjeldendeformue.søker': 'Søker',
     'gjeldendeformue.eps': 'Ektefelle/Samboer',

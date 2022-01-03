@@ -13,7 +13,6 @@ import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreBosituasjonsgrunnlag } from '~features/revurdering/revurderingActions';
-import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { MessageFormatter, useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
@@ -23,6 +22,7 @@ import { RevurderingStegProps } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
+import sharedMessages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -110,6 +110,7 @@ const BosituasjonFormPage = (props: RevurderingStegProps) => {
                                     value={field.value ?? ''}
                                     onChange={field.onChange}
                                     error={fieldState.error}
+                                    description={formatMessage('revurdering.begrunnelse.description')}
                                 />
                             )}
                         />

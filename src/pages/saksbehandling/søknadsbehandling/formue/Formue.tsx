@@ -440,6 +440,7 @@ const Formue = (props: {
                                     {...field}
                                     value={field.value || ''}
                                     error={fieldState.error?.message}
+                                    description={formatMessage('input.begrunnelse.description')}
                                 />
                             )}
                         />

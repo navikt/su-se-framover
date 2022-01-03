@@ -5,6 +5,7 @@ export default {
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
 
     'input.label.begrunnelse': 'Begrunnelse',
+    'input.begrunnelse.description': 'Unngå personsensitive opplysninger',
 
     'knapp.tilbake': 'Tilbake',
     'knapp.neste': 'Neste',

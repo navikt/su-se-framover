@@ -8,15 +8,14 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
-import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { getDateErrorMessage } from '~lib/validering';
+import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import { Revurdering, OpprettetRevurderingGrunn, StansAvYtelse } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
 import messages from './stans-nb';
 import styles from './stans.module.less';
@@ -53,7 +52,7 @@ const Stans = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.stansRoute>();
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId) ?? null;
 
-    const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [opprettStatus, opprettStans] = useAsyncActionCreator(revurderingActions.opprettStans);
     const [oppdaterStatus, oppdaterStans] = useAsyncActionCreator(revurderingActions.oppdaterStans);
@@ -106,14 +105,14 @@ const Stans = (props: Props) => {
         <Switch>
             <Route path={Routes.stansOppsummeringRoute.path}>
                 <Heading level="1" size="xlarge" className={styles.tittel}>
-                    {intl.formatMessage({ id: 'stans.tittel' })}
+                    {formatMessage('stans.tittel')}
                 </Heading>
                 <StansOppsummering sak={props.sak} />
             </Route>
             <Route path="*">
                 <form className={styles.pageContainer} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
                     <Heading level="1" size="xlarge" className={styles.tittel}>
-                        {intl.formatMessage({ id: 'stans.tittel' })}
+                        {formatMessage('stans.tittel')}
                     </Heading>
                     <div className={styles.content}>
                         <Controller
@@ -124,15 +123,11 @@ const Stans = (props: Props) => {
                                     error={fieldState.error?.message}
                                     value={field.value ?? undefined}
                                     onChange={field.onChange}
-                                    label={intl.formatMessage({ id: 'stans.årsak.tittel' })}
+                                    label={formatMessage('stans.årsak.tittel')}
                                 >
-                                    <option>{intl.formatMessage({ id: 'stans.årsak.label' })}</option>
+                                    <option>{formatMessage('stans.årsak.label')}</option>
                                     <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
-                                        {intl.formatMessage({
-                                            id: getRevurderingsårsakMessageId(
-                                                OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING
-                                            ),
-                                        })}
+                                        {formatMessage(OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING)}
                                     </option>
                                 </Select>
                             )}
@@ -142,7 +137,7 @@ const Stans = (props: Props) => {
                             name="stansDato"
                             render={({ field, fieldState }) => (
                                 <DatePicker
-                                    label={intl.formatMessage({ id: 'stans.dato.label' })}
+                                    label={formatMessage('stans.dato.label')}
                                     dateFormat="MM/yyyy"
                                     showMonthYearPicker
                                     isClearable
@@ -183,10 +178,10 @@ const Stans = (props: Props) => {
                                     history.goBack();
                                 }}
                             >
-                                {intl.formatMessage({ id: 'stans.bunnknapper.tilbake' })}
+                                {formatMessage('stans.bunnknapper.tilbake')}
                             </Button>
                             <Button variant="secondary">
-                                {intl.formatMessage({ id: 'stans.bunnknapper.neste' })}
+                                {formatMessage('stans.bunnknapper.neste')}
                                 {(RemoteData.isPending(opprettStatus) || RemoteData.isPending(oppdaterStatus)) && (
                                     <Loader />
                                 )}

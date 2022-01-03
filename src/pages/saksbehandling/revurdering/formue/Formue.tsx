@@ -28,6 +28,7 @@ import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~lib/validering';
+import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';
 import { RevurderingStegProps } from '~types/Revurdering';
@@ -187,7 +188,7 @@ const FormueBlokk = (props: {
     onSlettClick: (index: number) => void;
     watch: UseFormWatch<FormueFormData>;
 }) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const blokkName = `formue.${props.blokkIndex}` as const;
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
         regnUtFormDataVerdier(props.blokkField.søkersFormue)
@@ -323,10 +324,11 @@ const FormueBlokk = (props: {
                     defaultValue={props.blokkField.begrunnelse}
                     render={({ field, fieldState }) => (
                         <Textarea
-                            label={formatMessage('formueblokk.begrunnelse')}
+                            label={formatMessage('revurdering.begrunnelse')}
                             value={field.value ?? ''}
                             onChange={field.onChange}
                             error={fieldState.error?.message}
+                            description={formatMessage('revurdering.begrunnelse.description')}
                         />
                     )}
                 />

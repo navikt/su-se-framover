@@ -264,7 +264,7 @@ const VurderFormkrav = (props: Props) => {
                                     value={field.value ?? ''}
                                     error={fieldState.error?.message}
                                     label={formatMessage('formkrav.begrunnelse.label')}
-                                    placeholder={formatMessage('formkrav.begrunnelse.placeholder')}
+                                    description={formatMessage('formkrav.begrunnelse.placeholder')}
                                 />
                             )}
                         />

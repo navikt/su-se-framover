@@ -9,5 +9,5 @@ export default {
     'underkjennelse.select.label': 'Grunn',
     'underkjennelse.select.defaultValue': 'Velg grunn',
     'underkjennelse.kommentar.label': 'Kommentar',
-    'underkjennelse.kommentar.placeholder': 'Unngå personsensitive opplysninger',
+    'underkjennelse.kommentar.description': 'Unngå personsensitive opplysninger',
 };

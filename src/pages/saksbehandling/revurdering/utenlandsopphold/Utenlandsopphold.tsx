@@ -210,6 +210,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                             error={fieldState.error?.message}
                                             value={value ?? ''}
                                             {...field}
+                                            description={formatMessage('revurdering.begrunnelse.description')}
                                         />
                                     )}
                                 />

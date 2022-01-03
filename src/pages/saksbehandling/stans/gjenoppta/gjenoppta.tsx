@@ -7,15 +7,14 @@ import { Route, Switch, useHistory } from 'react-router';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
-import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import { Revurdering, OpprettetRevurderingGrunn, Gjenopptak } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
 import messages from './gjenoppta-nb';
 import styles from './gjenoppta.module.less';
@@ -46,7 +45,7 @@ function hentDefaultVerdier(r: Nullable<Revurdering>): FormData {
 
 const Gjenoppta = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansRoute>();
-    const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const history = useHistory();
 
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
@@ -97,7 +96,7 @@ const Gjenoppta = (props: Props) => {
     return (
         <>
             <Heading level="1" size="xlarge" className={styles.tittel}>
-                {intl.formatMessage({ id: 'gjenoppta.tittel' })}
+                {formatMessage('gjenoppta.tittel')}
             </Heading>
             <Switch>
                 <Route path={Routes.gjenopptaStansOppsummeringRoute.path}>
@@ -112,15 +111,11 @@ const Gjenoppta = (props: Props) => {
                                 error={fieldState.error?.message}
                                 value={field.value ?? undefined}
                                 onChange={field.onChange}
-                                label={intl.formatMessage({ id: 'gjenoppta.årsak.tittel' })}
+                                label={formatMessage('gjenoppta.årsak.tittel')}
                             >
-                                <option>{intl.formatMessage({ id: 'gjenoppta.årsak.label' })}</option>
+                                <option>{formatMessage('gjenoppta.årsak.label')}</option>
                                 <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
-                                    {intl.formatMessage({
-                                        id: getRevurderingsårsakMessageId(
-                                            OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING
-                                        ),
-                                    })}
+                                    {formatMessage(OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING)}
                                 </option>
                             </Select>
                         )}
@@ -149,10 +144,10 @@ const Gjenoppta = (props: Props) => {
                             variant="secondary"
                             onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
                         >
-                            {intl.formatMessage({ id: 'gjenoppta.oppsummering.tilbake' })}
+                            {formatMessage('gjenoppta.oppsummering.tilbake')}
                         </Button>
                         <Button variant="secondary">
-                            {intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' })}
+                            {formatMessage('gjenoppta.oppsummering.iverksett')}
                             {RemoteData.isPending(gjenopptaStatus) && <Loader />}
                         </Button>
                     </div>

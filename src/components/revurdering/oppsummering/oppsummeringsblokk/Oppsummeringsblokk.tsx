@@ -6,14 +6,13 @@ import * as S from 'fp-ts/string';
 import * as React from 'react';
 
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
-import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { maxBy } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
+import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import { Attestering } from '~types/Behandling';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Revurdering } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
-import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 import Vedtaksinformasjon from '../vedtaksinformasjon/Vedtaksinformasjon';
@@ -22,35 +21,33 @@ import messages from './oppsummeringsblokk-nb';
 import styles from './oppsummeringsblokk.module.less';
 
 const Intro = (props: { revurdering: Revurdering }) => {
-    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     return (
         <div className={styles.introContainer}>
             <div className={styles.intro}>
                 {[
                     {
-                        tittel: intl.formatMessage({ id: 'label.saksbehandler' }),
+                        tittel: formatMessage('label.saksbehandler'),
                         verdi: props.revurdering.saksbehandler,
                     },
                     {
-                        tittel: intl.formatMessage({ id: 'label.periode' }),
+                        tittel: formatMessage('label.periode'),
                         verdi: DateUtils.formatPeriode(props.revurdering.periode),
                     },
                     {
-                        tittel: intl.formatMessage({ id: 'label.startet' }),
+                        tittel: formatMessage('label.startet'),
                         verdi: DateUtils.formatDateTime(props.revurdering.opprettet),
                     },
                     {
-                        tittel: intl.formatMessage({ id: 'label.årsak' }),
-                        verdi: intl.formatMessage({
-                            id: getRevurderingsårsakMessageId(props.revurdering.årsak),
-                        }),
+                        tittel: formatMessage('label.årsak'),
+                        verdi: formatMessage(props.revurdering.årsak),
                     },
                     {
-                        tittel: intl.formatMessage({ id: 'label.begrunnelse' }),
+                        tittel: formatMessage('label.begrunnelse'),
                         verdi: props.revurdering.begrunnelse,
                     },
                     {
-                        tittel: intl.formatMessage({ id: 'label.attestant' }),
+                        tittel: formatMessage('label.attestant'),
                         verdi: pipe(
                             props.revurdering.attesteringer.filter((a) => a.underkjennelse === null),
                             maxBy(Ord.contramap((a: Attestering) => a.opprettet)(S.Ord)),
