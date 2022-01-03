@@ -1,14 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Loader, Textarea, Select, Panel } from '@navikt/ds-react';
-import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { BooleanRadioGroup } from '~components/formElements/FormElements';
+import Attestering from '~components/attestering/Attestering';
 import Personlinje from '~components/personlinje/Personlinje';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
@@ -18,14 +16,9 @@ import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import {
-    InformasjonsRevurdering,
-    InformasjonsRevurderingStatus,
-    IverksattRevurdering,
-    UnderkjentRevurdering,
-} from '~types/Revurdering';
+import { UnderkjennelseGrunn } from '~types/Behandling';
+import { InformasjonsRevurdering, InformasjonsRevurderingStatus } from '~types/Revurdering';
 import { erRevurderingTilAttestering, erGregulering } from '~utils/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
@@ -33,59 +26,19 @@ import SharedStyles from '../sharedStyles.module.less';
 import messages from './attesterRevurdering-nb';
 import styles from './attesterRevurdering.module.less';
 
-interface FormData {
-    beslutning?: boolean;
-    grunn?: UnderkjennRevurderingGrunn;
-    kommentar?: string;
-}
-
-export enum UnderkjennRevurderingGrunn {
-    BEREGNINGEN_ER_FEIL = 'BEREGNINGEN_ER_FEIL',
-    DOKUMENTASJON_MANGLER = 'DOKUMENTASJON_MANGLER',
-    VEDTAKSBREVET_ER_FEIL = 'VEDTAKSBREVET_ER_FEIL',
-    ANDRE_FORHOLD = 'ANDRE_FORHOLD',
-}
-
-function getTextId(grunn: UnderkjennRevurderingGrunn) {
-    switch (grunn) {
-        case UnderkjennRevurderingGrunn.BEREGNINGEN_ER_FEIL:
-            return 'input.grunn.value.beregningErFeil';
-        case UnderkjennRevurderingGrunn.DOKUMENTASJON_MANGLER:
-            return 'input.grunn.value.dokumentasjonMangler';
-        case UnderkjennRevurderingGrunn.VEDTAKSBREVET_ER_FEIL:
-            return 'input.grunn.value.vedtaksbrevetErFeil';
-        case UnderkjennRevurderingGrunn.ANDRE_FORHOLD:
-            return 'input.grunn.value.andreForhold';
-    }
-}
-
-const schema = yup.object<FormData>({
-    beslutning: yup.boolean().required(),
-    grunn: yup.mixed<UnderkjennRevurderingGrunn>().when('beslutning', {
-        is: false,
-        then: yup.mixed<UnderkjennRevurderingGrunn>().oneOf(Object.values(UnderkjennRevurderingGrunn)).required(),
-    }),
-    kommentar: yup.string().when('beslutning', {
-        is: false,
-        then: yup.string().required(),
-    }),
-});
-
 const AttesterRevurdering = (props: {
     sakInfo: { sakId: string; saksnummer: number };
     informasjonsRevurderinger: InformasjonsRevurdering[];
     søker: Person;
 }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
+    const history = useHistory();
     const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const revurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
-    const dispatch = useAppDispatch();
-    const history = useHistory();
-    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
-    const [sendtBeslutning, setSendtBeslutning] = useState<
-        RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
-    >(RemoteData.initial);
+    const dispatch = useAppDispatch();
+    const [iverksettStatus, iverksett] = useAsyncActionCreator(RevurderingActions.iverksettRevurdering);
+    const [underkjennStatus, underkjenn] = useAsyncActionCreator(RevurderingActions.underkjennRevurdering);
     const [grunnlagsdataOgVilkårsvurderinger, hentGrunnlagsdataOgVilkårsvurderinger] = useAsyncActionCreator(
         RevurderingActions.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger
     );
@@ -99,56 +52,6 @@ const AttesterRevurdering = (props: {
             sakId: props.sakInfo.sakId,
         });
     }, [revurdering?.id]);
-
-    const formik = useFormik<FormData>({
-        initialValues: {},
-        onSubmit: async (values) => {
-            if (values.beslutning) {
-                setSendtBeslutning(RemoteData.pending);
-                const res = await dispatch(
-                    RevurderingActions.iverksettRevurdering({
-                        sakId: props.sakInfo.sakId,
-                        revurderingId: urlParams.revurderingId,
-                    })
-                );
-
-                if (RevurderingActions.iverksettRevurdering.fulfilled.match(res)) {
-                    dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.saksnummer.toString() }));
-                    const message = intl.formatMessage({ id: 'attester.iverksatt' });
-                    history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
-                }
-
-                if (RevurderingActions.iverksettRevurdering.rejected.match(res)) {
-                    if (!res.payload) return;
-                    setSendtBeslutning(RemoteData.failure(res.payload));
-                }
-            }
-
-            if (!values.beslutning && values.grunn) {
-                setSendtBeslutning(RemoteData.pending);
-                const res = await dispatch(
-                    RevurderingActions.underkjennRevurdering({
-                        sakId: props.sakInfo.sakId,
-                        revurderingId: urlParams.revurderingId,
-                        grunn: values.grunn,
-                        kommentar: values.kommentar,
-                    })
-                );
-
-                if (RevurderingActions.underkjennRevurdering.fulfilled.match(res)) {
-                    const message = intl.formatMessage({ id: 'attester.sendtTilbake' });
-                    history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
-                }
-
-                if (RevurderingActions.underkjennRevurdering.rejected.match(res)) {
-                    if (!res.payload) return;
-                    setSendtBeslutning(RemoteData.failure(res.payload));
-                }
-            }
-        },
-        validateOnChange: hasSubmitted,
-        validationSchema: schema,
-    });
 
     if (!revurdering) {
         return (
@@ -172,6 +75,21 @@ const AttesterRevurdering = (props: {
         });
     };
 
+    const iverksettCallback = () => {
+        iverksett({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id }, () => {
+            dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.saksnummer.toString() }));
+            const message = intl.formatMessage({ id: 'attester.iverksatt' });
+            history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
+        });
+    };
+
+    const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) => {
+        underkjenn({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id, grunn, kommentar }, () => {
+            const message = intl.formatMessage({ id: 'attester.sendtTilbake' });
+            history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
+        });
+    };
+
     return (
         <div className={SharedStyles.container}>
             <Personlinje søker={props.søker} sakInfo={props.sakInfo} />
@@ -185,109 +103,48 @@ const AttesterRevurdering = (props: {
                     () => <Loader />,
                     (err) => <ApiErrorAlert error={err} />,
                     (grunnlag) => (
-                        <div>
-                            <div className={styles.oppsummeringContainer}>
-                                <Revurderingoppsummering
-                                    revurdering={revurdering}
-                                    forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlag}
-                                />
-                            </div>
-                            {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
-                                <Button
-                                    variant="secondary"
-                                    className={styles.brevButton}
-                                    type="button"
-                                    onClick={handleShowBrevClick}
-                                >
-                                    {intl.formatMessage({ id: 'knapp.brev' })}
-                                    {RemoteData.isPending(hentPdfStatus) && <Loader />}
-                                </Button>
-                            )}
-                            {RemoteData.isFailure(hentPdfStatus) && (
-                                <Alert variant="error" className={styles.brevFeil}>
-                                    {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}
-                                </Alert>
-                            )}
-
-                            {revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT && (
-                                <div className={styles.opphørsadvarsel}>
-                                    <Alert variant="warning">{intl.formatMessage({ id: 'info.opphør' })}</Alert>
+                        <Attestering
+                            sakId={props.sakInfo.sakId}
+                            iverksett={{
+                                fn: iverksettCallback,
+                                status: iverksettStatus,
+                            }}
+                            underkjenn={{
+                                fn: underkjennCallback,
+                                status: underkjennStatus,
+                            }}
+                        >
+                            <div>
+                                <div className={styles.oppsummeringContainer}>
+                                    <Revurderingoppsummering
+                                        revurdering={revurdering}
+                                        forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlag}
+                                    />
                                 </div>
-                            )}
-
-                            <form
-                                className={SharedStyles.container}
-                                onSubmit={(e) => {
-                                    setHasSubmitted(true);
-                                    formik.handleSubmit(e);
-                                }}
-                            >
-                                <Panel border>
-                                    <div className={styles.beslutningContainer}>
-                                        <BooleanRadioGroup
-                                            className={SharedStyles.formElement}
-                                            name="beslutning"
-                                            legend={intl.formatMessage({ id: 'beslutning.tittel' })}
-                                            value={formik.values.beslutning}
-                                            onChange={(value) =>
-                                                formik.setValues((v) => ({
-                                                    ...v,
-                                                    beslutning: value,
-                                                }))
-                                            }
-                                            error={formik.errors.beslutning}
-                                            labels={{
-                                                true: intl.formatMessage({ id: 'beslutning.godkjenn' }),
-                                                false: intl.formatMessage({ id: 'beslutning.underkjenn' }),
-                                            }}
-                                        />
-                                        {formik.values.beslutning === false && (
-                                            <div className={styles.selectContainer}>
-                                                <Select
-                                                    label={intl.formatMessage({ id: 'input.grunn.label' })}
-                                                    onChange={(event) =>
-                                                        formik.setValues((v) => ({
-                                                            ...v,
-                                                            grunn: event.target.value as UnderkjennRevurderingGrunn,
-                                                        }))
-                                                    }
-                                                    value={formik.values.grunn ?? ''}
-                                                    error={formik.errors.grunn}
-                                                >
-                                                    <option value="" disabled>
-                                                        {intl.formatMessage({ id: 'input.grunn.value.default' })}
-                                                    </option>
-                                                    {Object.values(UnderkjennRevurderingGrunn).map((grunn, index) => (
-                                                        <option value={grunn} key={index}>
-                                                            {intl.formatMessage({
-                                                                id: getTextId(grunn),
-                                                            })}
-                                                        </option>
-                                                    ))}
-                                                </Select>
-
-                                                <div className={styles.textAreaContainer}>
-                                                    <Textarea
-                                                        label={intl.formatMessage({ id: 'input.kommentar.label' })}
-                                                        name="kommentar"
-                                                        value={formik.values.kommentar ?? ''}
-                                                        error={formik.errors.kommentar}
-                                                        onChange={formik.handleChange}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <Button className={styles.sendBeslutningKnapp}>
-                                        {intl.formatMessage({ id: 'knapp.tekst' })}
-                                        {RemoteData.isPending(sendtBeslutning) && <Loader />}
+                                {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
+                                    <Button
+                                        variant="secondary"
+                                        className={styles.brevButton}
+                                        type="button"
+                                        onClick={handleShowBrevClick}
+                                    >
+                                        {intl.formatMessage({ id: 'knapp.brev' })}
+                                        {RemoteData.isPending(hentPdfStatus) && <Loader />}
                                     </Button>
-                                    {RemoteData.isFailure(sendtBeslutning) && (
-                                        <ApiErrorAlert error={sendtBeslutning.error} />
-                                    )}
-                                </Panel>
-                            </form>
-                        </div>
+                                )}
+                                {RemoteData.isFailure(hentPdfStatus) && (
+                                    <Alert variant="error" className={styles.brevFeil}>
+                                        {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}
+                                    </Alert>
+                                )}
+
+                                {revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT && (
+                                    <div className={styles.opphørsadvarsel}>
+                                        <Alert variant="warning">{intl.formatMessage({ id: 'info.opphør' })}</Alert>
+                                    </div>
+                                )}
+                            </div>
+                        </Attestering>
                     )
                 )
             )}

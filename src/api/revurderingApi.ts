@@ -1,7 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Nullable } from '~lib/types';
-import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
+import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -210,7 +210,7 @@ export async function sendTilAttestering(
 export async function underkjenn(
     sakId: string,
     revurderingId: string,
-    grunn: UnderkjennRevurderingGrunn,
+    grunn: UnderkjennelseGrunn,
     kommentar?: string
 ): Promise<ApiClientResult<UnderkjentRevurdering>> {
     return apiClient({
