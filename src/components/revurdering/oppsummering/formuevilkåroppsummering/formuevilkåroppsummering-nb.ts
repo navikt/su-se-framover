@@ -1,7 +1,7 @@
 export default {
     'gjeldendeformue.tittel': 'Formue',
     'gjeldendeformue.søker': 'Søker',
-    'gjeldendeformue.eps': 'Ektefelle/Samboer',
+    'gjeldendeformue.eps': 'Ektefelle/ Samboer',
     'gjeldendeformue.verdiBolig': 'Verdi på bolig',
     'gjeldendeformue.verdiEiendom': 'Verdi på eiendom',
     'gjeldendeformue.verdiKjøretøy': 'Verdi på kjøretøy',
