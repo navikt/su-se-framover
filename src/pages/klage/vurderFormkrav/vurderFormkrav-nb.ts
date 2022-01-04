@@ -27,7 +27,7 @@ export default {
     'formkrav.vedtak.label': 'Vedtaket som er påklagd',
     'formkrav.vedtak.option.default': 'Velg vedtak',
     'formkrav.begrunnelse.label': 'Begrunnelse',
-    'formkrav.begrunnelse.placeholder': 'Unngå personsensitive opplysninger',
+    'formkrav.begrunnelse.description': 'Unngå personsensitive opplysninger',
     'formkrav.button.tilbake': 'Tilbake',
     'formkrav.button.lagre': 'Lagre og fortsett senere',
     'formkrav.button.bekreftOgFortsett': 'Bekreft',

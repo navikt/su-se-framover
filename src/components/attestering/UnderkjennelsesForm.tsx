@@ -40,9 +40,9 @@ const UnderkjennelsesForm = (props: { control: Control<AttesterFormData> }) => {
                     <Textarea
                         {...field}
                         label={formatMessage('underkjennelse.kommentar.label')}
-                        placeholder={formatMessage('underkjennelse.kommentar.placeholder')}
                         value={field.value ?? ''}
                         error={fieldState.error?.message}
+                        description={formatMessage('underkjennelse.kommentar.description')}
                     />
                 )}
             />
