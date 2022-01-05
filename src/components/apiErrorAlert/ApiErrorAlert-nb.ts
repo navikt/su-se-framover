@@ -135,7 +135,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.REVURDERINGEN_ER_IVERKSATT]: 'Revurderingen er iverksatt',
     [ApiErrorCode.REVURDERINGER_ER_TIL_ATTESTERING]: 'Revurderingen er til attestering',
     [ApiErrorCode.REVURDERINGSPERIODE_INNEHOLDER_AVKORTING_UTENLANDSOPPHOLD]:
-        'Revurderingsperioden inneholder avkortinger pga utenlandsopphold. Dette støttes ikke',
+        'Revurderingsperioden inneholder fullførte utbetalinger som pga utenlandsopphold skal avkortes i ny stønadsperiode. Revurdering av dette støttes ikke.',
     [ApiErrorCode.REVURDERINGSÅRSAK_UGYLDIG_BEGRUNNELSE]: 'Ugyldig begrunnelse for revurdering',
     [ApiErrorCode.REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK]: 'Ugyldig årsak for revurdering',
     [ApiErrorCode.REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV]:
@@ -150,6 +150,10 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Stansdato er ikke første dato i inneværende eller neste måned',
     [ApiErrorCode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]:
         'Stønadsperioden overlapper med en eksisterende stønadsperiode',
+    [ApiErrorCode.STØNADSPERIODEN_OVERLAPPER_FULLFØRTE_UTBETALINGER_SOM_SKAL_AVKORTES]:
+        'Stønadsperioden overlapper med fullførte utbetalinger som skal avkortes i ny stønadsperiode. Virkningstidspunkt for ny stønadsperiode må være senere enn siste måned som har blitt utbetalt.',
+    [ApiErrorCode.AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG]:
+        'Tilgjengelig restbeløp etter fradrag er for lavt til å kunne gjennomføre avkorting innenfor valgt stønadsperiode. Delvis avkorting på tvers av stønadsperioder støttes ikke.',
     [ApiErrorCode.STØNADSPERIODE_FØR_2021]: 'Stønadsperiode kan ikke starte før Januar 2021',
     [ApiErrorCode.STØNADSPERIODE_MAX_12MND]: 'En stønadsperiode kan være maks 12 måneder',
     [ApiErrorCode.SØKNAD_ALLEREDE_LUKKET]: 'Søknaden er allerede lukket',

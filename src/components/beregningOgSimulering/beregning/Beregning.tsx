@@ -31,10 +31,11 @@ import { VilkårsvurderingBaseProps } from '~pages/saksbehandling/søknadsbehand
 import { Vurderingknapper } from '~pages/saksbehandling/søknadsbehandling/Vurdering';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
-import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { Fradrag, FradragTilhører } from '~types/Fradrag';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { kanSimuleres } from '~utils/behandling/behandlingUtils';
 import * as DateUtils from '~utils/date/dateUtils';
+import { fjernFradragSomIkkeErValgbare } from '~utils/fradrag/fradragUtil';
 import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -53,7 +54,7 @@ interface FormData {
 
 function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): FormData {
     return {
-        fradrag: fradrag.map((f) => ({
+        fradrag: fjernFradragSomIkkeErValgbare(fradrag).map((f) => ({
             periode: {
                 fraOgMed: DateUtils.toDateOrNull(f.periode?.fraOgMed),
                 tilOgMed: DateUtils.toDateOrNull(f.periode?.tilOgMed),
@@ -184,7 +185,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         }
         if (
             !props.behandling.beregning ||
-            !erFradragLike(props.behandling.beregning?.fradrag, formik.values.fradrag) ||
+            erFradragUlike(props.behandling.beregning?.fradrag, formik.values.fradrag) ||
             props.behandling.beregning.begrunnelse !== formik.values.begrunnelse
         ) {
             return setNeedsBeregning(true);
@@ -250,9 +251,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     null
                                 }
                                 feltnavn="fradrag"
-                                fradrag={formik.values.fradrag.filter(
-                                    (fradrag) => fradrag.type !== Fradragstype.AvkortingUtenlandsopphold
-                                )}
+                                fradrag={formik.values.fradrag}
                                 errors={formik.errors.fradrag}
                                 intl={intl}
                                 onChange={formik.handleChange}
@@ -376,15 +375,12 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     );
 };
 
-function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {
-    if (!fradrag) return false;
+function erFradragUlike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {
+    if (!fradrag) return true;
 
-    const fradragFraBasen = fradrag
-        .filter((f) => f.type !== Fradragstype.ForventetInntekt)
-        .filter((f) => f.type !== Fradragstype.AvkortingUtenlandsopphold)
-        .map(fradragTilFradragFormData);
+    const fradragFraDatabase = fjernFradragSomIkkeErValgbare(fradrag).map(fradragTilFradragFormData);
 
-    return getEq(eqFradragFormData).equals(formFradrag, fradragFraBasen);
+    return !getEq(eqFradragFormData).equals(formFradrag, fradragFraDatabase);
 }
 
 const eqUtenlandskInntekt = struct<UtenlandskInntektFormData>({

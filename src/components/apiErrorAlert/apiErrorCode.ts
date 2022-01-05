@@ -112,6 +112,8 @@ export enum ApiErrorCode {
     SISTE_VEDTAK_IKKE_STANS = 'siste_vedtak_ikke_stans',
     STANSDATO_IKKE_FØRSTE_I_INNEVÆRENDE_ELLER_NESTE_MÅNED = 'stansdato_ikke_første_i_inneværende_eller_neste_måned',
     STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE = 'stønadsperioden_overlapper_med_eksisterende_søknadsbehandling',
+    STØNADSPERIODEN_OVERLAPPER_FULLFØRTE_UTBETALINGER_SOM_SKAL_AVKORTES = 'stønadsperiode_inneholder_avkorting_utenlandsopphold',
+    AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG = 'avkorting_er_ufullstendig',
     STØNADSPERIODE_FØR_2021 = 'stønadsperiode_før_2021',
     STØNADSPERIODE_MAX_12MND = 'stønadsperiode_max_12mnd',
     SØKNAD_ALLEREDE_LUKKET = 'søknad_allerede_lukket',
