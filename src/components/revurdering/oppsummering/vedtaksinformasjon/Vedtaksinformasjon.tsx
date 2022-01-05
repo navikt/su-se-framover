@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
+import { Oppsummeringsverdi } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { Utenlandsoppsummering } from '~components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
@@ -51,7 +51,7 @@ const Vilkårvisning = (props: { grunnlagsblokker: Grunnlagsblokk[] }) => (
         {props.grunnlagsblokker.map((grunnlagsblokk, idx) => (
             <div key={idx} className={styles.grunnlagsblokk}>
                 {grunnlagsblokk.map(({ label, verdi }) => (
-                    <OppsummeringPar key={label} className={styles.info} label={label} verdi={verdi} />
+                    <Oppsummeringsverdi key={label} className={styles.info} label={label} verdi={verdi} />
                 ))}
             </div>
         ))}
@@ -116,7 +116,7 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; begrunnelse
                         bekreftetFormue={bekreftetFormue}
                         erVilkårOppfylt={vurdering.resultat === FormueResultat.VilkårOppfylt}
                     />
-                    <OppsummeringPar label={props.begrunnelseLabel} verdi={vurdering.grunnlag.begrunnelse} />
+                    <Oppsummeringsverdi label={props.begrunnelseLabel} verdi={vurdering.grunnlag.begrunnelse} />
                 </li>
             );
         })}

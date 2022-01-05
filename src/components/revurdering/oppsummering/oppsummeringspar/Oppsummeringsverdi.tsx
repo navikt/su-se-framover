@@ -11,7 +11,7 @@ interface Props {
     className?: string;
 }
 
-export const OppsummeringPar = ({ label, verdi, triple, className = '' }: Props) => (
+export const Oppsummeringsverdi = ({ label, verdi, triple, className = '' }: Props) => (
     <div className={classNames(styles.oppsummeringspar, className)}>
         <BodyShort>{label}</BodyShort>
         <Label>{verdi ?? ''}</Label>

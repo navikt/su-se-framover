@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
+import { Oppsummeringsverdi } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~lib/i18n';
 import { Utenlandsopphold } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { formatPeriode } from '~utils/date/dateUtils';
@@ -15,9 +15,9 @@ export const Utenlandsoppsummering = ({ utenlandsopphold }: { utenlandsopphold: 
         <ul className={styles.utenlandsoppsummering}>
             {utenlandsopphold.vurderinger.map((opphold) => (
                 <li key={formatPeriode(opphold.periode)}>
-                    <OppsummeringPar label={formatMessage('periode.label')} verdi={formatPeriode(opphold.periode)} />
-                    <OppsummeringPar label={formatMessage('status.label')} verdi={formatMessage(opphold.status)} />
-                    <OppsummeringPar label={formatMessage('begrunnelse.label')} verdi={opphold.begrunnelse} />
+                    <Oppsummeringsverdi label={formatMessage('periode.label')} verdi={formatPeriode(opphold.periode)} />
+                    <Oppsummeringsverdi label={formatMessage('status.label')} verdi={formatMessage(opphold.status)} />
+                    <Oppsummeringsverdi label={formatMessage('begrunnelse.label')} verdi={opphold.begrunnelse} />
                 </li>
             ))}
         </ul>
