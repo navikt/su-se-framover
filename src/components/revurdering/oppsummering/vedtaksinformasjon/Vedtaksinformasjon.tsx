@@ -11,7 +11,12 @@ import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvur
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsopphold } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { Vurderingstatus, InformasjonSomRevurderes, InformasjonsRevurdering } from '~types/Revurdering';
+import {
+    Vurderingstatus,
+    InformasjonSomRevurderes,
+    InformasjonsRevurdering,
+    InformasjonsRevurderingStatus,
+} from '~types/Revurdering';
 import { regnUtFormuegrunnlag } from '~utils/revurdering/formue/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -211,7 +216,7 @@ const Vedtaksinformasjon = (props: {
                     gamleData={props.grunnlagsdataOgVilkårsvurderinger.uføre}
                 />
             )}
-            {props.revurdering.informasjonSomRevurderes.Bosituasjon === Vurderingstatus.Vurdert && (
+            {revurdertBosituasjonEllerOpphørtPgaInntekt(props.revurdering) && (
                 <Bosituasjonblokk
                     nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
                     gamleData={props.grunnlagsdataOgVilkårsvurderinger}
@@ -238,5 +243,10 @@ const Vedtaksinformasjon = (props: {
         </div>
     );
 };
+
+const revurdertBosituasjonEllerOpphørtPgaInntekt = (revurdering: InformasjonsRevurdering) =>
+    revurdering.informasjonSomRevurderes.Bosituasjon === Vurderingstatus.Vurdert ||
+    (revurdering.informasjonSomRevurderes.Inntekt === Vurderingstatus.Vurdert &&
+        revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT);
 
 export default Vedtaksinformasjon;

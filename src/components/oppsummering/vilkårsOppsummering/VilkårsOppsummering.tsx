@@ -30,6 +30,7 @@ function shouldShowSats(status: Behandlingsstatus) {
         Behandlingsstatus.TIL_ATTESTERING_INNVILGET,
         Behandlingsstatus.UNDERKJENT_INNVILGET,
         Behandlingsstatus.IVERKSATT_INNVILGET,
+        Behandlingsstatus.BEREGNET_AVSLAG,
     ].includes(status);
 }
 
