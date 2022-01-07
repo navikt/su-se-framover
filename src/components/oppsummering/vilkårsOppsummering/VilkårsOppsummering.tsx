@@ -2,7 +2,6 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
-import { Behandlingsstatus } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
@@ -16,28 +15,14 @@ import { FormueVilkårsblokk } from './faktablokk/faktablokker/FormueFaktablokk'
 import { InstitusjonsoppholdVilkårsblokk } from './faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import { LovligOppholdVilkårsblokk } from './faktablokk/faktablokker/LovligOppholdFaktablokk';
 import { PersonligOppmøteVilkårsblokk } from './faktablokk/faktablokker/PersonligOppmøteFaktablokk';
-import { SatsVilkårsblokk } from './faktablokk/faktablokker/SatsFaktablokk';
 import { UførhetVilkårsblokk } from './faktablokk/faktablokker/UførhetFaktablokk';
 import { UtenlandsoppholdVilkårsblokk } from './faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import messages from './vilkårsOppsummering-nb';
 import styles from './vilkårsOppsummering.module.less';
 
-function shouldShowSats(status: Behandlingsstatus) {
-    return [
-        Behandlingsstatus.VILKÅRSVURDERT_INNVILGET,
-        Behandlingsstatus.BEREGNET_INNVILGET,
-        Behandlingsstatus.SIMULERT,
-        Behandlingsstatus.TIL_ATTESTERING_INNVILGET,
-        Behandlingsstatus.UNDERKJENT_INNVILGET,
-        Behandlingsstatus.IVERKSATT_INNVILGET,
-        Behandlingsstatus.BEREGNET_AVSLAG,
-    ].includes(status);
-}
-
 const VilkårsOppsummering = (props: {
     søknadInnhold: SøknadInnhold;
     behandlingsinformasjon: Behandlingsinformasjon;
-    behandlingstatus: Behandlingsstatus;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const { intl } = useI18n({ messages });
@@ -61,12 +46,6 @@ const VilkårsOppsummering = (props: {
                         grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
                     />
                 ))}
-                {shouldShowSats(props.behandlingstatus) && (
-                    <SatsVilkårsblokk
-                        bosituasjon={hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger)}
-                        søknadInnhold={props.søknadInnhold}
-                    />
-                )}
             </div>
         </div>
     );

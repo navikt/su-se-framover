@@ -2,6 +2,7 @@ import { Heading, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 
 import VisBeregningOgSimulering from '~components/beregningOgSimulering/BeregningOgSimulering';
+import { SatsVilkårsblokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import VilkårsOppsummering from '~components/oppsummering/vilkårsOppsummering/VilkårsOppsummering';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
@@ -10,6 +11,7 @@ import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
 import * as DateUtils from '~utils/date/dateUtils';
+import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import messages from './søknadsbehandling-nb';
 import SøknadsbehandlingHeader from './SøknadsbehandlingHeader';
@@ -60,14 +62,19 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
             </div>
             <VilkårsOppsummering
                 grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
-                behandlingstatus={props.behandling.status}
                 søknadInnhold={props.behandling.søknad.søknadInnhold}
                 behandlingsinformasjon={props.behandling.behandlingsinformasjon}
             />
             {props.behandling.beregning ? (
-                <Panel border>
-                    <VisBeregningOgSimulering behandling={props.behandling} />
-                </Panel>
+                <div>
+                    <SatsVilkårsblokk
+                        bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)}
+                        søknadInnhold={props.behandling.søknad.søknadInnhold}
+                    />
+                    <Panel border>
+                        <VisBeregningOgSimulering behandling={props.behandling} />
+                    </Panel>
+                </div>
             ) : (
                 formatMessage('feilmelding.ikkeGjortEnBeregning')
             )}
