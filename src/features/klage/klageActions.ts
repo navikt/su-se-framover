@@ -131,6 +131,20 @@ export const oversend = createAsyncThunk<Klage, { sakId: string; klageId: string
     }
 );
 
+export const avvis = createAsyncThunk<Klage, { sakId: string; klageId: string }, { rejectValue: ApiError }>(
+    'klage/avvis',
+    async ({ sakId, klageId }, thunkApi) => {
+        const res = await klageApi.avvis({
+            sakId,
+            klageId,
+        });
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
+
 export const underkjenn = createAsyncThunk<
     Klage,
     { sakId: string; klageId: string; grunn: UnderkjennelseGrunn; kommentar: string },

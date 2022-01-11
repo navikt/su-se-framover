@@ -9,7 +9,10 @@ export default {
 
     'framdriftsindikator.formkrav': 'Formkrav',
     'framdriftsindikator.vurdering': 'Vurdering',
+    'framdriftsindikator.avvisning': 'Avvisning',
     'framdriftsindikator.oppsummering': 'Oppsummering',
+
+    'framdriftsindikator.vurderingOgAvvisning': 'Vurdering/Avvisning',
 
     'feil.fantIkkeKlage': 'Fant ikke klage',
     'feil.ikkeRiktigTilstandForÅVilkårsvurdere': 'Klagen er ikke i riktig tilstand for å vurdere vilkår',

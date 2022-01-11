@@ -11,7 +11,7 @@ import * as Routes from '~lib/routes';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
-import { erKlageTilAttestering } from '~utils/klage/klageUtils';
+import { erKlageTilAttestering, erKlageTilAttesteringAvvist } from '~utils/klage/klageUtils';
 
 import messages from './attesterKlage-nb';
 import styles from './attesterKlage.module.less';
@@ -25,6 +25,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
     const klagensVedtak = props.vedtaker.find((v) => v.id === klage?.vedtakId);
 
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
+    const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.avvis);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
 
     if (!klagensVedtak || !klage) {
@@ -53,16 +54,49 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
         );
     }
 
-    const iverksettCallback = () =>
-        oversend(
-            {
-                sakId: props.sakId,
-                klageId: klage.id,
-            },
-            () => {
-                history.push(Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId));
-            }
-        );
+    const iverksettCallback = () => {
+        if (erKlageTilAttesteringAvvist(klage)) {
+            return avvisCallbackOgStatus();
+        } else {
+            return oversendCallbackOgStatus();
+        }
+    };
+
+    const avvisCallbackOgStatus = () => {
+        return {
+            callback: () =>
+                avvis(
+                    {
+                        sakId: props.sakId,
+                        klageId: klage.id,
+                    },
+                    () => {
+                        history.push(
+                            Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId)
+                        );
+                    }
+                ),
+            status: avvisStatus,
+        };
+    };
+
+    const oversendCallbackOgStatus = () => {
+        return {
+            callback: () =>
+                oversend(
+                    {
+                        sakId: props.sakId,
+                        klageId: klage.id,
+                    },
+                    () => {
+                        history.push(
+                            Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId)
+                        );
+                    }
+                ),
+            status: oversendStatus,
+        };
+    };
 
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) =>
         underkjenn(
@@ -81,8 +115,8 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
         <Attestering
             sakId={props.sakId}
             iverksett={{
-                fn: iverksettCallback,
-                status: oversendStatus,
+                fn: iverksettCallback().callback,
+                status: iverksettCallback().status,
             }}
             underkjenn={{
                 fn: underkjennCallback,

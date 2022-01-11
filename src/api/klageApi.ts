@@ -76,6 +76,13 @@ export async function oversend(arg: { sakId: string; klageId: string }): Promise
     });
 }
 
+export async function avvis(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/avvis`,
+        method: 'POST',
+    });
+}
+
 export async function underkjenn(arg: {
     sakId: string;
     klageId: string;

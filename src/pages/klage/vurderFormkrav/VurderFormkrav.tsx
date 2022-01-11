@@ -23,7 +23,11 @@ import { KlageSteg } from '~pages/saksbehandling/types';
 import { Svarord, Klage, KlageInnenforFristen, KlageErUnderskrevet } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
-import { erKlageVilkårsvurdertBekreftetEllerSenere, iGyldigTilstandForÅVilkårsvurdere } from '~utils/klage/klageUtils';
+import {
+    erKlageVilkårsvurdertBekreftetAvvist,
+    erKlageVilkårsvurdertBekreftetEllerSenere,
+    iGyldigTilstandForÅVilkårsvurdere,
+} from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
 
@@ -128,7 +132,9 @@ const VurderFormkrav = (props: Props) => {
                 Routes.klage.createURL({
                     sakId: props.sakId,
                     klageId: props.klage.id,
-                    steg: KlageSteg.Vurdering,
+                    steg: erKlageVilkårsvurdertBekreftetAvvist(props.klage)
+                        ? KlageSteg.Oppsummering
+                        : KlageSteg.Vurdering,
                 })
             );
             return;
@@ -150,12 +156,14 @@ const VurderFormkrav = (props: Props) => {
                         sakId: props.sakId,
                         klageId: props.klage.id,
                     },
-                    () => {
+                    (klage) => {
                         history.push(
                             Routes.klage.createURL({
                                 sakId: props.sakId,
                                 klageId: props.klage.id,
-                                steg: KlageSteg.Vurdering,
+                                steg: erKlageVilkårsvurdertBekreftetAvvist(klage)
+                                    ? KlageSteg.Oppsummering
+                                    : KlageSteg.Vurdering,
                             })
                         );
                     }
@@ -176,15 +184,11 @@ const VurderFormkrav = (props: Props) => {
     }
 
     const fyllInRadioGruppe = () =>
-        Object.values(Svarord).map(
-            (verdi) =>
-                //fjern disabled når vi har støtte for nei
-                verdi !== Svarord.NEI && (
-                    <Radio value={verdi} key={verdi}>
-                        {formatMessage(verdi)}
-                    </Radio>
-                )
-        );
+        Object.values(Svarord).map((verdi) => (
+            <Radio value={verdi} key={verdi}>
+                {formatMessage(verdi)}
+            </Radio>
+        ));
 
     return (
         <ToKolonner tittel={formatMessage('formkrav.tittel')}>
@@ -220,7 +224,6 @@ const VurderFormkrav = (props: Props) => {
                                     legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
                                     error={fieldState.error?.message}
                                     {...field}
-                                    hideNei
                                 />
                             )}
                         />
