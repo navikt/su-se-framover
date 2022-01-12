@@ -76,6 +76,9 @@ const Sakintro = (props: { sak: Sak }) => {
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
                     <NyBehandlingVelger sakId={props.sak.id} klageToggle={klageToggle} intl={intl} />
+                    <LinkAsButton variant="secondary" href={Routes.kontrollsamtale.createURL({ sakId: props.sak.id })}>
+                        {intl.formatMessage({ id: 'link.kontrollsamtale' })}
+                    </LinkAsButton>
                 </div>
             </div>
             {props.sak.søknader.length > 0 ? (

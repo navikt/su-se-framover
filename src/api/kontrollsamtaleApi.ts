@@ -1,11 +1,16 @@
+import { Kontrollsamtale } from '~types/Kontrollsamtale';
+
 import apiClient from './apiClient';
 
-export async function kallInnTilKontrollsamtale(sakId: string) {
-    return apiClient({
-        url: `/kontrollsamtale/kallInn`,
+export const settNyDatoForKontrollsamtale = (args: { sakId: string; nyDato: Date }) =>
+    apiClient({
+        url: '/kontrollsamtale/nyDato',
         method: 'POST',
-        body: {
-            sakId: sakId,
-        },
+        body: args,
     });
-}
+
+export const fetchNesteKontrollsamtale = (sakId: string) =>
+    apiClient<Kontrollsamtale | null>({
+        url: `/kontrollsamtale/hent/${sakId}`,
+        method: 'GET',
+    });

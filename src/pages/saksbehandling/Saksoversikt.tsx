@@ -11,7 +11,7 @@ import { SøknadsbehandlingDraftProvider } from '~context/søknadsbehandlingDraf
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useI18n, Languages } from '~lib/i18n';
+import { Languages, useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
@@ -33,6 +33,7 @@ const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter
 const StansPage = React.lazy(() => import('./stans/Stans'));
 const OpprettKlage = React.lazy(() => import('~pages/klage/opprettKlage/OpprettKlage'));
 const Klage = React.lazy(() => import('~pages/klage/Klage'));
+const NyDatoForKontrollsamtale = React.lazy(() => import('~pages/kompetansesamtale/KontrollsamtalePage'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
@@ -180,6 +181,11 @@ const Saksoversikt = () => {
                                             <Route path={Routes.alleDokumenterForSak.path}>
                                                 <div className={styles.mainContent}>
                                                     <DokumenterPage sak={sak} />
+                                                </div>
+                                            </Route>
+                                            <Route path={Routes.kontrollsamtale.path}>
+                                                <div className={styles.mainContent}>
+                                                    <NyDatoForKontrollsamtale sakId={sak.id} />
                                                 </div>
                                             </Route>
 
