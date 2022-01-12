@@ -13,7 +13,7 @@ import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { Kontrollsamtale } from '~types/Kontrollsamtale';
-import { toDateOrNull } from '~utils/date/dateUtils';
+import { formatDate, toDateOrNull } from '~utils/date/dateUtils';
 
 import styles from './kontrollsamtalePage.module.less';
 import messages from './message-nb';
@@ -51,12 +51,13 @@ const KontrollsamtalePage = (props: Props) => {
                         </Heading>
                         <BodyLong>
                             {kontrollsamtale?.innkallingsdato
-                                ? formatMessage('nestePlanlagt') + kontrollsamtale.innkallingsdato
+                                ? formatMessage('nestePlanlagt') + formatDate(kontrollsamtale.innkallingsdato)
                                 : formatMessage('ingenPlanlagt')}
                         </BodyLong>
                         <div className={styles.nyDatoContainer}>
                             <DatePicker
                                 className={styles.datePicker}
+                                dateFormat="dd/MM/yyyy"
                                 label={formatMessage('velgDatoTittel')}
                                 onChange={(dato: Date | null) => settNyDato(dato)}
                                 value={nyDato ?? toDateOrNull(kontrollsamtale?.innkallingsdato)}

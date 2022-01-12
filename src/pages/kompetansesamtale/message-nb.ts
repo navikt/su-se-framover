@@ -1,6 +1,6 @@
 export default {
     kontrollsamtale: 'Kontrollsamtale',
-    nestePlanlagt: 'Neste planlagt kontrollsamtale: ',
+    nestePlanlagt: 'Neste planlagte kontrollsamtale: ',
     ingenPlanlagt: 'Ingen planlagte kontrollsamtaler',
     settNyDato: 'Sett ny dato',
     velgDatoTittel: 'Velg dato for neste kontrollsamtale',
