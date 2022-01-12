@@ -33,7 +33,7 @@ const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter
 const StansPage = React.lazy(() => import('./stans/Stans'));
 const OpprettKlage = React.lazy(() => import('~pages/klage/opprettKlage/OpprettKlage'));
 const Klage = React.lazy(() => import('~pages/klage/Klage'));
-const NyDatoForKontrollsamtale = React.lazy(() => import('~pages/kompetansesamtale/KontrollsamtalePage'));
+const NyDatoForKontrollsamtale = React.lazy(() => import('~pages/kontrollsamtale/KontrollsamtalePage'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
