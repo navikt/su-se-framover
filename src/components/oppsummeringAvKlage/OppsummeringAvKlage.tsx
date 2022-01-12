@@ -106,7 +106,7 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
 
             <div>
                 <Label>{formatMessage('formkrav.begrunnelse.label')}</Label>
-                <BodyShort>{props.klage.begrunnelse}</BodyShort>
+                <BodyShort className={styles.formkravBegrunnelse}>{props.klage.begrunnelse}</BodyShort>
             </div>
         </div>
     );

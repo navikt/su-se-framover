@@ -59,9 +59,6 @@ export const erKlageVilkårsvurdertBekreftet = (k: Klage) =>
     k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_TIL_VURDERING ||
     k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_AVVIST;
 
-export const erKlageVilkårsvurdertBekreftetAvvist = (k: Klage) =>
-    k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_AVVIST;
-
 export const erKlageVurdert = (k: Klage) =>
     k.status === KlageStatus.VURDERT_PÅBEGYNT ||
     k.status === KlageStatus.VURDERT_UTFYLT ||
@@ -69,10 +66,8 @@ export const erKlageVurdert = (k: Klage) =>
 
 export const erKlageVurdertBekreftet = (k: Klage): boolean => k.status === KlageStatus.VURDERT_BEKREFTET;
 
-export const erKlageAvvistPåbegynt = (k: Klage) => k.status === KlageStatus.AVVIST_PÅBEGYNT;
-export const erKlageAvvistBekreftet = (k: Klage) => k.status === KlageStatus.AVVIST_BEKREFTET;
-
-export const erKlageAvvist = (k: Klage) => erKlageAvvistPåbegynt(k) || erKlageAvvistBekreftet(k);
+export const erKlageAvvist = (k: Klage) =>
+    k.status === KlageStatus.AVVIST_PÅBEGYNT || k.status === KlageStatus.AVVIST_BEKREFTET;
 
 export const erKlageBekreftet = (k: Klage) =>
     k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_TIL_VURDERING ||
@@ -106,14 +101,8 @@ export const erKlageVurdertUtfyltEllerSenere = (k: Klage) =>
 export const erKlageVurdertUtfyltEllerBekreftet = (k: Klage) =>
     k.status === KlageStatus.VURDERT_UTFYLT || k.status === KlageStatus.VURDERT_BEKREFTET;
 
-export const iGyldigTilstandForÅVilkårsvurdere = (k: Klage) =>
-    erKlageOpprettet(k) || erKlageVilkårsvurdert(k) || erKlageVurdert(k) || erKlageAvvist(k);
-
-export const iGyldigTilstandForÅVurdere = (k: Klage) =>
-    k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_TIL_VURDERING || erKlageVurdert(k);
-
 const erKlageINoenFormForAvvistOgUnderBehandling = (k: Klage) => {
-    return erKlageVilkårsvurdertAvvist(k) || erKlageAvvist(k);
+    return erKlageVilkårsvurdertAvvist(k) || erKlageAvvist(k) || erKlageTilAttesteringAvvist(k);
 };
 
 const erKlageINoenFormForVurdertOgUnderBehandling = (k: Klage) => {
@@ -151,17 +140,26 @@ export const hentSisteVurderteSteg = (k: Klage) => {
         return KlageSteg.Vurdering;
     }
 
-    if (erKlageVurdertBekreftet(k) || erKlageVilkårsvurdertBekreftetAvvist(k)) {
+    if (erKlageVurdertBekreftet(k)) {
         return KlageSteg.Oppsummering;
+    }
+
+    if (erKlageAvvist(k)) {
+        return KlageSteg.Avvisning;
     }
 
     return KlageSteg.Formkrav;
 };
 
 const skalStegBliBehandlet = (s: KlageSteg, k: Klage) => {
+    //fjerner Avvisning fra framdriftsindikator dersom klagen blir en avvist
     if (s === KlageSteg.Avvisning && erKlageINoenFormForVurdertOgUnderBehandling(k)) {
         return false;
-    } else if (s === KlageSteg.Vurdering && erKlageINoenFormForAvvistOgUnderBehandling(k)) {
+    } else if (
+        //fjerner Vurdering og oppsummering fra framdriftsindikator dersom klagen er blir vurdert
+        (s === KlageSteg.Vurdering || s === KlageSteg.Oppsummering) &&
+        erKlageINoenFormForAvvistOgUnderBehandling(k)
+    ) {
         return false;
     }
     return true;

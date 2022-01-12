@@ -13,6 +13,7 @@ import {
     getPartialFramdriftsindikatorLinjeInfo,
 } from '~utils/klage/klageUtils';
 
+import AvvistKlage from './fritekstForAvvistKlage/AvvistKlage';
 import messages from './klage-nb';
 import styles from './klage.module.less';
 import SendKlageTilAttestering from './sendKlageTilAttestering/SendKlageTilAttestering';
@@ -110,6 +111,15 @@ const Klage = (props: { sak: Sak }) => {
                             })}
                         >
                             <VurderingAvKlage sakId={props.sak.id} klage={klage} />
+                        </Route>
+                        <Route
+                            path={Routes.klage.createURL({
+                                sakId: props.sak.id,
+                                klageId: klage.id,
+                                steg: KlageSteg.Avvisning,
+                            })}
+                        >
+                            <AvvistKlage sakId={props.sak.id} klage={klage} />
                         </Route>
                     </div>
 

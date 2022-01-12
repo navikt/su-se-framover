@@ -1,3 +1,4 @@
+import { Nullable } from '~lib/types';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Klage } from '~types/Klage';
 import { FormkravRequest, VurderingRequest } from '~utils/klage/klageUtils';
@@ -58,6 +59,27 @@ export async function lagreVurderingAvKlage(arg: VurderingRequest): Promise<ApiC
 export async function bekreftVurderinger(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/vurderinger/bekreft`,
+        method: 'POST',
+    });
+}
+
+export async function lagreAvvistFritekst(arg: {
+    sakId: string;
+    klageId: string;
+    fritekstTilBrev: Nullable<string>;
+}): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/avvist/fritekstTilBrev`,
+        method: 'POST',
+        body: {
+            fritekst: arg.fritekstTilBrev,
+        },
+    });
+}
+
+export async function bekreftAvvistFritekst(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/avvist/bekreft`,
         method: 'POST',
     });
 }

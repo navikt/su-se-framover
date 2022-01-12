@@ -24,9 +24,12 @@ import { Svarord, Klage, KlageInnenforFristen, KlageErUnderskrevet } from '~type
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
 import {
-    erKlageVilkårsvurdertBekreftetAvvist,
+    erKlageAvvist,
+    erKlageOpprettet,
+    erKlageVilkårsvurdert,
+    erKlageVilkårsvurdertAvvist,
     erKlageVilkårsvurdertBekreftetEllerSenere,
-    iGyldigTilstandForÅVilkårsvurdere,
+    erKlageVurdert,
 } from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
@@ -126,17 +129,23 @@ const VurderFormkrav = (props: Props) => {
         );
     };
 
+    const skalNavigeresTilAvvisning = (k: Klage) => {
+        return erKlageVilkårsvurdertAvvist(k) || erKlageAvvist(k);
+    };
+
+    const navigerTilNesteSide = (klage: Klage) => {
+        history.push(
+            Routes.klage.createURL({
+                sakId: props.sakId,
+                klageId: props.klage.id,
+                steg: skalNavigeresTilAvvisning(klage) ? KlageSteg.Avvisning : KlageSteg.Vurdering,
+            })
+        );
+    };
+
     const handleBekreftOgFortsettClick = (values: FormData) => {
         if (erKlageVilkårsvurdertBekreftetEllerSenere(props.klage) && !isDirty) {
-            history.push(
-                Routes.klage.createURL({
-                    sakId: props.sakId,
-                    klageId: props.klage.id,
-                    steg: erKlageVilkårsvurdertBekreftetAvvist(props.klage)
-                        ? KlageSteg.Oppsummering
-                        : KlageSteg.Vurdering,
-                })
-            );
+            navigerTilNesteSide(props.klage);
             return;
         }
 
@@ -157,20 +166,15 @@ const VurderFormkrav = (props: Props) => {
                         klageId: props.klage.id,
                     },
                     (klage) => {
-                        history.push(
-                            Routes.klage.createURL({
-                                sakId: props.sakId,
-                                klageId: props.klage.id,
-                                steg: erKlageVilkårsvurdertBekreftetAvvist(klage)
-                                    ? KlageSteg.Oppsummering
-                                    : KlageSteg.Vurdering,
-                            })
-                        );
+                        navigerTilNesteSide(klage);
                     }
                 );
             }
         );
     };
+
+    const iGyldigTilstandForÅVilkårsvurdere = (k: Klage) =>
+        erKlageOpprettet(k) || erKlageVilkårsvurdert(k) || erKlageVurdert(k) || erKlageAvvist(k);
 
     if (!iGyldigTilstandForÅVilkårsvurdere(props.klage)) {
         return (

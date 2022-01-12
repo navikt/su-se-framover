@@ -13,7 +13,7 @@ import * as Routes from '~lib/routes';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
-import { erKlageVilkårsvurdertBekreftetAvvist, erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
+import { erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
 
@@ -40,7 +40,7 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
         );
     };
 
-    if (!erKlageVurdertBekreftet(props.klage) && !erKlageVilkårsvurdertBekreftetAvvist(props.klage)) {
+    if (!erKlageVurdertBekreftet(props.klage)) {
         return (
             <div className={sharedStyles.feilTilstandContainer}>
                 <Alert variant="error">{formatMessage('feil.klageErIkkeIRiktigTilstand')}</Alert>
@@ -87,9 +87,7 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
                             Routes.klage.createURL({
                                 sakId: props.sakId,
                                 klageId: props.klage.id,
-                                steg: erKlageVilkårsvurdertBekreftetAvvist(props.klage)
-                                    ? KlageSteg.Formkrav
-                                    : KlageSteg.Vurdering,
+                                steg: KlageSteg.Vurdering,
                             })
                         )
                     }
