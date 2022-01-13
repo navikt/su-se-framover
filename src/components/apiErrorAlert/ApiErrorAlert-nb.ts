@@ -23,6 +23,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FANT_IKKE_KLAGE]: 'Fant ikke klage',
     [ApiErrorCode.FANT_IKKE_PERSON]: 'Fant ikke personen',
     [ApiErrorCode.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'Fant ikke person eller saksbehandlers navn',
+    [ApiErrorCode.FEIL_VED_LAGRING_AV_BREV_OG_KLAGE]: 'Feil ved lagring av brev og klage',
     [ApiErrorCode.FANT_IKKE_REVURDERING]: 'Fant ikke revurdering',
     [ApiErrorCode.FANT_IKKE_SAK]: 'Fant ikke sak',
     [ApiErrorCode.FANT_IKKE_SØKNAD]: 'Fant ikke søknad',
@@ -43,7 +44,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FINNER_IKKE_UTBETALING]: 'Finner ikke utbetaling',
     [ApiErrorCode.FINNES_ALLEREDE_EN_KLAGEBEHANDLING]: 'Det finnes allerede en klagebehandling for gitt journalpostId',
     [ApiErrorCode.FINNES_ALLEREDE_EN_ÅPEN_KLAGE]: 'Det finnes allerede en åpen klage',
-    [ApiErrorCode.FORMUELISTE_KAN_IKKE_VÆRE_TOM]: '',
+    [ApiErrorCode.FORMUELISTE_KAN_IKKE_VÆRE_TOM]: 'Formuelisten kan ikke være tom',
     [ApiErrorCode.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'Formue som fører til opphør må revurderes',
     [ApiErrorCode.FORSKJELLIG_RESULTAT]: 'Vurderingsperiode kan ikke inneholde forskjellige resultater',
     [ApiErrorCode.FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE]: 'Fradragsperioden er utenfor bosituasjonsperioden',
@@ -53,6 +54,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL]:
         'Fritekst har blitt fyllt ut, men revurderingen er ikke forhåndsvarslet',
     [ApiErrorCode.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'G-regulering kan ikke føre til opphør',
+    [ApiErrorCode.GENERERER_BREV_FRA_UGYLDIG_TILSTAND]: 'Klagen er i en tilstand der generering av brev ikke støttes',
     [ApiErrorCode.HAR_ALLEREDE_EN_AKTIV_BEHANDLING]:
         'Det finnes allerede en åpen søknadsbehandling. Du må fullføre denne før du kan avslå en annen',
     [ApiErrorCode.HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING]:

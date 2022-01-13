@@ -9,6 +9,7 @@ export default {
     'behandling.avsluttBehandling': 'Avslutt behandling',
 
     'klage.attester': 'Attester',
+    'klage.avvist': 'Avvist',
     'klage.fortsettBehandling': 'Fortsett behandling',
     'klage.klager': 'Klager',
     'klage.oversendt': 'Oversendt klage',

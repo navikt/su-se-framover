@@ -41,6 +41,8 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                                 <Heading level="3" size="small">
                                     {erKlageOversendt(klage)
                                         ? formatMessage('klage.oversendt')
+                                        : erKlageIverksattAvvist(klage)
+                                        ? formatMessage('klage.avvist')
                                         : formatMessage('klage.åpenKlage')}
                                 </Heading>
                                 <Informasjonslinje label="Opprettet" value={() => formatDate(klage.opprettet)} />

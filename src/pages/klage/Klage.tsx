@@ -44,14 +44,14 @@ const Klage = (props: { sak: Sak }) => {
             });
         }
 
-        const formkravLinkeInfo = getPartialFramdriftsindikatorLinjeInfo(KlageSteg.Formkrav, klage);
+        const formkravLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(KlageSteg.Formkrav, klage);
         return [
             {
                 id: KlageSteg.Formkrav,
-                status: formkravLinkeInfo.status,
+                status: formkravLinjeInfo.status,
                 label: formatMessage(`framdriftsindikator.${KlageSteg.Formkrav}`),
                 url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: KlageSteg.Formkrav }),
-                erKlikkbar: formkravLinkeInfo.erKlikkbar,
+                erKlikkbar: formkravLinjeInfo.erKlikkbar,
             },
             {
                 id: 'vurderingOgAvvisning',

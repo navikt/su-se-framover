@@ -87,16 +87,16 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
 
             <div className={styles.informasjonsContentContainer}>
                 <div>
-                    <Label>{formatMessage('formkrav.innenforFrist.label')}</Label>
-                    <BodyShort>{props.klage.innenforFristen && formatMessage(props.klage.innenforFristen)}</BodyShort>
-                </div>
-                <div>
                     <Label>{formatMessage('formkrav.klagesPåKonkreteElementer.label')}</Label>
                     <BodyShort>
                         {props.klage.klagesDetPåKonkreteElementerIVedtaket
                             ? formatMessage('label.ja')
                             : formatMessage('label.nei')}
                     </BodyShort>
+                </div>
+                <div>
+                    <Label>{formatMessage('formkrav.innenforFrist.label')}</Label>
+                    <BodyShort>{props.klage.innenforFristen && formatMessage(props.klage.innenforFristen)}</BodyShort>
                 </div>
                 <div>
                     <Label>{formatMessage('formkrav.signert.label')}</Label>

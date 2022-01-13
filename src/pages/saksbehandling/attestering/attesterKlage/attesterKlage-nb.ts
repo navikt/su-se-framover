@@ -19,4 +19,5 @@ export default {
 
     'knapp.bekreft': 'Bekreft',
     'knapp.tilbake': 'Tilbake',
+    'knapp.seBrev': 'Se brev',
 };
