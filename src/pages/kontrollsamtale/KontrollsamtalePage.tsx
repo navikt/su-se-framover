@@ -57,7 +57,7 @@ const KontrollsamtalePage = (props: Props) => {
                         <div className={styles.nyDatoContainer}>
                             <DatePicker
                                 className={styles.datePicker}
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd.MM.yyyy"
                                 label={formatMessage('velgDatoTittel')}
                                 onChange={(dato: Date | null) => settNyDato(dato)}
                                 value={nyDato ?? toDateOrNull(kontrollsamtale?.innkallingsdato)}
@@ -94,10 +94,9 @@ const KontrollsamtalePage = (props: Props) => {
     );
 };
 
-const iMorgen = () => {
-    const iDag = new Date();
-    const iMorgen = new Date(iDag);
-    iMorgen.setDate(iDag.getDate() + 1);
+const iMorgen = (): Date => {
+    const iMorgen = new Date();
+    iMorgen.setDate(iMorgen.getDate() + 1);
     return iMorgen;
 };
 
