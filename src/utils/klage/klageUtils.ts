@@ -5,7 +5,10 @@ import * as S from 'fp-ts/string';
 
 import { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
 import { maxBy } from '~lib/fp';
+import { MessageFormatter } from '~lib/i18n';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
+import klageNb from '~pages/klage/klage-nb';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import {
     Klage,
@@ -20,7 +23,6 @@ import {
     KlageInnenforFristen,
     VedtattUtfall,
 } from '~types/Klage';
-
 export interface FormkravRequest {
     sakId: string;
     klageId: string;
@@ -152,11 +154,11 @@ export const hentSisteVurderteSteg = (k: Klage) => {
 };
 
 const skalStegBliBehandlet = (s: KlageSteg, k: Klage) => {
-    //fjerner Avvisning fra framdriftsindikator dersom klagen blir en avvist
+    //fjerner Avvisning fra framdriftsindikator dersom klagen blir en vurdert
     if (s === KlageSteg.Avvisning && erKlageINoenFormForVurdertOgUnderBehandling(k)) {
         return false;
     } else if (
-        //fjerner Vurdering og oppsummering fra framdriftsindikator dersom klagen er blir vurdert
+        //fjerner Vurdering og oppsummering fra framdriftsindikator dersom klagen blir vurdert
         (s === KlageSteg.Vurdering || s === KlageSteg.Oppsummering) &&
         erKlageINoenFormForAvvistOgUnderBehandling(k)
     ) {
@@ -167,6 +169,37 @@ const skalStegBliBehandlet = (s: KlageSteg, k: Klage) => {
 
 export const filtrerKlageStegSomIkkeBlirBehandlet = (k: Klage) => {
     return Object.values(KlageSteg).filter((verdi) => skalStegBliBehandlet(verdi, k));
+};
+
+export const getDefaultFramdriftsindikatorLinjer = (arg: {
+    sakId: string;
+    klageId: string;
+    formkravLinjeInfo: { status: Linjestatus; erKlikkbar: boolean };
+    formatMessage: MessageFormatter<typeof klageNb>;
+}) => {
+    return [
+        {
+            id: KlageSteg.Formkrav,
+            status: arg.formkravLinjeInfo.status,
+            label: arg.formatMessage(`framdriftsindikator.${KlageSteg.Formkrav}`),
+            url: Routes.klage.createURL({ sakId: arg.sakId, klageId: arg.klageId, steg: KlageSteg.Formkrav }),
+            erKlikkbar: arg.formkravLinjeInfo.erKlikkbar,
+        },
+        {
+            id: 'vurderingOgAvvisning',
+            status: Linjestatus.Ingenting,
+            label: arg.formatMessage(`framdriftsindikator.vurderingOgAvvisning`),
+            url: '',
+            erKlikkbar: false,
+        },
+        {
+            id: KlageSteg.Oppsummering,
+            status: Linjestatus.Ingenting,
+            label: arg.formatMessage(`framdriftsindikator.${KlageSteg.Oppsummering}`),
+            url: '',
+            erKlikkbar: false,
+        },
+    ];
 };
 
 export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage) => {

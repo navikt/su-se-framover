@@ -2,7 +2,7 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
+import Framdriftsindikator from '~components/framdriftsindikator/Framdriftsindikator';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { KlageSteg } from '~pages/saksbehandling/types';
@@ -10,6 +10,7 @@ import { Sak } from '~types/Sak';
 import {
     erKlageVilkårsvurdertUtfyltEllerSenere,
     filtrerKlageStegSomIkkeBlirBehandlet,
+    getDefaultFramdriftsindikatorLinjer,
     getPartialFramdriftsindikatorLinjeInfo,
 } from '~utils/klage/klageUtils';
 
@@ -31,8 +32,7 @@ const Klage = (props: { sak: Sak }) => {
 
     const lagFramdriftsindikatorLinjer = () => {
         if (erKlageVilkårsvurdertUtfyltEllerSenere(klage)) {
-            const stegUnderBehandling = filtrerKlageStegSomIkkeBlirBehandlet(klage);
-            return stegUnderBehandling.map((verdi) => {
+            filtrerKlageStegSomIkkeBlirBehandlet(klage).map((verdi) => {
                 const partialLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(verdi, klage);
                 return {
                     id: verdi,
@@ -45,29 +45,12 @@ const Klage = (props: { sak: Sak }) => {
         }
 
         const formkravLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(KlageSteg.Formkrav, klage);
-        return [
-            {
-                id: KlageSteg.Formkrav,
-                status: formkravLinjeInfo.status,
-                label: formatMessage(`framdriftsindikator.${KlageSteg.Formkrav}`),
-                url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: KlageSteg.Formkrav }),
-                erKlikkbar: formkravLinjeInfo.erKlikkbar,
-            },
-            {
-                id: 'vurderingOgAvvisning',
-                status: Linjestatus.Ingenting,
-                label: formatMessage(`framdriftsindikator.vurderingOgAvvisning`),
-                url: '',
-                erKlikkbar: false,
-            },
-            {
-                id: KlageSteg.Oppsummering,
-                status: Linjestatus.Ingenting,
-                label: formatMessage(`framdriftsindikator.${KlageSteg.Oppsummering}`),
-                url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: KlageSteg.Oppsummering }),
-                erKlikkbar: false,
-            },
-        ];
+        return getDefaultFramdriftsindikatorLinjer({
+            sakId: props.sak.id,
+            klageId: klage.id,
+            formkravLinjeInfo: { status: formkravLinjeInfo.status, erKlikkbar: formkravLinjeInfo.erKlikkbar },
+            formatMessage: formatMessage,
+        });
     };
 
     const pathsForFramdriftsindikator = lagFramdriftsindikatorLinjer()

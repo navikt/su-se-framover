@@ -32,7 +32,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 <div className={styles.panelInnholdContainer}>
                     <KlageInfo klage={props.klage} />
                     <FormkravInfo klage={props.klage} klagensVedtak={props.klagensVedtak} />
-                    <VurderInfo klage={props.klage} />
+                    {erKlageVurdertBekreftet(props.klage) && <VurderInfo klage={props.klage} />}
                 </div>
             </Oppsummeringspanel>
         </div>
@@ -116,10 +116,6 @@ const VurderInfo = (props: { klage: Klage }) => {
     const { formatMessage } = useI18n({
         messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
     });
-
-    if (!erKlageVurdertBekreftet(props.klage)) {
-        return null;
-    }
 
     return (
         <div className={styles.informasjonsContainer}>
