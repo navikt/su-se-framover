@@ -75,9 +75,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
                         klageId: klage.id,
                     },
                     () => {
-                        history.push(
-                            Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId)
-                        );
+                        history.push(Routes.createSakIntroLocation(formatMessage('notification.avvist'), props.sakId));
                     }
                 ),
             status: avvisStatus,

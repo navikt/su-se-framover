@@ -32,7 +32,7 @@ const Klage = (props: { sak: Sak }) => {
 
     const lagFramdriftsindikatorLinjer = () => {
         if (erKlageVilkårsvurdertUtfyltEllerSenere(klage)) {
-            filtrerKlageStegSomIkkeBlirBehandlet(klage).map((verdi) => {
+            return filtrerKlageStegSomIkkeBlirBehandlet(klage).map((verdi) => {
                 const partialLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(verdi, klage);
                 return {
                     id: verdi,
