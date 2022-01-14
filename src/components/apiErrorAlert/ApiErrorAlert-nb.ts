@@ -6,6 +6,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',
     [ApiErrorCode.AVSTEMMING_FEILET]: 'Avstemming feilet',
     [ApiErrorCode.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM]: 'Kan ikke sende in tom begrunnelse',
+    [ApiErrorCode.BELØPSENDRING_MINDRE_ENN_TI_PROSENT]:
+        'Beløpsendring i forhold til gjeldende utbetaling er mindre enn 10%',
     [ApiErrorCode.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
         'Bosituasjon og inntekt må revurderes siden det finnes flere bosituasjonsperioder',
     [ApiErrorCode.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'Informasjon i bosituasjon samsvarer ikke med formue',
@@ -195,5 +197,4 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ÅPEN_REVURDERING_EKSISTERER]: 'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
     [ApiErrorCode.ÅPEN_REVURDERING_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
 };
-
 export default messages;
