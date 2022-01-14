@@ -1,4 +1,4 @@
-import { BodyShort, Heading } from '@navikt/ds-react';
+import { BodyShort, Heading, Tag } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import Ikon from 'nav-frontend-ikoner-assets';
@@ -10,9 +10,14 @@ import { useUserContext } from '~context/userContext';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Klage } from '~types/Klage';
+import { Klage, Utfall } from '~types/Klage';
 import { formatDate } from '~utils/date/dateUtils';
-import { erKlageOversendt, erKlageTilAttestering, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
+import {
+    erKlageOversendt,
+    erKlageTilAttestering,
+    hentSisteVedtattUtfall,
+    hentSisteVurderteSteg,
+} from '~utils/klage/klageUtils';
 
 import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import messages from './sakintro-nb';
@@ -29,6 +34,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                     oversiktsinformasjon: (klage) => {
                         const attesteringer = klage?.attesteringer ?? [];
                         const senesteAttestering = pipe(attesteringer, last, toNullable);
+                        const sisteVedtattUtfall = hentSisteVedtattUtfall(klage.klagevedtakshistorikk);
                         return (
                             <>
                                 <Heading level="3" size="small">
@@ -40,6 +46,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                                 {senesteAttestering?.underkjennelse && (
                                     <UnderkjenteAttesteringer attesteringer={attesteringer} />
                                 )}
+                                {sisteVedtattUtfall && <UtfallTag utfall={sisteVedtattUtfall.utfall} />}
                             </>
                         );
                     },
@@ -94,6 +101,30 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
             </Oversiktslinje>
         </div>
     );
+};
+
+const UtfallTag = ({ utfall }: { utfall: Utfall }) => {
+    switch (utfall) {
+        case Utfall.AVVIST:
+        case Utfall.TRUKKET:
+        case Utfall.STADFESTELSE:
+            return (
+                <Tag className={styles.utfallTag} variant="info">
+                    {utfall}
+                </Tag>
+            );
+
+        case Utfall.OPPHEVET:
+        case Utfall.MEDHOLD:
+        case Utfall.DELVIS_MEDHOLD:
+        case Utfall.RETUR:
+        case Utfall.UGUNST:
+            return (
+                <Tag className={styles.utfallTag} variant="warning">
+                    {utfall}
+                </Tag>
+            );
+    }
 };
 
 export default KlageLister;
