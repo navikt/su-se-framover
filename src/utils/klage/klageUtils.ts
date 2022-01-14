@@ -1,4 +1,10 @@
+import { pipe } from 'fp-ts/lib/function';
+import { toNullable } from 'fp-ts/lib/Option';
+import * as Ord from 'fp-ts/Ord';
+import * as S from 'fp-ts/string';
+
 import { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
+import { maxBy } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import {
@@ -12,6 +18,7 @@ import {
     OpprettholdVedtakHjemmel,
     KlageErUnderskrevet,
     KlageInnenforFristen,
+    VedtattUtfall,
 } from '~types/Klage';
 
 export interface FormkravRequest {
@@ -160,3 +167,6 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
             };
     }
 };
+
+export const hentSisteVedtattUtfall = (vedtak: VedtattUtfall[]) =>
+    pipe(vedtak, maxBy(Ord.contramap((v: VedtattUtfall) => v.opprettet)(S.Ord)), toNullable);

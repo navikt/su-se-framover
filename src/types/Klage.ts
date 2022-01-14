@@ -18,6 +18,7 @@ export interface Klage {
     vedtaksvurdering: Nullable<Vedtaksvurdering>;
     fritekstTilBrev: Nullable<string>;
     attesteringer: Attestering[];
+    klagevedtakshistorikk: VedtattUtfall[];
 }
 
 export enum KlageStatus {
@@ -91,4 +92,20 @@ export enum OpprettholdVedtakHjemmel {
     'SU_PARAGRAF_12' = 'SU_PARAGRAF_12',
     'SU_PARAGRAF_13' = 'SU_PARAGRAF_13',
     'SU_PARAGRAF_18' = 'SU_PARAGRAF_18',
+}
+
+export enum Utfall {
+    TRUKKET = 'TRUKKET',
+    RETUR = 'RETUR',
+    OPPHEVET = 'OPPHEVET',
+    MEDHOLD = 'MEDHOLD',
+    DELVIS_MEDHOLD = 'DELVIS_MEDHOLD',
+    STADFESTELSE = 'STADFESTELSE',
+    UGUNST = 'UGUNST',
+    AVVIST = 'AVVIST',
+}
+
+export interface VedtattUtfall {
+    utfall: Utfall;
+    opprettet: string;
 }
