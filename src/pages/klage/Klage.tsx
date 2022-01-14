@@ -9,8 +9,8 @@ import { KlageSteg } from '~pages/saksbehandling/types';
 import { Sak } from '~types/Sak';
 import {
     erKlageVilkårsvurdertUtfyltEllerSenere,
-    filtrerKlageStegSomIkkeBlirBehandlet,
     getDefaultFramdriftsindikatorLinjer,
+    getFramdriftsindikatorLinjer,
     getPartialFramdriftsindikatorLinjeInfo,
 } from '~utils/klage/klageUtils';
 
@@ -32,15 +32,10 @@ const Klage = (props: { sak: Sak }) => {
 
     const lagFramdriftsindikatorLinjer = () => {
         if (erKlageVilkårsvurdertUtfyltEllerSenere(klage)) {
-            return filtrerKlageStegSomIkkeBlirBehandlet(klage).map((verdi) => {
-                const partialLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(verdi, klage);
-                return {
-                    id: verdi,
-                    status: partialLinjeInfo.status,
-                    label: formatMessage(`framdriftsindikator.${verdi}`),
-                    url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: verdi }),
-                    erKlikkbar: partialLinjeInfo.erKlikkbar,
-                };
+            return getFramdriftsindikatorLinjer({
+                sakId: props.sak.id,
+                klage: klage,
+                formatMessage: formatMessage,
             });
         }
 

@@ -37,7 +37,6 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     const { formatMessage } = useI18n({ messages });
 
     const [lagreFritekstStatus, lagreFritekst] = useAsyncActionCreator(klageActions.lagreAvvistFritekst);
-    const [bekreftFritekstStatus, bekreftAvvistFritekst] = useAsyncActionCreator(klageActions.bekreftAvvistFritekst);
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(klageActions.sendTilAttestering);
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
 
@@ -62,12 +61,10 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
         //Validering skal fange
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         lagreFritekst({ sakId: props.sakId, klageId: props.klage.id, fritekstTilBrev: data.fritekstTilBrev! }, () => {
-            bekreftAvvistFritekst({ sakId: props.sakId, klageId: props.klage.id }, () => {
-                sendTilAttestering({ sakId: props.sakId, klageId: props.klage.id }, () => {
-                    history.push(
-                        Routes.createSakIntroLocation(formatMessage('avvistKlage.sendtTilAttestering'), props.sakId)
-                    );
-                });
+            sendTilAttestering({ sakId: props.sakId, klageId: props.klage.id }, () => {
+                history.push(
+                    Routes.createSakIntroLocation(formatMessage('avvistKlage.sendtTilAttestering'), props.sakId)
+                );
             });
         });
     };
@@ -145,7 +142,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                             </Button>
                             <Button>
                                 {formatMessage('knapp.sendTilAttestering')}
-                                {RemoteData.isPending(bekreftFritekstStatus) && <Loader />}
+                                {RemoteData.isPending(sendTilAttesteringStatus) && <Loader />}
                             </Button>
                             <LinkAsButton
                                 variant="secondary"
@@ -160,9 +157,6 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                         </div>
                         {RemoteData.isFailure(lagreFritekstStatus) && (
                             <ApiErrorAlert error={lagreFritekstStatus.error} />
-                        )}
-                        {RemoteData.isFailure(bekreftFritekstStatus) && (
-                            <ApiErrorAlert error={bekreftFritekstStatus.error} />
                         )}
                         {RemoteData.isFailure(sendTilAttesteringStatus) && (
                             <ApiErrorAlert error={sendTilAttesteringStatus.error} />

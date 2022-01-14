@@ -68,14 +68,12 @@ export const erKlageVurdert = (k: Klage) =>
 
 export const erKlageVurdertBekreftet = (k: Klage): boolean => k.status === KlageStatus.VURDERT_BEKREFTET;
 
-export const erKlageAvvist = (k: Klage) =>
-    k.status === KlageStatus.AVVIST_PÅBEGYNT || k.status === KlageStatus.AVVIST_BEKREFTET;
+export const erKlageAvvist = (k: Klage) => k.status === KlageStatus.AVVIST;
 
 export const erKlageBekreftet = (k: Klage) =>
     k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_TIL_VURDERING ||
     k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_AVVIST ||
-    k.status === KlageStatus.VURDERT_BEKREFTET ||
-    k.status === KlageStatus.AVVIST_BEKREFTET;
+    k.status === KlageStatus.VURDERT_BEKREFTET;
 
 export const erKlageTilAttestering = (k: Klage): boolean =>
     k.status === KlageStatus.TIL_ATTESTERING_TIL_VURDERING || k.status === KlageStatus.TIL_ATTESTERING_AVVIST;
@@ -167,8 +165,25 @@ const skalStegBliBehandlet = (s: KlageSteg, k: Klage) => {
     return true;
 };
 
-export const filtrerKlageStegSomIkkeBlirBehandlet = (k: Klage) => {
+const filtrerKlageStegSomIkkeBlirBehandlet = (k: Klage) => {
     return Object.values(KlageSteg).filter((verdi) => skalStegBliBehandlet(verdi, k));
+};
+
+export const getFramdriftsindikatorLinjer = (arg: {
+    sakId: string;
+    klage: Klage;
+    formatMessage: MessageFormatter<typeof klageNb>;
+}) => {
+    return filtrerKlageStegSomIkkeBlirBehandlet(arg.klage).map((verdi) => {
+        const partialLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(verdi, arg.klage);
+        return {
+            id: verdi,
+            status: partialLinjeInfo.status,
+            label: arg.formatMessage(`framdriftsindikator.${verdi}`),
+            url: Routes.klage.createURL({ sakId: arg.sakId, klageId: arg.klage.id, steg: verdi }),
+            erKlikkbar: partialLinjeInfo.erKlikkbar,
+        };
+    });
 };
 
 export const getDefaultFramdriftsindikatorLinjer = (arg: {
@@ -229,7 +244,7 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
                 status:
                     erKlageOpprettet(k) || erKlageVilkårsvurdert(k)
                         ? Linjestatus.Ingenting
-                        : k.status === KlageStatus.AVVIST_PÅBEGYNT
+                        : k.status === KlageStatus.AVVIST
                         ? Linjestatus.Uavklart
                         : Linjestatus.Ok,
                 erKlikkbar: erKlageOpprettet(k) || erKlageVilkårsvurdert(k) || erKlageVurdert(k) ? false : true,

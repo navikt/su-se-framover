@@ -77,13 +77,6 @@ export async function lagreAvvistFritekst(arg: {
     });
 }
 
-export async function bekreftAvvistFritekst(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/klager/${arg.klageId}/avvist/bekreft`,
-        method: 'POST',
-    });
-}
-
 export async function sendTilAttestering(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/tilAttestering`,

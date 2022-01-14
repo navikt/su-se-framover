@@ -118,21 +118,6 @@ export const lagreAvvistFritekst = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const bekreftAvvistFritekst = createAsyncThunk<
-    Klage,
-    { sakId: string; klageId: string },
-    { rejectValue: ApiError }
->('klage/bekreftAvvistFritekst', async ({ sakId, klageId }, thunkApi) => {
-    const res = await klageApi.bekreftAvvistFritekst({
-        sakId,
-        klageId,
-    });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 export const sendTilAttestering = createAsyncThunk<
     Klage,
     { sakId: string; klageId: string },
