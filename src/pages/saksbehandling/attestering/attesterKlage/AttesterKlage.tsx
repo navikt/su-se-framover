@@ -28,7 +28,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
     const klagensVedtak = props.vedtaker.find((v) => v.id === klage?.vedtakId);
 
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
-    const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.avvis);
+    const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.iverksattAvvist);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
     const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
 

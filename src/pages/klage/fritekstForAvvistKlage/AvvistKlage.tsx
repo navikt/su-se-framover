@@ -13,7 +13,6 @@ import * as klageActions from '~features/klage/klageActions';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Klage, KlageStatus } from '~types/Klage';
@@ -25,11 +24,11 @@ import messages from './avvistKlage-nb';
 import styles from './avvistKlage.module.less';
 
 interface AvvistKlageFormData {
-    fritekstTilBrev: Nullable<string>;
+    fritekstTilBrev: string;
 }
 
 const schema = yup.object<AvvistKlageFormData>({
-    fritekstTilBrev: yup.string().required().nullable(),
+    fritekstTilBrev: yup.string().required(),
 });
 
 const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
@@ -40,10 +39,10 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(klageActions.sendTilAttestering);
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
 
-    const { handleSubmit, watch, control, getValues } = useForm<AvvistKlageFormData>({
+    const { handleSubmit, control, getValues } = useForm<AvvistKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
-            fritekstTilBrev: props.klage.fritekstTilBrev,
+            fritekstTilBrev: props.klage.fritekstTilBrev ?? '',
         },
     });
 
@@ -58,9 +57,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     };
 
     const handleBekreftOgFortsettSubmit = (data: AvvistKlageFormData) => {
-        //Validering skal fange
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        lagreFritekst({ sakId: props.sakId, klageId: props.klage.id, fritekstTilBrev: data.fritekstTilBrev! }, () => {
+        lagreFritekst({ sakId: props.sakId, klageId: props.klage.id, fritekstTilBrev: data.fritekstTilBrev }, () => {
             sendTilAttestering({ sakId: props.sakId, klageId: props.klage.id }, () => {
                 history.push(
                     Routes.createSakIntroLocation(formatMessage('avvistKlage.sendtTilAttestering'), props.sakId)
@@ -112,7 +109,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                                                 </HelpText>
                                             </div>
                                         }
-                                        value={field.value ?? ''}
+                                        value={field.value}
                                         error={fieldState.error?.message}
                                     />
                                 )}
@@ -120,11 +117,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                             <Button
                                 type="button"
                                 variant="secondary"
-                                onClick={() => {
-                                    const values = getValues();
-
-                                    onSeBrevClick(values.fritekstTilBrev ?? '');
-                                }}
+                                onClick={() => onSeBrevClick(getValues('fritekstTilBrev'))}
                             >
                                 {formatMessage('knapp.seBrev')}
                                 {RemoteData.isPending(brevStatus) && <Loader />}
@@ -135,7 +128,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                             <Button
                                 type="button"
                                 variant="secondary"
-                                onClick={() => handleOnLagre(watch('fritekstTilBrev') ?? '')}
+                                onClick={() => handleOnLagre(getValues('fritekstTilBrev'))}
                             >
                                 {formatMessage('knapp.lagre')}
                                 {RemoteData.isPending(lagreFritekstStatus) && <Loader />}

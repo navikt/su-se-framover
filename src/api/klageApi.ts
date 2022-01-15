@@ -91,9 +91,9 @@ export async function oversend(arg: { sakId: string; klageId: string }): Promise
     });
 }
 
-export async function avvis(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
+export async function iverksettAvvistKlage(arg: { sakId: string; klageId: string }): Promise<ApiClientResult<Klage>> {
     return apiClient({
-        url: `/saker/${arg.sakId}/klager/${arg.klageId}/avvis`,
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/iverksett(AvvistKlage)`,
         method: 'POST',
     });
 }
