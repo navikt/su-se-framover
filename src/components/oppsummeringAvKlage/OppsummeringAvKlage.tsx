@@ -9,7 +9,7 @@ import Oppsummeringspanel, {
 import {
     OppsummeringPar,
     OppsummeringsParSortering,
-} from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
+} from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~lib/i18n';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
