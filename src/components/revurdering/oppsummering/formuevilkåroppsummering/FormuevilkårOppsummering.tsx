@@ -1,7 +1,7 @@
 import { BodyShort } from '@navikt/ds-react';
 import React from 'react';
 
-import { Oppsummeringsverdi } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~lib/i18n';
 import { FormueVilkår, VurderingsperiodeFormue } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import * as DateUtils from '~utils/date/dateUtils';
@@ -26,7 +26,7 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
 
     return (
         <div className={styles.oppsummeringsContainer}>
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.gjeldendePeriode}
                 label={intl.formatMessage({ id: 'gjeldendeformue.gjeldendePeriode' })}
                 verdi={DateUtils.formatPeriode(vurdering.periode)}
@@ -41,49 +41,49 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
                     </BodyShort>
                 )}
             </div>
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.oppsummeringstriple}
                 label={intl.formatMessage({ id: 'gjeldendeformue.verdiBolig' })}
                 verdi={søker.verdiIkkePrimærbolig}
                 triple={eps?.verdiIkkePrimærbolig}
             />
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.oppsummeringstriple}
                 label={intl.formatMessage({ id: 'gjeldendeformue.verdiEiendom' })}
                 verdi={søker.verdiEiendommer}
                 triple={eps?.verdiEiendommer}
             />
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.oppsummeringstriple}
                 label={intl.formatMessage({ id: 'gjeldendeformue.verdiKjøretøy' })}
                 verdi={søker.verdiKjøretøy}
                 triple={eps?.verdiKjøretøy}
             />
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.oppsummeringstriple}
                 label={intl.formatMessage({ id: 'gjeldendeformue.innskudd' })}
                 verdi={søker.innskudd}
                 triple={eps?.innskudd}
             />
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.oppsummeringstriple}
                 label={intl.formatMessage({ id: 'gjeldendeformue.verdiPapir' })}
                 verdi={søker.verdipapir}
                 triple={eps?.verdipapir}
             />
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.oppsummeringstriple}
                 label={intl.formatMessage({ id: 'gjeldendeformue.stårNoenIGjeldTilDeg' })}
                 verdi={søker.pengerSkyldt}
                 triple={eps?.pengerSkyldt}
             />
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.oppsummeringstriple}
                 label={intl.formatMessage({ id: 'gjeldendeformue.kontanter' })}
                 verdi={søker.kontanter}
                 triple={eps?.kontanter}
             />
-            <Oppsummeringsverdi
+            <OppsummeringPar
                 className={styles.oppsummeringstriple}
                 label={intl.formatMessage({ id: 'gjeldendeformue.depositum' })}
                 verdi={søker.depositumskonto}
