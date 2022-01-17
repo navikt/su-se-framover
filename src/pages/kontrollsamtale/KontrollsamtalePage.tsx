@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Back } from '@navikt/ds-icons';
 import { Alert, BodyLong, Button, Heading, Loader } from '@navikt/ds-react';
+import startOfTomorrow from 'date-fns/startOfTomorrow';
 import * as React from 'react';
 import { useState } from 'react';
 import { useHistory } from 'react-router';
@@ -25,7 +26,7 @@ interface Props {
 const KontrollsamtalePage = (props: Props) => {
     const [nyDatoStatus, settNyDatoPost] = useApiCall(kontrollsamtaleApi.settNyDatoForKontrollsamtale);
     const [nesteKontrollsamtale, fetchNesteKontrollsamtale] = useApiCall(kontrollsamtaleApi.fetchNesteKontrollsamtale);
-    const [nyDato, settNyDato] = useState<Date | null>(null);
+    const [nyDato, settNyDato] = useState<Nullable<Date>>(null);
     const history = useHistory();
 
     const { formatMessage } = useI18n({ messages });
@@ -66,7 +67,7 @@ const KontrollsamtalePage = (props: Props) => {
                                         ? formatMessage('datovalidering')
                                         : undefined
                                 }
-                                minDate={iMorgen()}
+                                minDate={startOfTomorrow()}
                             />
                             <Button onClick={() => nyDato && handleNyDatoForKontrollsamtaleClick(nyDato)}>
                                 {formatMessage('settNyDato')}
@@ -92,12 +93,6 @@ const KontrollsamtalePage = (props: Props) => {
             </Button>
         </div>
     );
-};
-
-const iMorgen = (): Date => {
-    const iMorgen = new Date();
-    iMorgen.setDate(iMorgen.getDate() + 1);
-    return iMorgen;
 };
 
 export default KontrollsamtalePage;

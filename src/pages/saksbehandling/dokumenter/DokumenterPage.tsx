@@ -113,13 +113,7 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                 )
                         )
                     )}
-                    <Button
-                        className={styles.tilbakeknapp}
-                        variant="secondary"
-                        onClick={() => {
-                            history.goBack();
-                        }}
-                    >
+                    <Button className={styles.tilbakeknapp} variant="secondary" onClick={history.goBack}>
                         <Back />
                         {formatMessage('knapp.tilbake')}
                     </Button>
