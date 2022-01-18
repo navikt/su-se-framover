@@ -157,7 +157,13 @@ export async function beregnOgSimuler(
         revurderingId: string;
         periode: Periode<string>;
     }
-): Promise<ApiClientResult<{ revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[] }>> {
+): Promise<
+    ApiClientResult<{
+        revurdering: SimulertRevurdering;
+        feilmeldinger: ErrorMessage[];
+        varselmeldinger: ErrorMessage[];
+    }>
+> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${arg.revurderingId}/beregnOgSimuler`,
         method: 'POST',

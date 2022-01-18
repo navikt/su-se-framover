@@ -1,11 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { Forhåndsvarselhandling } from '~api/revurderingApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import apiErrorMessages from '~components/apiErrorAlert/ApiErrorAlert-nb';
+import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
@@ -48,9 +50,10 @@ const OppsummeringshandlingForm = (props: {
     førsteRevurderingstegUrl: string;
     revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering;
     feilmeldinger: ErrorMessage[];
+    varselmeldinger: ErrorMessage[];
 }) => {
     const history = useHistory();
-    const { intl } = useI18n({ messages: { ...messages } });
+    const { intl, formatMessage } = useI18n({ messages: { ...messages, ...apiErrorMessages } });
     const feilRef = React.useRef<HTMLDivElement>(null);
 
     const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
@@ -156,6 +159,15 @@ const OppsummeringshandlingForm = (props: {
 
     return (
         <div>
+            {props.varselmeldinger.length > 0 && (
+                <Alert variant="info" className={styles.alertstripe}>
+                    <ul>
+                        {props.varselmeldinger.map((m) => (
+                            <li key={m.code}>{formatMessage(m.code ?? ApiErrorCode.UKJENT_FEIL)}</li>
+                        ))}
+                    </ul>
+                </Alert>
+            )}
             {props.feilmeldinger.length > 0 && (
                 <div ref={feilRef} tabIndex={-1} aria-live="polite" aria-atomic="true" className={styles.alertstripe}>
                     <UtfallSomIkkeStøttes feilmeldinger={props.feilmeldinger} />
@@ -303,6 +315,7 @@ const RevurderingOppsummeringPage = (props: {
                                         førsteRevurderingstegUrl={props.førsteRevurderingstegUrl}
                                         revurdering={props.revurdering}
                                         feilmeldinger={beregning.feilmeldinger}
+                                        varselmeldinger={beregning.varselmeldinger}
                                     />
                                 ) : (
                                     <div>{formatMessage('feil.revurderingIUgyldigTilstand')}</div>

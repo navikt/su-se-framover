@@ -153,7 +153,7 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 );
 
 export const beregnOgSimuler = createAsyncThunk<
-    { revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[] },
+    { revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[]; varselmeldinger: ErrorMessage[] },
     { sakId: string; revurderingId: string; periode: Periode<string> },
     { rejectValue: ApiError }
 >('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode }, thunkApi) => {

@@ -4,6 +4,7 @@ export enum ApiErrorCode {
     ATTESTANT_SAMME_SOM_SAKSBEHANDLER = 'attestant_samme_som_saksbehandler',
     AVSTEMMING_FEILET = 'avstemming_feilet',
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
+    BELØPSENDRING_MINDRE_ENN_TI_PROSENT = 'beløpsendring_mindre_enn_ti_prosent',
     BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES = 'bosituasjon_med_flere_perioder_må_revurderes',
     BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE = 'bosituasjon_samsvarer_ikke_med_formue',
     DELVIS_OPPHØR = 'delvis_opphør',
