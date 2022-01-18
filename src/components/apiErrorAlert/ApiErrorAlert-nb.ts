@@ -41,6 +41,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år',
     [ApiErrorCode.FINNER_IKKE_PERSON]: 'Simulering feilet. Finner ikke person i TPS',
     [ApiErrorCode.FINNER_IKKE_UTBETALING]: 'Finner ikke utbetaling',
+    [ApiErrorCode.FINNES_ALLEREDE_EN_KLAGEBEHANDLING]: 'Det finnes allerede en klagebehandling for gitt journalpostId',
     [ApiErrorCode.FINNES_ALLEREDE_EN_ÅPEN_KLAGE]: 'Det finnes allerede en åpen klage',
     [ApiErrorCode.FORMUELISTE_KAN_IKKE_VÆRE_TOM]: '',
     [ApiErrorCode.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'Formue som fører til opphør må revurderes',
@@ -194,7 +195,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.VURDERINGSPERIODER_MANGLER]: 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
     [ApiErrorCode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
         'Vurdering av vilkår må gjøres innenfor revurderingsperioden',
-    [ApiErrorCode.ÅPEN_REVURDERING_EKSISTERER]: 'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
-    [ApiErrorCode.ÅPEN_REVURDERING_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
+    [ApiErrorCode.ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER]:
+        'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
+    [ApiErrorCode.ÅPEN_REVURDERING_STANS_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
 };
 export default messages;
