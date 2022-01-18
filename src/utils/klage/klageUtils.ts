@@ -117,16 +117,6 @@ export const hentSisteVurderteSteg = (k: Klage) => {
     return KlageSteg.Formkrav;
 };
 
-export const getÅpenKlage = (klager: Klage[]): Klage => {
-    const åpneKlager = klager.filter((k) => k.status !== KlageStatus.OVERSENDT);
-
-    if (åpneKlager.length > 1) {
-        throw new Error('Det finnes flere enn 1 åpen klage');
-    }
-
-    return åpneKlager[0];
-};
-
 export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage) => {
     switch (steg) {
         case KlageSteg.Formkrav:

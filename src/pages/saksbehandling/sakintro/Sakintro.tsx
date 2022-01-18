@@ -17,11 +17,9 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { Behandling } from '~types/Behandling';
-import { Klage } from '~types/Klage';
 import { Sak } from '~types/Sak';
 import { Søknad } from '~types/Søknad';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
-import { erKlageTilAttestering, getÅpenKlage, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
@@ -77,12 +75,7 @@ const Sakintro = (props: { sak: Sak }) => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    <NyBehandlingVelger
-                        sakId={props.sak.id}
-                        klager={props.sak.klager}
-                        klageToggle={klageToggle}
-                        intl={intl}
-                    />
+                    <NyBehandlingVelger sakId={props.sak.id} klageToggle={klageToggle} intl={intl} />
                 </div>
             </div>
             {props.sak.søknader.length > 0 ? (
@@ -132,32 +125,15 @@ const Sakintro = (props: { sak: Sak }) => {
     );
 };
 
-const NyBehandlingVelger = (props: { sakId: string; klager: Klage[]; klageToggle: boolean; intl: IntlShape }) => {
+const NyBehandlingVelger = (props: { sakId: string; klageToggle: boolean; intl: IntlShape }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement>();
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {
             case NyBehandling.REVURDER:
                 return Routes.revurderValgtSak.createURL({ sakId: props.sakId });
-            case NyBehandling.KLAGE: {
-                const åpenKlage = getÅpenKlage(props.klager);
-
-                if (åpenKlage) {
-                    if (erKlageTilAttestering(åpenKlage)) {
-                        return Routes.attesterKlage.createURL({
-                            sakId: props.sakId,
-                            klageId: åpenKlage.id,
-                        });
-                    } else {
-                        return Routes.klage.createURL({
-                            sakId: props.sakId,
-                            klageId: åpenKlage.id,
-                            steg: hentSisteVurderteSteg(åpenKlage),
-                        });
-                    }
-                }
+            case NyBehandling.KLAGE:
                 return Routes.klageOpprett.createURL({ sakId: props.sakId });
-            }
         }
     };
     return (
