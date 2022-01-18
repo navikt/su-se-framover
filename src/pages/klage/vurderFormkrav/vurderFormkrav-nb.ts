@@ -26,7 +26,7 @@ export default {
     'formkrav.signert.label': 'Er klagen signert?',
     'formkrav.vedtak.label': 'Vedtaket som er påklagd',
     'formkrav.vedtak.option.default': 'Velg vedtak',
-    'formkrav.begrunnelse.label': 'Begrunnelse',
+    'formkrav.begrunnelse.label': 'Informasjon til attestant',
     'formkrav.begrunnelse.description': 'Unngå personsensitive opplysninger',
     'formkrav.button.tilbake': 'Tilbake',
     'formkrav.button.lagre': 'Lagre og fortsett senere',

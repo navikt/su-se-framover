@@ -10,7 +10,7 @@ import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { FnrInput } from '~components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import { Oppsummeringsverdi } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreBosituasjonsgrunnlag } from '~features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~lib/hooks';
@@ -155,7 +155,7 @@ const GjeldendeBosituasjon = (props: {
                 {props.bosituasjon?.map((item, index) => (
                     <li key={index}>
                         <Label spacing>{DateUtils.formatPeriode(item.periode)}</Label>
-                        <Oppsummeringsverdi
+                        <OppsummeringPar
                             className={styles.informasjonsbitContainer}
                             label={props.formatMessage('eksisterende.vedtakinfo.søkerBorMed')}
                             verdi={props.formatMessage(
@@ -169,12 +169,12 @@ const GjeldendeBosituasjon = (props: {
 
                         {item.fnr && (
                             <div>
-                                <Oppsummeringsverdi
+                                <OppsummeringPar
                                     className={styles.informasjonsbitContainer}
                                     label={props.formatMessage('eksisterende.vedtakinfo.eps')}
                                     verdi={item.fnr}
                                 />
-                                <Oppsummeringsverdi
+                                <OppsummeringPar
                                     className={styles.informasjonsbitContainer}
                                     label={props.formatMessage('eksisterende.vedtakinfo.eps')}
                                     verdi={props.formatMessage(
@@ -185,7 +185,7 @@ const GjeldendeBosituasjon = (props: {
                                 />
                             </div>
                         )}
-                        <Oppsummeringsverdi
+                        <OppsummeringPar
                             className={styles.informasjonsbitContainer}
                             label={props.formatMessage('eksisterende.vedtakinfo.sats')}
                             verdi={item.sats}

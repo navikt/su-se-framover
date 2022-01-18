@@ -1,17 +1,20 @@
-import { Alert, Heading } from '@navikt/ds-react';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
+import * as pdfApi from '~api/pdfApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Attestering from '~components/attestering/Attestering';
 import OppsummeringAvKlage from '~components/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator } from '~lib/hooks';
+import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
-import { erKlageTilAttestering } from '~utils/klage/klageUtils';
+import { erKlageTilAttestering, erKlageTilAttesteringAvvist } from '~utils/klage/klageUtils';
 
 import messages from './attesterKlage-nb';
 import styles from './attesterKlage.module.less';
@@ -25,7 +28,9 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
     const klagensVedtak = props.vedtaker.find((v) => v.id === klage?.vedtakId);
 
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
+    const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.iverksattAvvist);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
+    const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
 
     if (!klagensVedtak || !klage) {
         return (
@@ -53,16 +58,47 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
         );
     }
 
-    const iverksettCallback = () =>
-        oversend(
-            {
-                sakId: props.sakId,
-                klageId: klage.id,
-            },
-            () => {
-                history.push(Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId));
-            }
-        );
+    const iverksettCallback = () => {
+        if (erKlageTilAttesteringAvvist(klage)) {
+            return avvisCallbackOgStatus();
+        } else {
+            return oversendCallbackOgStatus();
+        }
+    };
+
+    const avvisCallbackOgStatus = () => {
+        return {
+            callback: () =>
+                avvis(
+                    {
+                        sakId: props.sakId,
+                        klageId: klage.id,
+                    },
+                    () => {
+                        history.push(Routes.createSakIntroLocation(formatMessage('notification.avvist'), props.sakId));
+                    }
+                ),
+            status: avvisStatus,
+        };
+    };
+
+    const oversendCallbackOgStatus = () => {
+        return {
+            callback: () =>
+                oversend(
+                    {
+                        sakId: props.sakId,
+                        klageId: klage.id,
+                    },
+                    () => {
+                        history.push(
+                            Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId)
+                        );
+                    }
+                ),
+            status: oversendStatus,
+        };
+    };
 
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) =>
         underkjenn(
@@ -81,8 +117,8 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
         <Attestering
             sakId={props.sakId}
             iverksett={{
-                fn: iverksettCallback,
-                status: oversendStatus,
+                fn: iverksettCallback().callback,
+                status: iverksettCallback().status,
             }}
             underkjenn={{
                 fn: underkjennCallback,
@@ -93,6 +129,17 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
                 {formatMessage('page.tittel')}
             </Heading>
             <OppsummeringAvKlage klage={klage} klagensVedtak={klagensVedtak} />
+            <div className={styles.seBrevKnappContainer}>
+                <Button
+                    variant="secondary"
+                    type="button"
+                    onClick={() => seBrev({ sakId: props.sakId, klageId: klage.id })}
+                >
+                    {formatMessage('knapp.seBrev')}
+                    {RemoteData.isPending(seBrevStatus) && <Loader />}
+                </Button>
+                {RemoteData.isFailure(seBrevStatus) && <ApiErrorAlert error={seBrevStatus.error} />}
+            </div>
         </Attestering>
     );
 };

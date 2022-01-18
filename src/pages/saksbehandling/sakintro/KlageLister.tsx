@@ -13,9 +13,10 @@ import * as Routes from '~lib/routes';
 import { Klage, Utfall } from '~types/Klage';
 import { formatDate } from '~utils/date/dateUtils';
 import {
+    hentSisteVedtattUtfall,
+    erKlageIverksattAvvist,
     erKlageOversendt,
     erKlageTilAttestering,
-    hentSisteVedtattUtfall,
     hentSisteVurderteSteg,
 } from '~utils/klage/klageUtils';
 
@@ -40,6 +41,8 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                                 <Heading level="3" size="small">
                                     {erKlageOversendt(klage)
                                         ? formatMessage('klage.oversendt')
+                                        : erKlageIverksattAvvist(klage)
+                                        ? formatMessage('klage.avvist')
                                         : formatMessage('klage.åpenKlage')}
                                 </Heading>
                                 <Informasjonslinje label="Opprettet" value={() => formatDate(klage.opprettet)} />
@@ -51,7 +54,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                         );
                     },
                     knapper: (klage) => {
-                        if (erKlageOversendt(klage)) {
+                        if (erKlageOversendt(klage) || erKlageIverksattAvvist(klage)) {
                             return <></>;
                         }
                         if (erKlageTilAttestering(klage)) {

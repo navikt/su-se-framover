@@ -6,10 +6,14 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import {
+    OppsummeringPar,
+    OppsummeringsParSortering,
+} from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~lib/i18n';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
-import { erKlageOmgjort, erKlageOpprettholdt } from '~utils/klage/klageUtils';
+import { erKlageOmgjort, erKlageOpprettholdt, erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
 
 import formkravMessages from '../../pages/klage/vurderFormkrav/vurderFormkrav-nb';
 import vurderingMessages from '../../pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
@@ -32,7 +36,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 <div className={styles.panelInnholdContainer}>
                     <KlageInfo klage={props.klage} />
                     <FormkravInfo klage={props.klage} klagensVedtak={props.klagensVedtak} />
-                    <VurderInfo klage={props.klage} />
+                    {erKlageVurdertBekreftet(props.klage) && <VurderInfo klage={props.klage} />}
                 </div>
             </Oppsummeringspanel>
         </div>
@@ -58,10 +62,12 @@ const KlageInfo = (props: { klage: Klage }) => {
                     verdi: DateUtils.formatDate(props.klage.datoKlageMottatt),
                 },
             ].map((item) => (
-                <div key={item.tittel}>
-                    <Label>{item.tittel}</Label>
-                    <BodyShort>{item.verdi}</BodyShort>
-                </div>
+                <OppsummeringPar
+                    key={item.tittel}
+                    label={item.tittel}
+                    verdi={item.verdi}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
             ))}
         </div>
     );
@@ -75,39 +81,46 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
     return (
         <div className={styles.informasjonsContainer}>
             <div className={styles.informasjonsContentContainer}>
-                <div>
-                    <Label>{formatMessage('label.vedtak.type')}</Label>
-                    <BodyShort>{props.klagensVedtak.type}</BodyShort>
-                </div>
-                <div>
-                    <Label>{formatMessage('label.vedtak.dato')}</Label>
-                    <BodyShort>{DateUtils.formatDateTime(props.klagensVedtak.opprettet)}</BodyShort>
-                </div>
+                <OppsummeringPar
+                    label={formatMessage('label.vedtak.type')}
+                    verdi={props.klagensVedtak.type}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
+                <OppsummeringPar
+                    label={formatMessage('label.vedtak.dato')}
+                    verdi={DateUtils.formatDateTime(props.klagensVedtak.opprettet)}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
             </div>
 
             <div className={styles.informasjonsContentContainer}>
-                <div>
-                    <Label>{formatMessage('formkrav.innenforFrist.label')}</Label>
-                    <BodyShort>{props.klage.innenforFristen && formatMessage(props.klage.innenforFristen)}</BodyShort>
-                </div>
-                <div>
-                    <Label>{formatMessage('formkrav.klagesPåKonkreteElementer.label')}</Label>
-                    <BodyShort>
-                        {props.klage.klagesDetPåKonkreteElementerIVedtaket
+                <OppsummeringPar
+                    label={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
+                    verdi={
+                        props.klage.klagesDetPåKonkreteElementerIVedtaket
                             ? formatMessage('label.ja')
-                            : formatMessage('label.nei')}
-                    </BodyShort>
-                </div>
-                <div>
-                    <Label>{formatMessage('formkrav.signert.label')}</Label>
-                    <BodyShort>{props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet)}</BodyShort>
-                </div>
+                            : formatMessage('label.nei')
+                    }
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
+                <OppsummeringPar
+                    label={formatMessage('formkrav.innenforFrist.label')}
+                    verdi={props.klage.innenforFristen && formatMessage(props.klage.innenforFristen)}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
+                <OppsummeringPar
+                    label={formatMessage('formkrav.signert.label')}
+                    verdi={props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet)}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
             </div>
 
-            <div>
-                <Label>{formatMessage('formkrav.begrunnelse.label')}</Label>
-                <BodyShort>{props.klage.begrunnelse}</BodyShort>
-            </div>
+            <OppsummeringPar
+                label={formatMessage('formkrav.begrunnelse.label')}
+                verdi={props.klage.begrunnelse}
+                sorteres={OppsummeringsParSortering.Vertikalt}
+                className={styles.formkravBegrunnelse}
+            />
         </div>
     );
 };
@@ -120,23 +133,26 @@ const VurderInfo = (props: { klage: Klage }) => {
     return (
         <div className={styles.informasjonsContainer}>
             <div className={styles.informasjonsContentContainer}>
-                <div>
-                    <Label>{formatMessage('form.vurdering.label')}</Label>
-                    {/* Vurderingstypen skal finnes når man kommer til oppsummeringen */}
-                    {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-                    <BodyShort>{formatMessage(props.klage.vedtaksvurdering!.type)}</BodyShort>
-                </div>
+                <OppsummeringPar
+                    label={formatMessage('form.vurdering.label')}
+                    // Vurderingstypen skal finnes når man kommer til oppsummeringen
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    verdi={formatMessage(props.klage.vedtaksvurdering!.type)}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
 
                 {erKlageOmgjort(props.klage) ? (
                     <>
-                        <div>
-                            <Label>{formatMessage('form.omgjørVedtak.årsak.label')}</Label>
-                            <BodyShort>{formatMessage(props.klage.vedtaksvurdering.omgjør.årsak)}</BodyShort>
-                        </div>
-                        <div>
-                            <Label>{formatMessage('label.årsaksutfall')}</Label>
-                            <BodyShort>{formatMessage(props.klage.vedtaksvurdering.omgjør.utfall)}</BodyShort>
-                        </div>
+                        <OppsummeringPar
+                            label={formatMessage('form.omgjørVedtak.årsak.label')}
+                            verdi={formatMessage(props.klage.vedtaksvurdering.omgjør.årsak)}
+                            sorteres={OppsummeringsParSortering.Vertikalt}
+                        />
+                        <OppsummeringPar
+                            label={formatMessage('label.årsaksutfall')}
+                            verdi={formatMessage(props.klage.vedtaksvurdering.omgjør.utfall)}
+                            sorteres={OppsummeringsParSortering.Vertikalt}
+                        />
                     </>
                 ) : erKlageOpprettholdt(props.klage) ? (
                     <div>
