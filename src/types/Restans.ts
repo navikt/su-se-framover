@@ -11,6 +11,7 @@ export interface Restans {
 export enum RestansType {
     SØKNADSBEHANDLING = 'SØKNADSBEHANDLING',
     REVURDERING = 'REVURDERING',
+    KLAGE = 'KLAGE',
 }
 
 export enum RestansStatus {
