@@ -44,7 +44,7 @@ export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Nullable<Utlandsd
     );
 };
 
-export const toDateOrNull = (date: string | undefined): Date | null => {
+export const toDateOrNull = (date: string | undefined | null): Date | null => {
     if (!date) {
         return null;
     }

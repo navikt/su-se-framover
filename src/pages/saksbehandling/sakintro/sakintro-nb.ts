@@ -37,6 +37,7 @@ export default {
     'knapp.stoppUtbetaling': 'Stopp utbetaling',
 
     'link.dokumenter': 'Brev sendt fra SU',
+    'link.kontrollsamtale': 'Kontrollsamtale',
 
     'revurdering.fortsett': 'Fortsett revurdering',
     'revurdering.oppsummering': 'Se oppsummering',

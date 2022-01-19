@@ -69,6 +69,7 @@ export enum ApiErrorCode {
     KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER = 'kan_ikke_stanse_opphørte_utbetalinger',
     KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD = 'kan_ikke_velge_både_omgjør_og_oppretthold',
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
+    KUNNE_IKKE_ENDRE_DATO = 'kunne_ikke_endre_dato',
     KUNNE_IKKE_GENERERE_BREV = 'kunne_ikke_generere_brev',
     KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_gjenopptak_ugyldig_tilstand',
     KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_stans_ugyldig_tilstand',
