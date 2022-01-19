@@ -65,7 +65,7 @@ const Sakintro = (props: { sak: Sak }) => {
 
     const { avsluttedeRevurderinger, åpneRevurderinger } = splittAvsluttedeOgÅpneRevurderinger(props.sak.revurderinger);
 
-    const kanRevurderes = !isEmpty(props.sak.utbetalinger);
+    const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
 
     const kanOppretteKlage = !isEmpty(props.sak.vedtak);
     const klageToggle = useFeatureToggle(FeatureToggle.Klage) && kanOppretteKlage;
@@ -76,9 +76,14 @@ const Sakintro = (props: { sak: Sak }) => {
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
                     <NyBehandlingVelger sakId={props.sak.id} klageToggle={klageToggle} intl={intl} />
-                    <LinkAsButton variant="secondary" href={Routes.kontrollsamtale.createURL({ sakId: props.sak.id })}>
-                        {intl.formatMessage({ id: 'link.kontrollsamtale' })}
-                    </LinkAsButton>
+                    {harUtbetalinger && (
+                        <LinkAsButton
+                            variant="secondary"
+                            href={Routes.kontrollsamtale.createURL({ sakId: props.sak.id })}
+                        >
+                            {intl.formatMessage({ id: 'link.kontrollsamtale' })}
+                        </LinkAsButton>
+                    )}
                 </div>
             </div>
             {props.sak.søknader.length > 0 ? (
@@ -94,7 +99,7 @@ const Sakintro = (props: { sak: Sak }) => {
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
-                    {kanRevurderes && (
+                    {harUtbetalinger && (
                         <ÅpneRevurderinger sak={props.sak} åpneRevurderinger={åpneRevurderinger} intl={intl} />
                     )}
                     <IverksattInnvilgedeSøknader
