@@ -15,7 +15,7 @@ export interface Vedtak {
     behandlingId: string;
     sakId: string;
     fnr: string;
-    periode: Periode<string>;
+    periode: Nullable<Periode<string>>;
     type: VedtakType;
     saksnummer: string;
 }
