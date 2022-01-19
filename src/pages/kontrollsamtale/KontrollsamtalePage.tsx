@@ -10,6 +10,7 @@ import { ApiError } from '~api/apiClient';
 import * as kontrollsamtaleApi from '~api/kontrollsamtaleApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
@@ -21,6 +22,7 @@ import messages from './message-nb';
 
 interface Props {
     sakId: string;
+    kanKalleInn: boolean;
 }
 
 const KontrollsamtalePage = (props: Props) => {
@@ -50,39 +52,47 @@ const KontrollsamtalePage = (props: Props) => {
                         <Heading level="1" size="xlarge">
                             {formatMessage('kontrollsamtale')}
                         </Heading>
-                        <BodyLong>
-                            {kontrollsamtale?.innkallingsdato
-                                ? formatMessage('nestePlanlagt') + formatDate(kontrollsamtale.innkallingsdato)
-                                : formatMessage('ingenPlanlagt')}
-                        </BodyLong>
-                        <div className={styles.nyDatoContainer}>
-                            <DatePicker
-                                className={styles.datePicker}
-                                dateFormat="dd.MM.yyyy"
-                                label={formatMessage('velgDatoTittel')}
-                                onChange={(dato: Date | null) => settNyDato(dato)}
-                                value={nyDato ?? toDateOrNull(kontrollsamtale?.innkallingsdato)}
-                                feil={
-                                    (nyDato ?? toDateOrNull(kontrollsamtale?.innkallingsdato)) === null
-                                        ? formatMessage('datovalidering')
-                                        : undefined
-                                }
-                                minDate={startOfTomorrow()}
-                            />
-                            <Button onClick={() => nyDato && handleNyDatoForKontrollsamtaleClick(nyDato)}>
-                                {formatMessage('settNyDato')}
-                                {RemoteData.isPending(nyDatoStatus) && <Loader />}
-                            </Button>
-                        </div>
-                        {RemoteData.isSuccess(nyDatoStatus) && (
-                            <Alert className={styles.alert} variant="info">
-                                {formatMessage('nyDatoBekreftelse')}
-                            </Alert>
-                        )}
-                        {RemoteData.isFailure(nyDatoStatus) && (
-                            <Alert className={styles.alert} variant="error">
-                                {formatMessage('kunneIkkeSetteDato')}
-                            </Alert>
+                        {!props.kanKalleInn ? (
+                            <SkjemaelementFeilmelding className={styles.feilmelding}>
+                                {formatMessage('ingenUtbetalingsperioder')}
+                            </SkjemaelementFeilmelding>
+                        ) : (
+                            <>
+                                <BodyLong>
+                                    {kontrollsamtale?.innkallingsdato
+                                        ? formatMessage('nestePlanlagt') + formatDate(kontrollsamtale.innkallingsdato)
+                                        : formatMessage('ingenPlanlagt')}
+                                </BodyLong>
+                                <div className={styles.nyDatoContainer}>
+                                    <DatePicker
+                                        className={styles.datePicker}
+                                        dateFormat="dd.MM.yyyy"
+                                        label={formatMessage('velgDatoTittel')}
+                                        onChange={(dato: Date | null) => settNyDato(dato)}
+                                        value={nyDato ?? toDateOrNull(kontrollsamtale?.innkallingsdato)}
+                                        feil={
+                                            (nyDato ?? toDateOrNull(kontrollsamtale?.innkallingsdato)) === null
+                                                ? formatMessage('datovalidering')
+                                                : undefined
+                                        }
+                                        minDate={startOfTomorrow()}
+                                    />
+                                    <Button onClick={() => nyDato && handleNyDatoForKontrollsamtaleClick(nyDato)}>
+                                        {formatMessage('settNyDato')}
+                                        {RemoteData.isPending(nyDatoStatus) && <Loader />}
+                                    </Button>
+                                </div>
+                                {RemoteData.isSuccess(nyDatoStatus) && (
+                                    <Alert className={styles.alert} variant="info">
+                                        {formatMessage('nyDatoBekreftelse')}
+                                    </Alert>
+                                )}
+                                {RemoteData.isFailure(nyDatoStatus) && (
+                                    <Alert className={styles.alert} variant="error">
+                                        {formatMessage('kunneIkkeSetteDato')}
+                                    </Alert>
+                                )}
+                            </>
                         )}
                     </>
                 )

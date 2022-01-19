@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Loader } from '@navikt/ds-react';
+import { isEmpty } from 'fp-ts/lib/Array';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -185,7 +186,10 @@ const Saksoversikt = () => {
                                             </Route>
                                             <Route path={Routes.kontrollsamtale.path}>
                                                 <div className={styles.mainContent}>
-                                                    <NyDatoForKontrollsamtale sakId={sak.id} />
+                                                    <NyDatoForKontrollsamtale
+                                                        sakId={sak.id}
+                                                        kanKalleInn={!isEmpty(sak.utbetalinger)}
+                                                    />
                                                 </div>
                                             </Route>
 
