@@ -1,11 +1,7 @@
 @import '~/styles/variables.less';
 
 .buttonContainer {
-    margin-top: @spacing;
-}
-
-.navigationButtonContainer {
-    margin-bottom: @spacing;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 13em);
     gap: @spacing;
 }
