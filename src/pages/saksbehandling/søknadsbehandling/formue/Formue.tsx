@@ -448,17 +448,18 @@ const Formue = (props: {
                         <Controller
                             control={form.control}
                             name="status"
-                            render={({ field, fieldState }) => (
+                            render={({ field }) => (
                                 <Checkbox
                                     className={styles.henteMerInfoCheckbox}
                                     {...field}
-                                    error={fieldState.error?.message}
                                     checked={field.value === FormueStatus.MåInnhenteMerInformasjon}
                                     onChange={() => {
                                         field.onChange(
-                                            field.value === FormueStatus.VilkårOppfylt
-                                                ? FormueStatus.MåInnhenteMerInformasjon
-                                                : FormueStatus.VilkårOppfylt
+                                            field.value === FormueStatus.MåInnhenteMerInformasjon
+                                                ? totalFormue <= senesteHalvG
+                                                    ? FormueStatus.VilkårOppfylt
+                                                    : FormueStatus.VilkårIkkeOppfylt
+                                                : FormueStatus.MåInnhenteMerInformasjon
                                         );
                                     }}
                                 >

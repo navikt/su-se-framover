@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Attachment } from '@navikt/ds-icons';
-import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
+import { Alert, BodyLong, Button, CheckboxGroup, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { pipe } from 'fp-ts/function';
 import * as React from 'react';
@@ -156,14 +156,18 @@ const index = (props: { nesteUrl: string }) => {
                 </section>
 
                 <div className={styles.checkboksPanelContainer}>
-                    <ConfirmationPanel
-                        checked={erBekreftet}
-                        label={formatMessage('bekreftelsesboks.tekst.p2')}
-                        onChange={() => setErBekreftet(!erBekreftet)}
+                    <CheckboxGroup
+                        legend=""
                         error={hasSubmitted && !erBekreftet ? formatMessage('feil.påkrevdFelt') : undefined}
                     >
-                        {formatMessage('bekreftelsesboks.tekst.p1')}
-                    </ConfirmationPanel>
+                        <ConfirmationPanel
+                            checked={erBekreftet}
+                            label={formatMessage('bekreftelsesboks.tekst.p2')}
+                            onChange={() => setErBekreftet(!erBekreftet)}
+                        >
+                            {formatMessage('bekreftelsesboks.tekst.p1')}
+                        </ConfirmationPanel>
+                    </CheckboxGroup>
                 </div>
             </div>
         );
