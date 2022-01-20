@@ -112,7 +112,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                             borIBolig: null,
                             verdiPåBolig: null,
                             boligBrukesTil: null,
-                            eierMerEnnEnBolig: null,
                             harDepositumskonto: null,
                             depositumsBeløp: null,
                             kontonummer: null,
@@ -209,24 +208,22 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     </>
                 )}
 
-                {formik.values.eierBolig && (
-                    <BooleanRadioGroup
-                        name={keyOf<FormData>('eierMerEnnEnBolig')}
-                        legend={formatMessage('eiendom.eierAndreEiendommer')}
-                        error={formik.errors.eierMerEnnEnBolig}
-                        value={formik.values.eierMerEnnEnBolig}
-                        onChange={(e) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                eierMerEnnEnBolig: e,
-                                verdiPåEiendom: null,
-                                eiendomBrukesTil: null,
-                            }))
-                        }
-                    />
-                )}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('eierMerEnnEnBolig')}
+                    legend={formatMessage('eiendom.eierAndreEiendommer')}
+                    error={formik.errors.eierMerEnnEnBolig}
+                    value={formik.values.eierMerEnnEnBolig}
+                    onChange={(e) =>
+                        formik.setValues((v) => ({
+                            ...v,
+                            eierMerEnnEnBolig: e,
+                            verdiPåEiendom: null,
+                            eiendomBrukesTil: null,
+                        }))
+                    }
+                />
 
-                {formik.values.eierBolig && formik.values.eierMerEnnEnBolig && (
+                {formik.values.eierMerEnnEnBolig && (
                     <>
                         <TextField
                             id={keyOf<FormData>('verdiPåEiendom')}

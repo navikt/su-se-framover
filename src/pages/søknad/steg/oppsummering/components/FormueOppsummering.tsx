@@ -70,12 +70,10 @@ export const FormueOppsummering = ({
                 />
             )}
 
-            {formue.eierBolig && (
-                <Oppsummeringsfelt
-                    label={formatMessage('eiendom.eierAndreEiendommer')}
-                    verdi={formue.eierMerEnnEnBolig ? 'Ja' : formue.eierMerEnnEnBolig === false ? 'Nei' : 'Ubesvart'}
-                />
-            )}
+            <Oppsummeringsfelt
+                label={formatMessage('eiendom.eierAndreEiendommer')}
+                verdi={formue.eierMerEnnEnBolig ? 'Ja' : formue.eierMerEnnEnBolig === false ? 'Nei' : 'Ubesvart'}
+            />
 
             {formue.eierMerEnnEnBolig && (
                 <Oppsummeringsfelt
