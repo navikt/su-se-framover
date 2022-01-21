@@ -101,7 +101,7 @@ export enum ApiErrorCode {
     REVURDERINGEN_ER_ALLEREDE_AVSLUTTET = 'revurderingen_er_allerede_avsluttet',
     REVURDERINGEN_ER_IVERKSATT = 'revurderingen_er_iverksatt',
     REVURDERINGER_ER_TIL_ATTESTERING = 'revurdering_er_til_attestering',
-    REVURDERINGSPERIODE_INNEHOLDER_AVKORTING_UTENLANDSOPPHOLD = 'revurderingsperiode_inneholder_avkorting_utenlandsopphold',
+    UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE = 'utestående_avkorting_må_revurderes_eller_avkortes_i_ny_periode',
     REVURDERINGSÅRSAK_UGYLDIG_BEGRUNNELSE = 'revurderingsårsak_ugyldig_begrunnelse',
     REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK = 'revurderingsårsak_ugyldig_årsak',
     REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV = 'revurdering_er_ikke_forhåndsvarslet_for_å_vise_brev',
