@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Attachment } from '@navikt/ds-icons';
-import { Alert, BodyLong, Button, CheckboxGroup, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
+import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { pipe } from 'fp-ts/function';
 import * as React from 'react';
@@ -10,6 +10,7 @@ import { ErrorCode } from '~api/apiClient';
 import * as sakApi from '~api/sakApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
@@ -156,18 +157,17 @@ const index = (props: { nesteUrl: string }) => {
                 </section>
 
                 <div className={styles.checkboksPanelContainer}>
-                    <CheckboxGroup
-                        legend=""
-                        error={hasSubmitted && !erBekreftet ? formatMessage('feil.påkrevdFelt') : undefined}
+                    <ConfirmationPanel
+                        checked={erBekreftet}
+                        label={formatMessage('bekreftelsesboks.tekst.p2')}
+                        onChange={() => setErBekreftet(!erBekreftet)}
+                        error={hasSubmitted && !erBekreftet}
                     >
-                        <ConfirmationPanel
-                            checked={erBekreftet}
-                            label={formatMessage('bekreftelsesboks.tekst.p2')}
-                            onChange={() => setErBekreftet(!erBekreftet)}
-                        >
-                            {formatMessage('bekreftelsesboks.tekst.p1')}
-                        </ConfirmationPanel>
-                    </CheckboxGroup>
+                        {formatMessage('bekreftelsesboks.tekst.p1')}
+                    </ConfirmationPanel>
+                    {hasSubmitted && !erBekreftet && (
+                        <SkjemaelementFeilmelding>{formatMessage('feil.påkrevdFelt')}</SkjemaelementFeilmelding>
+                    )}
                 </div>
             </div>
         );
