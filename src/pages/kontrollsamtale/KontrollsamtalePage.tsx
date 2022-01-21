@@ -88,9 +88,7 @@ const KontrollsamtalePage = (props: Props) => {
                                     </Alert>
                                 )}
                                 {RemoteData.isFailure(nyDatoStatus) && (
-                                    <Alert className={styles.alert} variant="error">
-                                        {formatMessage('kunneIkkeSetteDato')}
-                                    </Alert>
+                                    <ApiErrorAlert className={styles.alert} error={nyDatoStatus.error} />
                                 )}
                             </>
                         )}

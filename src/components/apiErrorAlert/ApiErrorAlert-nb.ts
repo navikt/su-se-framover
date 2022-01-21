@@ -19,7 +19,9 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ER_BESLUTTET]: 'Revurderingen er allerede besluttet',
     [ApiErrorCode.FANT_IKKE_AKTØR_ID]: 'Fant ikke AktørID',
     [ApiErrorCode.FANT_IKKE_BEHANDLING]: 'Fant ikke behandlingen',
-    [ApiErrorCode.FANT_IKKE_GJELDENDEUTBETALING]: 'Kunne ikke hente gjeldende utbetaling',
+    [ApiErrorCode.FANT_IKKE_GJELDENDE_UTBETALING]: 'Kunne ikke hente gjeldende utbetaling',
+    [ApiErrorCode.FANT_IKKE_GJELDENDE_STØNADSPERIODE]:
+        'Kunne ikke sette innkallingsdato, ettersom vi ikke fant gjeldende stønadsperiode',
     [ApiErrorCode.FANT_IKKE_KLAGE]: 'Fant ikke klage',
     [ApiErrorCode.FANT_IKKE_PERSON]: 'Fant ikke personen',
     [ApiErrorCode.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'Fant ikke person eller saksbehandlers navn',
@@ -179,6 +181,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_PERIODE_FOM]: 'Perioder kan kun starte første dagen i måneden',
     [ApiErrorCode.UGYLDIG_PERIODE_START_SLUTT]: 'Startmåned må være før, eller lik sluttmåned',
     [ApiErrorCode.UGYLDIG_PERIODE_TOM]: 'Perioder kan kun slutte siste dagen i måneden',
+    [ApiErrorCode.UGYLDIG_STATUSOVERGANG_KONTROLLSAMTALE]:
+        'Kunne ikke oppdatere da kontrollsamtalen er i en ugyldig tilstand',
     [ApiErrorCode.UGYLDIG_TILSTAND]: 'Ugyldig tilstand',
     [ApiErrorCode.UGYLDIG_TILSTAND_FOR_OPPDATERING]: 'Ugyldig tilstand for oppdatering',
     [ApiErrorCode.UGYLDIG_VALG]: 'Ugyldig valg av beslutning for forhåndsvarsel',
