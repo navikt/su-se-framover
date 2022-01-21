@@ -8,14 +8,14 @@ export interface Vedtak {
     id: string;
     opprettet: string;
     beregning: Nullable<Beregning>;
-    simulering?: Simulering;
+    simulering: Nullable<Simulering>;
     attestant: string;
     saksbehandler: string;
     utbetalingId: Nullable<string>;
     behandlingId: string;
     sakId: string;
     fnr: string;
-    periode: Periode<string>;
+    periode: Nullable<Periode<string>>;
     type: VedtakType;
     saksnummer: string;
 }
@@ -28,4 +28,5 @@ export enum VedtakType {
     OPPHØR = 'OPPHØR',
     STANS_AV_YTELSE = 'STANS_AV_YTELSE',
     GJENOPPTAK_AV_YTELSE = 'GJENOPPTAK_AV_YTELSE',
+    AVVIST_KLAGE = 'AVVIST_KLAGE',
 }
