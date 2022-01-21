@@ -23,7 +23,14 @@ import { KlageSteg } from '~pages/saksbehandling/types';
 import { Svarord, Klage, KlageInnenforFristen, KlageErUnderskrevet } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
 import { formatDateTime } from '~utils/date/dateUtils';
-import { erKlageVilkårsvurdertBekreftetEllerSenere, iGyldigTilstandForÅVilkårsvurdere } from '~utils/klage/klageUtils';
+import {
+    erKlageAvvist,
+    erKlageOpprettet,
+    erKlageVilkårsvurdert,
+    erKlageVilkårsvurdertAvvist,
+    erKlageVilkårsvurdertBekreftetEllerSenere,
+    erKlageVurdert,
+} from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
 
@@ -122,15 +129,23 @@ const VurderFormkrav = (props: Props) => {
         );
     };
 
+    const skalNavigeresTilAvvisning = (k: Klage) => {
+        return erKlageVilkårsvurdertAvvist(k) || erKlageAvvist(k);
+    };
+
+    const navigerTilNesteSide = (klage: Klage) => {
+        history.push(
+            Routes.klage.createURL({
+                sakId: props.sakId,
+                klageId: props.klage.id,
+                steg: skalNavigeresTilAvvisning(klage) ? KlageSteg.Avvisning : KlageSteg.Vurdering,
+            })
+        );
+    };
+
     const handleBekreftOgFortsettClick = (values: FormData) => {
         if (erKlageVilkårsvurdertBekreftetEllerSenere(props.klage) && !isDirty) {
-            history.push(
-                Routes.klage.createURL({
-                    sakId: props.sakId,
-                    klageId: props.klage.id,
-                    steg: KlageSteg.Vurdering,
-                })
-            );
+            navigerTilNesteSide(props.klage);
             return;
         }
 
@@ -150,19 +165,16 @@ const VurderFormkrav = (props: Props) => {
                         sakId: props.sakId,
                         klageId: props.klage.id,
                     },
-                    () => {
-                        history.push(
-                            Routes.klage.createURL({
-                                sakId: props.sakId,
-                                klageId: props.klage.id,
-                                steg: KlageSteg.Vurdering,
-                            })
-                        );
+                    (klage) => {
+                        navigerTilNesteSide(klage);
                     }
                 );
             }
         );
     };
+
+    const iGyldigTilstandForÅVilkårsvurdere = (k: Klage) =>
+        erKlageOpprettet(k) || erKlageVilkårsvurdert(k) || erKlageVurdert(k) || erKlageAvvist(k);
 
     if (!iGyldigTilstandForÅVilkårsvurdere(props.klage)) {
         return (
@@ -176,15 +188,11 @@ const VurderFormkrav = (props: Props) => {
     }
 
     const fyllInRadioGruppe = () =>
-        Object.values(Svarord).map(
-            (verdi) =>
-                //fjern disabled når vi har støtte for nei
-                verdi !== Svarord.NEI && (
-                    <Radio value={verdi} key={verdi}>
-                        {formatMessage(verdi)}
-                    </Radio>
-                )
-        );
+        Object.values(Svarord).map((verdi) => (
+            <Radio value={verdi} key={verdi}>
+                {formatMessage(verdi)}
+            </Radio>
+        ));
 
     return (
         <ToKolonner tittel={formatMessage('formkrav.tittel')}>
@@ -220,7 +228,6 @@ const VurderFormkrav = (props: Props) => {
                                     legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
                                     error={fieldState.error?.message}
                                     {...field}
-                                    hideNei
                                 />
                             )}
                         />
@@ -264,7 +271,7 @@ const VurderFormkrav = (props: Props) => {
                                     value={field.value ?? ''}
                                     error={fieldState.error?.message}
                                     label={formatMessage('formkrav.begrunnelse.label')}
-                                    placeholder={formatMessage('formkrav.begrunnelse.placeholder')}
+                                    description={formatMessage('formkrav.begrunnelse.description')}
                                 />
                             )}
                         />

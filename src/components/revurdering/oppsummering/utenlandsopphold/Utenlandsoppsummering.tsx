@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
+import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~lib/i18n';
 import { Utenlandsopphold } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { formatPeriode } from '~utils/date/dateUtils';

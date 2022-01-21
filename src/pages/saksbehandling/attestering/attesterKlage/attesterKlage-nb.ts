@@ -15,8 +15,10 @@ export default {
     'feil.klageErIkkeTilAttestering': 'Klagen er ikke til attestering',
 
     'notification.oversendt': 'Oversendt klage',
+    'notification.avvist': 'Iverksatt avvist klage',
     'notification.underkjent': 'Underkjent klage',
 
     'knapp.bekreft': 'Bekreft',
     'knapp.tilbake': 'Tilbake',
+    'knapp.seBrev': 'Se brev',
 };

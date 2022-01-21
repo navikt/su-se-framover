@@ -16,7 +16,7 @@ import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './restanser-nb';
 import styles from './restanser.module.less';
-import { AriaSortVerdier, formatRestansStatus, formatRestansType, RestansKolonner, sortTabell } from './restanserUtils';
+import { AriaSortVerdier, RestansKolonner, sortTabell } from './restanserUtils';
 
 const Restanser = () => {
     const { formatMessage } = useI18n({ messages });
@@ -194,11 +194,9 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         <tr key={restans.behandlingId}>
                             <td className={getRowClassName('saksnummer')}>{restans.saksnummer}</td>
                             <td className={getRowClassName('typeBehandling')}>
-                                {formatRestansType(restans.typeBehandling, formatMessage)}
+                                {formatMessage(restans.typeBehandling)}
                             </td>
-                            <td className={getRowClassName('status')}>
-                                {formatRestansStatus(restans.status, formatMessage)}
-                            </td>
+                            <td className={getRowClassName('status')}>{formatMessage(restans.status)}</td>
                             <td className={getRowClassName('behandlingStartet')}>
                                 {restans.behandlingStartet ? formatDateTime(restans.behandlingStartet) : ''}
                             </td>

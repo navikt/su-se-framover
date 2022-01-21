@@ -9,5 +9,7 @@ export default {
     'gjenoppta.oppsummering.tilbake': 'Tilbake',
     'gjenoppta.oppsummering.error.fant.ingen': 'Fant ikke gjenopptak',
 
+    'gjenoppta.bunnknapper.tilbake': 'Tilbake',
+
     'gjenoppta.notification': 'Utbetalinger har blitt gjenopptatt',
 };

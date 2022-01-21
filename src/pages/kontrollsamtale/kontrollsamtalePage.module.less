@@ -1,0 +1,28 @@
+@import '~/styles/variables.less';
+
+.kontrollsamtalePage {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+    padding: @spacing;
+    width: 100%;
+
+    .nyDatoContainer {
+        display: flex;
+        gap: @spacing-xs;
+
+        .datePicker {
+            width: auto;
+        }
+
+        button {
+            margin-top: @spacing;
+            height: fit-content;
+        }
+    }
+
+    .tilbakeknapp,
+    .alert {
+        width: fit-content;
+    }
+}

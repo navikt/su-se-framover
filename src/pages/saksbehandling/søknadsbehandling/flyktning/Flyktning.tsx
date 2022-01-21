@@ -216,6 +216,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                         error={fieldState.error?.message}
                                         {...field}
                                         value={field.value ?? ''}
+                                        description={formatMessage('input.begrunnelse.description')}
                                     />
                                 )}
                             />

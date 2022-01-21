@@ -6,6 +6,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',
     [ApiErrorCode.AVSTEMMING_FEILET]: 'Avstemming feilet',
     [ApiErrorCode.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM]: 'Kan ikke sende in tom begrunnelse',
+    [ApiErrorCode.BELØPSENDRING_MINDRE_ENN_TI_PROSENT]:
+        'Beløpsendring i forhold til gjeldende utbetaling er mindre enn 10%',
     [ApiErrorCode.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
         'Bosituasjon og inntekt må revurderes siden det finnes flere bosituasjonsperioder',
     [ApiErrorCode.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'Informasjon i bosituasjon samsvarer ikke med formue',
@@ -17,10 +19,13 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ER_BESLUTTET]: 'Revurderingen er allerede besluttet',
     [ApiErrorCode.FANT_IKKE_AKTØR_ID]: 'Fant ikke AktørID',
     [ApiErrorCode.FANT_IKKE_BEHANDLING]: 'Fant ikke behandlingen',
-    [ApiErrorCode.FANT_IKKE_GJELDENDEUTBETALING]: 'Kunne ikke hente gjeldende utbetaling',
+    [ApiErrorCode.FANT_IKKE_GJELDENDE_UTBETALING]: 'Kunne ikke hente gjeldende utbetaling',
+    [ApiErrorCode.FANT_IKKE_GJELDENDE_STØNADSPERIODE]:
+        'Kunne ikke sette innkallingsdato, ettersom vi ikke fant gjeldende stønadsperiode',
     [ApiErrorCode.FANT_IKKE_KLAGE]: 'Fant ikke klage',
     [ApiErrorCode.FANT_IKKE_PERSON]: 'Fant ikke personen',
     [ApiErrorCode.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'Fant ikke person eller saksbehandlers navn',
+    [ApiErrorCode.FEIL_VED_LAGRING_AV_BREV_OG_KLAGE]: 'Feil ved lagring av brev og klage',
     [ApiErrorCode.FANT_IKKE_REVURDERING]: 'Fant ikke revurdering',
     [ApiErrorCode.FANT_IKKE_SAK]: 'Fant ikke sak',
     [ApiErrorCode.FANT_IKKE_SØKNAD]: 'Fant ikke søknad',
@@ -39,8 +44,9 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år',
     [ApiErrorCode.FINNER_IKKE_PERSON]: 'Simulering feilet. Finner ikke person i TPS',
     [ApiErrorCode.FINNER_IKKE_UTBETALING]: 'Finner ikke utbetaling',
+    [ApiErrorCode.FINNES_ALLEREDE_EN_KLAGEBEHANDLING]: 'Det finnes allerede en klagebehandling for gitt journalpostId',
     [ApiErrorCode.FINNES_ALLEREDE_EN_ÅPEN_KLAGE]: 'Det finnes allerede en åpen klage',
-    [ApiErrorCode.FORMUELISTE_KAN_IKKE_VÆRE_TOM]: '',
+    [ApiErrorCode.FORMUELISTE_KAN_IKKE_VÆRE_TOM]: 'Formuelisten kan ikke være tom',
     [ApiErrorCode.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'Formue som fører til opphør må revurderes',
     [ApiErrorCode.FORSKJELLIG_RESULTAT]: 'Vurderingsperiode kan ikke inneholde forskjellige resultater',
     [ApiErrorCode.FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE]: 'Fradragsperioden er utenfor bosituasjonsperioden',
@@ -50,6 +56,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL]:
         'Fritekst har blitt fyllt ut, men revurderingen er ikke forhåndsvarslet',
     [ApiErrorCode.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'G-regulering kan ikke føre til opphør',
+    [ApiErrorCode.GENERERER_BREV_FRA_UGYLDIG_TILSTAND]: 'Klagen er i en tilstand der generering av brev ikke støttes',
     [ApiErrorCode.HAR_ALLEREDE_EN_AKTIV_BEHANDLING]:
         'Det finnes allerede en åpen søknadsbehandling. Du må fullføre denne før du kan avslå en annen',
     [ApiErrorCode.HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING]:
@@ -90,6 +97,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD]: 'Kan ikke velge både omgjør og oppretthold',
     [ApiErrorCode.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
         'Kontrollsimuleringen er ulik saksbehandlers simulering',
+    [ApiErrorCode.KUNNE_IKKE_ENDRE_DATO]: 'Kunne ikke endre dato',
     [ApiErrorCode.KUNNE_IKKE_GENERERE_BREV]: 'Kunne ikke generere brev',
     [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND]: 'Siste utbetaling er ikke stans',
     [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND]: 'Kan ikke stanse utbetalinger som allerede er stanset',
@@ -179,6 +187,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_PERIODE_FOM]: 'Perioder kan kun starte første dagen i måneden',
     [ApiErrorCode.UGYLDIG_PERIODE_START_SLUTT]: 'Startmåned må være før, eller lik sluttmåned',
     [ApiErrorCode.UGYLDIG_PERIODE_TOM]: 'Perioder kan kun slutte siste dagen i måneden',
+    [ApiErrorCode.UGYLDIG_STATUSOVERGANG_KONTROLLSAMTALE]:
+        'Kunne ikke oppdatere da kontrollsamtalen er i en ugyldig tilstand',
     [ApiErrorCode.UGYLDIG_TILSTAND]: 'Ugyldig tilstand',
     [ApiErrorCode.UGYLDIG_TILSTAND_FOR_OPPDATERING]: 'Ugyldig tilstand for oppdatering',
     [ApiErrorCode.UGYLDIG_VALG]: 'Ugyldig valg av beslutning for forhåndsvarsel',
@@ -198,8 +208,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.VURDERINGSPERIODER_MANGLER]: 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
     [ApiErrorCode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
         'Vurdering av vilkår må gjøres innenfor revurderingsperioden',
-    [ApiErrorCode.ÅPEN_REVURDERING_EKSISTERER]: 'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
-    [ApiErrorCode.ÅPEN_REVURDERING_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
+    [ApiErrorCode.ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER]:
+        'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
+    [ApiErrorCode.ÅPEN_REVURDERING_STANS_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
 };
-
 export default messages;

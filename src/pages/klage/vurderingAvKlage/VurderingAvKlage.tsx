@@ -38,8 +38,9 @@ import {
     OmgjørVedtakÅrsak,
     OpprettholdVedtakHjemmel,
     KlageVurderingType,
+    KlageStatus,
 } from '~types/Klage';
-import { erKlageVurdertBekreftet, iGyldigTilstandForÅVurdere } from '~utils/klage/klageUtils';
+import { erKlageVurdert, erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
 
@@ -119,7 +120,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         klageActions.lagreVurderingAvKlage
     );
     const [bekreftVurderingerStatus, bekreftVurderinger] = useAsyncActionCreator(klageActions.bekreftVurderinger);
-    const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForOppretthold);
+    const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
 
     const initialValues = {
         klageVurderingType: props.klage.vedtaksvurdering?.type ?? null,
@@ -138,11 +139,37 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         watch,
         control,
         formState: { isDirty },
-        ...form
     } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
+
+    const lagOpprettholdApiBody = (data: VurderingAvKlageFormData) => {
+        return {
+            sakId: props.sakId,
+            klageId: props.klage.id,
+            omgjør:
+                data.klageVurderingType === KlageVurderingType.OMGJØR
+                    ? {
+                          årsak: data.omgjør.årsak ? data.omgjør.årsak : null,
+                          utfall: data.omgjør.utfall,
+                      }
+                    : null,
+            oppretthold:
+                data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
+                    ? {
+                          hjemler: data.oppretthold.hjemmel,
+                      }
+                    : null,
+            fritekstTilBrev: data.fritekstTilBrev,
+        };
+    };
+
+    const onSeBrevClick = (data: VurderingAvKlageFormData) => {
+        lagreVurderingAvKlage(lagOpprettholdApiBody(data), () => {
+            hentBrev({ sakId: props.sakId, klageId: props.klage.id });
+        });
+    };
 
     const handleLagreVurderingAvKlageClick = (data: VurderingAvKlageFormData) => {
         if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
@@ -150,29 +177,9 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             return;
         }
 
-        lagreVurderingAvKlage(
-            {
-                sakId: props.sakId,
-                klageId: props.klage.id,
-                omgjør:
-                    data.klageVurderingType === KlageVurderingType.OMGJØR
-                        ? {
-                              årsak: data.omgjør.årsak ? data.omgjør.årsak : null,
-                              utfall: data.omgjør.utfall,
-                          }
-                        : null,
-                oppretthold:
-                    data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
-                        ? {
-                              hjemler: data.oppretthold.hjemmel,
-                          }
-                        : null,
-                fritekstTilBrev: data.fritekstTilBrev,
-            },
-            () => {
-                history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-            }
-        );
+        lagreVurderingAvKlage(lagOpprettholdApiBody(data), () => {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        });
     };
 
     const handleBekreftOgFortsettSubmit = (data: VurderingAvKlageFormData) => {
@@ -186,44 +193,27 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             );
             return;
         }
-        lagreVurderingAvKlage(
-            {
-                sakId: props.sakId,
-                klageId: props.klage.id,
-                omgjør:
-                    data.klageVurderingType === KlageVurderingType.OMGJØR
-                        ? {
-                              årsak: data.omgjør.årsak ? data.omgjør.årsak : null,
-                              utfall: data.omgjør.utfall,
-                          }
-                        : null,
-                oppretthold:
-                    data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
-                        ? {
-                              hjemler: data.oppretthold.hjemmel,
-                          }
-                        : null,
-                fritekstTilBrev: data.fritekstTilBrev,
-            },
-            () => {
-                bekreftVurderinger(
-                    {
-                        sakId: props.sakId,
-                        klageId: props.klage.id,
-                    },
-                    () => {
-                        history.push(
-                            Routes.klage.createURL({
-                                sakId: props.sakId,
-                                klageId: props.klage.id,
-                                steg: KlageSteg.Oppsummering,
-                            })
-                        );
-                    }
-                );
-            }
-        );
+        lagreVurderingAvKlage(lagOpprettholdApiBody(data), () => {
+            bekreftVurderinger(
+                {
+                    sakId: props.sakId,
+                    klageId: props.klage.id,
+                },
+                () => {
+                    history.push(
+                        Routes.klage.createURL({
+                            sakId: props.sakId,
+                            klageId: props.klage.id,
+                            steg: KlageSteg.Oppsummering,
+                        })
+                    );
+                }
+            );
+        });
     };
+
+    const iGyldigTilstandForÅVurdere = (k: Klage) =>
+        k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_TIL_VURDERING || erKlageVurdert(k);
 
     if (!iGyldigTilstandForÅVurdere(props.klage)) {
         return (
@@ -301,20 +291,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                     />
                                 )}
                             />
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                onClick={() => {
-                                    const values = form.getValues();
-
-                                    hentBrev({
-                                        sakId: props.sakId,
-                                        klageId: props.klage.id,
-                                        fritekst: values.fritekstTilBrev ?? '',
-                                        hjemler: values.oppretthold.hjemmel,
-                                    });
-                                }}
-                            >
+                            <Button type="button" variant="secondary" onClick={() => onSeBrevClick(watch())}>
                                 {formatMessage('knapp.seBrev')}
                                 {RemoteData.isPending(brevStatus) && <Loader />}
                             </Button>

@@ -72,7 +72,6 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             eierBolig: e,
                             borIBolig: null,
                             verdiPåBolig: null,
-                            eierMerEnnEnBolig: null,
                             boligBrukesTil: null,
                             harDepositumskonto: null,
                             depositumsBeløp: null,
@@ -160,22 +159,20 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     </>
                 )}
 
-                {formik.values.eierBolig && (
-                    <BooleanRadioGroup
-                        name="eierMerEnnEnBolig"
-                        legend={formatMessage('eiendom.eierAndreEiendommer')}
-                        error={formik.errors.eierMerEnnEnBolig}
-                        value={formik.values.eierMerEnnEnBolig}
-                        onChange={(e) =>
-                            formik.setValues({
-                                ...formik.values,
-                                eierMerEnnEnBolig: e,
-                                verdiPåEiendom: null,
-                                eiendomBrukesTil: null,
-                            })
-                        }
-                    />
-                )}
+                <BooleanRadioGroup
+                    name="eierMerEnnEnBolig"
+                    legend={formatMessage('eiendom.eierAndreEiendommer')}
+                    error={formik.errors.eierMerEnnEnBolig}
+                    value={formik.values.eierMerEnnEnBolig}
+                    onChange={(e) =>
+                        formik.setValues({
+                            ...formik.values,
+                            eierMerEnnEnBolig: e,
+                            verdiPåEiendom: null,
+                            eiendomBrukesTil: null,
+                        })
+                    }
+                />
 
                 {formik.values.eierMerEnnEnBolig && (
                     <>

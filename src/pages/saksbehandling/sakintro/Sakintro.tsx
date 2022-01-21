@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, LinkPanel, Loader } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Loader, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import Chevron from 'nav-frontend-chevron';
-import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -17,11 +16,9 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { Behandling } from '~types/Behandling';
-import { Klage } from '~types/Klage';
 import { Sak } from '~types/Sak';
 import { Søknad } from '~types/Søknad';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
-import { erKlageTilAttestering, getÅpenKlage, hentSisteVurderteSteg } from '~utils/klage/klageUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
@@ -67,8 +64,7 @@ const Sakintro = (props: { sak: Sak }) => {
 
     const { avsluttedeRevurderinger, åpneRevurderinger } = splittAvsluttedeOgÅpneRevurderinger(props.sak.revurderinger);
 
-    const kanRevurderes = !isEmpty(props.sak.utbetalinger);
-    const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) && kanRevurderes;
+    const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
 
     const kanOppretteKlage = !isEmpty(props.sak.vedtak);
     const klageToggle = useFeatureToggle(FeatureToggle.Klage) && kanOppretteKlage;
@@ -78,12 +74,15 @@ const Sakintro = (props: { sak: Sak }) => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    <NyBehandlingVelger
-                        sakId={props.sak.id}
-                        klager={props.sak.klager}
-                        klageToggle={klageToggle}
-                        intl={intl}
-                    />
+                    <NyBehandlingVelger sakId={props.sak.id} klageToggle={klageToggle} intl={intl} />
+                    {harUtbetalinger && (
+                        <LinkAsButton
+                            variant="secondary"
+                            href={Routes.kontrollsamtale.createURL({ sakId: props.sak.id })}
+                        >
+                            {intl.formatMessage({ id: 'link.kontrollsamtale' })}
+                        </LinkAsButton>
+                    )}
                 </div>
             </div>
             {props.sak.søknader.length > 0 ? (
@@ -99,7 +98,7 @@ const Sakintro = (props: { sak: Sak }) => {
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
-                    {revurderingToggle && (
+                    {harUtbetalinger && (
                         <ÅpneRevurderinger sak={props.sak} åpneRevurderinger={åpneRevurderinger} intl={intl} />
                     )}
                     <IverksattInnvilgedeSøknader
@@ -133,54 +132,29 @@ const Sakintro = (props: { sak: Sak }) => {
     );
 };
 
-const NyBehandlingVelger = (props: { sakId: string; klager: Klage[]; klageToggle: boolean; intl: IntlShape }) => {
-    const [anchorEl, setAnchorEl] = useState<HTMLElement>();
+const NyBehandlingVelger = (props: { sakId: string; klageToggle: boolean; intl: IntlShape }) => {
+    const [anchorEl, setAnchorEl] = useState<Nullable<HTMLElement>>(null);
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {
             case NyBehandling.REVURDER:
                 return Routes.revurderValgtSak.createURL({ sakId: props.sakId });
-            case NyBehandling.KLAGE: {
-                const åpenKlage = getÅpenKlage(props.klager);
-
-                if (åpenKlage) {
-                    if (erKlageTilAttestering(åpenKlage)) {
-                        return Routes.attesterKlage.createURL({
-                            sakId: props.sakId,
-                            klageId: åpenKlage.id,
-                        });
-                    } else {
-                        return Routes.klage.createURL({
-                            sakId: props.sakId,
-                            klageId: åpenKlage.id,
-                            steg: hentSisteVurderteSteg(åpenKlage),
-                        });
-                    }
-                }
+            case NyBehandling.KLAGE:
                 return Routes.klageOpprett.createURL({ sakId: props.sakId });
-            }
         }
     };
     return (
         <div className={styles.nyBehandlingVelgerContainer}>
-            <Button
-                variant="secondary"
-                onClick={(e) => {
-                    if (anchorEl) {
-                        setAnchorEl(undefined);
-                    } else {
-                        setAnchorEl(e.currentTarget);
-                    }
-                }}
-            >
+            <Button variant="secondary" onClick={(e) => setAnchorEl(anchorEl ? null : e.currentTarget)}>
                 {props.intl.formatMessage({ id: 'popover.default' })}
-                {anchorEl !== null ? <Chevron type="ned" /> : <Chevron type="opp" />}
+                {anchorEl === null ? <Chevron type="ned" /> : <Chevron type="opp" />}
             </Button>
             <Popover
-                ankerEl={anchorEl}
-                onRequestClose={() => setAnchorEl(undefined)}
-                orientering={PopoverOrientering.Under}
-                utenPil
+                arrow={false}
+                placement="bottom"
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                open={anchorEl !== null}
             >
                 <div className={styles.popoverOptionsContainer}>
                     <LinkAsButton

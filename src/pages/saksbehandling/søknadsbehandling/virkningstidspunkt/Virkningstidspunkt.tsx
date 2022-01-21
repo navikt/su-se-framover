@@ -233,6 +233,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                         {...field}
                                         label={formatMessage('begrunnelse.label')}
                                         error={fieldState.error?.message}
+                                        description={formatMessage('input.begrunnelse.description')}
                                     />
                                 )}
                             />

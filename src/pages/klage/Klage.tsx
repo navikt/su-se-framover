@@ -7,8 +7,14 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { KlageSteg } from '~pages/saksbehandling/types';
 import { Sak } from '~types/Sak';
-import { getPartialFramdriftsindikatorLinjeInfo } from '~utils/klage/klageUtils';
+import {
+    erKlageVilkårsvurdertUtfyltEllerSenere,
+    getDefaultFramdriftsindikatorLinjer,
+    getFramdriftsindikatorLinjer,
+    getPartialFramdriftsindikatorLinjeInfo,
+} from '~utils/klage/klageUtils';
 
+import AvvistKlage from './fritekstForAvvistKlage/AvvistKlage';
 import messages from './klage-nb';
 import styles from './klage.module.less';
 import SendKlageTilAttestering from './sendKlageTilAttestering/SendKlageTilAttestering';
@@ -24,18 +30,25 @@ const Klage = (props: { sak: Sak }) => {
         return <div>{formatMessage('feil.fantIkkeKlage')}</div>;
     }
 
-    const linjer = Object.values(KlageSteg).map((verdi) => {
-        const partialLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(verdi, klage);
-        return {
-            id: verdi,
-            status: partialLinjeInfo.status,
-            label: formatMessage(`framdriftsindikator.${verdi}`),
-            url: Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: verdi }),
-            erKlikkbar: partialLinjeInfo.erKlikkbar,
-        };
-    });
+    const lagFramdriftsindikatorLinjer = () => {
+        if (erKlageVilkårsvurdertUtfyltEllerSenere(klage)) {
+            return getFramdriftsindikatorLinjer({
+                sakId: props.sak.id,
+                klage: klage,
+                formatMessage: formatMessage,
+            });
+        }
 
-    const pathsForFramdriftsindikator = linjer
+        const formkravLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(KlageSteg.Formkrav, klage);
+        return getDefaultFramdriftsindikatorLinjer({
+            sakId: props.sak.id,
+            klageId: klage.id,
+            formkravLinjeInfo: { status: formkravLinjeInfo.status, erKlikkbar: formkravLinjeInfo.erKlikkbar },
+            formatMessage: formatMessage,
+        });
+    };
+
+    const pathsForFramdriftsindikator = lagFramdriftsindikatorLinjer()
         .filter(
             (l) =>
                 l.url !==
@@ -56,7 +69,7 @@ const Klage = (props: { sak: Sak }) => {
                     </Heading>
                     <div className={styles.klageContainerMedFramdriftsindikator}>
                         <Route path={pathsForFramdriftsindikator}>
-                            <Framdriftsindikator aktivId={urlParams.steg} elementer={linjer} />
+                            <Framdriftsindikator aktivId={urlParams.steg} elementer={lagFramdriftsindikatorLinjer()} />
                         </Route>
 
                         <Route
@@ -76,6 +89,15 @@ const Klage = (props: { sak: Sak }) => {
                             })}
                         >
                             <VurderingAvKlage sakId={props.sak.id} klage={klage} />
+                        </Route>
+                        <Route
+                            path={Routes.klage.createURL({
+                                sakId: props.sak.id,
+                                klageId: klage.id,
+                                steg: KlageSteg.Avvisning,
+                            })}
+                        >
+                            <AvvistKlage sakId={props.sak.id} klage={klage} />
                         </Route>
                     </div>
 

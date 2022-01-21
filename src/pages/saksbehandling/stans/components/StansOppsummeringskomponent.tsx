@@ -6,9 +6,9 @@ import { ApiError } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Beregningblokk from '~components/revurdering/oppsummering/beregningblokk/Beregningblokk';
 import StansOppsummeringsblokk from '~components/revurdering/oppsummering/stansoppsummeringsblokk/stans/stansoppsummeringsblokk';
-import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
+import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import { Revurdering } from '~types/Revurdering';
 
 import messages from '../stans-nb';

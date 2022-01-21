@@ -4,8 +4,8 @@ import * as React from 'react';
 import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
 import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
 import simulertUtbetaling from '~components/beregningOgSimulering/simulering/simulering-nb';
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
 import { useI18n } from '~lib/i18n';
+import { Oppsummeringsfelt } from '~pages/søknad/steg/oppsummering/components/Oppsummeringsfelt';
 import { InformasjonsRevurderingStatus, Revurdering } from '~types/Revurdering';
 import { formatPeriode } from '~utils/date/dateUtils';
 import { formatCurrency } from '~utils/format/formatUtils';
@@ -98,7 +98,7 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
                         {formatMessage('heading.avkorting')}
                     </Heading>
                     <div className={styles.avkortingContent}>
-                        <OppsummeringPar
+                        <Oppsummeringsfelt
                             label={formatMessage('avkorting.total')}
                             verdi={formatCurrency(simuleringForAvkortingsvarsel.totalBruttoYtelse)}
                         />

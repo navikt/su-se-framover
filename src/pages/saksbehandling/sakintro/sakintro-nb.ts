@@ -9,6 +9,7 @@ export default {
     'behandling.avsluttBehandling': 'Avslutt behandling',
 
     'klage.attester': 'Attester',
+    'klage.avvist': 'Avvist',
     'klage.fortsettBehandling': 'Fortsett behandling',
     'klage.klager': 'Klager',
     'klage.oversendt': 'Oversendt klage',
@@ -36,6 +37,7 @@ export default {
     'knapp.stoppUtbetaling': 'Stopp utbetaling',
 
     'link.dokumenter': 'Brev sendt fra SU',
+    'link.kontrollsamtale': 'Kontrollsamtale',
 
     'revurdering.fortsett': 'Fortsett revurdering',
     'revurdering.oppsummering': 'Se oppsummering',

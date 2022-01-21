@@ -201,3 +201,11 @@ export const createSakIntroLocation = (
         state: { notification: message },
     };
 };
+
+//---------------Kontrollsamtale------------------------------
+export const kontrollsamtale: Route<{
+    sakId: string;
+}> = {
+    path: '/saksoversikt/:sakId/kontrollsamtale/',
+    createURL: (args) => `/saksoversikt/${args.sakId}/kontrollsamtale/`,
+};

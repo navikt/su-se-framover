@@ -16,16 +16,14 @@ export const Vurderingknapper = (props: {
 
     return (
         <div className={styles.buttonContainer}>
-            <div className={styles.navigationButtonContainer}>
-                <Button variant="secondary" onClick={props.onTilbakeClick} type="button">
-                    {intl.formatMessage({ id: 'knapp.tilbake' })}
-                </Button>
-                <Button onClick={props.onNesteClick} type={props.onNesteClick ? 'button' : 'submit'}>
-                    {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
-                </Button>
-            </div>
             <Button variant="secondary" onClick={props.onLagreOgFortsettSenereClick} type="button">
                 {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
+            </Button>
+            <Button onClick={props.onNesteClick} type={props.onNesteClick ? 'button' : 'submit'}>
+                {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
+            </Button>
+            <Button variant="secondary" onClick={props.onTilbakeClick} type="button">
+                {intl.formatMessage({ id: 'knapp.tilbake' })}
             </Button>
         </div>
     );

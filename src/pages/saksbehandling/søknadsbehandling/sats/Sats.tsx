@@ -350,6 +350,7 @@ const SatsForm = (props: SatsProps) => {
                                         {...field}
                                         value={field.value ?? ''}
                                         error={fieldState.error?.message}
+                                        description={props.formatMessage('input.begrunnelse.description')}
                                     />
                                 )}
                             />

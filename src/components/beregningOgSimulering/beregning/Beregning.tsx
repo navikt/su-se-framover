@@ -295,6 +295,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 onChange={formik.handleChange}
                                 value={formik.values.begrunnelse ?? ''}
                                 error={formik.errors.begrunnelse}
+                                description={intl.formatMessage({ id: 'input.begrunnelse.description' })}
                             />
                         </div>
 

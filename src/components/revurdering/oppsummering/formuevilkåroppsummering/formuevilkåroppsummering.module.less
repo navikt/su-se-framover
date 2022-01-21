@@ -10,9 +10,34 @@
     }
 }
 
-.formueVerdiTittel {
-    margin-left: 50%;
+.oppsummeringstriple {
+    p {
+        flex: 0.5;
+        text-align: end;
+    }
+
+    > p:first-child {
+        flex: 1;
+        text-align: left;
+    }
+}
+
+.titler {
+    display: flex;
     margin-bottom: @spacing-xxs;
+
+    :last-child {
+        margin-left: @spacing-xxs;
+        width: 5rem;
+        border-left: 1px solid @navBorder;
+        padding-left: @spacing-xxs;
+    }
+
+    :first-child {
+        margin-left: auto;
+        width: fit-content;
+        border-left: none;
+    }
 }
 
 .formueInfo {

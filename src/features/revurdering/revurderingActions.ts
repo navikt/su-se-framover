@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
-import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
+import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -153,7 +153,7 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 );
 
 export const beregnOgSimuler = createAsyncThunk<
-    { revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[] },
+    { revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[]; varselmeldinger: ErrorMessage[] },
     { sakId: string; revurderingId: string; periode: Periode<string> },
     { rejectValue: ApiError }
 >('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode }, thunkApi) => {
@@ -218,7 +218,7 @@ export const iverksettRevurdering = createAsyncThunk<
 
 export const underkjennRevurdering = createAsyncThunk<
     UnderkjentRevurdering,
-    { sakId: string; revurderingId: string; grunn: UnderkjennRevurderingGrunn; kommentar?: string },
+    { sakId: string; revurderingId: string; grunn: UnderkjennelseGrunn; kommentar?: string },
     { rejectValue: ApiError }
 >('revurdering/underkjenn', async ({ sakId, revurderingId, grunn, kommentar }, thunkApi) => {
     const res = await revurderingApi.underkjenn(sakId, revurderingId, grunn, kommentar);

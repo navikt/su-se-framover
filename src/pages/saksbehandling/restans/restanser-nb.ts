@@ -1,16 +1,27 @@
+import { RestansType, RestansStatus } from '~types/Restans';
+
+const restansTypeMessages: { [key in RestansType]: string } = {
+    [RestansType.SØKNADSBEHANDLING]: 'Søknadsbehandling',
+    [RestansType.REVURDERING]: 'Revurdering',
+    [RestansType.KLAGE]: 'Klage',
+};
+
+const restansStatus: { [key in RestansStatus]: string } = {
+    [RestansStatus.NY_SØKNAD]: 'Ny søknad',
+    [RestansStatus.UNDER_BEHANDLING]: 'Under behandling',
+    [RestansStatus.TIL_ATTESTERING]: 'Til attestering',
+    [RestansStatus.UNDERKJENT]: 'Underkjent',
+};
+
 export default {
     'restans.ingenRestanser': 'Ingen restanser',
     'restans.behandling.startet': 'Behandling startet',
 
     'restans.typeBehandling': 'Type behandling',
-    'restans.typeBehandling.REVURDERING': 'Revurdering',
-    'restans.typeBehandling.SØKNADSBEHANDLING': 'Søknadsbehandling',
+    ...restansTypeMessages,
 
     'restans.status': 'Status',
-    'restans.status.NY_SØKNAD': 'Ny søknad',
-    'restans.status.UNDERKJENT': 'Underkjent',
-    'restans.status.TIL_ATTESTERING': 'Til attestering',
-    'restans.status.UNDER_BEHANDLING': 'Under behandling',
+    ...restansStatus,
 
     'åpne.behandlinger.overskrift': 'Åpne behandlinger',
 

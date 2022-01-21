@@ -1,7 +1,6 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
 export enum FeatureToggle {
-    Revurdering = 'supstonad.ufore.revurdering',
     Hotjar = 'supstonad.ufore.hotjar',
     Klage = 'supstonad.ufore.klage',
 }

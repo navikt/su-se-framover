@@ -11,7 +11,6 @@ import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
-import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -27,7 +26,7 @@ import SkjemaelementFeilmelding from '../../../components/formElements/Skjemaele
 import { RevurderingSteg } from '../types';
 
 import Formue from './formue/Formue';
-import messages, { stegmessages } from './revurdering-nb';
+import sharedMessages, { stegmessages } from './revurdering-nb';
 import styles from './revurdering.module.less';
 
 const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
@@ -42,7 +41,7 @@ const RevurderingPage = (props: {
     utbetalinger: Utbetalingsperiode[];
     informasjonsRevurderinger: InformasjonsRevurdering[];
 }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages, ...stegmessages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...stegmessages } });
 
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 

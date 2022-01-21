@@ -21,5 +21,6 @@ export enum RevurderingSteg {
 export enum KlageSteg {
     Formkrav = 'formkrav',
     Vurdering = 'vurdering',
+    Avvisning = 'avvisning',
     Oppsummering = 'oppsummering',
 }

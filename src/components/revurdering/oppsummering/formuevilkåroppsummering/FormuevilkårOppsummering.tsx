@@ -1,8 +1,7 @@
-import { BodyShort, Label } from '@navikt/ds-react';
-import classNames from 'classnames';
+import { BodyShort } from '@navikt/ds-react';
 import React from 'react';
 
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
+import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~lib/i18n';
 import { FormueVilkår, VurderingsperiodeFormue } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import * as DateUtils from '~utils/date/dateUtils';
@@ -22,6 +21,8 @@ const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår }) =>
 
 export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFormue }) => {
     const { intl } = useI18n({ messages });
+    const søker = vurdering.grunnlag.søkersFormue;
+    const eps = vurdering.grunnlag.epsFormue;
 
     return (
         <div className={styles.oppsummeringsContainer}>
@@ -30,58 +31,64 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
                 label={intl.formatMessage({ id: 'gjeldendeformue.gjeldendePeriode' })}
                 verdi={DateUtils.formatPeriode(vurdering.periode)}
             />
-            <BodyShort className={styles.formueVerdiTittel}>
-                {intl.formatMessage({ id: 'gjeldendeformue.søker' })}
-            </BodyShort>
-            <OppsummeringPar
-                label={intl.formatMessage({ id: 'gjeldendeformue.verdiBolig' })}
-                verdi={vurdering.grunnlag.søkersFormue.verdiIkkePrimærbolig}
-            />
-            <OppsummeringPar
-                label={intl.formatMessage({ id: 'gjeldendeformue.verdiEiendom' })}
-                verdi={vurdering.grunnlag.søkersFormue.verdiEiendommer}
-            />
-            <OppsummeringPar
-                label={intl.formatMessage({ id: 'gjeldendeformue.verdiKjøretøy' })}
-                verdi={vurdering.grunnlag.søkersFormue.verdiKjøretøy}
-            />
-            <OppsummeringPar
-                label={intl.formatMessage({ id: 'gjeldendeformue.innskudd' })}
-                verdi={vurdering.grunnlag.søkersFormue.innskudd}
-            />
-            <OppsummeringPar
-                label={intl.formatMessage({ id: 'gjeldendeformue.verdiPapir' })}
-                verdi={vurdering.grunnlag.søkersFormue.verdipapir}
-            />
-            <OppsummeringPar
-                label={intl.formatMessage({ id: 'gjeldendeformue.stårNoenIGjeldTilDeg' })}
-                verdi={vurdering.grunnlag.søkersFormue.pengerSkyldt}
-            />
-            <OppsummeringPar
-                label={intl.formatMessage({ id: 'gjeldendeformue.kontanter' })}
-                verdi={vurdering.grunnlag.søkersFormue.kontanter}
-            />
-            <OppsummeringPar
-                label={intl.formatMessage({ id: 'gjeldendeformue.depositum' })}
-                verdi={vurdering.grunnlag.søkersFormue.depositumskonto}
-            />
-            {vurdering.grunnlag.epsFormue && (
-                <div className={styles.epsContainer}>
+            <div className={styles.titler}>
+                <BodyShort className={styles.formueVerdiTittel}>
+                    {intl.formatMessage({ id: 'gjeldendeformue.søker' })}
+                </BodyShort>
+                {eps && (
                     <BodyShort className={styles.formueVerdiTittel}>
                         {intl.formatMessage({ id: 'gjeldendeformue.eps' })}
                     </BodyShort>
-                    <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
-                        <Label>{vurdering.grunnlag.epsFormue.verdiIkkePrimærbolig}</Label>
-                        <Label>{vurdering.grunnlag.epsFormue.verdiEiendommer}</Label>
-                        <Label>{vurdering.grunnlag.epsFormue.verdiKjøretøy}</Label>
-                        <Label>{vurdering.grunnlag.epsFormue.innskudd}</Label>
-                        <Label>{vurdering.grunnlag.epsFormue.verdipapir}</Label>
-                        <Label>{vurdering.grunnlag.epsFormue.pengerSkyldt}</Label>
-                        <Label>{vurdering.grunnlag.epsFormue.kontanter}</Label>
-                        <Label>{vurdering.grunnlag.epsFormue.depositumskonto}</Label>
-                    </div>
-                </div>
-            )}
+                )}
+            </div>
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={intl.formatMessage({ id: 'gjeldendeformue.verdiBolig' })}
+                verdi={søker.verdiIkkePrimærbolig}
+                triple={eps?.verdiIkkePrimærbolig}
+            />
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={intl.formatMessage({ id: 'gjeldendeformue.verdiEiendom' })}
+                verdi={søker.verdiEiendommer}
+                triple={eps?.verdiEiendommer}
+            />
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={intl.formatMessage({ id: 'gjeldendeformue.verdiKjøretøy' })}
+                verdi={søker.verdiKjøretøy}
+                triple={eps?.verdiKjøretøy}
+            />
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={intl.formatMessage({ id: 'gjeldendeformue.innskudd' })}
+                verdi={søker.innskudd}
+                triple={eps?.innskudd}
+            />
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={intl.formatMessage({ id: 'gjeldendeformue.verdiPapir' })}
+                verdi={søker.verdipapir}
+                triple={eps?.verdipapir}
+            />
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={intl.formatMessage({ id: 'gjeldendeformue.stårNoenIGjeldTilDeg' })}
+                verdi={søker.pengerSkyldt}
+                triple={eps?.pengerSkyldt}
+            />
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={intl.formatMessage({ id: 'gjeldendeformue.kontanter' })}
+                verdi={søker.kontanter}
+                triple={eps?.kontanter}
+            />
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={intl.formatMessage({ id: 'gjeldendeformue.depositum' })}
+                verdi={søker.depositumskonto}
+                triple={eps?.depositumskonto}
+            />
         </div>
     );
 };

@@ -477,6 +477,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                         {...field}
                                         error={fieldState.error?.message}
                                         value={field.value ?? ''}
+                                        description={formatMessage('input.begrunnelse.description')}
                                     />
                                 )}
                             />

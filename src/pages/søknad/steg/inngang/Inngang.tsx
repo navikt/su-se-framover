@@ -10,6 +10,7 @@ import { ErrorCode } from '~api/apiClient';
 import * as sakApi from '~api/sakApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
@@ -160,10 +161,13 @@ const index = (props: { nesteUrl: string }) => {
                         checked={erBekreftet}
                         label={formatMessage('bekreftelsesboks.tekst.p2')}
                         onChange={() => setErBekreftet(!erBekreftet)}
-                        error={hasSubmitted && !erBekreftet ? formatMessage('feil.påkrevdFelt') : undefined}
+                        error={hasSubmitted && !erBekreftet}
                     >
                         {formatMessage('bekreftelsesboks.tekst.p1')}
                     </ConfirmationPanel>
+                    {hasSubmitted && !erBekreftet && (
+                        <SkjemaelementFeilmelding>{formatMessage('feil.påkrevdFelt')}</SkjemaelementFeilmelding>
+                    )}
                 </div>
             </div>
         );

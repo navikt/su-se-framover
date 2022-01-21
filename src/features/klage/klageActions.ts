@@ -102,6 +102,22 @@ export const bekreftVurderinger = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreAvvistFritekst = createAsyncThunk<
+    Klage,
+    { sakId: string; klageId: string; fritekstTilBrev: string },
+    { rejectValue: ApiError }
+>('klage/lagreAvvistFritekst', async ({ sakId, klageId, fritekstTilBrev }, thunkApi) => {
+    const res = await klageApi.lagreAvvistFritekst({
+        sakId,
+        klageId,
+        fritekstTilBrev,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const sendTilAttestering = createAsyncThunk<
     Klage,
     { sakId: string; klageId: string },
@@ -121,6 +137,20 @@ export const oversend = createAsyncThunk<Klage, { sakId: string; klageId: string
     'klage/oversend',
     async ({ sakId, klageId }, thunkApi) => {
         const res = await klageApi.oversend({
+            sakId,
+            klageId,
+        });
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
+
+export const iverksattAvvist = createAsyncThunk<Klage, { sakId: string; klageId: string }, { rejectValue: ApiError }>(
+    'klage/avvis',
+    async ({ sakId, klageId }, thunkApi) => {
+        const res = await klageApi.iverksettAvvistKlage({
             sakId,
             klageId,
         });
