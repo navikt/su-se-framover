@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, LinkPanel, Loader } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Loader, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import Chevron from 'nav-frontend-chevron';
-import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -134,7 +133,7 @@ const Sakintro = (props: { sak: Sak }) => {
 };
 
 const NyBehandlingVelger = (props: { sakId: string; klageToggle: boolean; intl: IntlShape }) => {
-    const [anchorEl, setAnchorEl] = useState<HTMLElement>();
+    const [anchorEl, setAnchorEl] = useState<Nullable<HTMLElement>>(null);
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {
@@ -146,24 +145,16 @@ const NyBehandlingVelger = (props: { sakId: string; klageToggle: boolean; intl: 
     };
     return (
         <div className={styles.nyBehandlingVelgerContainer}>
-            <Button
-                variant="secondary"
-                onClick={(e) => {
-                    if (anchorEl) {
-                        setAnchorEl(undefined);
-                    } else {
-                        setAnchorEl(e.currentTarget);
-                    }
-                }}
-            >
+            <Button variant="secondary" onClick={(e) => setAnchorEl(anchorEl ? null : e.currentTarget)}>
                 {props.intl.formatMessage({ id: 'popover.default' })}
-                {anchorEl !== null ? <Chevron type="ned" /> : <Chevron type="opp" />}
+                {anchorEl === null ? <Chevron type="ned" /> : <Chevron type="opp" />}
             </Button>
             <Popover
-                ankerEl={anchorEl}
-                onRequestClose={() => setAnchorEl(undefined)}
-                orientering={PopoverOrientering.Under}
-                utenPil
+                arrow={false}
+                placement="bottom"
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                open={anchorEl !== null}
             >
                 <div className={styles.popoverOptionsContainer}>
                     <LinkAsButton
