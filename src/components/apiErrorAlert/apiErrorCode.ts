@@ -60,6 +60,7 @@ export enum ApiErrorCode {
     IKKE_TILGANG_TIL_PERSON = 'ikke_tilgang_til_person',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
     IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
+    KAN_IKKE_AVVISE_KLAGE_SOM_HAR_VÆRT_OVERSENDT = 'kan_ikke_avvise_klage_som_har_vært_oversendt',
     KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER = 'kan_ikke_gjenoppta_opphørte_utbetalinger',
     KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
     KAN_IKKE_LUKKE_EN_ALLEREDE_LUKKET_SØKNADSBEHANDLING = 'kan_ikke_lukke_en_allerede_lukket_søknadsbehandling',

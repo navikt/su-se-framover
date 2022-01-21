@@ -79,6 +79,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
         'Iverksetting av stans som fører til feilutbetaling støttes ikke',
+    [ApiErrorCode.KAN_IKKE_AVVISE_KLAGE_SOM_HAR_VÆRT_OVERSENDT]: 'Kan ikke avvise en klage som har vært oversendt',
     [ApiErrorCode.KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER]:
         'Kan ikke opprette revurdering for gjenopptak av ytelse, siste vedtak er ikke en stans',
     [ApiErrorCode.KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS]: 'Kan ikke ha fradrag knyttet til EPS når bruker ikke har EPS',
