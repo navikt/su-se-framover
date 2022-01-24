@@ -112,8 +112,8 @@ export const revurderingstegrekkefølge = [
     RevurderingSteg.Uførhet,
     RevurderingSteg.Bosituasjon,
     RevurderingSteg.Formue,
-    RevurderingSteg.EndringAvFradrag,
     RevurderingSteg.Utenlandsopphold,
+    RevurderingSteg.EndringAvFradrag,
 ];
 
 export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) => {

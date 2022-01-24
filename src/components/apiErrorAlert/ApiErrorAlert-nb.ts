@@ -142,8 +142,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.REVURDERINGEN_ER_ALLEREDE_AVSLUTTET]: 'Revurderingen er allerede avsluttet',
     [ApiErrorCode.REVURDERINGEN_ER_IVERKSATT]: 'Revurderingen er iverksatt',
     [ApiErrorCode.REVURDERINGER_ER_TIL_ATTESTERING]: 'Revurderingen er til attestering',
-    [ApiErrorCode.UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE]:
-        'Saken inneholder en utestående avkorting som enten må håndteres i ny stønadsperiode eller revurderes i sin helhet. Håndter i ny periode eller utvid revurderingsperioden til å inkludere perioden for avkortingen.',
     [ApiErrorCode.REVURDERINGSÅRSAK_UGYLDIG_BEGRUNNELSE]: 'Ugyldig begrunnelse for revurdering',
     [ApiErrorCode.REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK]: 'Ugyldig årsak for revurdering',
     [ApiErrorCode.REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV]:
@@ -202,6 +200,10 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'Fradrag mangler valuta',
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIVT_BELØP]: 'Fradrag har negativt utenlandsbeløp',
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIV_KURS]: 'Fradrag har negativ kurs',
+    [ApiErrorCode.UTENLANDSOPPHOLD_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]:
+        'Utenlandsopphold som fører til opphør må revurderes',
+    [ApiErrorCode.UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE]:
+        'Saken inneholder en utestående avkorting som enten må håndteres i ny stønadsperiode eller revurderes i sin helhet. Håndter i ny periode eller utvid revurderingsperioden til å inkludere perioden for avkortingen.',
     [ApiErrorCode.VERDIER_KAN_IKKE_VÆRE_NEGATIV]: 'Kan ikke sende inn negative verdier',
     [ApiErrorCode.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]:
         'Vurdering av vilkår må ha samme resultat for hele revurderingsperioden',
