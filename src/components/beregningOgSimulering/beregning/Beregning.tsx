@@ -117,53 +117,45 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         (values) => eqBeregningFormData.equals(values, initialFormData)
     );
 
-    const lagreFradragsgrunnlag = (values: FormData) => {
-        lagreFradrag(
-            {
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                fradrag: values.fradrag.map((f) => ({
-                    //valdiering sikrer at feltet ikke er null
-                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                    periode:
-                        f.periode?.fraOgMed && f.periode.tilOgMed
-                            ? {
-                                  fraOgMed: formatISO(f.periode.fraOgMed, { representation: 'date' }),
-                                  tilOgMed: formatISO(f.periode.tilOgMed, { representation: 'date' }),
-                              }
-                            : {
-                                  fraOgMed: formatISO(stønadsperiode.fom, { representation: 'date' }),
-                                  tilOgMed: formatISO(stønadsperiode.tom, { representation: 'date' }),
-                              },
-
-                    beløp: parseInt(f.beløp!, 10),
-                    type: f.type!,
-                    utenlandskInntekt: f.fraUtland
+    const lagreFradragsgrunnlag = async (values: FormData) =>
+        lagreFradrag({
+            sakId: props.sakId,
+            behandlingId: props.behandling.id,
+            fradrag: values.fradrag.map((f) => ({
+                //valdiering sikrer at feltet ikke er null
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                periode:
+                    f.periode?.fraOgMed && f.periode.tilOgMed
                         ? {
-                              beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
-                              valuta: f.utenlandskInntekt.valuta,
-                              kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
+                              fraOgMed: formatISO(f.periode.fraOgMed, { representation: 'date' }),
+                              tilOgMed: formatISO(f.periode.tilOgMed, { representation: 'date' }),
                           }
-                        : null,
-                    tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
-                    /* eslint-enable @typescript-eslint/no-non-null-assertion */
-                })),
-            },
-            (b) => {
-                formik.resetForm({
-                    values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
-                });
-            }
-        );
-    };
+                        : {
+                              fraOgMed: formatISO(stønadsperiode.fom, { representation: 'date' }),
+                              tilOgMed: formatISO(stønadsperiode.tom, { representation: 'date' }),
+                          },
 
-    const lagreFradragOgBeregn = (values: FormData, onSuccess: (behandling: Behandling) => void) => {
+                beløp: parseInt(f.beløp!, 10),
+                type: f.type!,
+                utenlandskInntekt: f.fraUtland
+                    ? {
+                          beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
+                          valuta: f.utenlandskInntekt.valuta,
+                          kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
+                      }
+                    : null,
+                tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
+                /* eslint-enable @typescript-eslint/no-non-null-assertion */
+            })),
+        });
+
+    const lagreFradragOgBeregn = async (values: FormData, onSuccess: (behandling: Behandling) => void) => {
         if (eqBeregningFormData.equals(values, initialFormData)) {
             clearDraft();
         }
 
         if (!getEq(eqFradragFormData).equals(values.fradrag, initialFormData.fradrag)) {
-            lagreFradragsgrunnlag(values);
+            await lagreFradragsgrunnlag(values);
         }
 
         beregn(
