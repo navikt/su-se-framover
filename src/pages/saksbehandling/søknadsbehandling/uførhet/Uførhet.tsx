@@ -98,12 +98,12 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const { uføre } = props.behandling.grunnlagsdataOgVilkårsvurderinger;
 
     const initialFormData = useMemo<FormData>(() => {
-        const uføreGrunnlag = uføre?.vurderinger[0].grunnlag;
+        const uføreVurdering = uføre?.vurderinger[0];
         return {
             status: uføre?.resultat ?? null,
-            uføregrad: uføreGrunnlag?.uføregrad?.toString() ?? null,
-            forventetInntekt: uføreGrunnlag?.forventetInntekt?.toString() ?? null,
-            begrunnelse: uføreGrunnlag?.begrunnelse || null,
+            uføregrad: uføreVurdering?.grunnlag?.uføregrad.toString() ?? null,
+            forventetInntekt: uføreVurdering?.grunnlag?.forventetInntekt?.toString() ?? null,
+            begrunnelse: uføreVurdering?.begrunnelse ?? null,
         };
     }, [uføre]);
 
