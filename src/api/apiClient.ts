@@ -1,7 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
 import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
-
 import Config from '~config';
 
 export enum ErrorCode {

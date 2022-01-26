@@ -19,9 +19,12 @@ const opprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: str
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_8]: '§ 8',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_9]: '§ 9',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_10]: '§ 10',
+    [OpprettholdVedtakHjemmel.SU_PARAGRAF_11]: '§ 11',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_12]: '§ 12',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_13]: '§ 13',
+    [OpprettholdVedtakHjemmel.SU_PARAGRAF_17]: '§ 17',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_18]: '§ 18',
+    [OpprettholdVedtakHjemmel.SU_PARAGRAF_21]: '§ 21',
 };
 
 const klageVurderingTypeMessages: { [key in KlageVurderingType]: string } = {
