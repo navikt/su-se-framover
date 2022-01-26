@@ -10,21 +10,23 @@ import { useUserContext } from '~context/userContext';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Klage, Utfall } from '~types/Klage';
+import { Klage, KlageStatus, Utfall } from '~types/Klage';
+import { Sak } from '~types/Sak';
 import { formatDate } from '~utils/date/dateUtils';
 import {
     hentSisteVedtattUtfall,
     erKlageIverksattAvvist,
     erKlageOversendt,
-    erKlageTilAttestering,
     hentSisteVurderteSteg,
+    klageErFerdigBehandlet,
+    erKlageTilAttestering,
 } from '~utils/klage/klageUtils';
 
 import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
 
-const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
+const KlageLister = (props: { sak: Sak; klager: Klage[] }) => {
     const { formatMessage } = useI18n({ messages });
     const user = useUserContext();
 
@@ -54,8 +56,22 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                         );
                     },
                     knapper: (klage) => {
-                        if (erKlageOversendt(klage) || erKlageIverksattAvvist(klage)) {
-                            return <></>;
+                        if (klageErFerdigBehandlet(klage)) {
+                            return (
+                                <LinkAsButton
+                                    variant="secondary"
+                                    size="small"
+                                    href={Routes.vedtaksoppsummering.createURL({
+                                        sakId: props.sak.id,
+                                        vedtakId:
+                                            klage.status === KlageStatus.OVERSENDT
+                                                ? klage.id
+                                                : props.sak.vedtak.find((v) => v.id === klage.id)?.id ?? '',
+                                    })}
+                                >
+                                    {formatMessage('klage.seOppsummering')}
+                                </LinkAsButton>
+                            );
                         }
                         if (erKlageTilAttestering(klage)) {
                             return user.isAttestant && user.navIdent !== klage.saksbehandler ? (
@@ -63,7 +79,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                                     variant="secondary"
                                     size="small"
                                     href={Routes.attesterKlage.createURL({
-                                        sakId: props.sakId,
+                                        sakId: props.sak.id,
                                         klageId: klage.id,
                                     })}
                                 >
@@ -91,7 +107,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[] }) => {
                                 variant="secondary"
                                 size="small"
                                 href={Routes.klage.createURL({
-                                    sakId: props.sakId,
+                                    sakId: props.sak.id,
                                     klageId: klage.id,
                                     steg: hentSisteVurderteSteg(klage),
                                 })}
