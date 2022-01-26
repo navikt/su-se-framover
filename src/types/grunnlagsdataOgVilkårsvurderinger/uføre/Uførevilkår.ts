@@ -1,3 +1,4 @@
+import { Nullable } from '~lib/types';
 import { Periode } from '~types/Periode';
 
 import { Uføregrunnlag } from './Uføregrunnlag';
@@ -14,7 +15,7 @@ export interface VurderingsperiodeUføre {
     resultat: UføreResultat;
     grunnlag?: Uføregrunnlag;
     periode: Periode<string>;
-    begrunnelse?: string;
+    begrunnelse: Nullable<string>;
 }
 
 export enum UføreResultat {
