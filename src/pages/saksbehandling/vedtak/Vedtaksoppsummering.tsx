@@ -6,11 +6,10 @@ import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsum
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
-import { klageErFerdigBehandlet } from '~utils/klage/klageUtils';
 
 import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
 import RevurderingsoppsummeringWithSnapshot from './revurderingsvedtakWithSnapshot/RevurderingsoppsummeringWithSnapshot';
-import { hentInformasjonKnyttetTilVedtak } from './utils';
+import { hentInformasjonKnyttetTilVedtak, hentKlagevedtakFraKlageinstans } from './utils';
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
 
@@ -23,18 +22,10 @@ const Vedtaksoppsummering = (props: Props) => {
     const { intl } = useI18n({ messages });
     const history = useHistory();
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
-    if (!vedtak) {
-        // Klage kan ha ett vedtak fra klageinstans
-        const klageMedKlageinstansvedtak = props.sak.klager.find((k) => k.id === urlParams.vedtakId);
-        if (klageMedKlageinstansvedtak && klageErFerdigBehandlet(klageMedKlageinstansvedtak)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const vedtakSomKlagesPå = props.sak.vedtak.find((v) => v.id === klageMedKlageinstansvedtak.vedtakId)!;
-            return <Klagevedtaksoppsummering vedtak={vedtakSomKlagesPå} klage={klageMedKlageinstansvedtak} />;
-        }
-        return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
-    }
 
-    const vedtaksinformasjon = hentInformasjonKnyttetTilVedtak(props.sak, vedtak);
+    const vedtaksinformasjon = vedtak
+        ? hentInformasjonKnyttetTilVedtak(props.sak, vedtak)
+        : hentKlagevedtakFraKlageinstans(props.sak, urlParams.vedtakId);
 
     const renderOppsummering = () => {
         switch (vedtaksinformasjon?.type) {
@@ -44,7 +35,7 @@ const Vedtaksoppsummering = (props: Props) => {
                         revurdering={vedtaksinformasjon.revurdering}
                         intl={intl}
                         sakId={props.sak.id}
-                        vedtakId={vedtak.id}
+                        vedtakId={vedtaksinformasjon.vedtak.id}
                     />
                 );
             case 'søknadsbehandling':
@@ -52,18 +43,17 @@ const Vedtaksoppsummering = (props: Props) => {
                     <Søknadsbehandlingoppsummering
                         sak={props.sak}
                         behandling={vedtaksinformasjon.behandling}
-                        vedtakForBehandling={vedtak}
+                        vedtakForBehandling={vedtaksinformasjon.vedtak}
                         medBrevutkastknapp
                     />
                 );
             case 'klage':
-                return <Klagevedtaksoppsummering vedtak={vedtak} klage={vedtaksinformasjon.klage} />;
+                return <Klagevedtaksoppsummering vedtak={vedtaksinformasjon.vedtak} klage={vedtaksinformasjon.klage} />;
             default:
                 return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
         }
     };
 
-    console.log('ok');
     return (
         <div className={styles.container}>
             {renderOppsummering()}

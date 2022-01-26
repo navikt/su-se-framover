@@ -26,7 +26,7 @@ export const OppsummeringPar = ({
 }: Props) => {
     if (sorteres === OppsummeringsParSortering.Vertikalt) {
         return (
-            <div className={styles.oppsummeringspar2}>
+            <div className={classNames(styles.oppsummeringspar2, className)}>
                 <Label>{label}</Label>
                 <BodyShort>{verdi ?? ''}</BodyShort>
             </div>

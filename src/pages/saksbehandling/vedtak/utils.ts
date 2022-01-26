@@ -4,19 +4,23 @@ import { Klage } from '~types/Klage';
 import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
+import { erKlageFerdigBehandlet } from '~utils/klage/klageUtils';
 import { erRevurderingIverksatt } from '~utils/revurdering/revurderingUtils';
 
 interface Søknadsbehandlingsoppsummering {
     behandling: Behandling;
+    vedtak: Vedtak;
     type: 'søknadsbehandling';
 }
 
 interface Revurderingsoppsummering {
     revurdering: IverksattRevurdering;
+    vedtak: Vedtak;
     type: 'revurdering';
 }
 interface KlageOppsummering {
     klage: Klage;
+    vedtak: Vedtak;
     type: 'klage';
 }
 
@@ -26,6 +30,7 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
     if (søknadsbehandling) {
         return {
             behandling: søknadsbehandling,
+            vedtak: vedtak,
             type: 'søknadsbehandling',
         };
     }
@@ -34,6 +39,7 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
     if (revurdering && erRevurderingIverksatt(revurdering)) {
         return {
             revurdering: revurdering,
+            vedtak: vedtak,
             type: 'revurdering',
         };
     }
@@ -42,8 +48,24 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
     if (klage) {
         return {
             klage: klage,
+            vedtak: vedtak,
             type: 'klage',
         };
     }
+    return null;
+}
+
+export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string): Nullable<Oppsummering> {
+    const klageMedKlageinstansvedtak = sak.klager.find((k) => k.id === klageId);
+    if (klageMedKlageinstansvedtak && erKlageFerdigBehandlet(klageMedKlageinstansvedtak)) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const vedtakSomKlagesPå = sak.vedtak.find((v) => v.id === klageMedKlageinstansvedtak.vedtakId)!;
+        return {
+            klage: klageMedKlageinstansvedtak,
+            vedtak: vedtakSomKlagesPå,
+            type: 'klage',
+        };
+    }
+
     return null;
 }

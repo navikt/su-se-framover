@@ -21,6 +21,10 @@
         grid-template-columns: repeat(3, 1fr);
         margin-bottom: @spacing-xs;
         gap: @spacing-s;
+
+        .tekstMaxBredde {
+            max-width: 240px;
+        }
     }
 }
 
@@ -31,4 +35,16 @@
 
 .formkravBegrunnelse {
     white-space: pre-wrap;
+}
+
+.vurdering {
+    display: flex;
+    align-items: center;
+    gap: @spacing-xxs;
+
+    .tag {
+        height: 1.5rem;
+        width: 1.5rem;
+        color: var(--navds-semantic-color-feedback-info-icon);
+    }
 }

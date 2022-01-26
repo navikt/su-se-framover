@@ -18,7 +18,7 @@ import {
     erKlageIverksattAvvist,
     erKlageOversendt,
     hentSisteVurderteSteg,
-    klageErFerdigBehandlet,
+    erKlageFerdigBehandlet,
     erKlageTilAttestering,
 } from '~utils/klage/klageUtils';
 
@@ -56,7 +56,7 @@ const KlageLister = (props: { sak: Sak; klager: Klage[] }) => {
                         );
                     },
                     knapper: (klage) => {
-                        if (klageErFerdigBehandlet(klage)) {
+                        if (erKlageFerdigBehandlet(klage)) {
                             return (
                                 <LinkAsButton
                                     variant="secondary"
@@ -66,7 +66,7 @@ const KlageLister = (props: { sak: Sak; klager: Klage[] }) => {
                                         vedtakId:
                                             klage.status === KlageStatus.OVERSENDT
                                                 ? klage.id
-                                                : props.sak.vedtak.find((v) => v.id === klage.id)?.id ?? '',
+                                                : props.sak.vedtak.find((v) => v.behandlingId === klage.id)?.id ?? '',
                                     })}
                                 >
                                     {formatMessage('klage.seOppsummering')}

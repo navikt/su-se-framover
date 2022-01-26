@@ -134,6 +134,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
                     variant="secondary"
                     type="button"
                     onClick={() => seBrev({ sakId: props.sakId, klageId: klage.id })}
+                    className={styles.knapp}
                 >
                     {formatMessage('knapp.seBrev')}
                     {RemoteData.isPending(seBrevStatus) && <Loader />}
