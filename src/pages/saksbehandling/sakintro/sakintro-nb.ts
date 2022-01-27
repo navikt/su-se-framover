@@ -14,6 +14,7 @@ export default {
     'klage.klager': 'Klager',
     'klage.oversendt': 'Oversendt klage',
     'klage.åpenKlage': 'Åpen klage',
+    'klage.seOppsummering': 'Se oppsummering',
 
     'saksoversikt.tittel': 'Saksnummer',
 

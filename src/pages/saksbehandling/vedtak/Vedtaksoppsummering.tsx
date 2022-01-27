@@ -7,8 +7,9 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
+import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
 import RevurderingsoppsummeringWithSnapshot from './revurderingsvedtakWithSnapshot/RevurderingsoppsummeringWithSnapshot';
-import { hentInformasjonKnyttetTilVedtak } from './utils';
+import { hentInformasjonKnyttetTilVedtak, hentKlagevedtakFraKlageinstans } from './utils';
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
 
@@ -21,9 +22,10 @@ const Vedtaksoppsummering = (props: Props) => {
     const { intl } = useI18n({ messages });
     const history = useHistory();
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
-    if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
 
-    const vedtaksinformasjon = hentInformasjonKnyttetTilVedtak(props.sak, vedtak);
+    const vedtaksinformasjon = vedtak
+        ? hentInformasjonKnyttetTilVedtak(props.sak, vedtak)
+        : hentKlagevedtakFraKlageinstans(props.sak, urlParams.vedtakId);
 
     const renderOppsummering = () => {
         switch (vedtaksinformasjon?.type) {
@@ -33,7 +35,7 @@ const Vedtaksoppsummering = (props: Props) => {
                         revurdering={vedtaksinformasjon.revurdering}
                         intl={intl}
                         sakId={props.sak.id}
-                        vedtakId={vedtak.id}
+                        vedtakId={vedtaksinformasjon.vedtak.id}
                     />
                 );
             case 'søknadsbehandling':
@@ -41,11 +43,13 @@ const Vedtaksoppsummering = (props: Props) => {
                     <Søknadsbehandlingoppsummering
                         sak={props.sak}
                         behandling={vedtaksinformasjon.behandling}
-                        vedtakForBehandling={vedtak}
+                        vedtakForBehandling={vedtaksinformasjon.vedtak}
                         medBrevutkastknapp
                     />
                 );
-            default:
+            case 'klage':
+                return <Klagevedtaksoppsummering vedtak={vedtaksinformasjon.vedtak} klage={vedtaksinformasjon.klage} />;
+            case undefined:
                 return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
         }
     };

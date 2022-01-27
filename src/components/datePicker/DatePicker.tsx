@@ -1,4 +1,4 @@
-import { Label, TextField } from '@navikt/ds-react';
+import { HelpText, Label, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 import ReactDatePicker, { ReactDatePickerProps } from 'react-datepicker';
@@ -12,6 +12,7 @@ interface Props extends Omit<ReactDatePickerProps, 'selected' | 'value'> {
     label: string;
     value?: Date | null;
     feil?: string;
+    hjelpetekst?: string;
 }
 
 const CustomInput = React.forwardRef<HTMLInputElement, { label: string; error?: boolean }>(function C(props, ref) {
@@ -19,15 +20,18 @@ const CustomInput = React.forwardRef<HTMLInputElement, { label: string; error?: 
 });
 
 const DatePicker = (
-    { label, value, feil, id = uuid(), className, ...datePickerProps }: Props,
+    { label, value, feil, id = uuid(), className, hjelpetekst, ...datePickerProps }: Props,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ref: React.ForwardedRef<any>
 ) => {
     return (
         <div className={classNames(styles.container, className)}>
-            <Label as="label" htmlFor={id}>
-                {label}
-            </Label>
+            <div className={styles.label}>
+                <Label as="label" htmlFor={id}>
+                    {label}
+                </Label>
+                {hjelpetekst && <HelpText>{hjelpetekst}</HelpText>}
+            </div>
             <ReactDatePicker
                 id={id}
                 selected={value}
