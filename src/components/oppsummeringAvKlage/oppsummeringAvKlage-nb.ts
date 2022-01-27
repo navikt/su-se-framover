@@ -6,7 +6,7 @@ export default {
     'label.klageMottatt': 'Klage opprettet',
     'label.årsaksutfall': 'Utfall',
 
-    'label.vurdering.tittel': 'VURDERING',
+    'label.vurdering.tittel': 'vurdering',
     'label.vurdering.avvist': 'Klagen avvist',
     'label.vurdering.opprettholdt': 'Oppretthold vedtaket',
     'label.vurdering.omgjort': 'Omgjøring av vedtak',

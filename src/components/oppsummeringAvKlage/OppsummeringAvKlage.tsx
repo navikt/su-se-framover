@@ -28,19 +28,17 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
         messages: oppsummeringMessages,
     });
 
-    const hentVurderingstekst = (klage: Klage): string => {
-        if (klage.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD)
-            return formatMessage('label.vurdering.opprettholdt');
-        else if (klage.vedtaksvurdering?.type === KlageVurderingType.OMGJØR)
-            return formatMessage('label.vurdering.omgjort');
+    const hentVurderingstekstId = (klage: Klage): keyof typeof oppsummeringMessages => {
+        if (klage.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD) return 'label.vurdering.opprettholdt';
+        else if (klage.vedtaksvurdering?.type === KlageVurderingType.OMGJØR) return 'label.vurdering.omgjort';
         else if (
             [KlageStatus.AVVIST, KlageStatus.TIL_ATTESTERING_AVVIST, KlageStatus.IVERKSATT_AVVIST].includes(
                 klage.status
             )
         )
-            return formatMessage('label.vurdering.avvist');
+            return 'label.vurdering.avvist';
 
-        return formatMessage('label.vurdering.ukjent');
+        return 'label.vurdering.ukjent';
     };
 
     return (
@@ -59,7 +57,9 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 <div className={styles.vurdering}>
                     <InformationFilled className={styles.tag} />
                     <Heading size="xsmall" level="6">
-                        {formatMessage('label.vurdering.tittel')}: {hentVurderingstekst(props.klage)}
+                        {`${formatMessage('label.vurdering.tittel').toUpperCase()}: ${formatMessage(
+                            hentVurderingstekstId(props.klage)
+                        )}`}
                     </Heading>
                 </div>
             </Oppsummeringspanel>

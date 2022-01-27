@@ -110,11 +110,11 @@ const erKlageINoenFormForVurdertOgUnderBehandling = (k: Klage) => {
     return erKlageVilkårsvurdertTilVurdering(k) || erKlageVurdert(k);
 };
 
-export const erKlageFerdigBehandlet = (klage: Klage): boolean => {
-    return (
-        erKlageIverksattAvvist(klage) ||
-        (erKlageOversendt(klage) && hentSisteVedtattUtfall(klage.klagevedtakshistorikk)?.utfall !== Utfall.RETUR)
-    );
+const erOversendtKlageFerdigbehandlet = (klage: Klage) =>
+    erKlageOversendt(klage) && hentSisteVedtattUtfall(klage.klagevedtakshistorikk)?.utfall !== Utfall.RETUR;
+
+export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
+    return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage);
 };
 
 export const erKlageOmgjort = (

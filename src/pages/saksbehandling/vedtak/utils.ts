@@ -4,7 +4,7 @@ import { Klage } from '~types/Klage';
 import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
-import { erKlageFerdigBehandlet } from '~utils/klage/klageUtils';
+import { erKlageFerdigbehandlet } from '~utils/klage/klageUtils';
 import { erRevurderingIverksatt } from '~utils/revurdering/revurderingUtils';
 
 interface Søknadsbehandlingsoppsummering {
@@ -55,9 +55,9 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
     return null;
 }
 
-export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string): Nullable<Oppsummering> {
+export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string): Nullable<KlageOppsummering> {
     const klageMedKlageinstansvedtak = sak.klager.find((k) => k.id === klageId);
-    if (klageMedKlageinstansvedtak && erKlageFerdigBehandlet(klageMedKlageinstansvedtak)) {
+    if (klageMedKlageinstansvedtak && erKlageFerdigbehandlet(klageMedKlageinstansvedtak)) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const vedtakSomKlagesPå = sak.vedtak.find((v) => v.id === klageMedKlageinstansvedtak.vedtakId)!;
         return {

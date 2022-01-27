@@ -49,7 +49,7 @@ const Vedtaksoppsummering = (props: Props) => {
                 );
             case 'klage':
                 return <Klagevedtaksoppsummering vedtak={vedtaksinformasjon.vedtak} klage={vedtaksinformasjon.klage} />;
-            default:
+            case undefined:
                 return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
         }
     };

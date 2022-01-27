@@ -11,14 +11,14 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Klage, KlageStatus, Utfall } from '~types/Klage';
-import { Sak } from '~types/Sak';
+import { Vedtak } from '~types/Vedtak';
 import { formatDate } from '~utils/date/dateUtils';
 import {
     hentSisteVedtattUtfall,
     erKlageIverksattAvvist,
     erKlageOversendt,
     hentSisteVurderteSteg,
-    erKlageFerdigBehandlet,
+    erKlageFerdigbehandlet,
     erKlageTilAttestering,
 } from '~utils/klage/klageUtils';
 
@@ -26,7 +26,7 @@ import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
 
-const KlageLister = (props: { sak: Sak; klager: Klage[] }) => {
+const KlageLister = (props: { sakId: string; klager: Klage[]; vedtak: Vedtak[] }) => {
     const { formatMessage } = useI18n({ messages });
     const user = useUserContext();
 
@@ -56,17 +56,17 @@ const KlageLister = (props: { sak: Sak; klager: Klage[] }) => {
                         );
                     },
                     knapper: (klage) => {
-                        if (erKlageFerdigBehandlet(klage)) {
+                        if (erKlageFerdigbehandlet(klage)) {
                             return (
                                 <LinkAsButton
                                     variant="secondary"
                                     size="small"
                                     href={Routes.vedtaksoppsummering.createURL({
-                                        sakId: props.sak.id,
+                                        sakId: props.sakId,
                                         vedtakId:
                                             klage.status === KlageStatus.OVERSENDT
                                                 ? klage.id
-                                                : props.sak.vedtak.find((v) => v.behandlingId === klage.id)?.id ?? '',
+                                                : props.vedtak.find((v) => v.behandlingId === klage.id)?.id ?? '',
                                     })}
                                 >
                                     {formatMessage('klage.seOppsummering')}
@@ -79,7 +79,7 @@ const KlageLister = (props: { sak: Sak; klager: Klage[] }) => {
                                     variant="secondary"
                                     size="small"
                                     href={Routes.attesterKlage.createURL({
-                                        sakId: props.sak.id,
+                                        sakId: props.sakId,
                                         klageId: klage.id,
                                     })}
                                 >
@@ -107,7 +107,7 @@ const KlageLister = (props: { sak: Sak; klager: Klage[] }) => {
                                 variant="secondary"
                                 size="small"
                                 href={Routes.klage.createURL({
-                                    sakId: props.sak.id,
+                                    sakId: props.sakId,
                                     klageId: klage.id,
                                     steg: hentSisteVurderteSteg(klage),
                                 })}
