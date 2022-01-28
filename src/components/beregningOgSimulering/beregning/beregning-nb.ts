@@ -1,5 +1,7 @@
 export default {
     'alert.advarsel.kjørBeregningFørst': 'Du må kjøre en beregning før du kan gå videre',
+    'alert.advarsel.avkorting':
+        'Bruker har en utestående avkorting (pga for langt utenlandsopphold) som vil bli automatisk trukket fra etter du har lagt inn fradrag og startet beregningen.',
     'alert.feil.beregningFeilet': 'Beregning feilet',
 
     'beregning.behandlingErIkkeFerdig': 'Behandlingen er ikke ferdig.',

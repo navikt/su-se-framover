@@ -19,7 +19,11 @@ import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~redux/Store';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { InformasjonsRevurdering, InformasjonsRevurderingStatus } from '~types/Revurdering';
-import { erRevurderingTilAttestering, erGregulering } from '~utils/revurdering/revurderingUtils';
+import {
+    erRevurderingTilAttestering,
+    erGregulering,
+    hentAvkortingFraRevurdering,
+} from '~utils/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
 
@@ -32,6 +36,7 @@ const AttesterRevurdering = (props: {
     søker: Person;
 }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const history = useHistory();
     const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const revurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
@@ -56,7 +61,7 @@ const AttesterRevurdering = (props: {
     if (!revurdering) {
         return (
             <div className={styles.advarselContainer}>
-                <Alert variant="error">{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</Alert>
+                <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>
             </div>
         );
     }
@@ -64,7 +69,7 @@ const AttesterRevurdering = (props: {
     if (!erRevurderingTilAttestering(revurdering)) {
         return (
             <div className={styles.advarselContainer}>
-                <Alert variant="error">{intl.formatMessage({ id: 'feil.ikkeTilAttestering' })}</Alert>
+                <Alert variant="error">{formatMessage('feil.ikkeTilAttestering')}</Alert>
             </div>
         );
     }
@@ -94,7 +99,7 @@ const AttesterRevurdering = (props: {
         <div className={SharedStyles.container}>
             <Personlinje søker={props.søker} sakInfo={props.sakInfo} />
             <Heading level="1" size="xlarge" className={SharedStyles.tittel}>
-                {intl.formatMessage({ id: 'page.tittel' })}
+                {formatMessage('page.tittel')}
             </Heading>
             {pipe(
                 grunnlagsdataOgVilkårsvurderinger,
@@ -140,7 +145,11 @@ const AttesterRevurdering = (props: {
 
                                 {revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT && (
                                     <div className={styles.opphørsadvarsel}>
-                                        <Alert variant="warning">{intl.formatMessage({ id: 'info.opphør' })}</Alert>
+                                        <Alert variant="warning">
+                                            {hentAvkortingFraRevurdering(revurdering)
+                                                ? formatMessage('info.opphør.og.avkorting')
+                                                : formatMessage('info.opphør')}
+                                        </Alert>
                                     </div>
                                 )}
                             </div>

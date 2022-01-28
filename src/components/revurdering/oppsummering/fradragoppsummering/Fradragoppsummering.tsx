@@ -7,13 +7,12 @@ import * as React from 'react';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
 import { eqNullable } from '~lib/types';
-import { Fradrag } from '~types/Fradrag';
+import { Fradrag, FradragTilhører } from '~types/Fradrag';
 import { eqStringPeriode } from '~types/Periode';
 import { groupByEq } from '~utils/array/arrayUtils';
 import * as DateUtils from '~utils/date/dateUtils';
 import { formatCurrency } from '~utils/format/formatUtils';
 import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
-import { getFradragstypeStringMedEpsSpesifisering } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import messages from './fradragoppsummering-nb';
 import styles from './fradragoppsummering.module.less';
@@ -45,7 +44,11 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                             {fradragsgruppe.map((fradrag, idx) => (
                                 <li key={idx} className={styles.linje}>
                                     <span>
-                                        {getFradragstypeStringMedEpsSpesifisering(fradrag.type, fradrag.tilhører, intl)}
+                                        {`${intl.formatMessage({ id: fradrag.type })}${
+                                            fradrag.tilhører === FradragTilhører.EPS
+                                                ? ' ' + intl.formatMessage({ id: 'fradrag.suffix.eps' })
+                                                : ''
+                                        }`}
                                     </span>
                                     <span>{formatCurrency(fradrag.beløp)}</span>
                                     {fradrag.utenlandskInntekt !== null && (

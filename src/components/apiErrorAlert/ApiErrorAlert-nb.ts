@@ -135,6 +135,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Opphørsdato er ikke lik fra-dato for revurderingsperioden. Revurdering må gjennomføres i flere steg.',
     [ApiErrorCode.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]:
         'Opphør i kombinasjon med andre endringer støttes ikke. Revurdering må gjennomføres i flere steg.',
+    [ApiErrorCode.OPPHØR_AV_YTELSE_SOM_SKAL_AVKORTES]: 'Opphør av avkorting støttes ikke',
     [ApiErrorCode.OVERLAPPENDE_VURDERINGSPERIODER]: 'Perioder kan ikke overlappe',
     [ApiErrorCode.PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG]:
         'Det er ikke samsvar mellom perioden for vurdering og perioden for grunnlaget',
@@ -157,6 +158,10 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Stansdato er ikke første dato i inneværende eller neste måned',
     [ApiErrorCode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]:
         'Stønadsperioden overlapper med en eksisterende stønadsperiode',
+    [ApiErrorCode.STØNADSPERIODEN_OVERLAPPER_FULLFØRTE_UTBETALINGER_SOM_SKAL_AVKORTES]:
+        'Stønadsperioden overlapper med fullførte utbetalinger som skal avkortes i ny stønadsperiode. Virkningstidspunkt for ny stønadsperiode må være senere enn siste måned som har blitt utbetalt.',
+    [ApiErrorCode.AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG]:
+        'Tilgjengelig restbeløp etter fradrag er for lavt til å kunne gjennomføre avkorting innenfor valgt stønadsperiode. Delvis avkorting på tvers av stønadsperioder støttes ikke.',
     [ApiErrorCode.STØNADSPERIODE_FØR_2021]: 'Stønadsperiode kan ikke starte før Januar 2021',
     [ApiErrorCode.STØNADSPERIODE_MAX_12MND]: 'En stønadsperiode kan være maks 12 måneder',
     [ApiErrorCode.SØKNAD_ALLEREDE_LUKKET]: 'Søknaden er allerede lukket',
@@ -197,6 +202,10 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'Fradrag mangler valuta',
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIVT_BELØP]: 'Fradrag har negativt utenlandsbeløp',
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIV_KURS]: 'Fradrag har negativ kurs',
+    [ApiErrorCode.UTENLANDSOPPHOLD_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]:
+        'Utenlandsopphold som fører til opphør må revurderes',
+    [ApiErrorCode.UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE]:
+        'Saken inneholder en utestående avkorting som enten må håndteres i ny stønadsperiode eller revurderes i sin helhet. Håndter i ny periode eller utvid revurderingsperioden til å inkludere perioden for avkortingen.',
     [ApiErrorCode.VERDIER_KAN_IKKE_VÆRE_NEGATIV]: 'Kan ikke sende inn negative verdier',
     [ApiErrorCode.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]:
         'Vurdering av vilkår må ha samme resultat for hele revurderingsperioden',

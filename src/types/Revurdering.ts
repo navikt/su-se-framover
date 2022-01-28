@@ -5,7 +5,7 @@ import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
-import { Simulering } from './Simulering';
+import { Simulering, SimulertPeriode } from './Simulering';
 import { Vedtak } from './Vedtak';
 
 //Dette er feltene som deles av backends 'abstrakte' revurdering. Hadde vært fint å skille på dem litt mer, både bak og fram
@@ -59,6 +59,11 @@ export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus
 
 export type OpprettetRevurdering = InformasjonsRevurdering<InformasjonsRevurderingStatus.OPPRETTET>;
 
+export type SimuleringForAvkortingsvarsel = {
+    perioder: SimulertPeriode[];
+    totalBruttoYtelse: number;
+};
+
 export interface BeregnetInnvilget extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INNVILGET> {
     beregning: Beregning;
 }
@@ -74,6 +79,7 @@ export interface SimulertRevurdering
     > {
     beregning: Beregning;
     simulering: Simulering;
+    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
 }
 
 export interface RevurderingTilAttestering
@@ -83,6 +89,7 @@ export interface RevurderingTilAttestering
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
+    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
 }
 
 export interface IverksattRevurdering
@@ -92,6 +99,7 @@ export interface IverksattRevurdering
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
+    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
 }
 
 export interface UnderkjentRevurdering
@@ -101,6 +109,7 @@ export interface UnderkjentRevurdering
     beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
+    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
 }
 
 export interface AvsluttetRevurdering extends InformasjonsRevurdering<InformasjonsRevurderingStatus.AVSLUTTET> {

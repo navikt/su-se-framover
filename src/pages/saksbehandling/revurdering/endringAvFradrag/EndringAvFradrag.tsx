@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Heading } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -22,9 +22,10 @@ import { useI18n } from '~lib/i18n';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~redux/Store';
-import { Fradrag, FradragTilhører } from '~types/Fradrag';
+import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
 import { Revurdering, RevurderingStegProps } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
+import { fjernFradragSomIkkeErValgbare } from '~utils/fradrag/fradragUtil';
 import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -119,7 +120,9 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     });
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
-            fradrag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.map(fradragTilFradragFormData),
+            fradrag: fjernFradragSomIkkeErValgbare(props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag).map(
+                fradragTilFradragFormData
+            ),
         },
         async onSubmit(values) {
             await save(values, () => history.push(props.nesteUrl));
@@ -139,6 +142,15 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
+                        <div>
+                            {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
+                                (fradrag) => fradrag.type === Fradragstype.AvkortingUtenlandsopphold
+                            ) && (
+                                <Alert variant={'info'} className={styles.avkortingAlert}>
+                                    {intl.formatMessage({ id: 'alert.advarsel.avkorting' })}
+                                </Alert>
+                            )}
+                        </div>
                         <div>
                             <div className={styles.fradragInputsContainer}>
                                 <FradragInputs

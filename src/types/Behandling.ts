@@ -22,6 +22,7 @@ export interface Behandling {
     satsBeløp: Nullable<number>;
     stønadsperiode: Nullable<Behandlingsperiode>;
     fritekstTilBrev: string;
+    simuleringForAvkortingsvarsel: Nullable<Simulering>;
 }
 
 export interface Behandlingsperiode {

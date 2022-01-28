@@ -65,7 +65,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                                     )} - ${formatMonthYear(last.tilOgMed)}`}</span>
                                     <span className={styles.type}>
                                         {head.type !== SimulertUtbetalingstype.ORDINÆR
-                                            ? intl.formatMessage({ id: simulertUtbetalingstypeToResourceId(head.type) })
+                                            ? intl.formatMessage({ id: head.type })
                                             : ''}
                                     </span>
                                     <span className={styles.beløp}>
@@ -85,21 +85,6 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
             )}
         </div>
     );
-};
-
-const simulertUtbetalingstypeToResourceId = (type: SimulertUtbetalingstype) => {
-    switch (type) {
-        case SimulertUtbetalingstype.ORDINÆR:
-            return 'simulertUtbetalingstype.ordinær';
-        case SimulertUtbetalingstype.ETTERBETALING:
-            return 'simulertUtbetalingstype.etterbetaling';
-        case SimulertUtbetalingstype.FEILUTBETALING:
-            return 'simulertUtbetalingstype.feilutbetaling';
-        case SimulertUtbetalingstype.UENDRET:
-            return 'simulertUtbetalingstype.uendret';
-        case SimulertUtbetalingstype.INGEN_UTBETALING:
-            return 'simulertUtbetalingstype.ingenUtbetaling';
-    }
 };
 
 export const VisSimulering = (props: Props) => {
