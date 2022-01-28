@@ -22,6 +22,7 @@ import {
     KlageErUnderskrevet,
     KlageInnenforFristen,
     VedtattUtfall,
+    Utfall,
 } from '~types/Klage';
 export interface FormkravRequest {
     sakId: string;
@@ -107,6 +108,13 @@ const erKlageINoenFormForAvvistOgUnderBehandling = (k: Klage) => {
 
 const erKlageINoenFormForVurdertOgUnderBehandling = (k: Klage) => {
     return erKlageVilkårsvurdertTilVurdering(k) || erKlageVurdert(k);
+};
+
+const erOversendtKlageFerdigbehandlet = (klage: Klage) =>
+    erKlageOversendt(klage) && hentSisteVedtattUtfall(klage.klagevedtakshistorikk)?.utfall !== Utfall.RETUR;
+
+export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
+    return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage);
 };
 
 export const erKlageOmgjort = (

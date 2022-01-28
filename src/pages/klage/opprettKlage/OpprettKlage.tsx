@@ -87,6 +87,7 @@ const OpprettKlage = (props: { sak: Sak }) => {
                         maxDate={new Date()}
                         value={field.value}
                         autoComplete="off"
+                        hjelpetekst={formatMessage('opprett.klageMottatt.hjelpetekst')}
                     />
                 )}
             />

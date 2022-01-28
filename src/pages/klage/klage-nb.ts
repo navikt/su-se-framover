@@ -6,6 +6,7 @@ export default {
     'opprett.button.submit': 'Registrer',
     'opprett.success.notification': 'Ny klage ble registrert',
     'opprett.klageMottatt.label': 'Klage mottatt',
+    'opprett.klageMottatt.hjelpetekst': 'Fyll inn datoen NAV mottok klagen',
 
     'framdriftsindikator.formkrav': 'Formkrav',
     'framdriftsindikator.vurdering': 'Vurdering',

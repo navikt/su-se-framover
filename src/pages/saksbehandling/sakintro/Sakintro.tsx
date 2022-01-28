@@ -109,7 +109,9 @@ const Sakintro = (props: { sak: Sak }) => {
                     <AvslåtteSøknader sak={props.sak} avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                     <AvsluttedeRevurderinger avsluttedeRevurderinger={avsluttedeRevurderinger} intl={intl} />
-                    {klageToggle && <KlageLister sakId={props.sak.id} klager={props.sak.klager} />}
+                    {klageToggle && (
+                        <KlageLister sakId={props.sak.id} klager={props.sak.klager} vedtak={props.sak.vedtak} />
+                    )}
                     <div>
                         <LinkPanel
                             href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}

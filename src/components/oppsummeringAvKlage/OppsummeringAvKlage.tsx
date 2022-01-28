@@ -1,4 +1,5 @@
-import { BodyShort, Label } from '@navikt/ds-react';
+import { InformationFilled } from '@navikt/ds-icons';
+import { BodyShort, Label, Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -11,9 +12,9 @@ import {
     OppsummeringsParSortering,
 } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~lib/i18n';
-import { Klage } from '~types/Klage';
+import { Klage, KlageStatus, KlageVurderingType } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
-import { erKlageOmgjort, erKlageOpprettholdt, erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
+import { erKlageOmgjort, erKlageOpprettholdt } from '~utils/klage/klageUtils';
 
 import formkravMessages from '../../pages/klage/vurderFormkrav/vurderFormkrav-nb';
 import vurderingMessages from '../../pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
@@ -26,6 +27,20 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
     const { formatMessage } = useI18n({
         messages: oppsummeringMessages,
     });
+
+    const hentVurderingstekstId = (klage: Klage): keyof typeof oppsummeringMessages => {
+        if (klage.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD) return 'label.vurdering.opprettholdt';
+        else if (klage.vedtaksvurdering?.type === KlageVurderingType.OMGJØR) return 'label.vurdering.omgjort';
+        else if (
+            [KlageStatus.AVVIST, KlageStatus.TIL_ATTESTERING_AVVIST, KlageStatus.IVERKSATT_AVVIST].includes(
+                klage.status
+            )
+        )
+            return 'label.vurdering.avvist';
+
+        return 'label.vurdering.ukjent';
+    };
+
     return (
         <div className={styles.oppsummeringPanelContainer}>
             <Oppsummeringspanel
@@ -36,7 +51,16 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 <div className={styles.panelInnholdContainer}>
                     <KlageInfo klage={props.klage} />
                     <FormkravInfo klage={props.klage} klagensVedtak={props.klagensVedtak} />
-                    {erKlageVurdertBekreftet(props.klage) && <VurderInfo klage={props.klage} />}
+                    {props.klage.vedtaksvurdering && <VurderInfo klage={props.klage} />}
+                </div>
+
+                <div className={styles.vurdering}>
+                    <InformationFilled className={styles.tag} />
+                    <Heading size="xsmall" level="6">
+                        {`${formatMessage('label.vurdering.tittel').toUpperCase()}: ${formatMessage(
+                            hentVurderingstekstId(props.klage)
+                        )}`}
+                    </Heading>
                 </div>
             </Oppsummeringspanel>
         </div>
@@ -102,6 +126,7 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
                             : formatMessage('label.nei')
                     }
                     sorteres={OppsummeringsParSortering.Vertikalt}
+                    className={styles.tekstMaxBredde}
                 />
                 <OppsummeringPar
                     label={formatMessage('formkrav.innenforFrist.label')}
