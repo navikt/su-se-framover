@@ -101,6 +101,7 @@ export enum ApiErrorCode {
     OPPHØR_AV_FLERE_VILKÅR = 'opphør_av_flere_vilkår',
     OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE = 'opphør_ikke_tidligste_dato',
     OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',
+    OPPHØR_AV_YTELSE_SOM_SKAL_AVKORTES = 'opphør_av_ytelse_som_skal_avkortes',
     OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
     PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG = 'periode_for_grunnlag_og_vurdering_er_forskjellig',
     PERIODE_MANGLER = 'periode_mangler',
