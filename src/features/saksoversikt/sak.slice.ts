@@ -800,6 +800,10 @@ export default createSlice({
         builder.addCase(klageActions.underkjenn.fulfilled, (state, action) => {
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
+
+        builder.addCase(klageActions.avsluttKlage.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
     },
 });
 

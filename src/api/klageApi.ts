@@ -113,3 +113,17 @@ export async function underkjenn(arg: {
         },
     });
 }
+
+export async function avslutt(arg: {
+    sakId: string;
+    klageId: string;
+    begrunnelse: string;
+}): Promise<ApiClientResult<Klage>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/klager/${arg.klageId}/avslutt`,
+        method: 'POST',
+        body: {
+            begrunnelse: arg.begrunnelse,
+        },
+    });
+}

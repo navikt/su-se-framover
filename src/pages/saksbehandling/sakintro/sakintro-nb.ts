@@ -10,6 +10,7 @@ export default {
 
     'klage.attester': 'Attester',
     'klage.avvist': 'Avvist',
+    'klage.avsluttet': 'Avsluttet klage',
     'klage.fortsettBehandling': 'Fortsett behandling',
     'klage.klager': 'Klager',
     'klage.oversendt': 'Oversendt klage',
