@@ -1,3 +1,5 @@
+import { GRegulering } from '~types/GRegulering';
+
 import apiClient, { ApiClientResult } from './apiClient';
 
 interface JournalpostOk {
@@ -52,6 +54,20 @@ export async function konsistensavstemming(fraOgMed: string): Promise<ApiClientR
     return apiClient({
         url: `/avstemming/konsistens?fraOgMed=${fraOgMed}`,
         method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
+export async function hentReguleringer({
+    dato,
+}: {
+    dato?: string;
+}): Promise<ApiClientResult<{ saker: GRegulering[] }>> {
+    const queryParam = `?dato=${dato}`;
+
+    return apiClient({
+        url: `/reguleringer${dato ? queryParam : ''}`,
+        method: 'GET',
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }

@@ -5,10 +5,17 @@ import * as React from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
-import { fetchBakoverStatus, patchSøknader, SøknadResponse, konsistensavstemming } from '~api/driftApi';
+import {
+    fetchBakoverStatus,
+    patchSøknader,
+    SøknadResponse,
+    konsistensavstemming,
+    hentReguleringer,
+} from '~api/driftApi';
 import { useApiCall } from '~lib/hooks';
 import { toIsoDateOnlyString } from '~utils/date/dateUtils';
 
+import GReguleringTabell from './components/GReguleringTabell';
 import styles from './index.module.less';
 
 const Rad = (props: {
@@ -104,6 +111,7 @@ const Drift = () => {
         hentStatus();
     }, []);
 
+    const [GReguleringsdata, hentGReguleringsdata] = useApiCall(hentReguleringer);
     const [fixSøknaderResponse, setfixSøknaderResponse] = React.useState<
         RemoteData.RemoteData<ApiError, SøknadResponse>
     >(RemoteData.initial);
@@ -197,6 +205,14 @@ const Drift = () => {
                             </div>
                         </Modal.Content>
                     </Modal>
+                    <Button
+                        variant="secondary"
+                        className={styles.knapp}
+                        type="button"
+                        onClick={() => hentGReguleringsdata({})}
+                    >
+                        G-regulering
+                    </Button>
                 </div>
                 {RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">
@@ -205,6 +221,12 @@ const Drift = () => {
                         <p>
                             {fixSøknaderResponse.error.body?.message ?? JSON.stringify(fixSøknaderResponse.error.body)}
                         </p>
+                    </Alert>
+                )}
+                {RemoteData.isFailure(GReguleringsdata) && (
+                    <Alert className={styles.alert} variant="error">
+                        <p>Henting av G-reguleringsresultat feilet</p>
+                        Feilkode: {GReguleringsdata.error?.statusCode}
                     </Alert>
                 )}
                 <div className={styles.tabellContainer}>
@@ -219,6 +241,7 @@ const Drift = () => {
                         </Alert>
                     )}
                 </div>
+                {RemoteData.isSuccess(GReguleringsdata) && <GReguleringTabell data={GReguleringsdata.value.saker} />}
             </div>
         </div>
     );
