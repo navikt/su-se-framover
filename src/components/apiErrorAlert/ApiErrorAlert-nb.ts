@@ -22,6 +22,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FANT_IKKE_GJELDENDE_UTBETALING]: 'Kunne ikke hente gjeldende utbetaling',
     [ApiErrorCode.FANT_IKKE_GJELDENDE_STØNADSPERIODE]:
         'Kunne ikke sette innkallingsdato, ettersom vi ikke fant gjeldende stønadsperiode',
+    [ApiErrorCode.FANT_IKKE_JOURNALPOST]: 'Fant ikke journalpost',
     [ApiErrorCode.FANT_IKKE_KLAGE]: 'Fant ikke klage',
     [ApiErrorCode.FANT_IKKE_PERSON]: 'Fant ikke personen',
     [ApiErrorCode.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'Fant ikke person eller saksbehandlers navn',
@@ -63,6 +64,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
     [ApiErrorCode.HAR_IKKE_EKTEFELLE]: 'Har ikke ektefelle',
     [ApiErrorCode.HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING]: 'Hele behandlingsperioden må ha vurderinger',
+    [ApiErrorCode.HENTET_JOURNALPOST_IKKE_KNYTTET_TIL_SAK]: 'Den hentede journalposten er ikke knyttet til denne saken',
     [ApiErrorCode.HULL_I_TIDSLINJE]:
         'Mangler systemstøtte for revurdering av perioder med hull i tidslinjen for vedtak',
     [ApiErrorCode.IKKE_FORHÅNDSVARSLET]: 'Kan ikke beslutte forhåndsvarsel. Revurderingen er ikke forhåndsvarslet',
@@ -75,6 +77,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Ikke lov med formue for EPS hvis søker ikke har EPS',
     [ApiErrorCode.IKKE_RIKTIG_TILSTAND_FOR_BESLUTTNING]:
         'Revurderingen er ikke i riktig tilstand for å beslutte forhåndsvarslingen',
+    [ApiErrorCode.IKKE_TILGANG_TIL_JOURNALPOST]: 'Har ikke tilgang til journalpost',
     [ApiErrorCode.IKKE_TILGANG_TIL_PERSON]: 'Du har ikke tilgang til å se informasjon om denne brukeren',
     [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
@@ -168,6 +171,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.SØKNAD_ER_LUKKET]: 'Søknad er lukket',
     [ApiErrorCode.SØKNAD_HAR_BEHANDLING]: 'Søknad har allerede en behandling',
     [ApiErrorCode.SØKNAD_MANGLER_OPPGAVE]: 'Søknad mangler oppgave',
+    [ApiErrorCode.TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST]: 'Teknisk feil ved henting av journalpost fra SAF',
     [ApiErrorCode.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'Uføregraden må være mellom 1 og 100',
     [ApiErrorCode.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'Uføregrad og/eller forventet inntekt mangler',
     [ApiErrorCode.UGYLDIG_BEREGNINGSGRUNNLAG]: 'Ugyldig beregningsgrunnlag',
@@ -176,6 +180,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_FØDSELSNUMMER]: 'Ugyldig fødselsnummer',
     [ApiErrorCode.UGYLDIG_GRUNN_FOR_UNDERKJENNING]: 'Ugyldig underkjennelses grunn',
     [ApiErrorCode.UGYLDIG_INPUT]: 'Ugyldig input',
+    [ApiErrorCode.UGYLDIG_JOURNALPOSTID]: 'ugyldig_journalpostId',
     [ApiErrorCode.UGYLDIG_MOTTATT_DATO]: 'Ugyldig mottatt dato',
     [ApiErrorCode.UGYLDIG_OMGJØRINGSUTFALL]: 'Ugyldig omgjøringsutfall',
     [ApiErrorCode.UGYLDIG_OMGJØRINGSÅRSAK]: 'Ugyldig omgjøringsårsak',
@@ -197,6 +202,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UKJENT_BREVTYPE]: 'Ukjent brevtype',
     [ApiErrorCode.UKJENT_FEIL]: 'Ukjent feil',
     [ApiErrorCode.UKJENT_FEIL]: 'Ukjent feil',
+    [ApiErrorCode.UKJENT_FEIL_VED_HENTING_AV_JOURNALPOST]: 'Ukjent feil ved henting av journalpost',
     [ApiErrorCode.UTBETALING_ALLEREDE_OPPHØRT]: 'Utbetaling allerede opphørt',
     [ApiErrorCode.UTBETALING_ALLEREDE_STANSET]: 'Utbetaling allerede stanset',
     [ApiErrorCode.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'Fradrag mangler valuta',
