@@ -138,7 +138,7 @@ export enum ApiErrorCode {
     UGYLDIG_MOTTATT_DATO = 'ugyldig_mottatt_dato',
     UGYLDIG_OMGJØRINGSUTFALL = 'ugyldig_omgjøringsutfall',
     UGYLDIG_OMGJØRINGSÅRSAK = 'ugyldig_omgjøringsårsak',
-    UGYLDIG_OPPRETTHOLDESESHJEMLER = 'ugyldig_opprettholdeseshjemler',
+    UGYLDIG_OPPRETTHOLDESESHJEMLER = 'ugyldig_opprettholdelseshjemler',
     UGYLDIG_PARAMETER = 'ugyldig_parameter',
     UGYLDIG_PARAMETER_ID = 'ugyldig_parameter_id',
     UGYLDIG_PARAMETER_IDTYPE = 'ugyldig_parameter_idType',
