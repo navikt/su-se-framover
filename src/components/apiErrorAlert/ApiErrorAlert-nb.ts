@@ -64,10 +64,12 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
     [ApiErrorCode.HAR_IKKE_EKTEFELLE]: 'Har ikke ektefelle',
     [ApiErrorCode.HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING]: 'Hele behandlingsperioden må ha vurderinger',
-    [ApiErrorCode.HENTET_JOURNALPOST_IKKE_KNYTTET_TIL_SAK]: 'Den hentede journalposten er ikke knyttet til denne saken',
+    [ApiErrorCode.JOURNALPOST_IKKE_KNYTTET_TIL_SAK]: 'Journalposten er ikke knyttet til denne saken',
     [ApiErrorCode.HULL_I_TIDSLINJE]:
         'Mangler systemstøtte for revurdering av perioder med hull i tidslinjen for vedtak',
     [ApiErrorCode.IKKE_FORHÅNDSVARSLET]: 'Kan ikke beslutte forhåndsvarsel. Revurderingen er ikke forhåndsvarslet',
+    [ApiErrorCode.JOURNALPOST_TEMA_ER_IKKE_SUP]: 'Tema for journalposten er ikke SUP',
+    [ApiErrorCode.JOURNALPOST_ER_IKKE_FERDIGSTILT]: 'Journalposten er ikke ferdigstilt',
     [ApiErrorCode.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
     [ApiErrorCode.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN]:
         'Ikke lov med formueperiode utenfor behandlingsperioden',
@@ -171,7 +173,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.SØKNAD_ER_LUKKET]: 'Søknad er lukket',
     [ApiErrorCode.SØKNAD_HAR_BEHANDLING]: 'Søknad har allerede en behandling',
     [ApiErrorCode.SØKNAD_MANGLER_OPPGAVE]: 'Søknad mangler oppgave',
-    [ApiErrorCode.TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST]: 'Teknisk feil ved henting av journalpost fra SAF',
+    [ApiErrorCode.TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST]:
+        'Teknisk feil ved henting av journalpost fra sak og arkivfasade (forvaltes av Team Dokumentløsninger)',
     [ApiErrorCode.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'Uføregraden må være mellom 1 og 100',
     [ApiErrorCode.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'Uføregrad og/eller forventet inntekt mangler',
     [ApiErrorCode.UGYLDIG_BEREGNINGSGRUNNLAG]: 'Ugyldig beregningsgrunnlag',
@@ -180,7 +183,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_FØDSELSNUMMER]: 'Ugyldig fødselsnummer',
     [ApiErrorCode.UGYLDIG_GRUNN_FOR_UNDERKJENNING]: 'Ugyldig underkjennelses grunn',
     [ApiErrorCode.UGYLDIG_INPUT]: 'Ugyldig input',
-    [ApiErrorCode.UGYLDIG_JOURNALPOSTID]: 'ugyldig_journalpostId',
+    [ApiErrorCode.UGYLDIG_JOURNALPOSTID]: 'Ugyldig journalpostID',
     [ApiErrorCode.UGYLDIG_MOTTATT_DATO]: 'Ugyldig mottatt dato',
     [ApiErrorCode.UGYLDIG_OMGJØRINGSUTFALL]: 'Ugyldig omgjøringsutfall',
     [ApiErrorCode.UGYLDIG_OMGJØRINGSÅRSAK]: 'Ugyldig omgjøringsårsak',
