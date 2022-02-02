@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Datepicker } from '@navikt/ds-datepicker';
 import { Alert, Checkbox, Label, Radio, RadioGroup } from '@navikt/ds-react';
-import fnrValidator from '@navikt/fnrvalidator';
 import * as DateFns from 'date-fns';
 import { FormikErrors, useFormik } from 'formik';
 import * as React from 'react';
@@ -33,17 +32,7 @@ type FormData = SøknadState['boOgOpphold'];
 
 const epsFormDataSchema = yup
     .object<EPSFormData>({
-        fnr: yup
-            .string()
-            .nullable()
-            .defined()
-            .test(
-                'isValidEktefelle',
-                'Ugyldig fødselsnummer',
-                (value) =>
-                    typeof value === 'string' && value.length === 11 && fnrValidator.fnr(value).status === 'valid'
-            )
-            .typeError('Ugyldig fødselsnummer'),
+        fnr: yup.string().nullable().defined().length(11).typeError('Ugyldig fødselsnummer'),
         alder: yup.number().nullable().defined(),
         erUførFlyktning: yup
             .boolean()

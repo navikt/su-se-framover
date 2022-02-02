@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader, SearchField } from '@navikt/ds-react';
-import fnrValidator from '@navikt/fnrvalidator';
 import React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 
@@ -31,12 +30,10 @@ const Personsøk = (props: PersonsøkProps) => {
     const { intl } = useI18n({ messages });
 
     const [input, setInput] = React.useState('');
-    const [fnrValidation, setFnrValidation] = React.useState<ValidationResult | null>(null);
     const [inputErrorMessage, setInputErrorMsg] = React.useState<string | null>(null);
 
     React.useEffect(() => {
         setHasSubmitted(true);
-        setFnrValidation(null);
         setInputErrorMsg(null);
 
         if (input.length !== 11) {
@@ -44,39 +41,17 @@ const Personsøk = (props: PersonsøkProps) => {
         }
     }, [input]);
 
-    const lagFnrFeilmelding = (error: ErrorReason) => {
-        switch (error) {
-            case 'fnr or dnr must consist of 11 digits':
-                return intl.formatMessage({ id: 'feilmelding.lengde' });
-            case "checksums don't match":
-            case 'invalid date':
-                return intl.formatMessage({ id: 'feilmelding.ugyldig' });
-        }
-    };
-
     const handleSubmit = () => {
         if (!Number(input)) {
             return setInputErrorMsg(intl.formatMessage({ id: 'feilmelding.måVareTall' }));
         }
 
         if (!props.onFetchBySaksnummer || input.length === 11) {
-            return fetchSakByFnr();
+            return props.onFetchByFnr(input);
         }
 
         props.onFetchBySaksnummer?.(input);
     };
-
-    const fetchSakByFnr = () => {
-        const validation = fnrValidator.fnr(input);
-        setFnrValidation(validation);
-        if (validation.status === 'valid') {
-            props.onFetchByFnr(input);
-        }
-    };
-
-    const valideringsfeil =
-        inputErrorMessage ||
-        (fnrValidation?.status === 'invalid' ? lagFnrFeilmelding(fnrValidation.reasons[0]) : undefined);
 
     return (
         <RawIntlProvider value={intl}>
@@ -114,8 +89,8 @@ const Personsøk = (props: PersonsøkProps) => {
                             {RemoteData.isPending(props.person) && <Loader />}
                         </SearchField.Button>
                     </SearchField>
-                    {hasSubmitted && valideringsfeil && (
-                        <SkjemaelementFeilmelding>{valideringsfeil}</SkjemaelementFeilmelding>
+                    {hasSubmitted && inputErrorMessage && (
+                        <SkjemaelementFeilmelding>{inputErrorMessage}</SkjemaelementFeilmelding>
                     )}
                 </div>
                 <div className={styles.personkortWrapper}>
