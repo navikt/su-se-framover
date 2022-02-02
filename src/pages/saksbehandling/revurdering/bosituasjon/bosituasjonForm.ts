@@ -1,5 +1,3 @@
-import fnrValidator from '@navikt/fnrvalidator';
-
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
@@ -61,11 +59,7 @@ export const bosituasjonFormValidation = (epsAlder: Nullable<number>) =>
                             name: 'Gyldig fødselsnummer',
                             message: 'Ugyldig fødselsnummer',
                             test: function (value) {
-                                return (
-                                    typeof value === 'string' &&
-                                    value.length === 11 &&
-                                    fnrValidator.fnr(value).status === 'valid'
-                                );
+                                return typeof value === 'string' && value.length === 11;
                             },
                         }),
                 }),

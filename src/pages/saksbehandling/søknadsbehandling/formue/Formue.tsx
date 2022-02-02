@@ -14,7 +14,6 @@ import {
     BodyShort,
     Label,
 } from '@navikt/ds-react';
-import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
 import React, { useState, useEffect, useRef } from 'react';
 import { Control, Controller, useForm, UseFormTrigger } from 'react-hook-form';
@@ -110,12 +109,7 @@ const schema = yup
             .typeError('Feltet må fylles ut'),
         epsFnr: yup.mixed<string>().when('borSøkerMedEPS', {
             is: true,
-            then: yup
-                .mixed<string>()
-                .required('Du må legge inn ektefelle/samboers fødselsnummer')
-                .test('erGyldigFnr', 'Du må legge inn et gyldig fødselsnummer', (fnr) => {
-                    return fnr && fnrValidator.fnr(fnr).status === 'valid';
-                }),
+            then: yup.string().required('Du må legge inn ektefelle/samboers fødselsnummer').length(11),
         }),
     })
     .required();
@@ -243,7 +237,7 @@ const Formue = (props: {
     }, [watch.epsVerdier?.innskuddsbeløp]);
 
     useEffect(() => {
-        if (watch.epsFnr && fnrValidator.fnr(watch.epsFnr).status === 'valid') {
+        if (watch.epsFnr && watch.epsFnr.length === 11) {
             fetchEps(watch.epsFnr);
         } else {
             resetEpsToInitial();

@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Loader, TextField } from '@navikt/ds-react';
-import fnrValidator from '@navikt/fnrvalidator';
 import React, { useEffect, useState } from 'react';
 
 import { ApiError } from '~api/apiClient';
@@ -58,10 +57,7 @@ export const FnrInput = ({
     useEffect(() => {
         setPerson(RemoteData.initial);
         if (fnr?.length === 11) {
-            const validateFnr = fnrValidator.fnr(fnr);
-            if (validateFnr.status === 'valid') {
-                fetchPerson(fnr);
-            }
+            fetchPerson(fnr);
         }
     }, [fnr]);
 
