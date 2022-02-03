@@ -1,4 +1,4 @@
-import { GRegulering } from '~types/GRegulering';
+import { Regulering } from '~types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -58,11 +58,7 @@ export async function konsistensavstemming(fraOgMed: string): Promise<ApiClientR
     });
 }
 
-export async function hentReguleringer({
-    dato,
-}: {
-    dato?: string;
-}): Promise<ApiClientResult<{ saker: GRegulering[] }>> {
+export async function hentReguleringer({ dato }: { dato?: string }): Promise<ApiClientResult<{ saker: Regulering[] }>> {
     const queryParam = `?dato=${dato}`;
 
     return apiClient({

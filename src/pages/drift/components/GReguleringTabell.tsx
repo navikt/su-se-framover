@@ -3,10 +3,10 @@ import React from 'react';
 
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import * as Routes from '~lib/routes';
-import { GRegulering } from '~types/GRegulering';
+import { Regulering } from '~types/Regulering';
 
 interface Props {
-    data: GRegulering[];
+    data: Regulering[];
 }
 
 const GReguleringTabell = ({ data }: Props) => {
