@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
-import { Adresse, IngenAdresseGrunn } from '~api/personApi';
+import { Adresse, IngenAdresseGrunn, Person } from '~api/personApi';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
@@ -42,6 +42,18 @@ const epsFormDataSchema = yup
                 otherwise: yup.boolean().nullable().defined(),
             })
             .defined(),
+        eps: yup.mixed<Person>().test({
+            name: 'skal ha person dersom fnr er utfylt',
+            message: 'Ektefelle / samboer må være hentet av systemet, og tilgjengelig, før du kan fortsette',
+            test: function (val) {
+                const fnr: string = this.parent.fnr;
+
+                if (fnr?.length === 11) {
+                    return val !== null;
+                }
+                return false;
+            },
+        }),
     })
     .defined();
 
@@ -353,6 +365,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                               fnr: null,
                                               erUførFlyktning: null,
                                               alder: null,
+                                              eps: null,
                                           }
                                         : null,
                             }));

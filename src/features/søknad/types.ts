@@ -1,3 +1,4 @@
+import { Person } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
 export enum TypeOppholdstillatelse {
@@ -25,6 +26,7 @@ export interface EPSFormData {
     fnr: Nullable<string>;
     alder: Nullable<number>;
     erUførFlyktning: Nullable<boolean>;
+    eps: Nullable<Person>;
 }
 
 export enum GrunnForPapirinnsending {
