@@ -28,7 +28,7 @@ const GReguleringTabell = ({ data }: Props) => {
                         return (
                             <tr key={index}>
                                 <td>{d.saksnummer}</td>
-                                <td>{d.type}</td>
+                                <td>{d.reguleringType}</td>
                                 <td>
                                     <LinkAsButton
                                         variant="tertiary"
