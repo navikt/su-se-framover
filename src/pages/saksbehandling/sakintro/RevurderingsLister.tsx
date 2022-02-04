@@ -168,7 +168,6 @@ const RevurderingStartetKnapper = (props: {
                         }),
                     }}
                     hideSecondaryButton={revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_STANS}
-                    intl={props.intl}
                 />
             )}
 
@@ -188,7 +187,6 @@ const RevurderingStartetKnapper = (props: {
                         }),
                     }}
                     hideSecondaryButton={revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK}
-                    intl={props.intl}
                 />
             )}
 
@@ -210,7 +208,6 @@ const RevurderingStartetKnapper = (props: {
                             }),
                         }}
                         hideSecondaryButton={false}
-                        intl={props.intl}
                     />
                 )}
         </div>

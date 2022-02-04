@@ -185,7 +185,6 @@ export const AvsluttOgStartFortsettButtons = (props: {
     sakId: string;
     behandlingsId: string;
     primaryButtonTekst: string;
-    intl: IntlShape;
     usePrimaryAsLink?: {
         url: string;
     };
@@ -195,6 +194,7 @@ export const AvsluttOgStartFortsettButtons = (props: {
     };
     hideSecondaryButton?: boolean;
 }) => {
+    const { formatMessage } = useI18n({ messages });
     return (
         <div className={styles.avsluttOgStartFortsettKnapperContainer}>
             {!props.hideSecondaryButton && (
@@ -206,9 +206,7 @@ export const AvsluttOgStartFortsettButtons = (props: {
                         id: props.behandlingsId,
                     })}
                 >
-                    {props.intl.formatMessage({
-                        id: 'behandling.avsluttBehandling',
-                    })}
+                    {formatMessage('behandling.avsluttBehandling')}
                 </LinkAsButton>
             )}
             {props.usePrimaryAsButton ? (

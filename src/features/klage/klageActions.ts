@@ -177,3 +177,19 @@ export const underkjenn = createAsyncThunk<
     }
     return thunkApi.rejectWithValue(res.error);
 });
+
+export const avsluttKlage = createAsyncThunk<
+    Klage,
+    { sakId: string; klageId: string; begrunnelse: string },
+    { rejectValue: ApiError }
+>('klage/avslutt', async ({ sakId, klageId, begrunnelse }, thunkApi) => {
+    const res = await klageApi.avslutt({
+        sakId,
+        klageId,
+        begrunnelse,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});

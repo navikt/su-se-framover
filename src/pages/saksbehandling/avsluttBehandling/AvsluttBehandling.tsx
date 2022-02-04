@@ -7,6 +7,7 @@ import { Sak } from '~types/Sak';
 
 import messages from './avsluttBehandling-nb';
 import styles from './avsluttBehandling.module.less';
+import AvsluttKlage from './avsluttKlage/AvsluttKlage';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad';
 
@@ -16,8 +17,9 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
 
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.id);
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.id);
+    const klage = props.sak.klager.find((k) => k.id === urlParams.id);
 
-    if (!søknad && !revurdering) {
+    if (!søknad && !revurdering && !klage) {
         return (
             <div>
                 <Alert variant="error">
@@ -40,6 +42,7 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
                 <div className={styles.mainContent}>
                     {søknad && <LukkSøknadOgAvsluttBehandling sakId={props.sak.id} søknad={søknad} />}
                     {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
+                    {klage && <AvsluttKlage sakId={props.sak.id} klage={klage} />}
                 </div>
             </Panel>
         </div>

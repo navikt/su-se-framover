@@ -19,6 +19,13 @@ export interface Klage {
     fritekstTilBrev: Nullable<string>;
     attesteringer: Attestering[];
     klagevedtakshistorikk: VedtattUtfall[];
+    avsluttet: AvsluttKlageStatus;
+}
+
+export enum AvsluttKlageStatus {
+    KAN_AVSLUTTES = 'KAN_AVSLUTTES',
+    ER_AVSLUTTET = 'ER_AVSLUTTET',
+    KAN_IKKE_AVSLUTTES = 'KAN_IKKE_AVSLUTTES',
 }
 
 export enum KlageStatus {

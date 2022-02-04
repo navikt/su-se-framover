@@ -23,6 +23,7 @@ import {
     KlageInnenforFristen,
     VedtattUtfall,
     Utfall,
+    AvsluttKlageStatus,
 } from '~types/Klage';
 export interface FormkravRequest {
     sakId: string;
@@ -71,11 +72,6 @@ export const erKlageVurdertBekreftet = (k: Klage): boolean => k.status === Klage
 
 export const erKlageAvvist = (k: Klage) => k.status === KlageStatus.AVVIST;
 
-export const erKlageBekreftet = (k: Klage) =>
-    k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_TIL_VURDERING ||
-    k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_AVVIST ||
-    k.status === KlageStatus.VURDERT_BEKREFTET;
-
 export const erKlageTilAttestering = (k: Klage): boolean =>
     k.status === KlageStatus.TIL_ATTESTERING_TIL_VURDERING || k.status === KlageStatus.TIL_ATTESTERING_AVVIST;
 
@@ -84,6 +80,8 @@ export const erKlageTilAttesteringAvvist = (k: Klage) => k.status === KlageStatu
 export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.OVERSENDT;
 
 export const erKlageIverksattAvvist = (k: Klage) => k.status === KlageStatus.IVERKSATT_AVVIST;
+
+export const erKlageAvsluttet = (k: Klage) => k.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET;
 
 export const erKlageVilkårsvurdertUtfyltEllerSenere = (k: Klage) =>
     k.status !== KlageStatus.OPPRETTET && k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT;
@@ -94,13 +92,8 @@ export const erKlageVilkårsvurdertBekreftetEllerSenere = (k: Klage) =>
     erKlageAvvist(k) ||
     erKlageTilAttestering(k) ||
     erKlageOversendt(k) ||
-    erKlageIverksattAvvist(k);
-
-export const erKlageVurdertUtfyltEllerSenere = (k: Klage) =>
-    erKlageVurdertUtfyltEllerBekreftet(k) || erKlageTilAttestering(k) || erKlageOversendt(k);
-
-export const erKlageVurdertUtfyltEllerBekreftet = (k: Klage) =>
-    k.status === KlageStatus.VURDERT_UTFYLT || k.status === KlageStatus.VURDERT_BEKREFTET;
+    erKlageIverksattAvvist(k) ||
+    erKlageAvsluttet(k);
 
 const erKlageINoenFormForAvvistOgUnderBehandling = (k: Klage) => {
     return erKlageVilkårsvurdertAvvist(k) || erKlageAvvist(k) || erKlageTilAttesteringAvvist(k);
@@ -113,6 +106,7 @@ const erKlageINoenFormForVurdertOgUnderBehandling = (k: Klage) => {
 const erOversendtKlageFerdigbehandlet = (klage: Klage) =>
     erKlageOversendt(klage) && hentSisteVedtattUtfall(klage.klagevedtakshistorikk)?.utfall !== Utfall.RETUR;
 
+/**Anser ikke en avsluttet klage som ferdigbehandlet */
 export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
     return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage);
 };

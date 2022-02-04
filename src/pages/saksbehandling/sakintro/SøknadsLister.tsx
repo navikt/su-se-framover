@@ -197,7 +197,6 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                         ),
                     status: behandlingStatus,
                 }}
-                intl={props.intl}
             />
 
             {RemoteData.isFailure(behandlingStatus) && (
@@ -262,7 +261,6 @@ const SøknadsbehandlingStartetKnapper = (props: {
                                     vilkar: hentSisteVurdertSaksbehandlingssteg(behandling),
                                 }),
                             }}
-                            intl={props.intl}
                         />
                     )
                 )}
