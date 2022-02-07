@@ -216,7 +216,9 @@ const EPSForm = (props: {
                     onFnrChange={field.onChange}
                     fnr={field.value ?? ''}
                     feil={fieldState.error?.message}
-                    onAlderChange={(alder) => props.setEpsAlder(alder)}
+                    getHentetPerson={(person) => {
+                        props.setEpsAlder(person?.alder ?? null);
+                    }}
                 />
             )}
         />

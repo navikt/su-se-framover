@@ -18,7 +18,12 @@ interface Props {
     feil?: FormikErrors<EPSFormData>;
 }
 const EktefellePartnerSamboer = (props: Props) => {
-    const epsFormData: EPSFormData = props.value ?? { fnr: null, alder: null, erUførFlyktning: null };
+    const epsFormData: EPSFormData = props.value ?? {
+        fnr: null,
+        alder: null,
+        erUførFlyktning: null,
+        eps: null,
+    };
 
     const { formatMessage } = useI18n({ messages });
 
@@ -39,10 +44,11 @@ const EktefellePartnerSamboer = (props: Props) => {
                 }}
                 feil={props.feil?.fnr}
                 autoComplete="off"
-                onAlderChange={(alder) => {
+                getHentetPerson={(person) => {
                     props.onChange({
                         ...epsFormData,
-                        alder: alder,
+                        eps: person,
+                        alder: person?.alder ?? null,
                     });
                 }}
             />
