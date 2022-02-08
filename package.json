@@ -57,7 +57,7 @@
         "@reduxjs/toolkit": "^1.7.2",
         "@sentry/browser": "^6.16.1",
         "@sentry/cli": "^1.72.1",
-        "@types/jest": "^27.0.3",
+        "@types/jest": "^27.4.0",
         "@types/react-collapse": "^5.0.1",
         "@types/react-datepicker": "^4.3.4",
         "amplitude-js": "^8.16.0",
