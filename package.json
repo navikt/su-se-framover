@@ -51,7 +51,7 @@
         "@navikt/ds-css-internal": "^0.7.1",
         "@navikt/ds-datepicker": "^1.0.4",
         "@navikt/ds-icons": "^0.8.1",
-        "@navikt/ds-react": "^0.15.2",
+        "@navikt/ds-react": "^0.16.1",
         "@navikt/ds-react-internal": "^0.10.2",
         "@navikt/fnrvalidator": "^1.1.4",
         "@reduxjs/toolkit": "^1.7.2",
