@@ -12,7 +12,7 @@ export default {
     'knapp.seBrev': 'Se brev',
 
     'knapp.tilbake': 'Tilbake',
-    'knapp.lagre': 'Lagre',
+    'knapp.lagre': 'Lagre og fortsett senere',
     'knapp.sendTilAttestering': 'Send til attestering',
 
     'feil.ikkeRiktigTilstandForÅVurdere': 'Klagen er ikke i riktig tilstand for å avvise klage',

@@ -4,10 +4,8 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import * as PdfApi from '~api/pdfApi';
-import { Person } from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Attestering from '~components/attestering/Attestering';
-import Personlinje from '~components/personlinje/Personlinje';
+import { AttesteringsForm } from '~components/attestering/AttesteringsForm';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -33,12 +31,10 @@ import styles from './attesterRevurdering.module.less';
 const AttesterRevurdering = (props: {
     sakInfo: { sakId: string; saksnummer: number };
     informasjonsRevurderinger: InformasjonsRevurdering[];
-    søker: Person;
 }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const history = useHistory();
-    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const revurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
     const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
     const dispatch = useAppDispatch();
@@ -83,81 +79,76 @@ const AttesterRevurdering = (props: {
     const iverksettCallback = () => {
         iverksett({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id }, () => {
             dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.saksnummer.toString() }));
-            const message = intl.formatMessage({ id: 'attester.iverksatt' });
+            const message = formatMessage('attester.iverksatt');
             history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
         });
     };
 
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) => {
         underkjenn({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id, grunn, kommentar }, () => {
-            const message = intl.formatMessage({ id: 'attester.sendtTilbake' });
+            const message = formatMessage('attester.sendtTilbake');
             history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
         });
     };
 
-    return (
-        <div className={SharedStyles.container}>
-            <Personlinje søker={props.søker} sakInfo={props.sakInfo} />
-            <Heading level="1" size="xlarge" className={SharedStyles.tittel}>
-                {formatMessage('page.tittel')}
-            </Heading>
-            {pipe(
-                grunnlagsdataOgVilkårsvurderinger,
-                RemoteData.fold(
-                    () => <Loader />,
-                    () => <Loader />,
-                    (err) => <ApiErrorAlert error={err} />,
-                    (grunnlag) => (
-                        <Attestering
-                            sakId={props.sakInfo.sakId}
-                            iverksett={{
-                                fn: iverksettCallback,
-                                status: iverksettStatus,
-                            }}
-                            underkjenn={{
-                                fn: underkjennCallback,
-                                status: underkjennStatus,
-                            }}
+    return pipe(
+        grunnlagsdataOgVilkårsvurderinger,
+        RemoteData.fold(
+            () => <Loader />,
+            () => <Loader />,
+            (err) => <ApiErrorAlert error={err} />,
+            (grunnlag) => (
+                <div className={SharedStyles.pageContainer}>
+                    <Heading level="1" size="xlarge" className={SharedStyles.tittel}>
+                        {formatMessage('page.tittel')}
+                    </Heading>
+                    <div className={styles.oppsummeringContainer}>
+                        <Revurderingoppsummering
+                            revurdering={revurdering}
+                            forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlag}
+                        />
+                    </div>
+                    {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
+                        <Button
+                            variant="secondary"
+                            className={styles.brevButton}
+                            type="button"
+                            onClick={handleShowBrevClick}
                         >
-                            <div>
-                                <div className={styles.oppsummeringContainer}>
-                                    <Revurderingoppsummering
-                                        revurdering={revurdering}
-                                        forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlag}
-                                    />
-                                </div>
-                                {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
-                                    <Button
-                                        variant="secondary"
-                                        className={styles.brevButton}
-                                        type="button"
-                                        onClick={handleShowBrevClick}
-                                    >
-                                        {intl.formatMessage({ id: 'knapp.brev' })}
-                                        {RemoteData.isPending(hentPdfStatus) && <Loader />}
-                                    </Button>
-                                )}
-                                {RemoteData.isFailure(hentPdfStatus) && (
-                                    <Alert variant="error" className={styles.brevFeil}>
-                                        {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}
-                                    </Alert>
-                                )}
+                            {formatMessage('knapp.brev')}
+                            {RemoteData.isPending(hentPdfStatus) && <Loader />}
+                        </Button>
+                    )}
+                    {RemoteData.isFailure(hentPdfStatus) && (
+                        <Alert variant="error" className={styles.brevFeil}>
+                            {formatMessage('feil.klarteIkkeHenteBrev')}
+                        </Alert>
+                    )}
 
-                                {revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT && (
-                                    <div className={styles.opphørsadvarsel}>
-                                        <Alert variant="warning">
-                                            {hentAvkortingFraRevurdering(revurdering)
-                                                ? formatMessage('info.opphør.og.avkorting')
-                                                : formatMessage('info.opphør')}
-                                        </Alert>
-                                    </div>
-                                )}
-                            </div>
-                        </Attestering>
-                    )
-                )
-            )}
-        </div>
+                    {revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT && (
+                        <div className={styles.opphørsadvarsel}>
+                            <Alert variant="warning">
+                                {hentAvkortingFraRevurdering(revurdering)
+                                    ? formatMessage('info.opphør.og.avkorting')
+                                    : formatMessage('info.opphør')}
+                            </Alert>
+                        </div>
+                    )}
+
+                    <AttesteringsForm
+                        sakId={props.sakInfo.sakId}
+                        iverksett={{
+                            fn: iverksettCallback,
+                            status: iverksettStatus,
+                        }}
+                        underkjenn={{
+                            fn: underkjennCallback,
+                            status: underkjennStatus,
+                        }}
+                    />
+                </div>
+            )
+        )
     );
 };
 

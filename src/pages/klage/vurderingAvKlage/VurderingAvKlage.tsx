@@ -291,9 +291,14 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                     />
                                 )}
                             />
-                            <Button type="button" variant="secondary" onClick={() => onSeBrevClick(watch())}>
+                            <Button
+                                type="button"
+                                className={styles.seBrevButton}
+                                variant="secondary"
+                                loading={RemoteData.isPending(brevStatus)}
+                                onClick={() => onSeBrevClick(watch())}
+                            >
                                 {formatMessage('knapp.seBrev')}
-                                {RemoteData.isPending(brevStatus) && <Loader />}
                             </Button>
                             {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                         </div>

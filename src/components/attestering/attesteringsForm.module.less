@@ -1,17 +1,15 @@
 @import '~/styles/variables.less';
 
 .container {
-    width: 100%;
-    padding: 0 @spacing-xxl;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-bottom: @spacing-xxl;
+    align-items: flex-start;
+    width: 80%;
 }
 
 .knapperContainer {
     display: grid;
-    grid-template-columns: repeat(2, 10em);
+    grid-template-columns: repeat(2, @knappBredde);
     gap: @spacing;
     margin: @spacing 0;
 }

@@ -1,11 +1,19 @@
 @import '~/styles/variables.less';
 
-.container {
-    width: 100%;
+//Dette er ikke en 'shared' styling. den ligger her så jeg ikke trenger å lage en helt ny css fil for Attestering.tsx ;)
+.attesteringsContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: @spacing-xxl;
+    width: 100%;
+}
+//-----------------------------------------------------------------------------------------------------------------------
+
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80%;
 }
 
 .navigeringContainer {

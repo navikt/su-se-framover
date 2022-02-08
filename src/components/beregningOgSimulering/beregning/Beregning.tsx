@@ -307,11 +307,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     className={styles.feiloppsummering}
                                 />
                             )}
-                            <Button type="submit" size="small">
+                            <Button
+                                className={styles.beregningButton}
+                                loading={RemoteData.isPending(beregningStatus)}
+                                type="submit"
+                            >
                                 {props.behandling.beregning
                                     ? intl.formatMessage({ id: 'knapp.startNyBeregning' })
                                     : intl.formatMessage({ id: 'knapp.startBeregning' })}
-                                {RemoteData.isPending(beregningStatus) && <Loader />}
                             </Button>
 
                             {props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG && (

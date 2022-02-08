@@ -37,7 +37,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
         begrunnelse: string;
     }): void;
 }) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
 
     interface FormData {
         resultatEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
@@ -89,7 +89,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                 name="resultatEtterForhåndsvarsel"
                 render={({ field, fieldState }) => (
                     <RadioGroup
-                        legend={intl.formatMessage({ id: 'etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel' })}
+                        legend={formatMessage('etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel')}
                         error={fieldState.error?.message}
                         name={field.name}
                         className={styles.resultatEtterForhåndsvarselContainer}
@@ -101,19 +101,13 @@ export const ResultatEtterForhåndsvarselform = (props: {
                             ref={field.ref}
                             value={BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger}
                         >
-                            {intl.formatMessage({
-                                id: 'etterForhåndsvarsel.radio.sammeOpplysninger',
-                            })}
+                            {formatMessage('etterForhåndsvarsel.radio.sammeOpplysninger')}
                         </Radio>
                         <Radio value={BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger}>
-                            {intl.formatMessage({
-                                id: 'etterForhåndsvarsel.radio.andreOpplysninger',
-                            })}
+                            {formatMessage('etterForhåndsvarsel.radio.andreOpplysninger')}
                         </Radio>
                         <Radio value={BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer}>
-                            {intl.formatMessage({
-                                id: 'etterForhåndsvarsel.radio.avsluttesUtenEndring',
-                            })}
+                            {formatMessage('etterForhåndsvarsel.radio.avsluttesUtenEndring')}
                         </Radio>
                     </RadioGroup>
                 )}
@@ -124,7 +118,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                 render={({ field, fieldState }) => (
                     <div className={styles.etterForhåndsvarselBegrunnelseContainer}>
                         <Textarea
-                            label={intl.formatMessage({ id: 'etterForhåndsvarsel.begrunnelse.label' })}
+                            label={formatMessage('etterForhåndsvarsel.begrunnelse.label')}
                             {...field}
                             error={fieldState.error?.message}
                         />
@@ -137,7 +131,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     name="tekstTilVedtaksbrev"
                     render={({ field, fieldState }) => (
                         <OppsummeringsBrevInput
-                            tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
+                            tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                     sakId: props.sakId,
@@ -158,7 +152,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     name="tekstTilAvsluttRevurderingBrev"
                     render={({ field, fieldState }) => (
                         <OppsummeringsBrevInput
-                            tittel={intl.formatMessage({ id: 'brevInput.tekstTilAvsluttRevurdering.tittel' })}
+                            tittel={formatMessage('brevInput.tekstTilAvsluttRevurdering.tittel')}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForAvslutningAvRevurdering({
                                     sakId: props.sakId,
@@ -177,10 +171,10 @@ export const ResultatEtterForhåndsvarselform = (props: {
             <RevurderingBunnknapper
                 nesteKnappTekst={
                     resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger
-                        ? intl.formatMessage({ id: 'fortsett.button.label' })
+                        ? formatMessage('fortsett.button.label')
                         : resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer
-                        ? intl.formatMessage({ id: 'avslutt.button.label' })
-                        : intl.formatMessage({ id: 'sendTilAttestering.button.label' })
+                        ? formatMessage('avslutt.button.label')
+                        : formatMessage('sendTilAttestering.button.label')
                 }
                 loading={RemoteData.isPending(props.submitStatus)}
             />
@@ -200,7 +194,7 @@ export const VelgForhåndsvarselForm = (props: {
         fritekstTilBrev: Nullable<string>;
     }
 
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
 
     const form = useForm<FormData>({
         defaultValues: {
@@ -239,18 +233,16 @@ export const VelgForhåndsvarselForm = (props: {
                 name="forhåndsvarselhandling"
                 render={({ field, fieldState }) => (
                     <RadioGroup
-                        legend={intl.formatMessage({ id: 'velgForhåndsvarsel.handling.legend' })}
+                        legend={formatMessage('velgForhåndsvarsel.handling.legend')}
                         error={fieldState.error?.message}
                         name={field.name}
                         onChange={(val) => field.onChange(val)}
                         value={field.value ?? ''}
                     >
                         <Radio id={field.name} ref={field.ref} value={Forhåndsvarselhandling.Forhåndsvarsle}>
-                            {intl.formatMessage({ id: 'ja' })}
+                            {formatMessage('ja')}
                         </Radio>
-                        <Radio value={Forhåndsvarselhandling.IngenForhåndsvarsel}>
-                            {intl.formatMessage({ id: 'nei' })}
-                        </Radio>
+                        <Radio value={Forhåndsvarselhandling.IngenForhåndsvarsel}>{formatMessage('nei')}</Radio>
                     </RadioGroup>
                 )}
             />
@@ -261,7 +253,7 @@ export const VelgForhåndsvarselForm = (props: {
                     render={({ field, fieldState }) =>
                         forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle ? (
                             <OppsummeringsBrevInput
-                                tittel={intl.formatMessage({ id: 'brevInput.tekstTilForhåndsvarsel.tittel' })}
+                                tittel={formatMessage('brevInput.tekstTilForhåndsvarsel.tittel')}
                                 onVisBrevClick={() =>
                                     pdfApi.fetchBrevutkastForForhåndsvarsel(
                                         props.sakId,
@@ -275,7 +267,7 @@ export const VelgForhåndsvarselForm = (props: {
                             />
                         ) : (
                             <OppsummeringsBrevInput
-                                tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
+                                tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
                                 onVisBrevClick={() =>
                                     pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                         sakId: props.sakId,
@@ -295,8 +287,8 @@ export const VelgForhåndsvarselForm = (props: {
             <RevurderingBunnknapper
                 nesteKnappTekst={
                     forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle
-                        ? intl.formatMessage({ id: 'sendForhåndsvarsel.button.label' })
-                        : intl.formatMessage({ id: 'sendTilAttestering.button.label' })
+                        ? formatMessage('sendForhåndsvarsel.button.label')
+                        : formatMessage('sendTilAttestering.button.label')
                 }
                 tilbakeUrl={props.forrigeUrl}
                 loading={RemoteData.isPending(props.submitStatus)}
@@ -312,7 +304,7 @@ export const SendTilAttesteringForm = (props: {
     brevsending: 'aldriSende' | 'alltidSende' | 'kanVelge';
     onSubmit(args: { fritekstTilBrev: string; skalFøreTilBrevutsending: boolean }): void;
 }) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     interface FormData {
         tekstTilVedtaksbrev: string;
         skalFøreTilBrevutsending: boolean;
@@ -348,7 +340,7 @@ export const SendTilAttesteringForm = (props: {
                             checked={field.value}
                             onChange={field.onChange}
                         >
-                            {intl.formatMessage({ id: 'sendTilAttestering.skalFøreTilBrev' })}
+                            {formatMessage('sendTilAttestering.skalFøreTilBrev')}
                         </Checkbox>
                     )}
                 />
@@ -360,7 +352,7 @@ export const SendTilAttesteringForm = (props: {
                     name="tekstTilVedtaksbrev"
                     render={({ field, fieldState }) => (
                         <OppsummeringsBrevInput
-                            tittel={intl.formatMessage({ id: 'brevInput.tekstTilVedtaksbrev.tittel' })}
+                            tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                     sakId: props.revurdering.tilRevurdering.sakId,
@@ -379,7 +371,7 @@ export const SendTilAttesteringForm = (props: {
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
 
             <RevurderingBunnknapper
-                nesteKnappTekst={intl.formatMessage({ id: 'sendTilAttestering.button.label' })}
+                nesteKnappTekst={formatMessage('sendTilAttestering.button.label')}
                 tilbakeUrl={props.forrigeUrl}
                 loading={RemoteData.isPending(props.submitStatus)}
             />

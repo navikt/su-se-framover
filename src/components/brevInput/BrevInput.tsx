@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
+import { Alert, Button, Textarea } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { FieldError } from 'react-hook-form';
 import { IntlShape } from 'react-intl';
@@ -50,9 +50,14 @@ export function BrevInput(props: BrevInputProps) {
                 />
             </div>
             <div className={styles.seBrevContainer}>
-                <Button variant="secondary" onClick={onHentBrev} type="button" size="small">
+                <Button
+                    type="button"
+                    variant="secondary"
+                    className={styles.seBrevButton}
+                    loading={RemoteData.isPending(hentBrevStatus)}
+                    onClick={onHentBrev}
+                >
                     {props.intl.formatMessage({ id: 'knapp.seBrev' })}
-                    {RemoteData.isPending(hentBrevStatus) && <Loader />}
                 </Button>
                 {RemoteData.isFailure(hentBrevStatus) && (
                     <Alert variant="error">

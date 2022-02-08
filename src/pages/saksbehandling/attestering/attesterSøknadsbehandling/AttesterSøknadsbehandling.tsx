@@ -4,8 +4,7 @@ import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
-import Attestering from '~components/attestering/Attestering';
-import Personlinje from '~components/personlinje/Personlinje';
+import { AttesteringsForm } from '~components/attestering/AttesteringsForm';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~lib/hooks';
@@ -76,9 +75,14 @@ const Attesteringsinnhold = ({
     }
 
     return (
-        <div className={SharedStyles.container}>
-            <Personlinje søker={props.søker} sakInfo={{ sakId: props.sak.id, saksnummer: props.sak.saksnummer }} />
-            <Attestering
+        <div className={SharedStyles.pageContainer}>
+            <Søknadsbehandlingoppsummering
+                sak={props.sak}
+                behandling={props.behandling}
+                medBrevutkastknapp
+                tittel={intl.formatMessage({ id: 'page.tittel' })}
+            />
+            <AttesteringsForm
                 sakId={props.sak.id}
                 iverksett={{
                     fn: iverksettCallback,
@@ -88,14 +92,7 @@ const Attesteringsinnhold = ({
                     fn: underkjennCallback,
                     status: underkjennStatus,
                 }}
-            >
-                <Søknadsbehandlingoppsummering
-                    sak={props.sak}
-                    behandling={props.behandling}
-                    medBrevutkastknapp
-                    tittel={intl.formatMessage({ id: 'page.tittel' })}
-                />
-            </Attestering>
+            />
         </div>
     );
 };
