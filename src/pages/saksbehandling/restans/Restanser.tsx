@@ -1,12 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Accordion, Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
@@ -17,41 +16,6 @@ import { formatDateTime } from '~utils/date/dateUtils';
 import messages from './restanser-nb';
 import styles from './restanser.module.less';
 import { AriaSortVerdier, RestansKolonner, sortTabell } from './restanserUtils';
-
-const Restanser = () => {
-    const { formatMessage } = useI18n({ messages });
-    const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentRestanser);
-
-    useEffect(() => {
-        hentÅpneBehandlinger();
-    }, []);
-
-    return pipe(
-        hentÅpneBehandlingerStatus,
-        RemoteData.fold(
-            () => <Loader />,
-            () => <Loader />,
-            () => <Alert variant="error">{formatMessage('feil.feilOppstod')}</Alert>,
-            (restanser: Restans[]) => {
-                if (restanser.length === 0) {
-                    return <Alert variant="success">{formatMessage('restans.ingenRestanser')}</Alert>;
-                }
-                return (
-                    <Accordion>
-                        <Accordion.Item>
-                            <Accordion.Header type="button">
-                                {formatMessage('åpne.behandlinger.overskrift')}
-                            </Accordion.Header>
-                            <Accordion.Content>
-                                <RestanserTabell tabelldata={restanser} />
-                            </Accordion.Content>
-                        </Accordion.Item>
-                    </Accordion>
-                );
-            }
-        )
-    );
-};
 
 const KnappOgStatus = (props: { saksnummer: string }) => {
     const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
@@ -136,6 +100,10 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
         return classNames({ ['tabell__td--sortert']: erKolonneSortertEtter(kolonne) });
     };
 
+    if (props.tabelldata.length === 0) {
+        return <Alert variant="success">{formatMessage('restans.ingenRestanser')}</Alert>;
+    }
+
     return (
         <div>
             <table className={classNames('tabell', styles.tabell)}>
@@ -211,4 +179,4 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     );
 };
 
-export default Restanser;
+export default RestanserTabell;

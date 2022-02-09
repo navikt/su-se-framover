@@ -87,6 +87,8 @@
         "nav-frontend-stegindikator": "^2.0.2",
         "nav-frontend-stegindikator-style": "^2.0.1",
         "nav-frontend-tabell-style": "^2.1.1",
+        "nav-frontend-tabs": "^2.0.2",
+        "nav-frontend-tabs-style": "^2.0.1",
         "nav-frontend-typografi-style": "^2.0.1",
         "postcss-import": "^14.0.2",
         "postcss-less": "^4.0.1",

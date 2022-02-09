@@ -5,19 +5,18 @@ import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-import { ApiError, ErrorCode } from '~api/apiClient';
+import { visErrorMelding } from '~components/apiErrorAlert/utils';
 import Personlinje from '~components/personlinje/Personlinje';
-import Personsøk from '~components/Personsøk/Personsøk';
 import { SøknadsbehandlingDraftProvider } from '~context/søknadsbehandlingDraftContext';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { Languages, useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
+import { ÅpneBehandlinger } from '~pages/saksbehandling/behandlingsoversikt/ÅpneBehandlinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
 
-import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 import Gjenoppta from './stans/gjenoppta/gjenoppta';
@@ -40,7 +39,7 @@ const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
     const history = useHistory();
 
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
 
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const dispatch = useAppDispatch();
@@ -63,24 +62,6 @@ const Saksoversikt = () => {
 
     const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
-    const visErrorMelding = (error: ApiError): string => {
-        switch (error.statusCode) {
-            case ErrorCode.Unauthorized:
-                return intl.formatMessage({ id: 'feilmelding.ikkeTilgang' });
-            case ErrorCode.NotFound:
-                return intl.formatMessage({
-                    id: 'feilmelding.fantIkkeSak',
-                });
-            default:
-                return intl.formatMessage(
-                    { id: 'feilmelding.generisk' },
-                    {
-                        statusCode: error.statusCode,
-                    }
-                );
-        }
-    };
-
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             <Switch>
@@ -92,16 +73,13 @@ const Saksoversikt = () => {
                             () => <Loader />,
                             () =>
                                 RemoteData.isFailure(søker) ? (
-                                    <Alert variant="error">{visErrorMelding(søker.error)}</Alert>
+                                    <Alert variant="error">{visErrorMelding(søker.error, formatMessage)}</Alert>
                                 ) : (
                                     RemoteData.isFailure(sak) && (
                                         <Alert variant="error">
-                                            {intl.formatMessage(
-                                                { id: 'feilmelding.generisk' },
-                                                {
-                                                    statusCode: sak.error.statusCode,
-                                                }
-                                            )}
+                                            {formatMessage('feilmelding.generisk', {
+                                                statusCode: sak.error.statusCode,
+                                            })}
                                         </Alert>
                                     )
                                 ),
@@ -204,32 +182,7 @@ const Saksoversikt = () => {
                     )}
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
-                    <div className={styles.saksoversiktForside}>
-                        <div className={styles.search}>
-                            <Personsøk
-                                onReset={() => {
-                                    dispatch(personSlice.default.actions.resetSøker());
-                                    dispatch(sakSlice.default.actions.resetSak());
-                                }}
-                                onFetchByFnr={(fnr) => {
-                                    dispatch(personSlice.fetchPerson({ fnr }));
-                                    dispatch(sakSlice.fetchSak({ fnr }));
-                                }}
-                                onFetchBySaksnummer={async (saksnummer) => {
-                                    const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
-                                    if (sakSlice.fetchSak.fulfilled.match(res)) {
-                                        dispatch(personSlice.fetchPerson({ fnr: res.payload.fnr }));
-                                    }
-                                }}
-                                person={søker}
-                                autofocusPersonsøk
-                            />
-                            {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
-                                <Alert variant="error">{visErrorMelding(sak.error)}</Alert>
-                            )}
-                        </div>
-                        <Restanser />
-                    </div>
+                    <ÅpneBehandlinger sak={sak} søker={søker} />
                 </Route>
             </Switch>
         </IntlProvider>

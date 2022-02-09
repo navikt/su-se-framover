@@ -1,0 +1,39 @@
+@import '~/styles/variables.less';
+
+.saksoversiktForside {
+    width: 100%;
+    height: 1vh;
+
+    li:first-child {
+        margin-left: @spacing;
+    }
+
+    .tabcontainer {
+        background: white;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: @spacing;
+    }
+
+    .filter {
+        display: flex;
+        flex-direction: column;
+        background: @navLysGra;
+        padding: @spacing;
+        padding-top: @spacing-xs;
+        height: fit-content;
+        gap: @spacing;
+
+        .label {
+            margin-left: -@spacing-xs;
+            margin-bottom: @spacing-xxs;
+        }
+    }
+
+    .personsøk {
+        margin-left: @spacing-xxl;
+        margin-top: @spacing-l;
+        margin-bottom: @spacing-xxl;
+    }
+}
