@@ -14,6 +14,7 @@ export type RestansTypeFilter = {
     [RestansType.SØKNADSBEHANDLING]: boolean;
     [RestansType.REVURDERING]: boolean;
     [RestansType.KLAGE]: boolean;
+    [RestansType.REGULERING]: boolean;
 };
 
 export type RestansStatusFilter = {

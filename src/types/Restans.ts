@@ -12,6 +12,7 @@ export enum RestansType {
     SØKNADSBEHANDLING = 'SØKNADSBEHANDLING',
     REVURDERING = 'REVURDERING',
     KLAGE = 'KLAGE',
+    REGULERING = 'REGULERING',
 }
 
 export enum RestansStatus {

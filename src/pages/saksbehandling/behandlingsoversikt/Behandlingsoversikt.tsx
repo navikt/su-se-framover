@@ -19,6 +19,7 @@ import messages from './behandlingsoversikt-nb';
 import styles from './behandlingsoversikt.module.less';
 import { FerdigeBehandlinger } from './ferdigeBehandlinger/FerdigeBehandlinger';
 import Nøkkeltall from './nøkkeltall/Nøkkeltall';
+import Regulering from './regulering/regulering';
 import { ÅpneBehandlinger } from './åpneBehandlinger/ÅpneBehandlinger';
 
 interface Props {
@@ -30,6 +31,7 @@ enum Tab {
     ÅPNE_BEHANDLINGER = 'ÅPNE_BEHANDLINGER',
     FERDIGE_BEHANDLINGER = 'FERDIGE_BEHANDLINGER',
     NØKKELTALL = 'NØKKELTALL',
+    REGULERING = 'REGULERING',
 }
 
 export const Behandlingsoversikt = ({ sak, søker }: Props) => {
@@ -99,12 +101,16 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
                     <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.NØKKELTALL)} value={Tab.NØKKELTALL}>
                         {formatMessage('nøkkeltall')}
                     </Tabs.Trigger>
+                    <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.REGULERING)} value={Tab.REGULERING}>
+                        {formatMessage('regulering')}
+                    </Tabs.Trigger>
                 </Tabs.List>
             </Tabs.Root>
             <div className={styles.tabcontainer}>
                 {aktivTab === Tab.ÅPNE_BEHANDLINGER && <ÅpneBehandlinger />}
                 {aktivTab === Tab.FERDIGE_BEHANDLINGER && <FerdigeBehandlinger />}
                 {aktivTab === Tab.NØKKELTALL && <Nøkkeltall />}
+                {aktivTab === Tab.REGULERING && <Regulering />}
             </div>
         </div>
     );

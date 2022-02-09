@@ -28,6 +28,7 @@ export const ÅpneBehandlinger = () => {
         [RestansType.SØKNADSBEHANDLING]: false,
         [RestansType.REVURDERING]: false,
         [RestansType.KLAGE]: false,
+        [RestansType.REGULERING]: false,
     });
 
     const [status, setStatus] = useState<RestansStatusFilter>({
