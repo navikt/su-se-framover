@@ -19,6 +19,8 @@ import { useAppDispatch } from '~redux/Store';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 import { Sak } from '~types/Sak';
 
+import { isRestansStatus, isRestansType } from '../restans/restanserUtils';
+
 import messages from './åpneBehandlinger-nb';
 import styles from './åpneBehandlinger.module.less';
 
@@ -43,20 +45,23 @@ export const ÅpneBehandlinger = ({ sak, søker }: Props) => {
 
     const [aktivTab, setAktivTab] = useState<Tab>(Tab.ÅPNE_BEHANDLINGER);
     const [filter, setFilter] = useState<FilterCheckbox>({
-        [RestansType.SØKNADSBEHANDLING]: true,
-        [RestansType.REVURDERING]: true,
-        [RestansType.KLAGE]: true,
-        [RestansStatus.NY_SØKNAD]: true,
-        [RestansStatus.UNDER_BEHANDLING]: true,
-        [RestansStatus.TIL_ATTESTERING]: true,
-        [RestansStatus.UNDERKJENT]: true,
+        [RestansType.SØKNADSBEHANDLING]: false,
+        [RestansType.REVURDERING]: false,
+        [RestansType.KLAGE]: false,
+        [RestansStatus.NY_SØKNAD]: false,
+        [RestansStatus.UNDER_BEHANDLING]: false,
+        [RestansStatus.TIL_ATTESTERING]: false,
+        [RestansStatus.UNDERKJENT]: false,
     });
 
     const filterRestanser = (restanser: Restans[], filter: FilterCheckbox): Restans[] => {
         const filtre = hentFiltrerteVerdier(filter);
+        const skalFiltrerePåType = filtre.filter(isRestansType).length !== 0;
+        const skalFiltrerePåStatus = filtre.filter(isRestansStatus).length !== 0;
+
         return restanser
-            .filter((restans) => filtre.includes(restans.typeBehandling))
-            .filter((restans) => filtre.includes(restans.status));
+            .filter((restans) => (skalFiltrerePåType ? filtre.includes(restans.typeBehandling) : true))
+            .filter((restans) => (skalFiltrerePåStatus ? filtre.includes(restans.status) : true));
     };
 
     return (
