@@ -59,7 +59,7 @@
         "@types/jest": "^27.4.0",
         "@types/react-collapse": "^5.0.1",
         "@types/react-datepicker": "^4.3.4",
-        "amplitude-js": "^8.16.0",
+        "amplitude-js": "^8.16.1",
         "autoprefixer": "^10.4.2",
         "babel-polyfill": "^6.26.0",
         "babel-runtime": "^6.26.0",
