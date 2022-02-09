@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { RemoteFailure, RemoteInitial, RemotePending, RemoteSuccess } from '@devexperts/remote-data-ts';
-import { Alert, Loader } from '@navikt/ds-react';
+import { Alert, Heading, Loader } from '@navikt/ds-react';
 import Tabs from 'nav-frontend-tabs';
 import React, { useEffect, useState } from 'react';
 
 import { ApiError } from '~api/apiClient';
 import { Person } from '~api/personApi';
+import { Person as PersonIkon } from '~assets/Icons';
 import { visErrorMelding } from '~components/apiErrorAlert/utils';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
@@ -67,6 +68,10 @@ export const ÅpneBehandlinger = ({ sak, søker }: Props) => {
     return (
         <div className={styles.saksoversiktForside}>
             <div className={styles.personsøk}>
+                <Heading level="1" size="xlarge" spacing className={styles.finnSak}>
+                    <PersonIkon />
+                    {formatMessage('finnSak')}
+                </Heading>
                 <Personsøk
                     onReset={() => {
                         dispatch(personSlice.default.actions.resetSøker());

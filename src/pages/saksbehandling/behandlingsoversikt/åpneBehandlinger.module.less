@@ -4,6 +4,20 @@
     width: 100%;
     height: 1vh;
 
+    .personsøk {
+        margin-left: 20rem;
+        margin-top: @spacing-l;
+        margin-bottom: @spacing-xxl;
+
+        .finnSak {
+            display: flex;
+
+            svg {
+                margin-right: @spacing-xxs;
+            }
+        }
+    }
+
     li:first-child {
         margin-left: @spacing;
     }
@@ -23,17 +37,12 @@
         padding-top: @spacing-xs;
         height: fit-content;
         margin-right: @spacing-xxl;
+        margin-bottom: @spacing;
         gap: @spacing;
 
         .label {
             margin-left: -@spacing-xs;
             margin-bottom: @spacing-xxs;
         }
-    }
-
-    .personsøk {
-        margin-left: @spacing-xxl;
-        margin-top: @spacing-l;
-        margin-bottom: @spacing-xxl;
     }
 }
