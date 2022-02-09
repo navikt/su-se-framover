@@ -42,7 +42,7 @@
     },
     "homepage": "https://github.com/navikt/su-se-framover#readme",
     "dependencies": {
-        "@babel/runtime": "^7.17.0",
+        "@babel/runtime": "^7.17.2",
         "@devexperts/remote-data-ts": "^2.1.1",
         "@formatjs/intl-datetimeformat": "^5.0.0",
         "@formatjs/intl-numberformat": "^7.4.2",
