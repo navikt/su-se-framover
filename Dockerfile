@@ -16,7 +16,7 @@ COPY tsconfig.json ${BASE_DIR}/
 WORKDIR ${BACKEND_DIR}
 # We need Python2/3 to install node-gyp: https://github.com/nodejs/docker-node/issues/384
 RUN apk --no-cache add --virtual native-deps \
-    g++ gcc libgcc libstdc++ linux-headers make python3 && \
+    make g++ python3 && \
     npm ci &&\
     apk del native-deps
 RUN npm run build
