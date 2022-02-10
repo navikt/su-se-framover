@@ -19,6 +19,9 @@ jobs:
             - uses: actions/setup-node@v2.5.1
               with:
                   node-version: '16.x'
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: '3.x'
             - name: install deps
               run: npm ci
             - name: lint and typecheck
