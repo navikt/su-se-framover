@@ -12,8 +12,8 @@
     "author": "",
     "license": "ISC",
     "engines": {
-        "node": ">=14 <15",
-        "npm": ">=6 <7"
+        "node": ">=16 <17",
+        "npm": ">=8 <9"
     },
     "dependencies": {
         "@tsconfig/node12": "^1.0.9",
