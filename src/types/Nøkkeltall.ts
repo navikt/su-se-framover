@@ -4,7 +4,7 @@ export interface Nøkkeltall {
     løpendeSaker: number;
 }
 
-interface Søknader {
+export interface Søknader {
     totaltAntall: number;
     iverksatteAvslag: number;
     iverksatteInnvilget: number;
@@ -14,3 +14,9 @@ interface Søknader {
     digitalsøknader: number;
     papirsøknader: number;
 }
+
+export const ferdigBehandlet = (søknader: Søknader) =>
+    søknader.iverksatteInnvilget + søknader.iverksatteAvslag + søknader.lukket;
+export const ikkeFerdigbehandlet = (søknader: Søknader) => søknader.påbegynt + søknader.ikkePåbegynt;
+export const søknader = (søknader: Søknader) => søknader.digitalsøknader + søknader.papirsøknader;
+export const brukere = (nøkkeltall: Nøkkeltall) => nøkkeltall.antallUnikePersoner + nøkkeltall.løpendeSaker;

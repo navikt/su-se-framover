@@ -4,9 +4,10 @@ import React from 'react';
 import DatePicker from '~components/datePicker/DatePicker';
 import { MessageFormatter } from '~lib/i18n';
 import { Nullable } from '~lib/types';
-import messages from '~pages/saksbehandling/behandlingsoversikt/åpneBehandlinger-nb';
-import styles from '~pages/saksbehandling/behandlingsoversikt/åpneBehandlinger.module.less';
 import { RestansStatus, RestansType } from '~types/Restans';
+
+import messages from './filter-nb';
+import styles from './filter.module.less';
 
 export type FilterCheckbox = {
     [RestansType.SØKNADSBEHANDLING]: boolean;

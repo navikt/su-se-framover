@@ -1,10 +1,9 @@
 import { useParams } from 'react-router-dom';
 
 import * as Routes from '~lib/routes';
+import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '~pages/saksbehandling/types';
+import { Søknadsteg } from '~pages/søknad/types';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
-
-import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '../pages/saksbehandling/types';
-import { Søknadsteg } from '../pages/søknad/types';
 
 interface Route<T> {
     path: string;
@@ -25,11 +24,6 @@ export const home: Route<never> = {
 export const drift: Route<never> = {
     path: '/drift/',
     createURL: () => '/drift/',
-};
-
-export const nøkkeltall: Route<never> = {
-    path: '/nøkkeltall/',
-    createURL: () => '/nøkkeltall/',
 };
 
 //-------------Søknad--------------------------------
