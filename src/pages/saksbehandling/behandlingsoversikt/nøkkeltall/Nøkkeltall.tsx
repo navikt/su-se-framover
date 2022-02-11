@@ -15,7 +15,7 @@ import styles from './nøkkeltall.module.less';
 const Rad = ({ label, verdi, bold = false }: { label: string; verdi: number; bold?: boolean }) => (
     <li className={styles.item}>
         <Label className={bold ? styles.bold : styles.normal}>{label}</Label>
-        <BodyShort className={styles.bold}>{verdi}</BodyShort>
+        <BodyShort className={bold ? styles.bold : styles.normal}>{verdi}</BodyShort>
     </li>
 );
 

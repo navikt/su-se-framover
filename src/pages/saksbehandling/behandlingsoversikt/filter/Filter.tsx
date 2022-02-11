@@ -58,7 +58,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                 </div>
             )}
             <div className={styles.filterbehandling}>
-                <Label className={styles.label}>{formatMessage('typeBehandling')}</Label>
+                <Label className={styles.label}>{formatMessage('behandlingstype')}</Label>
                 <Checkbox
                     checked={props.filterState.SØKNADSBEHANDLING}
                     onChange={(e) => props.oppdaterFilter(RestansType.SØKNADSBEHANDLING, e.target.checked)}
@@ -79,7 +79,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                 </Checkbox>
             </div>
             <div className={styles.filterbehandling}>
-                <Label className={styles.label}>{formatMessage('statusBehandling')}</Label>
+                <Label className={styles.label}>{formatMessage('behandlingsstatus')}</Label>
                 <Checkbox
                     checked={props.filterState.NY_SØKNAD}
                     onChange={(e) => props.oppdaterFilter(RestansStatus.NY_SØKNAD, e.target.checked)}
