@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader, Modal } from '@navikt/ds-react';
 import 'nav-frontend-tabell-style';
 import * as React from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
@@ -13,6 +14,8 @@ import {
     hentReguleringer,
 } from '~api/driftApi';
 import { useApiCall } from '~lib/hooks';
+import { Nullable } from '~lib/types';
+import Nøkkeltall from '~pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~utils/date/dateUtils';
 
 import GReguleringTabell from './components/GReguleringTabell';
@@ -95,7 +98,16 @@ const SøknadTabell = (props: { søknadResponse: SøknadResponse }) => {
     );
 };
 
+enum Knapp {
+    FIX_SØKNADER,
+    KAST_EN_FEIL,
+    KONSISTENSAVSTEMMING,
+    G_REGULERING,
+    NØKKELTALL,
+}
+
 const Drift = () => {
+    const [knappTrykket, settKnappTrykket] = useState<Nullable<Knapp>>();
     const [statusBakover, setStatusBakover] = React.useState<RemoteData.RemoteData<ApiError, string>>(
         RemoteData.initial
     );
@@ -209,9 +221,20 @@ const Drift = () => {
                         variant="secondary"
                         className={styles.knapp}
                         type="button"
-                        onClick={() => hentGReguleringsdata({})}
+                        onClick={() => {
+                            hentGReguleringsdata({});
+                            settKnappTrykket(Knapp.G_REGULERING);
+                        }}
                     >
                         G-regulering
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        className={styles.knapp}
+                        type="button"
+                        onClick={() => settKnappTrykket(Knapp.NØKKELTALL)}
+                    >
+                        Nøkkeltall
                     </Button>
                 </div>
                 {RemoteData.isFailure(fixSøknaderResponse) && (
@@ -241,7 +264,10 @@ const Drift = () => {
                         </Alert>
                     )}
                 </div>
-                {RemoteData.isSuccess(GReguleringsdata) && <GReguleringTabell data={GReguleringsdata.value.saker} />}
+                {knappTrykket === Knapp.G_REGULERING && RemoteData.isSuccess(GReguleringsdata) && (
+                    <GReguleringTabell data={GReguleringsdata.value.saker} />
+                )}
+                {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
             </div>
         </div>
     );

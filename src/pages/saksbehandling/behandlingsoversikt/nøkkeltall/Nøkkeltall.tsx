@@ -7,7 +7,7 @@ import { hentNøkkeltall } from '~api/nøkkeltallApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
-import { brukere, ferdigBehandlet, ikkeFerdigbehandlet, søknader } from '~types/Nøkkeltall';
+import { brukere, ferdigBehandlet, ikkeFerdigbehandlet, søknader } from '~utils/nøkkeltall/nøkkeltallUtils';
 
 import messages from './nøkkeltall-nb';
 import styles from './nøkkeltall.module.less';
