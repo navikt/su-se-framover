@@ -46,7 +46,9 @@ export const ÅpneBehandlinger = () => {
 
         return restanser
             .filter((restans) => (typefilter.length ? typefilter.includes(restans.typeBehandling) : true))
-            .filter((restans) => (statusfilter.length ? statusfilter.includes(restans.status) : true));
+            .filter((restans) =>
+                statusfilter.length ? statusfilter.includes(restans.status as keyof RestansStatusFilter) : true
+            );
     };
 
     return (

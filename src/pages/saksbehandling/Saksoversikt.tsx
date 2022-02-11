@@ -1,17 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Loader } from '@navikt/ds-react';
+import { Loader } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-import { visErrorMelding } from '~components/apiErrorAlert/utils';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Personlinje from '~components/personlinje/Personlinje';
 import { SøknadsbehandlingDraftProvider } from '~context/søknadsbehandlingDraftContext';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { Languages, useI18n } from '~lib/i18n';
+import { Languages } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Behandlingsoversikt } from '~pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -38,8 +38,6 @@ const NyDatoForKontrollsamtale = React.lazy(() => import('~pages/kontrollsamtale
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
     const history = useHistory();
-
-    const { formatMessage } = useI18n({ messages });
 
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const dispatch = useAppDispatch();
@@ -73,15 +71,9 @@ const Saksoversikt = () => {
                             () => <Loader />,
                             () =>
                                 RemoteData.isFailure(søker) ? (
-                                    <Alert variant="error">{visErrorMelding(søker.error, formatMessage)}</Alert>
+                                    <ApiErrorAlert error={søker.error} />
                                 ) : (
-                                    RemoteData.isFailure(sak) && (
-                                        <Alert variant="error">
-                                            {formatMessage('feilmelding.generisk', {
-                                                statusCode: sak.error.statusCode,
-                                            })}
-                                        </Alert>
-                                    )
+                                    RemoteData.isFailure(sak) && <ApiErrorAlert error={sak.error} />
                                 ),
                             ([søker, sak]) => (
                                 <>

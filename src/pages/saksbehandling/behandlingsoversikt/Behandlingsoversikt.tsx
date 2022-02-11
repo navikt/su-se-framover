@@ -1,13 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { RemoteFailure, RemoteInitial, RemotePending, RemoteSuccess } from '@devexperts/remote-data-ts';
-import { Alert, Heading } from '@navikt/ds-react';
+import { Heading } from '@navikt/ds-react';
 import Tabs from 'nav-frontend-tabs';
 import React, { useState } from 'react';
 
 import { ApiError } from '~api/apiClient';
 import { Person } from '~api/personApi';
 import { Person as PersonIkon } from '~assets/Icons';
-import { visErrorMelding } from '~components/apiErrorAlert/utils';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -64,7 +64,7 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
                     autofocusPersonsøk
                 />
                 {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
-                    <Alert variant="error">{visErrorMelding(sak.error, formatMessage)}</Alert>
+                    <ApiErrorAlert className={styles.alert} error={sak.error} />
                 )}
             </div>
 
