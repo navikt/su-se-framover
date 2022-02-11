@@ -18,6 +18,9 @@ export default {
     'notification.avvist': 'Iverksatt avvist klage',
     'notification.underkjent': 'Underkjent klage',
 
+    'radio.overførTilKlageinstans': 'Overfør til Klageinstans',
+    'radio.godkjennAvvisning': 'Godkjenn avvisning',
+
     'knapp.bekreft': 'Bekreft',
     'knapp.tilbake': 'Tilbake',
     'knapp.seBrev': 'Se brev',

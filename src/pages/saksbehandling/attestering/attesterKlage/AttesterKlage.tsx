@@ -5,7 +5,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import * as pdfApi from '~api/pdfApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Attestering from '~components/attestering/Attestering';
+import { AttesteringsForm } from '~components/attestering/AttesteringsForm';
 import OppsummeringAvKlage from '~components/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~features/klage/klageActions';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
@@ -14,7 +14,12 @@ import * as Routes from '~lib/routes';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Klage } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
-import { erKlageTilAttestering, erKlageTilAttesteringAvvist } from '~utils/klage/klageUtils';
+import {
+    erKlageINoenFormForAvvist,
+    erKlageOpprettholdt,
+    erKlageTilAttestering,
+    erKlageTilAttesteringAvvist,
+} from '~utils/klage/klageUtils';
 
 import messages from './attesterKlage-nb';
 import styles from './attesterKlage.module.less';
@@ -114,17 +119,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
         );
 
     return (
-        <Attestering
-            sakId={props.sakId}
-            iverksett={{
-                fn: iverksettCallback().callback,
-                status: iverksettCallback().status,
-            }}
-            underkjenn={{
-                fn: underkjennCallback,
-                status: underkjennStatus,
-            }}
-        >
+        <div>
             <Heading level="1" size="xlarge" className={styles.tittel}>
                 {formatMessage('page.tittel')}
             </Heading>
@@ -141,7 +136,25 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
                 </Button>
                 {RemoteData.isFailure(seBrevStatus) && <ApiErrorAlert error={seBrevStatus.error} />}
             </div>
-        </Attestering>
+            <AttesteringsForm
+                sakId={props.sakId}
+                iverksett={{
+                    fn: iverksettCallback().callback,
+                    status: iverksettCallback().status,
+                }}
+                underkjenn={{
+                    fn: underkjennCallback,
+                    status: underkjennStatus,
+                }}
+                radioTexts={{
+                    bekreftText: erKlageOpprettholdt(klage)
+                        ? formatMessage('radio.overførTilKlageinstans')
+                        : erKlageINoenFormForAvvist(klage)
+                        ? formatMessage('radio.godkjennAvvisning')
+                        : undefined,
+                }}
+            />
+        </div>
     );
 };
 

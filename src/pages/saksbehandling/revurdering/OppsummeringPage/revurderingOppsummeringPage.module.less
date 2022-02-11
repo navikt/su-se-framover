@@ -1,17 +1,12 @@
 @import '~/styles/variables.less';
 @import '~/styles/utils.less';
 
-.container {
-    width: 100%;
+.content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-}
-
-.content {
-    width: 100%;
-    max-width: @container-desktop;
-    padding: 0 @spacing;
+    align-items: flex-start;
+    width: 80%;
+    margin-top: @spacing;
 
     > :not(:last-child) {
         margin-bottom: @spacing;

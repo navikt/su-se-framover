@@ -33,7 +33,6 @@ import {
     erRevurderingUnderkjent,
 } from '~utils/revurdering/revurderingUtils';
 
-import sharedStyles from '../revurdering.module.less';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import {
@@ -53,7 +52,7 @@ const OppsummeringshandlingForm = (props: {
     varselmeldinger: ErrorMessage[];
 }) => {
     const history = useHistory();
-    const { intl, formatMessage } = useI18n({ messages: { ...messages, ...apiErrorMessages } });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...apiErrorMessages } });
     const feilRef = React.useRef<HTMLDivElement>(null);
 
     const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
@@ -71,12 +70,7 @@ const OppsummeringshandlingForm = (props: {
             };
         },
         () => {
-            history.push(
-                Routes.createSakIntroLocation(
-                    intl.formatMessage({ id: 'notification.sendtTilAttestering' }),
-                    props.sakId
-                )
-            );
+            history.push(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId));
         }
     );
 
@@ -98,10 +92,7 @@ const OppsummeringshandlingForm = (props: {
             switch (args.forhåndsvarselhandling) {
                 case Forhåndsvarselhandling.Forhåndsvarsle:
                     history.push(
-                        Routes.createSakIntroLocation(
-                            intl.formatMessage({ id: 'notification.sendtForhåndsvarsel' }),
-                            props.sakId
-                        )
+                        Routes.createSakIntroLocation(formatMessage('notification.sendtForhåndsvarsel'), props.sakId)
                     );
                     return;
                 case Forhåndsvarselhandling.IngenForhåndsvarsel:
@@ -140,18 +131,12 @@ const OppsummeringshandlingForm = (props: {
                     break;
                 case BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger:
                     history.push(
-                        Routes.createSakIntroLocation(
-                            intl.formatMessage({ id: 'notification.sendtTilAttestering' }),
-                            props.sakId
-                        )
+                        Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId)
                     );
                     break;
                 case BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer:
                     history.push(
-                        Routes.createSakIntroLocation(
-                            intl.formatMessage({ id: 'notification.avsluttetRevurdering' }),
-                            props.sakId
-                        )
+                        Routes.createSakIntroLocation(formatMessage('notification.avsluttetRevurdering'), props.sakId)
                     );
             }
         }
@@ -284,48 +269,42 @@ const RevurderingOppsummeringPage = (props: {
         });
     }, [props.revurdering.id]);
 
-    return (
-        <div className={sharedStyles.revurderingContainer}>
-            <div className={styles.container}>
-                {pipe(
-                    RemoteData.combine(beregnOgSimulerStatus, props.grunnlagsdataOgVilkårsvurderinger),
-                    RemoteData.fold(
-                        () => <Loader title={formatMessage('beregner.label')} />,
-                        () => <Loader title={formatMessage('beregner.label')} />,
-                        (err) => (
-                            <div>
-                                <ApiErrorAlert error={err} />
-                                <Button variant="secondary" onClick={() => history.push(props.forrigeUrl)}>
-                                    {formatMessage('knapp.tilbake')}
-                                </Button>
-                            </div>
-                        ),
-                        ([beregning, grunnlagsdataOgVilkårsvurderinger]) => (
-                            <div className={styles.content}>
-                                <Revurderingoppsummering
-                                    revurdering={props.revurdering}
-                                    forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
-                                />
-                                {erRevurderingSimulert(props.revurdering) ||
-                                erBeregnetIngenEndring(props.revurdering) ||
-                                erRevurderingUnderkjent(props.revurdering) ? (
-                                    <OppsummeringshandlingForm
-                                        sakId={props.sakId}
-                                        forrigeUrl={props.forrigeUrl}
-                                        førsteRevurderingstegUrl={props.førsteRevurderingstegUrl}
-                                        revurdering={props.revurdering}
-                                        feilmeldinger={beregning.feilmeldinger}
-                                        varselmeldinger={beregning.varselmeldinger}
-                                    />
-                                ) : (
-                                    <div>{formatMessage('feil.revurderingIUgyldigTilstand')}</div>
-                                )}
-                            </div>
-                        )
-                    )
-                )}
-            </div>
-        </div>
+    return pipe(
+        RemoteData.combine(beregnOgSimulerStatus, props.grunnlagsdataOgVilkårsvurderinger),
+        RemoteData.fold(
+            () => <Loader title={formatMessage('beregner.label')} />,
+            () => <Loader title={formatMessage('beregner.label')} />,
+            (err) => (
+                <div className={styles.content}>
+                    <ApiErrorAlert error={err} />
+                    <Button variant="secondary" onClick={() => history.push(props.forrigeUrl)}>
+                        {formatMessage('knapp.tilbake')}
+                    </Button>
+                </div>
+            ),
+            ([beregning, grunnlagsdataOgVilkårsvurderinger]) => (
+                <div className={styles.content}>
+                    <Revurderingoppsummering
+                        revurdering={props.revurdering}
+                        forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
+                    />
+                    {erRevurderingSimulert(props.revurdering) ||
+                    erBeregnetIngenEndring(props.revurdering) ||
+                    erRevurderingUnderkjent(props.revurdering) ? (
+                        <OppsummeringshandlingForm
+                            sakId={props.sakId}
+                            forrigeUrl={props.forrigeUrl}
+                            førsteRevurderingstegUrl={props.førsteRevurderingstegUrl}
+                            revurdering={props.revurdering}
+                            feilmeldinger={beregning.feilmeldinger}
+                            varselmeldinger={beregning.varselmeldinger}
+                        />
+                    ) : (
+                        <div>{formatMessage('feil.revurderingIUgyldigTilstand')}</div>
+                    )}
+                </div>
+            )
+        )
     );
 };
 

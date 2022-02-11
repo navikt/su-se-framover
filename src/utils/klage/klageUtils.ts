@@ -95,8 +95,11 @@ export const erKlageVilkårsvurdertBekreftetEllerSenere = (k: Klage) =>
     erKlageIverksattAvvist(k) ||
     erKlageAvsluttet(k);
 
+export const erKlageINoenFormForAvvist = (k: Klage) =>
+    erKlageVilkårsvurdertAvvist(k) || erKlageAvvist(k) || erKlageTilAttesteringAvvist(k) || erKlageIverksattAvvist(k);
+
 const erKlageINoenFormForAvvistOgUnderBehandling = (k: Klage) => {
-    return erKlageVilkårsvurdertAvvist(k) || erKlageAvvist(k) || erKlageTilAttesteringAvvist(k);
+    return erKlageINoenFormForAvvist(k) && !erKlageIverksattAvvist(k);
 };
 
 const erKlageINoenFormForVurdertOgUnderBehandling = (k: Klage) => {

@@ -10,10 +10,9 @@ import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useBrevForhåndsvisning } from '~lib/hooks';
+import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import {
@@ -28,22 +27,18 @@ import { createVilkårUrl, mapToVilkårsinformasjon } from '~utils/søknadsbehan
 import messages from './sendTilAttesteringPage-nb';
 import styles from './sendTilAttesteringPage.module.less';
 
-type Props = {
-    sak: Sak;
-};
-
 interface FormData {
     fritekst: string;
 }
 
-const SendTilAttesteringPage = (props: Props) => {
-    const { sak } = props;
-    const { intl } = useI18n({ messages });
+const SendTilAttesteringPage = (props: { sak: Sak }) => {
+    const { formatMessage } = useI18n({ messages });
 
-    const dispatch = useAppDispatch();
-    const { sendtTilAttesteringStatus } = useAppSelector((s) => s.sak);
-    const { sakId, behandlingId } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
-    const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
+    const history = useHistory();
+    const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(sakSlice.sendTilAttestering);
+    const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
+    const { behandlingId } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
+    const behandling = props.sak.behandlinger.find((x) => x.id === behandlingId);
 
     const initialValues: FormData = { fritekst: behandling?.fritekstTilBrev ?? '' };
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
@@ -51,13 +46,9 @@ const SendTilAttesteringPage = (props: Props) => {
         ({ fritekst }) => fritekst === initialValues.fritekst
     );
 
-    const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
-
-    const history = useHistory();
-
     const vilkårUrl = (vilkårType: Vilkårtype) => {
         return createVilkårUrl({
-            sakId: sakId,
+            sakId: props.sak.id,
             behandlingId: behandlingId,
             vilkar: vilkårType,
         });
@@ -77,18 +68,18 @@ const SendTilAttesteringPage = (props: Props) => {
     }, [behandling, sisteVurderteVilkår]);
 
     const handleSubmit = async (values: FormData) => {
-        const response = await dispatch(
-            sakSlice.sendTilAttestering({
-                sakId: sak.id,
+        sendTilAttestering(
+            {
+                sakId: props.sak.id,
                 behandlingId: behandlingId,
                 fritekstTilBrev: values.fritekst,
-            })
+            },
+            () => {
+                clearDraft();
+                const message = formatMessage('vedtak.sendtTilAttestering');
+                history.push(Routes.createSakIntroLocation(message, props.sak.id));
+            }
         );
-        if (sakSlice.sendTilAttestering.fulfilled.match(response)) {
-            clearDraft();
-            const message = intl.formatMessage({ id: 'vedtak.sendtTilAttestering' });
-            history.push(Routes.createSakIntroLocation(message, sak.id));
-        }
     };
 
     const form = useForm({
@@ -97,13 +88,13 @@ const SendTilAttesteringPage = (props: Props) => {
     useDraftFormSubscribe(form.watch);
 
     if (!behandling) {
-        return <Alert variant="error">{intl.formatMessage({ id: 'feilmelding.fantIkkeBehandlingsId' })}</Alert>;
+        return <Alert variant="error">{formatMessage('feilmelding.fantIkkeBehandlingsId')}</Alert>;
     }
 
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
         return (
             <form className={styles.vedtakContainer} onSubmit={form.handleSubmit(handleSubmit)}>
-                <Søknadsbehandlingoppsummering sak={sak} behandling={behandling} />
+                <Søknadsbehandlingoppsummering sak={props.sak} behandling={behandling} />
 
                 <div className={styles.fritekstareaOuterContainer}>
                     <div className={styles.fritekstareaContainer}>
@@ -112,14 +103,14 @@ const SendTilAttesteringPage = (props: Props) => {
                             name="fritekst"
                             render={({ field, fieldState }) => (
                                 <Textarea
-                                    label={intl.formatMessage({ id: 'input.fritekst.label' })}
+                                    label={formatMessage('input.fritekst.label')}
                                     error={fieldState.error?.message}
                                     {...field}
                                 />
                             )}
                         />
                         {RemoteData.isFailure(brevStatus) && (
-                            <Alert variant="error">{intl.formatMessage({ id: 'feilmelding.brevhentingFeilet' })}</Alert>
+                            <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
                         )}
                         <Button
                             variant="secondary"
@@ -127,35 +118,35 @@ const SendTilAttesteringPage = (props: Props) => {
                             type="button"
                             onClick={() => {
                                 lastNedBrev({
-                                    sakId,
+                                    sakId: props.sak.id,
                                     behandlingId: behandling.id,
                                     fritekst: form.getValues().fritekst,
                                 });
                             }}
                             size="small"
                         >
-                            {intl.formatMessage({ id: 'knapp.vis' })}
+                            {formatMessage('knapp.vis')}
                             {RemoteData.isPending(brevStatus) && <Loader />}
                         </Button>
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
                     <LinkAsButton variant="secondary" href={tilbakeUrl}>
-                        {intl.formatMessage({ id: 'knapp.tilbake' })}
+                        {formatMessage('knapp.tilbake')}
                     </LinkAsButton>
                     <Button type="submit">
-                        {intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
-                        {RemoteData.isPending(sendtTilAttesteringStatus) && <Loader />}
+                        {formatMessage('knapp.sendTilAttestering')}
+                        {RemoteData.isPending(sendTilAttesteringStatus) && <Loader />}
                     </Button>
                 </div>
-                {RemoteData.isFailure(sendtTilAttesteringStatus) && (
-                    <ApiErrorAlert error={sendtTilAttesteringStatus.error} />
+                {RemoteData.isFailure(sendTilAttesteringStatus) && (
+                    <ApiErrorAlert error={sendTilAttesteringStatus.error} />
                 )}
             </form>
         );
     }
 
-    return <div>{intl.formatMessage({ id: 'behandling.ikkeFerdig' })}</div>;
+    return <div>{formatMessage('behandling.ikkeFerdig')}</div>;
 };
 
 export default SendTilAttesteringPage;

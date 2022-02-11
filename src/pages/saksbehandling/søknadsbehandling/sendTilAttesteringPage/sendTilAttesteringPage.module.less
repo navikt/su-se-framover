@@ -4,7 +4,8 @@
     margin-bottom: @spacing-xxl;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    width: 80%;
     padding: @spacing;
 
     .vedtakSendtTilAttesteringAlertStripe {
@@ -25,9 +26,9 @@
 }
 
 .navigeringContainer {
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: repeat(2, @knappBredde);
+    gap: @spacing;
 }
 
 .fritekstareaOuterContainer {

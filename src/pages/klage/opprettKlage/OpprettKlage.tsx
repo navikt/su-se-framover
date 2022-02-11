@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, TextField } from '@navikt/ds-react';
-import { formatISO } from 'date-fns';
+import * as DateFns from 'date-fns';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -34,7 +34,11 @@ const schema = yup.object<FormData>({
         .test('isNumeric', 'Må være et tall', function (id) {
             return pipe(id, Number, Number.isInteger);
         }),
-    datoKlageMottatt: yup.date().required().typeError('Feltet må være en dato på formatet dd/mm/yyyy').max(new Date()),
+    datoKlageMottatt: yup
+        .date()
+        .required()
+        .typeError('Feltet må være en dato på formatet dd/mm/yyyy')
+        .max(DateFns.endOfDay(new Date())),
 });
 
 const OpprettKlage = (props: { sak: Sak }) => {
@@ -56,7 +60,7 @@ const OpprettKlage = (props: { sak: Sak }) => {
                     {
                         sakId: props.sak.id,
                         journalpostId: values.journalpostId,
-                        datoKlageMottatt: formatISO(values.datoKlageMottatt, { representation: 'date' }),
+                        datoKlageMottatt: DateFns.formatISO(values.datoKlageMottatt, { representation: 'date' }),
                     },
                     (klage) => {
                         history.push(
@@ -84,7 +88,7 @@ const OpprettKlage = (props: { sak: Sak }) => {
                         dateFormat="dd/MM/yyyy"
                         label={formatMessage('opprett.klageMottatt.label')}
                         feil={fieldState.error?.message}
-                        maxDate={new Date()}
+                        maxDate={DateFns.endOfDay(new Date())}
                         value={field.value}
                         autoComplete="off"
                         hjelpetekst={formatMessage('opprett.klageMottatt.hjelpetekst')}

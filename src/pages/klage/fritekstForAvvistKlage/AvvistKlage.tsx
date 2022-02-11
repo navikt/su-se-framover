@@ -53,7 +53,13 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     };
 
     const handleOnLagre = (fritekstTilBrev: string) => {
-        lagreFritekst({ sakId: props.sakId, klageId: props.klage.id, fritekstTilBrev: fritekstTilBrev });
+        lagreFritekst({ sakId: props.sakId, klageId: props.klage.id, fritekstTilBrev: fritekstTilBrev }, () => {
+            history.push(
+                Routes.saksoversiktValgtSak.createURL({
+                    sakId: props.sakId,
+                })
+            );
+        });
     };
 
     const handleBekreftOgFortsettSubmit = (data: AvvistKlageFormData) => {
@@ -115,12 +121,13 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                                 )}
                             />
                             <Button
+                                className={styles.seBrevKnapp}
                                 type="button"
                                 variant="secondary"
+                                loading={RemoteData.isPending(brevStatus)}
                                 onClick={() => onSeBrevClick(getValues('fritekstTilBrev'))}
                             >
                                 {formatMessage('knapp.seBrev')}
-                                {RemoteData.isPending(brevStatus) && <Loader />}
                             </Button>
                             {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                         </div>
