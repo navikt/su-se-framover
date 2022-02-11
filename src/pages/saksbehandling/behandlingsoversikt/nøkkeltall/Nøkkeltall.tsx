@@ -7,15 +7,15 @@ import { hentNøkkeltall } from '~api/nøkkeltallApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
-import { brukere, ferdigBehandlet, ikkeFerdigbehandlet, søknader } from '~utils/nøkkeltall/nøkkeltallUtils';
+import { ferdigBehandlet, ikkeFerdigbehandlet, søknader } from '~utils/nøkkeltall/nøkkeltallUtils';
 
 import messages from './nøkkeltall-nb';
 import styles from './nøkkeltall.module.less';
 
-const Rad = ({ label, verdi, bold = false }: { label: string; verdi: number; bold?: boolean }) => (
+const Rad = ({ label, verdi, bold = false }: { label: string; verdi: undefined | number; bold?: boolean }) => (
     <li className={styles.item}>
         <Label className={bold ? styles.bold : styles.normal}>{label}</Label>
-        <BodyShort className={bold ? styles.bold : styles.normal}>{verdi}</BodyShort>
+        {verdi && <BodyShort className={bold ? styles.bold : styles.normal}>{verdi}</BodyShort>}
     </li>
 );
 
@@ -60,7 +60,7 @@ const Nøkkeltall = () => {
                         <Rad label={formatMessage('papir')} verdi={nøkkeltall.søknader.papirsøknader} />
                     </ul>
                     <ul className={styles.list}>
-                        <Rad bold label={formatMessage('brukere')} verdi={brukere(nøkkeltall)} />
+                        <Rad bold label={formatMessage('brukere')} verdi={undefined} />
                         <Rad label={formatMessage('antallPersoner')} verdi={nøkkeltall.antallUnikePersoner} />
                         <Rad label={formatMessage('løpendeSaker')} verdi={nøkkeltall.løpendeSaker} />
                     </ul>
