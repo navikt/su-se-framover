@@ -98,7 +98,7 @@ const AttesterRevurdering = (props: {
             () => <Loader />,
             (err) => <ApiErrorAlert error={err} />,
             (grunnlag) => (
-                <div className={SharedStyles.pageContainer}>
+                <div>
                     <Heading level="1" size="xlarge" className={SharedStyles.tittel}>
                         {formatMessage('page.tittel')}
                     </Heading>

@@ -13,10 +13,10 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
 
 import messages from './attestering-nb';
+import styles from './attestering.module.less';
 import AttesterKlage from './attesterKlage/AttesterKlage';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
 import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';
-import sharedStyles from './sharedStyles.module.less';
 
 const Attestering = () => {
     const dispatch = useAppDispatch();
@@ -43,7 +43,7 @@ const Attestering = () => {
             () => <Loader />,
             (_err) => <Alert variant="error">{formatMessage('feil.generisk')}</Alert>,
             ([sakValue, søkerValue]) => (
-                <div className={sharedStyles.attesteringsContainer}>
+                <div className={styles.attesteringsSideContainer}>
                     <Personlinje
                         søker={søkerValue}
                         sakInfo={{
@@ -51,20 +51,26 @@ const Attestering = () => {
                             saksnummer: sakValue.saksnummer,
                         }}
                     />
-                    <Switch>
-                        <Route path={Routes.attesterSøknadsbehandling.path}>
-                            <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
-                        </Route>
-                        <Route path={Routes.attesterRevurdering.path}>
-                            <AttesterRevurdering
-                                sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
-                                informasjonsRevurderinger={sakValue.revurderinger.filter(erInformasjonsRevurdering)}
-                            />
-                        </Route>
-                        <Route path={Routes.attesterKlage.path}>
-                            <AttesterKlage sakId={sakValue.id} klager={sakValue.klager} vedtaker={sakValue.vedtak} />
-                        </Route>
-                    </Switch>
+                    <div className={styles.attesteringsKomponentContainer}>
+                        <Switch>
+                            <Route path={Routes.attesterSøknadsbehandling.path}>
+                                <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
+                            </Route>
+                            <Route path={Routes.attesterRevurdering.path}>
+                                <AttesterRevurdering
+                                    sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
+                                    informasjonsRevurderinger={sakValue.revurderinger.filter(erInformasjonsRevurdering)}
+                                />
+                            </Route>
+                            <Route path={Routes.attesterKlage.path}>
+                                <AttesterKlage
+                                    sakId={sakValue.id}
+                                    klager={sakValue.klager}
+                                    vedtaker={sakValue.vedtak}
+                                />
+                            </Route>
+                        </Switch>
+                    </div>
                 </div>
             )
         )

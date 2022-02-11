@@ -67,10 +67,13 @@ export const AttesteringsForm = (props: Props) => {
     });
 
     const submitHandler = (data: AttesteringFormData) => {
-        if (data.beslutning === Beslutning.IVERKSETT) props.iverksett.fn();
-        if (data.beslutning === Beslutning.UNDERKJENN) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
+        switch (data.beslutning) {
+            case Beslutning.IVERKSETT:
+                props.iverksett.fn();
+                break;
+            case Beslutning.UNDERKJENN:
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
         }
     };
 

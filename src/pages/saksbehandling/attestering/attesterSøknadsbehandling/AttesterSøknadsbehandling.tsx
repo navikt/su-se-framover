@@ -14,9 +14,8 @@ import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { erIverksatt, erTilAttestering } from '~utils/behandling/behandlingUtils';
 
-import SharedStyles from '../sharedStyles.module.less';
-
 import messages from './attesterSøknadsbehandling-nb';
+import styles from './attesterSøknadsbehandling.module.less';
 
 const Attesteringsinnhold = ({
     intl,
@@ -75,7 +74,7 @@ const Attesteringsinnhold = ({
     }
 
     return (
-        <div className={SharedStyles.pageContainer}>
+        <div className={styles.pageContainer}>
             <Søknadsbehandlingoppsummering
                 sak={props.sak}
                 behandling={props.behandling}
