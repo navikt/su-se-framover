@@ -22,6 +22,7 @@ export enum ApiErrorCode {
     FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN = 'fant_ikke_person_eller_saksbehandler_navn',
     FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
     FANT_IKKE_SAK = 'fant_ikke_sak',
+    FANT_IKKE_SAK_ELLER_FEIL_FORMAT = 'sakId_mangler_eller_feil_format',
     FANT_IKKE_SØKNAD = 'fant_ikke_søknad',
     FANT_IKKE_TIDLIGERE_GRUNNLAGSDATA = 'fant_ikke_tidligere_grunnlagsdata',
     FANT_IKKE_VEDTAK = 'fant_ikke_vedtak',

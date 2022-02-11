@@ -1,12 +1,17 @@
 import { RestansType, RestansStatus } from '~types/Restans';
 
-const restansTypeMessages: { [key in RestansType]: string } = {
+export const restansTypeMessages: { [key in RestansType]: string } = {
     [RestansType.SØKNADSBEHANDLING]: 'Søknadsbehandling',
     [RestansType.REVURDERING]: 'Revurdering',
     [RestansType.KLAGE]: 'Klage',
 };
 
-const restansStatus: { [key in RestansStatus]: string } = {
+export const restansStatus: { [key in RestansStatus]: string } = {
+    [RestansStatus.INGEN_ENDRING]: 'Ingen endring',
+    [RestansStatus.AVSLAG]: 'Avslag',
+    [RestansStatus.AVSLUTTET]: 'Avsluttet / lukket',
+    [RestansStatus.INNVILGET]: 'Innvilget',
+    [RestansStatus.OPPHØR]: 'Opphør',
     [RestansStatus.NY_SØKNAD]: 'Ny søknad',
     [RestansStatus.UNDER_BEHANDLING]: 'Under behandling',
     [RestansStatus.TIL_ATTESTERING]: 'Til attestering',

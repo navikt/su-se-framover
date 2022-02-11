@@ -12,6 +12,7 @@ import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/i18n';
+import { FerdigeBehandlinger } from '~pages/saksbehandling/behandlingsoversikt/ferdigeBehandlinger/FerdigeBehandlinger';
 import { useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
 
@@ -27,6 +28,7 @@ interface Props {
 
 enum Tab {
     ÅPNE_BEHANDLINGER,
+    FERDIGE_BEHANDLINGER,
     NØKKELTALL,
 }
 
@@ -67,12 +69,17 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
             </div>
 
             <Tabs
-                tabs={[{ label: formatMessage('åpneBehandlinger') }, { label: formatMessage('nøkkeltall') }]}
+                tabs={[
+                    { label: formatMessage('åpneBehandlinger') },
+                    { label: formatMessage('ferdigeBehandlinger') },
+                    { label: formatMessage('nøkkeltall') },
+                ]}
                 defaultAktiv={aktivTab}
                 onChange={(_, index) => setAktivTab(index)}
             />
             <div className={styles.tabcontainer}>
                 {aktivTab === Tab.ÅPNE_BEHANDLINGER && <ÅpneBehandlinger />}
+                {aktivTab === Tab.FERDIGE_BEHANDLINGER && <FerdigeBehandlinger />}
                 {aktivTab === Tab.NØKKELTALL && <Nøkkeltall />}
             </div>
         </div>

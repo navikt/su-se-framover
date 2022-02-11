@@ -10,19 +10,21 @@ import { useI18n } from '~lib/i18n';
 import {
     Filter,
     hentFiltrerteVerdier,
-    RestansStatusFilter,
+    RestansResultatFilter,
     RestansTypeFilter,
 } from '~pages/saksbehandling/behandlingsoversikt/filter/Filter';
 import RestanserTabell from '~pages/saksbehandling/restans/Restanser';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 
-import messages from './åpneBehandlinger-nb';
+import messages from './ferdigeBehandlinger-nb';
 
-export const ÅpneBehandlinger = () => {
-    const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentÅpneBehandlinger);
+export const FerdigeBehandlinger = () => {
+    const [hentFerdigeBehandlingerStatus, hentFerdigeBehandlinger] = useAsyncActionCreator(
+        sakSlice.hentFerdigeBehandlinger
+    );
 
     useEffect(() => {
-        hentÅpneBehandlinger();
+        hentFerdigeBehandlinger();
     }, []);
 
     const { formatMessage } = useI18n({ messages });
@@ -33,33 +35,46 @@ export const ÅpneBehandlinger = () => {
         [RestansType.KLAGE]: false,
     });
 
-    const [status, setStatus] = useState<RestansStatusFilter>({
-        [RestansStatus.NY_SØKNAD]: false,
-        [RestansStatus.UNDER_BEHANDLING]: false,
-        [RestansStatus.TIL_ATTESTERING]: false,
-        [RestansStatus.UNDERKJENT]: false,
+    const [resultat, setResultat] = useState<RestansResultatFilter>({
+        [RestansStatus.OPPHØR]: false,
+        [RestansStatus.AVSLAG]: false,
+        [RestansStatus.INGEN_ENDRING]: false,
+        [RestansStatus.INNVILGET]: false,
+        [RestansStatus.AVSLUTTET]: false,
     });
 
     const filterRestanser = (restanser: Restans[]): Restans[] => {
         const typefilter = hentFiltrerteVerdier(type);
-        const statusfilter = hentFiltrerteVerdier(status);
+        const resultatfilter = hentFiltrerteVerdier(resultat);
 
         return restanser
             .filter((restans) => (typefilter.length ? typefilter.includes(restans.typeBehandling) : true))
-            .filter((restans) => (statusfilter.length ? statusfilter.includes(restans.status) : true));
+            .filter((restans) =>
+                resultatfilter.length ? resultatfilter.includes(restans.status as keyof RestansResultatFilter) : true
+            );
     };
 
     return (
         <>
             <Filter
                 type={type}
-                status={status}
-                oppdaterStatus={(key, verdi) => setStatus({ ...status, [key]: verdi })}
-                oppdaterType={(key, verdi) => setType({ ...type, [key]: verdi })}
+                resultat={resultat}
+                oppdaterResultat={(key, verdi) => {
+                    setResultat({
+                        ...resultat,
+                        [key]: verdi,
+                    });
+                }}
+                oppdaterType={(key, verdi) => {
+                    setType({
+                        ...type,
+                        [key]: verdi,
+                    });
+                }}
                 formatMessage={formatMessage}
             />
             {pipe(
-                hentÅpneBehandlingerStatus,
+                hentFerdigeBehandlingerStatus,
                 RemoteData.fold(
                     () => <Loader />,
                     () => <Loader />,

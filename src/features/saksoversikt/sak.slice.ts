@@ -42,10 +42,21 @@ export const fetchSak = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentRestanser = createAsyncThunk<Restans[], void, { rejectValue: ApiError }>(
-    'sak/hentRestanser',
+export const hentÅpneBehandlinger = createAsyncThunk<Restans[], void, { rejectValue: ApiError }>(
+    'sak/apneBehandlinger',
     async (_, thunkApi) => {
-        const res = await sakApi.hentRestanser();
+        const res = await sakApi.hentÅpneBehandlinger();
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
+
+export const hentFerdigeBehandlinger = createAsyncThunk<Restans[], void, { rejectValue: ApiError }>(
+    'sak/ferdigeBehandlinger',
+    async (_, thunkApi) => {
+        const res = await sakApi.hentFerdigeBehandlinger();
         if (res.status === 'ok') {
             return res.data;
         }
