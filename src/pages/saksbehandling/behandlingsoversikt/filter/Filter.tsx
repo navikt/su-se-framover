@@ -4,9 +4,10 @@ import React from 'react';
 import DatePicker from '~components/datePicker/DatePicker';
 import { MessageFormatter } from '~lib/i18n';
 import { Nullable } from '~lib/types';
-import messages from '~pages/saksbehandling/behandlingsoversikt/åpneBehandlinger-nb';
-import styles from '~pages/saksbehandling/behandlingsoversikt/åpneBehandlinger.module.less';
 import { RestansStatus, RestansType } from '~types/Restans';
+
+import messages from './filter-nb';
+import styles from './filter.module.less';
 
 export type FilterCheckbox = {
     [RestansType.SØKNADSBEHANDLING]: boolean;
@@ -57,7 +58,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                 </div>
             )}
             <div className={styles.filterbehandling}>
-                <Label className={styles.label}>{formatMessage('typeBehandling')}</Label>
+                <Label className={styles.label}>{formatMessage('behandlingstype')}</Label>
                 <Checkbox
                     checked={props.filterState.SØKNADSBEHANDLING}
                     onChange={(e) => props.oppdaterFilter(RestansType.SØKNADSBEHANDLING, e.target.checked)}
@@ -78,7 +79,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                 </Checkbox>
             </div>
             <div className={styles.filterbehandling}>
-                <Label className={styles.label}>{formatMessage('statusBehandling')}</Label>
+                <Label className={styles.label}>{formatMessage('behandlingsstatus')}</Label>
                 <Checkbox
                     checked={props.filterState.NY_SØKNAD}
                     onChange={(e) => props.oppdaterFilter(RestansStatus.NY_SØKNAD, e.target.checked)}

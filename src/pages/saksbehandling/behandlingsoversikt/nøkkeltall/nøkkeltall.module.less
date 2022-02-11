@@ -1,0 +1,34 @@
+@import '~/styles/variables.less';
+
+.nøkkeltall {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: @spacing-xxs;
+
+        li:first-child {
+            margin-left: 0;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+
+            :first-child {
+                margin-right: @spacing;
+            }
+
+            .normal {
+                font-weight: 400;
+            }
+
+            .bold {
+                font-weight: 600;
+            }
+        }
+    }
+}

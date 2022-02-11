@@ -13,7 +13,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { Languages, useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { ÅpneBehandlinger } from '~pages/saksbehandling/behandlingsoversikt/ÅpneBehandlinger';
+import { Behandlingsoversikt } from '~pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
 
@@ -182,7 +182,7 @@ const Saksoversikt = () => {
                     )}
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
-                    <ÅpneBehandlinger sak={sak} søker={søker} />
+                    <Behandlingsoversikt sak={sak} søker={søker} />
                 </Route>
             </Switch>
         </IntlProvider>

@@ -1,12 +1,7 @@
-import { statusFeilmeldinger } from '~components/apiErrorAlert/ApiErrorAlert-nb';
-
 export default {
-    ...statusFeilmeldinger,
-    åpneBehandlinger: 'Åpne behandlinger',
-    finnSak: 'Finn sak',
     tidsperiode: 'Tidsperiode',
-    typeBehandling: 'Type behandling',
-    statusBehandling: 'Status behandling',
+    behandlingstype: 'Behandlingstype',
+    behandlingsstatus: 'Behandlingsstatus',
     tilOgMed: 'Dato til og med',
     fraOgMed: 'Dato fra og med',
     søknadsbehandling: 'Søknadsbehandling',

@@ -4,7 +4,7 @@ export interface Nøkkeltall {
     løpendeSaker: number;
 }
 
-interface Søknader {
+export interface Søknader {
     totaltAntall: number;
     iverksatteAvslag: number;
     iverksatteInnvilget: number;
