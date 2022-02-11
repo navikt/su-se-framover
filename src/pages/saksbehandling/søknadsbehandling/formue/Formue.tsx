@@ -109,7 +109,7 @@ const schema = yup
             .typeError('Feltet må fylles ut'),
         epsFnr: yup.mixed<string>().when('borSøkerMedEPS', {
             is: true,
-            then: yup.string().required('Du må legge inn ektefelle/samboers fødselsnummer').length(11),
+            then: yup.string().typeError('Du må legge inn ektefelle/samboers fødselsnummer').length(11),
         }),
     })
     .required();
