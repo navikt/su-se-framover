@@ -2,7 +2,7 @@ import { Checkbox, Label } from '@navikt/ds-react';
 import React from 'react';
 
 import DatePicker from '~components/datePicker/DatePicker';
-import { MessageFormatter } from '~lib/i18n';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { RestansStatus, RestansType } from '~types/Restans';
 
@@ -39,8 +39,12 @@ export interface FilterProps {
     oppdaterType?: (key: keyof RestansTypeFilter, verdi: boolean) => void;
     oppdaterStatus?: (key: keyof RestansStatusFilter, verdi: boolean) => void;
     oppdaterResultat?: (key: keyof RestansResultatFilter, verdi: boolean) => void;
-    formatMessage: MessageFormatter<typeof messages>;
 }
+
+const tilOgMedErGyldig = (fraOgMed: Nullable<Date> | undefined, tilOgMed: Nullable<Date>) => {
+    if (!fraOgMed || !tilOgMed) return true;
+    return tilOgMed >= fraOgMed;
+};
 
 export const hentFiltrerteVerdier = <T,>(filter: T): Array<keyof T> =>
     Object.entries(filter)
@@ -48,7 +52,7 @@ export const hentFiltrerteVerdier = <T,>(filter: T): Array<keyof T> =>
         .map(([key, _]) => key) as Array<keyof T>;
 
 export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) => {
-    const formatMessage = props.formatMessage;
+    const { formatMessage } = useI18n({ messages });
     const skalViseDato = tilOgMedState || fraOgMedState;
 
     return (
@@ -56,18 +60,23 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
             {skalViseDato && (
                 <div className={styles.filterdato}>
                     <Label className={styles.label}>{formatMessage('tidsperiode')}</Label>
-                    {tilOgMedState && (
-                        <DatePicker
-                            label={formatMessage('tilOgMed')}
-                            value={tilOgMedState[0]}
-                            onChange={tilOgMedState[1]}
-                        />
-                    )}
                     {fraOgMedState && (
                         <DatePicker
                             label={formatMessage('fraOgMed')}
                             value={fraOgMedState[0]}
                             onChange={fraOgMedState[1]}
+                        />
+                    )}
+                    {tilOgMedState && (
+                        <DatePicker
+                            label={formatMessage('tilOgMed')}
+                            value={tilOgMedState[0]}
+                            onChange={tilOgMedState[1]}
+                            feil={
+                                tilOgMedErGyldig(fraOgMedState?.[0], tilOgMedState[0])
+                                    ? undefined
+                                    : formatMessage('datovalidering')
+                            }
                         />
                     )}
                 </div>

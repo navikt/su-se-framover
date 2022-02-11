@@ -6,7 +6,7 @@ import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
+import { Nullable } from '~lib/types';
 import {
     Filter,
     hentFiltrerteVerdier,
@@ -15,8 +15,7 @@ import {
 } from '~pages/saksbehandling/behandlingsoversikt/filter/Filter';
 import RestanserTabell from '~pages/saksbehandling/restans/Restanser';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
-
-import messages from './ferdigeBehandlinger-nb';
+import { toDateOrNull } from '~utils/date/dateUtils';
 
 export const FerdigeBehandlinger = () => {
     const [hentFerdigeBehandlingerStatus, hentFerdigeBehandlinger] = useAsyncActionCreator(
@@ -27,7 +26,8 @@ export const FerdigeBehandlinger = () => {
         hentFerdigeBehandlinger();
     }, []);
 
-    const { formatMessage } = useI18n({ messages });
+    const tilOgMed = useState<Nullable<Date>>(null);
+    const fraOgMed = useState<Nullable<Date>>(null);
 
     const [type, setType] = useState<RestansTypeFilter>({
         [RestansType.SØKNADSBEHANDLING]: false,
@@ -48,6 +48,8 @@ export const FerdigeBehandlinger = () => {
         const resultatfilter = hentFiltrerteVerdier(resultat);
 
         return restanser
+            .filter((restans) => (tilOgMed[0] ? (toDateOrNull(restans.behandlingStartet) ?? '') <= tilOgMed[0] : true))
+            .filter((restans) => (fraOgMed[0] ? (toDateOrNull(restans.behandlingStartet) ?? '') >= fraOgMed[0] : true))
             .filter((restans) => (typefilter.length ? typefilter.includes(restans.typeBehandling) : true))
             .filter((restans) =>
                 resultatfilter.length ? resultatfilter.includes(restans.status as keyof RestansResultatFilter) : true
@@ -59,6 +61,8 @@ export const FerdigeBehandlinger = () => {
             <Filter
                 type={type}
                 resultat={resultat}
+                tilOgMedState={tilOgMed}
+                fraOgMedState={fraOgMed}
                 oppdaterResultat={(key, verdi) => {
                     setResultat({
                         ...resultat,
@@ -71,7 +75,6 @@ export const FerdigeBehandlinger = () => {
                         [key]: verdi,
                     });
                 }}
-                formatMessage={formatMessage}
             />
             {pipe(
                 hentFerdigeBehandlingerStatus,

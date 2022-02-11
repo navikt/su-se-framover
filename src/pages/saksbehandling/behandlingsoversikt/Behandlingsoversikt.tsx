@@ -16,10 +16,10 @@ import { FerdigeBehandlinger } from '~pages/saksbehandling/behandlingsoversikt/f
 import { useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
 
+import messages from './behandlingsoversikt-nb';
 import styles from './behandlingsoversikt.module.less';
 import Nøkkeltall from './nøkkeltall/Nøkkeltall';
 import { ÅpneBehandlinger } from './åpneBehandlinger/ÅpneBehandlinger';
-import messages from './åpneBehandlinger/åpneBehandlinger-nb';
 
 interface Props {
     søker: RemoteInitial | RemotePending | RemoteFailure<ApiError> | RemoteSuccess<Person>;

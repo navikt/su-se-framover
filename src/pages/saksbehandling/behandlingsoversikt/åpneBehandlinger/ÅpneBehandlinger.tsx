@@ -6,7 +6,6 @@ import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
 import {
     Filter,
     hentFiltrerteVerdier,
@@ -16,16 +15,12 @@ import {
 import RestanserTabell from '~pages/saksbehandling/restans/Restanser';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 
-import messages from './åpneBehandlinger-nb';
-
 export const ÅpneBehandlinger = () => {
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentÅpneBehandlinger);
 
     useEffect(() => {
         hentÅpneBehandlinger();
     }, []);
-
-    const { formatMessage } = useI18n({ messages });
 
     const [type, setType] = useState<RestansTypeFilter>({
         [RestansType.SØKNADSBEHANDLING]: false,
@@ -58,7 +53,6 @@ export const ÅpneBehandlinger = () => {
                 status={status}
                 oppdaterStatus={(key, verdi) => setStatus({ ...status, [key]: verdi })}
                 oppdaterType={(key, verdi) => setType({ ...type, [key]: verdi })}
-                formatMessage={formatMessage}
             />
             {pipe(
                 hentÅpneBehandlingerStatus,
