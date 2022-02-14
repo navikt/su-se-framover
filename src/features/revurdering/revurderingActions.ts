@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
+import { Tilbakekrevingsbehandling } from '~pages/saksbehandling/revurdering/OppsummeringPage/oppsummeringPageForms/OppsummeringPageForms';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -178,6 +179,22 @@ export const lagreForhåndsvarsel = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/forhandsvarsle', async ({ sakId, revurderingId, forhåndsvarselhandling, fritekstTilBrev }, thunkApi) => {
     const res = await revurderingApi.lagreForhåndsvarsel(sakId, revurderingId, forhåndsvarselhandling, fritekstTilBrev);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreTilbakekrevingsbehandling = createAsyncThunk<
+    SimulertRevurdering,
+    {
+        sakId: string;
+        revurderingId: string;
+        tilbakekrevingsbehandling: Tilbakekrevingsbehandling;
+    },
+    { rejectValue: ApiError }
+>('revurdering/tilbakekreving', async ({ sakId, revurderingId, tilbakekrevingsbehandling }, thunkApi) => {
+    const res = await revurderingApi.lagreTilbakekrevingsbehandling(sakId, revurderingId, tilbakekrevingsbehandling);
     if (res.status === 'ok') {
         return res.data;
     }

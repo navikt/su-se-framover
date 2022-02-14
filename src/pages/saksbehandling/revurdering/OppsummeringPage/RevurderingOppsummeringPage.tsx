@@ -38,6 +38,8 @@ import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøtte
 import {
     ResultatEtterForhåndsvarselform,
     SendTilAttesteringForm,
+    TilbakekrevingForm,
+    Tilbakekrevingsbehandling,
     VelgForhåndsvarselForm,
 } from './oppsummeringPageForms/OppsummeringPageForms';
 import messages from './revurderingOppsummeringPage-nb';
@@ -104,6 +106,22 @@ const OppsummeringshandlingForm = (props: {
             }
         }
     );
+
+    const [lagreTilbakekrevingsbehandlingState, lagreTilbakekrevingsbehandling] =
+        useAsyncActionCreatorWithArgsTransformer(
+            RevurderingActions.lagreTilbakekrevingsbehandling,
+            (args: { tilbakekrevingsbehandling: Tilbakekrevingsbehandling }) => {
+                if (props.feilmeldinger.length > 0) {
+                    feilRef.current?.focus();
+                    return;
+                }
+                return {
+                    sakId: props.sakId,
+                    revurderingId: props.revurdering.id,
+                    tilbakekrevingsbehandling: args.tilbakekrevingsbehandling,
+                };
+            }
+        );
 
     const [fortsettEtterForhåndsvarselState, fortsettEtterForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
         RevurderingActions.fortsettEtterForhåndsvarsel,
@@ -189,6 +207,15 @@ const OppsummeringshandlingForm = (props: {
                     submitStatus={sendTilAttesteringState}
                     onSubmit={(args) =>
                         sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: true })
+                    }
+                />
+            ) : props.revurdering.tilbakekrevingsbehandling != null ? (
+                <TilbakekrevingForm
+                    revurdering={props.revurdering}
+                    onSubmit={(args) =>
+                        lagreTilbakekrevingsbehandling({
+                            tilbakekrevingsbehandling: args.tilbakekrevingsbehandling,
+                        })
                     }
                 />
             ) : !erRevurderingForhåndsvarslet(props.revurdering) ? (

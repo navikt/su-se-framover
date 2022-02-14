@@ -17,6 +17,12 @@ export default {
 
     'sendTilAttestering.skalFøreTilBrev': 'Send vedtaksbrev til bruker',
 
+    'tilbakekreving.avgjør.aktsomhet.tittel': 'Vurder aktsomhet',
+    'tilbakekreving.avgjør.aktsomhet.forsto': 'Grov uaktsomhet (full tilbakekreving)',
+    'tilbakekreving.avgjør.aktsomhet.burde.forstått': 'Simpel uaktsomhet (full tilbakekreving)',
+    'tilbakekreving.avgjør.aktsomhet.kunne.ikke.forstått':
+        'Hadde ikke forutsetning/mulighet til å forstå (ingen tilbakekreving)',
+
     'velgForhåndsvarsel.handling.legend': 'Skal bruker forhåndsvarsles?',
     'velgForhåndsvarsel.submit.legend': 'Skal bruker forhåndsvarsles?',
 
