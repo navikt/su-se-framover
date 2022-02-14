@@ -22,7 +22,7 @@ export default {
     ...restansTypeMessages,
     ...restansStatus,
 
-    'restans.ingenRestanser': 'Ingen restanser',
+    'restans.ingenBehandlinger': 'Ingen behandlinger',
     'restans.behandling.startet': 'Behandling startet',
     'restans.typeBehandling': 'Behandlingstype',
     'restans.status': 'Status',

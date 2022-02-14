@@ -87,7 +87,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     if (props.tabelldata.length === 0) {
         return (
             <Alert variant="info" className={styles.ingenResultater}>
-                {formatMessage('restans.ingenRestanser')}
+                {formatMessage('restans.ingenBehandlinger')}
             </Alert>
         );
     }
