@@ -27,8 +27,12 @@ export async function fetchSakBySakId(sakId: string): Promise<ApiClientResult<Sa
     return apiClient({ url: `/saker/${sakId}`, method: 'GET' });
 }
 
-export async function hentRestanser(): Promise<ApiClientResult<Restans[]>> {
-    return apiClient({ url: `/saker/restanser`, method: 'GET' });
+export async function hentÅpneBehandlinger(): Promise<ApiClientResult<Restans[]>> {
+    return apiClient({ url: `/saker/behandlinger/apne`, method: 'GET' });
+}
+
+export async function hentFerdigeBehandlinger(): Promise<ApiClientResult<Restans[]>> {
+    return apiClient({ url: `/saker/behandlinger/ferdige`, method: 'GET' });
 }
 
 export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<BegrensetSakinfo>> {

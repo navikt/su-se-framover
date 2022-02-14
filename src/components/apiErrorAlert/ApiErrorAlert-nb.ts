@@ -29,6 +29,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FEIL_VED_LAGRING_AV_BREV_OG_KLAGE]: 'Feil ved lagring av brev og klage',
     [ApiErrorCode.FANT_IKKE_REVURDERING]: 'Fant ikke revurdering',
     [ApiErrorCode.FANT_IKKE_SAK]: 'Fant ikke sak',
+    [ApiErrorCode.FANT_IKKE_SAK_ELLER_FEIL_FORMAT]: 'Fant ikke sak, eller feil format på spørring',
     [ApiErrorCode.FANT_IKKE_SØKNAD]: 'Fant ikke søknad',
     [ApiErrorCode.FANT_IKKE_TIDLIGERE_GRUNNLAGSDATA]: 'Fant ikke tidligere grunnlagsdata',
     [ApiErrorCode.FANT_IKKE_VEDTAK]: 'Fant ikke vedtak',
@@ -175,6 +176,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.SØKNAD_MANGLER_OPPGAVE]: 'Søknad mangler oppgave',
     [ApiErrorCode.TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST]:
         'Teknisk feil ved henting av journalpost fra sak og arkivfasade (forvaltes av Team Dokumentløsninger)',
+    [ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG]: 'Klarte ikke kontakte tjenesten',
     [ApiErrorCode.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'Uføregraden må være mellom 1 og 100',
     [ApiErrorCode.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'Uføregrad og/eller forventet inntekt mangler',
     [ApiErrorCode.UGYLDIG_BEREGNINGSGRUNNLAG]: 'Ugyldig beregningsgrunnlag',

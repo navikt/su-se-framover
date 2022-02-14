@@ -17,39 +17,25 @@ import messages from './restanser-nb';
 import styles from './restanser.module.less';
 import { AriaSortVerdier, RestansKolonner, sortTabell } from './restanserUtils';
 
-const KnappOgStatus = (props: { saksnummer: string }) => {
+const VelgSakKnapp = (props: { label: string; saksnummer: string }) => {
     const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
-    const { formatMessage } = useI18n({ messages });
-    const history = useHistory();
+    const { push } = useHistory();
     const dispatch = useAppDispatch();
 
     return (
-        <div>
-            <Button
-                variant="tertiary"
-                className={styles.seSakKnapp}
-                onClick={async () => {
-                    //Siden man kan ha søkt opp en person og/eller før man velger å trykke på hent sak
-                    //så resetter vi person og sak slik at når saksbehandler henter sak
-                    //gjennom knappene, vil vi hente alt korrekt
-                    dispatch(personSlice.default.actions.resetSøker());
-                    dispatch(sakSlice.default.actions.resetSak());
-                    hentSak({ saksnummer: props.saksnummer }, (sak) => {
-                        history.push(
-                            Routes.saksoversiktValgtSak.createURL({
-                                sakId: sak.id,
-                            })
-                        );
-                    });
-                }}
-            >
-                {formatMessage('sak.seSak')}
-                {RemoteData.isPending(hentSakStatus) && <Loader />}
-            </Button>
-            {RemoteData.isFailure(hentSakStatus) && (
-                <Alert variant="error">{formatMessage('feil.sak.kunneIkkeHente')}</Alert>
-            )}
-        </div>
+        <Button
+            variant="tertiary"
+            onClick={async () => {
+                dispatch(personSlice.default.actions.resetSøker());
+                dispatch(sakSlice.default.actions.resetSak());
+                hentSak({ saksnummer: props.saksnummer }, (sak) => {
+                    push(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
+                });
+            }}
+        >
+            {props.label}
+            {RemoteData.isPending(hentSakStatus) && <Loader />}
+        </Button>
     );
 };
 
@@ -89,16 +75,14 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
         }
     }, [props.tabelldata]);
 
-    const getHeaderClassName = (kolonne: RestansKolonner) => {
-        return classNames({
+    const getHeaderClassName = (kolonne: RestansKolonner) =>
+        classNames({
             ['tabell__th--sortert-asc']: erKolonneSortertEtter(kolonne) && erSortVerdi('ascending'),
             ['tabell__th--sortert-desc']: erKolonneSortertEtter(kolonne) && erSortVerdi('descending'),
         });
-    };
 
-    const getRowClassName = (kolonne: RestansKolonner) => {
-        return classNames({ ['tabell__td--sortert']: erKolonneSortertEtter(kolonne) });
-    };
+    const getRowClassName = (kolonne: RestansKolonner) =>
+        classNames({ ['tabell__td--sortert']: erKolonneSortertEtter(kolonne) });
 
     if (props.tabelldata.length === 0) {
         return (
@@ -109,77 +93,70 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     }
 
     return (
-        <div>
-            <table className={classNames('tabell', styles.tabell)}>
-                <thead>
-                    <tr>
-                        <th
-                            role="columnheader"
-                            aria-sort={erKolonneSortertEtter('saksnummer') ? sortVerdi : 'none'}
-                            className={getHeaderClassName('saksnummer')}
+        <table className={classNames('tabell', styles.tabell)}>
+            <thead>
+                <tr>
+                    <th
+                        role="columnheader"
+                        aria-sort={erKolonneSortertEtter('saksnummer') ? sortVerdi : 'none'}
+                        className={getHeaderClassName('saksnummer')}
+                    >
+                        <button aria-label="Sorter etter saksnummer" onClick={() => onTabellHeaderClick('saksnummer')}>
+                            {formatMessage('sak.saksnummer')}
+                        </button>
+                    </th>
+                    <th
+                        role="columnheader"
+                        aria-sort={erKolonneSortertEtter('typeBehandling') ? sortVerdi : 'none'}
+                        className={getHeaderClassName('typeBehandling')}
+                    >
+                        <button
+                            aria-label="Sorter etter type behandling"
+                            onClick={() => onTabellHeaderClick('typeBehandling')}
                         >
-                            <button
-                                aria-label="Sorter etter saksnummer"
-                                onClick={() => onTabellHeaderClick('saksnummer')}
-                            >
-                                {formatMessage('sak.saksnummer')}
-                            </button>
-                        </th>
-                        <th
-                            role="columnheader"
-                            aria-sort={erKolonneSortertEtter('typeBehandling') ? sortVerdi : 'none'}
-                            className={getHeaderClassName('typeBehandling')}
+                            {formatMessage('restans.typeBehandling')}
+                        </button>
+                    </th>
+                    <th
+                        role="columnheader"
+                        aria-sort={erKolonneSortertEtter('status') ? sortVerdi : 'none'}
+                        className={getHeaderClassName('status')}
+                    >
+                        <button aria-label="Sorter etter status" onClick={() => onTabellHeaderClick('status')}>
+                            {formatMessage('restans.status')}
+                        </button>
+                    </th>
+                    <th
+                        role="columnheader"
+                        aria-sort={erKolonneSortertEtter('behandlingStartet') ? sortVerdi : 'none'}
+                        className={getHeaderClassName('behandlingStartet')}
+                    >
+                        <button
+                            aria-label="Sorter etter når behandling startet"
+                            onClick={() => onTabellHeaderClick('behandlingStartet')}
                         >
-                            <button
-                                aria-label="Sorter etter type behandling"
-                                onClick={() => onTabellHeaderClick('typeBehandling')}
-                            >
-                                {formatMessage('restans.typeBehandling')}
-                            </button>
-                        </th>
-                        <th
-                            role="columnheader"
-                            aria-sort={erKolonneSortertEtter('status') ? sortVerdi : 'none'}
-                            className={getHeaderClassName('status')}
-                        >
-                            <button aria-label="Sorter etter status" onClick={() => onTabellHeaderClick('status')}>
-                                {formatMessage('restans.status')}
-                            </button>
-                        </th>
-                        <th
-                            role="columnheader"
-                            aria-sort={erKolonneSortertEtter('behandlingStartet') ? sortVerdi : 'none'}
-                            className={getHeaderClassName('behandlingStartet')}
-                        >
-                            <button
-                                aria-label="Sorter etter når behandling startet"
-                                onClick={() => onTabellHeaderClick('behandlingStartet')}
-                            >
-                                {formatMessage('restans.behandling.startet')}
-                            </button>
-                        </th>
-                        <th></th>
+                            {formatMessage('restans.behandling.startet')}
+                        </button>
+                    </th>
+                    <th />
+                </tr>
+            </thead>
+            <tbody>
+                {sortertTabell.map((restans) => (
+                    <tr key={restans.behandlingId}>
+                        <td className={getRowClassName('saksnummer')}>{restans.saksnummer}</td>
+                        <td className={getRowClassName('typeBehandling')}>{formatMessage(restans.typeBehandling)}</td>
+                        <td className={getRowClassName('status')}>{formatMessage(restans.status)}</td>
+                        <td className={getRowClassName('behandlingStartet')}>
+                            {restans.behandlingStartet ? formatDateTime(restans.behandlingStartet) : ''}
+                        </td>
+                        <td>
+                            <VelgSakKnapp label={formatMessage('sak.seSak')} saksnummer={restans.saksnummer} />
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {sortertTabell.map((restans) => (
-                        <tr key={restans.behandlingId}>
-                            <td className={getRowClassName('saksnummer')}>{restans.saksnummer}</td>
-                            <td className={getRowClassName('typeBehandling')}>
-                                {formatMessage(restans.typeBehandling)}
-                            </td>
-                            <td className={getRowClassName('status')}>{formatMessage(restans.status)}</td>
-                            <td className={getRowClassName('behandlingStartet')}>
-                                {restans.behandlingStartet ? formatDateTime(restans.behandlingStartet) : ''}
-                            </td>
-                            <td>
-                                <KnappOgStatus saksnummer={restans.saksnummer} />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                ))}
+            </tbody>
+        </table>
     );
 };
 
