@@ -33,6 +33,7 @@ const DatePicker = (
                 {hjelpetekst && <HelpText>{hjelpetekst}</HelpText>}
             </div>
             <ReactDatePicker
+                popperClassName={styles.popper}
                 id={id}
                 selected={value}
                 {...datePickerProps}
