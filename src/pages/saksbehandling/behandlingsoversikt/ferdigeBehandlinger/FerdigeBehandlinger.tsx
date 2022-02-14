@@ -43,7 +43,7 @@ export const FerdigeBehandlinger = () => {
         [RestansStatus.AVSLUTTET]: false,
     });
 
-    const filterRestanser = (restanser: Restans[]): Restans[] => {
+    const filtrerRestanser = (restanser: Restans[]): Restans[] => {
         const typefilter = hentFiltrerteVerdier(type);
         const resultatfilter = hentFiltrerteVerdier(resultat);
 
@@ -82,7 +82,7 @@ export const FerdigeBehandlinger = () => {
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (restanser: Restans[]) => <RestanserTabell tabelldata={filterRestanser(restanser)} />
+                    (restanser: Restans[]) => <RestanserTabell tabelldata={filtrerRestanser(restanser)} />
                 )
             )}
         </>

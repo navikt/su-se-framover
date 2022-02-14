@@ -8,10 +8,10 @@ export const restansTypeMessages: { [key in RestansType]: string } = {
 
 export const restansStatus: { [key in RestansStatus]: string } = {
     [RestansStatus.INGEN_ENDRING]: 'Ingen endring',
-    [RestansStatus.AVSLAG]: 'Avslag',
+    [RestansStatus.AVSLAG]: 'Avslått',
     [RestansStatus.AVSLUTTET]: 'Avsluttet / lukket',
     [RestansStatus.INNVILGET]: 'Innvilget',
-    [RestansStatus.OPPHØR]: 'Opphør',
+    [RestansStatus.OPPHØR]: 'Opphørt',
     [RestansStatus.NY_SØKNAD]: 'Ny søknad',
     [RestansStatus.UNDER_BEHANDLING]: 'Under behandling',
     [RestansStatus.TIL_ATTESTERING]: 'Til attestering',

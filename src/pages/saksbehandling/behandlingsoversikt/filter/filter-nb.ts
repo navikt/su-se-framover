@@ -7,7 +7,7 @@ export default {
     resultat: 'Resultat',
     tilOgMed: 'Dato til og med',
     fraOgMed: 'Dato fra og med',
-    datovalidering: 'Sett etter fra og med',
+    datovalidering: 'Kan ikke være før fra og med dato',
     ...restansTypeMessages,
     ...restansStatus,
 };
