@@ -12,14 +12,20 @@ import { ApiErrorCode } from './apiErrorCode';
 interface Props {
     error?: ApiError;
     className?: string;
+    size?: 'medium' | 'small';
 }
 
-const ApiErrorAlert = ({ error, className = '' }: Props) => {
+const ApiErrorAlert = ({ error, className = '', size }: Props) => {
     const { formatMessage } = useI18n({ messages });
 
+    const melding =
+        error?.statusCode === 503
+            ? formatMessage(ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG)
+            : formatMessage(error?.body?.code ?? ApiErrorCode.UKJENT_FEIL);
+
     return (
-        <Alert variant="error" className={classNames(className, styles.alertstripe)}>
-            {formatMessage(error?.body?.code ?? ApiErrorCode.UKJENT_FEIL)}
+        <Alert variant="error" className={classNames(className, styles.alertstripe)} size={size}>
+            {melding}
         </Alert>
     );
 };

@@ -133,6 +133,7 @@ export enum ApiErrorCode {
     SØKNAD_ER_LUKKET = 'søknad_er_lukket',
     SØKNAD_HAR_BEHANDLING = 'søknad_har_behandling',
     SØKNAD_MANGLER_OPPGAVE = 'søknad_mangler_oppgave',
+    TJENESTEN_ER_IKKE_TILGJENGELIG = 'tjeneste_ikke_tilgjengelig',
     TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST = 'teknisk_feil_ved_henting_av_journalpost',
     UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE = 'uføregrad_må_være_mellom_en_og_hundre',
     UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER = 'uføregrad_og_forventet_inntekt_mangler',
