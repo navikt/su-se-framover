@@ -19,20 +19,13 @@ export const restansStatus: { [key in RestansStatus]: string } = {
 };
 
 export default {
-    'restans.ingenRestanser': 'Ingen restanser',
-    'restans.behandling.startet': 'Behandling startet',
-
-    'restans.typeBehandling': 'Type behandling',
     ...restansTypeMessages,
-
-    'restans.status': 'Status',
     ...restansStatus,
 
-    'åpne.behandlinger.overskrift': 'Åpne behandlinger',
-
+    'restans.ingenRestanser': 'Ingen restanser',
+    'restans.behandling.startet': 'Behandling startet',
+    'restans.typeBehandling': 'Behandlingstype',
+    'restans.status': 'Status',
     'sak.saksnummer': 'Saksnummer',
     'sak.seSak': 'Se sak',
-
-    'feil.feilOppstod': 'En feil oppstod',
-    'feil.sak.kunneIkkeHente': 'Kunne ikke hente sak',
 };

@@ -3,14 +3,10 @@ import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 
 import { pipe } from '~lib/fp';
-import { Restans, RestansStatus, RestansType } from '~types/Restans';
+import { Restans } from '~types/Restans';
 
 export type RestansKolonner = 'saksnummer' | 'typeBehandling' | 'status' | 'behandlingStartet';
 export type AriaSortVerdier = 'none' | 'ascending' | 'descending';
-
-export const isRestansType = (x: RestansType | RestansStatus): x is RestansType => Object.keys(RestansType).includes(x);
-export const isRestansStatus = (x: RestansType | RestansStatus): x is RestansStatus =>
-    Object.keys(RestansStatus).includes(x);
 
 export const sortTabell = (restanser: Restans[], kolonne: RestansKolonner | 'ingen', sortVerdi: AriaSortVerdier) => {
     if (kolonne === 'ingen' || sortVerdi === 'none') {
