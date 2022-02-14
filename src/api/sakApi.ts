@@ -28,11 +28,11 @@ export async function fetchSakBySakId(sakId: string): Promise<ApiClientResult<Sa
 }
 
 export async function hentÅpneBehandlinger(): Promise<ApiClientResult<Restans[]>> {
-    return apiClient({ url: `/saker/apneBehandlinger`, method: 'GET' });
+    return apiClient({ url: `/saker/behandlinger/apne`, method: 'GET' });
 }
 
 export async function hentFerdigeBehandlinger(): Promise<ApiClientResult<Restans[]>> {
-    return apiClient({ url: `/saker/ferdigeBehandlinger`, method: 'GET' });
+    return apiClient({ url: `/saker/behandlinger/ferdige`, method: 'GET' });
 }
 
 export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<BegrensetSakinfo>> {
