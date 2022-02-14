@@ -1,4 +1,5 @@
 import { Nullable } from '~lib/types';
+import { Tilbakekrevingsbehandling } from '~pages/saksbehandling/revurdering/OppsummeringPage/oppsummeringPageForms/OppsummeringPageForms';
 
 import { Attestering } from './Behandling';
 import { Beregning } from './Beregning';
@@ -21,6 +22,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     begrunnelse: Nullable<string>;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
+    tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
 /**

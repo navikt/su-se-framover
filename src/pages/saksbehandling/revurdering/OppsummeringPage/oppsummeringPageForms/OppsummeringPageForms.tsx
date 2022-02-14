@@ -182,6 +182,82 @@ export const ResultatEtterForhåndsvarselform = (props: {
     );
 };
 
+export enum TilbakekrevingsAvgjørelse {
+    FORSTO = 'FORSTO',
+    BURDE_FORSTÅTT = 'BURDE_FORSTÅTT',
+    KUNNE_IKKE_FORSTÅ = 'KUNNE_IKKE_FORSTÅTT',
+}
+
+export interface Tilbakekrevingsbehandling {
+    avgjørelse: TilbakekrevingsAvgjørelse;
+}
+
+export const TilbakekrevingForm = (props: {
+    revurdering: InformasjonsRevurdering;
+    onSubmit(args: { tilbakekrevingsbehandling: Tilbakekrevingsbehandling }): void;
+}) => {
+    interface FormData {
+        tilbakekrevingsavgjørelse: TilbakekrevingsAvgjørelse;
+    }
+
+    const { formatMessage } = useI18n({ messages });
+
+    const form = useForm<FormData>({
+        defaultValues: {
+            tilbakekrevingsavgjørelse: props.revurdering.tilbakekrevingsbehandling?.avgjørelse,
+        },
+        resolver: yupResolver(
+            yup
+                .object<FormData>({
+                    tilbakekrevingsavgjørelse: yup
+                        .mixed()
+                        .required()
+                        .defined()
+                        .oneOf(Object.values(TilbakekrevingsAvgjørelse), 'Aktsomhet må vurderes ved tilbakekreving'),
+                })
+                .required()
+        ),
+    });
+    return (
+        <form
+            onSubmit={form.handleSubmit((values) => {
+                console.log('kjeks');
+                return props.onSubmit({
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    tilbakekrevingsbehandling: {
+                        avgjørelse: values.tilbakekrevingsavgjørelse,
+                    },
+                });
+            })}
+            className={styles.form}
+        >
+            <Controller
+                control={form.control}
+                name="tilbakekrevingsavgjørelse"
+                render={({ field, fieldState }) => (
+                    <RadioGroup
+                        legend={formatMessage('tilbakekreving.avgjør.aktsomhet.tittel')}
+                        error={fieldState.error?.message}
+                        name={field.name}
+                        onChange={(val) => field.onChange(val)}
+                        value={field.value ?? ''}
+                    >
+                        <Radio id={field.name} ref={field.ref} value={TilbakekrevingsAvgjørelse.FORSTO}>
+                            {formatMessage('tilbakekreving.avgjør.aktsomhet.forsto')}
+                        </Radio>
+                        <Radio value={TilbakekrevingsAvgjørelse.BURDE_FORSTÅTT}>
+                            {formatMessage('tilbakekreving.avgjør.aktsomhet.burde.forstått')}
+                        </Radio>
+                        <Radio value={TilbakekrevingsAvgjørelse.KUNNE_IKKE_FORSTÅ}>
+                            {formatMessage('tilbakekreving.avgjør.aktsomhet.kunne.ikke.forstått')}
+                        </Radio>
+                    </RadioGroup>
+                )}
+            />
+        </form>
+    );
+};
+
 export const VelgForhåndsvarselForm = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
