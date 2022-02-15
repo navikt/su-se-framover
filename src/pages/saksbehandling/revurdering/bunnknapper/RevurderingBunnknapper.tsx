@@ -13,6 +13,7 @@ export const RevurderingBunnknapper = ({
     ...props
 }: {
     tilbakeUrl?: string;
+    onTilbakeClick?: () => void;
     loading?: boolean;
     onLagreOgFortsettSenereClick?: () => void;
     nesteKnappTekst?: string;
@@ -46,6 +47,11 @@ export const RevurderingBunnknapper = ({
                     <LinkAsButton href={props.tilbakeUrl} variant="secondary">
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
                     </LinkAsButton>
+                )}
+                {props.onTilbakeClick && (
+                    <Button onClick={props.onTilbakeClick} variant="secondary">
+                        {intl.formatMessage({ id: 'knapp.tilbake' })}
+                    </Button>
                 )}
             </div>
         </div>
