@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader } from '@navikt/ds-react';
 import * as React from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
@@ -56,6 +57,7 @@ const OppsummeringshandlingForm = (props: {
     const history = useHistory();
     const { formatMessage } = useI18n({ messages: { ...messages, ...apiErrorMessages } });
     const feilRef = React.useRef<HTMLDivElement>(null);
+    const [aktsomhetValgt, setAktsomhetValgt] = useState(false);
 
     const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
         RevurderingActions.sendRevurderingTilAttestering,
@@ -120,7 +122,8 @@ const OppsummeringshandlingForm = (props: {
                     revurderingId: props.revurdering.id,
                     tilbakekrevingsbehandling: args.tilbakekrevingsbehandling,
                 };
-            }
+            },
+            () => setAktsomhetValgt(true)
         );
 
     const [fortsettEtterForhåndsvarselState, fortsettEtterForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
@@ -209,7 +212,7 @@ const OppsummeringshandlingForm = (props: {
                         sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: true })
                     }
                 />
-            ) : props.revurdering.tilbakekrevingsbehandling != null ? (
+            ) : props.revurdering.tilbakekrevingsbehandling != null && !aktsomhetValgt ? (
                 <TilbakekrevingForm
                     revurdering={props.revurdering}
                     onSubmit={(args) =>
@@ -217,12 +220,17 @@ const OppsummeringshandlingForm = (props: {
                             tilbakekrevingsbehandling: args.tilbakekrevingsbehandling,
                         })
                     }
+                    forrigeUrl={props.forrigeUrl}
+                    submitStatus={lagreTilbakekrevingsbehandlingState}
                 />
             ) : !erRevurderingForhåndsvarslet(props.revurdering) ? (
                 <VelgForhåndsvarselForm
                     sakId={props.sakId}
                     revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
+                    forrigeUrl={props.revurdering.tilbakekrevingsbehandling != null ? undefined : props.forrigeUrl}
+                    onForrigeClick={
+                        props.revurdering.tilbakekrevingsbehandling != null ? () => setAktsomhetValgt(false) : undefined
+                    }
                     submitStatus={
                         RemoteData.isInitial(sendTilAttesteringState)
                             ? lagreForhåndsvarselState

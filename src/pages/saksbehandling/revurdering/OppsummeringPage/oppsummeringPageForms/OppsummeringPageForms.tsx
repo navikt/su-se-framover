@@ -193,6 +193,8 @@ export interface Tilbakekrevingsbehandling {
 }
 
 export const TilbakekrevingForm = (props: {
+    forrigeUrl: string;
+    submitStatus: ApiResult<unknown>;
     revurdering: InformasjonsRevurdering;
     onSubmit(args: { tilbakekrevingsbehandling: Tilbakekrevingsbehandling }): void;
 }) => {
@@ -218,17 +220,17 @@ export const TilbakekrevingForm = (props: {
                 .required()
         ),
     });
+
     return (
         <form
-            onSubmit={form.handleSubmit((values) => {
-                console.log('kjeks');
-                return props.onSubmit({
+            onSubmit={form.handleSubmit((values) =>
+                props.onSubmit({
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     tilbakekrevingsbehandling: {
                         avgjørelse: values.tilbakekrevingsavgjørelse,
                     },
-                });
-            })}
+                })
+            )}
             className={styles.form}
         >
             <Controller
@@ -254,6 +256,11 @@ export const TilbakekrevingForm = (props: {
                     </RadioGroup>
                 )}
             />
+            <RevurderingBunnknapper
+                nesteKnappTekst={formatMessage('tilbakekreving.button')}
+                tilbakeUrl={props.forrigeUrl}
+                loading={RemoteData.isPending(props.submitStatus)}
+            />
         </form>
     );
 };
@@ -261,7 +268,8 @@ export const TilbakekrevingForm = (props: {
 export const VelgForhåndsvarselForm = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
-    forrigeUrl: string;
+    forrigeUrl?: string;
+    onForrigeClick?: () => void;
     submitStatus: ApiResult<unknown>;
     onSubmit(args: { forhåndsvarselhandling: Forhåndsvarselhandling; fritekstTilBrev: string }): void;
 }) => {
@@ -367,6 +375,7 @@ export const VelgForhåndsvarselForm = (props: {
                         : formatMessage('sendTilAttestering.button.label')
                 }
                 tilbakeUrl={props.forrigeUrl}
+                onTilbakeClick={props.onForrigeClick}
                 loading={RemoteData.isPending(props.submitStatus)}
             />
         </form>

@@ -22,6 +22,7 @@ export default {
     'tilbakekreving.avgjør.aktsomhet.burde.forstått': 'Simpel uaktsomhet (full tilbakekreving)',
     'tilbakekreving.avgjør.aktsomhet.kunne.ikke.forstått':
         'Hadde ikke forutsetning/mulighet til å forstå (ingen tilbakekreving)',
+    'tilbakekreving.button': 'Lagre valg',
 
     'velgForhåndsvarsel.handling.legend': 'Skal bruker forhåndsvarsles?',
     'velgForhåndsvarsel.submit.legend': 'Skal bruker forhåndsvarsles?',
