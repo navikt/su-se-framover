@@ -34,7 +34,7 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
             {props.tittel && typeof props.tittel !== 'string' ? (
                 props.tittel
             ) : (
-                <Heading level="1" size="2xlarge" spacing>
+                <Heading level="1" size="xlarge" spacing>
                     {props.tittel ?? formatMessage('tittel')}
                 </Heading>
             )}

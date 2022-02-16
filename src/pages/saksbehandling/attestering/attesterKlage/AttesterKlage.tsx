@@ -21,6 +21,8 @@ import {
     erKlageTilAttesteringAvvist,
 } from '~utils/klage/klageUtils';
 
+import sharedStyles from '../sharedStyles.module.less';
+
 import messages from './attesterKlage-nb';
 import styles from './attesterKlage.module.less';
 
@@ -120,7 +122,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
 
     return (
         <div>
-            <Heading level="1" size="xlarge" className={styles.tittel}>
+            <Heading level="1" size="xlarge" className={sharedStyles.tittel}>
                 {formatMessage('page.tittel')}
             </Heading>
             <OppsummeringAvKlage klage={klage} klagensVedtak={klagensVedtak} />
