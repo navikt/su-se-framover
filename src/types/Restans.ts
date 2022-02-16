@@ -23,5 +23,7 @@ export enum RestansStatus {
     OPPHØR = 'OPPHØR',
     AVSLAG = 'AVSLAG',
     INGEN_ENDRING = 'INGEN_ENDRING',
-    AVSLUTTET = 'AVSLUTTET',
+    STANS = 'STANS',
+    GJENOPPTAK = 'GJENOPPTAK',
+    OVERSENDT = 'OVERSENDT',
 }
