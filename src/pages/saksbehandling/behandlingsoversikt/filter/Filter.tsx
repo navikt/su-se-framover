@@ -1,4 +1,5 @@
 import { Checkbox, Label } from '@navikt/ds-react';
+import * as DateFns from 'date-fns';
 import React from 'react';
 
 import DatePicker from '~components/datePicker/DatePicker';
@@ -27,7 +28,9 @@ export type RestansResultatFilter = {
     [RestansStatus.AVSLAG]: boolean;
     [RestansStatus.INGEN_ENDRING]: boolean;
     [RestansStatus.INNVILGET]: boolean;
-    [RestansStatus.AVSLUTTET]: boolean;
+    [RestansStatus.STANS]: boolean;
+    [RestansStatus.GJENOPPTAK]: boolean;
+    [RestansStatus.OVERSENDT]: boolean;
 };
 
 export interface FilterProps {
@@ -63,15 +66,17 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                     {fraOgMedState && (
                         <DatePicker
                             label={formatMessage('fraOgMed')}
+                            dateFormat={'dd.MM.yyyy'}
                             value={fraOgMedState[0]}
-                            onChange={fraOgMedState[1]}
+                            onChange={(dato) => fraOgMedState[1](dato ? DateFns.startOfDay(dato) : dato)}
                         />
                     )}
                     {tilOgMedState && (
                         <DatePicker
                             label={formatMessage('tilOgMed')}
                             value={tilOgMedState[0]}
-                            onChange={tilOgMedState[1]}
+                            dateFormat={'dd.MM.yyyy'}
+                            onChange={(dato) => tilOgMedState[1](dato ? DateFns.endOfDay(dato) : dato)}
                             feil={
                                 tilOgMedErGyldig(fraOgMedState?.[0], tilOgMedState[0])
                                     ? undefined

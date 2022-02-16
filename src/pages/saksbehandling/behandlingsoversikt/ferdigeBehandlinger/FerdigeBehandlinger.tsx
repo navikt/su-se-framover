@@ -40,7 +40,9 @@ export const FerdigeBehandlinger = () => {
         [RestansStatus.AVSLAG]: false,
         [RestansStatus.INGEN_ENDRING]: false,
         [RestansStatus.INNVILGET]: false,
-        [RestansStatus.AVSLUTTET]: false,
+        [RestansStatus.STANS]: false,
+        [RestansStatus.GJENOPPTAK]: false,
+        [RestansStatus.OVERSENDT]: false,
     });
 
     const filtrerRestanser = (restanser: Restans[]): Restans[] => {

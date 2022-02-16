@@ -9,13 +9,15 @@ export const restansTypeMessages: { [key in RestansType]: string } = {
 export const restansStatus: { [key in RestansStatus]: string } = {
     [RestansStatus.INGEN_ENDRING]: 'Ingen endring',
     [RestansStatus.AVSLAG]: 'Avslått',
-    [RestansStatus.AVSLUTTET]: 'Avsluttet / lukket',
     [RestansStatus.INNVILGET]: 'Innvilget',
     [RestansStatus.OPPHØR]: 'Opphørt',
     [RestansStatus.NY_SØKNAD]: 'Ny søknad',
     [RestansStatus.UNDER_BEHANDLING]: 'Under behandling',
     [RestansStatus.TIL_ATTESTERING]: 'Til attestering',
     [RestansStatus.UNDERKJENT]: 'Underkjent',
+    [RestansStatus.STANS]: 'Stanset',
+    [RestansStatus.GJENOPPTAK]: 'Gjenopptatt',
+    [RestansStatus.OVERSENDT]: 'Oversendt',
 };
 
 export default {
