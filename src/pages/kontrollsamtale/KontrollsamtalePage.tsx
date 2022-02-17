@@ -49,7 +49,7 @@ const KontrollsamtalePage = (props: Props) => {
                 (err) => <ApiErrorAlert error={err as ApiError} />,
                 (kontrollsamtale: Nullable<Kontrollsamtale>) => (
                     <>
-                        <Heading level="1" size="xlarge">
+                        <Heading level="1" size="large">
                             {formatMessage('kontrollsamtale')}
                         </Heading>
                         {!props.kanKalleInn ? (

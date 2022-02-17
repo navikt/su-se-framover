@@ -74,7 +74,7 @@ const RevurderingPage = (props: {
     if (props.utbetalinger.length === 0) {
         return (
             <div className={styles.revurderingContainer}>
-                <Heading level="1" size="xlarge" className={styles.tittel}>
+                <Heading level="1" size="large" className={styles.tittel}>
                     {formatMessage('revurdering.tittel')}
                 </Heading>
                 <div className={styles.mainContentContainer}>
@@ -138,7 +138,7 @@ const RevurderingPage = (props: {
                     <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>
                 ) : (
                     <>
-                        <Heading level="1" size="xlarge" className={styles.tittel}>
+                        <Heading level="1" size="large" className={styles.tittel}>
                             {formatMessage('revurdering.tittel')}
                         </Heading>
                         <Route

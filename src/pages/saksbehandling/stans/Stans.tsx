@@ -104,14 +104,14 @@ const Stans = (props: Props) => {
     return (
         <Switch>
             <Route path={Routes.stansOppsummeringRoute.path}>
-                <Heading level="1" size="xlarge" className={styles.tittel}>
+                <Heading level="1" size="large" className={styles.tittel}>
                     {formatMessage('stans.tittel')}
                 </Heading>
                 <StansOppsummering sak={props.sak} />
             </Route>
             <Route path="*">
                 <form className={styles.pageContainer} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
-                    <Heading level="1" size="xlarge" className={styles.tittel}>
+                    <Heading level="1" size="large" className={styles.tittel}>
                         {formatMessage('stans.tittel')}
                     </Heading>
                     <div className={styles.content}>

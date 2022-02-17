@@ -62,7 +62,7 @@ const DokumenterPage = (props: { sak: Sak }) => {
                         RemoteData.fold3(
                             () => (
                                 <div className={styles.loaderContainer}>
-                                    <Loader size="xlarge" title={formatMessage('loader.henterBrev')} />
+                                    <Loader size="large" title={formatMessage('loader.henterBrev')} />
                                 </div>
                             ),
                             (err) => (

@@ -41,7 +41,7 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
     return (
         <div className={styles.saksoversiktForside}>
             <div className={styles.personsøk}>
-                <Heading level="1" size="xlarge" spacing className={styles.finnSak}>
+                <Heading level="1" size="large" spacing className={styles.finnSak}>
                     <PersonIkon />
                     {formatMessage('finnSak')}
                 </Heading>

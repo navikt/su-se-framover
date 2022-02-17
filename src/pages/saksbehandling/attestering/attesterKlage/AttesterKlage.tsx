@@ -122,7 +122,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
 
     return (
         <div>
-            <Heading level="1" size="xlarge" className={sharedStyles.tittel}>
+            <Heading level="1" size="large" className={sharedStyles.tittel}>
                 {formatMessage('page.tittel')}
             </Heading>
             <OppsummeringAvKlage klage={klage} klagensVedtak={klagensVedtak} />

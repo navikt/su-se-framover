@@ -25,7 +25,7 @@ const Infoside = (props: { nesteUrl: string }) => {
                 </BodyLong>
             </GuidePanel>
 
-            <Heading level="1" size="2xlarge" spacing>
+            <Heading level="1" size="xlarge" spacing>
                 {formatMessage('page.tittel')}
             </Heading>
 

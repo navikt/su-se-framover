@@ -64,7 +64,7 @@ const Klage = (props: { sak: Sak }) => {
         <div className={styles.pageContainer}>
             <Switch>
                 <>
-                    <Heading level="1" size="xlarge" className={styles.pageTittel}>
+                    <Heading level="1" size="large" className={styles.pageTittel}>
                         {formatMessage('page.tittel')}
                     </Heading>
                     <div className={styles.klageContainerMedFramdriftsindikator}>
