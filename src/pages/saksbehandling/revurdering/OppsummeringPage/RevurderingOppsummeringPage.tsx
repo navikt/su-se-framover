@@ -163,6 +163,42 @@ const OppsummeringshandlingForm = (props: {
         }
     );
 
+    const visTilbakekrevingForm = props.revurdering.tilbakekrevingsbehandling != null && !aktsomhetValgt;
+    const sendTilAttesteringForm =
+        erGregulering(props.revurdering.årsak) ||
+        erBeregnetIngenEndring(props.revurdering) ||
+        erRevurderingUnderkjent(props.revurdering) ||
+        erForhåndsvarslingBesluttet(props.revurdering) ||
+        erIngenForhåndsvarsel(props.revurdering);
+
+    const hentBrevsending = (revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering) => {
+        if (
+            erForhåndsvarslingBesluttet(revurdering) ||
+            erIngenForhåndsvarsel(revurdering) ||
+            erRevurderingUnderkjent(revurdering)
+        ) {
+            return 'alltidSende';
+        } else if (erGregulering(revurdering.årsak)) {
+            return 'aldriSende';
+        } else {
+            return 'kanVelge';
+        }
+    };
+
+    enum Form {
+        ATTESTERING,
+        TILBAKEKREVING,
+        FORHÅNDSVARSLING,
+        ER_FORHÅNDSVARSLET,
+    }
+
+    const skalVises = (): Form => {
+        if (sendTilAttesteringForm) return Form.ATTESTERING;
+        if (visTilbakekrevingForm) return Form.TILBAKEKREVING;
+        if (!erRevurderingForhåndsvarslet(props.revurdering)) return Form.FORHÅNDSVARSLING;
+        return Form.ER_FORHÅNDSVARSLET;
+    };
+
     return (
         <div>
             {props.varselmeldinger.length > 0 && (
@@ -179,40 +215,16 @@ const OppsummeringshandlingForm = (props: {
                     <UtfallSomIkkeStøttes feilmeldinger={props.feilmeldinger} />
                 </div>
             )}
-            {erGregulering(props.revurdering.årsak) ? (
+            {skalVises() === Form.ATTESTERING && (
                 <SendTilAttesteringForm
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
-                    brevsending="aldriSende"
+                    brevsending={hentBrevsending(props.revurdering)}
                     submitStatus={sendTilAttesteringState}
-                    onSubmit={(args) =>
-                        sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: false })
-                    }
+                    onSubmit={sendTilAttestering}
                 />
-            ) : erBeregnetIngenEndring(props.revurdering) ? (
-                <SendTilAttesteringForm
-                    revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
-                    brevsending="kanVelge"
-                    submitStatus={sendTilAttesteringState}
-                    onSubmit={(args) =>
-                        sendTilAttestering({
-                            vedtaksbrevtekst: args.fritekstTilBrev,
-                            skalFøreTilBrevutsending: args.skalFøreTilBrevutsending,
-                        })
-                    }
-                />
-            ) : erRevurderingUnderkjent(props.revurdering) ? (
-                <SendTilAttesteringForm
-                    revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
-                    brevsending="alltidSende"
-                    submitStatus={sendTilAttesteringState}
-                    onSubmit={(args) =>
-                        sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: true })
-                    }
-                />
-            ) : props.revurdering.tilbakekrevingsbehandling != null && !aktsomhetValgt ? (
+            )}
+            {skalVises() === Form.TILBAKEKREVING && (
                 <TilbakekrevingForm
                     revurdering={props.revurdering}
                     onSubmit={(args) =>
@@ -223,7 +235,8 @@ const OppsummeringshandlingForm = (props: {
                     forrigeUrl={props.forrigeUrl}
                     submitStatus={lagreTilbakekrevingsbehandlingState}
                 />
-            ) : !erRevurderingForhåndsvarslet(props.revurdering) ? (
+            )}
+            {skalVises() === Form.FORHÅNDSVARSLING && (
                 <VelgForhåndsvarselForm
                     sakId={props.sakId}
                     revurdering={props.revurdering}
@@ -243,29 +256,14 @@ const OppsummeringshandlingForm = (props: {
                         })
                     }
                 />
-            ) : erForhåndsvarslingBesluttet(props.revurdering) || erIngenForhåndsvarsel(props.revurdering) ? (
-                <SendTilAttesteringForm
-                    revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
-                    brevsending="alltidSende"
-                    submitStatus={sendTilAttesteringState}
-                    onSubmit={(args) =>
-                        sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: true })
-                    }
-                />
-            ) : (
+            )}
+            {skalVises() === Form.ER_FORHÅNDSVARSLET && (
                 <ResultatEtterForhåndsvarselform
                     sakId={props.sakId}
                     revurderingId={props.revurdering.id}
                     forrigeUrl={props.forrigeUrl}
                     submitStatus={fortsettEtterForhåndsvarselState}
-                    onSubmit={(args) =>
-                        fortsettEtterForhåndsvarsel({
-                            beslutningEtterForhåndsvarsel: args.resultatEtterForhåndsvarsel,
-                            brevtekst: args.brevTekst,
-                            begrunnelse: args.begrunnelse,
-                        })
-                    }
+                    onSubmit={fortsettEtterForhåndsvarsel}
                 />
             )}
         </div>
