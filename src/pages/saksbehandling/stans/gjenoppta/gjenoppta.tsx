@@ -95,7 +95,7 @@ const Gjenoppta = (props: Props) => {
 
     return (
         <>
-            <Heading level="1" size="xlarge" className={styles.tittel}>
+            <Heading level="1" size="large" className={styles.tittel}>
                 {formatMessage('gjenoppta.tittel')}
             </Heading>
             <Switch>

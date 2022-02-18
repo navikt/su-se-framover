@@ -106,7 +106,7 @@ export const StartUtfylling = () => {
                     (søker) => (
                         <>
                             <div className={styles.headerContainer}>
-                                <Heading level="2" size="xlarge" className={styles.personkortContainer}>
+                                <Heading level="2" size="large" className={styles.personkortContainer}>
                                     <Personkort person={søker} variant="wide" />
                                 </Heading>
                             </div>

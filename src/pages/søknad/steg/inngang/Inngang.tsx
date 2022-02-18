@@ -179,7 +179,7 @@ const index = (props: { nesteUrl: string }) => {
     };
     return (
         <div className={styles.pageContainer}>
-            <Heading level="1" size="2xlarge" spacing className={styles.heading}>
+            <Heading level="1" size="xlarge" spacing className={styles.heading}>
                 {isPapirsøknad ? (
                     formatMessage('page.tittel.papirSøknad')
                 ) : (
