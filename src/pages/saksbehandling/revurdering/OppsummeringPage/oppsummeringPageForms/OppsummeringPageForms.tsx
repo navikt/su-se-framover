@@ -32,15 +32,15 @@ export const ResultatEtterForhåndsvarselform = (props: {
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
     onSubmit(args: {
-        resultatEtterForhåndsvarsel: BeslutningEtterForhåndsvarsling;
-        brevTekst: string;
+        beslutningEtterForhåndsvarsel: BeslutningEtterForhåndsvarsling;
+        brevtekst: string;
         begrunnelse: string;
     }): void;
 }) => {
     const { formatMessage } = useI18n({ messages });
 
     interface FormData {
-        resultatEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
+        beslutningEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
         tekstTilVedtaksbrev: string;
         tekstTilAvsluttRevurderingBrev: string;
         begrunnelse: string;
@@ -48,7 +48,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
 
     const form = useForm<FormData>({
         defaultValues: {
-            resultatEtterForhåndsvarsel: null,
+            beslutningEtterForhåndsvarsel: null,
             tekstTilVedtaksbrev: '',
             tekstTilAvsluttRevurderingBrev: '',
             begrunnelse: '',
@@ -56,7 +56,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
         resolver: yupResolver(
             yup
                 .object<FormData>({
-                    resultatEtterForhåndsvarsel: yup
+                    beslutningEtterForhåndsvarsel: yup
                         .mixed()
                         .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
                         .required(),
@@ -68,16 +68,17 @@ export const ResultatEtterForhåndsvarselform = (props: {
         ),
     });
 
-    const resultatEtterForhåndsvarsel = form.watch('resultatEtterForhåndsvarsel');
+    const resultatEtterForhåndsvarsel = form.watch('beslutningEtterForhåndsvarsel');
     return (
         <form
             onSubmit={form.handleSubmit((values) =>
                 props.onSubmit({
                     begrunnelse: values.begrunnelse,
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    resultatEtterForhåndsvarsel: values.resultatEtterForhåndsvarsel!,
-                    brevTekst:
-                        values.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger
+                    beslutningEtterForhåndsvarsel: values.beslutningEtterForhåndsvarsel!,
+                    brevtekst:
+                        values.beslutningEtterForhåndsvarsel ===
+                        BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger
                             ? values.tekstTilVedtaksbrev
                             : values.tekstTilAvsluttRevurderingBrev,
                 })
@@ -86,7 +87,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
         >
             <Controller
                 control={form.control}
-                name="resultatEtterForhåndsvarsel"
+                name="beslutningEtterForhåndsvarsel"
                 render={({ field, fieldState }) => (
                     <RadioGroup
                         legend={formatMessage('etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel')}
@@ -382,21 +383,34 @@ export const VelgForhåndsvarselForm = (props: {
     );
 };
 
+type brevutsendingstype = 'aldriSende' | 'alltidSende' | 'kanVelge';
+
+const getBrevutsending = (brevutsending: brevutsendingstype, value: boolean) => {
+    switch (brevutsending) {
+        case 'aldriSende':
+            return false;
+        case 'alltidSende':
+            return true;
+        case 'kanVelge':
+            return value;
+    }
+};
+
 export const SendTilAttesteringForm = (props: {
     revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
-    brevsending: 'aldriSende' | 'alltidSende' | 'kanVelge';
-    onSubmit(args: { fritekstTilBrev: string; skalFøreTilBrevutsending: boolean }): void;
+    brevsending: brevutsendingstype;
+    onSubmit(args: { vedtaksbrevtekst: string; skalFøreTilBrevutsending: boolean }): void;
 }) => {
     const { formatMessage } = useI18n({ messages });
     interface FormData {
-        tekstTilVedtaksbrev: string;
+        vedtaksbrevtekst: string;
         skalFøreTilBrevutsending: boolean;
     }
     const form = useForm<FormData>({
         defaultValues: {
-            tekstTilVedtaksbrev: props.revurdering.fritekstTilBrev,
+            vedtaksbrevtekst: props.revurdering.fritekstTilBrev,
             skalFøreTilBrevutsending:
                 props.brevsending === 'alltidSende' || props.revurdering.fritekstTilBrev.length > 0,
         },
@@ -406,10 +420,10 @@ export const SendTilAttesteringForm = (props: {
 
     return (
         <form
-            onSubmit={form.handleSubmit((values) =>
+            onSubmit={form.handleSubmit(({ vedtaksbrevtekst, skalFøreTilBrevutsending }) =>
                 props.onSubmit({
-                    fritekstTilBrev: values.tekstTilVedtaksbrev,
-                    skalFøreTilBrevutsending: values.skalFøreTilBrevutsending,
+                    vedtaksbrevtekst: vedtaksbrevtekst,
+                    skalFøreTilBrevutsending: getBrevutsending(props.brevsending, skalFøreTilBrevutsending),
                 })
             )}
             className={styles.form}
@@ -434,7 +448,7 @@ export const SendTilAttesteringForm = (props: {
             {skalFøreTilBrevutsending && (
                 <Controller
                     control={form.control}
-                    name="tekstTilVedtaksbrev"
+                    name="vedtaksbrevtekst"
                     render={({ field, fieldState }) => (
                         <OppsummeringsBrevInput
                             tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
