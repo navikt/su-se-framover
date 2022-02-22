@@ -1,4 +1,4 @@
-import { Heading, Panel } from '@navikt/ds-react';
+import { Heading, Label, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 
 import VisBeregningOgSimulering from '~components/beregningOgSimulering/BeregningOgSimulering';
@@ -76,7 +76,7 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
                     </Panel>
                 </div>
             ) : (
-                formatMessage('feilmelding.ikkeGjortEnBeregning')
+                <Label>{formatMessage('feilmelding.ikkeGjortEnBeregning')}</Label>
             )}
         </div>
     );
