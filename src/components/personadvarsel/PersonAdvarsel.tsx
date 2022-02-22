@@ -1,14 +1,34 @@
 import { Tag, TagProps } from '@navikt/ds-react';
+import classNames from 'classnames';
+import * as DateFns from 'date-fns';
 import * as React from 'react';
 
 import { Person, Adressebeskyttelse } from '~api/personApi';
 
 import styles from './personAdvarsel.module.less';
 
+type TagVariant = TagProps['variant'] | 'black';
+
 interface EtikettInfo {
     text: string;
-    variant: TagProps['variant'];
+    variant: TagVariant;
 }
+
+const TagWithBlack = (props: { etikett: EtikettInfo }) => {
+    return (
+        <Tag
+            className={classNames(styles.etikett, {
+                [styles.black]: props.etikett.variant === 'black',
+            })}
+            //Svart variant er enda ikke publistert i Tag. så vi hacker til at den er en 'info', men endrer CSS at den ser riktig ut.
+            variant={props.etikett.variant === 'black' ? 'info' : props.etikett.variant}
+            key={props.etikett.text}
+            size="medium"
+        >
+            {props.etikett.text}
+        </Tag>
+    );
+};
 
 export const PersonAdvarsel = (props: { person: Person }) => {
     const { adressebeskyttelse, skjermet } = props.person;
@@ -38,13 +58,17 @@ export const PersonAdvarsel = (props: { person: Person }) => {
             variant: 'warning',
         });
     }
+    if (props.person.dødsdato) {
+        etiketter.push({
+            text: `Død ${DateFns.format(new Date(props.person.dødsdato), 'dd.MM.yyyy')}`,
+            variant: 'black',
+        });
+    }
 
     return (
         <div className={styles.container}>
             {etiketter.map((etikett) => (
-                <Tag className={styles.etikett} variant={etikett.variant} key={etikett.text} size="small">
-                    {etikett.text}
-                </Tag>
+                <TagWithBlack key={etikett.text} etikett={etikett} />
             ))}
         </div>
     );
