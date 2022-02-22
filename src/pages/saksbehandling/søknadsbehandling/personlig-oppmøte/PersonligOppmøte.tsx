@@ -324,16 +324,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        if (erUnderkjent(props.behandling) && erVilkårsvurderingerVurdertAvslag(props.behandling)) {
-            clearDraft();
-            return history.push(
-                Routes.saksbehandlingSendTilAttestering.createURL({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                })
-            );
-        }
-
         if (
             eqPersonligOppmøte.equals(
                 { status: personligOppmøteStatus, begrunnelse: values.begrunnelse },
