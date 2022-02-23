@@ -1,7 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Nullable } from '~lib/types';
-import { Tilbakekrevingsbehandling } from '~pages/saksbehandling/revurdering/OppsummeringPage/oppsummeringPageForms/OppsummeringPageForms';
+import { TilbakekrevingsAvgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -201,13 +201,13 @@ export async function lagreForhåndsvarsel(
 export async function lagreTilbakekrevingsbehandling(
     sakId: string,
     revurderingId: string,
-    tilbakekrevingsbehandling: Tilbakekrevingsbehandling
+    tilbakekrevingsbehandling: TilbakekrevingsAvgjørelse
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilbakekreving`,
         method: 'POST',
         body: {
-            avgjørelse: tilbakekrevingsbehandling.avgjørelse,
+            avgjørelse: tilbakekrevingsbehandling,
         },
     });
 }

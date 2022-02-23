@@ -1,7 +1,4 @@
 export default {
-    ja: 'Ja',
-    nei: 'Nei',
-
     'knapp.seBrev': 'Forhåndsvis brev',
 
     'avslutt.button.label': 'Avslutt revurdering',

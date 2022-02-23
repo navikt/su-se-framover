@@ -3,27 +3,27 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
-import { Tilbakekrevingsbehandling } from '~pages/saksbehandling/revurdering/OppsummeringPage/oppsummeringPageForms/OppsummeringPageForms';
+import { TilbakekrevingsAvgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
 import {
-    RevurderingTilAttestering,
-    IverksattRevurdering,
-    OpprettetRevurdering,
-    SimulertRevurdering,
-    UnderkjentRevurdering,
-    OpprettetRevurderingGrunn,
     BeslutningEtterForhåndsvarsling,
-    InformasjonSomRevurderes,
     BosituasjonRequest,
     FormuegrunnlagRequest,
-    Revurdering,
-    InformasjonsRevurdering,
-    StansAvYtelse,
     Gjenopptak,
+    InformasjonSomRevurderes,
+    InformasjonsRevurdering,
+    IverksattRevurdering,
+    OpprettetRevurdering,
+    OpprettetRevurderingGrunn,
+    Revurdering,
+    RevurderingTilAttestering,
+    SimulertRevurdering,
+    StansAvYtelse,
+    UnderkjentRevurdering,
     UtenlandsoppholdRequest,
 } from '~types/Revurdering';
 
@@ -190,7 +190,7 @@ export const lagreTilbakekrevingsbehandling = createAsyncThunk<
     {
         sakId: string;
         revurderingId: string;
-        tilbakekrevingsbehandling: Tilbakekrevingsbehandling;
+        tilbakekrevingsbehandling: TilbakekrevingsAvgjørelse;
     },
     { rejectValue: ApiError }
 >('revurdering/tilbakekreving', async ({ sakId, revurderingId, tilbakekrevingsbehandling }, thunkApi) => {
