@@ -21,10 +21,25 @@ export const RevurderingBunnknapper = ({
     const { intl } = useI18n({ messages: { ...sharedI18n } });
     const [knappTrykket, setKnappTrykket] = useState<'neste' | 'avslutt' | undefined>(undefined);
 
+    const Tilbake = () => (
+        <>
+            {props.tilbakeUrl && (
+                <LinkAsButton href={props.tilbakeUrl} variant="secondary">
+                    {intl.formatMessage({ id: 'knapp.tilbake' })}
+                </LinkAsButton>
+            )}
+            {props.onTilbakeClick && (
+                <Button onClick={props.onTilbakeClick} variant="secondary">
+                    {intl.formatMessage({ id: 'knapp.tilbake' })}
+                </Button>
+            )}
+        </>
+    );
+
     return (
         <div>
             <div className={styles.navigationButtonContainer}>
-                {onLagreOgFortsettSenereClick && (
+                {onLagreOgFortsettSenereClick ? (
                     <Button
                         variant="secondary"
                         onClick={() => {
@@ -36,24 +51,15 @@ export const RevurderingBunnknapper = ({
                         {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
                         {knappTrykket === 'avslutt' && props.loading && <Loader />}
                     </Button>
+                ) : (
+                    <Tilbake />
                 )}
                 <Button onClick={() => setKnappTrykket('neste')} type={'submit'}>
                     {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
                     {knappTrykket === 'neste' && props.loading && <Loader />}
                 </Button>
             </div>
-            <div className={styles.navigationButtonContainer}>
-                {props.tilbakeUrl && (
-                    <LinkAsButton href={props.tilbakeUrl} variant="secondary">
-                        {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </LinkAsButton>
-                )}
-                {props.onTilbakeClick && (
-                    <Button onClick={props.onTilbakeClick} variant="secondary">
-                        {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </Button>
-                )}
-            </div>
+            <div className={styles.navigationButtonContainer}>{onLagreOgFortsettSenereClick && <Tilbake />}</div>
         </div>
     );
 };
