@@ -80,6 +80,7 @@ export interface Person {
     }>;
     vergemål: Nullable<boolean>;
     fullmakt: Nullable<boolean>;
+    dødsdato: Nullable<string>;
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {
