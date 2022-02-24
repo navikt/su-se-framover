@@ -18,14 +18,14 @@ import { InformasjonsRevurdering } from '~types/Revurdering';
 import messages from './tilbakekrevingForm-nb';
 import styles from './tilbakekrevingForm.module.less';
 
-export enum TilbakekrevingsAvgjørelse {
+export enum Tilbakekrevingsavgjørelse {
     TILBAKEKREV = 'TILBAKEKREV',
     IKKE_TILBAKEKREV = 'IKKE_TILBAKEKREV',
     IKKE_AVGJORT = 'IKKE_AVGJORT',
 }
 
 export type TilbakekrevingsbehandlingFormData = {
-    avgjørelse: TilbakekrevingsAvgjørelse;
+    avgjørelse: Tilbakekrevingsavgjørelse;
 };
 
 enum Page {
@@ -43,10 +43,10 @@ export const TilbakekrevingForm = (props: {
     const [lagreTilbakekrevingsbehandlingState, lagreTilbakekrevingsbehandling] =
         useAsyncActionCreatorWithArgsTransformer(
             RevurderingActions.lagreTilbakekrevingsbehandling,
-            (avgjørelse: TilbakekrevingsAvgjørelse) => ({
+            (behandling: TilbakekrevingsbehandlingFormData) => ({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                tilbakekrevingsbehandling: avgjørelse,
+                tilbakekrevingsbehandling: behandling,
             }),
             () => setPage(Page.FORHÅNDSVARSEL)
         );
@@ -56,7 +56,7 @@ export const TilbakekrevingForm = (props: {
     const form = useForm<TilbakekrevingsbehandlingFormData>({
         defaultValues: {
             avgjørelse:
-                props.revurdering.tilbakekrevingsbehandling?.avgjørelse ?? TilbakekrevingsAvgjørelse.IKKE_AVGJORT,
+                props.revurdering.tilbakekrevingsbehandling?.avgjørelse ?? Tilbakekrevingsavgjørelse.IKKE_AVGJORT,
         },
         resolver: yupResolver(
             yup
@@ -66,7 +66,7 @@ export const TilbakekrevingForm = (props: {
                         .required()
                         .defined()
                         .oneOf(
-                            [TilbakekrevingsAvgjørelse.TILBAKEKREV, TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV],
+                            [Tilbakekrevingsavgjørelse.TILBAKEKREV, Tilbakekrevingsavgjørelse.IKKE_TILBAKEKREV],
                             'Aktsomhet må vurderes ved tilbakekreving'
                         ),
                 })
@@ -77,10 +77,7 @@ export const TilbakekrevingForm = (props: {
     return (
         <>
             {pageValgt === Page.TILBAKEKREVING && (
-                <form
-                    onSubmit={form.handleSubmit((values) => lagreTilbakekrevingsbehandling(values.avgjørelse))}
-                    className={styles.form}
-                >
+                <form onSubmit={form.handleSubmit(lagreTilbakekrevingsbehandling)} className={styles.form}>
                     <Heading size="small" level="5" spacing className={styles.heading}>
                         {formatMessage('tittel')}
                     </Heading>
@@ -97,16 +94,16 @@ export const TilbakekrevingForm = (props: {
                                 error={fieldState.error?.message}
                                 {...field}
                             >
-                                <Radio id={field.name} ref={field.ref} value={TilbakekrevingsAvgjørelse.TILBAKEKREV}>
+                                <Radio id={field.name} ref={field.ref} value={Tilbakekrevingsavgjørelse.TILBAKEKREV}>
                                     {formatMessage('aktsomhetJa')}
                                 </Radio>
-                                <Radio value={TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV}>
+                                <Radio value={Tilbakekrevingsavgjørelse.IKKE_TILBAKEKREV}>
                                     {formatMessage('aktsomhetNei')}
                                 </Radio>
                             </RadioGroup>
                         )}
                     />
-                    {form.watch('avgjørelse') === TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV && (
+                    {form.watch('avgjørelse') === Tilbakekrevingsavgjørelse.IKKE_TILBAKEKREV && (
                         <Alert variant={'info'}>{formatMessage('ingenTilbakekreving')}</Alert>
                     )}
                     {RemoteData.isFailure(lagreTilbakekrevingsbehandlingState) && (

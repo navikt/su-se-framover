@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
-import { TilbakekrevingsAvgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { TilbakekrevingsbehandlingFormData } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -190,7 +190,7 @@ export const lagreTilbakekrevingsbehandling = createAsyncThunk<
     {
         sakId: string;
         revurderingId: string;
-        tilbakekrevingsbehandling: TilbakekrevingsAvgjørelse;
+        tilbakekrevingsbehandling: TilbakekrevingsbehandlingFormData;
     },
     { rejectValue: ApiError }
 >('revurdering/tilbakekreving', async ({ sakId, revurderingId, tilbakekrevingsbehandling }, thunkApi) => {
