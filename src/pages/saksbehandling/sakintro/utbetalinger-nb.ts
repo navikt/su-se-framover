@@ -2,7 +2,7 @@ import { Utbetalingstype } from '~types/Utbetalingsperiode';
 
 const utbetalingsTypeTekstMapper: { [key in Utbetalingstype]: string } = {
     [Utbetalingstype.NY]: ' ',
-    [Utbetalingstype.OPPHØR]: 'display.utbetalingsperiode.linje.opphørt',
+    [Utbetalingstype.OPPHØR]: 'Opphørt',
 };
 
 export default {
