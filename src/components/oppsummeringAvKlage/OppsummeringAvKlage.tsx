@@ -1,8 +1,8 @@
-import { InformationFilled } from '@navikt/ds-icons';
 import { BodyShort, Label, Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
+import { InformationIcon } from '~components/icons/Icons';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -55,7 +55,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 </div>
 
                 <div className={styles.vurdering}>
-                    <InformationFilled className={styles.tag} />
+                    <InformationIcon className={styles.tag} />
                     <Heading size="xsmall" level="6">
                         {`${formatMessage('label.vurdering.tittel').toUpperCase()}: ${formatMessage(
                             hentVurderingstekstId(props.klage)

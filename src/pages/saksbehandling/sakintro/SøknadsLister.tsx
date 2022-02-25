@@ -2,12 +2,12 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Heading, Label, Panel } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
-import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import { ErrorIcon, InformationIcon } from '~components/icons/Icons';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~context/userContext';
@@ -221,7 +221,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
         <div>
             {erTilAttestering(behandling) && (!user.isAttestant || user.navIdent === behandling.saksbehandler) && (
                 <div className={styles.ikonContainer}>
-                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                    <InformationIcon className={styles.ikon} />
                     <p>
                         {props.intl.formatMessage({
                             id: 'attestering.tilAttestering',
@@ -295,7 +295,7 @@ export const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: Int
                                 </div>
                             </div>
                             <div className={styles.ikonContainer}>
-                                <Ikon className={styles.ikon} kind="feil-sirkel-fyll" width={'24px'} />
+                                <ErrorIcon className={styles.ikon} />
                                 <p className={styles.ikonTekst}>
                                     {props.intl.formatMessage({
                                         id: lukketBegrunnelseResourceId(søknad.lukket?.type),

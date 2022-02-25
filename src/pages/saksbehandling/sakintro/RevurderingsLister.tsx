@@ -1,10 +1,10 @@
 import { BodyShort, Heading, Label, Panel, Tag } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
-import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
+import { InformationIcon } from '~components/icons/Icons';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~context/userContext';
@@ -142,7 +142,7 @@ const RevurderingStartetKnapper = (props: {
                     </LinkAsButton>
                 ) : (
                     <div className={styles.ikonContainer}>
-                        <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                        <InformationIcon className={styles.ikon} />
                         <BodyShort>
                             {props.intl.formatMessage({
                                 id: 'attestering.tilAttestering',

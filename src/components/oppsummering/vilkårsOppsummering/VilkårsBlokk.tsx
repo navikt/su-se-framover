@@ -21,13 +21,7 @@ const Vilkårsblokk = (props: {
     return (
         <div className={styles.blokkContainer}>
             <Heading level="3" size="xsmall" className={styles.blokkHeader}>
-                {props.status ? (
-                    <VilkårvurderingStatusIcon
-                        className={styles.ikon}
-                        status={props.status}
-                        showIkkeVurdertAsUavklart
-                    />
-                ) : null}
+                {props.status ? <VilkårvurderingStatusIcon status={props.status} showIkkeVurdertAsUavklart /> : null}
                 {props.tittel}
             </Heading>
             <div className={styles.pairBlokkContainer}>
