@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Collapse, Expand } from '@navikt/ds-icons';
 import { Alert, Button, LinkPanel, Loader, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
-import Chevron from 'nav-frontend-chevron';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -147,9 +147,15 @@ const NyBehandlingVelger = (props: { sakId: string; klageToggle: boolean; intl: 
     };
     return (
         <div className={styles.nyBehandlingVelgerContainer}>
-            <Button variant="secondary" onClick={(e) => setAnchorEl(anchorEl ? null : e.currentTarget)}>
+            <Button
+                variant="secondary"
+                onClick={(e) => {
+                    console.log(anchorEl === e.currentTarget);
+                    return setAnchorEl(anchorEl ? null : e.currentTarget);
+                }}
+            >
                 {props.intl.formatMessage({ id: 'popover.default' })}
-                {anchorEl === null ? <Chevron type="ned" /> : <Chevron type="opp" />}
+                {anchorEl === null ? <Expand className={styles.chevron} /> : <Collapse className={styles.chevron} />}
             </Button>
             <Popover
                 arrow={false}

@@ -73,8 +73,6 @@
         "io-ts-types": "^0.5.16",
         "lodash.debounce": "^4.0.8",
         "lodash.throttle": "^4.1.1",
-        "nav-frontend-chevron": "^1.0.30",
-        "nav-frontend-chevron-style": "^1.0.4",
         "nav-frontend-core": "^6.0.1",
         "nav-frontend-js-utils": "^1.0.20",
         "nav-frontend-knapper-style": "^2.1.1",
