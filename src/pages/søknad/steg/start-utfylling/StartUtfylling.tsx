@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, ContentContainer, Heading, Loader } from '@navikt/ds-react';
+import { Alert, ContentContainer, Heading, Loader, StepIndicator } from '@navikt/ds-react';
 import classNames from 'classnames';
-import Stegindikator from 'nav-frontend-stegindikator/lib/stegindikator';
 import { useEffect } from 'react';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -112,14 +111,14 @@ export const StartUtfylling = () => {
                             </div>
                             <div className={styles.content}>
                                 <div className={styles.stegindikatorContainer}>
-                                    <Stegindikator
-                                        steg={steg.map((s, index) => ({
-                                            index,
-                                            label: s.label,
-                                        }))}
-                                        aktivtSteg={aktivtSteg}
-                                        visLabel={false}
-                                        onChange={
+                                    <StepIndicator
+                                        // steg={steg.map((s, index) => ({
+                                        //     index,
+                                        //     label: s.label,
+                                        // }))}
+                                        activeStep={aktivtSteg}
+                                        hideLabels
+                                        onStepChange={
                                             process.env.NODE_ENV === 'development'
                                                 ? (index) => {
                                                       const nyttSteg = steg[index];
@@ -133,16 +132,20 @@ export const StartUtfylling = () => {
                                                   }
                                                 : undefined
                                         }
+                                    >
+                                        {steg.map((s, index) => (
+                                            <StepIndicator.Step key={index}>{s.label}</StepIndicator.Step>
+                                        ))}
+                                    </StepIndicator>
+                                    <Steg
+                                        title={steg.find((s) => s.step === step)?.label || ''}
+                                        step={step}
+                                        søknad={søknad}
+                                        søker={søker}
+                                        erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
+                                        hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
                                     />
                                 </div>
-                                <Steg
-                                    title={steg.find((s) => s.step === step)?.label || ''}
-                                    step={step}
-                                    søknad={søknad}
-                                    søker={søker}
-                                    erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
-                                    hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
-                                />
                             </div>
                         </>
                     )
