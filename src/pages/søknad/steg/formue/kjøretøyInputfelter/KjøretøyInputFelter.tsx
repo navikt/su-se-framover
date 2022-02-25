@@ -1,6 +1,7 @@
 import { Fieldset, TextField } from '@navikt/ds-react';
 import { FormikErrors } from 'formik';
 import * as React from 'react';
+import { FieldError } from 'react-hook-form';
 
 import SøknadInputliste from '~features/søknad/søknadInputliste/SøknadInputliste';
 import { useI18n } from '~lib/i18n';
@@ -19,7 +20,12 @@ export const kjøretøyMessages = {
 
 const KjøretøyInputFelter = (props: {
     arr: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
-    errors: string | string[] | Array<FormikErrors<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>> | undefined;
+    errors:
+        | string
+        | string[]
+        | Array<FormikErrors<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>>
+        | undefined
+        | FieldError;
     feltnavn: string;
     onChange: (element: { index: number; verdiPåKjøretøy: string; kjøretøyDeEier: string }) => void;
     onLeggTilClick: () => void;
