@@ -54,7 +54,7 @@
         "@navikt/ds-react": "^0.16.4",
         "@navikt/ds-react-internal": "^0.11.4",
         "@reduxjs/toolkit": "^1.7.2",
-        "@sentry/browser": "^6.17.6",
+        "@sentry/browser": "^6.18.0",
         "@sentry/cli": "^1.72.2",
         "@types/jest": "^27.4.0",
         "@types/react-collapse": "^5.0.1",
