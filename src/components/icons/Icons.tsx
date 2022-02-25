@@ -1,4 +1,4 @@
-import { WarningFilled, SuccessFilled, ErrorFilled } from '@navikt/ds-icons';
+import { WarningFilled, SuccessFilled, ErrorFilled, InformationFilled } from '@navikt/ds-icons';
 import React from 'react';
 
 const iconWidth = '1.5em';
@@ -32,9 +32,9 @@ export const WarningIcon = (props: Props) => (
 );
 
 export const InformationIcon = (props: Props) => (
-    <WarningFilled
+    <InformationFilled
         className={props.className}
         fontSize={props.width ?? iconWidth}
-        color="var(--navds-semantic-color-feedback-info-icon);"
+        color="var(--navds-semantic-color-feedback-info-icon)"
     />
 );
