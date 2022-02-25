@@ -107,13 +107,11 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
     return (
         <form
-            onSubmit={() => {
-                form.handleSubmit((values) => {
-                    dispatch(søknadSlice.actions.formueUpdated(values));
-                    history.push(props.nesteUrl);
-                });
+            onSubmit={form.handleSubmit((values) => {
+                dispatch(søknadSlice.actions.formueUpdated(values));
+                history.push(props.nesteUrl);
                 focusAfterTimeout(feiloppsummeringref)();
-            }}
+            })}
             className={sharedStyles.container}
         >
             <SøknadSpørsmålsgruppe legend={formatMessage('legend.eiendom')}>
@@ -136,7 +134,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         render={({ field, fieldState }) => (
                             <BooleanRadioGroup
                                 legend={formatMessage('eierBolig.borIBolig')}
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 {...field}
                             />
                         )}
@@ -153,7 +151,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     id="verdiPåBolig"
                                     className={sharedStyles.narrow}
                                     label={formatMessage('eierBolig.formuePåBolig')}
-                                    error={fieldState.error}
+                                    error={fieldState.error?.message}
                                     {...field}
                                     value={field.value ?? ''}
                                     autoComplete="off"
@@ -172,7 +170,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     className={sharedStyles.narrow}
                                     label={formatMessage('eierBolig.boligBrukesTil')}
                                     autoComplete="off"
-                                    error={fieldState.error}
+                                    error={fieldState.error?.message}
                                     {...field}
                                     value={field.value ?? ''}
                                 />
@@ -188,7 +186,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         render={({ field, fieldState }) => (
                             <BooleanRadioGroup
                                 legend={formatMessage('depositum.label')}
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 {...field}
                             />
                         )}
@@ -205,7 +203,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     id="depositumsBeløp"
                                     className={sharedStyles.narrow}
                                     label={formatMessage('depositum.beløp')}
-                                    error={fieldState.error}
+                                    error={fieldState.error?.message}
                                     {...field}
                                     value={field.value ?? ''}
                                     autoComplete="off"
@@ -225,7 +223,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     label={formatMessage('depositum.kontonummer')}
                                     {...field}
                                     value={field.value ?? ''}
-                                    error={fieldState.error}
+                                    error={fieldState.error?.message}
                                     autoComplete="off"
                                 />
                             )}
@@ -239,7 +237,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={formatMessage('eiendom.eierAndreEiendommer')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -255,7 +253,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     id="verdiPåEiendom"
                                     className={sharedStyles.narrow}
                                     label={formatMessage('eiendom.samledeVerdi')}
-                                    error={fieldState.error}
+                                    error={fieldState.error?.message}
                                     autoComplete="off"
                                     {...field}
                                     value={field.value ?? ''}
@@ -273,7 +271,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     id="eiendomBrukesTil"
                                     className={sharedStyles.narrow}
                                     label={formatMessage('eiendom.brukesTil')}
-                                    error={fieldState.error}
+                                    error={fieldState.error?.message}
                                     autoComplete="off"
                                     {...field}
                                     value={field.value ?? ''}
@@ -290,7 +288,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={formatMessage('kjøretøy.label')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -303,7 +301,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         render={({ field, fieldState }) => (
                             <KjøretøyInputFelter
                                 arr={field.value}
-                                errors={fieldState.error}
+                                errors={fieldState.error?.message}
                                 feltnavn={field.name}
                                 onLeggTilClick={() =>
                                     field.onChange([
@@ -345,7 +343,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
                                     : formatMessage('innskudd.label')
                             }
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -360,7 +358,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 className={sharedStyles.narrow}
                                 id="innskuddsBeløp"
                                 label={formatMessage('innskudd.beløp')}
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 {...field}
                                 value={field.value ?? ''}
                                 // Dette elementet vises ikke ved sidelast
@@ -377,7 +375,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={formatMessage('verdipapir.label')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -392,7 +390,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 className={sharedStyles.narrow}
                                 id="verdipapirBeløp"
                                 label={formatMessage('verdipapir.beløp')}
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 {...field}
                                 value={field.value ?? ''}
                                 autoComplete="off"
@@ -410,7 +408,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={formatMessage('skylderNoenMegPenger.label')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -427,7 +425,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 label={formatMessage('skylderNoenMegPenger.beløp')}
                                 {...field}
                                 value={field.value ?? ''}
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
                                 // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -443,7 +441,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={formatMessage('harKontanter.label')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -457,7 +455,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                             <TextField
                                 className={sharedStyles.narrow}
                                 label={formatMessage('harKontanter.beløp')}
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 {...field}
                                 value={field.value ?? ''}
                                 autoComplete="off"

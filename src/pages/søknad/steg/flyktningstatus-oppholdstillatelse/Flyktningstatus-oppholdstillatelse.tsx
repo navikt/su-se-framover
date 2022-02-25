@@ -87,13 +87,11 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
 
     return (
         <form
-            onSubmit={() =>
-                form.handleSubmit((values) => {
-                    dispatch(søknadSlice.actions.flyktningstatusUpdated(values));
-                    history.push(props.nesteUrl);
-                    focusAfterTimeout(feiloppsummeringref)();
-                })
-            }
+            onSubmit={form.handleSubmit((values) => {
+                dispatch(søknadSlice.actions.flyktningstatusUpdated(values));
+                history.push(props.nesteUrl);
+                focusAfterTimeout(feiloppsummeringref)();
+            })}
             className={sharedStyles.container}
         >
             <SøknadSpørsmålsgruppe withoutLegend className={sharedStyles.formContainer}>
@@ -110,7 +108,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                     {formatMessage('flyktning.hjelpetekst.body')}
                                 </CollapsableFormElementDescription>
                             }
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -124,7 +122,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={formatMessage('norsk.statsborger.label')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -136,7 +134,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         render={({ field, fieldState }) => (
                             <BooleanRadioGroup
                                 legend={formatMessage('oppholdstillatelse.label')}
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 {...field}
                             />
                         )}
@@ -145,10 +143,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 {form.watch('harOppholdstillatelse') === true && (
                     <Controller
                         control={form.control}
-                        name="harOppholdstillatelse"
+                        name="typeOppholdstillatelse"
                         render={({ field, fieldState }) => (
                             <RadioGroup
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 legend={formatMessage('oppholdstillatelse.type')}
                                 {...field}
                                 value={field.value?.toString() ?? ''}
@@ -180,7 +178,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={formatMessage('statsborger.andre.land.label')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                         />
                     )}
@@ -193,7 +191,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             <TextField
                                 className={sharedStyles.narrow}
                                 label={formatMessage('statsborger.andre.land.fritekst')}
-                                error={fieldState.error}
+                                error={fieldState.error?.message}
                                 {...field}
                                 value={field.value || ''}
                                 autoComplete="off"
