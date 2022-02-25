@@ -91,11 +91,13 @@ export const VelgForhåndsvarselForm = (props: {
         ),
     });
 
-    const submitStatus = RemoteData.isInitial(sendTilAttesteringState)
-        ? lagreForhåndsvarselState
-        : RemoteData.combine(lagreForhåndsvarselState, sendTilAttesteringState);
-
     const forhåndsvarselhandling = form.watch('forhåndsvarselhandling');
+    const submitStatus =
+        forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle
+            ? lagreForhåndsvarselState
+            : RemoteData.combine(lagreForhåndsvarselState, sendTilAttesteringState);
+
+    const isLoading = RemoteData.isPending(lagreForhåndsvarselState) || RemoteData.isPending(sendTilAttesteringState);
 
     return (
         <form
@@ -167,7 +169,7 @@ export const VelgForhåndsvarselForm = (props: {
                 }
                 onTilbakeClick={props.onTilbakeClick}
                 tilbakeUrl={props.forrigeUrl}
-                loading={RemoteData.isPending(submitStatus)}
+                loading={isLoading}
             />
         </form>
     );
