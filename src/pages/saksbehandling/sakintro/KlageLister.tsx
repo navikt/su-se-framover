@@ -1,7 +1,7 @@
+import { InformationFilled } from '@navikt/ds-icons';
 import { BodyShort, Heading, Tag } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
-import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
@@ -91,7 +91,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[]; vedtak: Vedtak[] }
                                 </LinkAsButton>
                             ) : (
                                 <div className={styles.ikonContainer}>
-                                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                                    <InformationFilled className={styles.ikon} />
                                     <BodyShort>{formatMessage('attestering.tilAttestering')}</BodyShort>
                                 </div>
                             );
@@ -100,7 +100,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[]; vedtak: Vedtak[] }
                         if (user.navIdent === pipe(klage.attesteringer, last, toNullable)?.attestant) {
                             return (
                                 <div className={styles.ikonContainer}>
-                                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                                    <InformationFilled className={styles.ikon} />
                                     <BodyShort>{formatMessage('attestering.sendtTilbakeTilBehandling')}</BodyShort>
                                 </div>
                             );

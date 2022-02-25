@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Attachment, SuccessFilled } from '@navikt/ds-icons';
+import { Attachment } from '@navikt/ds-icons';
 import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Panel } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
@@ -9,6 +9,7 @@ import { ApiError } from '~api/apiClient';
 import { fetchSøknadutskrift } from '~api/pdfApi';
 import { OpprettetSøknad } from '~api/søknadApi';
 import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
+import { SuccessIcon } from '~components/icons/Icons';
 import * as personSlice from '~features/person/person.slice';
 import * as søknadslice from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/i18n';
@@ -83,7 +84,7 @@ const Kvittering = () => {
                             <div className={styles.container}>
                                 <div className={styles.textContainer}>
                                     <Panel border className={styles.headingpanel}>
-                                        <SuccessFilled className={styles.successIcon} />
+                                        <SuccessIcon className={styles.successIcon} />
                                         <Heading level="1" size="large" className={styles.headingContainer}>
                                             <span>
                                                 {formatMessage('heading.søknadForNavnErMottatt', {

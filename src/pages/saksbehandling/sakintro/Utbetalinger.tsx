@@ -1,9 +1,10 @@
+import { WarningFilled } from '@navikt/ds-icons';
 import { Button, Heading, Panel } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { SuccessIcon } from '~components/icons/Icons';
 import { DateFormats, useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
@@ -53,7 +54,7 @@ export const Utbetalinger = (props: {
                     </Heading>
                     {erStønadsperiodeUtløpt || kanGjenopptas ? (
                         <div className={styles.ikonContainer}>
-                            <Ikon className={styles.ikon} kind="advarsel-sirkel-fyll" width={'24px'} />
+                            <WarningFilled className={styles.ikon} fontSize={'24px'} />
                             <p>
                                 {formatMessage(
                                     kanGjenopptas ? 'display.stønadsperioder.stoppet' : 'display.stønadsperioder.utløpt'
@@ -62,7 +63,7 @@ export const Utbetalinger = (props: {
                         </div>
                     ) : (
                         <div className={styles.ikonContainer}>
-                            <Ikon className={styles.ikon} kind="ok-sirkel-fyll" width={'24px'} />
+                            <SuccessIcon className={styles.ikon} />
                             <p> {formatMessage('display.stønadsperioder.aktiv')}</p>
                         </div>
                     )}

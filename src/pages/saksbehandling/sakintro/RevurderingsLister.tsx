@@ -1,7 +1,7 @@
+import { InformationFilled } from '@navikt/ds-icons';
 import { BodyShort, Heading, Label, Panel, Tag } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
-import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -142,7 +142,7 @@ const RevurderingStartetKnapper = (props: {
                     </LinkAsButton>
                 ) : (
                     <div className={styles.ikonContainer}>
-                        <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                        <InformationFilled className={styles.ikon} fontSize={'24px'} />
                         <BodyShort>
                             {props.intl.formatMessage({
                                 id: 'attestering.tilAttestering',
