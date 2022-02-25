@@ -1,6 +1,8 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup, TextField } from '@navikt/ds-react';
-import { useFormik } from 'formik';
 import * as React from 'react';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { BooleanRadioGroup, CollapsableFormElementDescription } from '~/components/formElements/FormElements';
@@ -11,7 +13,7 @@ import { TypeOppholdstillatelse } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
 import { keyOf, Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -60,169 +62,161 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
     const flyktningstatusFraStore = useAppSelector((s) => s.soknad.flyktningstatus);
     const dispatch = useAppDispatch();
     const history = useHistory();
-    const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
-    const save = (values: FormData) =>
-        dispatch(
-            søknadSlice.actions.flyktningstatusUpdated({
-                erFlyktning: values.erFlyktning,
-                erNorskStatsborger: values.erNorskStatsborger,
-                harOppholdstillatelse: values.harOppholdstillatelse,
-                typeOppholdstillatelse: values.typeOppholdstillatelse,
-                statsborgerskapAndreLand: values.statsborgerskapAndreLand,
-                statsborgerskapAndreLandFritekst: values.statsborgerskapAndreLandFritekst,
-            })
-        );
-
-    const formik = useFormik<FormData>({
-        initialValues: {
-            erFlyktning: flyktningstatusFraStore.erFlyktning,
-            erNorskStatsborger: flyktningstatusFraStore.erNorskStatsborger,
-            harOppholdstillatelse: flyktningstatusFraStore.harOppholdstillatelse,
-            typeOppholdstillatelse: flyktningstatusFraStore.typeOppholdstillatelse,
-            statsborgerskapAndreLand: flyktningstatusFraStore.statsborgerskapAndreLand,
-            statsborgerskapAndreLandFritekst: flyktningstatusFraStore.statsborgerskapAndreLandFritekst,
-        },
-        onSubmit: (values) => {
-            save(values);
-            history.push(props.nesteUrl);
-        },
-        validationSchema: schema,
-        validateOnChange: hasSubmitted,
+    const form = useForm<FormData>({
+        defaultValues: flyktningstatusFraStore,
+        resolver: yupResolver(schema),
     });
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
+    const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
+
+    useEffect(() => {
+        setFieldsToNull(['harOppholdstillatelse', 'typeOppholdstillatelse']);
+    }, [form.watch('erNorskStatsborger')]);
+
+    useEffect(() => {
+        setFieldsToNull(['typeOppholdstillatelse']);
+    }, [form.watch('harOppholdstillatelse')]);
+
+    useEffect(() => {
+        setFieldsToNull(['statsborgerskapAndreLandFritekst']);
+    }, [form.watch('statsborgerskapAndreLand')]);
+
     return (
         <form
-            onSubmit={(e) => {
-                setHasSubmitted(true);
-                formik.handleSubmit(e);
-                focusAfterTimeout(feiloppsummeringref)();
-            }}
+            onSubmit={() =>
+                form.handleSubmit((values) => {
+                    dispatch(søknadSlice.actions.flyktningstatusUpdated(values));
+                    history.push(props.nesteUrl);
+                    focusAfterTimeout(feiloppsummeringref)();
+                })
+            }
             className={sharedStyles.container}
         >
             <SøknadSpørsmålsgruppe withoutLegend className={sharedStyles.formContainer}>
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('erFlyktning')}
-                    legend={formatMessage('flyktning.label')}
-                    description={
-                        <CollapsableFormElementDescription title={formatMessage('flyktning.hjelpetekst.tittel')}>
-                            {formatMessage('flyktning.hjelpetekst.body')}
-                        </CollapsableFormElementDescription>
-                    }
-                    error={formik.errors.erFlyktning}
-                    value={formik.values.erFlyktning}
-                    onChange={(val) =>
-                        formik.setValues({
-                            ...formik.values,
-                            erFlyktning: val,
-                        })
-                    }
+                <Controller
+                    control={form.control}
+                    name="erFlyktning"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('flyktning.label')}
+                            description={
+                                <CollapsableFormElementDescription
+                                    title={formatMessage('flyktning.hjelpetekst.tittel')}
+                                >
+                                    {formatMessage('flyktning.hjelpetekst.body')}
+                                </CollapsableFormElementDescription>
+                            }
+                            error={fieldState.error}
+                            {...field}
+                        />
+                    )}
                 />
-                {formik.values.erFlyktning === false && (
+                {form.watch('erFlyktning') === false && (
                     <Alert variant="warning">{formatMessage('flyktning.måVæreFlyktning')}</Alert>
                 )}
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('erNorskStatsborger')}
-                    legend={formatMessage('norsk.statsborger.label')}
-                    error={formik.errors.erNorskStatsborger}
-                    value={formik.values.erNorskStatsborger}
-                    onChange={(val) =>
-                        formik.setValues({
-                            ...formik.values,
-                            erNorskStatsborger: val,
-                            harOppholdstillatelse: null,
-                            typeOppholdstillatelse: null,
-                        })
-                    }
+                <Controller
+                    control={form.control}
+                    name="erNorskStatsborger"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('norsk.statsborger.label')}
+                            error={fieldState.error}
+                            {...field}
+                        />
+                    )}
                 />
-                {formik.values.erNorskStatsborger === false && (
-                    <BooleanRadioGroup
-                        name={keyOf<FormData>('harOppholdstillatelse')}
-                        legend={formatMessage('oppholdstillatelse.label')}
-                        error={formik.errors.harOppholdstillatelse}
-                        value={formik.values.harOppholdstillatelse}
-                        onChange={(val) =>
-                            formik.setValues({
-                                ...formik.values,
-                                harOppholdstillatelse: val,
-                                typeOppholdstillatelse: null,
-                            })
-                        }
+                {form.watch('erNorskStatsborger') === false && (
+                    <Controller
+                        control={form.control}
+                        name="harOppholdstillatelse"
+                        render={({ field, fieldState }) => (
+                            <BooleanRadioGroup
+                                legend={formatMessage('oppholdstillatelse.label')}
+                                error={fieldState.error}
+                                {...field}
+                            />
+                        )}
                     />
                 )}
-                {formik.values.harOppholdstillatelse === true && (
-                    <RadioGroup
-                        error={formik.errors.typeOppholdstillatelse}
-                        legend={formatMessage('oppholdstillatelse.type')}
-                        name={keyOf<FormData>('typeOppholdstillatelse')}
-                        onChange={(value) => {
-                            formik.setValues({
-                                ...formik.values,
-                                typeOppholdstillatelse: value as TypeOppholdstillatelse,
-                            });
-                        }}
-                        value={formik.values.typeOppholdstillatelse?.toString() ?? ''}
-                    >
-                        <Radio id={keyOf<FormData>('typeOppholdstillatelse')} value={TypeOppholdstillatelse.Permanent}>
-                            {formatMessage('oppholdstillatelse.permanent')}
-                        </Radio>
-                        <Radio value={TypeOppholdstillatelse.Midlertidig}>
-                            {formatMessage('oppholdstillatelse.midlertidig')}
-                        </Radio>
-                    </RadioGroup>
+                {form.watch('harOppholdstillatelse') === true && (
+                    <Controller
+                        control={form.control}
+                        name="harOppholdstillatelse"
+                        render={({ field, fieldState }) => (
+                            <RadioGroup
+                                error={fieldState.error}
+                                legend={formatMessage('oppholdstillatelse.type')}
+                                {...field}
+                                value={field.value?.toString() ?? ''}
+                            >
+                                <Radio
+                                    id={keyOf<FormData>('typeOppholdstillatelse')}
+                                    value={TypeOppholdstillatelse.Permanent}
+                                >
+                                    {formatMessage('oppholdstillatelse.permanent')}
+                                </Radio>
+                                <Radio value={TypeOppholdstillatelse.Midlertidig}>
+                                    {formatMessage('oppholdstillatelse.midlertidig')}
+                                </Radio>
+                            </RadioGroup>
+                        )}
+                    />
                 )}
-                {formik.values.harOppholdstillatelse === false && (
+                {form.watch('harOppholdstillatelse') === false && (
                     <Alert variant="warning">{formatMessage('oppholdstillatelse.ikkeLovligOpphold')}</Alert>
                 )}
 
-                {formik.values.typeOppholdstillatelse === 'midlertidig' && (
+                {form.watch('typeOppholdstillatelse') === 'midlertidig' && (
                     <Alert variant="warning">{formatMessage('oppholdstillatelse.midlertidig.info')}</Alert>
                 )}
 
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('statsborgerskapAndreLand')}
-                    legend={formatMessage('statsborger.andre.land.label')}
-                    error={formik.errors.statsborgerskapAndreLand}
-                    value={formik.values.statsborgerskapAndreLand}
-                    onChange={(val) =>
-                        formik.setValues({
-                            ...formik.values,
-                            statsborgerskapAndreLand: val,
-                            statsborgerskapAndreLandFritekst: null,
-                        })
-                    }
+                <Controller
+                    control={form.control}
+                    name="statsborgerskapAndreLand"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('statsborger.andre.land.label')}
+                            error={fieldState.error}
+                            {...field}
+                        />
+                    )}
                 />
-                {formik.values.statsborgerskapAndreLand && (
-                    <TextField
-                        id={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
-                        name={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
-                        className={sharedStyles.narrow}
-                        label={formatMessage('statsborger.andre.land.fritekst')}
-                        error={formik.errors.statsborgerskapAndreLandFritekst}
-                        value={formik.values.statsborgerskapAndreLandFritekst || ''}
-                        onChange={formik.handleChange}
-                        autoComplete="off"
-                        // Dette elementet vises ikke ved sidelast
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
-                        autoFocus
+                {form.watch('statsborgerskapAndreLand') && (
+                    <Controller
+                        control={form.control}
+                        name="statsborgerskapAndreLandFritekst"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                className={sharedStyles.narrow}
+                                label={formatMessage('statsborger.andre.land.fritekst')}
+                                error={fieldState.error}
+                                {...field}
+                                value={field.value || ''}
+                                autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                            />
+                        )}
                     />
                 )}
             </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
                 tittel={formatMessage('feiloppsummering.title')}
-                feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                hidden={!formikErrorsHarFeil(formik.errors)}
+                hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
+                feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                 ref={feiloppsummeringref}
             />
 
             <Bunnknapper
                 previous={{
                     onClick: () => {
-                        save(formik.values);
+                        dispatch(søknadSlice.actions.flyktningstatusUpdated(form.getValues()));
                         history.push(props.forrigeUrl);
                     },
                 }}
