@@ -1,7 +1,7 @@
 import { WarningFilled, SuccessFilled, ErrorFilled } from '@navikt/ds-icons';
 import React from 'react';
 
-const iconWidth = '24px';
+const iconWidth = '1.5em';
 interface Props {
     width?: string | number;
     className?: string;
