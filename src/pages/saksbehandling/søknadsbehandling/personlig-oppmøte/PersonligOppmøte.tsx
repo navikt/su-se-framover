@@ -28,7 +28,7 @@ import {
 } from '~types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
-import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
+import { erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
 import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -322,16 +322,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         ) {
             advarselRef.current.focus();
             return;
-        }
-
-        if (erUnderkjent(props.behandling) && erVilkårsvurderingerVurdertAvslag(props.behandling)) {
-            clearDraft();
-            return history.push(
-                Routes.saksbehandlingSendTilAttestering.createURL({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                })
-            );
         }
 
         if (
