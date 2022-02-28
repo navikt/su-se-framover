@@ -112,10 +112,6 @@ export const StartUtfylling = () => {
                             <div className={styles.content}>
                                 <div className={styles.stegindikatorContainer}>
                                     <StepIndicator
-                                        // steg={steg.map((s, index) => ({
-                                        //     index,
-                                        //     label: s.label,
-                                        // }))}
                                         activeStep={aktivtSteg}
                                         hideLabels
                                         onStepChange={
