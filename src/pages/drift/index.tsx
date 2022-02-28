@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader, Modal } from '@navikt/ds-react';
-import 'nav-frontend-tabell-style';
 import * as React from 'react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
