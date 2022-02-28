@@ -1,17 +1,18 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from '@navikt/ds-react';
-import { useFormik } from 'formik';
 import * as React from 'react';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { BooleanRadioGroup } from '~/components/formElements/FormElements';
-import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import søknadSlice, { Kjøretøy, SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
-import { keyOf } from '~lib/types';
-import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
@@ -27,64 +28,78 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
     const formueFraStore = useAppSelector((s) => s.soknad.formue);
     const dispatch = useAppDispatch();
     const history = useHistory();
-    const [hasSubmitted, setHasSubmitted] = React.useState(false);
-    const save = (values: FormData) => {
-        dispatch(
-            søknadSlice.actions.formueUpdated({
-                eierBolig: values.eierBolig,
-                borIBolig: values.borIBolig,
-                verdiPåBolig: values.verdiPåBolig,
-                boligBrukesTil: values.boligBrukesTil,
-                eierMerEnnEnBolig: values.eierMerEnnEnBolig,
-                harDepositumskonto: values.harDepositumskonto,
-                depositumsBeløp: values.depositumsBeløp,
-                kontonummer: values.kontonummer,
-                verdiPåEiendom: values.verdiPåEiendom,
-                eiendomBrukesTil: values.eiendomBrukesTil,
-                eierKjøretøy: values.eierKjøretøy,
-                kjøretøy: values.kjøretøy,
-                harInnskuddPåKonto: values.harInnskuddPåKonto,
-                innskuddsBeløp: values.innskuddsBeløp,
-                harVerdipapir: values.harVerdipapir,
-                verdipapirBeløp: values.verdipapirBeløp,
-                skylderNoenMegPenger: values.skylderNoenMegPenger,
-                skylderNoenMegPengerBeløp: values.skylderNoenMegPengerBeløp,
-                harKontanter: values.harKontanter,
-                kontanterBeløp: values.kontanterBeløp,
-            })
-        );
-    };
 
-    const formik = useFormik<FormData>({
-        initialValues: {
-            eierBolig: formueFraStore.eierBolig,
-            borIBolig: formueFraStore.borIBolig,
-            verdiPåBolig: formueFraStore.verdiPåBolig,
-            boligBrukesTil: formueFraStore.boligBrukesTil,
-            eierMerEnnEnBolig: formueFraStore.eierMerEnnEnBolig,
-            harDepositumskonto: formueFraStore.harDepositumskonto,
-            depositumsBeløp: formueFraStore.depositumsBeløp,
-            kontonummer: formueFraStore.kontonummer,
-            verdiPåEiendom: formueFraStore.verdiPåEiendom,
-            eiendomBrukesTil: formueFraStore.eiendomBrukesTil,
-            eierKjøretøy: formueFraStore.eierKjøretøy,
-            kjøretøy: formueFraStore.kjøretøy,
-            harInnskuddPåKonto: formueFraStore.harInnskuddPåKonto,
-            innskuddsBeløp: formueFraStore.innskuddsBeløp,
-            harVerdipapir: formueFraStore.harVerdipapir,
-            verdipapirBeløp: formueFraStore.verdipapirBeløp,
-            skylderNoenMegPenger: formueFraStore.skylderNoenMegPenger,
-            skylderNoenMegPengerBeløp: formueFraStore.skylderNoenMegPengerBeløp,
-            harKontanter: formueFraStore.harKontanter,
-            kontanterBeløp: formueFraStore.kontanterBeløp,
-        },
-        onSubmit: (values) => {
-            save(values);
-            history.push(props.nesteUrl);
-        },
-        validationSchema: formueValideringSchema('søker'),
-        validateOnChange: hasSubmitted,
+    const form = useForm<FormData>({
+        defaultValues: formueFraStore,
+        resolver: yupResolver(formueValideringSchema('søker')),
     });
+
+    const [
+        eierBolig,
+        borIBolig,
+        harDepositumskonto,
+        eierMerEnnEnBolig,
+        harInnskuddPåKonto,
+        harVerdipapir,
+        skylderNoenMegPenger,
+        harKontanter,
+        eierKjøretøy,
+    ] = form.watch([
+        'eierBolig',
+        'borIBolig',
+        'harDepositumskonto',
+        'eierMerEnnEnBolig',
+        'harInnskuddPåKonto',
+        'harVerdipapir',
+        'skylderNoenMegPenger',
+        'harKontanter',
+        'eierKjøretøy',
+    ]);
+
+    const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
+
+    useEffect(() => {
+        setFieldsToNull([
+            'borIBolig',
+            'verdiPåBolig',
+            'boligBrukesTil',
+            'harDepositumskonto',
+            'depositumsBeløp',
+            'kontonummer',
+        ]);
+    }, [eierBolig]);
+
+    useEffect(() => {
+        setFieldsToNull(['verdiPåBolig', 'boligBrukesTil']);
+    }, [borIBolig]);
+
+    useEffect(() => {
+        setFieldsToNull(['depositumsBeløp', 'kontonummer']);
+    }, [harDepositumskonto]);
+
+    useEffect(() => {
+        setFieldsToNull(['verdiPåEiendom', 'eiendomBrukesTil']);
+    }, [eierMerEnnEnBolig]);
+
+    useEffect(() => {
+        setFieldsToNull(['innskuddsBeløp']);
+    }, [harInnskuddPåKonto]);
+
+    useEffect(() => {
+        setFieldsToNull(['verdipapirBeløp']);
+    }, [harVerdipapir]);
+
+    useEffect(() => {
+        setFieldsToNull(['skylderNoenMegPengerBeløp']);
+    }, [skylderNoenMegPenger]);
+
+    useEffect(() => {
+        setFieldsToNull(['kontanterBeløp']);
+    }, [harKontanter]);
+
+    useEffect(() => {
+        form.setValue('kjøretøy', eierKjøretøy ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : []);
+    }, [eierKjøretøy]);
 
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
@@ -92,353 +107,377 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
     return (
         <form
-            onSubmit={(e) => {
-                setHasSubmitted(true);
-                formik.handleSubmit(e);
+            onSubmit={form.handleSubmit((values) => {
+                dispatch(søknadSlice.actions.formueUpdated(values));
+                history.push(props.nesteUrl);
                 focusAfterTimeout(feiloppsummeringref)();
-            }}
+            })}
             className={sharedStyles.container}
         >
             <SøknadSpørsmålsgruppe legend={formatMessage('legend.eiendom')}>
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('eierBolig')}
-                    legend={formatMessage('eierBolig.label')}
-                    error={formik.errors.eierBolig}
-                    value={formik.values.eierBolig}
-                    onChange={(e) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            eierBolig: e,
-                            borIBolig: null,
-                            verdiPåBolig: null,
-                            boligBrukesTil: null,
-                            harDepositumskonto: null,
-                            depositumsBeløp: null,
-                            kontonummer: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name={'eierBolig'}
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('eierBolig.label')}
+                            error={fieldState.error}
+                            {...field}
+                        />
+                    )}
                 />
-                {formik.values.eierBolig && (
-                    <BooleanRadioGroup
-                        name={keyOf<FormData>('borIBolig')}
-                        legend={formatMessage('eierBolig.borIBolig')}
-                        error={formik.errors.borIBolig}
-                        value={formik.values.borIBolig}
-                        onChange={(e) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                borIBolig: e,
-                                verdiPåBolig: null,
-                                boligBrukesTil: null,
-                            }))
-                        }
+
+                {eierBolig && (
+                    <Controller
+                        control={form.control}
+                        name={'borIBolig'}
+                        render={({ field, fieldState }) => (
+                            <BooleanRadioGroup
+                                legend={formatMessage('eierBolig.borIBolig')}
+                                error={fieldState.error?.message}
+                                {...field}
+                            />
+                        )}
                     />
                 )}
 
-                {formik.values.borIBolig === false && (
+                {borIBolig === false && (
                     <>
-                        <TextField
-                            id={keyOf<FormData>('verdiPåBolig')}
-                            name={keyOf<FormData>('verdiPåBolig')}
-                            className={sharedStyles.narrow}
-                            label={formatMessage('eierBolig.formuePåBolig')}
-                            value={formik.values.verdiPåBolig || ''}
-                            error={formik.errors.verdiPåBolig}
-                            onChange={formik.handleChange}
-                            autoComplete="off"
-                            // Dette elementet vises ikke ved sidelast
-                            // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
+                        <Controller
+                            control={form.control}
+                            name={'verdiPåBolig'}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    id="verdiPåBolig"
+                                    className={sharedStyles.narrow}
+                                    label={formatMessage('eierBolig.formuePåBolig')}
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    autoComplete="off"
+                                    // Dette elementet vises ikke ved sidelast
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                                    autoFocus
+                                />
+                            )}
                         />
-                        <TextField
-                            id={keyOf<FormData>('boligBrukesTil')}
-                            name={keyOf<FormData>('boligBrukesTil')}
-                            className={sharedStyles.narrow}
-                            label={formatMessage('eierBolig.boligBrukesTil')}
-                            value={formik.values.boligBrukesTil || ''}
-                            error={formik.errors.boligBrukesTil}
-                            onChange={formik.handleChange}
-                            autoComplete="off"
+                        <Controller
+                            control={form.control}
+                            name={'boligBrukesTil'}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    id="boligBrukesTil"
+                                    className={sharedStyles.narrow}
+                                    label={formatMessage('eierBolig.boligBrukesTil')}
+                                    autoComplete="off"
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                    value={field.value ?? ''}
+                                />
+                            )}
                         />
                     </>
                 )}
 
-                {formik.values.eierBolig === false && (
-                    <BooleanRadioGroup
-                        name={keyOf<FormData>('harDepositumskonto')}
-                        legend={formatMessage('depositum.label')}
-                        error={formik.errors.harDepositumskonto}
-                        value={formik.values.harDepositumskonto}
-                        onChange={(e) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                harDepositumskonto: e,
-                                depositumsBeløp: null,
-                                kontonummer: null,
-                            }))
-                        }
+                {eierBolig === false && (
+                    <Controller
+                        control={form.control}
+                        name={'harDepositumskonto'}
+                        render={({ field, fieldState }) => (
+                            <BooleanRadioGroup
+                                legend={formatMessage('depositum.label')}
+                                error={fieldState.error?.message}
+                                {...field}
+                            />
+                        )}
                     />
                 )}
 
-                {formik.values.harDepositumskonto && (
+                {harDepositumskonto && (
                     <>
-                        <TextField
-                            id={keyOf<FormData>('depositumsBeløp')}
+                        <Controller
+                            control={form.control}
                             name="depositumsBeløp"
-                            className={sharedStyles.narrow}
-                            label={formatMessage('depositum.beløp')}
-                            value={formik.values.depositumsBeløp || ''}
-                            error={formik.errors.depositumsBeløp}
-                            onChange={formik.handleChange}
-                            autoComplete="off"
-                            // Dette elementet vises ikke ved sidelast
-                            // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    id="depositumsBeløp"
+                                    className={sharedStyles.narrow}
+                                    label={formatMessage('depositum.beløp')}
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    autoComplete="off"
+                                    // Dette elementet vises ikke ved sidelast
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                                    autoFocus
+                                />
+                            )}
                         />
-                        <TextField
-                            id={keyOf<FormData>('kontonummer')}
-                            name={keyOf<FormData>('kontonummer')}
-                            className={sharedStyles.narrow}
-                            label={formatMessage('depositum.kontonummer')}
-                            value={formik.values.kontonummer || ''}
-                            error={formik.errors.kontonummer}
-                            onChange={formik.handleChange}
-                            autoComplete="off"
+                        <Controller
+                            control={form.control}
+                            name="kontonummer"
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    id="kontonummer"
+                                    className={sharedStyles.narrow}
+                                    label={formatMessage('depositum.kontonummer')}
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    autoComplete="off"
+                                />
+                            )}
                         />
                     </>
                 )}
 
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('eierMerEnnEnBolig')}
-                    legend={formatMessage('eiendom.eierAndreEiendommer')}
-                    error={formik.errors.eierMerEnnEnBolig}
-                    value={formik.values.eierMerEnnEnBolig}
-                    onChange={(e) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            eierMerEnnEnBolig: e,
-                            verdiPåEiendom: null,
-                            eiendomBrukesTil: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="eierMerEnnEnBolig"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('eiendom.eierAndreEiendommer')}
+                            error={fieldState.error?.message}
+                            {...field}
+                        />
+                    )}
                 />
 
-                {formik.values.eierMerEnnEnBolig && (
+                {eierMerEnnEnBolig && (
                     <>
-                        <TextField
-                            id={keyOf<FormData>('verdiPåEiendom')}
-                            name={keyOf<FormData>('verdiPåEiendom')}
-                            className={sharedStyles.narrow}
-                            label={formatMessage('eiendom.samledeVerdi')}
-                            value={formik.values.verdiPåEiendom || ''}
-                            error={formik.errors.verdiPåEiendom}
-                            onChange={formik.handleChange}
-                            autoComplete="off"
-                            // Dette elementet vises ikke ved sidelast
-                            // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
+                        <Controller
+                            control={form.control}
+                            name="verdiPåEiendom"
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    id="verdiPåEiendom"
+                                    className={sharedStyles.narrow}
+                                    label={formatMessage('eiendom.samledeVerdi')}
+                                    error={fieldState.error?.message}
+                                    autoComplete="off"
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    // Dette elementet vises ikke ved sidelast
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                                    autoFocus
+                                />
+                            )}
                         />
-                        <TextField
-                            id={keyOf<FormData>('eiendomBrukesTil')}
-                            name={keyOf<FormData>('eiendomBrukesTil')}
-                            className={sharedStyles.narrow}
-                            label={formatMessage('eiendom.brukesTil')}
-                            value={formik.values.eiendomBrukesTil || ''}
-                            error={formik.errors.eiendomBrukesTil}
-                            onChange={formik.handleChange}
-                            autoComplete="off"
+                        <Controller
+                            control={form.control}
+                            name="eiendomBrukesTil"
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    id="eiendomBrukesTil"
+                                    className={sharedStyles.narrow}
+                                    label={formatMessage('eiendom.brukesTil')}
+                                    error={fieldState.error?.message}
+                                    autoComplete="off"
+                                    {...field}
+                                    value={field.value ?? ''}
+                                />
+                            )}
                         />
                     </>
                 )}
             </SøknadSpørsmålsgruppe>
             <SøknadSpørsmålsgruppe legend={formatMessage('legend.kjøretøy')}>
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('eierKjøretøy')}
-                    legend={formatMessage('kjøretøy.label')}
-                    error={formik.errors.eierKjøretøy}
-                    value={formik.values.eierKjøretøy}
-                    onChange={(e) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            eierKjøretøy: e,
-                            kjøretøy: e ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : [],
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="eierKjøretøy"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('kjøretøy.label')}
+                            error={fieldState.error?.message}
+                            {...field}
+                        />
+                    )}
                 />
-                {formik.values.eierKjøretøy && (
-                    <KjøretøyInputFelter
-                        arr={formik.values.kjøretøy}
-                        errors={formik.errors.kjøretøy}
-                        feltnavn={keyOf<FormData>('kjøretøy')}
-                        onLeggTilClick={() => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                kjøretøy: [
-                                    ...formik.values.kjøretøy,
-                                    {
-                                        verdiPåKjøretøy: '',
-                                        kjøretøyDeEier: '',
-                                    },
-                                ],
-                            }));
-                        }}
-                        onFjernClick={(index) => {
-                            formik.setValues({
-                                ...formik.values,
-                                kjøretøy: formik.values.kjøretøy.filter((_, i) => index !== i),
-                            });
-                        }}
-                        onChange={(val) => {
-                            formik.setValues({
-                                ...formik.values,
-                                kjøretøy: formik.values.kjøretøy.map((input, i) =>
-                                    val.index === i
-                                        ? {
-                                              verdiPåKjøretøy: val.verdiPåKjøretøy,
-                                              kjøretøyDeEier: val.kjøretøyDeEier,
-                                          }
-                                        : input
-                                ),
-                            });
-                        }}
+
+                {eierKjøretøy && (
+                    <Controller
+                        control={form.control}
+                        name={'kjøretøy'}
+                        render={({ field, fieldState }) => (
+                            <KjøretøyInputFelter
+                                arr={field.value}
+                                errors={fieldState.error?.message}
+                                feltnavn={field.name}
+                                onLeggTilClick={() =>
+                                    field.onChange([
+                                        ...field.value,
+                                        {
+                                            verdiPåKjøretøy: '',
+                                            kjøretøyDeEier: '',
+                                        },
+                                    ])
+                                }
+                                onFjernClick={(index) =>
+                                    field.onChange(field.value.filter((_: Kjøretøy, i: number) => index !== i))
+                                }
+                                onChange={(val) =>
+                                    field.onChange(
+                                        field.value.map((input: Kjøretøy, i: number) =>
+                                            val.index === i
+                                                ? {
+                                                      verdiPåKjøretøy: val.verdiPåKjøretøy,
+                                                      kjøretøyDeEier: val.kjøretøyDeEier,
+                                                  }
+                                                : input
+                                        )
+                                    )
+                                }
+                            />
+                        )}
                     />
                 )}
             </SøknadSpørsmålsgruppe>
             <SøknadSpørsmålsgruppe legend={formatMessage('legend.verdi')}>
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('harInnskuddPåKonto')}
-                    legend={
-                        formik.values.harDepositumskonto
-                            ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
-                            : formatMessage('innskudd.label')
-                    }
-                    error={formik.errors.harInnskuddPåKonto}
-                    value={formik.values.harInnskuddPåKonto}
-                    onChange={(e) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            harInnskuddPåKonto: e,
-                            innskuddsBeløp: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="harInnskuddPåKonto"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={
+                                harDepositumskonto
+                                    ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
+                                    : formatMessage('innskudd.label')
+                            }
+                            error={fieldState.error?.message}
+                            {...field}
+                        />
+                    )}
                 />
 
-                {formik.values.harInnskuddPåKonto && (
-                    <TextField
-                        className={sharedStyles.narrow}
-                        id={keyOf<FormData>('innskuddsBeløp')}
-                        name={keyOf<FormData>('innskuddsBeløp')}
-                        label={formatMessage('innskudd.beløp')}
-                        error={formik.errors.innskuddsBeløp}
-                        value={formik.values.innskuddsBeløp || ''}
-                        onChange={formik.handleChange}
-                        // Dette elementet vises ikke ved sidelast
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
-                        autoFocus
+                {harInnskuddPåKonto && (
+                    <Controller
+                        control={form.control}
+                        name="innskuddsBeløp"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                className={sharedStyles.narrow}
+                                id="innskuddsBeløp"
+                                label={formatMessage('innskudd.beløp')}
+                                error={fieldState.error?.message}
+                                {...field}
+                                value={field.value ?? ''}
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                            />
+                        )}
                     />
                 )}
 
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('harVerdipapir')}
-                    legend={formatMessage('verdipapir.label')}
-                    error={formik.errors.harVerdipapir}
-                    value={formik.values.harVerdipapir}
-                    onChange={(e) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            harVerdipapir: e,
-                            verdipapirBeløp: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="harVerdipapir"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('verdipapir.label')}
+                            error={fieldState.error?.message}
+                            {...field}
+                        />
+                    )}
                 />
 
-                {formik.values.harVerdipapir && (
-                    <TextField
-                        className={sharedStyles.narrow}
-                        id={keyOf<FormData>('verdipapirBeløp')}
-                        name={keyOf<FormData>('verdipapirBeløp')}
-                        label={formatMessage('verdipapir.beløp')}
-                        value={formik.values.verdipapirBeløp || ''}
-                        error={formik.errors.verdipapirBeløp}
-                        onChange={formik.handleChange}
-                        autoComplete="off"
-                        // Dette elementet vises ikke ved sidelast
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
-                        autoFocus
+                {harVerdipapir && (
+                    <Controller
+                        control={form.control}
+                        name="verdipapirBeløp"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                className={sharedStyles.narrow}
+                                id="verdipapirBeløp"
+                                label={formatMessage('verdipapir.beløp')}
+                                error={fieldState.error?.message}
+                                {...field}
+                                value={field.value ?? ''}
+                                autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                            />
+                        )}
                     />
                 )}
 
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('skylderNoenMegPenger')}
-                    legend={formatMessage('skylderNoenMegPenger.label')}
-                    error={formik.errors.skylderNoenMegPenger}
-                    value={formik.values.skylderNoenMegPenger}
-                    onChange={(e) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            skylderNoenMegPenger: e,
-                            skylderNoenMegPengerBeløp: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="skylderNoenMegPenger"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('skylderNoenMegPenger.label')}
+                            error={fieldState.error?.message}
+                            {...field}
+                        />
+                    )}
                 />
 
-                {formik.values.skylderNoenMegPenger && (
-                    <TextField
-                        className={sharedStyles.narrow}
-                        id={keyOf<FormData>('skylderNoenMegPengerBeløp')}
-                        name={keyOf<FormData>('skylderNoenMegPengerBeløp')}
-                        label={formatMessage('skylderNoenMegPenger.beløp')}
-                        value={formik.values.skylderNoenMegPengerBeløp || ''}
-                        error={formik.errors.skylderNoenMegPengerBeløp}
-                        onChange={formik.handleChange}
-                        autoComplete="off"
-                        // Dette elementet vises ikke ved sidelast
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
-                        autoFocus
+                {skylderNoenMegPenger && (
+                    <Controller
+                        control={form.control}
+                        name="skylderNoenMegPengerBeløp"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                className={sharedStyles.narrow}
+                                id="skylderNoenMegPengerBeløp"
+                                label={formatMessage('skylderNoenMegPenger.beløp')}
+                                {...field}
+                                value={field.value ?? ''}
+                                error={fieldState.error?.message}
+                                autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                            />
+                        )}
                     />
                 )}
 
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('harKontanter')}
-                    legend={formatMessage('harKontanter.label')}
-                    error={formik.errors.harKontanter}
-                    value={formik.values.harKontanter}
-                    onChange={(e) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            harKontanter: e,
-                            kontanterBeløp: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="harKontanter"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('harKontanter.label')}
+                            error={fieldState.error?.message}
+                            {...field}
+                        />
+                    )}
                 />
 
-                {formik.values.harKontanter && (
-                    <TextField
-                        className={sharedStyles.narrow}
-                        id={keyOf<FormData>('kontanterBeløp')}
-                        name={keyOf<FormData>('kontanterBeløp')}
-                        label={formatMessage('harKontanter.beløp')}
-                        value={formik.values.kontanterBeløp || ''}
-                        error={formik.errors.kontanterBeløp}
-                        onChange={formik.handleChange}
-                        autoComplete="off"
-                        // Dette elementet vises ikke ved sidelast
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
-                        autoFocus
+                {harKontanter && (
+                    <Controller
+                        control={form.control}
+                        name="kontanterBeløp"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                className={sharedStyles.narrow}
+                                label={formatMessage('harKontanter.beløp')}
+                                error={fieldState.error?.message}
+                                {...field}
+                                value={field.value ?? ''}
+                                autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                            />
+                        )}
                     />
                 )}
             </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
                 tittel={formatMessage('feiloppsummering.title')}
-                feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                hidden={!formikErrorsHarFeil(formik.errors)}
+                hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
+                feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                 ref={feiloppsummeringref}
             />
             <Bunnknapper
                 previous={{
                     onClick: () => {
-                        save(formik.values);
+                        dispatch(søknadSlice.actions.formueUpdated(form.getValues()));
                         history.push(props.forrigeUrl);
                     },
                 }}

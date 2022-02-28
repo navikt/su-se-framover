@@ -21,6 +21,11 @@ export interface AdresseFraSøknad {
     bruksenhet: Nullable<string>;
 }
 
+export interface Kjøretøy {
+    verdiPåKjøretøy: string;
+    kjøretøyDeEier: string;
+}
+
 export interface SøknadState {
     harUførevedtak: Nullable<boolean>;
     flyktningstatus: {
@@ -55,7 +60,7 @@ export interface SøknadState {
         verdiPåEiendom: Nullable<string>;
         eiendomBrukesTil: Nullable<string>;
         eierKjøretøy: Nullable<boolean>;
-        kjøretøy: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
+        kjøretøy: Kjøretøy[];
         harInnskuddPåKonto: Nullable<boolean>;
         innskuddsBeløp: Nullable<string>;
         harVerdipapir: Nullable<boolean>;
