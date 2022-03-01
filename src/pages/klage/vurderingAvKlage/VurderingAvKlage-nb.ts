@@ -33,7 +33,7 @@ const klageVurderingTypeMessages: { [key in KlageVurderingType]: string } = {
 };
 
 export default {
-    'form.klageVurderingType.legend': 'Skal vedtaket omgjøres, eller opprettholdes?',
+    'form.klageVurderingType.legend': 'Velg vurdering',
     ...klageVurderingTypeMessages,
 
     'form.omgjørVedtak.årsak.label': 'Årsak',

@@ -245,6 +245,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                     <RadioGroup
                                         {...field}
                                         legend={formatMessage('form.klageVurderingType.legend')}
+                                        hideLegend={true}
                                         error={fieldState.error?.message}
                                         value={field.value ?? ''}
                                     >
