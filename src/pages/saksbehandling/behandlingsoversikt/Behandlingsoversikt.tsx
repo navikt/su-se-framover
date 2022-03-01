@@ -20,7 +20,6 @@ import messages from './behandlingsoversikt-nb';
 import styles from './behandlingsoversikt.module.less';
 import { FerdigeBehandlinger } from './ferdigeBehandlinger/FerdigeBehandlinger';
 import Nøkkeltall from './nøkkeltall/Nøkkeltall';
-//import Nøkkeltall from './nøkkeltall/Nøkkeltall';
 import { ÅpneBehandlinger } from './åpneBehandlinger/ÅpneBehandlinger';
 
 interface Props {
