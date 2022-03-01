@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup, TextField } from '@navikt/ds-react';
 import * as React from 'react';
-import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -12,7 +11,7 @@ import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe
 import { TypeOppholdstillatelse } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
-import { keyOf, Nullable } from '~lib/types';
+import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
@@ -73,18 +72,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
 
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
 
-    useEffect(() => {
-        setFieldsToNull(['harOppholdstillatelse', 'typeOppholdstillatelse']);
-    }, [form.watch('erNorskStatsborger')]);
-
-    useEffect(() => {
-        setFieldsToNull(['typeOppholdstillatelse']);
-    }, [form.watch('harOppholdstillatelse')]);
-
-    useEffect(() => {
-        setFieldsToNull(['statsborgerskapAndreLandFritekst']);
-    }, [form.watch('statsborgerskapAndreLand')]);
-
     return (
         <form
             onSubmit={form.handleSubmit((values) => {
@@ -124,52 +111,62 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             legend={formatMessage('norsk.statsborger.label')}
                             error={fieldState.error?.message}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['harOppholdstillatelse', 'typeOppholdstillatelse']);
+                            }}
                         />
                     )}
                 />
                 {form.watch('erNorskStatsborger') === false && (
-                    <Controller
-                        control={form.control}
-                        name="harOppholdstillatelse"
-                        render={({ field, fieldState }) => (
-                            <BooleanRadioGroup
-                                legend={formatMessage('oppholdstillatelse.label')}
-                                error={fieldState.error?.message}
-                                {...field}
-                            />
+                    <>
+                        <Controller
+                            control={form.control}
+                            name="harOppholdstillatelse"
+                            render={({ field, fieldState }) => (
+                                <BooleanRadioGroup
+                                    legend={formatMessage('oppholdstillatelse.label')}
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                    onChange={(val) => {
+                                        field.onChange(val);
+                                        setFieldsToNull(['typeOppholdstillatelse']);
+                                    }}
+                                />
+                            )}
+                        />
+                        {form.watch('harOppholdstillatelse') === true && (
+                            <>
+                                <Controller
+                                    control={form.control}
+                                    name="typeOppholdstillatelse"
+                                    render={({ field, fieldState }) => (
+                                        <RadioGroup
+                                            error={fieldState.error?.message}
+                                            legend={formatMessage('oppholdstillatelse.type')}
+                                            {...field}
+                                            value={field.value?.toString() ?? ''}
+                                        >
+                                            <Radio id={field.name} value={TypeOppholdstillatelse.Permanent}>
+                                                {formatMessage('oppholdstillatelse.permanent')}
+                                            </Radio>
+                                            <Radio value={TypeOppholdstillatelse.Midlertidig}>
+                                                {formatMessage('oppholdstillatelse.midlertidig')}
+                                            </Radio>
+                                        </RadioGroup>
+                                    )}
+                                />
+                                {form.watch('typeOppholdstillatelse') === 'midlertidig' && (
+                                    <Alert variant="warning">
+                                        {formatMessage('oppholdstillatelse.midlertidig.info')}
+                                    </Alert>
+                                )}
+                            </>
                         )}
-                    />
-                )}
-                {form.watch('harOppholdstillatelse') === true && (
-                    <Controller
-                        control={form.control}
-                        name="typeOppholdstillatelse"
-                        render={({ field, fieldState }) => (
-                            <RadioGroup
-                                error={fieldState.error?.message}
-                                legend={formatMessage('oppholdstillatelse.type')}
-                                {...field}
-                                value={field.value?.toString() ?? ''}
-                            >
-                                <Radio
-                                    id={keyOf<FormData>('typeOppholdstillatelse')}
-                                    value={TypeOppholdstillatelse.Permanent}
-                                >
-                                    {formatMessage('oppholdstillatelse.permanent')}
-                                </Radio>
-                                <Radio value={TypeOppholdstillatelse.Midlertidig}>
-                                    {formatMessage('oppholdstillatelse.midlertidig')}
-                                </Radio>
-                            </RadioGroup>
+                        {form.watch('harOppholdstillatelse') === false && (
+                            <Alert variant="warning">{formatMessage('oppholdstillatelse.ikkeLovligOpphold')}</Alert>
                         )}
-                    />
-                )}
-                {form.watch('harOppholdstillatelse') === false && (
-                    <Alert variant="warning">{formatMessage('oppholdstillatelse.ikkeLovligOpphold')}</Alert>
-                )}
-
-                {form.watch('typeOppholdstillatelse') === 'midlertidig' && (
-                    <Alert variant="warning">{formatMessage('oppholdstillatelse.midlertidig.info')}</Alert>
+                    </>
                 )}
 
                 <Controller
@@ -180,6 +177,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             legend={formatMessage('statsborger.andre.land.label')}
                             error={fieldState.error?.message}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['statsborgerskapAndreLandFritekst']);
+                            }}
                         />
                     )}
                 />

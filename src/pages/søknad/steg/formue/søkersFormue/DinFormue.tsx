@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from '@navikt/ds-react';
 import * as React from 'react';
-import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -34,76 +33,11 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
         resolver: yupResolver(formueValideringSchema('søker')),
     });
 
-    const [
-        eierBolig,
-        borIBolig,
-        harDepositumskonto,
-        eierMerEnnEnBolig,
-        harInnskuddPåKonto,
-        harVerdipapir,
-        skylderNoenMegPenger,
-        harKontanter,
-        eierKjøretøy,
-    ] = form.watch([
-        'eierBolig',
-        'borIBolig',
-        'harDepositumskonto',
-        'eierMerEnnEnBolig',
-        'harInnskuddPåKonto',
-        'harVerdipapir',
-        'skylderNoenMegPenger',
-        'harKontanter',
-        'eierKjøretøy',
-    ]);
-
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
-
-    useEffect(() => {
-        setFieldsToNull([
-            'borIBolig',
-            'verdiPåBolig',
-            'boligBrukesTil',
-            'harDepositumskonto',
-            'depositumsBeløp',
-            'kontonummer',
-        ]);
-    }, [eierBolig]);
-
-    useEffect(() => {
-        setFieldsToNull(['verdiPåBolig', 'boligBrukesTil']);
-    }, [borIBolig]);
-
-    useEffect(() => {
-        setFieldsToNull(['depositumsBeløp', 'kontonummer']);
-    }, [harDepositumskonto]);
-
-    useEffect(() => {
-        setFieldsToNull(['verdiPåEiendom', 'eiendomBrukesTil']);
-    }, [eierMerEnnEnBolig]);
-
-    useEffect(() => {
-        setFieldsToNull(['innskuddsBeløp']);
-    }, [harInnskuddPåKonto]);
-
-    useEffect(() => {
-        setFieldsToNull(['verdipapirBeløp']);
-    }, [harVerdipapir]);
-
-    useEffect(() => {
-        setFieldsToNull(['skylderNoenMegPengerBeløp']);
-    }, [skylderNoenMegPenger]);
-
-    useEffect(() => {
-        setFieldsToNull(['kontanterBeløp']);
-    }, [harKontanter]);
-
-    useEffect(() => {
-        form.setValue('kjøretøy', eierKjøretøy ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : []);
-    }, [eierKjøretøy]);
-
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+
+    console.log('Feiloppsummering er fucka');
 
     return (
         <form
@@ -123,11 +57,22 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                             legend={formatMessage('eierBolig.label')}
                             error={fieldState.error}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull([
+                                    'borIBolig',
+                                    'verdiPåBolig',
+                                    'boligBrukesTil',
+                                    'harDepositumskonto',
+                                    'depositumsBeløp',
+                                    'kontonummer',
+                                ]);
+                            }}
                         />
                     )}
                 />
 
-                {eierBolig && (
+                {form.watch('eierBolig') && (
                     <Controller
                         control={form.control}
                         name={'borIBolig'}
@@ -136,12 +81,16 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 legend={formatMessage('eierBolig.borIBolig')}
                                 error={fieldState.error?.message}
                                 {...field}
+                                onChange={(val) => {
+                                    field.onChange(val);
+                                    setFieldsToNull(['verdiPåBolig', 'boligBrukesTil']);
+                                }}
                             />
                         )}
                     />
                 )}
 
-                {borIBolig === false && (
+                {form.watch('borIBolig') === false && (
                     <>
                         <Controller
                             control={form.control}
@@ -179,7 +128,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     </>
                 )}
 
-                {eierBolig === false && (
+                {form.watch('eierBolig') === false && (
                     <Controller
                         control={form.control}
                         name={'harDepositumskonto'}
@@ -188,12 +137,16 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 legend={formatMessage('depositum.label')}
                                 error={fieldState.error?.message}
                                 {...field}
+                                onChange={(val) => {
+                                    field.onChange(val);
+                                    setFieldsToNull(['depositumsBeløp', 'kontonummer']);
+                                }}
                             />
                         )}
                     />
                 )}
 
-                {harDepositumskonto && (
+                {form.watch('harDepositumskonto') && (
                     <>
                         <Controller
                             control={form.control}
@@ -239,11 +192,15 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                             legend={formatMessage('eiendom.eierAndreEiendommer')}
                             error={fieldState.error?.message}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['verdiPåEiendom', 'eiendomBrukesTil']);
+                            }}
                         />
                     )}
                 />
 
-                {eierMerEnnEnBolig && (
+                {form.watch('eierMerEnnEnBolig') && (
                     <>
                         <Controller
                             control={form.control}
@@ -290,11 +247,18 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                             legend={formatMessage('kjøretøy.label')}
                             error={fieldState.error?.message}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                form.setValue(
+                                    'kjøretøy',
+                                    form.watch('eierKjøretøy') ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : []
+                                );
+                            }}
                         />
                     )}
                 />
 
-                {eierKjøretøy && (
+                {form.watch('eierKjøretøy') && (
                     <Controller
                         control={form.control}
                         name={'kjøretøy'}
@@ -339,17 +303,21 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={
-                                harDepositumskonto
+                                form.watch('harDepositumskonto')
                                     ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
                                     : formatMessage('innskudd.label')
                             }
                             error={fieldState.error?.message}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['innskuddsBeløp']);
+                            }}
                         />
                     )}
                 />
 
-                {harInnskuddPåKonto && (
+                {form.watch('harInnskuddPåKonto') && (
                     <Controller
                         control={form.control}
                         name="innskuddsBeløp"
@@ -377,11 +345,15 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                             legend={formatMessage('verdipapir.label')}
                             error={fieldState.error?.message}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['verdipapirBeløp']);
+                            }}
                         />
                     )}
                 />
 
-                {harVerdipapir && (
+                {form.watch('harVerdipapir') && (
                     <Controller
                         control={form.control}
                         name="verdipapirBeløp"
@@ -410,11 +382,15 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                             legend={formatMessage('skylderNoenMegPenger.label')}
                             error={fieldState.error?.message}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['skylderNoenMegPengerBeløp']);
+                            }}
                         />
                     )}
                 />
 
-                {skylderNoenMegPenger && (
+                {form.watch('skylderNoenMegPenger') && (
                     <Controller
                         control={form.control}
                         name="skylderNoenMegPengerBeløp"
@@ -443,11 +419,15 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                             legend={formatMessage('harKontanter.label')}
                             error={fieldState.error?.message}
                             {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['kontanterBeløp']);
+                            }}
                         />
                     )}
                 />
 
-                {harKontanter && (
+                {form.watch('harKontanter') && (
                     <Controller
                         control={form.control}
                         name="kontanterBeløp"
