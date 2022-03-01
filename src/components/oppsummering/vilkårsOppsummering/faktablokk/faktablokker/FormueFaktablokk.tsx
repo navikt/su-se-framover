@@ -1,4 +1,4 @@
-import { Alert, Label } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 
@@ -285,7 +285,9 @@ export const FormueVilkårsblokk = (props: {
                         <div>
                             {props.formue.status === FormueStatus.VilkårOppfylt ? (
                                 <>
-                                    <Label>{formatMessage('formue.vilkårOppfylt')}</Label>
+                                    <Heading size="small" level="5">
+                                        {formatMessage('formue.vilkårOppfylt')}
+                                    </Heading>
                                     <p>{formatMessage('formue.vilkårOppfyltGrunn')}</p>
                                 </>
                             ) : props.formue.status === FormueStatus.VilkårIkkeOppfylt ? (
