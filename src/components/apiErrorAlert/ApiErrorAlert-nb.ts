@@ -71,6 +71,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.IKKE_FORHÅNDSVARSLET]: 'Kan ikke beslutte forhåndsvarsel. Revurderingen er ikke forhåndsvarslet',
     [ApiErrorCode.JOURNALPOST_TEMA_ER_IKKE_SUP]: 'Tema for journalposten er ikke SUP',
     [ApiErrorCode.JOURNALPOST_ER_IKKE_FERDIGSTILT]: 'Journalposten er ikke ferdigstilt',
+    [ApiErrorCode.JOURNALPOST_ER_IKKE_ET_UTGÅENDE_DOKUMENT]: 'Journalposten må være et ferdigstilt, utgående dokument',
     [ApiErrorCode.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
     [ApiErrorCode.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN]:
         'Ikke lov med formueperiode utenfor behandlingsperioden',

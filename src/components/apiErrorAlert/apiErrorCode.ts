@@ -63,6 +63,7 @@ export enum ApiErrorCode {
     IKKE_TILGANG_TIL_JOURNALPOST = 'ikke_tilgang_til_journalpost',
     IKKE_TILGANG_TIL_PERSON = 'ikke_tilgang_til_person',
     JOURNALPOST_ER_IKKE_FERDIGSTILT = 'journalpost_er_ikke_ferdigstilt',
+    JOURNALPOST_ER_IKKE_ET_UTGÅENDE_DOKUMENT = 'journalpost_er_ikke_et_utgående_dokument',
     JOURNALPOST_IKKE_KNYTTET_TIL_SAK = 'journalpost_ikke_knyttet_til_sak',
     JOURNALPOST_TEMA_ER_IKKE_SUP = 'journalpost_tema_er_ikke_sup',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
