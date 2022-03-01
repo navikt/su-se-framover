@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Loader, Table } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -93,10 +93,10 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     }
 
     return (
-        <table className={classNames('tabell', styles.tabell)}>
-            <thead>
-                <tr>
-                    <th
+        <Table className={classNames('tabell', styles.tabell)}>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell
                         role="columnheader"
                         aria-sort={erKolonneSortertEtter('saksnummer') ? sortVerdi : 'none'}
                         className={getHeaderClassName('saksnummer')}
@@ -104,8 +104,8 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         <button aria-label="Sorter etter saksnummer" onClick={() => onTabellHeaderClick('saksnummer')}>
                             {formatMessage('sak.saksnummer')}
                         </button>
-                    </th>
-                    <th
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
                         role="columnheader"
                         aria-sort={erKolonneSortertEtter('typeBehandling') ? sortVerdi : 'none'}
                         className={getHeaderClassName('typeBehandling')}
@@ -116,8 +116,8 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         >
                             {formatMessage('restans.typeBehandling')}
                         </button>
-                    </th>
-                    <th
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
                         role="columnheader"
                         aria-sort={erKolonneSortertEtter('status') ? sortVerdi : 'none'}
                         className={getHeaderClassName('status')}
@@ -125,8 +125,8 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         <button aria-label="Sorter etter status" onClick={() => onTabellHeaderClick('status')}>
                             {formatMessage('restans.status')}
                         </button>
-                    </th>
-                    <th
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
                         role="columnheader"
                         aria-sort={erKolonneSortertEtter('behandlingStartet') ? sortVerdi : 'none'}
                         className={getHeaderClassName('behandlingStartet')}
@@ -137,26 +137,30 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         >
                             {formatMessage('restans.behandling.startet')}
                         </button>
-                    </th>
-                    <th />
-                </tr>
-            </thead>
-            <tbody>
+                    </Table.HeaderCell>
+                    <Table.HeaderCell />
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
                 {sortertTabell.map((restans) => (
-                    <tr key={restans.behandlingId}>
-                        <td className={getRowClassName('saksnummer')}>{restans.saksnummer}</td>
-                        <td className={getRowClassName('typeBehandling')}>{formatMessage(restans.typeBehandling)}</td>
-                        <td className={getRowClassName('status')}>{formatMessage(restans.status)}</td>
-                        <td className={getRowClassName('behandlingStartet')}>
+                    <Table.Row key={restans.behandlingId}>
+                        <Table.DataCell className={getRowClassName('saksnummer')}>{restans.saksnummer}</Table.DataCell>
+                        <Table.DataCell className={getRowClassName('typeBehandling')}>
+                            {formatMessage(restans.typeBehandling)}
+                        </Table.DataCell>
+                        <Table.DataCell className={getRowClassName('status')}>
+                            {formatMessage(restans.status)}
+                        </Table.DataCell>
+                        <Table.DataCell className={getRowClassName('behandlingStartet')}>
                             {restans.behandlingStartet ? formatDateTime(restans.behandlingStartet) : ''}
-                        </td>
-                        <td>
+                        </Table.DataCell>
+                        <Table.DataCell>
                             <VelgSakKnapp label={formatMessage('sak.seSak')} saksnummer={restans.saksnummer} />
-                        </td>
-                    </tr>
+                        </Table.DataCell>
+                    </Table.Row>
                 ))}
-            </tbody>
-        </table>
+            </Table.Body>
+        </Table>
     );
 };
 

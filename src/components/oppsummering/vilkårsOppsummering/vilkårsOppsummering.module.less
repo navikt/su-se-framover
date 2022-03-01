@@ -36,7 +36,8 @@
             }
         }
 
-        @media only screen and (max-width: @screen-md) {
+        // @screen-md fra deprecated https://github.com/navikt/nav-frontend-core/blob/162c248da84041fa91bbcd8eadb8449bc90e8556/less/_variabler.less
+        @media only screen and (max-width: 992px) {
             flex-direction: column;
 
             .blokk {
