@@ -45,7 +45,7 @@
 }
 
 .nav-frontend-tabs {
-    border-bottom: 1px solid @navGra20;
+    border-bottom: 1px solid var(--navds-global-color-gray-300);
 
     &__tab-outer {
         margin-right: 0.5rem;
@@ -65,16 +65,16 @@
 
     &__tab-inner {
         padding: 0.75rem 1rem 0.3rem;
-        color: @navBla;
+        color: var(--navds-global-color-blue-500);
         border: 1px solid transparent;
         border-top-left-radius: 0.25rem;
         border-top-right-radius: 0.25rem;
         background: none;
 
         &--aktiv {
-            color: @navMorkGra;
+            color: var(--navds-global-color-gray-800);
             background: white;
-            border: 1px solid @navGra20;
+            border: 1px solid var(--navds-global-color-gray-300);
             border-bottom: 1px solid white;
             position: relative;
             top: 1px;
@@ -104,7 +104,7 @@
         }
 
         &--disabled {
-            color: @navGra60;
+            color: var(--navds-global-color-gray-600);
             cursor: not-allowed;
 
             .nav-frontend-tabs__tab-label {
