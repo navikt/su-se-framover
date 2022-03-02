@@ -1,14 +1,14 @@
-import { IntlShape } from 'react-intl';
+import { formatDate } from '~utils/date/dateUtils';
 
 import { Behandlingsstatus } from '../../types/Behandling';
 import { Sak } from '../../types/Sak';
 import { Søknad, Søknadstype } from '../../types/Søknad';
 
-export function søknadMottatt(søknad: Søknad, intl: IntlShape): string {
+export function søknadMottatt(søknad: Søknad): string {
     if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {
-        return intl.formatDate(søknad.søknadInnhold.forNav.mottaksdatoForSøknad);
+        return formatDate(søknad.søknadInnhold.forNav.mottaksdatoForSøknad);
     }
-    return intl.formatDate(søknad.opprettet);
+    return formatDate(søknad.opprettet);
 }
 
 export function getIverksatteInnvilgedeSøknader(sak: Sak) {

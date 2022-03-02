@@ -19,6 +19,7 @@ import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { erIverksatt, erTilAttestering, hentSisteVurdertSaksbehandlingssteg } from '~utils/behandling/behandlingUtils';
+import { formatDate } from '~utils/date/dateUtils';
 import { søknadMottatt } from '~utils/søknad/søknadUtils';
 
 import { AvsluttOgStartFortsettButtons } from './Sakintro';
@@ -66,7 +67,7 @@ export const ÅpneSøknader = (props: {
                                         </Heading>
                                         <div className={styles.dato}>
                                             <Label>{`${props.intl.formatMessage({ id: 'søknad.mottatt' })}: `}</Label>
-                                            <BodyShort>{søknadMottatt(s, props.intl)}</BodyShort>
+                                            <BodyShort>{søknadMottatt(s)}</BodyShort>
                                         </div>
                                         {senesteAttestering?.underkjennelse && (
                                             <UnderkjenteAttesteringer attesteringer={attesteringer} />
@@ -134,7 +135,7 @@ export const IverksattInnvilgedeSøknader = (props: {
                                         </Heading>
                                         <div className={styles.dato}>
                                             <Label>{`${props.intl.formatMessage({ id: 'søknad.mottatt' })}: `}</Label>
-                                            <BodyShort>{søknadMottatt(s.søknad, props.intl)}</BodyShort>
+                                            <BodyShort>{søknadMottatt(s.søknad)}</BodyShort>
                                         </div>
                                         <div className={styles.dato}>
                                             <Label>
@@ -142,7 +143,7 @@ export const IverksattInnvilgedeSøknader = (props: {
                                                     id: 'søknad.iverksattDato',
                                                 })}: `}
                                             </Label>
-                                            <BodyShort>{props.intl.formatDate(s.iverksattDato)}</BodyShort>
+                                            <BodyShort>{formatDate(s.iverksattDato ?? '')}</BodyShort>
                                         </div>
                                     </div>
                                     <div>
@@ -290,7 +291,7 @@ export const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: Int
                                     </Heading>
                                     <div className={styles.dato}>
                                         <Label>{`${props.intl.formatMessage({ id: 'søknad.mottatt' })}: `}</Label>
-                                        <BodyShort>{søknadMottatt(søknad, props.intl)}</BodyShort>
+                                        <BodyShort>{søknadMottatt(søknad)}</BodyShort>
                                     </div>
                                 </div>
                             </div>
@@ -348,7 +349,7 @@ export const AvslåtteSøknader = (props: {
                                         </Heading>
                                         <div className={styles.dato}>
                                             <Label>{`${props.intl.formatMessage({ id: 'søknad.mottatt' })}: `}</Label>
-                                            <BodyShort>{søknadMottatt(s.søknad, props.intl)}</BodyShort>
+                                            <BodyShort>{søknadMottatt(s.søknad)}</BodyShort>
                                         </div>
                                         <div className={styles.dato}>
                                             <Label>
@@ -356,7 +357,7 @@ export const AvslåtteSøknader = (props: {
                                                     id: 'søknad.iverksattDato',
                                                 })}: `}
                                             </Label>
-                                            <BodyShort>{props.intl.formatDate(s.iverksattDato)}</BodyShort>
+                                            <BodyShort>{s.iverksattDato ? formatDate(s.iverksattDato) : ''}</BodyShort>
                                         </div>
                                     </div>
                                 </div>

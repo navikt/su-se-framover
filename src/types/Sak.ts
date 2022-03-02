@@ -4,6 +4,7 @@ import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 import { Behandling } from './Behandling';
 import { Klage } from './Klage';
 import { Periode } from './Periode';
+import { Regulering } from './Regulering';
 import { Revurdering } from './Revurdering';
 import { Søknad } from './Søknad';
 import { Vedtak } from './Vedtak';
@@ -19,6 +20,7 @@ export interface Sak {
     revurderinger: Revurdering[];
     vedtak: Vedtak[];
     klager: Klage[];
+    reguleringer: Regulering[];
 }
 
 export enum KanStansesEllerGjenopptas {

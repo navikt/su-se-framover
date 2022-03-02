@@ -8,6 +8,7 @@ import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
 import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
+import ReguleringVedtaksoppsummering from './reguleringsvedtaksoppsummering/reguleringVedtaksoppsummering';
 import RevurderingsoppsummeringWithSnapshot from './revurderingsvedtakWithSnapshot/RevurderingsoppsummeringWithSnapshot';
 import { hentInformasjonKnyttetTilVedtak, hentKlagevedtakFraKlageinstans } from './utils';
 import messages from './vedtaksoppsummering-nb';
@@ -49,6 +50,14 @@ const Vedtaksoppsummering = (props: Props) => {
                 );
             case 'klage':
                 return <Klagevedtaksoppsummering vedtak={vedtaksinformasjon.vedtak} klage={vedtaksinformasjon.klage} />;
+            case 'regulering':
+                return (
+                    <ReguleringVedtaksoppsummering
+                        sakId={props.sak.id}
+                        vedtak={vedtaksinformasjon.vedtak}
+                        regulering={vedtaksinformasjon.regulering}
+                    />
+                );
             case undefined:
                 return <div>{formatMessage('feilmelding.fantIkkeVedtak')}</div>;
         }

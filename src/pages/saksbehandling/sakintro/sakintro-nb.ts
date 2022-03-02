@@ -57,4 +57,10 @@ export default {
 
     'suksess.forhåndsvarsel': 'Forhåndsvarsel er sendt til bruker og oppgave i Gosys er opprettet',
     'suksess.sendtTilAttestering': 'Revurderingen er sendt til attestering',
+
+    'regulering.tittel': 'Regulering',
+    'regulering.automatisk': 'Automatisk regulering',
+    'regulering.manuell': 'Manuell regulering',
+    'regulering.g': 'G-regulering for {år}',
+    'regulering.seOppsummering': 'Se oppsummering',
 };

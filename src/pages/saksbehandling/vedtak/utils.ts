@@ -1,6 +1,7 @@
 import { Nullable } from '~lib/types';
 import { Behandling } from '~types/Behandling';
 import { Klage } from '~types/Klage';
+import { Regulering } from '~types/Regulering';
 import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
@@ -23,8 +24,18 @@ interface KlageOppsummering {
     vedtak: Vedtak;
     type: 'klage';
 }
+interface Reguleringsoppsummering {
+    regulering: Regulering;
+    vedtak: Vedtak;
+    type: 'regulering';
+}
 
-type Oppsummering = Revurderingsoppsummering | Søknadsbehandlingsoppsummering | KlageOppsummering;
+type Oppsummering =
+    | Revurderingsoppsummering
+    | Søknadsbehandlingsoppsummering
+    | KlageOppsummering
+    | Reguleringsoppsummering;
+
 export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nullable<Oppsummering> {
     const søknadsbehandling = sak.behandlinger.find((b) => b.id === vedtak.behandlingId);
     if (søknadsbehandling) {
@@ -50,6 +61,15 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
             klage: klage,
             vedtak: vedtak,
             type: 'klage',
+        };
+    }
+
+    const regulering = sak.reguleringer.find((r) => r.id === vedtak.behandlingId);
+    if (regulering) {
+        return {
+            regulering: regulering,
+            vedtak: vedtak,
+            type: 'regulering',
         };
     }
     return null;

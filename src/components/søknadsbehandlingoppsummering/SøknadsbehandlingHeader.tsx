@@ -128,7 +128,7 @@ const Tilleggsinfo = (props: {
                     <Label size="small" spacing>
                         {props.intl.formatMessage({ id: 'behandling.søknadsdato' })}
                     </Label>
-                    <p>{søknadMottatt(props.behandling.søknad, props.intl)}</p>
+                    <p>{søknadMottatt(props.behandling.søknad)}</p>
                 </div>
                 <div>
                     <Label size="small" spacing>
