@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
+import { BeregnOgSimuler } from '~api/revurderingApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
@@ -33,6 +34,7 @@ import {
     erBeregnetIngenEndring,
     erRevurderingSimulert,
     erRevurderingUnderkjent,
+    harBeregninger,
 } from '~utils/revurdering/revurderingUtils';
 
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -183,16 +185,26 @@ const RevurderingOppsummeringPage = (props: {
 
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
 
+    const beregningStatus = harBeregninger(props.revurdering)
+        ? RemoteData.success<never, BeregnOgSimuler>({
+              revurdering: props.revurdering as SimulertRevurdering,
+              feilmeldinger: [],
+              varselmeldinger: [],
+          })
+        : beregnOgSimulerStatus;
+
     React.useEffect(() => {
-        beregnOgSimuler({
-            sakId: props.sakId,
-            periode: props.revurdering.periode,
-            revurderingId: props.revurdering.id,
-        });
+        if (RemoteData.isInitial(beregningStatus)) {
+            beregnOgSimuler({
+                sakId: props.sakId,
+                periode: props.revurdering.periode,
+                revurderingId: props.revurdering.id,
+            });
+        }
     }, [props.revurdering.id]);
 
     return pipe(
-        RemoteData.combine(beregnOgSimulerStatus, props.grunnlagsdataOgVilkårsvurderinger),
+        RemoteData.combine(beregningStatus, props.grunnlagsdataOgVilkårsvurderinger),
         RemoteData.fold(
             () => <Loader title={formatMessage('beregner.label')} />,
             () => <Loader title={formatMessage('beregner.label')} />,
