@@ -127,7 +127,7 @@ const schema = (erGRegulering: boolean) =>
         })
         .required();
 
-const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføregrunnlagFormData => ({
+export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføregrunnlagFormData => ({
     id: uuid(),
     fraOgMed: DateUtils.parseIsoDateOnly(u.periode.fraOgMed),
     tilOgMed: DateUtils.parseIsoDateOnly(u.periode.tilOgMed),
@@ -141,7 +141,7 @@ const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): Uføregrunnla
             : null,
 });
 
-const Uføreperiodevurdering = (props: {
+export const Uføreperiodevurdering = (props: {
     item: FieldArrayWithId<FormData, 'grunnlag', 'id'>;
     index: number;
     control: Control<FormData>;

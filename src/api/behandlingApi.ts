@@ -209,24 +209,17 @@ export async function lagreUtenlandsopphold(arg: {
 export async function lagreUføregrunnlag(arg: {
     sakId: string;
     behandlingId: string;
-    periode: Periode<string>;
-    uføregrad: Nullable<number>;
-    forventetInntekt: Nullable<number>;
-    begrunnelse: string;
-    resultat: UføreResultat;
+    vurderinger: Array<{
+        periode: Periode<string>;
+        uføregrad: Nullable<number>;
+        forventetInntekt: Nullable<number>;
+        resultat: UføreResultat;
+        begrunnelse: Nullable<string>;
+    }>;
 }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/uføre`,
         method: 'POST',
-        body: {
-            uføregrad: arg.uføregrad,
-            forventetInntekt: arg.forventetInntekt,
-            periode: {
-                fraOgMed: arg.periode.fraOgMed,
-                tilOgMed: arg.periode.tilOgMed,
-            },
-            begrunnelse: arg.begrunnelse,
-            resultat: arg.resultat,
-        },
+        body: { vurderinger: arg.vurderinger },
     });
 }

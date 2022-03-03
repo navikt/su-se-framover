@@ -163,11 +163,13 @@ export const lagreUføregrunnlag = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        periode: Periode<string>;
-        uføregrad: Nullable<number>;
-        forventetInntekt: Nullable<number>;
-        begrunnelse: string;
-        resultat: UføreResultat;
+        vurderinger: Array<{
+            periode: Periode<string>;
+            uføregrad: Nullable<number>;
+            forventetInntekt: Nullable<number>;
+            resultat: UføreResultat;
+            begrunnelse: Nullable<string>;
+        }>;
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/uføre', async (arg, thunkApi) => {
