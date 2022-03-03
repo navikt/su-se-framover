@@ -5,19 +5,13 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
-import {
-    fetchBakoverStatus,
-    patchSøknader,
-    SøknadResponse,
-    konsistensavstemming,
-    hentReguleringer,
-} from '~api/driftApi';
+import { fetchBakoverStatus, patchSøknader, SøknadResponse, konsistensavstemming } from '~api/driftApi';
+import { testRegulering } from '~api/reguleringApi';
 import { useApiCall } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import Nøkkeltall from '~pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~utils/date/dateUtils';
 
-import GReguleringTabell from './components/GReguleringTabell';
 import { SøknadTabellDrift } from './components/SøknadTabell';
 import styles from './index.module.less';
 
@@ -46,7 +40,7 @@ const Drift = () => {
         hentStatus();
     }, []);
 
-    const [GReguleringsdata, hentGReguleringsdata] = useApiCall(hentReguleringer);
+    const [gReguleringsresponse, startGRegulering] = useApiCall(testRegulering);
     const [fixSøknaderResponse, setfixSøknaderResponse] = React.useState<
         RemoteData.RemoteData<ApiError, SøknadResponse>
     >(RemoteData.initial);
@@ -146,9 +140,10 @@ const Drift = () => {
                         variant="secondary"
                         className={styles.knapp}
                         type="button"
+                        loading={RemoteData.isPending(gReguleringsresponse)}
                         onClick={() => {
-                            hentGReguleringsdata({});
                             settKnappTrykket(Knapp.G_REGULERING);
+                            startGRegulering({});
                         }}
                     >
                         G-regulering
@@ -171,10 +166,10 @@ const Drift = () => {
                         </p>
                     </Alert>
                 )}
-                {knappTrykket === Knapp.G_REGULERING && RemoteData.isFailure(GReguleringsdata) && (
+                {knappTrykket === Knapp.G_REGULERING && RemoteData.isFailure(gReguleringsresponse) && (
                     <Alert className={styles.alert} variant="error">
-                        <p>Henting av G-reguleringsresultat feilet</p>
-                        Feilkode: {GReguleringsdata.error?.statusCode}
+                        <p>G-regulering feilet</p>
+                        Feilkode: {gReguleringsresponse.error?.statusCode}
                     </Alert>
                 )}
                 <div className={styles.tabellContainer}>
@@ -189,8 +184,10 @@ const Drift = () => {
                         </Alert>
                     )}
                 </div>
-                {knappTrykket === Knapp.G_REGULERING && RemoteData.isSuccess(GReguleringsdata) && (
-                    <GReguleringTabell data={GReguleringsdata.value.saker} />
+                {knappTrykket === Knapp.G_REGULERING && RemoteData.isSuccess(gReguleringsresponse) && (
+                    <Alert className={styles.alert} variant="success">
+                        <p>G-regulering ble gjennomført</p>
+                    </Alert>
                 )}
                 {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
             </div>

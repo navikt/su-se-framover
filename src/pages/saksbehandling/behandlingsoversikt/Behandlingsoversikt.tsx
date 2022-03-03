@@ -2,25 +2,44 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading } from '@navikt/ds-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import * as A from 'fp-ts/Array';
+import React, { useEffect, useState } from 'react';
 
 import { Person } from '~api/personApi';
+import { hentReguleringsstatus } from '~api/reguleringApi';
 import { Person as PersonIkon } from '~assets/Icons';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+<<<<<<< HEAD
 import { ApiResult } from '~lib/hooks';
+=======
+import { pipe } from '~lib/fp';
+import { useApiCall } from '~lib/hooks';
+>>>>>>> 040a0432 (Flytt g-regulering-startknapp til drift og refaktorer reguleringsoversikt)
 import { useI18n } from '~lib/i18n';
 import { useAppDispatch } from '~redux/Store';
+import { Regulering, ReguleringType } from '~types/Regulering';
 import { Sak } from '~types/Sak';
 
 import messages from './behandlingsoversikt-nb';
 import styles from './behandlingsoversikt.module.less';
 import { FerdigeBehandlinger } from './ferdigeBehandlinger/FerdigeBehandlinger';
 import Nøkkeltall from './nøkkeltall/Nøkkeltall';
-import Regulering from './regulering/regulering';
+import Reguleringsoversikt from './regulering/reguleringsoversikt';
 import { ÅpneBehandlinger } from './åpneBehandlinger/ÅpneBehandlinger';
+
+const splittAutomatiskeOgManuelleReguleringer = (reguleringer: Regulering[]) => {
+    return pipe(
+        reguleringer,
+        A.partition((regulering) => regulering.reguleringType === ReguleringType.AUTOMATISK),
+        ({ left, right }) => ({
+            automatiske: right,
+            manuelle: left,
+        })
+    );
+};
 
 interface Props {
     søker: ApiResult<Person>;
@@ -37,6 +56,18 @@ enum Tab {
 export const Behandlingsoversikt = ({ sak, søker }: Props) => {
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages });
+    const [, hentReguleringer] = useApiCall(hentReguleringsstatus);
+    const [reguleringer, setReguleringer] = useState<{ automatiske: Regulering[]; manuelle: Regulering[] }>({
+        automatiske: [],
+        manuelle: [],
+    });
+    const gjenståendeReguleringer = reguleringer.manuelle.filter((m) => !m.erFerdigstilt);
+
+    useEffect(() => {
+        hentReguleringer({}, (r) => {
+            setReguleringer(splittAutomatiskeOgManuelleReguleringer(r));
+        });
+    }, []);
 
     const tabsClassnames = (erAktiv: boolean) => {
         return classNames(
@@ -101,16 +132,20 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
                     <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.NØKKELTALL)} value={Tab.NØKKELTALL}>
                         {formatMessage('nøkkeltall')}
                     </Tabs.Trigger>
-                    <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.REGULERING)} value={Tab.REGULERING}>
-                        {formatMessage('regulering')}
-                    </Tabs.Trigger>
+                    {gjenståendeReguleringer.length > 0 && (
+                        <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.REGULERING)} value={Tab.REGULERING}>
+                            {formatMessage('regulering')}
+                        </Tabs.Trigger>
+                    )}
                 </Tabs.List>
             </Tabs.Root>
             <div className={styles.tabcontainer}>
                 {aktivTab === Tab.ÅPNE_BEHANDLINGER && <ÅpneBehandlinger />}
                 {aktivTab === Tab.FERDIGE_BEHANDLINGER && <FerdigeBehandlinger />}
                 {aktivTab === Tab.NØKKELTALL && <Nøkkeltall />}
-                {aktivTab === Tab.REGULERING && <Regulering />}
+                {aktivTab === Tab.REGULERING && (
+                    <Reguleringsoversikt automatiske={reguleringer.automatiske} manuelle={reguleringer.manuelle} />
+                )}
             </div>
         </div>
     );
