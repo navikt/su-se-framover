@@ -37,8 +37,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
-    console.log('Feiloppsummering er fucka');
-
     return (
         <form
             onSubmit={form.handleSubmit((values) => {
