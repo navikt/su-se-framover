@@ -6,6 +6,7 @@ import { Simulering } from './Simulering';
 
 export interface Regulering {
     id: string;
+    fnr: string;
     opprettet: string;
     sakId: string;
     saksnummer: number;

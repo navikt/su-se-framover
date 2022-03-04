@@ -6,5 +6,6 @@ export default {
 
     'tabell.saksnummer': 'Saksnummer',
     'tabell.lenke': 'Lenke',
+    'tabell.fnr': 'Fødselsnummer',
     'tabell.lenke.knapp': 'Se sak',
 };
