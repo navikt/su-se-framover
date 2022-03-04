@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
+import { Uføregrunnlag } from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
@@ -256,7 +257,7 @@ export const fortsettEtterForhåndsvarsel = createAsyncThunk<
 );
 
 export const lagreUføregrunnlag = createAsyncThunk<
-    { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] },
+    Uføregrunnlag,
     {
         sakId: string;
         revurderingId: string;

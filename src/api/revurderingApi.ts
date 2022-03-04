@@ -254,6 +254,11 @@ export async function fortsettEtterForhåndsvarsel(
     });
 }
 
+export interface Uføregrunnlag {
+    revurdering: OpprettetRevurdering;
+    feilmeldinger: ErrorMessage[];
+}
+
 export async function lagreUføregrunnlag(arg: {
     sakId: string;
     revurderingId: string;
@@ -265,7 +270,7 @@ export async function lagreUføregrunnlag(arg: {
         begrunnelse: Nullable<string>;
     }>;
 }) {
-    return apiClient<{ revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] }>({
+    return apiClient<Uføregrunnlag>({
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
