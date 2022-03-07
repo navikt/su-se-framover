@@ -1,7 +1,10 @@
-import { BodyShort, Label, Heading } from '@navikt/ds-react';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { BodyShort, Label, Heading, Button } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
+import * as pdfApi from '~api/pdfApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { InformationIcon } from '~components/icons/Icons';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -11,6 +14,7 @@ import {
     OppsummeringPar,
     OppsummeringsParSortering,
 } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Klage, KlageStatus, KlageVurderingType } from '~types/Klage';
 import { Vedtak } from '~types/Vedtak';
@@ -27,6 +31,8 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
     const { formatMessage } = useI18n({
         messages: oppsummeringMessages,
     });
+
+    const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
 
     const hentVurderingstekstId = (klage: Klage): keyof typeof oppsummeringMessages => {
         if (klage.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD) return 'label.vurdering.opprettholdt';
@@ -57,10 +63,21 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 <div className={styles.vurdering}>
                     <InformationIcon className={styles.tag} />
                     <Heading size="xsmall" level="6">
-                        {`${formatMessage('label.vurdering.tittel').toUpperCase()}: ${formatMessage(
+                        {`${formatMessage('label.vurdering.tittel')}: ${formatMessage(
                             hentVurderingstekstId(props.klage)
                         )}`}
                     </Heading>
+                </div>
+
+                <div className={styles.seBrevContainer}>
+                    <Button
+                        variant="secondary"
+                        loading={RemoteData.isPending(brevStatus)}
+                        onClick={() => hentBrev({ sakId: props.klage.sakid, klageId: props.klage.id })}
+                    >
+                        {formatMessage('knapp.seBrev')}
+                    </Button>
+                    {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                 </div>
             </Oppsummeringspanel>
         </div>
