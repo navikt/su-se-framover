@@ -46,7 +46,7 @@ export default {
 
     'form.vurdering.label': 'Vurdering',
     'form.fritekst.label': 'Brev til bruker og klageinstans',
-    'form.fritekst.hjelpeTekst': 'Skriv inn vurdering av klagen og gjengi hovedinnholdet i klagers anførsler',
+    'form.fritekst.hjelpeTekst': 'Se rutine på Navet',
 
     'knapp.seBrev': 'Se brev',
     'knapp.lagre': 'Lagre og fortsett senere',

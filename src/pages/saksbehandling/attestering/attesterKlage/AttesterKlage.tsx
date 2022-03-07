@@ -1,14 +1,11 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import * as pdfApi from '~api/pdfApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~components/attestering/AttesteringsForm';
 import OppsummeringAvKlage from '~components/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
+import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { UnderkjennelseGrunn } from '~types/Behandling';
@@ -37,7 +34,6 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
     const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.iverksattAvvist);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
-    const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
 
     if (!klagensVedtak || !klage) {
         return (
@@ -126,18 +122,6 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
                 {formatMessage('page.tittel')}
             </Heading>
             <OppsummeringAvKlage klage={klage} klagensVedtak={klagensVedtak} />
-            <div className={styles.seBrevKnappContainer}>
-                <Button
-                    variant="secondary"
-                    type="button"
-                    onClick={() => seBrev({ sakId: props.sakId, klageId: klage.id })}
-                    className={styles.knapp}
-                >
-                    {formatMessage('knapp.seBrev')}
-                    {RemoteData.isPending(seBrevStatus) && <Loader />}
-                </Button>
-                {RemoteData.isFailure(seBrevStatus) && <ApiErrorAlert error={seBrevStatus.error} />}
-            </div>
             <AttesteringsForm
                 sakId={props.sakId}
                 iverksett={{
