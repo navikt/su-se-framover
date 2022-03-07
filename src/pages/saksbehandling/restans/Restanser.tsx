@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader, Table } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import * as personSlice from '~features/person/person.slice';
@@ -15,7 +15,7 @@ import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './restanser-nb';
 import styles from './restanser.module.less';
-import { AriaSortVerdier, RestansKolonner, sortTabell } from './restanserUtils';
+import { AriaSortVerdi, RestansKolonne, sortTabell } from './restanserUtils';
 
 const VelgSakKnapp = (props: { label: string; saksnummer: string }) => {
     const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
@@ -42,47 +42,29 @@ const VelgSakKnapp = (props: { label: string; saksnummer: string }) => {
 const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const [sortertTabell, setSortertTabell] = useState<Restans[]>(props.tabelldata);
-    const [sortVerdi, setSortVerdi] = useState<AriaSortVerdier>('none');
-    const [sortertKolonne, setSortertKolonne] = useState<RestansKolonner | 'ingen'>('ingen');
+    const [sortVerdi, setSortVerdi] = useState<AriaSortVerdi>();
+    const [sortertKolonne, setSortertKolonne] = useState<RestansKolonne>();
 
-    const erKolonneSortertEtter = (k: RestansKolonner) => k === sortertKolonne;
-    const erSortVerdi = (s: AriaSortVerdier) => s === sortVerdi;
-
-    const onTabellHeaderClick = async (kolonne: RestansKolonner) => {
-        const currentSortVerdi = getCurrentSortVerdi();
-        const sortert = sortTabell(props.tabelldata, kolonne, currentSortVerdi);
-        setSortertTabell(sortert);
-        setSortertKolonne(kolonne);
-    };
-
-    const getCurrentSortVerdi = (): AriaSortVerdier => {
-        if (erSortVerdi('ascending')) {
-            setSortVerdi('descending');
-            return 'descending';
+    const handleSorterClick = (kolonne: RestansKolonne) => {
+        if (sortertKolonne !== kolonne) {
+            setSortertKolonne(kolonne);
+            setSortVerdi('ascending');
+            return;
         }
 
-        setSortVerdi('ascending');
-        return 'ascending';
+        setSortVerdi(nesteSortVerdi(sortVerdi));
     };
 
-    useEffect(() => {
-        if (erSortVerdi('none')) {
-            setSortertTabell(props.tabelldata);
-        } else {
-            const sortert = sortTabell(props.tabelldata, sortertKolonne, sortVerdi);
-            setSortertTabell(sortert);
+    const nesteSortVerdi = (sortVerdi?: AriaSortVerdi) => {
+        switch (sortVerdi) {
+            case undefined:
+                return 'ascending';
+            case 'ascending':
+                return 'descending';
+            case 'descending':
+                return undefined;
         }
-    }, [props.tabelldata]);
-
-    const getHeaderClassName = (kolonne: RestansKolonner) =>
-        classNames({
-            ['tabell__th--sortert-asc']: erKolonneSortertEtter(kolonne) && erSortVerdi('ascending'),
-            ['tabell__th--sortert-desc']: erKolonneSortertEtter(kolonne) && erSortVerdi('descending'),
-        });
-
-    const getRowClassName = (kolonne: RestansKolonner) =>
-        classNames({ ['tabell__td--sortert']: erKolonneSortertEtter(kolonne) });
+    };
 
     if (props.tabelldata.length === 0) {
         return (
@@ -93,65 +75,37 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     }
 
     return (
-        <Table className={classNames('tabell', styles.tabell)}>
+        <Table
+            className={classNames('tabell', styles.tabell, 'navds-table')}
+            sort={sortVerdi && sortertKolonne ? { orderBy: sortertKolonne, direction: sortVerdi } : undefined}
+            onSortChange={(sortKey) => {
+                handleSorterClick(sortKey as RestansKolonne);
+            }}
+        >
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell
-                        role="columnheader"
-                        aria-sort={erKolonneSortertEtter('saksnummer') ? sortVerdi : 'none'}
-                        className={getHeaderClassName('saksnummer')}
-                    >
-                        <button aria-label="Sorter etter saksnummer" onClick={() => onTabellHeaderClick('saksnummer')}>
-                            {formatMessage('sak.saksnummer')}
-                        </button>
-                    </Table.HeaderCell>
-                    <Table.HeaderCell
-                        role="columnheader"
-                        aria-sort={erKolonneSortertEtter('typeBehandling') ? sortVerdi : 'none'}
-                        className={getHeaderClassName('typeBehandling')}
-                    >
-                        <button
-                            aria-label="Sorter etter type behandling"
-                            onClick={() => onTabellHeaderClick('typeBehandling')}
-                        >
-                            {formatMessage('restans.typeBehandling')}
-                        </button>
-                    </Table.HeaderCell>
-                    <Table.HeaderCell
-                        role="columnheader"
-                        aria-sort={erKolonneSortertEtter('status') ? sortVerdi : 'none'}
-                        className={getHeaderClassName('status')}
-                    >
-                        <button aria-label="Sorter etter status" onClick={() => onTabellHeaderClick('status')}>
-                            {formatMessage('restans.status')}
-                        </button>
-                    </Table.HeaderCell>
-                    <Table.HeaderCell
-                        role="columnheader"
-                        aria-sort={erKolonneSortertEtter('behandlingStartet') ? sortVerdi : 'none'}
-                        className={getHeaderClassName('behandlingStartet')}
-                    >
-                        <button
-                            aria-label="Sorter etter når behandling startet"
-                            onClick={() => onTabellHeaderClick('behandlingStartet')}
-                        >
-                            {formatMessage('restans.behandling.startet')}
-                        </button>
-                    </Table.HeaderCell>
+                    <Table.ColumnHeader sortKey="saksnummer" sortable>
+                        {formatMessage('sak.saksnummer')}
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader sortKey="typeBehandling" sortable>
+                        {formatMessage('restans.typeBehandling')}
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader sortKey="status" sortable>
+                        {formatMessage('restans.status')}
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader sortKey="behandlingStartet" sortable>
+                        {formatMessage('restans.behandling.startet')}
+                    </Table.ColumnHeader>
                     <Table.HeaderCell />
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {sortertTabell.map((restans) => (
+                {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((restans) => (
                     <Table.Row key={restans.behandlingId}>
-                        <Table.DataCell className={getRowClassName('saksnummer')}>{restans.saksnummer}</Table.DataCell>
-                        <Table.DataCell className={getRowClassName('typeBehandling')}>
-                            {formatMessage(restans.typeBehandling)}
-                        </Table.DataCell>
-                        <Table.DataCell className={getRowClassName('status')}>
-                            {formatMessage(restans.status)}
-                        </Table.DataCell>
-                        <Table.DataCell className={getRowClassName('behandlingStartet')}>
+                        <Table.DataCell>{restans.saksnummer}</Table.DataCell>
+                        <Table.DataCell>{formatMessage(restans.typeBehandling)}</Table.DataCell>
+                        <Table.DataCell>{formatMessage(restans.status)}</Table.DataCell>
+                        <Table.DataCell>
                             {restans.behandlingStartet ? formatDateTime(restans.behandlingStartet) : ''}
                         </Table.DataCell>
                         <Table.DataCell>
