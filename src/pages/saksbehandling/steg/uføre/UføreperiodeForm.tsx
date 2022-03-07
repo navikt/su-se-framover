@@ -44,7 +44,7 @@ interface Props {
     resetUføregradEllerForventetInntekt: (index: number, field: 'uføregrad' | 'forventetInntekt') => void;
     minDate: Nullable<Date>;
     maxDate: Nullable<Date>;
-    onRemoveClick: () => void;
+    onRemoveClick?: () => void;
 }
 
 export const UføreperiodeForm = (props: Props) => {
@@ -96,15 +96,17 @@ export const UføreperiodeForm = (props: Props) => {
                         )}
                     />
                 </div>
-                <Button
-                    variant="secondary"
-                    className={styles.slettknapp}
-                    onClick={props.onRemoveClick}
-                    size="small"
-                    aria-label={formatMessage('input.fjernPeriode.label')}
-                >
-                    <Delete />
-                </Button>
+                {props.onRemoveClick && (
+                    <Button
+                        variant="secondary"
+                        className={styles.slettknapp}
+                        onClick={props.onRemoveClick}
+                        size="small"
+                        aria-label={formatMessage('input.fjernPeriode.label')}
+                    >
+                        <Delete />
+                    </Button>
+                )}
             </div>
             <Controller
                 control={props.control}

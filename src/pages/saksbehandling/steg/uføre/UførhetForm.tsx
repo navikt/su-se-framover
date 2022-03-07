@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { RemoteData as RemoteDataType } from '@devexperts/remote-data-ts';
 import { Button } from '@navikt/ds-react';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { v4 as uuid } from 'uuid';
@@ -54,7 +55,13 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
         name: 'grunnlag',
     });
 
-    const valdieringsFeil = hookFormErrorsTilFeiloppsummering(form.formState.errors);
+    const valideringsFeil = hookFormErrorsTilFeiloppsummering(form.formState.errors);
+
+    useEffect(() => {
+        if (grunnlagValues.fields.length === 0) {
+            grunnlagValues.append(lagTomUføreperiode());
+        }
+    }, [grunnlagValues.fields]);
 
     return (
         <form
@@ -72,7 +79,9 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                             control={form.control}
                             minDate={props.minDate}
                             maxDate={props.maxDate}
-                            onRemoveClick={() => grunnlagValues.remove(idx)}
+                            onRemoveClick={
+                                grunnlagValues.fields.length <= 1 ? undefined : () => grunnlagValues.remove(idx)
+                            }
                             resetUføregradEllerForventetInntekt={(index, field) =>
                                 form.setValue(`grunnlag.${index}.${field}`, '')
                             }
@@ -92,8 +101,8 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
             <Feiloppsummering
                 tittel={formatMessage('feiloppsummering.title')}
                 className={styles.feiloppsummering}
-                feil={valdieringsFeil}
-                hidden={valdieringsFeil.length === 0}
+                feil={valideringsFeil}
+                hidden={valideringsFeil.length === 0}
                 ref={feiloppsummeringRef}
             />
             {RemoteData.isFailure(savingState) && <ApiErrorAlert error={savingState.error} />}
