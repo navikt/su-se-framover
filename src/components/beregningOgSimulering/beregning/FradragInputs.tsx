@@ -151,7 +151,7 @@ export const FradragInputs = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
     onFradragChange: (index: number, value: FradragFormData) => void;
-    beregningsDato: Nullable<{ fom: Date; tom: Date }>;
+    beregningsDato: Nullable<{ fom: Nullable<Date>; tom: Nullable<Date> }>;
 }) => {
     return (
         <div className={styles.fradragContainer}>

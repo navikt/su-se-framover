@@ -131,8 +131,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                               tilOgMed: formatISO(f.periode.tilOgMed, { representation: 'date' }),
                           }
                         : {
-                              fraOgMed: formatISO(stønadsperiode.fom, { representation: 'date' }),
-                              tilOgMed: formatISO(stønadsperiode.tom, { representation: 'date' }),
+                              fraOgMed: formatISO(stønadsperiode.fom!, { representation: 'date' }),
+                              tilOgMed: formatISO(stønadsperiode.tom!, { representation: 'date' }),
                           },
 
                 beløp: parseInt(f.beløp!, 10),
