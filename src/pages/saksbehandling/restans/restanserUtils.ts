@@ -9,11 +9,7 @@ export type RestansKolonne = 'saksnummer' | 'typeBehandling' | 'status' | 'behan
 export type AriaSortVerdi = 'ascending' | 'descending';
 
 export const sortTabell = (restanser: Restans[], kolonne?: RestansKolonne, sortVerdi?: AriaSortVerdi) => {
-    if (!kolonne || !sortVerdi) {
-        return restanser;
-    }
-
-    return pipe(restanser, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)]));
+    return kolonne && sortVerdi ? pipe(restanser, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)])) : restanser;
 
     function kolonneOgRetning(kolonne: RestansKolonne, sortVerdi: AriaSortVerdi): Ord.Ord<Restans> {
         return pipe(
