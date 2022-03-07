@@ -1,20 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, GuidePanel, Heading, Loader } from '@navikt/ds-react';
+import { Alert, Button, GuidePanel, Heading, Loader, Table } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 
 import { testRegulering } from '~api/reguleringApi';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
+import * as reguleringApi from '~api/reguleringApi';
 import { pipe } from '~lib/fp';
-import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
+import { useApiCall } from '~lib/hooks';
 
 import styles from '../index.module.less';
 
 const StartGRegulering = () => {
     const [reguleringsstatus, reguler] = useApiCall(testRegulering);
-    const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentÅpneBehandlinger);
+    const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useApiCall(reguleringApi.hentSakerMedÅpneBehandlinger);
 
     useEffect(() => {
-        hentÅpneBehandlinger();
+        hentÅpneBehandlinger({});
     }, []);
 
     return (
@@ -31,8 +31,26 @@ const StartGRegulering = () => {
                         () => <Loader />,
                         () => <Loader />,
                         () => <Alert variant="error">En feil skjedde under henting av åpne behandlinger</Alert>,
-                        (åpneBehandlinger) => {
-                            return <p>Antal åpne behandlinger: {åpneBehandlinger.length}</p>;
+                        (saksnummer) => {
+                            return (
+                                <>
+                                    <p>Antal saker med en behandling til attestering: {saksnummer.length}</p>
+                                    <Table size="small" className={styles.saksliste}>
+                                        <Table.Header>
+                                            <Table.Row>
+                                                <Table.HeaderCell scope="col">Saksnummer</Table.HeaderCell>
+                                            </Table.Row>
+                                        </Table.Header>
+                                        <Table.Body>
+                                            {saksnummer.map((s) => (
+                                                <Table.Row key={s}>
+                                                    <Table.HeaderCell scope="row">{s}</Table.HeaderCell>
+                                                </Table.Row>
+                                            ))}
+                                        </Table.Body>
+                                    </Table>
+                                </>
+                            );
                         }
                     )
                 )}

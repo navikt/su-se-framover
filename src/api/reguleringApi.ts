@@ -16,3 +16,10 @@ export async function hentReguleringsstatus(): Promise<ApiClientResult<Regulerin
         method: 'GET',
     });
 }
+
+export async function hentSakerMedÅpneBehandlinger(): Promise<ApiClientResult<number[]>> {
+    return apiClient({
+        url: `/reguleringer/saker/apneBehandlinger`,
+        method: 'GET',
+    });
+}
