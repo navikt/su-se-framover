@@ -1,4 +1,4 @@
-import { UseI18N } from '~lib/i18n';
+import { MessageFormatter, UseI18N } from '~lib/i18n';
 import {
     erBosituasjonFullstendig,
     BosituasjonTyper,
@@ -19,7 +19,7 @@ export type Grunnlagsblokk = Array<{
 
 export function getUførevilkårgrunnlagsblokker(
     vilkår: UføreVilkår,
-    { formatMessage }: UseI18N<Messages>
+    formatMessage: MessageFormatter<Messages>
 ): Grunnlagsblokk[] {
     return vilkår.vurderinger.map((v) =>
         v.grunnlag && v.resultat === UføreResultat.VilkårOppfylt
