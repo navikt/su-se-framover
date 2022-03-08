@@ -53,7 +53,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             legend={formatMessage('eierBolig.label')}
-                            error={fieldState.error}
+                            error={fieldState.error?.message}
                             {...field}
                             onChange={(val) => {
                                 field.onChange(val);
