@@ -143,9 +143,7 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
                 {aktivTab === Tab.ÅPNE_BEHANDLINGER && <ÅpneBehandlinger />}
                 {aktivTab === Tab.FERDIGE_BEHANDLINGER && <FerdigeBehandlinger />}
                 {aktivTab === Tab.NØKKELTALL && <Nøkkeltall />}
-                {aktivTab === Tab.REGULERING && (
-                    <Reguleringsoversikt automatiske={reguleringer.automatiske} manuelle={reguleringer.manuelle} />
-                )}
+                {aktivTab === Tab.REGULERING && <Reguleringsoversikt manuelle={reguleringer.manuelle} />}
             </div>
         </div>
     );

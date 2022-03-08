@@ -15,11 +15,9 @@ import messages from './regulering-nb';
 import styles from './regulering.module.less';
 
 interface Props {
-    automatiske: Regulering[];
     manuelle: Regulering[];
 }
 const Reguleringsoversikt = (props: Props) => {
-    const { automatiske } = props;
     const gjenståendeManuelle = props.manuelle.filter((m) => !m.erFerdigstilt);
     const { formatMessage } = useI18n({ messages });
 
@@ -68,7 +66,6 @@ const Reguleringsoversikt = (props: Props) => {
         <div className={styles.oversikt}>
             <Alert variant="success">
                 {formatMessage('resultat', {
-                    antallAutomatiske: automatiske.length,
                     antallManuelle: gjenståendeManuelle.length,
                 })}
             </Alert>

@@ -1,6 +1,5 @@
 export default {
-    resultat:
-        '{antallAutomatiske} saker ble automatisk g-regulert. {antallManuelle} saker trenger manuell behandling. ',
+    resultat: '{antallManuelle} saker trenger manuell behandling. ',
     'resultat.startManuell': 'Start behandling av saker til manuell G-regulering',
     feil: 'En feil skjedde',
 

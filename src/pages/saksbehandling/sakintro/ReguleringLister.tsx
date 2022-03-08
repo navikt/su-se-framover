@@ -6,7 +6,7 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Regulering, ReguleringType } from '~types/Regulering';
 import { Vedtak } from '~types/Vedtak';
-import { formatDate, formatYear } from '~utils/date/dateUtils';
+import { formatDate } from '~utils/date/dateUtils';
 
 import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import messages from './sakintro-nb';
@@ -34,12 +34,7 @@ const ReguleringLister = (props: Props) => {
                                         : formatMessage('regulering.manuell')}
                                 </Heading>
                                 <Informasjonslinje label="Opprettet" value={() => formatDate(regulering.opprettet)} />
-                                <Informasjonslinje
-                                    label="Jobbnavn"
-                                    value={() =>
-                                        formatMessage('regulering.g', { år: formatYear(regulering.jobbType.dato) })
-                                    }
-                                />
+                                <Informasjonslinje label="Jobbnavn" value={() => formatMessage('regulering.g')} />
                             </>
                         );
                     },
