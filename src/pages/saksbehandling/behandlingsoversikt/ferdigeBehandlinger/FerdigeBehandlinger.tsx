@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Loader } from '@navikt/ds-react';
+import { BodyShort, Label, Loader } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import {
     Filter,
@@ -17,7 +18,12 @@ import RestanserTabell from '~pages/saksbehandling/restans/Restanser';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 import { toDateOrNull } from '~utils/date/dateUtils';
 
+import messages from '../behandlingsoversikt-nb';
+
+import styles from './ferdigeBehandlinger.module.less';
+
 export const FerdigeBehandlinger = () => {
+    const { formatMessage } = useI18n({ messages });
     const [hentFerdigeBehandlingerStatus, hentFerdigeBehandlinger] = useAsyncActionCreator(
         sakSlice.hentFerdigeBehandlinger
     );
@@ -58,6 +64,14 @@ export const FerdigeBehandlinger = () => {
             );
     };
 
+    const AntallBehandlinger = (args: { restanser: Restans[] }) => {
+        return args.restanser.length > 0 ? (
+            <div className={styles.antallBehandlingerContainer}>
+                <Label>{args.restanser.length}</Label> <BodyShort>{formatMessage('behandlinger')}</BodyShort>
+            </div>
+        ) : null;
+    };
+
     return (
         <>
             <Filter
@@ -84,7 +98,12 @@ export const FerdigeBehandlinger = () => {
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (restanser: Restans[]) => <RestanserTabell tabelldata={filtrerRestanser(restanser)} />
+                    (restanser: Restans[]) => (
+                        <div>
+                            <AntallBehandlinger restanser={filtrerRestanser(restanser)} />
+                            <RestanserTabell tabelldata={filtrerRestanser(restanser)} />
+                        </div>
+                    )
                 )
             )}
         </>

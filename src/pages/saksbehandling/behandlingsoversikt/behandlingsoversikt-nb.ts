@@ -3,4 +3,5 @@ export default {
     ferdigeBehandlinger: 'Ferdige behandlinger',
     finnSak: 'Finn sak',
     nøkkeltall: 'Nøkkeltall',
+    behandlinger: 'behandlinger',
 };
