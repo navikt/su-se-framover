@@ -220,10 +220,10 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Saken inneholder en utestående avkorting som enten må håndteres i ny stønadsperiode eller revurderes i sin helhet. Håndter i ny periode eller utvid revurderingsperioden til å inkludere perioden for avkortingen.',
     [ApiErrorCode.VERDIER_KAN_IKKE_VÆRE_NEGATIV]: 'Kan ikke sende inn negative verdier',
     [ApiErrorCode.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]:
-        'Vurdering av vilkår må ha samme resultat for hele revurderingsperioden',
+        'Vurdering av vilkår må ha samme resultat for hele behandlingsperioden',
     [ApiErrorCode.VURDERINGSPERIODER_MANGLER]: 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
     [ApiErrorCode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
-        'Vurdering av vilkår må gjøres innenfor revurderingsperioden',
+        'Vurdering av vilkår må gjøres innenfor behandlingsperioden',
     [ApiErrorCode.ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER]:
         'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
     [ApiErrorCode.ÅPEN_REVURDERING_STANS_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
