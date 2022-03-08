@@ -1,5 +1,5 @@
 import { Delete } from '@navikt/ds-icons';
-import { Button, Panel, TextField } from '@navikt/ds-react';
+import { Button, Panel, Radio, RadioGroup, Textarea, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import * as React from 'react';
@@ -7,7 +7,6 @@ import { Control, Controller, useWatch } from 'react-hook-form';
 import { v4 as uuid } from 'uuid';
 
 import DatePicker from '~components/datePicker/DatePicker';
-import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { getDateErrorMessage } from '~lib/validering';
@@ -17,24 +16,14 @@ import { FormData, UføreperiodeFormData } from '~pages/saksbehandling/steg/ufø
 import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import * as DateUtils from '~utils/date/dateUtils';
 
-const sjekkOppfylt = (resultat: UføreResultat): Nullable<boolean> => {
-    switch (resultat) {
-        case UføreResultat.VilkårOppfylt:
-            return true;
-        case UføreResultat.IkkeVurdert:
-            return false;
-        default:
-            return null;
-    }
-};
-
 export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføreperiodeFormData => ({
     id: uuid(),
     fraOgMed: DateUtils.parseIsoDateOnly(u.periode.fraOgMed),
     tilOgMed: DateUtils.parseIsoDateOnly(u.periode.tilOgMed),
     uføregrad: u.grunnlag?.uføregrad.toString() ?? '',
     forventetInntekt: u.grunnlag?.forventetInntekt.toString() ?? '',
-    oppfylt: sjekkOppfylt(u.resultat),
+    begrunnelse: u.begrunnelse,
+    oppfylt: u.resultat,
 });
 
 interface Props {
@@ -45,6 +34,7 @@ interface Props {
     minDate: Nullable<Date>;
     maxDate: Nullable<Date>;
     onRemoveClick?: () => void;
+    kanVelgeUføresakTilBehandling: boolean;
 }
 
 export const UføreperiodeForm = (props: Props) => {
@@ -113,14 +103,25 @@ export const UføreperiodeForm = (props: Props) => {
                 name={`grunnlag.${props.index}.oppfylt`}
                 defaultValue={props.item.oppfylt}
                 render={({ field, fieldState }) => (
-                    <BooleanRadioGroup
+                    <RadioGroup
                         legend={formatMessage('input.erVilkårOppfylt.label')}
                         error={fieldState.error?.message}
                         {...field}
-                    />
+                        value={field.value ?? ''}
+                    >
+                        <Radio id={field.name} value={UføreResultat.VilkårOppfylt} ref={field.ref}>
+                            {formatMessage('radio.label.ja')}
+                        </Radio>
+                        <Radio value={UføreResultat.VilkårIkkeOppfylt}>{formatMessage('radio.label.nei')}</Radio>
+                        {props.kanVelgeUføresakTilBehandling && (
+                            <Radio value={UføreResultat.HarUføresakTilBehandling}>
+                                {formatMessage('radio.label.uføresakTilBehandling')}
+                            </Radio>
+                        )}
+                    </RadioGroup>
                 )}
             />
-            {value.oppfylt && (
+            {value.oppfylt === UføreResultat.VilkårOppfylt && (
                 <div className={styles.horizontal}>
                     <Controller
                         control={props.control}
@@ -150,6 +151,19 @@ export const UføreperiodeForm = (props: Props) => {
                     />
                 </div>
             )}
+            <Controller
+                control={props.control}
+                name={`grunnlag.${props.index}.begrunnelse`}
+                render={({ field, fieldState }) => (
+                    <Textarea
+                        label={formatMessage('gjeldende.begrunnelse')}
+                        error={fieldState.error?.message}
+                        {...field}
+                        value={field.value ?? ''}
+                        description={formatMessage('input.begrunnelse.description')}
+                    />
+                )}
+            />
         </Panel>
     );
 };

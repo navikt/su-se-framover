@@ -17,4 +17,10 @@ export default {
     'gjeldende.begrunnelse': 'Begrunnelse',
 
     'feil.overlappendePerioder': 'To eller flere av periodene overlapper. Du må rette opp i det før du kan gå videre.',
+
+    'radio.label.ja': 'Ja',
+    'radio.label.nei': 'Nei',
+    'radio.label.uavklart': 'Uavklart',
+    'radio.label.uføresakTilBehandling': 'Har uføresak til behandling',
+    'input.begrunnelse.description': 'Unngå personsensitive opplysninger',
 };

@@ -22,5 +22,4 @@ export enum UføreResultat {
     VilkårOppfylt = 'VilkårOppfylt',
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
     HarUføresakTilBehandling = 'HarUføresakTilBehandling',
-    IkkeVurdert = 'IkkeVurdert',
 }

@@ -1,4 +1,5 @@
 import { Nullable } from '~lib/types';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 
 export interface UføreperiodeFormData {
     id: string;
@@ -6,7 +7,8 @@ export interface UføreperiodeFormData {
     tilOgMed: Nullable<Date>;
     uføregrad: string;
     forventetInntekt: string;
-    oppfylt: Nullable<boolean>;
+    begrunnelse: Nullable<string>;
+    oppfylt: Nullable<UføreResultat>;
 }
 
 export interface FormData {

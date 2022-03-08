@@ -44,8 +44,8 @@ const Uførhet = (props: RevurderingStegProps) => {
                     },
                     forventetInntekt: g.oppfylt ? Number.parseInt(g.forventetInntekt, 10) : null,
                     uføregrad: g.oppfylt ? Number.parseInt(g.uføregrad, 10) : null,
-                    begrunnelse: null,
-                    resultat: g.oppfylt ? UføreResultat.VilkårOppfylt : UføreResultat.VilkårIkkeOppfylt,
+                    begrunnelse: g.begrunnelse,
+                    resultat: g.oppfylt ?? UføreResultat.HarUføresakTilBehandling,
                 })),
             },
             onSuccess
@@ -61,6 +61,7 @@ const Uførhet = (props: RevurderingStegProps) => {
                         savingState={lagreUføregrunnlagStatus}
                         minDate={DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed)}
                         maxDate={DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed)}
+                        erSaksbehandling={false}
                         {...props}
                     />
                 ),

@@ -48,8 +48,8 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                     },
                     forventetInntekt: g.oppfylt ? Number.parseInt(g.forventetInntekt, 10) : null,
                     uføregrad: g.oppfylt ? Number.parseInt(g.uføregrad, 10) : null,
-                    begrunnelse: null,
-                    resultat: g.oppfylt ? UføreResultat.VilkårOppfylt : UføreResultat.VilkårIkkeOppfylt,
+                    begrunnelse: g.begrunnelse,
+                    resultat: g.oppfylt ?? UføreResultat.HarUføresakTilBehandling,
                 })),
             },
             onSuccess
@@ -66,6 +66,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                         form={form}
                         savingState={lagreBehandlingsinformasjonStatus}
                         avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+                        erSaksbehandling={true}
                         {...props}
                     />
                 ),

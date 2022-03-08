@@ -2,7 +2,8 @@ import * as DateFns from 'date-fns';
 
 import { Nullable } from '~lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
-import { UføreperiodeFormData, FormData } from '~pages/saksbehandling/steg/uføre/types';
+import { FormData, UføreperiodeFormData } from '~pages/saksbehandling/steg/uføre/types';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import * as DateUtils from '~utils/date/dateUtils';
 
 const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
@@ -21,8 +22,20 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
                 return true;
             }),
         oppfylt: erGRegulering
-            ? yup.mixed<boolean>().equals([true], 'Vilkår må være oppfylt ved g-regulering')
-            : yup.bool().required().defined(),
+            ? yup
+                  .mixed<UføreResultat>()
+                  .equals([UføreResultat.VilkårOppfylt], 'Vilkår må være oppfylt ved g-regulering')
+            : yup
+                  .mixed()
+                  .defined()
+                  .oneOf(
+                      [
+                          UføreResultat.VilkårOppfylt,
+                          UføreResultat.VilkårIkkeOppfylt,
+                          UføreResultat.HarUføresakTilBehandling,
+                      ],
+                      'Du må velge om bruker har vedtak om uføretrygd eller uføresak til behandling'
+                  ),
         uføregrad: yup.mixed<string>().when('oppfylt', {
             is: true,
             then: yup
@@ -38,6 +51,7 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
             then: validateStringAsNonNegativeNumber(),
             otherwise: yup.string().notRequired(),
         }),
+        begrunnelse: yup.string().nullable().defined(),
     });
 
 export const schema = (erGRegulering: boolean) =>

@@ -33,6 +33,7 @@ interface Props {
     avsluttUrl: string;
     onFormSubmit: (values: FormData, onSuccess: () => void) => void;
     savingState: RemoteDataType<ApiError | undefined, Uføregrunnlag | Behandling>;
+    erSaksbehandling: boolean;
 }
 
 export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Props) => {
@@ -45,6 +46,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
         tilOgMed: null,
         forventetInntekt: '',
         oppfylt: null,
+        begrunnelse: null,
         uføregrad: '',
     });
 
@@ -85,6 +87,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                             resetUføregradEllerForventetInntekt={(index, field) =>
                                 form.setValue(`grunnlag.${index}.${field}`, '')
                             }
+                            kanVelgeUføresakTilBehandling={props.erSaksbehandling}
                         />
                     </li>
                 ))}
