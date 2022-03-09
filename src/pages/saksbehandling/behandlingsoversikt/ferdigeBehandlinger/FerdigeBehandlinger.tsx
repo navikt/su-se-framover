@@ -17,6 +17,8 @@ import RestanserTabell from '~pages/saksbehandling/restans/Restanser';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 import { toDateOrNull } from '~utils/date/dateUtils';
 
+import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
+
 export const FerdigeBehandlinger = () => {
     const [hentFerdigeBehandlingerStatus, hentFerdigeBehandlinger] = useAsyncActionCreator(
         sakSlice.hentFerdigeBehandlinger
@@ -84,7 +86,12 @@ export const FerdigeBehandlinger = () => {
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (restanser: Restans[]) => <RestanserTabell tabelldata={filtrerRestanser(restanser)} />
+                    (restanser: Restans[]) => (
+                        <div>
+                            <AntallBehandlinger restanser={filtrerRestanser(restanser)} />
+                            <RestanserTabell tabelldata={filtrerRestanser(restanser)} />
+                        </div>
+                    )
                 )
             )}
         </>

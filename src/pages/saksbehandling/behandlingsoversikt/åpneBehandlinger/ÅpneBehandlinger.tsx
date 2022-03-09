@@ -15,6 +15,8 @@ import {
 import RestanserTabell from '~pages/saksbehandling/restans/Restanser';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 
+import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
+
 export const ÅpneBehandlinger = () => {
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentÅpneBehandlinger);
 
@@ -54,13 +56,19 @@ export const ÅpneBehandlinger = () => {
                 oppdaterStatus={(key, verdi) => setStatus({ ...status, [key]: verdi })}
                 oppdaterType={(key, verdi) => setType({ ...type, [key]: verdi })}
             />
+
             {pipe(
                 hentÅpneBehandlingerStatus,
                 RemoteData.fold(
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (restanser: Restans[]) => <RestanserTabell tabelldata={filterRestanser(restanser)} />
+                    (restanser: Restans[]) => (
+                        <div>
+                            <AntallBehandlinger restanser={filterRestanser(restanser)} />
+                            <RestanserTabell tabelldata={filterRestanser(restanser)} />
+                        </div>
+                    )
                 )
             )}
         </>
