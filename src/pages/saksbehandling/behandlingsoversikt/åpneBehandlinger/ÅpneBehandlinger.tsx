@@ -1,12 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Label, Loader } from '@navikt/ds-react';
+import { Loader } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
 import {
     Filter,
     hentFiltrerteVerdier,
@@ -16,12 +15,9 @@ import {
 import RestanserTabell from '~pages/saksbehandling/restans/Restanser';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 
-import messages from '../behandlingsoversikt-nb';
-
-import styles from './åpneBehandlinger.module.less';
+import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
 
 export const ÅpneBehandlinger = () => {
-    const { formatMessage } = useI18n({ messages });
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentÅpneBehandlinger);
 
     useEffect(() => {
@@ -50,14 +46,6 @@ export const ÅpneBehandlinger = () => {
             .filter((restans) =>
                 statusfilter.length ? statusfilter.includes(restans.status as keyof RestansStatusFilter) : true
             );
-    };
-
-    const AntallBehandlinger = (args: { restanser: Restans[] }) => {
-        return args.restanser.length > 0 ? (
-            <div className={styles.antallBehandlingerContainer}>
-                <Label>{args.restanser.length}</Label> <BodyShort>{formatMessage('behandlinger')}</BodyShort>
-            </div>
-        ) : null;
     };
 
     return (
