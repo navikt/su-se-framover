@@ -6,7 +6,6 @@ import { pipe } from 'fp-ts/function';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ErrorCode } from '~api/apiClient';
 import * as sakApi from '~api/sakApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
@@ -15,7 +14,7 @@ import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import søknadSlice from '~features/søknad/søknad.slice';
-import { useAsyncActionCreator, useApiCall } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { MessageFormatter, useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -205,22 +204,7 @@ const index = (props: { nesteUrl: string }) => {
                             dispatch(personSlice.default.actions.resetSøker());
                         }}
                         onFetchByFnr={handleSøk}
-                        person={
-                            // Vi ønsker ikke at personen skal dukke opp før vi også har eventuelle
-                            // alerts på plass.
-                            pipe(
-                                sakinfo,
-                                RemoteData.chain(() => hentPersonStatus),
-                                RemoteData.mapLeft(
-                                    (e) =>
-                                        e ?? {
-                                            statusCode: ErrorCode.Unknown,
-                                            correlationId: '',
-                                            body: null,
-                                        }
-                                )
-                            )
-                        }
+                        person={søker}
                     />
                     {pipe(
                         RemoteData.combine(sakinfo, hentPersonStatus),

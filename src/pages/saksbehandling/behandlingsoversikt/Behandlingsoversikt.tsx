@@ -1,17 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { RemoteFailure, RemoteInitial, RemotePending, RemoteSuccess } from '@devexperts/remote-data-ts';
 import { Heading } from '@navikt/ds-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 
-import { ApiError } from '~api/apiClient';
 import { Person } from '~api/personApi';
 import { Person as PersonIkon } from '~assets/Icons';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
@@ -23,8 +22,8 @@ import Nøkkeltall from './nøkkeltall/Nøkkeltall';
 import { ÅpneBehandlinger } from './åpneBehandlinger/ÅpneBehandlinger';
 
 interface Props {
-    søker: RemoteInitial | RemotePending | RemoteFailure<ApiError> | RemoteSuccess<Person>;
-    sak: RemoteInitial | RemotePending | RemoteFailure<ApiError> | RemoteSuccess<Sak>;
+    søker: ApiResult<Person>;
+    sak: ApiResult<Sak>;
 }
 
 enum Tab {
@@ -73,7 +72,6 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
                         }
                     }}
                     person={søker}
-                    autofocusPersonsøk
                 />
                 {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
                     <ApiErrorAlert className={styles.alert} error={sak.error} />
