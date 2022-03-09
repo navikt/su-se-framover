@@ -10,11 +10,12 @@ import DatePicker from '~components/datePicker/DatePicker';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { getDateErrorMessage } from '~lib/validering';
-import messages from '~pages/saksbehandling/revurdering/uførhet/uførhet-nb';
-import styles from '~pages/saksbehandling/revurdering/uførhet/uførhet.module.less';
 import { FormData, UføreperiodeFormData } from '~pages/saksbehandling/steg/uføre/types';
 import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import * as DateUtils from '~utils/date/dateUtils';
+
+import messages from './uførhet-nb';
+import styles from './uførhet.module.less';
 
 export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføreperiodeFormData => ({
     id: uuid(),
@@ -30,7 +31,7 @@ interface Props {
     item: UføreperiodeFormData;
     index: number;
     control: Control<FormData>;
-    resetUføregradEllerForventetInntekt: (index: number, field: 'uføregrad' | 'forventetInntekt') => void;
+    resetUføregradOgForventetInntekt: () => void;
     minDate: Nullable<Date>;
     maxDate: Nullable<Date>;
     onRemoveClick?: () => void;
@@ -108,6 +109,10 @@ export const UføreperiodeForm = (props: Props) => {
                         error={fieldState.error?.message}
                         {...field}
                         value={field.value ?? ''}
+                        onChange={(val) => {
+                            field.onChange(val);
+                            props.resetUføregradOgForventetInntekt();
+                        }}
                     >
                         <Radio id={field.name} value={UføreResultat.VilkårOppfylt} ref={field.ref}>
                             {formatMessage('radio.label.ja')}

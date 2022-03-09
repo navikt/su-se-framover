@@ -3,15 +3,14 @@ import * as React from 'react';
 
 import { useI18n } from '~lib/i18n';
 import messages from '~pages/saksbehandling/revurdering/uførhet/uførhet-nb';
-import styles from '~pages/saksbehandling/revurdering/uførhet/uførhet.module.less';
-import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
+import styles from '~pages/saksbehandling/steg/uføre/uførhet.module.less';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { formatPeriode } from '~utils/date/dateUtils';
 import { formatCurrency } from '~utils/format/formatUtils';
 
 export const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages });
     return (
         <div>
             <Heading level="2" size="large" spacing>

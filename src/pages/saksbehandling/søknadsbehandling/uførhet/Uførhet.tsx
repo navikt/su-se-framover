@@ -15,13 +15,12 @@ import { schema } from '~pages/saksbehandling/steg/uføre/validation';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import * as DateUtils from '~utils/date/dateUtils';
 
-import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './uførhet-nb';
 
 const Uførhet = (props: VilkårsvurderingBaseProps) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages });
 
     const [lagreBehandlingsinformasjonStatus, lagreUføregrunnlag] = useAsyncActionCreator(sakSlice.lagreUføregrunnlag);
     const form = useForm<FormData>({

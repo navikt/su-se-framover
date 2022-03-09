@@ -16,13 +16,13 @@ import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
-import messages from '~pages/saksbehandling/revurdering/uførhet/uførhet-nb';
-import styles from '~pages/saksbehandling/revurdering/uførhet/uførhet.module.less';
 import UtfallSomIkkeStøttes from '~pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormData, UføreperiodeFormData } from '~pages/saksbehandling/steg/uføre/types';
 import { UføreperiodeForm } from '~pages/saksbehandling/steg/uføre/UføreperiodeForm';
-import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
+import styles from '~pages/saksbehandling/steg/uføre/uførhet.module.less';
 import { Behandling } from '~types/Behandling';
+
+import messages from './uførhet-nb';
 
 interface Props {
     form: UseFormReturn<FormData>;
@@ -37,7 +37,7 @@ interface Props {
 }
 
 export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Props) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages });
     const history = useHistory();
 
     const lagTomUføreperiode = (): UføreperiodeFormData => ({
@@ -84,9 +84,10 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                             onRemoveClick={
                                 grunnlagValues.fields.length <= 1 ? undefined : () => grunnlagValues.remove(idx)
                             }
-                            resetUføregradEllerForventetInntekt={(index, field) =>
-                                form.setValue(`grunnlag.${index}.${field}`, '')
-                            }
+                            resetUføregradOgForventetInntekt={() => {
+                                form.setValue(`grunnlag.${idx}.uføregrad`, '');
+                                form.setValue(`grunnlag.${idx}.forventetInntekt`, '');
+                            }}
                             kanVelgeUføresakTilBehandling={props.erSaksbehandling}
                         />
                     </li>

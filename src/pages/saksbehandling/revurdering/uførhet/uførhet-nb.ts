@@ -1,26 +1,14 @@
+import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
+
 export default {
-    'heading.valgtPeriode': 'Valgt revurderingsperiode',
+    ...sharedMessages,
     'heading.gjeldendeGrunnlag': 'Gjeldende grunnlagsdata',
-
-    'button.nyPeriode.label': 'Ny periode for opplysning',
-
-    'input.fom.label': 'Fra og med',
-    'input.tom.label': 'Til og med',
-    'input.erVilkårOppfylt.label': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
-    'input.uføregrad.label': 'Uføregrad',
-    'input.forventetInntekt.label': 'Forventet inntekt etter uførhet per år',
-    'input.fjernPeriode.label': 'Fjern perioden',
 
     'gjeldende.vilkårOppfylt': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
     'gjeldende.uføregrad': 'Uføregrad:',
     'gjeldende.inntektEtterUførhet': 'Inntekt etter uførhet:',
     'gjeldende.begrunnelse': 'Begrunnelse',
 
+    'heading.valgtPeriode': 'Valgt revurderingsperiode',
     'feil.overlappendePerioder': 'To eller flere av periodene overlapper. Du må rette opp i det før du kan gå videre.',
-
-    'radio.label.ja': 'Ja',
-    'radio.label.nei': 'Nei',
-    'radio.label.uavklart': 'Uavklart',
-    'radio.label.uføresakTilBehandling': 'Har uføresak til behandling',
-    'input.begrunnelse.description': 'Unngå personsensitive opplysninger',
 };

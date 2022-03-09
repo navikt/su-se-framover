@@ -37,7 +37,7 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
                       'Du må velge om bruker har vedtak om uføretrygd eller uføresak til behandling'
                   ),
         uføregrad: yup.mixed<string>().when('oppfylt', {
-            is: true,
+            is: UføreResultat.VilkårOppfylt,
             then: yup
                 .number()
                 .required('Feltet må fylles ut')
@@ -47,7 +47,7 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
             otherwise: yup.string().notRequired(),
         }),
         forventetInntekt: yup.mixed<string>().when('oppfylt', {
-            is: true,
+            is: UføreResultat.VilkårOppfylt,
             then: validateStringAsNonNegativeNumber(),
             otherwise: yup.string().notRequired(),
         }),
