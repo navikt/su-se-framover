@@ -13,7 +13,7 @@ export interface VurderingsperiodeUføre {
     id: string;
     opprettet: string;
     resultat: UføreResultat;
-    grunnlag?: Uføregrunnlag;
+    grunnlag: Nullable<Uføregrunnlag>;
     periode: Periode<string>;
     begrunnelse: Nullable<string>;
 }

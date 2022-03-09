@@ -75,4 +75,4 @@ const trimIdFromObject = <T>(obj: T) => {
 };
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-const harId = (obj: any): obj is { id: string } => 'id' in obj;
+const harId = (obj: any): obj is { id: string } => (obj ? 'id' in obj : false);
