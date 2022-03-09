@@ -87,4 +87,5 @@ export const sluttenAvMåneden = (d: Date) => DateFns.endOfMonth(d);
  * Gir null dersom @param str er null
  * @returns null hvis @param str er null; parset dato ellers
  */
-export const parseIsoDateOnly = (str: string) => DateFns.parse(str, DateFormats.IsoDateOnly, new Date());
+export const parseIsoDateOnly = (str: string | null) =>
+    str ? DateFns.parse(str, DateFormats.IsoDateOnly, new Date()) : null;

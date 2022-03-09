@@ -18,84 +18,8 @@ import Nøkkeltall from '~pages/saksbehandling/behandlingsoversikt/nøkkeltall/N
 import { toIsoDateOnlyString } from '~utils/date/dateUtils';
 
 import GReguleringTabell from './components/GReguleringTabell';
+import { SøknadTabellDrift } from './components/SøknadTabell';
 import styles from './index.module.less';
-
-const Rad = (props: {
-    type: 'Journalpost' | 'Oppgave' | 'Brevbestilling';
-    status: 'OK' | 'FEIL';
-    sakId: string;
-    id: string;
-    søknadId?: string;
-    behandlingId?: string;
-}) => {
-    return (
-        <tr>
-            <td>{props.type}</td>
-            <td>{props.status}</td>
-            <td className={styles.tabelldata}>{props.sakId}</td>
-            <td className={styles.tabelldata}>{props.id}</td>
-            <td className={styles.tabelldata}>{props.søknadId ?? props.behandlingId}</td>
-        </tr>
-    );
-};
-
-const SøknadTabell = (props: { søknadResponse: SøknadResponse }) => {
-    return (
-        <table className="tabell">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Sakid</th>
-                    <th>Id</th>
-                    <th>Søknadid</th>
-                </tr>
-            </thead>
-            <tbody>
-                {props.søknadResponse.journalposteringer.ok.map((journalpost) => (
-                    <Rad
-                        key={journalpost.journalpostId}
-                        type="Journalpost"
-                        status="OK"
-                        sakId={journalpost.sakId}
-                        søknadId={journalpost.søknadId}
-                        id={journalpost.journalpostId}
-                    />
-                ))}
-                {props.søknadResponse.journalposteringer.feilet.map((journalpost, index) => (
-                    <Rad
-                        key={index}
-                        type="Journalpost"
-                        status="FEIL"
-                        sakId={journalpost.sakId}
-                        søknadId={journalpost.søknadId}
-                        id={journalpost.grunn}
-                    />
-                ))}
-                {props.søknadResponse.oppgaver.ok.map((oppgave) => (
-                    <Rad
-                        key={oppgave.oppgaveId}
-                        type="Oppgave"
-                        status="OK"
-                        sakId={oppgave.sakId}
-                        søknadId={oppgave.søknadId}
-                        id={oppgave.oppgaveId}
-                    />
-                ))}
-                {props.søknadResponse.oppgaver.feilet.map((oppgave, index) => (
-                    <Rad
-                        key={index}
-                        type="Oppgave"
-                        status="FEIL"
-                        sakId={oppgave.sakId}
-                        søknadId={oppgave.søknadId}
-                        id={oppgave.grunn}
-                    />
-                ))}
-            </tbody>
-        </table>
-    );
-};
 
 enum Knapp {
     FIX_SØKNADER,
@@ -128,6 +52,7 @@ const Drift = () => {
     >(RemoteData.initial);
 
     const fixSøknader = async () => {
+        settKnappTrykket(Knapp.FIX_SØKNADER);
         const resultat = await patchSøknader();
         if (resultat.status === 'ok') {
             setfixSøknaderResponse(RemoteData.success(resultat.data));
@@ -206,9 +131,10 @@ const Drift = () => {
                                     variant="secondary"
                                     className={styles.knapp}
                                     type="button"
-                                    onClick={() =>
-                                        fetchKonsistensavstemming(toIsoDateOnlyString(konsistensavstemmingFraOgMed))
-                                    }
+                                    onClick={() => {
+                                        settKnappTrykket(Knapp.KONSISTENSAVSTEMMING);
+                                        fetchKonsistensavstemming(toIsoDateOnlyString(konsistensavstemmingFraOgMed));
+                                    }}
                                 >
                                     Konsistensavstemming
                                     {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
@@ -236,7 +162,7 @@ const Drift = () => {
                         Nøkkeltall
                     </Button>
                 </div>
-                {RemoteData.isFailure(fixSøknaderResponse) && (
+                {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">
                         <p>Fix Søknader feilet</p>
                         {fixSøknaderResponse.error.statusCode}
@@ -245,19 +171,19 @@ const Drift = () => {
                         </p>
                     </Alert>
                 )}
-                {RemoteData.isFailure(GReguleringsdata) && (
+                {knappTrykket === Knapp.G_REGULERING && RemoteData.isFailure(GReguleringsdata) && (
                     <Alert className={styles.alert} variant="error">
                         <p>Henting av G-reguleringsresultat feilet</p>
                         Feilkode: {GReguleringsdata.error?.statusCode}
                     </Alert>
                 )}
                 <div className={styles.tabellContainer}>
-                    {RemoteData.isSuccess(fixSøknaderResponse) && (
+                    {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isSuccess(fixSøknaderResponse) && (
                         <div>
-                            <SøknadTabell søknadResponse={fixSøknaderResponse.value} />
+                            <SøknadTabellDrift søknadResponse={fixSøknaderResponse.value} />
                         </div>
                     )}
-                    {RemoteData.isSuccess(konsistensavstemmingStatus) && (
+                    {knappTrykket === Knapp.KONSISTENSAVSTEMMING && RemoteData.isSuccess(konsistensavstemmingStatus) && (
                         <Alert className={styles.alert} variant="success">
                             <p>{JSON.stringify(konsistensavstemmingStatus.value)}</p>
                         </Alert>

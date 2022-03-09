@@ -5,17 +5,13 @@ import * as S from 'fp-ts/string';
 import { pipe } from '~lib/fp';
 import { Restans } from '~types/Restans';
 
-export type RestansKolonner = 'saksnummer' | 'typeBehandling' | 'status' | 'behandlingStartet';
-export type AriaSortVerdier = 'none' | 'ascending' | 'descending';
+export type RestansKolonne = 'saksnummer' | 'typeBehandling' | 'status' | 'behandlingStartet';
+export type AriaSortVerdi = 'ascending' | 'descending';
 
-export const sortTabell = (restanser: Restans[], kolonne: RestansKolonner | 'ingen', sortVerdi: AriaSortVerdier) => {
-    if (kolonne === 'ingen' || sortVerdi === 'none') {
-        return restanser;
-    }
+export const sortTabell = (restanser: Restans[], kolonne?: RestansKolonne, sortVerdi?: AriaSortVerdi) => {
+    return kolonne && sortVerdi ? pipe(restanser, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)])) : restanser;
 
-    return pipe(restanser, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)]));
-
-    function kolonneOgRetning(kolonne: RestansKolonner, sortVerdi: AriaSortVerdier): Ord.Ord<Restans> {
+    function kolonneOgRetning(kolonne: RestansKolonne, sortVerdi: AriaSortVerdi): Ord.Ord<Restans> {
         return pipe(
             sortVerdi === 'ascending' ? Ord.reverse(S.Ord) : S.Ord,
             Ord.contramap((r: Restans) => r[kolonne] || '')

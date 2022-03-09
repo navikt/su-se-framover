@@ -12,6 +12,7 @@ import {
     Alert,
     Label,
     HelpText,
+    Link as DsReactLink,
 } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as A from 'fp-ts/lib/Array';
@@ -121,6 +122,9 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     );
     const [bekreftVurderingerStatus, bekreftVurderinger] = useAsyncActionCreator(klageActions.bekreftVurderinger);
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
+
+    const hjelpetekstLink =
+        'https://navno.sharepoint.com/sites/fag-og-ytelser-pensjon-supplerende-stonad/SitePages/Midlertidig-rutine-for-klagebehandling---supplerende-st%C3%B8nad-til-uf%C3%B8re-flyktninger.aspx?OR=Teams-HL&CT=1645705340996&sourceId=&params=%7B%22AppName%22%3A%22Teams-Desktop%22%2C%22AppVersion%22%3A%2228%2F22010300411%22%7D';
 
     const initialValues = {
         klageVurderingType: props.klage.vedtaksvurdering?.type ?? null,
@@ -277,12 +281,15 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                 render={({ field, fieldState }) => (
                                     <Textarea
                                         {...field}
+                                        minRows={5}
                                         label={
                                             <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
                                                 <Label>{formatMessage('form.fritekst.label')}</Label>
                                                 <HelpText>
                                                     <Label className={styles.hjelpetekst}>
-                                                        {formatMessage('form.fritekst.hjelpeTekst')}
+                                                        <DsReactLink href={hjelpetekstLink} target="_blank">
+                                                            {formatMessage('form.fritekst.hjelpeTekst')}
+                                                        </DsReactLink>
                                                     </Label>
                                                 </HelpText>
                                             </div>

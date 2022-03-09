@@ -68,6 +68,11 @@ export default {
     'personligOppmøte.papirsøknad.midlertidigUnntakForOppmøteplikt': 'Midlertidig unntak for oppmøteplikt',
 
     'uførhet.vedtakOmUføretrygd': 'Har du fått vedtak om uføretrygd?',
+    'input.label.uføregrad': 'Uføregrad',
+    'input.label.forventetInntekt': 'Forventet inntekt etter uførhet per år',
+    'radio.uførhet.legend':
+        'Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-7 i folketrygdloven er oppfylt?',
+    'radio.label.uføresakTilBehandling': 'Har uføresak til behandling',
 
     'utenlandsOpphold.antallDagerSiste90': 'Antall dager oppholdt i utlandet siste 90 dager',
     'utenlandsOpphold.antallDagerPlanlagt': 'Antall dager planlagt opphold i utlandet',

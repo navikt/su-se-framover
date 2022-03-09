@@ -150,7 +150,6 @@ const NyBehandlingVelger = (props: { sakId: string; klageToggle: boolean; intl: 
             <Button
                 variant="secondary"
                 onClick={(e) => {
-                    console.log(anchorEl === e.currentTarget);
                     return setAnchorEl(anchorEl ? null : e.currentTarget);
                 }}
             >
