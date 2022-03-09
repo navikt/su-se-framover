@@ -1,10 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Textarea } from '@navikt/ds-react';
+import { Button, Textarea } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { FieldError } from 'react-hook-form';
-import { IntlShape } from 'react-intl';
 
 import { ApiClientResult, ApiError } from '~api/apiClient';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 
 import styles from './brevInput.module.less';
 
@@ -12,8 +12,8 @@ export interface BrevInputProps {
     tekst: string;
     onVisBrevClick: () => Promise<ApiClientResult<Blob>>;
     onChange: (e: React.ChangeEvent<unknown>) => void;
-    intl: IntlShape;
     tittel: string;
+    knappLabel: string;
     placeholder?: string;
     feil?: FieldError;
 }
@@ -41,6 +41,7 @@ export function BrevInput(props: BrevInputProps) {
         <div className={styles.brevContainer}>
             <div className={styles.textAreaContainer}>
                 <Textarea
+                    minRows={4}
                     label={props.tittel}
                     name="tekstTilVedtaksbrev"
                     placeholder={props.placeholder}
@@ -57,13 +58,9 @@ export function BrevInput(props: BrevInputProps) {
                     loading={RemoteData.isPending(hentBrevStatus)}
                     onClick={onHentBrev}
                 >
-                    {props.intl.formatMessage({ id: 'knapp.seBrev' })}
+                    {props.knappLabel}
                 </Button>
-                {RemoteData.isFailure(hentBrevStatus) && (
-                    <Alert variant="error">
-                        {hentBrevStatus?.error?.body?.message || props.intl.formatMessage({ id: 'feil.ukjentFeil' })}
-                    </Alert>
-                )}
+                {RemoteData.isFailure(hentBrevStatus) && <ApiErrorAlert error={hentBrevStatus.error} />}
             </div>
         </div>
     );

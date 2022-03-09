@@ -97,6 +97,13 @@ export const erRevurderingAvsluttet = (r: Revurdering): boolean =>
     r.status === UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK ||
     r.status === UtbetalingsRevurderingStatus.AVSLUTTET_STANS;
 
+export const skalAttesteres = (r: Revurdering): boolean =>
+    erGregulering(r.årsak) ||
+    erBeregnetIngenEndring(r) ||
+    erRevurderingUnderkjent(r) ||
+    erForhåndsvarslingBesluttet(r) ||
+    erIngenForhåndsvarsel(r);
+
 export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: Beregning } {
     return 'beregning' in r;
 }

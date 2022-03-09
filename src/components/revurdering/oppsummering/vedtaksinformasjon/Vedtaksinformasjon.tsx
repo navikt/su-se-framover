@@ -6,19 +6,19 @@ import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { Utenlandsoppsummering } from '~components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
+import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { UføreVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { Utenlandsopphold } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import {
-    Vurderingstatus,
-    InformasjonSomRevurderes,
-    InformasjonsRevurdering,
-    InformasjonsRevurderingStatus,
-} from '~types/Revurdering';
+    bosituasjonErlik,
+    formueErlik,
+    fradragErlik,
+    GrunnlagsdataOgVilkårsvurderinger,
+    uføreErlik,
+    utenlandsoppholdErlik,
+} from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { InformasjonsRevurdering, Vurderingstatus } from '~types/Revurdering';
 import { regnUtFormuegrunnlag } from '~utils/revurdering/formue/RevurderFormueUtils';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { sjekkBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
@@ -63,35 +63,13 @@ const Vilkårvisning = (props: { grunnlagsblokker: Grunnlagsblokk[] }) => (
     </div>
 );
 
-const Uførevilkårblokk = ({ nyeData, gamleData }: { nyeData: UføreVilkår | null; gamleData: UføreVilkår | null }) => {
+const Bosituasjonblokk = (props: { nyeData: Bosituasjon[]; gamleData: Bosituasjon[] }) => {
     const i18n = useI18n({ messages });
 
-    if (!nyeData) {
-        return null;
-    }
-
-    return (
-        <Rad radTittel={i18n.formatMessage('radTittel.uførhet')}>
-            {{
-                venstre: <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(nyeData, i18n)} />,
-                høyre: gamleData ? (
-                    <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(gamleData, i18n)} />
-                ) : null,
-            }}
-        </Rad>
-    );
-};
-
-const Bosituasjonblokk = (props: {
-    nyeData: GrunnlagsdataOgVilkårsvurderinger;
-    gamleData: GrunnlagsdataOgVilkårsvurderinger;
-}) => {
-    const i18n = useI18n({ messages });
-
-    const nyeBosituasjongrunnlag = hentBosituasjongrunnlag(props.nyeData);
+    const nyeBosituasjongrunnlag = sjekkBosituasjongrunnlag(props.nyeData);
     if (!nyeBosituasjongrunnlag) return null;
 
-    const gamleBosituasjongrunnlag = hentBosituasjongrunnlag(props.gamleData);
+    const gamleBosituasjongrunnlag = sjekkBosituasjongrunnlag(props.gamleData);
 
     return (
         <Rad radTittel={i18n.formatMessage('radTittel.bosituasjon')}>
@@ -128,125 +106,99 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; begrunnelse
     </ul>
 );
 
-const Formueblokk = (props: { nyeData: FormueVilkår; gamleData: FormueVilkår }) => {
-    const { formatMessage } = useI18n({ messages });
-
-    return (
-        <Rad radTittel={formatMessage('radTittel.formue')}>
-            {{
-                venstre: (
-                    <FormuevilkårVisning
-                        formuevilkår={props.nyeData}
-                        begrunnelseLabel={formatMessage('formue.begrunnelse')}
-                    />
-                ),
-                høyre: <FormuevilkårOppsummering gjeldendeFormue={props.gamleData} />,
-            }}
-        </Rad>
-    );
-};
-
-const Fradragblokk = (props: {
-    nyeData: GrunnlagsdataOgVilkårsvurderinger;
-    gamleData: GrunnlagsdataOgVilkårsvurderinger;
-}) => {
-    const { formatMessage } = useI18n({ messages });
-
-    return (
-        <Rad radTittel={formatMessage('radTittel.fradrag')}>
-            {{
-                venstre: <Fradragoppsummering fradrag={props.nyeData.fradrag} />,
-                høyre:
-                    props.gamleData.fradrag.length > 0 ? (
-                        <Fradragoppsummering fradrag={props.gamleData.fradrag} />
-                    ) : null,
-            }}
-        </Rad>
-    );
-};
-
-const Utenlandsblokk = (props: { nyeData: Nullable<Utenlandsopphold>; gamleData: Nullable<Utenlandsopphold> }) => {
-    const { formatMessage } = useI18n({ messages });
-
-    if (props.nyeData === null) {
-        return null;
-    }
-
-    return (
-        <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
-            {{
-                venstre: <Utenlandsoppsummering utenlandsopphold={props.nyeData} />,
-                høyre: props.gamleData ? <Utenlandsoppsummering utenlandsopphold={props.gamleData} /> : null,
-            }}
-        </Rad>
-    );
-};
-
 const Vedtaksinformasjon = (props: {
     revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const nyeData = props.revurdering.grunnlagsdataOgVilkårsvurderinger;
+    const gamleData = props.grunnlagsdataOgVilkårsvurderinger;
+    const valgtRevurderingssteg = props.revurdering.informasjonSomRevurderes;
 
-    const skalViseEndringerIOppsummering = Object.entries(props.revurdering.informasjonSomRevurderes)
-        .filter(([informasjon]) => informasjon !== InformasjonSomRevurderes.Inntekt)
-        .some(([, status]) => status === Vurderingstatus.Vurdert);
+    const skalViseUføre =
+        !uføreErlik(nyeData.uføre, gamleData.uføre) || valgtRevurderingssteg.Uførhet === Vurderingstatus.Vurdert;
+    const skalVisebosituasjon =
+        !bosituasjonErlik(nyeData.bosituasjon, gamleData.bosituasjon) ||
+        valgtRevurderingssteg.Bosituasjon === Vurderingstatus.Vurdert;
+    const skalViseformue =
+        !formueErlik(nyeData.formue, gamleData.formue) || valgtRevurderingssteg.Formue === Vurderingstatus.Vurdert;
+    const skalVisefradrag =
+        !fradragErlik(nyeData.fradrag, gamleData.fradrag) || valgtRevurderingssteg.Inntekt === Vurderingstatus.Vurdert;
+    const skalViseutenlandsopphold =
+        !utenlandsoppholdErlik(nyeData.utenlandsopphold, gamleData.utenlandsopphold) ||
+        valgtRevurderingssteg.Utenlandsopphold === Vurderingstatus.Vurdert;
 
     return (
         <div className={styles.container}>
-            {skalViseEndringerIOppsummering && (
-                <Rad overskrift>
+            <Rad overskrift>
+                {{
+                    venstre: (
+                        <Heading level="3" size="medium">
+                            {formatMessage('heading.nyInfo')}
+                        </Heading>
+                    ),
+                    høyre: (
+                        <Heading level="3" size="medium">
+                            {formatMessage('heading.eksisterende')}
+                        </Heading>
+                    ),
+                }}
+            </Rad>
+            {skalViseUføre && (
+                <Rad radTittel={formatMessage('radTittel.uførhet')}>
                     {{
-                        venstre: (
-                            <Heading level="3" size="medium">
-                                {formatMessage('heading.nyInfo')}
-                            </Heading>
-                        ),
-                        høyre: (
-                            <Heading level="3" size="medium">
-                                {formatMessage('heading.eksisterende')}
-                            </Heading>
-                        ),
+                        venstre: nyeData.uføre ? (
+                            <Vilkårvisning
+                                grunnlagsblokker={getUførevilkårgrunnlagsblokker(nyeData.uføre, formatMessage)}
+                            />
+                        ) : null,
+                        høyre: gamleData.uføre ? (
+                            <Vilkårvisning
+                                grunnlagsblokker={getUførevilkårgrunnlagsblokker(gamleData.uføre, formatMessage)}
+                            />
+                        ) : null,
                     }}
                 </Rad>
             )}
-            {props.revurdering.informasjonSomRevurderes.Uførhet === Vurderingstatus.Vurdert && (
-                <Uførevilkårblokk
-                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre}
-                    gamleData={props.grunnlagsdataOgVilkårsvurderinger.uføre}
-                />
+            {skalVisebosituasjon && (
+                <Bosituasjonblokk nyeData={nyeData.bosituasjon} gamleData={gamleData.bosituasjon} />
             )}
-            {revurdertBosituasjonEllerOpphørtPgaInntekt(props.revurdering) && (
-                <Bosituasjonblokk
-                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
-                    gamleData={props.grunnlagsdataOgVilkårsvurderinger}
-                />
+            {skalViseformue && (
+                <Rad radTittel={formatMessage('radTittel.formue')}>
+                    {{
+                        venstre: (
+                            <FormuevilkårVisning
+                                formuevilkår={nyeData.formue}
+                                begrunnelseLabel={formatMessage('formue.begrunnelse')}
+                            />
+                        ),
+                        høyre: <FormuevilkårOppsummering gjeldendeFormue={gamleData.formue} />,
+                    }}
+                </Rad>
             )}
-            {props.revurdering.informasjonSomRevurderes.Formue === Vurderingstatus.Vurdert && (
-                <Formueblokk
-                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue}
-                    gamleData={props.grunnlagsdataOgVilkårsvurderinger.formue}
-                />
+            {skalVisefradrag && (
+                <Rad radTittel={formatMessage('radTittel.fradrag')}>
+                    {{
+                        venstre: nyeData.fradrag.length > 0 ? <Fradragoppsummering fradrag={nyeData.fradrag} /> : null,
+                        høyre:
+                            gamleData.fradrag.length > 0 ? <Fradragoppsummering fradrag={gamleData.fradrag} /> : null,
+                    }}
+                </Rad>
             )}
-            {props.revurdering.informasjonSomRevurderes.Inntekt === Vurderingstatus.Vurdert && (
-                <Fradragblokk
-                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
-                    gamleData={props.grunnlagsdataOgVilkårsvurderinger}
-                />
-            )}
-            {props.revurdering.informasjonSomRevurderes.Utenlandsopphold === Vurderingstatus.Vurdert && (
-                <Utenlandsblokk
-                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
-                    gamleData={props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
-                />
+            {skalViseutenlandsopphold && (
+                <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
+                    {{
+                        venstre: nyeData.utenlandsopphold ? (
+                            <Utenlandsoppsummering utenlandsopphold={nyeData.utenlandsopphold} />
+                        ) : null,
+                        høyre: gamleData.utenlandsopphold ? (
+                            <Utenlandsoppsummering utenlandsopphold={gamleData.utenlandsopphold} />
+                        ) : null,
+                    }}
+                </Rad>
             )}
         </div>
     );
 };
-
-const revurdertBosituasjonEllerOpphørtPgaInntekt = (revurdering: InformasjonsRevurdering) =>
-    revurdering.informasjonSomRevurderes.Bosituasjon === Vurderingstatus.Vurdert ||
-    (revurdering.informasjonSomRevurderes.Inntekt === Vurderingstatus.Vurdert &&
-        revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT);
 
 export default Vedtaksinformasjon;

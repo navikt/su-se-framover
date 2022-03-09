@@ -1,6 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Nullable } from '~lib/types';
+import { TilbakekrevingsbehandlingFormData } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -151,19 +152,19 @@ export async function oppdaterRevurdering(
     });
 }
 
+export type BeregnOgSimuler = {
+    revurdering: SimulertRevurdering;
+    feilmeldinger: ErrorMessage[];
+    varselmeldinger: ErrorMessage[];
+};
+
 export async function beregnOgSimuler(
     sakId: string,
     arg: {
         revurderingId: string;
         periode: Periode<string>;
     }
-): Promise<
-    ApiClientResult<{
-        revurdering: SimulertRevurdering;
-        feilmeldinger: ErrorMessage[];
-        varselmeldinger: ErrorMessage[];
-    }>
-> {
+): Promise<ApiClientResult<BeregnOgSimuler>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${arg.revurderingId}/beregnOgSimuler`,
         method: 'POST',
@@ -193,6 +194,20 @@ export async function lagreForhåndsvarsel(
         body: {
             forhåndsvarselhandling,
             fritekst: fritekstTilBrev,
+        },
+    });
+}
+
+export async function lagreTilbakekrevingsbehandling(
+    sakId: string,
+    revurderingId: string,
+    tilbakekrevingsbehandling: TilbakekrevingsbehandlingFormData
+): Promise<ApiClientResult<SimulertRevurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/tilbakekreving`,
+        method: 'POST',
+        body: {
+            avgjørelse: tilbakekrevingsbehandling.avgjørelse,
         },
     });
 }

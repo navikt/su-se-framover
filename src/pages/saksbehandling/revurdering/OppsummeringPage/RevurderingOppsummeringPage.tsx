@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
-import { Forhåndsvarselhandling } from '~api/revurderingApi';
+import { BeregnOgSimuler } from '~api/revurderingApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
@@ -14,6 +14,13 @@ import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
+import { VelgForhåndsvarselForm } from '~pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
+import {
+    getOppsummeringsformState,
+    hentBrevsending,
+    OppsummeringState,
+} from '~pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
+import { TilbakekrevingForm } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
@@ -25,21 +32,14 @@ import {
 } from '~types/Revurdering';
 import {
     erBeregnetIngenEndring,
-    erForhåndsvarslingBesluttet,
-    erGregulering,
-    erIngenForhåndsvarsel,
-    erRevurderingForhåndsvarslet,
     erRevurderingSimulert,
     erRevurderingUnderkjent,
+    harBeregninger,
 } from '~utils/revurdering/revurderingUtils';
 
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
-import {
-    ResultatEtterForhåndsvarselform,
-    SendTilAttesteringForm,
-    VelgForhåndsvarselForm,
-} from './oppsummeringPageForms/OppsummeringPageForms';
+import { ResultatEtterForhåndsvarselform, SendTilAttesteringForm } from './oppsummeringPageForms/OppsummeringPageForms';
 import messages from './revurderingOppsummeringPage-nb';
 import styles from './revurderingOppsummeringPage.module.less';
 
@@ -71,37 +71,6 @@ const OppsummeringshandlingForm = (props: {
         },
         () => {
             history.push(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId));
-        }
-    );
-
-    const [lagreForhåndsvarselState, lagreForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
-        RevurderingActions.lagreForhåndsvarsel,
-        (args: { forhåndsvarselhandling: Forhåndsvarselhandling; brevtekst: string }) => {
-            if (props.feilmeldinger.length > 0) {
-                feilRef.current?.focus();
-                return;
-            }
-            return {
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                forhåndsvarselhandling: args.forhåndsvarselhandling,
-                fritekstTilBrev: args.brevtekst,
-            };
-        },
-        (args) => {
-            switch (args.forhåndsvarselhandling) {
-                case Forhåndsvarselhandling.Forhåndsvarsle:
-                    history.push(
-                        Routes.createSakIntroLocation(formatMessage('notification.sendtForhåndsvarsel'), props.sakId)
-                    );
-                    return;
-                case Forhåndsvarselhandling.IngenForhåndsvarsel:
-                    sendTilAttestering({
-                        vedtaksbrevtekst: args.brevtekst,
-                        skalFøreTilBrevutsending: true,
-                    });
-                    return;
-            }
         }
     );
 
@@ -142,6 +111,8 @@ const OppsummeringshandlingForm = (props: {
         }
     );
 
+    const oppsummeringsformState = getOppsummeringsformState(props.revurdering);
+
     return (
         <div>
             {props.varselmeldinger.length > 0 && (
@@ -158,79 +129,32 @@ const OppsummeringshandlingForm = (props: {
                     <UtfallSomIkkeStøttes feilmeldinger={props.feilmeldinger} />
                 </div>
             )}
-            {erGregulering(props.revurdering.årsak) ? (
+            {oppsummeringsformState === OppsummeringState.ATTESTERING && (
                 <SendTilAttesteringForm
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
-                    brevsending="aldriSende"
+                    brevsending={hentBrevsending(props.revurdering)}
                     submitStatus={sendTilAttesteringState}
-                    onSubmit={(args) =>
-                        sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: false })
-                    }
+                    onSubmit={sendTilAttestering}
                 />
-            ) : erBeregnetIngenEndring(props.revurdering) ? (
-                <SendTilAttesteringForm
-                    revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
-                    brevsending="kanVelge"
-                    submitStatus={sendTilAttesteringState}
-                    onSubmit={(args) =>
-                        sendTilAttestering({
-                            vedtaksbrevtekst: args.fritekstTilBrev,
-                            skalFøreTilBrevutsending: args.skalFøreTilBrevutsending,
-                        })
-                    }
-                />
-            ) : erRevurderingUnderkjent(props.revurdering) ? (
-                <SendTilAttesteringForm
-                    revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
-                    brevsending="alltidSende"
-                    submitStatus={sendTilAttesteringState}
-                    onSubmit={(args) =>
-                        sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: true })
-                    }
-                />
-            ) : !erRevurderingForhåndsvarslet(props.revurdering) ? (
+            )}
+            {oppsummeringsformState === OppsummeringState.TILBAKEKREVING && (
+                <TilbakekrevingForm revurdering={props.revurdering} forrigeUrl={props.forrigeUrl} sakId={props.sakId} />
+            )}
+            {oppsummeringsformState === OppsummeringState.FORHÅNDSVARSLING && (
                 <VelgForhåndsvarselForm
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
-                    submitStatus={
-                        RemoteData.isInitial(sendTilAttesteringState)
-                            ? lagreForhåndsvarselState
-                            : RemoteData.combine(lagreForhåndsvarselState, sendTilAttesteringState)
-                    }
-                    onSubmit={(args) =>
-                        lagreForhåndsvarsel({
-                            brevtekst: args.fritekstTilBrev,
-                            forhåndsvarselhandling: args.forhåndsvarselhandling,
-                        })
-                    }
                 />
-            ) : erForhåndsvarslingBesluttet(props.revurdering) || erIngenForhåndsvarsel(props.revurdering) ? (
-                <SendTilAttesteringForm
-                    revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
-                    brevsending="alltidSende"
-                    submitStatus={sendTilAttesteringState}
-                    onSubmit={(args) =>
-                        sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: true })
-                    }
-                />
-            ) : (
+            )}
+            {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && (
                 <ResultatEtterForhåndsvarselform
                     sakId={props.sakId}
                     revurderingId={props.revurdering.id}
                     forrigeUrl={props.forrigeUrl}
                     submitStatus={fortsettEtterForhåndsvarselState}
-                    onSubmit={(args) =>
-                        fortsettEtterForhåndsvarsel({
-                            beslutningEtterForhåndsvarsel: args.resultatEtterForhåndsvarsel,
-                            brevtekst: args.brevTekst,
-                            begrunnelse: args.begrunnelse,
-                        })
-                    }
+                    onSubmit={fortsettEtterForhåndsvarsel}
                 />
             )}
         </div>
@@ -261,16 +185,26 @@ const RevurderingOppsummeringPage = (props: {
 
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
 
+    const beregningStatus = harBeregninger(props.revurdering)
+        ? RemoteData.success<never, BeregnOgSimuler>({
+              revurdering: props.revurdering as SimulertRevurdering,
+              feilmeldinger: [],
+              varselmeldinger: [],
+          })
+        : beregnOgSimulerStatus;
+
     React.useEffect(() => {
-        beregnOgSimuler({
-            sakId: props.sakId,
-            periode: props.revurdering.periode,
-            revurderingId: props.revurdering.id,
-        });
+        if (RemoteData.isInitial(beregningStatus)) {
+            beregnOgSimuler({
+                sakId: props.sakId,
+                periode: props.revurdering.periode,
+                revurderingId: props.revurdering.id,
+            });
+        }
     }, [props.revurdering.id]);
 
     return pipe(
-        RemoteData.combine(beregnOgSimulerStatus, props.grunnlagsdataOgVilkårsvurderinger),
+        RemoteData.combine(beregningStatus, props.grunnlagsdataOgVilkårsvurderinger),
         RemoteData.fold(
             () => <Loader title={formatMessage('beregner.label')} />,
             () => <Loader title={formatMessage('beregner.label')} />,

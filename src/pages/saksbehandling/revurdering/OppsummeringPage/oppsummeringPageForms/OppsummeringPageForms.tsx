@@ -5,9 +5,8 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import * as pdfApi from '~api/pdfApi';
-import { Forhåndsvarselhandling } from '~api/revurderingApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput, BrevInputProps } from '~components/brevInput/BrevInput';
+import { BrevInput } from '~components/brevInput/BrevInput';
 import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
@@ -19,28 +18,21 @@ import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper
 import messages from './oppsummeringPageForms-nb';
 import styles from './oppsummeringPageForms.module.less';
 
-const OppsummeringsBrevInput = (props: Omit<BrevInputProps, 'placeholder' | 'intl'>) => {
-    const { intl } = useI18n({ messages });
-    return (
-        <BrevInput placeholder={intl.formatMessage({ id: 'brevInput.innhold.placeholder' })} intl={intl} {...props} />
-    );
-};
-
 export const ResultatEtterForhåndsvarselform = (props: {
     sakId: string;
     revurderingId: string;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
     onSubmit(args: {
-        resultatEtterForhåndsvarsel: BeslutningEtterForhåndsvarsling;
-        brevTekst: string;
+        beslutningEtterForhåndsvarsel: BeslutningEtterForhåndsvarsling;
+        brevtekst: string;
         begrunnelse: string;
     }): void;
 }) => {
     const { formatMessage } = useI18n({ messages });
 
     interface FormData {
-        resultatEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
+        beslutningEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
         tekstTilVedtaksbrev: string;
         tekstTilAvsluttRevurderingBrev: string;
         begrunnelse: string;
@@ -48,7 +40,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
 
     const form = useForm<FormData>({
         defaultValues: {
-            resultatEtterForhåndsvarsel: null,
+            beslutningEtterForhåndsvarsel: null,
             tekstTilVedtaksbrev: '',
             tekstTilAvsluttRevurderingBrev: '',
             begrunnelse: '',
@@ -56,7 +48,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
         resolver: yupResolver(
             yup
                 .object<FormData>({
-                    resultatEtterForhåndsvarsel: yup
+                    beslutningEtterForhåndsvarsel: yup
                         .mixed()
                         .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
                         .required(),
@@ -68,16 +60,17 @@ export const ResultatEtterForhåndsvarselform = (props: {
         ),
     });
 
-    const resultatEtterForhåndsvarsel = form.watch('resultatEtterForhåndsvarsel');
+    const resultatEtterForhåndsvarsel = form.watch('beslutningEtterForhåndsvarsel');
     return (
         <form
             onSubmit={form.handleSubmit((values) =>
                 props.onSubmit({
                     begrunnelse: values.begrunnelse,
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    resultatEtterForhåndsvarsel: values.resultatEtterForhåndsvarsel!,
-                    brevTekst:
-                        values.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger
+                    beslutningEtterForhåndsvarsel: values.beslutningEtterForhåndsvarsel!,
+                    brevtekst:
+                        values.beslutningEtterForhåndsvarsel ===
+                        BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger
                             ? values.tekstTilVedtaksbrev
                             : values.tekstTilAvsluttRevurderingBrev,
                 })
@@ -86,7 +79,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
         >
             <Controller
                 control={form.control}
-                name="resultatEtterForhåndsvarsel"
+                name="beslutningEtterForhåndsvarsel"
                 render={({ field, fieldState }) => (
                     <RadioGroup
                         legend={formatMessage('etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel')}
@@ -130,7 +123,9 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     control={form.control}
                     name="tekstTilVedtaksbrev"
                     render={({ field, fieldState }) => (
-                        <OppsummeringsBrevInput
+                        <BrevInput
+                            placeholder={formatMessage('brevInput.innhold.placeholder')}
+                            knappLabel={formatMessage('knapp.seBrev')}
                             tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
@@ -151,7 +146,9 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     control={form.control}
                     name="tekstTilAvsluttRevurderingBrev"
                     render={({ field, fieldState }) => (
-                        <OppsummeringsBrevInput
+                        <BrevInput
+                            placeholder={formatMessage('brevInput.innhold.placeholder')}
+                            knappLabel={formatMessage('knapp.seBrev')}
                             tittel={formatMessage('brevInput.tekstTilAvsluttRevurdering.tittel')}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForAvslutningAvRevurdering({
@@ -182,136 +179,34 @@ export const ResultatEtterForhåndsvarselform = (props: {
     );
 };
 
-export const VelgForhåndsvarselForm = (props: {
-    sakId: string;
-    revurdering: InformasjonsRevurdering;
-    forrigeUrl: string;
-    submitStatus: ApiResult<unknown>;
-    onSubmit(args: { forhåndsvarselhandling: Forhåndsvarselhandling; fritekstTilBrev: string }): void;
-}) => {
-    interface FormData {
-        forhåndsvarselhandling: Nullable<Forhåndsvarselhandling>;
-        fritekstTilBrev: Nullable<string>;
+type brevutsendingstype = 'aldriSende' | 'alltidSende' | 'kanVelge';
+
+const getBrevutsending = (brevutsending: brevutsendingstype, value: boolean) => {
+    switch (brevutsending) {
+        case 'aldriSende':
+            return false;
+        case 'alltidSende':
+            return true;
+        case 'kanVelge':
+            return value;
     }
-
-    const { formatMessage } = useI18n({ messages });
-
-    const form = useForm<FormData>({
-        defaultValues: {
-            forhåndsvarselhandling: null,
-            fritekstTilBrev: null,
-        },
-        resolver: yupResolver(
-            yup
-                .object<FormData>({
-                    forhåndsvarselhandling: yup
-                        .mixed()
-                        .required()
-                        .defined()
-                        .oneOf(Object.values(Forhåndsvarselhandling), 'Du må velge om bruker skal forhåndsvarsles'),
-                    fritekstTilBrev: yup.string().nullable().required(),
-                })
-                .required()
-        ),
-    });
-
-    const forhåndsvarselhandling = form.watch('forhåndsvarselhandling');
-
-    return (
-        <form
-            onSubmit={form.handleSubmit((values) =>
-                props.onSubmit({
-                    fritekstTilBrev: values.fritekstTilBrev ?? '',
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    forhåndsvarselhandling: values.forhåndsvarselhandling!,
-                })
-            )}
-            className={styles.form}
-        >
-            <Controller
-                control={form.control}
-                name="forhåndsvarselhandling"
-                render={({ field, fieldState }) => (
-                    <RadioGroup
-                        legend={formatMessage('velgForhåndsvarsel.handling.legend')}
-                        error={fieldState.error?.message}
-                        name={field.name}
-                        onChange={(val) => field.onChange(val)}
-                        value={field.value ?? ''}
-                    >
-                        <Radio id={field.name} ref={field.ref} value={Forhåndsvarselhandling.Forhåndsvarsle}>
-                            {formatMessage('ja')}
-                        </Radio>
-                        <Radio value={Forhåndsvarselhandling.IngenForhåndsvarsel}>{formatMessage('nei')}</Radio>
-                    </RadioGroup>
-                )}
-            />
-            {forhåndsvarselhandling !== null && (
-                <Controller
-                    control={form.control}
-                    name="fritekstTilBrev"
-                    render={({ field, fieldState }) =>
-                        forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle ? (
-                            <OppsummeringsBrevInput
-                                tittel={formatMessage('brevInput.tekstTilForhåndsvarsel.tittel')}
-                                onVisBrevClick={() =>
-                                    pdfApi.fetchBrevutkastForForhåndsvarsel(
-                                        props.sakId,
-                                        props.revurdering.id,
-                                        field.value ?? ''
-                                    )
-                                }
-                                tekst={field.value ?? ''}
-                                onChange={field.onChange}
-                                feil={fieldState.error}
-                            />
-                        ) : (
-                            <OppsummeringsBrevInput
-                                tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
-                                onVisBrevClick={() =>
-                                    pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
-                                        sakId: props.sakId,
-                                        revurderingId: props.revurdering.id,
-                                        fritekst: field.value,
-                                    })
-                                }
-                                tekst={field.value ?? ''}
-                                onChange={field.onChange}
-                                feil={fieldState.error}
-                            />
-                        )
-                    }
-                />
-            )}
-            {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
-            <RevurderingBunnknapper
-                nesteKnappTekst={
-                    forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle
-                        ? formatMessage('sendForhåndsvarsel.button.label')
-                        : formatMessage('sendTilAttestering.button.label')
-                }
-                tilbakeUrl={props.forrigeUrl}
-                loading={RemoteData.isPending(props.submitStatus)}
-            />
-        </form>
-    );
 };
 
 export const SendTilAttesteringForm = (props: {
     revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
-    brevsending: 'aldriSende' | 'alltidSende' | 'kanVelge';
-    onSubmit(args: { fritekstTilBrev: string; skalFøreTilBrevutsending: boolean }): void;
+    brevsending: brevutsendingstype;
+    onSubmit(args: { vedtaksbrevtekst: string; skalFøreTilBrevutsending: boolean }): void;
 }) => {
     const { formatMessage } = useI18n({ messages });
     interface FormData {
-        tekstTilVedtaksbrev: string;
+        vedtaksbrevtekst: string;
         skalFøreTilBrevutsending: boolean;
     }
     const form = useForm<FormData>({
         defaultValues: {
-            tekstTilVedtaksbrev: props.revurdering.fritekstTilBrev,
+            vedtaksbrevtekst: props.revurdering.fritekstTilBrev,
             skalFøreTilBrevutsending:
                 props.brevsending === 'alltidSende' || props.revurdering.fritekstTilBrev.length > 0,
         },
@@ -321,10 +216,10 @@ export const SendTilAttesteringForm = (props: {
 
     return (
         <form
-            onSubmit={form.handleSubmit((values) =>
+            onSubmit={form.handleSubmit(({ vedtaksbrevtekst, skalFøreTilBrevutsending }) =>
                 props.onSubmit({
-                    fritekstTilBrev: values.tekstTilVedtaksbrev,
-                    skalFøreTilBrevutsending: values.skalFøreTilBrevutsending,
+                    vedtaksbrevtekst: vedtaksbrevtekst,
+                    skalFøreTilBrevutsending: getBrevutsending(props.brevsending, skalFøreTilBrevutsending),
                 })
             )}
             className={styles.form}
@@ -349,9 +244,11 @@ export const SendTilAttesteringForm = (props: {
             {skalFøreTilBrevutsending && (
                 <Controller
                     control={form.control}
-                    name="tekstTilVedtaksbrev"
+                    name="vedtaksbrevtekst"
                     render={({ field, fieldState }) => (
-                        <OppsummeringsBrevInput
+                        <BrevInput
+                            placeholder={formatMessage('brevInput.innhold.placeholder')}
+                            knappLabel={formatMessage('knapp.seBrev')}
                             tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({

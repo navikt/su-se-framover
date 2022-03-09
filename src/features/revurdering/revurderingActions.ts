@@ -4,26 +4,27 @@ import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
 import { Uføregrunnlag } from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
+import { TilbakekrevingsbehandlingFormData } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~types/Behandling';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
 import {
-    RevurderingTilAttestering,
-    IverksattRevurdering,
-    OpprettetRevurdering,
-    SimulertRevurdering,
-    UnderkjentRevurdering,
-    OpprettetRevurderingGrunn,
     BeslutningEtterForhåndsvarsling,
-    InformasjonSomRevurderes,
     BosituasjonRequest,
     FormuegrunnlagRequest,
-    Revurdering,
-    InformasjonsRevurdering,
-    StansAvYtelse,
     Gjenopptak,
+    InformasjonSomRevurderes,
+    InformasjonsRevurdering,
+    IverksattRevurdering,
+    OpprettetRevurdering,
+    OpprettetRevurderingGrunn,
+    Revurdering,
+    RevurderingTilAttestering,
+    SimulertRevurdering,
+    StansAvYtelse,
+    UnderkjentRevurdering,
     UtenlandsoppholdRequest,
 } from '~types/Revurdering';
 
@@ -179,6 +180,22 @@ export const lagreForhåndsvarsel = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/forhandsvarsle', async ({ sakId, revurderingId, forhåndsvarselhandling, fritekstTilBrev }, thunkApi) => {
     const res = await revurderingApi.lagreForhåndsvarsel(sakId, revurderingId, forhåndsvarselhandling, fritekstTilBrev);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreTilbakekrevingsbehandling = createAsyncThunk<
+    SimulertRevurdering,
+    {
+        sakId: string;
+        revurderingId: string;
+        tilbakekrevingsbehandling: TilbakekrevingsbehandlingFormData;
+    },
+    { rejectValue: ApiError }
+>('revurdering/tilbakekreving', async ({ sakId, revurderingId, tilbakekrevingsbehandling }, thunkApi) => {
+    const res = await revurderingApi.lagreTilbakekrevingsbehandling(sakId, revurderingId, tilbakekrevingsbehandling);
     if (res.status === 'ok') {
         return res.data;
     }
