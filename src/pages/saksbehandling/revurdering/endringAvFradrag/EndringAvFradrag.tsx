@@ -79,11 +79,11 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     periode: {
                         /* eslint-disable @typescript-eslint/no-non-null-assertion */
                         fraOgMed: DateUtils.toIsoDateOnlyString(
-                            f.periode?.fraOgMed ?? DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed)
+                            f.periode?.fraOgMed ?? DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed)!
                         ),
                         tilOgMed: DateUtils.toIsoDateOnlyString(
                             DateUtils.sluttenAvMåneden(
-                                f.periode?.tilOgMed ?? DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed)
+                                f.periode?.tilOgMed ?? DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed)!
                             )
                         ),
                         /* eslint-enable @typescript-eslint/no-non-null-assertion */
