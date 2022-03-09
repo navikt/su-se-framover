@@ -77,7 +77,10 @@ const KontrollsamtalePage = (props: Props) => {
                                         }
                                         minDate={startOfTomorrow()}
                                     />
-                                    <Button onClick={() => nyDato && handleNyDatoForKontrollsamtaleClick(nyDato)}>
+                                    <Button
+                                        className={styles.nyDatoButton}
+                                        onClick={() => nyDato && handleNyDatoForKontrollsamtaleClick(nyDato)}
+                                    >
                                         {formatMessage('settNyDato')}
                                         {RemoteData.isPending(nyDatoStatus) && <Loader />}
                                     </Button>
