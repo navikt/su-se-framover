@@ -40,7 +40,7 @@ const Personsøk = (props: PersonsøkProps) => {
     };
 
     return (
-        <>
+        <div className={styles.personsøk}>
             <div className={styles.inputContainer}>
                 <Search
                     label={
@@ -69,7 +69,7 @@ const Personsøk = (props: PersonsøkProps) => {
                     )
                 )}
             </div>
-        </>
+        </div>
     );
 };
 
