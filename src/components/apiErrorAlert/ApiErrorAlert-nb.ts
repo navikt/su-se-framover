@@ -70,8 +70,9 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Mangler systemstøtte for revurdering av perioder med hull i tidslinjen for vedtak',
     [ApiErrorCode.IKKE_FORHÅNDSVARSLET]: 'Kan ikke beslutte forhåndsvarsel. Revurderingen er ikke forhåndsvarslet',
     [ApiErrorCode.JOURNALPOST_TEMA_ER_IKKE_SUP]: 'Tema for journalposten er ikke SUP',
-    [ApiErrorCode.JOURNALPOST_ER_IKKE_FERDIGSTILT]: 'Journalposten er ikke ferdigstilt',
-    [ApiErrorCode.JOURNALPOST_ER_IKKE_ET_UTGÅENDE_DOKUMENT]: 'Journalposten må være et ferdigstilt, utgående dokument',
+    [ApiErrorCode.JOURNALPOST_ER_IKKE_FERDIGSTILT]: 'Journalposten til klagen er ikke ferdigstilt',
+    [ApiErrorCode.JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT]:
+        'Den journalførte klagen må være et journalført, innkommende dokument',
     [ApiErrorCode.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
     [ApiErrorCode.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN]:
         'Ikke lov med formueperiode utenfor behandlingsperioden',
