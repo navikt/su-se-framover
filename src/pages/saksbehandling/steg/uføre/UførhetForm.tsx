@@ -61,7 +61,11 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
 
     useEffect(() => {
         if (grunnlagValues.fields.length === 0) {
-            grunnlagValues.append(lagTomUføreperiode());
+            grunnlagValues.append({
+                ...lagTomUføreperiode(),
+                fraOgMed: props.minDate,
+                tilOgMed: props.maxDate,
+            });
         }
     }, [grunnlagValues.fields]);
 
