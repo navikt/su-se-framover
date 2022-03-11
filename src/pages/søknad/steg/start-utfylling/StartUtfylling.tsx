@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, ContentContainer, Heading, Loader, StepIndicator } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -30,6 +30,8 @@ export const StartUtfylling = () => {
     const { formatMessage } = useI18n({ messages });
     const user = useUserContext();
     const history = useHistory();
+    const [sisteStartetSteg, setSisteStartetSteg] = useState(0);
+    const isLocal = process.env.NODE_ENV === 'developmentz';
 
     useEffect(() => {
         // check that user is still logged in first
@@ -83,6 +85,12 @@ export const StartUtfylling = () => {
     ].filter((s) => s.onlyIf ?? true);
     const aktivtSteg = steg.findIndex((s) => s.step === step);
 
+    useEffect(() => {
+        if (aktivtSteg > sisteStartetSteg) {
+            setSisteStartetSteg(aktivtSteg);
+        }
+    }, [aktivtSteg]);
+
     const ManglendeData = () => (
         <ContentContainer className={classNames(styles.content, styles.feilmeldingContainer)}>
             <Alert variant="error" className={styles.feilmeldingTekst}>
@@ -114,23 +122,26 @@ export const StartUtfylling = () => {
                                     <StepIndicator
                                         activeStep={aktivtSteg}
                                         hideLabels
-                                        onStepChange={
-                                            process.env.NODE_ENV === 'development'
-                                                ? (index) => {
-                                                      const nyttSteg = steg[index];
-                                                      if (nyttSteg) {
-                                                          history.push(
-                                                              routes.soknadsutfylling.createURL({
-                                                                  step: nyttSteg.step,
-                                                              })
-                                                          );
-                                                      }
-                                                  }
-                                                : undefined
-                                        }
+                                        onStepChange={(index) => {
+                                            const nyttSteg = steg[index];
+                                            if (nyttSteg) {
+                                                history.push(
+                                                    routes.soknadsutfylling.createURL({
+                                                        step: nyttSteg.step,
+                                                    })
+                                                );
+                                            }
+                                        }}
                                     >
                                         {steg.map((s, index) => (
-                                            <StepIndicator.Step key={index}>{s.label}</StepIndicator.Step>
+                                            <StepIndicator.Step
+                                                key={index}
+                                                disabled={
+                                                    isLocal ? false : aktivtSteg !== index && index > sisteStartetSteg
+                                                }
+                                            >
+                                                {s.label}
+                                            </StepIndicator.Step>
                                         ))}
                                     </StepIndicator>
                                     <Steg
