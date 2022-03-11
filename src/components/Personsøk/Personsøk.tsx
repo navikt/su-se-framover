@@ -50,6 +50,11 @@ const Personsøk = (props: PersonsøkProps) => {
                     }
                     onSearch={(e) => handleSubmit(e as string)}
                     onClear={props.onReset}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                            handleSubmit(event.currentTarget.value);
+                        }
+                    }}
                     type="primary"
                 >
                     <Search.Button>
