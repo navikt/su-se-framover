@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader, Search } from '@navikt/ds-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Person } from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
@@ -38,6 +38,10 @@ const Personsøk = (props: PersonsøkProps) => {
             ? props.onFetchByFnr(strippedSearch)
             : props.onFetchBySaksnummer?.(strippedSearch);
     };
+
+    useEffect(() => {
+        props.onReset();
+    }, []);
 
     return (
         <div className={styles.personsøk}>
