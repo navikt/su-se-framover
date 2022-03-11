@@ -31,7 +31,7 @@ export const StartUtfylling = () => {
     const user = useUserContext();
     const history = useHistory();
     const [sisteStartetSteg, setSisteStartetSteg] = useState(0);
-    const isLocal = process.env.NODE_ENV === 'developmentz';
+    const isLocal = process.env.NODE_ENV === 'development';
 
     useEffect(() => {
         // check that user is still logged in first
