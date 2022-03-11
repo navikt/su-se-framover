@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Heading, Loader, TextField } from '@navikt/ds-react';
+import { Button, Heading, HelpText, Loader, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -76,7 +76,12 @@ const OpprettKlage = (props: { sak: Sak }) => {
             <TextField
                 {...register('journalpostId')}
                 error={formState.errors.journalpostId?.message}
-                label="JournalpostId"
+                label={
+                    <div className={styles.journalpostIdLabel}>
+                        {formatMessage('opprett.journalpostId.label')}
+                        <HelpText>{formatMessage('opprett.journalpostId.hjelpetekst')}</HelpText>
+                    </div>
+                }
             />
 
             <Controller
