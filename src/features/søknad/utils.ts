@@ -47,7 +47,6 @@ export const toInntekt = (inntekt: SøknadState['inntekt']) => {
         søktAndreYtelserIkkeBehandletBegrunnelse: inntekt.søktAndreYtelserIkkeBehandlet
             ? inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
             : null,
-        sosialstønadBeløp: inntekt.harMottattSosialstønad ? Number(inntekt.sosialStønadBeløp) : null,
         trygdeytelserIUtlandet: inntekt.trygdeytelserIUtlandet.map((p) => ({
             ...p,
             beløp: Number(p.beløp),

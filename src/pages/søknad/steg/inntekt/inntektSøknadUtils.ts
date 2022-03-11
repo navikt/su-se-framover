@@ -33,23 +33,6 @@ export const inntektsValideringSchema = (formueTilhører: 'søker' | 'eps') => {
                     .positive(),
                 otherwise: yup.number(),
             }) as yup.Schema<Nullable<string>>,
-        harMottattSosialstønad: yup
-            .boolean()
-            .nullable()
-            .required(`Fyll ut om ${tilhører} har mottatt sosialstønad siste 3 måneder`),
-        sosialStønadBeløp: yup
-            .number()
-            .nullable()
-            .when('harMottattSosialstønad', {
-                is: true,
-                then: yup
-                    .number()
-                    .typeError('Beløp på sosialstønad må være et tall')
-                    .label('Beløp på sosialstønad')
-                    .nullable()
-                    .positive(),
-                otherwise: yup.number(),
-            }) as yup.Schema<Nullable<string>>,
         mottarPensjon: yup.boolean().nullable().required(`Fyll ut om ${tilhører} mottar pensjon`),
         pensjonsInntekt: yup
             .array(

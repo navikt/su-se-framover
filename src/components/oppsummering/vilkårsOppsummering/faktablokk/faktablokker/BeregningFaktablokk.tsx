@@ -35,14 +35,6 @@ const BeregningFaktablokk = (props: FaktablokkProps) => {
                     },
                     {
                         tittel: intl.formatMessage({
-                            id: 'beregning.mottattSosialstønadSiste3måneder',
-                        }),
-                        verdi:
-                            props.søknadInnhold.inntektOgPensjon.sosialstønadBeløp?.toString() ??
-                            intl.formatMessage({ id: 'fraSøknad.nei' }),
-                    },
-                    {
-                        tittel: intl.formatMessage({
                             id: 'beregning.trygdeytelserIUtlandet',
                         }),
                         verdi: props.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet?.length ? (
@@ -102,14 +94,6 @@ const BeregningFaktablokk = (props: FaktablokkProps) => {
                             }),
                             verdi:
                                 props.søknadInnhold.ektefelle.inntektOgPensjon.søktAndreYtelserIkkeBehandletBegrunnelse?.toString() ??
-                                intl.formatMessage({ id: 'fraSøknad.nei' }),
-                        },
-                        {
-                            tittel: intl.formatMessage({
-                                id: 'beregning.es.mottattSosialstønadSiste3måneder',
-                            }),
-                            verdi:
-                                props.søknadInnhold.ektefelle.inntektOgPensjon.sosialstønadBeløp?.toString() ??
                                 intl.formatMessage({ id: 'fraSøknad.nei' }),
                         },
                         {

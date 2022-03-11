@@ -143,35 +143,6 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             error={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
                         />
                     )}
-
-                    <BooleanRadioGroup
-                        name="harMottattSosialstønad"
-                        legend={formatMessage('sosialstønad.label')}
-                        error={formik.errors.harMottattSosialstønad}
-                        value={formik.values.harMottattSosialstønad}
-                        onChange={(val) =>
-                            formik.setValues({
-                                ...formik.values,
-                                harMottattSosialstønad: val,
-                                sosialStønadBeløp: null,
-                            })
-                        }
-                    />
-                    {formik.values.harMottattSosialstønad && (
-                        <TextField
-                            className={sharedStyles.narrow}
-                            id="sosialStønadBeløp"
-                            name="sosialStønadBeløp"
-                            label={formatMessage('sosialstønad.beløp')}
-                            value={formik.values.sosialStønadBeløp || ''}
-                            onChange={formik.handleChange}
-                            error={formik.errors.sosialStønadBeløp}
-                            autoComplete="off"
-                            // Dette elementet vises ikke ved sidelast
-                            // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
-                        />
-                    )}
                 </SøknadSpørsmålsgruppe>
                 <SøknadSpørsmålsgruppe legend={formatMessage('legend.andreUtbetalinger')}>
                     <BooleanRadioGroup

@@ -16,9 +16,6 @@ export default {
     'søktAndreYtelserIkkeBehandlet.hjelpetekst':
         'For eksempel alderspensjon, uføretrygd, arbeidsavklaringspenger, sykepenger eller tjenestepensjon.',
 
-    'sosialstønad.label': 'Har du fått økonomisk sosialhjelp i løpet av de siste tre månedene?',
-    'sosialstønad.beløp': 'Hvor mye penger har du fått i den tiden? (valgfri)',
-
     'trygdeytelserIUtlandet.label': 'Har du trygdeytelser fra andre land?',
 
     'mottarPensjon.label': 'Får du tjenestepensjon eller pensjon som ikke er fra NAV?',
