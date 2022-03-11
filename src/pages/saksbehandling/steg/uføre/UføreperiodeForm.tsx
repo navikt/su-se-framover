@@ -45,48 +45,33 @@ export const UføreperiodeForm = (props: Props) => {
     return (
         <Panel className={styles.periodeContainer} border>
             <div className={styles.horizontal}>
-                <div className={classNames(styles.horizontal, styles.periodeInputContainer)}>
-                    <Controller
-                        name={`grunnlag.${props.index}.fraOgMed`}
-                        control={props.control}
-                        defaultValue={props.item.fraOgMed}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                id={field.name}
-                                label={formatMessage('input.fom.label')}
-                                feil={getDateErrorMessage(fieldState.error)}
-                                {...field}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                autoComplete="off"
-                                minDate={props.minDate}
-                                maxDate={props.maxDate}
-                                onChange={(date: Nullable<Date>) => field.onChange(date ? startOfMonth(date) : null)}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name={`grunnlag.${props.index}.tilOgMed`}
-                        control={props.control}
-                        defaultValue={props.item.tilOgMed}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                label={formatMessage('input.tom.label')}
-                                id={field.name}
-                                feil={getDateErrorMessage(fieldState.error)}
-                                {...field}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                autoComplete="off"
-                                minDate={props.minDate}
-                                maxDate={props.maxDate}
-                                onChange={(date: Date) => field.onChange(date ? endOfMonth(date) : date)}
-                            />
-                        )}
-                    />
-                </div>
+                <Controller
+                    control={props.control}
+                    name={`grunnlag.${props.index}.oppfylt`}
+                    defaultValue={props.item.oppfylt}
+                    render={({ field, fieldState }) => (
+                        <RadioGroup
+                            legend={formatMessage('input.erVilkårOppfylt.label')}
+                            error={fieldState.error?.message}
+                            {...field}
+                            value={field.value ?? ''}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                props.resetUføregradOgForventetInntekt();
+                            }}
+                        >
+                            <Radio id={field.name} value={UføreResultat.VilkårOppfylt} ref={field.ref}>
+                                {formatMessage('radio.label.ja')}
+                            </Radio>
+                            <Radio value={UføreResultat.VilkårIkkeOppfylt}>{formatMessage('radio.label.nei')}</Radio>
+                            {props.kanVelgeUføresakTilBehandling && (
+                                <Radio value={UføreResultat.HarUføresakTilBehandling}>
+                                    {formatMessage('radio.label.uføresakTilBehandling')}
+                                </Radio>
+                            )}
+                        </RadioGroup>
+                    )}
+                />
                 {props.onRemoveClick && (
                     <Button
                         variant="secondary"
@@ -99,33 +84,7 @@ export const UføreperiodeForm = (props: Props) => {
                     </Button>
                 )}
             </div>
-            <Controller
-                control={props.control}
-                name={`grunnlag.${props.index}.oppfylt`}
-                defaultValue={props.item.oppfylt}
-                render={({ field, fieldState }) => (
-                    <RadioGroup
-                        legend={formatMessage('input.erVilkårOppfylt.label')}
-                        error={fieldState.error?.message}
-                        {...field}
-                        value={field.value ?? ''}
-                        onChange={(val) => {
-                            field.onChange(val);
-                            props.resetUføregradOgForventetInntekt();
-                        }}
-                    >
-                        <Radio id={field.name} value={UføreResultat.VilkårOppfylt} ref={field.ref}>
-                            {formatMessage('radio.label.ja')}
-                        </Radio>
-                        <Radio value={UføreResultat.VilkårIkkeOppfylt}>{formatMessage('radio.label.nei')}</Radio>
-                        {props.kanVelgeUføresakTilBehandling && (
-                            <Radio value={UføreResultat.HarUføresakTilBehandling}>
-                                {formatMessage('radio.label.uføresakTilBehandling')}
-                            </Radio>
-                        )}
-                    </RadioGroup>
-                )}
-            />
+
             {value.oppfylt === UføreResultat.VilkårOppfylt && (
                 <div className={styles.horizontal}>
                     <Controller
@@ -156,6 +115,49 @@ export const UføreperiodeForm = (props: Props) => {
                     />
                 </div>
             )}
+
+            <div className={classNames(styles.horizontal, styles.periodeInputContainer)}>
+                <Controller
+                    name={`grunnlag.${props.index}.fraOgMed`}
+                    control={props.control}
+                    defaultValue={props.item.fraOgMed}
+                    render={({ field, fieldState }) => (
+                        <DatePicker
+                            id={field.name}
+                            label={formatMessage('input.fom.label')}
+                            feil={getDateErrorMessage(fieldState.error)}
+                            {...field}
+                            dateFormat="MM/yyyy"
+                            showMonthYearPicker
+                            isClearable
+                            autoComplete="off"
+                            minDate={props.minDate}
+                            maxDate={props.maxDate}
+                            onChange={(date: Nullable<Date>) => field.onChange(date ? startOfMonth(date) : null)}
+                        />
+                    )}
+                />
+                <Controller
+                    name={`grunnlag.${props.index}.tilOgMed`}
+                    control={props.control}
+                    defaultValue={props.item.tilOgMed}
+                    render={({ field, fieldState }) => (
+                        <DatePicker
+                            label={formatMessage('input.tom.label')}
+                            id={field.name}
+                            feil={getDateErrorMessage(fieldState.error)}
+                            {...field}
+                            dateFormat="MM/yyyy"
+                            showMonthYearPicker
+                            isClearable
+                            autoComplete="off"
+                            minDate={props.minDate}
+                            maxDate={props.maxDate}
+                            onChange={(date: Date) => field.onChange(date ? endOfMonth(date) : date)}
+                        />
+                    )}
+                />
+            </div>
             <Controller
                 control={props.control}
                 name={`grunnlag.${props.index}.begrunnelse`}
