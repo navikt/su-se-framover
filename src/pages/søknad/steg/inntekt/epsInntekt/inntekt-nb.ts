@@ -16,9 +16,6 @@ export default {
     'søktAndreYtelserIkkeBehandlet.hjelpetekst':
         'For eksempel alderspensjon, uføretrygd, arbeidsavklaringspenger, sykepenger eller tjenestepensjon.',
 
-    'sosialstønad.label': 'Har ektefelle/samboer fått økonomisk sosialhjelp i løpet av de siste tre månedene?',
-    'sosialstønad.beløp': 'Hvor mye penger har de fått i den tiden? (valgfri)',
-
     'trygdeytelserIUtlandet.label': 'Har ektfelle/samboer trygdeytelser fra andre land?',
 
     'mottarPensjon.label': 'Får ektefelle/samboer tjenestepensjon eller pensjon som ikke er fra NAV?',

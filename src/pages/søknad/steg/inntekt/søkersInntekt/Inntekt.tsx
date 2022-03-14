@@ -36,7 +36,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
         initialValues: {
             harForventetInntekt: inntektFraStore.harForventetInntekt,
             forventetInntekt: inntektFraStore.forventetInntekt,
-            harMottattSosialstønad: inntektFraStore.harMottattSosialstønad,
             mottarPensjon: inntektFraStore.mottarPensjon,
             pensjonsInntekt: inntektFraStore.pensjonsInntekt,
             andreYtelserINav: inntektFraStore.andreYtelserINav,
@@ -44,7 +43,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
             andreYtelserINavBeløp: inntektFraStore.andreYtelserINavBeløp,
             søktAndreYtelserIkkeBehandlet: inntektFraStore.søktAndreYtelserIkkeBehandlet,
             søktAndreYtelserIkkeBehandletBegrunnelse: inntektFraStore.søktAndreYtelserIkkeBehandletBegrunnelse,
-            sosialStønadBeløp: inntektFraStore.sosialStønadBeløp,
             harTrygdeytelserIUtlandet: inntektFraStore.harTrygdeytelserIUtlandet,
             trygdeytelserIUtlandet: inntektFraStore.trygdeytelserIUtlandet,
         },
@@ -61,7 +59,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
             søknadSlice.actions.inntektUpdated({
                 harForventetInntekt: values.harForventetInntekt,
                 forventetInntekt: values.forventetInntekt,
-                harMottattSosialstønad: values.harMottattSosialstønad,
                 mottarPensjon: values.mottarPensjon,
                 pensjonsInntekt: values.pensjonsInntekt,
                 andreYtelserINav: values.andreYtelserINav,
@@ -69,7 +66,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
                 andreYtelserINavBeløp: values.andreYtelserINavBeløp,
                 søktAndreYtelserIkkeBehandlet: values.søktAndreYtelserIkkeBehandlet,
                 søktAndreYtelserIkkeBehandletBegrunnelse: values.søktAndreYtelserIkkeBehandletBegrunnelse,
-                sosialStønadBeløp: values.sosialStønadBeløp,
                 harTrygdeytelserIUtlandet: values.harTrygdeytelserIUtlandet,
                 trygdeytelserIUtlandet: values.trygdeytelserIUtlandet,
             })
@@ -184,35 +180,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
                         value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
                         onChange={formik.handleChange}
                         error={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
-                        autoComplete="off"
-                        // Dette elementet vises ikke ved sidelast
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
-                        autoFocus
-                    />
-                )}
-
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('harMottattSosialstønad')}
-                    legend={formatMessage('sosialstønad.label')}
-                    error={formik.errors.harMottattSosialstønad}
-                    value={formik.values.harMottattSosialstønad}
-                    onChange={(val) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            harMottattSosialstønad: val,
-                            sosialStønadBeløp: null,
-                        }))
-                    }
-                />
-                {formik.values.harMottattSosialstønad && (
-                    <TextField
-                        className={sharedStyles.narrow}
-                        id={keyOf<FormData>('sosialStønadBeløp')}
-                        name={keyOf<FormData>('sosialStønadBeløp')}
-                        label={formatMessage('sosialstønad.beløp')}
-                        value={formik.values.sosialStønadBeløp || ''}
-                        onChange={formik.handleChange}
-                        error={formik.errors.sosialStønadBeløp}
                         autoComplete="off"
                         // Dette elementet vises ikke ved sidelast
                         // eslint-disable-next-line jsx-a11y/no-autofocus

@@ -2,7 +2,6 @@ export default {
     'beregning.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'beregning.andreYtelserINav': 'Har du andre ytelser i NAV?',
     'beregning.sømtOmAndreTrygdeytelser': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
-    'beregning.mottattSosialstønadSiste3måneder': 'Har du mottatt sosialstønad i løpet av de siste tre måneder?',
     'beregning.trygdeytelserIUtlandet': 'Har du trygdeytelser i utlandet?',
     'beregning.tjenestepensjon/pensjonssparing': 'Har du tjenestepensjon og/eller pensjonssparing?',
 
@@ -10,8 +9,6 @@ export default {
     'beregning.es.forventerArbeidsinntekt': 'Forventer ektefelle/samboer å ha arbeidsinntekt fremover?',
     'beregning.es.andreYtelserINav': 'Har ektefelle/samboer andre ytelser i NAV?',
     'beregning.es.sømtOmAndreTrygdeytelser': 'Har ektefelle/samboer søkt om andre trygdeytelser som ikke er behandlet?',
-    'beregning.es.mottattSosialstønadSiste3måneder':
-        'Har ektefelle/samboer mottatt sosialstønad i løpet av de siste tre måneder?',
     'beregning.es.trygdeytelserIUtlandet': 'Har ektefelle/samboer trygdeytelser i utlandet?',
     'beregning.es.tjenestepensjon/pensjonssparing': 'Har ektefelle/samboer tjenestepensjon og/eller pensjonssparing?',
 

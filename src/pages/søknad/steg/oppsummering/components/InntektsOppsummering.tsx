@@ -75,23 +75,6 @@ const InntektsOppsummering = ({
             )}
 
             <Oppsummeringsfelt
-                label={formatMessage('sosialstønad.label')}
-                verdi={
-                    inntekt.harMottattSosialstønad
-                        ? 'Ja'
-                        : inntekt.harMottattSosialstønad === false
-                        ? 'Nei'
-                        : 'Ubesvart'
-                }
-            />
-            {inntekt.harMottattSosialstønad && (
-                <Oppsummeringsfelt
-                    label={formatMessage('sosialstønad.beløp')}
-                    verdi={inntekt.sosialStønadBeløp ? inntekt.sosialStønadBeløp : 'Ubesvart'}
-                />
-            )}
-
-            <Oppsummeringsfelt
                 label={formatMessage('trygdeytelserIUtlandet.label')}
                 verdi={
                     inntekt.harTrygdeytelserIUtlandet
