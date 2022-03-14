@@ -13,10 +13,12 @@ import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
+import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~redux/Store';
 import { UnderkjennelseGrunn } from '~types/Behandling';
-import { InformasjonsRevurdering, InformasjonsRevurderingStatus } from '~types/Revurdering';
+import { InformasjonsRevurdering, InformasjonsRevurderingStatus, Revurdering } from '~types/Revurdering';
 import {
     erRevurderingTilAttestering,
     erGregulering,
@@ -91,6 +93,8 @@ const AttesterRevurdering = (props: {
         });
     };
 
+    const warningId = hentIdForWarning(revurdering);
+
     return pipe(
         grunnlagsdataOgVilkårsvurderinger,
         RemoteData.fold(
@@ -108,6 +112,11 @@ const AttesterRevurdering = (props: {
                             forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlag}
                         />
                     </div>
+                    {warningId && (
+                        <div className={styles.opphørsadvarsel}>
+                            <Alert variant="warning">{formatMessage(warningId)}</Alert>
+                        </div>
+                    )}
                     {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
                         <Button
                             variant="secondary"
@@ -125,16 +134,6 @@ const AttesterRevurdering = (props: {
                         </Alert>
                     )}
 
-                    {revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT && (
-                        <div className={styles.opphørsadvarsel}>
-                            <Alert variant="warning">
-                                {hentAvkortingFraRevurdering(revurdering)
-                                    ? formatMessage('info.opphør.og.avkorting')
-                                    : formatMessage('info.opphør')}
-                            </Alert>
-                        </div>
-                    )}
-
                     <AttesteringsForm
                         sakId={props.sakInfo.sakId}
                         iverksett={{
@@ -150,6 +149,19 @@ const AttesterRevurdering = (props: {
             )
         )
     );
+};
+
+const hentIdForWarning = (revurdering: Revurdering): Nullable<keyof typeof messages> => {
+    const tilbakekreving = revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV;
+    const opphør = revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT;
+
+    if (tilbakekreving && opphør) {
+        return 'tilbakekrevingOgOpphør';
+    } else if (tilbakekreving) {
+        return 'tilbakekreving';
+    } else if (opphør) {
+        return hentAvkortingFraRevurdering(revurdering) ? 'info.opphør.og.avkorting' : 'info.opphør';
+    } else return null;
 };
 
 export default AttesterRevurdering;

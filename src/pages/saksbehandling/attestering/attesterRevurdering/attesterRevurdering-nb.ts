@@ -13,4 +13,7 @@ export default {
     'knapp.brev': 'Vis brev',
 
     'page.tittel': 'Attestering',
+
+    tilbakekreving: 'Denne revurderingen fører til tilbakekreving',
+    tilbakekrevingOgOpphør: 'Denne revurderingen fører til tilbakekreving og opphør for bruker',
 };
