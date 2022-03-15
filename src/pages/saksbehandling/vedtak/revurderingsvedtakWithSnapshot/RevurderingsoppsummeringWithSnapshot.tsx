@@ -1,19 +1,23 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
-import { IntlShape } from 'react-intl';
 
 import { hentTidligereGrunnlagsdataForVedtak } from '~api/revurderingApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import { pipe } from '~lib/fp';
 import { useApiCall } from '~lib/hooks';
+import { MessageFormatter } from '~lib/i18n';
+import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { InformasjonsRevurdering } from '~types/Revurdering';
+
+import styles from './revurderingsoppsummeringWithSnapshot.module.less';
 
 const RevurderingsoppsummeringWithSnapshot = (props: {
     revurdering: InformasjonsRevurdering;
     sakId: string;
     vedtakId: string;
-    intl: IntlShape;
+    formatMessage: MessageFormatter<{ tilbakekreving: string }>;
 }) => {
     const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
 
@@ -28,16 +32,20 @@ const RevurderingsoppsummeringWithSnapshot = (props: {
                 RemoteData.fold(
                     () => <Loader />,
                     () => <Loader />,
-                    (error) => (
-                        <Alert variant="error">
-                            {error?.body?.message ?? props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
-                        </Alert>
-                    ),
+                    (error) => <ApiErrorAlert error={error} />,
                     (snapshot) => (
-                        <Revurderingoppsummering
-                            revurdering={props.revurdering}
-                            forrigeGrunnlagsdataOgVilkårsvurderinger={snapshot}
-                        />
+                        <>
+                            <Revurderingoppsummering
+                                revurdering={props.revurdering}
+                                forrigeGrunnlagsdataOgVilkårsvurderinger={snapshot}
+                            />
+                            {props.revurdering.tilbakekrevingsbehandling?.avgjørelse ===
+                                Tilbakekrevingsavgjørelse.TILBAKEKREV && (
+                                <Alert className={styles.tilbakekrevingAlert} variant={'info'}>
+                                    {props.formatMessage('tilbakekreving')}
+                                </Alert>
+                            )}
+                        </>
                     )
                 )
             )}

@@ -19,7 +19,7 @@ interface Props {
 
 const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const history = useHistory();
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
 
@@ -33,7 +33,7 @@ const Vedtaksoppsummering = (props: Props) => {
                 return (
                     <RevurderingsoppsummeringWithSnapshot
                         revurdering={vedtaksinformasjon.revurdering}
-                        intl={intl}
+                        formatMessage={formatMessage}
                         sakId={props.sak.id}
                         vedtakId={vedtaksinformasjon.vedtak.id}
                     />
@@ -50,7 +50,7 @@ const Vedtaksoppsummering = (props: Props) => {
             case 'klage':
                 return <Klagevedtaksoppsummering vedtak={vedtaksinformasjon.vedtak} klage={vedtaksinformasjon.klage} />;
             case undefined:
-                return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
+                return <div>{formatMessage('feilmelding.fantIkkeVedtak')}</div>;
         }
     };
 
@@ -58,7 +58,7 @@ const Vedtaksoppsummering = (props: Props) => {
         <div className={styles.container}>
             {renderOppsummering()}
             <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={() => history.goBack()}>
-                {intl.formatMessage({ id: 'knapp.tilbake' })}
+                {formatMessage('knapp.tilbake')}
             </Button>
         </div>
     );
