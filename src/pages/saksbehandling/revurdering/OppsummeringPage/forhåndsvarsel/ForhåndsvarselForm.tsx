@@ -23,7 +23,8 @@ import styles from './forhåndsvarselForm.module.less';
 
 export type ForhåndsvarselFormData = {
     forhåndsvarselhandling: Nullable<Forhåndsvarselhandling>;
-    fritekstTilBrev: Nullable<string>;
+    fritekstTilForhåndsvarsel: Nullable<string>;
+    fritekstTilVedtaksbrev: Nullable<string>;
 };
 
 export const VelgForhåndsvarselForm = (props: {
@@ -31,6 +32,7 @@ export const VelgForhåndsvarselForm = (props: {
     revurdering: InformasjonsRevurdering;
     forrigeUrl?: string;
     onTilbakeClick?: () => void;
+    tvingFohåndsvarsling: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const history = useHistory();
@@ -49,11 +51,15 @@ export const VelgForhåndsvarselForm = (props: {
 
     const [lagreForhåndsvarselState, lagreForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
         RevurderingActions.lagreForhåndsvarsel,
-        (args: { forhåndsvarselhandling: Forhåndsvarselhandling; fritekstTilBrev: string }) => ({
+        (args: {
+            forhåndsvarselhandling: Forhåndsvarselhandling;
+            fritekstTilForhåndsvarsel: string;
+            fritekstTilVedtaksbrev: string;
+        }) => ({
             sakId: props.sakId,
             revurderingId: props.revurdering.id,
             forhåndsvarselhandling: args.forhåndsvarselhandling,
-            fritekstTilBrev: args.fritekstTilBrev,
+            fritekstTilBrev: args.fritekstTilForhåndsvarsel,
         }),
         (args) => {
             switch (args.forhåndsvarselhandling) {
@@ -64,7 +70,7 @@ export const VelgForhåndsvarselForm = (props: {
                     return;
                 case Forhåndsvarselhandling.IngenForhåndsvarsel:
                     sendTilAttestering({
-                        vedtaksbrevtekst: args.fritekstTilBrev,
+                        vedtaksbrevtekst: args.fritekstTilVedtaksbrev,
                         skalFøreTilBrevutsending: true,
                     });
                     return;
@@ -74,8 +80,9 @@ export const VelgForhåndsvarselForm = (props: {
 
     const form = useForm<ForhåndsvarselFormData>({
         defaultValues: {
-            forhåndsvarselhandling: null,
-            fritekstTilBrev: null,
+            forhåndsvarselhandling: props.tvingFohåndsvarsling ? Forhåndsvarselhandling.Forhåndsvarsle : null,
+            fritekstTilForhåndsvarsel: null,
+            fritekstTilVedtaksbrev: null,
         },
         resolver: yupResolver(
             yup
@@ -85,7 +92,14 @@ export const VelgForhåndsvarselForm = (props: {
                         .required()
                         .defined()
                         .oneOf(Object.values(Forhåndsvarselhandling), 'Du må velge om bruker skal forhåndsvarsles'),
-                    fritekstTilBrev: yup.string().nullable().required(),
+                    fritekstTilForhåndsvarsel: yup.string().nullable().defined().when('forhåndsvarselhandling', {
+                        is: Forhåndsvarselhandling.Forhåndsvarsle,
+                        then: yup.string().nullable().required(),
+                    }),
+                    fritekstTilVedtaksbrev: yup.string().nullable().defined().when('forhåndsvarselhandling', {
+                        is: Forhåndsvarselhandling.IngenForhåndsvarsel,
+                        then: yup.string().nullable().required(),
+                    }),
                 })
                 .required()
         ),
@@ -103,55 +117,71 @@ export const VelgForhåndsvarselForm = (props: {
         <form
             onSubmit={form.handleSubmit((values) =>
                 lagreForhåndsvarsel({
-                    fritekstTilBrev: values.fritekstTilBrev ?? '',
+                    fritekstTilForhåndsvarsel: values.fritekstTilForhåndsvarsel ?? '',
+                    fritekstTilVedtaksbrev: values.fritekstTilVedtaksbrev ?? '',
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     forhåndsvarselhandling: values.forhåndsvarselhandling!,
                 })
             )}
             className={styles.form}
         >
-            <Controller
-                control={form.control}
-                name="forhåndsvarselhandling"
-                render={({ field, fieldState }) => (
-                    <RadioGroup
-                        legend={formatMessage('velgForhåndsvarsel.handling.legend')}
-                        error={fieldState.error?.message}
-                        value={field.value ?? ''}
-                        onChange={field.onChange}
-                    >
-                        <Radio id={field.name} ref={field.ref} value={Forhåndsvarselhandling.Forhåndsvarsle}>
-                            {formatMessage('ja')}
-                        </Radio>
-                        <Radio value={Forhåndsvarselhandling.IngenForhåndsvarsel}>{formatMessage('nei')}</Radio>
-                    </RadioGroup>
-                )}
-            />
-            {forhåndsvarselhandling !== null && (
+            {!props.tvingFohåndsvarsling && (
                 <Controller
                     control={form.control}
-                    name="fritekstTilBrev"
+                    name="forhåndsvarselhandling"
+                    render={({ field, fieldState }) => (
+                        <RadioGroup
+                            legend={formatMessage('velgForhåndsvarsel.handling.legend')}
+                            error={fieldState.error?.message}
+                            value={field.value ?? ''}
+                            onChange={field.onChange}
+                        >
+                            <Radio id={field.name} ref={field.ref} value={Forhåndsvarselhandling.Forhåndsvarsle}>
+                                {formatMessage('ja')}
+                            </Radio>
+                            <Radio value={Forhåndsvarselhandling.IngenForhåndsvarsel}>{formatMessage('nei')}</Radio>
+                        </RadioGroup>
+                    )}
+                />
+            )}
+            {forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle && (
+                <Controller
+                    control={form.control}
+                    name="fritekstTilForhåndsvarsel"
                     render={({ field, fieldState }) => (
                         <BrevInput
                             knappLabel={formatMessage('knapp.seBrev')}
                             placeholder={formatMessage('brevInput.innhold.placeholder')}
-                            tittel={formatMessage(
-                                forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle
-                                    ? 'brevInput.tekstTilForhåndsvarsel.tittel'
-                                    : 'brevInput.tekstTilVedtaksbrev.tittel'
-                            )}
+                            tittel={formatMessage('brevInput.tekstTilForhåndsvarsel.tittel')}
                             onVisBrevClick={() =>
-                                forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle
-                                    ? pdfApi.fetchBrevutkastForForhåndsvarsel(
-                                          props.sakId,
-                                          props.revurdering.id,
-                                          field.value ?? ''
-                                      )
-                                    : pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
-                                          sakId: props.sakId,
-                                          revurderingId: props.revurdering.id,
-                                          fritekst: field.value,
-                                      })
+                                pdfApi.fetchBrevutkastForForhåndsvarsel(
+                                    props.sakId,
+                                    props.revurdering.id,
+                                    field.value ?? ''
+                                )
+                            }
+                            tekst={field.value ?? ''}
+                            onChange={field.onChange}
+                            feil={fieldState.error}
+                        />
+                    )}
+                />
+            )}
+            {forhåndsvarselhandling === Forhåndsvarselhandling.IngenForhåndsvarsel && (
+                <Controller
+                    control={form.control}
+                    name="fritekstTilVedtaksbrev"
+                    render={({ field, fieldState }) => (
+                        <BrevInput
+                            knappLabel={formatMessage('knapp.seBrev')}
+                            placeholder={formatMessage('brevInput.innhold.placeholder')}
+                            tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
+                            onVisBrevClick={() =>
+                                pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                                    sakId: props.sakId,
+                                    revurderingId: props.revurdering.id,
+                                    fritekst: field.value,
+                                })
                             }
                             tekst={field.value ?? ''}
                             onChange={field.onChange}

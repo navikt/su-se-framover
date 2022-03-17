@@ -11,6 +11,7 @@ import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
@@ -20,7 +21,7 @@ import styles from './oppsummeringPageForms.module.less';
 
 export const ResultatEtterForhåndsvarselform = (props: {
     sakId: string;
-    revurderingId: string;
+    revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
     onSubmit(args: {
@@ -41,7 +42,10 @@ export const ResultatEtterForhåndsvarselform = (props: {
     const form = useForm<FormData>({
         defaultValues: {
             beslutningEtterForhåndsvarsel: null,
-            tekstTilVedtaksbrev: '',
+            tekstTilVedtaksbrev:
+                props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV
+                    ? formatMessage('tilbakekreving.forhåndstekst')
+                    : '',
             tekstTilAvsluttRevurderingBrev: '',
             begrunnelse: '',
         },
@@ -52,7 +56,13 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         .mixed()
                         .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
                         .required(),
-                    tekstTilVedtaksbrev: yup.string(),
+                    tekstTilVedtaksbrev: yup
+                        .string()
+                        .defined()
+                        .when('beslutningEtterForhåndsvarsel', {
+                            is: BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger,
+                            then: yup.string().matches(/^((?!_____)[\s\S])*$/, 'Du må erstatte _____ med tall'),
+                        }),
                     tekstTilAvsluttRevurderingBrev: yup.string(),
                     begrunnelse: yup.string().required(),
                 })
@@ -130,7 +140,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                     sakId: props.sakId,
-                                    revurderingId: props.revurderingId,
+                                    revurderingId: props.revurdering.id,
                                     fritekst: field.value,
                                 })
                             }
@@ -153,7 +163,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForAvslutningAvRevurdering({
                                     sakId: props.sakId,
-                                    revurderingId: props.revurderingId,
+                                    revurderingId: props.revurdering.id,
                                     fritekst: field.value,
                                 })
                             }

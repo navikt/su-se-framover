@@ -146,12 +146,13 @@ const OppsummeringshandlingForm = (props: {
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
+                    tvingFohåndsvarsling={false}
                 />
             )}
             {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && (
                 <ResultatEtterForhåndsvarselform
                     sakId={props.sakId}
-                    revurderingId={props.revurdering.id}
+                    revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
                     submitStatus={fortsettEtterForhåndsvarselState}
                     onSubmit={fortsettEtterForhåndsvarsel}
