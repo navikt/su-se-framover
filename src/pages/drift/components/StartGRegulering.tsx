@@ -1,21 +1,26 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, GuidePanel, Heading, Loader, Table } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
+import { Alert, Button, GuidePanel, Heading, Loader } from '@navikt/ds-react';
+import React, { useEffect, useState } from 'react';
 
-import { testRegulering } from '~api/reguleringApi';
+import { startRegulering } from '~api/reguleringApi';
 import * as reguleringApi from '~api/reguleringApi';
+import DatePicker from '~components/datePicker/DatePicker';
 import { pipe } from '~lib/fp';
 import { useApiCall } from '~lib/hooks';
+import { Nullable } from '~lib/types';
+import { toStringDateOrNull } from '~utils/date/dateUtils';
 
 import styles from '../index.module.less';
 
 const StartGRegulering = () => {
-    const [reguleringsstatus, reguler] = useApiCall(testRegulering);
+    const [reguleringsstatus, reguler] = useApiCall(startRegulering);
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useApiCall(reguleringApi.hentSakerMedÅpneBehandlinger);
 
     useEffect(() => {
         hentÅpneBehandlinger({});
     }, []);
+
+    const [startDato, setStartDato] = useState<Nullable<Date>>(null);
 
     return (
         <div className={styles.regulering}>
@@ -23,8 +28,6 @@ const StartGRegulering = () => {
                 Start G-regulering
             </Heading>
             <GuidePanel className={styles.guidePanel}>
-                <p>Nytt grunnbeløp på xxxx kr fra 01.05.22</p>
-                <br />
                 {pipe(
                     hentÅpneBehandlingerStatus,
                     RemoteData.fold(
@@ -34,21 +37,9 @@ const StartGRegulering = () => {
                         (saksnummer) => {
                             return (
                                 <>
-                                    <p>Antal saker med en behandling til attestering: {saksnummer.length}</p>
-                                    <Table size="small" className={styles.saksliste}>
-                                        <Table.Header>
-                                            <Table.Row>
-                                                <Table.HeaderCell scope="col">Saksnummer</Table.HeaderCell>
-                                            </Table.Row>
-                                        </Table.Header>
-                                        <Table.Body>
-                                            {saksnummer.map((s) => (
-                                                <Table.Row key={s}>
-                                                    <Table.HeaderCell scope="row">{s}</Table.HeaderCell>
-                                                </Table.Row>
-                                            ))}
-                                        </Table.Body>
-                                    </Table>
+                                    <p>Antall saker med åpen behandling eller stans: {saksnummer.length}</p>
+                                    <br />
+                                    <p>{saksnummer.sort().join(', ')}</p>
                                 </>
                             );
                         }
@@ -56,10 +47,21 @@ const StartGRegulering = () => {
                 )}
             </GuidePanel>
 
-            <Button onClick={() => reguler({})} loading={RemoteData.isPending(reguleringsstatus)}>
-                Start G-regulering
+            <DatePicker
+                label="Velg reguleringsdato"
+                value={startDato}
+                dateFormat="MM/yyyy"
+                showMonthYearPicker
+                onChange={(dato) => setStartDato(dato)}
+            />
+
+            <Button
+                onClick={() => reguler({ startDato: toStringDateOrNull(startDato) ?? '' })}
+                loading={RemoteData.isPending(reguleringsstatus)}
+            >
+                Start regulering
             </Button>
-            {RemoteData.isSuccess(reguleringsstatus) && <Alert variant="success">G-regulering gjennomført</Alert>}
+            {RemoteData.isSuccess(reguleringsstatus) && <Alert variant="success">Regulering gjennomført</Alert>}
         </div>
     );
 };

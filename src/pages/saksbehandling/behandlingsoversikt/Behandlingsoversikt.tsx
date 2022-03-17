@@ -12,12 +12,8 @@ import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-<<<<<<< HEAD
-import { ApiResult } from '~lib/hooks';
-=======
 import { pipe } from '~lib/fp';
-import { useApiCall } from '~lib/hooks';
->>>>>>> 040a0432 (Flytt g-regulering-startknapp til drift og refaktorer reguleringsoversikt)
+import { ApiResult, useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { useAppDispatch } from '~redux/Store';
 import { Regulering, ReguleringType } from '~types/Regulering';

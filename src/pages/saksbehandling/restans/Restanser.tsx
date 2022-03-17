@@ -1,7 +1,6 @@
 import { Alert, Table } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
 
 import VelgSakKnapp from '~components/velgSakKnapp/velgSakKnapp';
 import { useI18n } from '~lib/i18n';

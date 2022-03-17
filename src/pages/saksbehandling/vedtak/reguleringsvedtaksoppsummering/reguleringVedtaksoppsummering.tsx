@@ -10,7 +10,6 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import { Uførevilkårblokk } from '~components/revurdering/oppsummering/vedtaksinformasjon/Vedtaksinformasjon';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Regulering } from '~types/Regulering';
@@ -39,7 +38,7 @@ const ReguleringVedtaksoppsummering = (props: Props) => {
             () => null,
             () => null,
             () => null,
-            (historiskData) => {
+            () => {
                 return (
                     <div className={styles.container}>
                         <Oppsummeringspanel
@@ -68,10 +67,11 @@ const ReguleringVedtaksoppsummering = (props: Props) => {
                                     <BodyShort>{formatMessage('automatisk')}</BodyShort>
                                 </div>
                             </div>
-                            <Uførevilkårblokk
+                            {/* // TODO ai: Lag oppsummering for uførhet */}
+                            {/* <Uførhet
                                 nyeData={props.regulering.grunnlagsdataOgVilkårsvurderinger.uføre}
                                 gamleData={historiskData.uføre}
-                            />
+                            /> */}
                         </Oppsummeringspanel>
                         {props.regulering.beregning && props.regulering.simulering && (
                             <Oppsummeringspanel

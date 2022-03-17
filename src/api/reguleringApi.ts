@@ -2,17 +2,19 @@ import { Regulering } from '~types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function testRegulering() {
+export async function startRegulering({ startDato }: { startDato: string }) {
     return apiClient({
         url: `/reguleringer/automatisk`,
         method: 'POST',
+        body: {
+            startDato,
+        },
     });
 }
 
 export async function hentReguleringsstatus(): Promise<ApiClientResult<Regulering[]>> {
-    const jobbnavn = 'G_REGULERING_2022';
     return apiClient({
-        url: `/reguleringer/status/${jobbnavn}`,
+        url: `/reguleringer/status`,
         method: 'GET',
     });
 }
