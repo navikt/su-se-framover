@@ -214,12 +214,28 @@ export const SendTilAttesteringForm = (props: {
         vedtaksbrevtekst: string;
         skalFøreTilBrevutsending: boolean;
     }
+    const harFritekst = props.revurdering.fritekstTilBrev.length > 0;
+    const tilbakekreving =
+        props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV;
+
     const form = useForm<FormData>({
         defaultValues: {
-            vedtaksbrevtekst: props.revurdering.fritekstTilBrev,
-            skalFøreTilBrevutsending:
-                props.brevsending === 'alltidSende' || props.revurdering.fritekstTilBrev.length > 0,
+            vedtaksbrevtekst: harFritekst
+                ? props.revurdering.fritekstTilBrev
+                : tilbakekreving
+                ? formatMessage('tilbakekreving.forhåndstekst')
+                : '',
+            skalFøreTilBrevutsending: props.brevsending === 'alltidSende' || harFritekst,
         },
+        resolver: yupResolver(
+            yup.object<FormData>({
+                skalFøreTilBrevutsending: yup.boolean(),
+                vedtaksbrevtekst: yup
+                    .string()
+                    .defined()
+                    .matches(/^((?!_____)[\s\S])*$/, 'Du må erstatte _____ med tall'),
+            })
+        ),
     });
 
     const skalFøreTilBrevutsending = form.watch('skalFøreTilBrevutsending');
