@@ -26,7 +26,7 @@ export default {
     'tilbakekreving.forhåndstekst':
         'Beløpet du skylder før skatt er _____ kroner, som er hele det feilutbetalte beløpet. Beløpet du skal betale tilbake etter at skatten er trukket fra er _____ kroner.\n' +
         '\n' +
-        'Beløpet som er trukket i skatt får nav tilbakebetalt fra Skatteetaten. Skatteetaten vil vurdere om det er grunnlag for å endre skatteoppgjøret ditt.\n' +
+        'Beløpet som er trukket i skatt får NAV tilbakebetalt fra Skatteetaten. Skatteetaten vil vurdere om det er grunnlag for å endre skatteoppgjøret ditt.\n' +
         '\n' +
         'Du finner detaljer om feilutbetalt beløp med periode lengre ned i brevet.\n' +
         '\n' +
