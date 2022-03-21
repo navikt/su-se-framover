@@ -19,6 +19,8 @@ import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper
 import messages from './oppsummeringPageForms-nb';
 import styles from './oppsummeringPageForms.module.less';
 
+const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
+
 export const ResultatEtterForhåndsvarselform = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
@@ -61,7 +63,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         .defined()
                         .when('beslutningEtterForhåndsvarsel', {
                             is: BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger,
-                            then: yup.string().matches(/^((?!_____)[\s\S])*$/, 'Du må erstatte _____ med tall'),
+                            then: yup.string().matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall'),
                         }),
                     tekstTilAvsluttRevurderingBrev: yup.string(),
                     begrunnelse: yup.string().required(),
@@ -230,10 +232,7 @@ export const SendTilAttesteringForm = (props: {
         resolver: yupResolver(
             yup.object<FormData>({
                 skalFøreTilBrevutsending: yup.boolean(),
-                vedtaksbrevtekst: yup
-                    .string()
-                    .defined()
-                    .matches(/^((?!_____)[\s\S])*$/, 'Du må erstatte _____ med tall'),
+                vedtaksbrevtekst: yup.string().defined().matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall'),
             })
         ),
     });

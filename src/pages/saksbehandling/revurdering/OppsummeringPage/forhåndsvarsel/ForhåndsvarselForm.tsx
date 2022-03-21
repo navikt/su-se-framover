@@ -32,7 +32,7 @@ export const VelgForhåndsvarselForm = (props: {
     revurdering: InformasjonsRevurdering;
     forrigeUrl?: string;
     onTilbakeClick?: () => void;
-    tvingFohåndsvarsling: boolean;
+    tvingForhåndsvarsling: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const history = useHistory();
@@ -80,7 +80,7 @@ export const VelgForhåndsvarselForm = (props: {
 
     const form = useForm<ForhåndsvarselFormData>({
         defaultValues: {
-            forhåndsvarselhandling: props.tvingFohåndsvarsling ? Forhåndsvarselhandling.Forhåndsvarsle : null,
+            forhåndsvarselhandling: props.tvingForhåndsvarsling ? Forhåndsvarselhandling.Forhåndsvarsle : null,
             fritekstTilForhåndsvarsel: null,
             fritekstTilVedtaksbrev: null,
         },
@@ -125,7 +125,7 @@ export const VelgForhåndsvarselForm = (props: {
             )}
             className={styles.form}
         >
-            {!props.tvingFohåndsvarsling && (
+            {!props.tvingForhåndsvarsling && (
                 <Controller
                     control={form.control}
                     name="forhåndsvarselhandling"

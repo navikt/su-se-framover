@@ -124,7 +124,7 @@ export const TilbakekrevingForm = (props: {
                     onTilbakeClick={() => setPage(Page.TILBAKEKREVING)}
                     revurdering={props.revurdering}
                     sakId={props.sakId}
-                    tvingFohåndsvarsling={tilbakekreving}
+                    tvingForhåndsvarsling={tilbakekreving}
                 />
             )}
         </>

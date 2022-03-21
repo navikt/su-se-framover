@@ -146,7 +146,7 @@ const OppsummeringshandlingForm = (props: {
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
-                    tvingFohåndsvarsling={false}
+                    tvingForhåndsvarsling={false}
                 />
             )}
             {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && (
