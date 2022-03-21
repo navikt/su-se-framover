@@ -14,7 +14,7 @@ import {
     getPartialFramdriftsindikatorLinjeInfo,
 } from '~utils/klage/klageUtils';
 
-import AvvistKlage from './fritekstForAvvistKlage/AvvistKlage';
+import AvvistKlage from './avvistKlage/AvvistKlage';
 import messages from './klage-nb';
 import styles from './klage.module.less';
 import SendKlageTilAttestering from './sendKlageTilAttestering/SendKlageTilAttestering';

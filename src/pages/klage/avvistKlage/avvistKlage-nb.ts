@@ -7,7 +7,7 @@ export default {
     'avvistKlage.brevTilBruker': 'Brev til bruker',
     'avvistKlage.brevTilBruker.hjelpetekst': 'Skriv inn årsak til avvisningen av klagen',
 
-    'avvistKlage.sendtTilAttestering': 'Forslag til klageresultat er sendt til attestant.',
+    'avvistKlage.sendtTilAttestering': 'Klage er sendt til attestering og oppgave i Gosys er opprettet',
 
     'knapp.seBrev': 'Se brev',
 

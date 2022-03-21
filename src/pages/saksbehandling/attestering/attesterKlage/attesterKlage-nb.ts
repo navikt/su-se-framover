@@ -16,7 +16,7 @@ export default {
 
     'notification.oversendt': 'Oversendt klage',
     'notification.avvist': 'Iverksatt avvist klage',
-    'notification.underkjent': 'Underkjent klage',
+    'notification.underkjent': 'Saken er sendt tilbake til saksbehandler og oppgave i Gosys er opprettet',
 
     'radio.overførTilKlageinstans': 'Overfør til Klageinstans',
     'radio.godkjennAvvisning': 'Godkjenn avvisning',
