@@ -11,6 +11,7 @@ import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
@@ -18,9 +19,11 @@ import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper
 import messages from './oppsummeringPageForms-nb';
 import styles from './oppsummeringPageForms.module.less';
 
+const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
+
 export const ResultatEtterForhåndsvarselform = (props: {
     sakId: string;
-    revurderingId: string;
+    revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
     onSubmit(args: {
@@ -41,7 +44,10 @@ export const ResultatEtterForhåndsvarselform = (props: {
     const form = useForm<FormData>({
         defaultValues: {
             beslutningEtterForhåndsvarsel: null,
-            tekstTilVedtaksbrev: '',
+            tekstTilVedtaksbrev:
+                props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV
+                    ? formatMessage('tilbakekreving.forhåndstekst')
+                    : '',
             tekstTilAvsluttRevurderingBrev: '',
             begrunnelse: '',
         },
@@ -52,7 +58,13 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         .mixed()
                         .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
                         .required(),
-                    tekstTilVedtaksbrev: yup.string(),
+                    tekstTilVedtaksbrev: yup
+                        .string()
+                        .defined()
+                        .when('beslutningEtterForhåndsvarsel', {
+                            is: BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger,
+                            then: yup.string().matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall'),
+                        }),
                     tekstTilAvsluttRevurderingBrev: yup.string(),
                     begrunnelse: yup.string().required(),
                 })
@@ -130,7 +142,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                     sakId: props.sakId,
-                                    revurderingId: props.revurderingId,
+                                    revurderingId: props.revurdering.id,
                                     fritekst: field.value,
                                 })
                             }
@@ -153,7 +165,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForAvslutningAvRevurdering({
                                     sakId: props.sakId,
-                                    revurderingId: props.revurderingId,
+                                    revurderingId: props.revurdering.id,
                                     fritekst: field.value,
                                 })
                             }
@@ -204,12 +216,25 @@ export const SendTilAttesteringForm = (props: {
         vedtaksbrevtekst: string;
         skalFøreTilBrevutsending: boolean;
     }
+    const harFritekst = props.revurdering.fritekstTilBrev.length > 0;
+    const tilbakekreving =
+        props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV;
+
     const form = useForm<FormData>({
         defaultValues: {
-            vedtaksbrevtekst: props.revurdering.fritekstTilBrev,
-            skalFøreTilBrevutsending:
-                props.brevsending === 'alltidSende' || props.revurdering.fritekstTilBrev.length > 0,
+            vedtaksbrevtekst: harFritekst
+                ? props.revurdering.fritekstTilBrev
+                : tilbakekreving
+                ? formatMessage('tilbakekreving.forhåndstekst')
+                : '',
+            skalFøreTilBrevutsending: props.brevsending === 'alltidSende' || harFritekst,
         },
+        resolver: yupResolver(
+            yup.object<FormData>({
+                skalFøreTilBrevutsending: yup.boolean(),
+                vedtaksbrevtekst: yup.string().defined().matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall'),
+            })
+        ),
     });
 
     const skalFøreTilBrevutsending = form.watch('skalFøreTilBrevutsending');
