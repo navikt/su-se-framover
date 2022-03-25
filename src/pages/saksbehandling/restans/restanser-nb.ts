@@ -4,6 +4,7 @@ export const restansTypeMessages: { [key in RestansType]: string } = {
     [RestansType.SØKNADSBEHANDLING]: 'Søknadsbehandling',
     [RestansType.REVURDERING]: 'Revurdering',
     [RestansType.KLAGE]: 'Klage',
+    [RestansType.REGULERING]: 'Regulering',
 };
 
 export const restansStatus: { [key in RestansStatus]: string } = {

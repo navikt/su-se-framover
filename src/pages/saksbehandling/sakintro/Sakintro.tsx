@@ -23,6 +23,7 @@ import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurde
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
 
 import KlageLister from './KlageLister';
+import ReguleringLister from './ReguleringLister';
 import { AvsluttedeRevurderinger, ÅpneRevurderinger } from './RevurderingsLister';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
@@ -112,6 +113,11 @@ const Sakintro = (props: { sak: Sak }) => {
                     {klageToggle && (
                         <KlageLister sakId={props.sak.id} klager={props.sak.klager} vedtak={props.sak.vedtak} />
                     )}
+                    <ReguleringLister
+                        sakId={props.sak.id}
+                        reguleringer={props.sak.reguleringer}
+                        vedtak={props.sak.vedtak}
+                    />
                     <div>
                         <LinkPanel
                             href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}

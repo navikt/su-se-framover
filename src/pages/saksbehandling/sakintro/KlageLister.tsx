@@ -33,7 +33,7 @@ const KlageLister = (props: { sakId: string; klager: Klage[]; vedtak: Vedtak[] }
     const user = useUserContext();
 
     return (
-        <div>
+        <div className={styles.søknadsContainer}>
             <Oversiktslinje kategoriTekst={formatMessage('klage.klager')} entries={props.klager}>
                 {{
                     oversiktsinformasjon: (klage) => {

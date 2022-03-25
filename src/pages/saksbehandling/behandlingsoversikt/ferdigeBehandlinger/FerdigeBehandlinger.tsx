@@ -35,6 +35,7 @@ export const FerdigeBehandlinger = () => {
         [RestansType.SØKNADSBEHANDLING]: false,
         [RestansType.REVURDERING]: false,
         [RestansType.KLAGE]: false,
+        [RestansType.REGULERING]: false,
     });
 
     const [resultat, setResultat] = useState<RestansResultatFilter>({

@@ -30,6 +30,13 @@ export const formatMonthYear = (date: string) =>
         day: undefined,
     });
 
+export const formatYear = (date: string) =>
+    intl.formatDate(date, {
+        ...formatDateOptions,
+        day: undefined,
+        month: undefined,
+    });
+
 export type Utlandsdatoer = Array<{ utreisedato: string; innreisedato: string }>;
 
 export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Nullable<Utlandsdatoer>) => {

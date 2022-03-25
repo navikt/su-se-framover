@@ -1,43 +1,15 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Table } from '@navikt/ds-react';
+import { Alert, Table } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
-import * as personSlice from '~features/person/person.slice';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useAsyncActionCreator } from '~lib/hooks';
+import VelgSakKnapp from '~components/velgSakKnapp/velgSakKnapp';
 import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { useAppDispatch } from '~redux/Store';
 import { Restans } from '~types/Restans';
 import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './restanser-nb';
 import styles from './restanser.module.less';
 import { AriaSortVerdi, RestansKolonne, sortTabell } from './restanserUtils';
-
-const VelgSakKnapp = (props: { label: string; saksnummer: string }) => {
-    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
-    const { push } = useHistory();
-    const dispatch = useAppDispatch();
-
-    return (
-        <Button
-            variant="tertiary"
-            onClick={async () => {
-                dispatch(personSlice.default.actions.resetSøker());
-                dispatch(sakSlice.default.actions.resetSak());
-                hentSak({ saksnummer: props.saksnummer }, (sak) => {
-                    push(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
-                });
-            }}
-        >
-            {props.label}
-            {RemoteData.isPending(hentSakStatus) && <Loader />}
-        </Button>
-    );
-};
 
 const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     const { formatMessage } = useI18n({ messages });

@@ -13,6 +13,7 @@ import * as Routes from '~lib/routes';
 import { Revurdering, UtbetalingsRevurderingStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
+import { formatDate } from '~utils/date/dateUtils';
 
 import {
     erRevurderingTilAttestering,
@@ -70,16 +71,14 @@ export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Revurd
                                         )}
                                         <div className={styles.dato}>
                                             <Label>{props.intl.formatMessage({ id: 'revurdering.opprettet' })} </Label>
-                                            <BodyShort>{props.intl.formatDate(r.opprettet)}</BodyShort>
+                                            <BodyShort>{formatDate(r.opprettet)}</BodyShort>
                                         </div>
                                         {vedtakForBehandling?.opprettet && (
                                             <div className={styles.dato}>
                                                 <Label>
                                                     {props.intl.formatMessage({ id: 'revurdering.iverksattDato' })}{' '}
                                                 </Label>
-                                                <BodyShort>
-                                                    {props.intl.formatDate(vedtakForBehandling.opprettet)}
-                                                </BodyShort>
+                                                <BodyShort>{formatDate(vedtakForBehandling.opprettet)}</BodyShort>
                                             </div>
                                         )}
                                         {underkjenteRevurderinger.length > 0 && !erRevurderingIverksatt(r) && (
@@ -235,7 +234,7 @@ export const AvsluttedeRevurderinger = (props: { avsluttedeRevurderinger: Revurd
                                     </Heading>
                                     <div className={styles.dato}>
                                         <Label>{props.intl.formatMessage({ id: 'revurdering.opprettet' })} </Label>
-                                        <BodyShort>{props.intl.formatDate(revurdering.opprettet)}</BodyShort>
+                                        <BodyShort>{formatDate(revurdering.opprettet)}</BodyShort>
                                     </div>
                                 </div>
                             </div>
