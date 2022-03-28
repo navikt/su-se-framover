@@ -19,7 +19,7 @@ import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper
 import messages from './oppsummeringPageForms-nb';
 import styles from './oppsummeringPageForms.module.less';
 
-const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
+export const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
 
 export const ResultatEtterForhåndsvarselform = (props: {
     sakId: string;

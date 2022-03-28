@@ -35,6 +35,7 @@ import {
     erRevurderingSimulert,
     erRevurderingUnderkjent,
     harBeregninger,
+    harSimulering,
     periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~utils/revurdering/revurderingUtils';
 
@@ -147,7 +148,6 @@ const OppsummeringshandlingForm = (props: {
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
-                    tvingForhåndsvarsling={false}
                 />
             )}
             {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && (
@@ -205,9 +205,6 @@ const RevurderingOppsummeringPage = (props: {
         }
     }, [props.revurdering.id]);
 
-    console.log('HELLO');
-    console.log(erRevurderingSimulert(props.revurdering));
-
     return pipe(
         RemoteData.combine(beregningStatus, props.grunnlagsdataOgVilkårsvurderinger),
         RemoteData.fold(
@@ -227,7 +224,7 @@ const RevurderingOppsummeringPage = (props: {
                         revurdering={props.revurdering}
                         forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
                     />
-                    {erRevurderingSimulert(props.revurdering) &&
+                    {harSimulering(props.revurdering) &&
                         periodenInneholderTilbakekrevingOgAndreTyper(props.revurdering.simulering) && (
                             <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>
                         )}
