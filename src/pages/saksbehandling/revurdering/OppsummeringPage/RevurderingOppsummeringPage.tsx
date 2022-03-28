@@ -35,6 +35,7 @@ import {
     erRevurderingSimulert,
     erRevurderingUnderkjent,
     harBeregninger,
+    periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~utils/revurdering/revurderingUtils';
 
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -223,6 +224,10 @@ const RevurderingOppsummeringPage = (props: {
                         revurdering={props.revurdering}
                         forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
                     />
+                    {erRevurderingSimulert(props.revurdering) &&
+                        periodenInneholderTilbakekrevingOgAndreTyper(props.revurdering.simulering) && (
+                            <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>
+                        )}
                     {erRevurderingSimulert(props.revurdering) ||
                     erBeregnetIngenEndring(props.revurdering) ||
                     erRevurderingUnderkjent(props.revurdering) ? (

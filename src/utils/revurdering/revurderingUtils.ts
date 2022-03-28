@@ -5,24 +5,24 @@ import { Nullable } from '~lib/types';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { Beregning } from '~types/Beregning';
 import {
-    SimulertRevurdering,
-    RevurderingTilAttestering,
-    IverksattRevurdering,
     BeregnetIngenEndring,
-    UnderkjentRevurdering,
     Forhåndsvarseltype,
-    OpprettetRevurderingGrunn,
-    InformasjonSomRevurderes,
-    Vurderingstatus,
-    Revurdering,
-    InformasjonsRevurdering,
     Gjenopptak,
-    StansAvYtelse,
+    InformasjonSomRevurderes,
+    InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
-    UtbetalingsRevurderingStatus,
+    IverksattRevurdering,
+    OpprettetRevurderingGrunn,
+    Revurdering,
+    RevurderingTilAttestering,
     SimuleringForAvkortingsvarsel,
+    SimulertRevurdering,
+    StansAvYtelse,
+    UnderkjentRevurdering,
+    UtbetalingsRevurderingStatus,
+    Vurderingstatus,
 } from '~types/Revurdering';
-import { Simulering } from '~types/Simulering';
+import { Simulering, SimulertUtbetalingstype } from '~types/Simulering';
 
 export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
     return 'fritekstTilBrev' in r && 'informasjonSomRevurderes' in r;
@@ -162,3 +162,7 @@ export const splittAvsluttedeOgÅpneRevurderinger = (
         avsluttedeRevurderinger: right,
     }));
 };
+
+export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simulering) =>
+    simulering.perioder.some((periode) => periode.type === SimulertUtbetalingstype.FEILUTBETALING) &&
+    !simulering.perioder.every((periode) => periode.type === SimulertUtbetalingstype.FEILUTBETALING);
