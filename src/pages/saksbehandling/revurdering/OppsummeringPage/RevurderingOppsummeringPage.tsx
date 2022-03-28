@@ -205,6 +205,9 @@ const RevurderingOppsummeringPage = (props: {
         }
     }, [props.revurdering.id]);
 
+    console.log('HELLO');
+    console.log(erRevurderingSimulert(props.revurdering));
+
     return pipe(
         RemoteData.combine(beregningStatus, props.grunnlagsdataOgVilkårsvurderinger),
         RemoteData.fold(

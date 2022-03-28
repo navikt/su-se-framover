@@ -23,6 +23,8 @@ import {
     erRevurderingTilAttestering,
     erGregulering,
     hentAvkortingFraRevurdering,
+    periodenInneholderTilbakekrevingOgAndreTyper,
+    harSimulering,
 } from '~utils/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
@@ -154,8 +156,9 @@ const AttesterRevurdering = (props: {
 const hentIdForWarning = (revurdering: Revurdering): Nullable<keyof typeof messages> => {
     const tilbakekreving = revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV;
     const opphør = revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT;
-
-    if (tilbakekreving && opphør) {
+    if (harSimulering(revurdering) && periodenInneholderTilbakekrevingOgAndreTyper(revurdering.simulering)) {
+        return 'tilbakekrevingFlereTyper';
+    } else if (tilbakekreving && opphør) {
         return 'tilbakekrevingOgOpphør';
     } else if (tilbakekreving) {
         return 'tilbakekreving';
