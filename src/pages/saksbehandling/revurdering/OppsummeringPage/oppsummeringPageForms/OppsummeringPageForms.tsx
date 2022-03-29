@@ -11,6 +11,7 @@ import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { UNDERSCORE_REGEX } from '~pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~types/Revurdering';
 
@@ -18,8 +19,6 @@ import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper
 
 import messages from './oppsummeringPageForms-nb';
 import styles from './oppsummeringPageForms.module.less';
-
-const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
 
 export const ResultatEtterForhåndsvarselform = (props: {
     sakId: string;

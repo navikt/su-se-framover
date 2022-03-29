@@ -74,8 +74,6 @@ export const TilbakekrevingForm = (props: {
         ),
     });
 
-    const tilbakekreving = form.watch('avgjørelse') === Tilbakekrevingsavgjørelse.TILBAKEKREV;
-
     return (
         <>
             {pageValgt === Page.TILBAKEKREVING && (
@@ -124,7 +122,7 @@ export const TilbakekrevingForm = (props: {
                     onTilbakeClick={() => setPage(Page.TILBAKEKREVING)}
                     revurdering={props.revurdering}
                     sakId={props.sakId}
-                    tvingForhåndsvarsling={tilbakekreving}
+                    defaultVedtakstekst={formatMessage('tilbakekrevingForhåndstekst')}
                 />
             )}
         </>

@@ -16,6 +16,7 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import { UNDERSCORE_REGEX } from '~pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { InformasjonsRevurdering } from '~types/Revurdering';
 
 import messages from './forhåndsvarselForm-nb';
@@ -32,7 +33,7 @@ export const VelgForhåndsvarselForm = (props: {
     revurdering: InformasjonsRevurdering;
     forrigeUrl?: string;
     onTilbakeClick?: () => void;
-    tvingForhåndsvarsling: boolean;
+    defaultVedtakstekst?: string;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const history = useHistory();
@@ -80,9 +81,9 @@ export const VelgForhåndsvarselForm = (props: {
 
     const form = useForm<ForhåndsvarselFormData>({
         defaultValues: {
-            forhåndsvarselhandling: props.tvingForhåndsvarsling ? Forhåndsvarselhandling.Forhåndsvarsle : null,
+            forhåndsvarselhandling: null,
             fritekstTilForhåndsvarsel: null,
-            fritekstTilVedtaksbrev: null,
+            fritekstTilVedtaksbrev: props.defaultVedtakstekst ?? null,
         },
         resolver: yupResolver(
             yup
@@ -96,10 +97,17 @@ export const VelgForhåndsvarselForm = (props: {
                         is: Forhåndsvarselhandling.Forhåndsvarsle,
                         then: yup.string().nullable().required(),
                     }),
-                    fritekstTilVedtaksbrev: yup.string().nullable().defined().when('forhåndsvarselhandling', {
-                        is: Forhåndsvarselhandling.IngenForhåndsvarsel,
-                        then: yup.string().nullable().required(),
-                    }),
+                    fritekstTilVedtaksbrev: yup
+                        .string()
+                        .defined()
+                        .when('forhåndsvarselhandling', {
+                            is: Forhåndsvarselhandling.IngenForhåndsvarsel,
+                            then: yup
+                                .string()
+                                .nullable()
+                                .matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall')
+                                .required(),
+                        }),
                 })
                 .required()
         ),
@@ -125,25 +133,23 @@ export const VelgForhåndsvarselForm = (props: {
             )}
             className={styles.form}
         >
-            {!props.tvingForhåndsvarsling && (
-                <Controller
-                    control={form.control}
-                    name="forhåndsvarselhandling"
-                    render={({ field, fieldState }) => (
-                        <RadioGroup
-                            legend={formatMessage('velgForhåndsvarsel.handling.legend')}
-                            error={fieldState.error?.message}
-                            value={field.value ?? ''}
-                            onChange={field.onChange}
-                        >
-                            <Radio id={field.name} ref={field.ref} value={Forhåndsvarselhandling.Forhåndsvarsle}>
-                                {formatMessage('ja')}
-                            </Radio>
-                            <Radio value={Forhåndsvarselhandling.IngenForhåndsvarsel}>{formatMessage('nei')}</Radio>
-                        </RadioGroup>
-                    )}
-                />
-            )}
+            <Controller
+                control={form.control}
+                name="forhåndsvarselhandling"
+                render={({ field, fieldState }) => (
+                    <RadioGroup
+                        legend={formatMessage('velgForhåndsvarsel.handling.legend')}
+                        error={fieldState.error?.message}
+                        value={field.value ?? ''}
+                        onChange={field.onChange}
+                    >
+                        <Radio id={field.name} ref={field.ref} value={Forhåndsvarselhandling.Forhåndsvarsle}>
+                            {formatMessage('ja')}
+                        </Radio>
+                        <Radio value={Forhåndsvarselhandling.IngenForhåndsvarsel}>{formatMessage('nei')}</Radio>
+                    </RadioGroup>
+                )}
+            />
             {forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle && (
                 <Controller
                     control={form.control}

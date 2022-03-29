@@ -35,6 +35,8 @@ import {
     erRevurderingSimulert,
     erRevurderingUnderkjent,
     harBeregninger,
+    harSimulering,
+    periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~utils/revurdering/revurderingUtils';
 
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -146,7 +148,6 @@ const OppsummeringshandlingForm = (props: {
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
-                    tvingForhåndsvarsling={false}
                 />
             )}
             {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && (
@@ -223,6 +224,10 @@ const RevurderingOppsummeringPage = (props: {
                         revurdering={props.revurdering}
                         forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
                     />
+                    {harSimulering(props.revurdering) &&
+                        periodenInneholderTilbakekrevingOgAndreTyper(props.revurdering.simulering) && (
+                            <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>
+                        )}
                     {erRevurderingSimulert(props.revurdering) ||
                     erBeregnetIngenEndring(props.revurdering) ||
                     erRevurderingUnderkjent(props.revurdering) ? (

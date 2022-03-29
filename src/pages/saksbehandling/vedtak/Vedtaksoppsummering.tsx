@@ -28,7 +28,7 @@ const Vedtaksoppsummering = (props: Props) => {
         ? hentInformasjonKnyttetTilVedtak(props.sak, vedtak)
         : hentKlagevedtakFraKlageinstans(props.sak, urlParams.vedtakId);
 
-    const renderOppsummering = () => {
+    const Oppsummering = () => {
         switch (vedtaksinformasjon?.type) {
             case 'revurdering':
                 return (
@@ -65,8 +65,8 @@ const Vedtaksoppsummering = (props: Props) => {
 
     return (
         <div className={styles.container}>
-            {renderOppsummering()}
-            <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={() => history.goBack()}>
+            <Oppsummering />
+            <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={history.goBack}>
                 {formatMessage('knapp.tilbake')}
             </Button>
         </div>

@@ -16,4 +16,6 @@ export default {
 
     tilbakekreving: 'Denne revurderingen fører til tilbakekreving',
     tilbakekrevingOgOpphør: 'Denne revurderingen fører til tilbakekreving og opphør for bruker',
+    tilbakekrevingFlereTyper:
+        'Revurderingen fører til tilbakekreving pga en eller flere feilutbetalinger. Varsel og vedtaksbrev vil kun kommunisere tilbakekreving. Endringer i tillegg (som opphør o.l.) må gjøres i separate revurderinger for å få riktig kommunikasjon inn i brev.',
 };
