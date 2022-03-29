@@ -40,3 +40,5 @@ export const getOppsummeringsformState = (revurdering: Revurdering): Oppsummerin
     if (!erRevurderingForhåndsvarslet(revurdering)) return OppsummeringState.FORHÅNDSVARSLING;
     return OppsummeringState.ER_FORHÅNDSVARSLET;
 };
+
+export const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;

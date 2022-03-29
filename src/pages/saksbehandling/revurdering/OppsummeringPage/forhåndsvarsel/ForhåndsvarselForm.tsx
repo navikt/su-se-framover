@@ -16,7 +16,7 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
-import { UNDERSCORE_REGEX } from '~pages/saksbehandling/revurdering/OppsummeringPage/oppsummeringPageForms/OppsummeringPageForms';
+import { UNDERSCORE_REGEX } from '~pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { InformasjonsRevurdering } from '~types/Revurdering';
 
 import messages from './forhåndsvarselForm-nb';
