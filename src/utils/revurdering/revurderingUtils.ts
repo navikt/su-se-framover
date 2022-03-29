@@ -165,4 +165,9 @@ export const splittAvsluttedeOgÅpneRevurderinger = (
 
 export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simulering) =>
     simulering.perioder.some((periode) => periode.type === SimulertUtbetalingstype.FEILUTBETALING) &&
-    !simulering.perioder.every((periode) => periode.type === SimulertUtbetalingstype.FEILUTBETALING);
+    !simulering.perioder.every(
+        (periode) =>
+            periode.type === SimulertUtbetalingstype.FEILUTBETALING ||
+            SimulertUtbetalingstype.INGEN_UTBETALING ||
+            SimulertUtbetalingstype.UENDRET
+    );
