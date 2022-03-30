@@ -80,6 +80,7 @@ const VisBenyttetEpsFradrag = ({
     epsFribeløp: number;
 }) => (
     // Hvis denne finns så eksisterer det fradrag for EPS i aktuell måned
+
     <DetaljertFradrag
         tittel={{
             label: intl.formatMessage({ id: fradrag.type }),
@@ -89,13 +90,13 @@ const VisBenyttetEpsFradrag = ({
             ...epsInputFradrag.flatMap((f) => {
                 if (!f.utenlandskInntekt) {
                     return {
-                        label: intl.formatMessage({ id: fradrag.type }),
+                        label: intl.formatMessage({ id: f.type }),
                         verdi: formatCurrency(-f.beløp),
                     };
                 }
                 return [
                     {
-                        label: intl.formatMessage({ id: fradrag.type }),
+                        label: intl.formatMessage({ id: f.type }),
                         verdi: formatCurrency(-f.beløp),
                     },
                     {
