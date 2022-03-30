@@ -168,6 +168,6 @@ export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simuler
     !simulering.perioder.every(
         (periode) =>
             periode.type === SimulertUtbetalingstype.FEILUTBETALING ||
-            SimulertUtbetalingstype.INGEN_UTBETALING ||
-            SimulertUtbetalingstype.UENDRET
+            periode.type === SimulertUtbetalingstype.INGEN_UTBETALING ||
+            periode.type === SimulertUtbetalingstype.UENDRET
     );
