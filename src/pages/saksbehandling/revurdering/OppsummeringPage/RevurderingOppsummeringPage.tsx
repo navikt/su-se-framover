@@ -27,6 +27,7 @@ import {
     BeregnetIngenEndring,
     BeslutningEtterForhåndsvarsling,
     InformasjonsRevurdering,
+    InformasjonsRevurderingStatus,
     SimulertRevurdering,
     UnderkjentRevurdering,
 } from '~types/Revurdering';
@@ -225,9 +226,10 @@ const RevurderingOppsummeringPage = (props: {
                         forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
                     />
                     {harSimulering(props.revurdering) &&
-                        periodenInneholderTilbakekrevingOgAndreTyper(props.revurdering.simulering) && (
-                            <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>
-                        )}
+                        periodenInneholderTilbakekrevingOgAndreTyper(
+                            props.revurdering.simulering,
+                            props.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT
+                        ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
                     {erRevurderingSimulert(props.revurdering) ||
                     erBeregnetIngenEndring(props.revurdering) ||
                     erRevurderingUnderkjent(props.revurdering) ? (

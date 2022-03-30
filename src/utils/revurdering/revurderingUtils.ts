@@ -163,11 +163,12 @@ export const splittAvsluttedeOgÅpneRevurderinger = (
     }));
 };
 
-export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simulering) =>
+export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simulering, erOpphør: boolean) =>
     simulering.perioder.some((periode) => periode.type === SimulertUtbetalingstype.FEILUTBETALING) &&
-    !simulering.perioder.every(
-        (periode) =>
-            periode.type === SimulertUtbetalingstype.FEILUTBETALING ||
-            periode.type === SimulertUtbetalingstype.INGEN_UTBETALING ||
-            periode.type === SimulertUtbetalingstype.UENDRET
-    );
+    (erOpphør ||
+        !simulering.perioder.every(
+            (periode) =>
+                periode.type === SimulertUtbetalingstype.FEILUTBETALING ||
+                periode.type === SimulertUtbetalingstype.INGEN_UTBETALING ||
+                periode.type === SimulertUtbetalingstype.UENDRET
+        ));
