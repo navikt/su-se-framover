@@ -141,13 +141,7 @@ const RevurderingPage = (props: {
                         <Heading level="1" size="large" className={styles.tittel}>
                             {formatMessage('revurdering.tittel')}
                         </Heading>
-                        <Route
-                            path={Routes.revurderValgtRevurdering.createURL({
-                                sakId: props.sakId,
-                                steg: RevurderingSteg.Periode,
-                                revurderingId: påbegyntRevurdering.id,
-                            })}
-                        >
+                        <Route path={createRevurderingsPath(RevurderingSteg.Periode)}>
                             <RevurderingIntroPage
                                 sakId={props.sakId}
                                 utbetalinger={props.utbetalinger}
