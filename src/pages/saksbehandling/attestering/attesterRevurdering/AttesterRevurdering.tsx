@@ -156,13 +156,7 @@ const AttesterRevurdering = (props: {
 const hentIdForWarning = (revurdering: Revurdering): Nullable<keyof typeof messages> => {
     const tilbakekreving = revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV;
     const opphør = revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT;
-    if (
-        harSimulering(revurdering) &&
-        periodenInneholderTilbakekrevingOgAndreTyper(
-            revurdering.simulering,
-            revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT
-        )
-    ) {
+    if (harSimulering(revurdering) && periodenInneholderTilbakekrevingOgAndreTyper(revurdering.simulering, opphør)) {
         return 'tilbakekrevingFlereTyper';
     } else if (tilbakekreving && opphør) {
         return 'tilbakekrevingOgOpphør';
