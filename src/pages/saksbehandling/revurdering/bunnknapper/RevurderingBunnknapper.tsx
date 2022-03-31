@@ -79,6 +79,7 @@ export const RevurderingBunnknapper = ({
                 </Button>
             </div>
             <div className={styles.navigationButtonContainer}>{onLagreOgFortsettSenereClick && <Tilbake />}</div>
+
             <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
                 <div className={styles.modalContainer}>
                     <Heading level="2" size="medium" className={styles.modalTittel}>
