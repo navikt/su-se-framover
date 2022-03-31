@@ -1,4 +1,4 @@
-import { Button, Loader, Modal, Heading, BodyShort } from '@navikt/ds-react';
+import { Button, Modal, Heading, BodyShort } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { matchPath, useHistory } from 'react-router-dom';
 
@@ -26,35 +26,28 @@ export const RevurderingBunnknapper = ({
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
     const [knappTrykket, setKnappTrykket] = useState<'neste' | 'avslutt' | undefined>(undefined);
 
-    const navigererTilRevurderingStartside =
-        typeof props.tilbakeUrl === 'string' &&
-        matchPath(props.tilbakeUrl, {
-            path: Routes.revurderValgtRevurdering.path.replace(':steg', 'periode'),
-        }) !== null;
+    const Tilbake = () => {
+        const navigererTilRevurderingStartside =
+            typeof props.tilbakeUrl === 'string' &&
+            matchPath(props.tilbakeUrl, {
+                path: Routes.revurderValgtRevurdering.path.replace(':steg', 'periode'),
+            }) !== null;
 
-    const Tilbake = () => (
-        <>
-            {props.tilbakeUrl && (
-                <Button
-                    type="button"
-                    onClick={() => {
-                        /* props.tilbakeUrl blir sjekket om vi skal rendre denne button-komponenten */
-                        /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
-                        navigererTilRevurderingStartside ? setModalOpen(true) : history.push(props.tilbakeUrl!);
-                    }}
-                    variant="secondary"
-                >
-                    {formatMessage('knapp.tilbake')}
-                </Button>
-            )}
-            {props.onTilbakeClick && (
-                <Button onClick={props.onTilbakeClick} variant="secondary">
-                    {formatMessage('knapp.tilbake')}
-                </Button>
-            )}
-        </>
-    );
+        const navigationCallback = () =>
+            navigererTilRevurderingStartside ? setModalOpen(true) : history.push(props.tilbakeUrl!);
 
+        return (
+            <Button
+                onClick={props.onTilbakeClick ? props.onTilbakeClick : navigationCallback}
+                variant="secondary"
+                type="button"
+            >
+                {formatMessage('knapp.tilbake')}
+            </Button>
+        );
+    };
+
+    console.log(knappTrykket === 'neste', props.loading, knappTrykket === 'neste' && props.loading);
     return (
         <div>
             <div className={styles.navigationButtonContainer}>
@@ -66,16 +59,15 @@ export const RevurderingBunnknapper = ({
                             onLagreOgFortsettSenereClick();
                         }}
                         type="button"
+                        loading={knappTrykket === 'avslutt' && props.loading}
                     >
                         {formatMessage('knapp.lagreOgfortsettSenere')}
-                        {knappTrykket === 'avslutt' && props.loading && <Loader />}
                     </Button>
                 ) : (
                     <Tilbake />
                 )}
-                <Button onClick={() => setKnappTrykket('neste')} type={'submit'}>
+                <Button onClick={() => setKnappTrykket('neste')} loading={knappTrykket === 'neste' && props.loading}>
                     {props.nesteKnappTekst ? props.nesteKnappTekst : formatMessage('knapp.neste')}
-                    {knappTrykket === 'neste' && props.loading && <Loader />}
                 </Button>
             </div>
             <div className={styles.navigationButtonContainer}>{onLagreOgFortsettSenereClick && <Tilbake />}</div>
@@ -90,13 +82,13 @@ export const RevurderingBunnknapper = ({
                         <BodyShort>{formatMessage('modal.info.p2')}</BodyShort>
                     </div>
                     <div className={styles.modalKnappContainer}>
-                        <Button variant="tertiary" onClick={() => setModalOpen(false)}>
+                        <Button variant="tertiary" type="button" onClick={() => setModalOpen(false)}>
                             {formatMessage('modal.knapp.avbryt')}
                         </Button>
                         {/* props.tilbakeUrl blir sjekket ved navigererTilRevurderingStartside. (som bestemmer om modal skal åpnes eller ikke)  */}
                         {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
                         <LinkAsButton variant="danger" href={props.tilbakeUrl!}>
-                            {formatMessage('modal.knapp.nullstillData')}
+                            {formatMessage('modal.knapp.gåTilbake')}
                         </LinkAsButton>
                     </div>
                 </div>

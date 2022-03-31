@@ -33,6 +33,8 @@ const RevurderingIntroPage = (props: {
     const history = useHistory();
     const dispatch = useAppDispatch();
 
+    console.log('status: ', status, 'oppdater: ', oppdaterRevurderingStatus, 'opprett: ', opprettRevurderingStatus);
+
     const forrigeUrl = Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId });
     const thunk = (arg: FormValues) =>
         props.informasjonsRevurdering
