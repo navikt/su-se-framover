@@ -34,7 +34,11 @@ export const RevurderingBunnknapper = ({
             }) !== null;
 
         const navigationCallback = () =>
-            navigererTilRevurderingStartside ? setModalOpen(true) : history.push(props.tilbakeUrl!);
+            navigererTilRevurderingStartside
+                ? setModalOpen(true)
+                : props.tilbakeUrl
+                ? history.push(props.tilbakeUrl)
+                : undefined;
 
         return (
             <Button
@@ -47,7 +51,6 @@ export const RevurderingBunnknapper = ({
         );
     };
 
-    console.log(knappTrykket === 'neste', props.loading, knappTrykket === 'neste' && props.loading);
     return (
         <div>
             <div className={styles.navigationButtonContainer}>
@@ -85,7 +88,7 @@ export const RevurderingBunnknapper = ({
                         <Button variant="tertiary" type="button" onClick={() => setModalOpen(false)}>
                             {formatMessage('modal.knapp.avbryt')}
                         </Button>
-                        {/* props.tilbakeUrl blir sjekket ved navigererTilRevurderingStartside. (som bestemmer om modal skal åpnes eller ikke)  */}
+                        {/* blir sjekket ved navigererTilRevurderingStartside */}
                         {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
                         <LinkAsButton variant="danger" href={props.tilbakeUrl!}>
                             {formatMessage('modal.knapp.gåTilbake')}
