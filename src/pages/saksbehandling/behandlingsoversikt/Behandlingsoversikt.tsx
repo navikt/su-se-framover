@@ -16,7 +16,7 @@ import { pipe } from '~lib/fp';
 import { ApiResult, useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { useAppDispatch } from '~redux/Store';
-import { Regulering, ReguleringType } from '~types/Regulering';
+import { Regulering, Reguleringstype } from '~types/Regulering';
 import { Sak } from '~types/Sak';
 
 import messages from './behandlingsoversikt-nb';
@@ -29,7 +29,7 @@ import { ÅpneBehandlinger } from './åpneBehandlinger/ÅpneBehandlinger';
 const splittAutomatiskeOgManuelleReguleringer = (reguleringer: Regulering[]) => {
     return pipe(
         reguleringer,
-        A.partition((regulering) => regulering.reguleringType === ReguleringType.AUTOMATISK),
+        A.partition((regulering) => regulering.reguleringstype === Reguleringstype.AUTOMATISK),
         ({ left, right }) => ({
             automatiske: right,
             manuelle: left,

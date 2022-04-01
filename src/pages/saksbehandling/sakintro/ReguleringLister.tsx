@@ -4,7 +4,7 @@ import React from 'react';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Regulering, ReguleringType } from '~types/Regulering';
+import { Regulering, Reguleringstype } from '~types/Regulering';
 import { Vedtak } from '~types/Vedtak';
 import { formatDate } from '~utils/date/dateUtils';
 
@@ -29,7 +29,7 @@ const ReguleringLister = (props: Props) => {
                         return (
                             <>
                                 <Heading size="small" level="3" spacing>
-                                    {regulering.reguleringType === ReguleringType.AUTOMATISK
+                                    {regulering.reguleringstype === Reguleringstype.AUTOMATISK
                                         ? formatMessage('regulering.automatisk')
                                         : formatMessage('regulering.manuell')}
                                 </Heading>

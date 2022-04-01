@@ -10,7 +10,7 @@ export interface Regulering {
     opprettet: string;
     sakId: string;
     saksnummer: number;
-    reguleringType: ReguleringType;
+    reguleringstype: Reguleringstype;
     jobbType: JobbType;
     erFerdigstilt: boolean;
     beregning: Nullable<Beregning>;
@@ -23,7 +23,7 @@ interface JobbType {
     dato: string;
 }
 
-export enum ReguleringType {
+export enum Reguleringstype {
     AUTOMATISK = 'AUTOMATISK',
     MANUELL = 'MANUELL',
 }
