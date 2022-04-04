@@ -34,7 +34,7 @@ enum Page {
 }
 
 export const TilbakekrevingForm = (props: {
-    forrigeUrl: string;
+    forrige: { url: string; visModal: boolean };
     revurdering: InformasjonsRevurdering;
     sakId: string;
 }) => {
@@ -112,14 +112,14 @@ export const TilbakekrevingForm = (props: {
 
                     <RevurderingBunnknapper
                         nesteKnappTekst={formatMessage('neste')}
-                        tilbakeUrl={props.forrigeUrl}
+                        tilbake={props.forrige}
                         loading={RemoteData.isPending(lagreTilbakekrevingsbehandlingState)}
                     />
                 </form>
             )}
             {pageValgt === Page.FORHÅNDSVARSEL && (
                 <VelgForhåndsvarselForm
-                    onTilbakeClick={() => setPage(Page.TILBAKEKREVING)}
+                    tilbake={{ onTilbakeClick: () => setPage(Page.TILBAKEKREVING) }}
                     revurdering={props.revurdering}
                     sakId={props.sakId}
                     defaultVedtakstekst={formatMessage('tilbakekrevingForhåndstekst')}

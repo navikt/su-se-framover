@@ -209,7 +209,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
                             )}
                             <RevurderingBunnknapper
-                                tilbakeUrl={props.forrigeUrl}
+                                tilbake={props.forrige}
                                 onLagreOgFortsettSenereClick={() => {
                                     setHasSubmitted(true);
                                     customFormikSubmit(formik, () =>

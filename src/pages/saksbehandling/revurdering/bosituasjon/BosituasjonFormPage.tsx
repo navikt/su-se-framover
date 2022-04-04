@@ -125,7 +125,7 @@ const BosituasjonFormPage = (props: RevurderingStegProps) => {
                             <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
                         )}
                         <RevurderingBunnknapper
-                            tilbakeUrl={props.forrigeUrl}
+                            tilbake={props.forrige}
                             loading={RemoteData.isPending(status)}
                             onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'avbryt'))}
                         />

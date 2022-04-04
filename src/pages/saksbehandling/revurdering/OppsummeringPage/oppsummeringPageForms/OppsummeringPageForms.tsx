@@ -177,6 +177,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
             )}
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
             <RevurderingBunnknapper
+                tilbake={{ url: props.forrigeUrl, visModal: false }}
                 nesteKnappTekst={
                     resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger
                         ? formatMessage('fortsett.button.label')
@@ -293,7 +294,7 @@ export const SendTilAttesteringForm = (props: {
 
             <RevurderingBunnknapper
                 nesteKnappTekst={formatMessage('sendTilAttestering.button.label')}
-                tilbakeUrl={props.forrigeUrl}
+                tilbake={{ url: props.forrigeUrl, visModal: false }}
                 loading={RemoteData.isPending(props.submitStatus)}
             />
         </form>

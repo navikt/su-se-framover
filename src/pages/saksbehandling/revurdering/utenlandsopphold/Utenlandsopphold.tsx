@@ -232,7 +232,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                         </Button>
                         {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                         <RevurderingBunnknapper
-                            tilbakeUrl={props.forrigeUrl}
+                            tilbake={props.forrige}
                             loading={RemoteData.isPending(status)}
                             onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'avbryt'))}
                         />

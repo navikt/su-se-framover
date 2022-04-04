@@ -141,13 +141,17 @@ const OppsummeringshandlingForm = (props: {
                 />
             )}
             {oppsummeringsformState === OppsummeringState.TILBAKEKREVING && (
-                <TilbakekrevingForm revurdering={props.revurdering} forrigeUrl={props.forrigeUrl} sakId={props.sakId} />
+                <TilbakekrevingForm
+                    revurdering={props.revurdering}
+                    forrige={{ url: props.forrigeUrl, visModal: false }}
+                    sakId={props.sakId}
+                />
             )}
             {oppsummeringsformState === OppsummeringState.FORHÅNDSVARSLING && (
                 <VelgForhåndsvarselForm
                     sakId={props.sakId}
                     revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
+                    tilbake={{ url: props.forrigeUrl, visModal: false }}
                 />
             )}
             {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && (

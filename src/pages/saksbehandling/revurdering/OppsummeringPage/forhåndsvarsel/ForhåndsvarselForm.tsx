@@ -31,8 +31,7 @@ export type ForhåndsvarselFormData = {
 export const VelgForhåndsvarselForm = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
-    forrigeUrl?: string;
-    onTilbakeClick?: () => void;
+    tilbake: { url: string; visModal: boolean } | { onTilbakeClick: () => void };
     defaultVedtakstekst?: string;
 }) => {
     const { formatMessage } = useI18n({ messages });
@@ -203,8 +202,7 @@ export const VelgForhåndsvarselForm = (props: {
                         ? formatMessage('sendForhåndsvarsel.button.label')
                         : formatMessage('sendTilAttestering.button.label')
                 }
-                onTilbakeClick={props.onTilbakeClick}
-                tilbakeUrl={props.forrigeUrl}
+                tilbake={props.tilbake}
                 loading={isLoading}
             />
         </form>
