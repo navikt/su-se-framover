@@ -1,3 +1,6 @@
+import 'regenerator-runtime/runtime';
+import 'core-js/stable';
+
 import { Modal } from '@navikt/ds-react';
 import * as Sentry from '@sentry/browser';
 import * as React from 'react';
