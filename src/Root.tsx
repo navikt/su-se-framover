@@ -6,8 +6,8 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
+import { LOGIN_URL } from '~src/api/authUrl';
 import { FeatureToggle } from '~src/api/featureToggleApi';
-import Config from '~src/config';
 import { UserProvider } from '~src/context/userContext';
 import { FeatureToggleProvider, useFeatureToggle } from '~src/lib/featureToggles';
 import { pipe } from '~src/lib/fp';
@@ -119,7 +119,7 @@ const ContentWrapper: React.FC = (props) => {
                                             ? 'Ikke tilgang'
                                             : 'En feil oppstod'}
                                     </Heading>
-                                    <Link href={`${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`}>
+                                    <Link href={`${LOGIN_URL}?redirectTo=${window.location.pathname}`}>
                                         Logg inn på nytt
                                     </Link>
                                 </div>

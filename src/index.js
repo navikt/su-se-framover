@@ -1,10 +1,8 @@
 import { Modal } from '@navikt/ds-react';
 import * as Sentry from '@sentry/browser';
-import 'dotenv/config';
 import * as React from 'react';
 import { render } from 'react-dom';
 
-import * as Amplitude from './lib/tracking/amplitude';
 import polyfill from './polyfills';
 import Root from './Root';
 
@@ -21,7 +19,6 @@ polyfill().then(() => {
         });
     }
 
-    Amplitude.init();
     Modal.setAppElement(document.getElementById('root'));
 
     render(<Root />, document.getElementById('root'));

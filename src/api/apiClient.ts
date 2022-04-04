@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
+import { LOGIN_URL } from '~src/api/authUrl';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
-import Config from '~src/config';
 
 export enum ErrorCode {
     Unauthorized = 403,
@@ -77,7 +77,7 @@ export default async function apiClient<TSuccess>(arg: {
         authenticateChallengeHeader &&
         authenticateChallengeHeader.includes('realm=su-se-framover')
     ) {
-        window.location.href = `${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`;
+        window.location.href = `${LOGIN_URL}?redirectTo=${window.location.pathname}`;
     }
 
     const errorBody: ErrorMessage = await res.json().catch((_err) => ({}));

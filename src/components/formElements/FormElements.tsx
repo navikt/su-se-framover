@@ -4,8 +4,6 @@ import React, { forwardRef, useState } from 'react';
 import { Collapse } from 'react-collapse';
 
 import { useI18n } from '~src/lib/i18n';
-import { trackEvent } from '~src/lib/tracking/amplitude';
-import { søknadHjelpeTekstKlikk } from '~src/lib/tracking/trackingEvents';
 import { Nullable } from '~src/lib/types';
 
 import nb from './formElements-nb';
@@ -48,7 +46,6 @@ export const CollapsableFormElementDescription = (props: { title: string; childr
                 onClick={(e) => {
                     e.preventDefault();
                     setVisMer(!visMer);
-                    trackEvent(søknadHjelpeTekstKlikk());
                 }}
             >
                 {props.title}

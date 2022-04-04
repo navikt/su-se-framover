@@ -102,12 +102,3 @@ export const redis = {
     port: Number.parseInt(envVar({ name: 'REDIS_PORT', defaultValue: '6379' })),
     password: envVar({ name: 'REDIS_PASSWORD', defaultValue: { dev: '' } }),
 };
-
-// Config that is exposed to the frontend
-export const client = {
-    LOGIN_URL: '/login',
-    LOGOUT_URL: '/logout',
-    AMPLITUDE_API_KEY: envVar({ name: 'AMPLITUDE_API_KEY' }),
-};
-
-export type FrontendConfig = typeof client;

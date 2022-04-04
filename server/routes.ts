@@ -48,17 +48,10 @@ function setup() {
             }
         });
     } else {
-        router.use(
-            express.static(Config.server.frontendDir, {
-                index: false,
-            })
-        );
+        router.use(express.static(Config.server.frontendDir));
+
         router.get('*', (_req, res) => {
-            res.render('index.html', {
-                CONFIG: JSON.stringify(Config.client),
-                CSP_NONCE: (res as any).locals.cspNonce,
-                layout: false,
-            });
+            res.sendFile(Config.server.frontendDir + '/index.html');
         });
     }
 

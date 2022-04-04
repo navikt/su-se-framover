@@ -1,8 +1,8 @@
 import { Button, Modal, Heading, BodyShort } from '@navikt/ds-react';
 import React from 'react';
 
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { useI18n } from '~lib/i18n';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { useI18n } from '~src/lib/i18n';
 
 import messages from './nullstillRevurderingVarsel-nb';
 import styles from './nullstillRevurderingVarsel.module.less';

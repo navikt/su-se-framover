@@ -1,7 +1,7 @@
 import { Dropdown, Header } from '@navikt/ds-react-internal';
 import React from 'react';
 
-import Config from '~src/config';
+import { LOGOUT_URL } from '~src/api/authUrl';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { LoggedInUser, Rolle } from '~src/types/LoggedInUser';
@@ -40,7 +40,7 @@ const SuHeader = (props: Props) => {
                             <Dropdown.Menu.List>
                                 <Dropdown.Menu.List.Item
                                     onClick={() => {
-                                        window.location.href = Config.LOGOUT_URL;
+                                        window.location.href = LOGOUT_URL;
                                     }}
                                 >
                                     Logg ut

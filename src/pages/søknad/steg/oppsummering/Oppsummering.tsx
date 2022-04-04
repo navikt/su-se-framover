@@ -7,8 +7,6 @@ import { useHistory } from 'react-router-dom';
 import { Person } from '~src/api/personApi';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
 import { useI18n } from '~src/lib/i18n';
-import { trackEvent } from '~src/lib/tracking/amplitude';
-import { søknadSendInn } from '~src/lib/tracking/trackingEvents';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -33,7 +31,6 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
         );
         if (innsendingSlice.sendSøknad.fulfilled.match(res)) {
             history.push(props.nesteUrl);
-            trackEvent(søknadSendInn({ ident: props.søker.aktorId }));
         }
     };
 

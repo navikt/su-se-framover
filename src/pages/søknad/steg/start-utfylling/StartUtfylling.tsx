@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, ContentContainer, Heading, Loader, StepIndicator } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { fetchMe } from '~src/api/meApi';
@@ -13,8 +13,6 @@ import { DelerBoligMed } from '~src/features/søknad/types';
 import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
-import { trackEvent } from '~src/lib/tracking/amplitude';
-import { søknadNesteSteg } from '~src/lib/tracking/trackingEvents';
 import * as styles from '~src/pages/søknad/index.module.less';
 import messages from '~src/pages/søknad/nb';
 import { Steg } from '~src/pages/søknad/steg/Steg';
@@ -39,13 +37,6 @@ export const StartUtfylling = () => {
             if (!RemoteData.isSuccess(søkerFraStore)) {
                 return;
             }
-
-            trackEvent(
-                søknadNesteSteg({
-                    ident: søkerFraStore.value.aktorId,
-                    steg: step,
-                })
-            );
         });
     }, [step]);
 
