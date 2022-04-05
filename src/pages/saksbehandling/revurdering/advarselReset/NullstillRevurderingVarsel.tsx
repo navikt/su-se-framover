@@ -4,10 +4,10 @@ import React from 'react';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useI18n } from '~lib/i18n';
 
-import messages from './resetModal-nb';
-import styles from './resetModal.module.less';
+import messages from './nullstillRevurderingVarsel-nb';
+import styles from './nullstillRevurderingVarsel.module.less';
 
-export const ResetModal = (props: { isOpen: boolean; onClose: () => void; tilbakeUrl: string }) => {
+const NullstillRevurderingVarsel = (props: { isOpen: boolean; onClose: () => void; tilbakeUrl: string }) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });
     return (
         <Modal open={props.isOpen} onClose={props.onClose}>
@@ -31,3 +31,5 @@ export const ResetModal = (props: { isOpen: boolean; onClose: () => void; tilbak
         </Modal>
     );
 };
+
+export default NullstillRevurderingVarsel;

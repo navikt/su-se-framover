@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { useI18n } from '~lib/i18n';
 
 import sharedI18n from '../../søknadsbehandling/sharedI18n-nb';
-import { ResetModal as ResetTilbakekrevingModal } from '../advarselReset/resetModal';
+import NullstillRevurderingVarsel from '../advarselReset/NullstillRevurderingVarsel';
 
 import styles from './revurderingBunnknapper.module.less';
 
@@ -32,24 +32,20 @@ export const RevurderingBunnknapper = ({
             </Button>
         );
         if ('url' in tilbake) {
-            if (tilbake.visModal) {
-                return (
-                    <>
-                        {tilbakeknapp(() => setModalOpen(true))}
-                        <ResetTilbakekrevingModal
-                            isOpen={modalOpen}
-                            onClose={() => setModalOpen(false)}
-                            tilbakeUrl={tilbake.url}
-                        />
-                        ;
-                    </>
-                );
-            } else {
-                return tilbakeknapp(() => history.push(tilbake.url));
-            }
-        } else {
-            return tilbakeknapp(tilbake.onTilbakeClick);
+            return tilbake.visModal ? (
+                <>
+                    {tilbakeknapp(() => setModalOpen(true))}
+                    <NullstillRevurderingVarsel
+                        isOpen={modalOpen}
+                        onClose={() => setModalOpen(false)}
+                        tilbakeUrl={tilbake.url}
+                    />
+                </>
+            ) : (
+                tilbakeknapp(() => history.push(tilbake.url))
+            );
         }
+        return tilbakeknapp(tilbake.onTilbakeClick);
     };
 
     return (
