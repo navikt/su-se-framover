@@ -66,6 +66,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                         savingState={lagreBehandlingsinformasjonStatus}
                         avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                         erSaksbehandling={true}
+                        forrige={{ url: props.forrigeUrl, visModal: false }}
                         {...props}
                     />
                 ),

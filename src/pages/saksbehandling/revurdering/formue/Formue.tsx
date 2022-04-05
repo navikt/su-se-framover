@@ -153,7 +153,7 @@ const Formue = (props: RevurderingStegProps) => {
                             <UtfallSomIkkeStøttes feilmeldinger={lagreFormuegrunnlagStatus.value.feilmeldinger} />
                         )}
                         <RevurderingBunnknapper
-                            tilbakeUrl={props.forrigeUrl}
+                            tilbake={props.forrige}
                             loading={RemoteData.isPending(lagreFormuegrunnlagStatus)}
                             onLagreOgFortsettSenereClick={handleSubmit((values) =>
                                 lagreFormuegrunnlaget(values, 'avbryt')

@@ -1,10 +1,11 @@
-import { Button, Loader } from '@navikt/ds-react';
+import { Button } from '@navikt/ds-react';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useI18n } from '~lib/i18n';
 
 import sharedI18n from '../../søknadsbehandling/sharedI18n-nb';
+import NullstillRevurderingVarsel from '../advarselReset/NullstillRevurderingVarsel';
 
 import styles from './revurderingBunnknapper.module.less';
 
@@ -12,29 +13,40 @@ export const RevurderingBunnknapper = ({
     onLagreOgFortsettSenereClick,
     ...props
 }: {
-    tilbakeUrl?: string;
-    onTilbakeClick?: () => void;
+    tilbake: { url: string; visModal: boolean } | { onTilbakeClick: () => void };
     loading?: boolean;
     onLagreOgFortsettSenereClick?: () => void;
     nesteKnappTekst?: string;
 }) => {
-    const { intl } = useI18n({ messages: { ...sharedI18n } });
+    const history = useHistory();
+    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n } });
     const [knappTrykket, setKnappTrykket] = useState<'neste' | 'avslutt' | undefined>(undefined);
 
-    const Tilbake = () => (
-        <>
-            {props.tilbakeUrl && (
-                <LinkAsButton href={props.tilbakeUrl} variant="secondary">
-                    {intl.formatMessage({ id: 'knapp.tilbake' })}
-                </LinkAsButton>
-            )}
-            {props.onTilbakeClick && (
-                <Button onClick={props.onTilbakeClick} variant="secondary">
-                    {intl.formatMessage({ id: 'knapp.tilbake' })}
-                </Button>
-            )}
-        </>
-    );
+    const Tilbake = () => {
+        const { tilbake } = props;
+        if (tilbake === undefined) return <></>;
+        const tilbakeknapp = (onClick: () => void) => (
+            <Button onClick={onClick} variant="secondary" type="button">
+                {formatMessage('knapp.tilbake')}
+            </Button>
+        );
+        if ('url' in tilbake) {
+            return tilbake.visModal ? (
+                <>
+                    {tilbakeknapp(() => setModalOpen(true))}
+                    <NullstillRevurderingVarsel
+                        isOpen={modalOpen}
+                        onClose={() => setModalOpen(false)}
+                        tilbakeUrl={tilbake.url}
+                    />
+                </>
+            ) : (
+                tilbakeknapp(() => history.push(tilbake.url))
+            );
+        }
+        return tilbakeknapp(tilbake.onTilbakeClick);
+    };
 
     return (
         <div>
@@ -47,16 +59,15 @@ export const RevurderingBunnknapper = ({
                             onLagreOgFortsettSenereClick();
                         }}
                         type="button"
+                        loading={knappTrykket === 'avslutt' && props.loading}
                     >
-                        {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
-                        {knappTrykket === 'avslutt' && props.loading && <Loader />}
+                        {formatMessage('knapp.lagreOgfortsettSenere')}
                     </Button>
                 ) : (
                     <Tilbake />
                 )}
-                <Button onClick={() => setKnappTrykket('neste')} type={'submit'}>
-                    {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
-                    {knappTrykket === 'neste' && props.loading && <Loader />}
+                <Button onClick={() => setKnappTrykket('neste')} loading={knappTrykket === 'neste' && props.loading}>
+                    {props.nesteKnappTekst ? props.nesteKnappTekst : formatMessage('knapp.neste')}
                 </Button>
             </div>
             <div className={styles.navigationButtonContainer}>{onLagreOgFortsettSenereClick && <Tilbake />}</div>

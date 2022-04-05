@@ -141,13 +141,7 @@ const RevurderingPage = (props: {
                         <Heading level="1" size="large" className={styles.tittel}>
                             {formatMessage('revurdering.tittel')}
                         </Heading>
-                        <Route
-                            path={Routes.revurderValgtRevurdering.createURL({
-                                sakId: props.sakId,
-                                steg: RevurderingSteg.Periode,
-                                revurderingId: påbegyntRevurdering.id,
-                            })}
-                        >
+                        <Route path={createRevurderingsPath(RevurderingSteg.Periode)}>
                             <RevurderingIntroPage
                                 sakId={props.sakId}
                                 utbetalinger={props.utbetalinger}
@@ -162,9 +156,10 @@ const RevurderingPage = (props: {
                                 />
                             </Route>
                             {aktiveSteg(påbegyntRevurdering).map((el, idx) => {
-                                const forrigeUrl =
-                                    aktiveSteg(påbegyntRevurdering)[idx - 1]?.url ??
-                                    createRevurderingsPath(RevurderingSteg.Periode);
+                                const forrigeUrl = aktiveSteg(påbegyntRevurdering)[idx - 1]?.url;
+                                const forrige = forrigeUrl
+                                    ? { url: forrigeUrl, visModal: false }
+                                    : { url: createRevurderingsPath(RevurderingSteg.Periode), visModal: true };
                                 const nesteUrl = (revurdering: InformasjonsRevurdering) =>
                                     aktiveSteg(revurdering)[idx + 1]?.url ??
                                     createRevurderingsPath(RevurderingSteg.Oppsummering);
@@ -175,7 +170,7 @@ const RevurderingPage = (props: {
                                             sakId={props.sakId}
                                             informasjonsRevurdering={påbegyntRevurdering}
                                             grunnlagsdataOgVilkårsvurderinger={grunnlag}
-                                            forrigeUrl={forrigeUrl}
+                                            forrige={forrige}
                                             nesteUrl={nesteUrl}
                                             avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                                         />
@@ -207,7 +202,7 @@ const RevurderingPage = (props: {
 
 const RevurderingstegPage = (props: {
     steg: RevurderingSteg;
-    forrigeUrl: string;
+    forrige: { url: string; visModal: boolean };
     nesteUrl: (revurdering: InformasjonsRevurdering) => string;
     avsluttUrl: string;
     sakId: string;
@@ -232,7 +227,7 @@ const RevurderingstegPage = (props: {
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
-                                forrigeUrl={props.forrigeUrl}
+                                forrige={props.forrige}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
                                 avsluttUrl={props.avsluttUrl}
                             />
@@ -243,7 +238,7 @@ const RevurderingstegPage = (props: {
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
-                                forrigeUrl={props.forrigeUrl}
+                                forrige={props.forrige}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
                                 avsluttUrl={props.avsluttUrl}
                             />
@@ -254,7 +249,7 @@ const RevurderingstegPage = (props: {
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
-                                forrigeUrl={props.forrigeUrl}
+                                forrige={props.forrige}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
                                 avsluttUrl={props.avsluttUrl}
                             />
@@ -265,7 +260,7 @@ const RevurderingstegPage = (props: {
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
-                                forrigeUrl={props.forrigeUrl}
+                                forrige={props.forrige}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
                                 avsluttUrl={props.avsluttUrl}
                             />
@@ -276,7 +271,7 @@ const RevurderingstegPage = (props: {
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
-                                forrigeUrl={props.forrigeUrl}
+                                forrige={props.forrige}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
                                 avsluttUrl={props.avsluttUrl}
                             />

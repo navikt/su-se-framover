@@ -28,7 +28,7 @@ interface Props {
     form: UseFormReturn<FormData>;
     minDate: Nullable<Date>;
     maxDate: Nullable<Date>;
-    forrigeUrl: string;
+    forrige: { url: string; visModal: boolean };
     nesteUrl: string;
     avsluttUrl: string;
     onFormSubmit: (values: FormData, onSuccess: () => void) => void;
@@ -118,7 +118,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
             )}
             <RevurderingBunnknapper
-                tilbakeUrl={props.forrigeUrl}
+                tilbake={props.forrige}
                 onLagreOgFortsettSenereClick={form.handleSubmit((values: FormData) =>
                     onFormSubmit(values, () => history.push(props.avsluttUrl))
                 )}

@@ -53,8 +53,8 @@ interface RevurderingIntroFormProps {
     revurdering?: InformasjonsRevurdering;
     minFraOgMed: Date;
     maxFraOgMed: Date;
-    nesteClickStatus: RemoteData.RemoteData<ApiError, [null, null]>;
-    lagreOgFortsettSenereClickStatus: RemoteData.RemoteData<ApiError, null>;
+    opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
+    oppdaterRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const getInitialÅrsak = (årsak: OpprettetRevurderingGrunn | null | undefined) =>
@@ -218,15 +218,20 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                     />
                 </div>
-                {RemoteData.isFailure(props.nesteClickStatus) && <ApiErrorAlert error={props.nesteClickStatus.error} />}
+                {RemoteData.isFailure(props.opprettRevurderingStatus) && (
+                    <ApiErrorAlert error={props.opprettRevurderingStatus.error} />
+                )}
+                {RemoteData.isFailure(props.oppdaterRevurderingStatus) && (
+                    <ApiErrorAlert error={props.oppdaterRevurderingStatus.error} />
+                )}
                 <RevurderingBunnknapper
-                    tilbakeUrl={props.tilbakeUrl}
+                    tilbake={{ url: props.tilbakeUrl, visModal: false }}
                     onLagreOgFortsettSenereClick={form.handleSubmit((values) =>
                         props.save(formToSubmit(values), 'avbryt')
                     )}
                     loading={
-                        RemoteData.isPending(props.lagreOgFortsettSenereClickStatus) ||
-                        RemoteData.isPending(props.nesteClickStatus)
+                        RemoteData.isPending(props.opprettRevurderingStatus) ||
+                        RemoteData.isPending(props.oppdaterRevurderingStatus)
                     }
                 />
             </div>
