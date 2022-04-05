@@ -53,7 +53,7 @@ const KontrollsamtalePage = (props: Props) => {
                             {formatMessage('kontrollsamtale')}
                         </Heading>
                         {!props.kanKalleInn ? (
-                            <SkjemaelementFeilmelding className={styles.feilmelding}>
+                            <SkjemaelementFeilmelding>
                                 {formatMessage('ingenUtbetalingsperioder')}
                             </SkjemaelementFeilmelding>
                         ) : (

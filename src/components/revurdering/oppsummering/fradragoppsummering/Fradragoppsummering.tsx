@@ -56,7 +56,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                             <BodyShort size="small" className={styles.detailedLinje}>
                                                 {formatMessage('fradrag.utenlandsk.beløp')}
                                             </BodyShort>
-                                            <BodyShort size="small" className={styles.alignTextRight}>
+                                            <BodyShort size="small">
                                                 {formatCurrency(fradrag.utenlandskInntekt.beløpIUtenlandskValuta, {
                                                     currency: fradrag.utenlandskInntekt.valuta,
                                                 })}
@@ -64,7 +64,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                             <BodyShort size="small" className={styles.detailedLinje}>
                                                 {formatMessage('fradrag.utenlandsk.kurs')}
                                             </BodyShort>
-                                            <BodyShort size="small" className={styles.alignTextRight}>
+                                            <BodyShort size="small">
                                                 {intl.formatNumber(fradrag.utenlandskInntekt.kurs)}
                                             </BodyShort>
                                         </>

@@ -35,14 +35,8 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
                 verdi={DateUtils.formatPeriode(vurdering.periode)}
             />
             <div className={styles.titler}>
-                <BodyShort className={styles.formueVerdiTittel}>
-                    {intl.formatMessage({ id: 'gjeldendeformue.søker' })}
-                </BodyShort>
-                {eps && (
-                    <BodyShort className={styles.formueVerdiTittel}>
-                        {intl.formatMessage({ id: 'gjeldendeformue.eps' })}
-                    </BodyShort>
-                )}
+                <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.søker' })}</BodyShort>
+                {eps && <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.eps' })}</BodyShort>}
             </div>
             <OppsummeringPar
                 className={styles.oppsummeringstriple}

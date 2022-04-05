@@ -62,11 +62,11 @@ const Drift = () => {
     return (
         <div className={styles.container}>
             <div>
-                <h1 className={styles.header}>Drift</h1>
+                <h1>Drift</h1>
             </div>
 
             <div>
-                <h1 className={styles.header}>Status</h1>
+                <h1>Status</h1>
                 <div className={styles.statusContainer}>
                     {RemoteData.isSuccess(statusBakover) ? (
                         <Alert className={styles.alert} variant="success">
@@ -80,7 +80,7 @@ const Drift = () => {
                 </div>
             </div>
             <div>
-                <h1 className={styles.header}>Actions</h1>
+                <h1>Actions</h1>
                 <div className={styles.actionsContainer}>
                     <Button variant="secondary" className={styles.knapp} type="button" onClick={fixSøknader}>
                         Fix Søknader
