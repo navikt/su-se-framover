@@ -16,6 +16,9 @@
         "npm": ">=8 <9"
     },
     "dependencies": {
+        "@parcel/config-default": "^2.4.1",
+        "@parcel/core": "^2.4.1",
+        "@parcel/transformer-css": "^2.4.1",
         "@tsconfig/node12": "^1.0.9",
         "@types/compression": "^1.7.2",
         "@types/connect-redis": "0.0.17",
@@ -24,7 +27,6 @@
         "@types/express-handlebars": "^5.3.1",
         "@types/express-http-proxy": "^1.6.3",
         "@types/express-session": "^1.17.4",
-        "@types/parcel-bundler": "^1.12.4",
         "@types/passport": "^1.0.7",
         "@types/passport-jwt": "^3.0.6",
         "@types/pino-http": "^5.8.0",
@@ -40,9 +42,9 @@
         "helmet": "^4.6.0",
         "https-proxy-agent": "^5.0.0",
         "openid-client": "^5.0.2",
-        "parcel-bundler": "^1.12.5",
         "passport": "^0.5.0",
         "passport-jwt": "^4.0.0",
+        "pino": "^7.9.2",
         "pino-colada": "^2.2.0",
         "pino-http": "^5.8.0",
         "redis": "^3.1.2",
