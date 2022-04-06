@@ -2,11 +2,11 @@ import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-import { useI18n } from '~lib/i18n';
-import * as routes from '~lib/routes';
-import { StartUtfylling } from '~pages/søknad/steg/start-utfylling/StartUtfylling';
+import { useI18n } from '~src/lib/i18n';
+import * as routes from '~src/lib/routes';
+import { StartUtfylling } from '~src/pages/søknad/steg/start-utfylling/StartUtfylling';
 
-import styles from './index.module.less';
+import * as styles from './index.module.less';
 import Kvittering from './kvittering/Kvittering';
 import messages from './nb';
 import Infoside from './steg/infoside/Infoside';

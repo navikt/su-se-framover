@@ -2,7 +2,7 @@ import { struct } from 'fp-ts/lib/Eq';
 import * as N from 'fp-ts/lib/number';
 import * as S from 'fp-ts/lib/string';
 
-import { eqNullable, Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~src/lib/types';
 
 import { Periode } from './Periode';
 

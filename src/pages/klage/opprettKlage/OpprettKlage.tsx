@@ -4,23 +4,23 @@ import { Button, Heading, HelpText, Loader, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~components/datePicker/DatePicker';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import * as klageActions from '~features/klage/klageActions';
-import { pipe } from '~lib/fp';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import yup from '~lib/validering';
-import { KlageSteg } from '~pages/saksbehandling/types';
-import { Sak } from '~types/Sak';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import * as klageActions from '~src/features/klage/klageActions';
+import { pipe } from '~src/lib/fp';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import yup from '~src/lib/validering';
+import { KlageSteg } from '~src/pages/saksbehandling/types';
+import { Sak } from '~src/types/Sak';
 
 import messages from '../klage-nb';
 
-import styles from './opprettKlage.module.less';
+import * as styles from './opprettKlage.module.less';
 
 interface FormData {
     journalpostId: string;

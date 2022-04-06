@@ -2,17 +2,20 @@ import * as B from 'fp-ts/boolean';
 import * as Eq from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 
-import { DelerBoligMed } from '~features/søknad/types';
-import { eqNullable, Nullable } from '~lib/types';
-import { Behandlingsinformasjon, Formue, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
+import { DelerBoligMed } from '~src/features/søknad/types';
+import { eqNullable, Nullable } from '~src/lib/types';
+import { Behandlingsinformasjon, Formue, FormueStatus, FormueVerdier } from '~src/types/Behandlingsinformasjon';
 import {
     Bosituasjon,
     BosituasjonTyper,
-} from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnhold } from '~types/Søknad';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
-import { eqVerdierFormData, VerdierFormData } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { SøknadInnhold } from '~src/types/Søknad';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import {
+    eqVerdierFormData,
+    VerdierFormData,
+} from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 export interface FormueFormData {
     status: FormueStatus;

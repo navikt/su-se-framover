@@ -4,10 +4,10 @@ import { FormikErrors } from 'formik';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { UtenlandskInntekt } from '~types/Fradrag';
+import { UtenlandskInntekt } from '~src/types/Fradrag';
 
 import { UtenlandskInntektFormData } from './beregningstegTypes';
-import styles from './fradragInputs.module.less';
+import * as styles from './fradragInputs.module.less';
 
 const InntektFraUtland = (props: {
     name: string;

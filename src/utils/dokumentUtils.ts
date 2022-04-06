@@ -1,4 +1,4 @@
-import { Dokument } from '~types/dokument/Dokument';
+import { Dokument } from '~src/types/dokument/Dokument';
 
 export function getBlob(dokument: Dokument) {
     const binary_string = window.atob(dokument.dokument);

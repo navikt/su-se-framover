@@ -1,4 +1,4 @@
-import { statusFeilmeldinger } from '~components/apiErrorAlert/ApiErrorAlert-nb';
+import { statusFeilmeldinger } from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 
 export default {
     ...statusFeilmeldinger,

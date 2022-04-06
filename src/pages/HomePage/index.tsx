@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { useUserContext } from '~context/userContext';
-import * as Routes from '~lib/routes';
-import { Rolle } from '~types/LoggedInUser';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { useUserContext } from '~src/context/userContext';
+import * as Routes from '~src/lib/routes';
+import { Rolle } from '~src/types/LoggedInUser';
 
-import styles from './homePage.module.less';
+import * as styles from './homePage.module.less';
 
 const HomePage = () => {
     const history = useHistory();

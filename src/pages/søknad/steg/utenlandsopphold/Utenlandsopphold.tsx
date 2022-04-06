@@ -5,25 +5,25 @@ import { useFormik, FormikErrors } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { BooleanRadioGroup } from '~/components/formElements/FormElements';
-import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import SøknadInputliste from '~features/søknad/søknadInputliste/SøknadInputliste';
-import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
-import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/i18n';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
-import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
+import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
+import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
+import { Utenlandsopphold as UtenlandsoppholdType } from '~src/features/søknad/types';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { useI18n } from '~src/lib/i18n';
+import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~src/lib/validering';
+import { useAppSelector, useAppDispatch } from '~src/redux/Store';
+import { kalkulerTotaltAntallDagerIUtlandet } from '~src/utils/date/dateUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
+import * as sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './utenlandsopphold-nb';
-import styles from './utenlandsopphold.module.less';
+import * as styles from './utenlandsopphold.module.less';
 
 type FormData = SøknadState['utenlandsopphold'];
 
@@ -290,7 +290,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 <SøknadSpørsmålsgruppe withoutLegend>
                     <BooleanRadioGroup
                         name="harReistTilUtlandetSiste90dager"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('harReistSiste90.label')}
                         error={formik.errors.harReistTilUtlandetSiste90dager}
                         value={formik.values.harReistTilUtlandetSiste90dager}
@@ -353,7 +352,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                     <BooleanRadioGroup
                         name="skalReiseTilUtlandetNeste12Måneder"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('skalReiseNeste12.label')}
                         error={formik.errors.skalReiseTilUtlandetNeste12Måneder}
                         value={formik.values.skalReiseTilUtlandetNeste12Måneder}

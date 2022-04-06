@@ -1,5 +1,5 @@
-import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { BeregnetIngenEndring, Revurdering, SimulertRevurdering, UnderkjentRevurdering } from '~types/Revurdering';
+import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { BeregnetIngenEndring, Revurdering, SimulertRevurdering, UnderkjentRevurdering } from '~src/types/Revurdering';
 import {
     erForhåndsvarslingBesluttet,
     erGregulering,
@@ -7,7 +7,7 @@ import {
     erRevurderingForhåndsvarslet,
     erRevurderingUnderkjent,
     skalAttesteres,
-} from '~utils/revurdering/revurderingUtils';
+} from '~src/utils/revurdering/revurderingUtils';
 
 export const hentBrevsending = (revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering) => {
     if (

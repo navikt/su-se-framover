@@ -5,20 +5,20 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~components/datePicker/DatePicker';
-import * as revurderingActions from '~features/revurdering/revurderingActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import yup, { getDateErrorMessage } from '~lib/validering';
-import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { Revurdering, OpprettetRevurderingGrunn, StansAvYtelse } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import * as revurderingActions from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import yup, { getDateErrorMessage } from '~src/lib/validering';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { Revurdering, OpprettetRevurderingGrunn, StansAvYtelse } from '~src/types/Revurdering';
+import { Sak } from '~src/types/Sak';
 
 import messages from './stans-nb';
-import styles from './stans.module.less';
+import * as styles from './stans.module.less';
 import StansOppsummering from './stansOppsummering';
 
 interface Props {

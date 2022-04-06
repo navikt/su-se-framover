@@ -1,4 +1,4 @@
-import { RestansType, RestansStatus } from '~types/Restans';
+import { RestansType, RestansStatus } from '~src/types/Restans';
 
 export const restansTypeMessages: { [key in RestansType]: string } = {
     [RestansType.SØKNADSBEHANDLING]: 'Søknadsbehandling',

@@ -2,11 +2,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { ApiError } from '~api/apiClient';
-import * as personApi from '~api/personApi';
-import * as søknadApi from '~api/søknadApi';
-import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { SøknadInnhold, Søknadstype } from '~types/Søknad';
+import { ApiError } from '~src/api/apiClient';
+import * as personApi from '~src/api/personApi';
+import * as søknadApi from '~src/api/søknadApi';
+import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
+import { SøknadInnhold, Søknadstype } from '~src/types/Søknad';
 
 import { SøknadState } from './søknad.slice';
 import { DelerBoligMed } from './types';

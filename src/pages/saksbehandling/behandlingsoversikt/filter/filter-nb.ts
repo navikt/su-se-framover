@@ -1,4 +1,4 @@
-import { restansStatus, restansTypeMessages } from '~pages/saksbehandling/restans/restanser-nb';
+import { restansStatus, restansTypeMessages } from '~src/pages/saksbehandling/restans/restanser-nb';
 
 export default {
     tidsperiode: 'Tidsperiode',

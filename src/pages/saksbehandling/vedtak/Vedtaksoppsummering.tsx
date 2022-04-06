@@ -2,17 +2,17 @@ import { Button } from '@navikt/ds-react';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Sak } from '~types/Sak';
+import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Sak } from '~src/types/Sak';
 
 import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
 import ReguleringVedtaksoppsummering from './reguleringsvedtaksoppsummering/reguleringVedtaksoppsummering';
 import RevurderingsoppsummeringWithSnapshot from './revurderingsvedtakWithSnapshot/RevurderingsoppsummeringWithSnapshot';
 import { hentInformasjonKnyttetTilVedtak, hentKlagevedtakFraKlageinstans } from './utils';
 import messages from './vedtaksoppsummering-nb';
-import styles from './vedtaksoppsummering.module.less';
+import * as styles from './vedtaksoppsummering.module.less';
 
 interface Props {
     sak: Sak;

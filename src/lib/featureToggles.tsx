@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import * as React from 'react';
 
-import { ApiClientResult, ApiError, ErrorCode } from '~/api/apiClient';
-import { fetchAll as fetchAllFeatureToggles, FeatureToggle, FeatureToggles } from '~/api/featureToggleApi';
+import { ApiClientResult, ApiError, ErrorCode } from '~src/api/apiClient';
+import { fetchAll as fetchAllFeatureToggles, FeatureToggle, FeatureToggles } from '~src/api/featureToggleApi';
 
 import { pipe } from './fp';
 

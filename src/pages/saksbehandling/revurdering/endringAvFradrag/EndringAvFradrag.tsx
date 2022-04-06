@@ -4,39 +4,39 @@ import { useFormik } from 'formik';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ApiError, ErrorMessage } from '~api/apiClient';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import fradragMessages from '~components/beregningOgSimulering/beregning/beregning-nb';
-import { fradragTilFradragFormData } from '~components/beregningOgSimulering/beregning/beregningUtils';
+import { ApiError, ErrorMessage } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import fradragMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
+import { fradragTilFradragFormData } from '~src/components/beregningOgSimulering/beregning/beregningUtils';
 import {
     FradragFormData,
     FradragInputs,
     fradragSchema,
-} from '~components/beregningOgSimulering/beregning/FradragInputs';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import Fradragoppsummering from '~components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
-import { customFormikSubmit } from '~lib/formUtils';
-import { useI18n } from '~lib/i18n';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { useAppDispatch } from '~redux/Store';
-import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
-import { Revurdering, RevurderingStegProps } from '~types/Revurdering';
-import * as DateUtils from '~utils/date/dateUtils';
-import { fjernFradragSomIkkeErValgbare } from '~utils/fradrag/fradragUtil';
-import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+} from '~src/components/beregningOgSimulering/beregning/FradragInputs';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import Fradragoppsummering from '~src/components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { lagreFradragsgrunnlag } from '~src/features/revurdering/revurderingActions';
+import { customFormikSubmit } from '~src/lib/formUtils';
+import { useI18n } from '~src/lib/i18n';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { useAppDispatch } from '~src/redux/Store';
+import { Fradrag, Fradragstype, FradragTilhører } from '~src/types/Fradrag';
+import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
+import * as DateUtils from '~src/utils/date/dateUtils';
+import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
+import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
-import sharedStyles from '../revurdering.module.less';
+import * as sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './endringAvFradrag-nb';
-import styles from './endringAvFradrag.module.less';
+import * as styles from './endringAvFradrag.module.less';
 
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
@@ -146,9 +146,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
                                 (fradrag) => fradrag.type === Fradragstype.AvkortingUtenlandsopphold
                             ) && (
-                                <Alert variant={'info'} className={styles.avkortingAlert}>
-                                    {intl.formatMessage({ id: 'alert.advarsel.avkorting' })}
-                                </Alert>
+                                <Alert variant={'info'}>{intl.formatMessage({ id: 'alert.advarsel.avkorting' })}</Alert>
                             )}
                         </div>
                         <div>

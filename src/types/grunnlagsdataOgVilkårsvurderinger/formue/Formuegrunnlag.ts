@@ -1,5 +1,5 @@
-import { Nullable } from '~lib/types';
-import { FormuegrunnlagVerdier } from '~types/Revurdering';
+import { Nullable } from '~src/lib/types';
+import { FormuegrunnlagVerdier } from '~src/types/Revurdering';
 
 export interface Formuegrunnlag {
     søkersFormue: FormuegrunnlagVerdier;

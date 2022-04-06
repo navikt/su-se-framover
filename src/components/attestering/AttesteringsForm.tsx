@@ -4,17 +4,17 @@ import { Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { ApiResult } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { UnderkjennelseGrunn } from '~types/Behandling';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { ApiResult } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
 
 import messages from './attesteringsForm-nb';
-import styles from './attesteringsForm.module.less';
+import * as styles from './attesteringsForm.module.less';
 import UnderkjennelsesForm from './UnderkjennelsesForm';
 
 export interface AttesteringFormData {

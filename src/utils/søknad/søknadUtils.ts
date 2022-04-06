@@ -1,4 +1,4 @@
-import { formatDate } from '~utils/date/dateUtils';
+import { formatDate } from '~src/utils/date/dateUtils';
 
 import { Behandlingsstatus } from '../../types/Behandling';
 import { Sak } from '../../types/Sak';

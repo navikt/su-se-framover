@@ -3,13 +3,13 @@ import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import React, { forwardRef, useState } from 'react';
 import { Collapse } from 'react-collapse';
 
-import { useI18n } from '~lib/i18n';
-import { trackEvent } from '~lib/tracking/amplitude';
-import { søknadHjelpeTekstKlikk } from '~lib/tracking/trackingEvents';
-import { Nullable } from '~lib/types';
+import { useI18n } from '~src/lib/i18n';
+import { trackEvent } from '~src/lib/tracking/amplitude';
+import { søknadHjelpeTekstKlikk } from '~src/lib/tracking/trackingEvents';
+import { Nullable } from '~src/lib/types';
 
 import nb from './formElements-nb';
-import styles from './formElements.module.less';
+import * as styles from './formElements.module.less';
 
 interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChange' | 'children' | 'disabled'> {
     value: Nullable<boolean> | undefined;

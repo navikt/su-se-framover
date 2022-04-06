@@ -1,10 +1,10 @@
 import { Dropdown, Header } from '@navikt/ds-react-internal';
 import React from 'react';
 
-import Config from '~/config';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { LoggedInUser, Rolle } from '~types/LoggedInUser';
+import Config from '~src/config';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { LoggedInUser, Rolle } from '~src/types/LoggedInUser';
 
 import messages from './header-nb';
 

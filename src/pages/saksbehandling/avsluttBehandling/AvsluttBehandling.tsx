@@ -1,12 +1,12 @@
 import { Alert, Heading, Panel } from '@navikt/ds-react';
 import React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Sak } from '~types/Sak';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Sak } from '~src/types/Sak';
 
 import messages from './avsluttBehandling-nb';
-import styles from './avsluttBehandling.module.less';
+import * as styles from './avsluttBehandling.module.less';
 import AvsluttKlage from './avsluttKlage/AvsluttKlage';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad';

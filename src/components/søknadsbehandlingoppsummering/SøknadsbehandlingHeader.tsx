@@ -5,21 +5,21 @@ import { isSome } from 'fp-ts/lib/Option';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import * as DokumentApi from '~api/dokumentApi';
-import * as PdfApi from '~api/pdfApi';
-import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
-import { useUserContext } from '~context/userContext';
-import { useApiCall } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
-import { DokumentIdType } from '~types/dokument/Dokument';
-import { Vedtak } from '~types/Vedtak';
-import { erIverksatt } from '~utils/behandling/behandlingUtils';
-import { getBlob } from '~utils/dokumentUtils';
-import { søknadMottatt } from '~utils/søknad/søknadUtils';
+import * as DokumentApi from '~src/api/dokumentApi';
+import * as PdfApi from '~src/api/pdfApi';
+import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
+import { useUserContext } from '~src/context/userContext';
+import { useApiCall } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
+import { DokumentIdType } from '~src/types/dokument/Dokument';
+import { Vedtak } from '~src/types/Vedtak';
+import { erIverksatt } from '~src/utils/behandling/behandlingUtils';
+import { getBlob } from '~src/utils/dokumentUtils';
+import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
 import messages from './søknadsbehandling-nb';
-import styles from './søknadsbehandlingHeader.module.less';
+import * as styles from './søknadsbehandlingHeader.module.less';
 
 const SøknadsbehandlingHeader = (props: {
     sakId: string;

@@ -3,8 +3,8 @@ import { AsyncThunk } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { ApiClientResult, ApiError } from '~api/apiClient';
-import { useAppDispatch } from '~redux/Store';
+import { ApiClientResult, ApiError } from '~src/api/apiClient';
+import { useAppDispatch } from '~src/redux/Store';
 
 import { SuccessNotificationState } from './routes';
 

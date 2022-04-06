@@ -1,4 +1,4 @@
-import { Søknadsteg } from '~pages/søknad/types';
+import { Søknadsteg } from '~src/pages/søknad/types';
 
 export const steg: { [key in Søknadsteg]: string } = {
     [Søknadsteg.Uførevedtak]: 'Uførevedtak',

@@ -1,7 +1,7 @@
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { Revurdering } from '~types/Revurdering';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Revurdering } from '~src/types/Revurdering';
 
 export const getDefaultValues = (revurdering: Revurdering, bosituasjon: Bosituasjon[]): BosituasjonFormData => {
     const bosituasjonLocal = revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon;

@@ -5,12 +5,12 @@ import { useHistory } from 'react-router-dom';
 import {
     oppdaterRevurderingsPeriode as oppdaterRevurdering,
     opprettRevurdering,
-} from '~features/revurdering/revurderingActions';
-import * as Routes from '~lib/routes';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { InformasjonSomRevurderes, InformasjonsRevurdering, OpprettetRevurderingGrunn } from '~types/Revurdering';
-import { compareUtbetalingsperiode, Utbetalingsperiode } from '~types/Utbetalingsperiode';
-import { finnNesteRevurderingsteg } from '~utils/revurdering/revurderingUtils';
+} from '~src/features/revurdering/revurderingActions';
+import * as Routes from '~src/lib/routes';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { InformasjonSomRevurderes, InformasjonsRevurdering, OpprettetRevurderingGrunn } from '~src/types/Revurdering';
+import { compareUtbetalingsperiode, Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
+import { finnNesteRevurderingsteg } from '~src/utils/revurdering/revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 

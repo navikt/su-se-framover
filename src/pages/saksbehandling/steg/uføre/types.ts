@@ -1,5 +1,5 @@
-import { Nullable } from '~lib/types';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Nullable } from '~src/lib/types';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 
 export interface UføreperiodeFormData {
     id: string;

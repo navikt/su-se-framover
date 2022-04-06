@@ -1,7 +1,7 @@
 import { BodyShort, Label } from '@navikt/ds-react';
 import React from 'react';
 
-import styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
+import * as styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 
 export const Oppsummeringsfelt = (props: {
     label: React.ReactNode;

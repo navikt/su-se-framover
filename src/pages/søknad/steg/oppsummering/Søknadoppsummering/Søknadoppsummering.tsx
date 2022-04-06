@@ -3,19 +3,19 @@ import { Accordion } from '@navikt/ds-react';
 import React from 'react';
 import { RawIntlProvider, FormattedDate } from 'react-intl';
 
-import stegMessages from '~/pages/søknad/nb';
-import boOgOppholdMessages from '~/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
-import flyktningstatusMessages from '~/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
-import uførevedtakMessages from '~/pages/søknad/steg/uførevedtak/uførevedtak-nb';
-import utenlandsoppholdMessages from '~/pages/søknad/steg/utenlandsopphold/utenlandsopphold-nb';
-import { Person } from '~api/personApi';
-import { SøknadState } from '~features/søknad/søknad.slice';
-import { DelerBoligMed } from '~features/søknad/types';
-import { useI18n } from '~lib/i18n';
-import { Søknadsteg } from '~pages/søknad/types';
-import { formatAdresse } from '~utils/format/formatUtils';
+import { Person } from '~src/api/personApi';
+import { SøknadState } from '~src/features/søknad/søknad.slice';
+import { DelerBoligMed } from '~src/features/søknad/types';
+import { useI18n } from '~src/lib/i18n';
+import stegMessages from '~src/pages/søknad/nb';
+import boOgOppholdMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
+import flyktningstatusMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
+import uførevedtakMessages from '~src/pages/søknad/steg/uførevedtak/uførevedtak-nb';
+import utenlandsoppholdMessages from '~src/pages/søknad/steg/utenlandsopphold/utenlandsopphold-nb';
+import { Søknadsteg } from '~src/pages/søknad/types';
+import { formatAdresse } from '~src/utils/format/formatUtils';
 
-import sharedStyles from '../../../steg-shared.module.less';
+import * as sharedStyles from '../../../steg-shared.module.less';
 import { EndreSvar } from '../components/EndreSvar';
 import { FormueOppsummering } from '../components/FormueOppsummering';
 import InntektsOppsummering from '../components/InntektsOppsummering';
@@ -23,7 +23,7 @@ import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
 import { ingenAdresseGrunnTekst } from './OppsummeringUtils';
 import oppsummeringMessages from './søknadsoppsummering-nb';
-import styles from './søknadsoppsummering.module.less';
+import * as styles from './søknadsoppsummering.module.less';
 
 const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
     const { intl, formatMessage } = useI18n({

@@ -4,16 +4,16 @@ import { toNullable } from 'fp-ts/lib/Option';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { InformationIcon } from '~components/icons/Icons';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
-import { useUserContext } from '~context/userContext';
-import { pipe } from '~lib/fp';
-import * as Routes from '~lib/routes';
-import { Revurdering, UtbetalingsRevurderingStatus } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
-import { Vedtak } from '~types/Vedtak';
-import { formatDate } from '~utils/date/dateUtils';
+import { InformationIcon } from '~src/components/icons/Icons';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
+import { useUserContext } from '~src/context/userContext';
+import { pipe } from '~src/lib/fp';
+import * as Routes from '~src/lib/routes';
+import { Revurdering, UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
+import { Sak } from '~src/types/Sak';
+import { Vedtak } from '~src/types/Vedtak';
+import { formatDate } from '~src/utils/date/dateUtils';
 
 import {
     erRevurderingTilAttestering,
@@ -28,7 +28,7 @@ import {
 import { RevurderingSteg } from '../types';
 
 import { AvsluttOgStartFortsettButtons } from './Sakintro';
-import styles from './sakintro.module.less';
+import * as styles from './sakintro.module.less';
 
 export const ÅpneRevurderinger = (props: { sak: Sak; åpneRevurderinger: Revurdering[]; intl: IntlShape }) => {
     if (props.åpneRevurderinger.length === 0) return null;

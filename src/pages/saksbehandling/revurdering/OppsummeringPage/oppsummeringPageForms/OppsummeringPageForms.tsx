@@ -4,21 +4,21 @@ import { Checkbox, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import * as pdfApi from '~api/pdfApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '~components/brevInput/BrevInput';
-import { ApiResult } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { UNDERSCORE_REGEX } from '~pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
-import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~types/Revurdering';
+import * as pdfApi from '~src/api/pdfApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { BrevInput } from '~src/components/brevInput/BrevInput';
+import { ApiResult } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
+import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';
 
 import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
 
 import messages from './oppsummeringPageForms-nb';
-import styles from './oppsummeringPageForms.module.less';
+import * as styles from './oppsummeringPageForms.module.less';
 
 export const ResultatEtterForhåndsvarselform = (props: {
     sakId: string;
@@ -96,7 +96,6 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         legend={formatMessage('etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel')}
                         error={fieldState.error?.message}
                         name={field.name}
-                        className={styles.resultatEtterForhåndsvarselContainer}
                         value={field.value ?? undefined}
                         onChange={(val) => field.onChange(val as BeslutningEtterForhåndsvarsling)}
                     >
@@ -120,7 +119,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                 control={form.control}
                 name="begrunnelse"
                 render={({ field, fieldState }) => (
-                    <div className={styles.etterForhåndsvarselBegrunnelseContainer}>
+                    <div>
                         <Textarea
                             label={formatMessage('etterForhåndsvarsel.begrunnelse.label')}
                             {...field}
@@ -254,12 +253,7 @@ export const SendTilAttesteringForm = (props: {
                     control={form.control}
                     name="skalFøreTilBrevutsending"
                     render={({ field }) => (
-                        <Checkbox
-                            name="skalFøreTilBrevutsending"
-                            className={styles.skalFøreTilBrevutsendingCheckbox}
-                            checked={field.value}
-                            onChange={field.onChange}
-                        >
+                        <Checkbox name="skalFøreTilBrevutsending" checked={field.value} onChange={field.onChange}>
                             {formatMessage('sendTilAttestering.skalFøreTilBrev')}
                         </Checkbox>
                     )}

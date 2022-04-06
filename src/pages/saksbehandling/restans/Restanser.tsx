@@ -2,13 +2,13 @@ import { Alert, Table } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 
-import VelgSakKnapp from '~components/velgSakKnapp/velgSakKnapp';
-import { useI18n } from '~lib/i18n';
-import { Restans } from '~types/Restans';
-import { formatDateTime } from '~utils/date/dateUtils';
+import VelgSakKnapp from '~src/components/velgSakKnapp/velgSakKnapp';
+import { useI18n } from '~src/lib/i18n';
+import { Restans } from '~src/types/Restans';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from './restanser-nb';
-import styles from './restanser.module.less';
+import * as styles from './restanser.module.less';
 import { AriaSortVerdi, RestansKolonne, sortTabell } from './restanserUtils';
 
 const RestanserTabell = (props: { tabelldata: Restans[] }) => {

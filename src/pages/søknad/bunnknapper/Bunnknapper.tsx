@@ -2,12 +2,12 @@ import { BodyLong, Button, Heading, Loader, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import TextProvider from '~components/TextProvider';
-import { Languages } from '~lib/i18n';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import TextProvider from '~src/components/TextProvider';
+import { Languages } from '~src/lib/i18n';
 
 import messages from './bunnknapper-nb';
-import styles from './bunnknapper.module.less';
+import * as styles from './bunnknapper.module.less';
 
 const Bunnknapper = (props: {
     previous?: {

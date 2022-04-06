@@ -1,11 +1,11 @@
 import { BodyLong, GuidePanel, Heading, Ingress, Link } from '@navikt/ds-react';
 import React from 'react';
 
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { useI18n } from '~lib/i18n';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { useI18n } from '~src/lib/i18n';
 
 import messages from './infoside-nb';
-import styles from './infoside.module.less';
+import * as styles from './infoside.module.less';
 
 const Infoside = (props: { nesteUrl: string }) => {
     const suUførFlyktningLink = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-ufor-flyktning';

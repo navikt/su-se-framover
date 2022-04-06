@@ -1,6 +1,6 @@
-import { SøknadState } from '~features/søknad/søknad.slice';
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import { SøknadState } from '~src/features/søknad/søknad.slice';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
 
 type InntektFormData = SøknadState['inntekt'];
 

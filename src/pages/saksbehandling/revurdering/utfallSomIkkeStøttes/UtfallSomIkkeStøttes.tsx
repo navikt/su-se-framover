@@ -1,12 +1,12 @@
 import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
-import { ErrorMessage } from '~api/apiClient';
-import messages from '~components/apiErrorAlert/ApiErrorAlert-nb';
-import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
-import { useI18n } from '~lib/i18n';
+import { ErrorMessage } from '~src/api/apiClient';
+import messages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
+import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
+import { useI18n } from '~src/lib/i18n';
 
-import styles from './utfallSomIkkeStøttes.module.less';
+import * as styles from './utfallSomIkkeStøttes.module.less';
 
 const UtfallSomIkkeStøttes = (props: { feilmeldinger: ErrorMessage[] }) => {
     const { formatMessage } = useI18n({ messages });

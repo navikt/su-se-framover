@@ -6,26 +6,26 @@ import { FormikErrors, useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { BooleanRadioGroup } from '~/components/formElements/FormElements';
-import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
-import { Adresse, IngenAdresseGrunn, Person } from '~api/personApi';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
-import { DelerBoligMed, EPSFormData } from '~features/søknad/types';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/i18n';
-import { keyOf } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { formatAdresse } from '~utils/format/formatUtils';
+import { Adresse, IngenAdresseGrunn, Person } from '~src/api/personApi';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
+import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
+import { DelerBoligMed, EPSFormData } from '~src/features/søknad/types';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { useI18n } from '~src/lib/i18n';
+import { keyOf } from '~src/lib/types';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { formatAdresse } from '~src/utils/format/formatUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
+import * as sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './bo-og-opphold-i-norge-nb';
-import styles from './bo-og-opphold-i-norge.module.less';
+import * as styles from './bo-og-opphold-i-norge.module.less';
 import EktefellePartnerSamboer from './EktefellePartnerSamboer';
 
 type FormData = SøknadState['boOgOpphold'];
@@ -224,10 +224,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
             }}
             className={sharedStyles.container}
         >
-            <SøknadSpørsmålsgruppe
-                legend={formatMessage('institusjonsopphold.legend')}
-                className={sharedStyles.formContainer}
-            >
+            <SøknadSpørsmålsgruppe legend={formatMessage('institusjonsopphold.legend')}>
                 <BooleanRadioGroup
                     name={keyOf<FormData>('innlagtPåInstitusjon')}
                     legend={formatMessage('innlagtPåInstitusjon.label')}
@@ -322,7 +319,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     </div>
                 )}
             </SøknadSpørsmålsgruppe>
-            <SøknadSpørsmålsgruppe legend={formatMessage('bosituasjon.legend')} className={sharedStyles.formContainer}>
+            <SøknadSpørsmålsgruppe legend={formatMessage('bosituasjon.legend')}>
                 <BooleanRadioGroup
                     name={keyOf<FormData>('borOgOppholderSegINorge')}
                     legend={formatMessage('borOgOppholderSegINorge.label')}

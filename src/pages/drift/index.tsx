@@ -4,16 +4,16 @@ import * as React from 'react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
-import { ApiError } from '~api/apiClient';
-import { fetchBakoverStatus, patchSøknader, SøknadResponse, konsistensavstemming } from '~api/driftApi';
-import { useApiCall } from '~lib/hooks';
-import { Nullable } from '~lib/types';
-import Nøkkeltall from '~pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
-import { toIsoDateOnlyString } from '~utils/date/dateUtils';
+import { ApiError } from '~src/api/apiClient';
+import { fetchBakoverStatus, patchSøknader, SøknadResponse, konsistensavstemming } from '~src/api/driftApi';
+import { useApiCall } from '~src/lib/hooks';
+import { Nullable } from '~src/lib/types';
+import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
+import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import StartGRegulering from './components/StartGRegulering';
 import { SøknadTabellDrift } from './components/SøknadTabell';
-import styles from './index.module.less';
+import * as styles from './index.module.less';
 
 enum Knapp {
     FIX_SØKNADER,

@@ -1,6 +1,6 @@
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { LukkSøknadBegrunnelse } from '~types/Søknad';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { LukkSøknadBegrunnelse } from '~src/types/Søknad';
 
 export interface LukkSøknadOgAvsluttSøknadsbehandlingFormData {
     begrunnelse: Nullable<LukkSøknadOgAvsluttSøknadsbehandlingType>;

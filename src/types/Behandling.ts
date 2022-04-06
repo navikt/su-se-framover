@@ -1,5 +1,5 @@
-import { Nullable } from '~lib/types';
-import { Simulering } from '~types/Simulering';
+import { Nullable } from '~src/lib/types';
+import { Simulering } from '~src/types/Simulering';
 
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';

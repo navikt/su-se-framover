@@ -2,16 +2,16 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 
-import { hentTidligereGrunnlagsdataForVedtak } from '~api/revurderingApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
-import { pipe } from '~lib/fp';
-import { useApiCall } from '~lib/hooks';
-import { MessageFormatter } from '~lib/i18n';
-import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { InformasjonsRevurdering } from '~types/Revurdering';
+import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
+import { pipe } from '~src/lib/fp';
+import { useApiCall } from '~src/lib/hooks';
+import { MessageFormatter } from '~src/lib/i18n';
+import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { InformasjonsRevurdering } from '~src/types/Revurdering';
 
-import styles from './revurderingsoppsummeringWithSnapshot.module.less';
+import * as styles from './revurderingsoppsummeringWithSnapshot.module.less';
 
 const RevurderingsoppsummeringWithSnapshot = (props: {
     revurdering: InformasjonsRevurdering;

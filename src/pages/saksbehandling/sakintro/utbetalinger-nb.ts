@@ -1,4 +1,4 @@
-import { Utbetalingstype } from '~types/Utbetalingsperiode';
+import { Utbetalingstype } from '~src/types/Utbetalingsperiode';
 
 const utbetalingsTypeTekstMapper: { [key in Utbetalingstype]: string } = {
     [Utbetalingstype.NY]: ' ',

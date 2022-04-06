@@ -1,16 +1,16 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Regulering, Reguleringstype } from '~types/Regulering';
-import { Vedtak } from '~types/Vedtak';
-import { formatDate } from '~utils/date/dateUtils';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Regulering, Reguleringstype } from '~src/types/Regulering';
+import { Vedtak } from '~src/types/Vedtak';
+import { formatDate } from '~src/utils/date/dateUtils';
 
 import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import messages from './sakintro-nb';
-import styles from './sakintro.module.less';
+import * as styles from './sakintro.module.less';
 
 interface Props {
     sakId: string;

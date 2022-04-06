@@ -3,21 +3,21 @@ import { BodyShort, Label, Panel } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useEffect } from 'react';
 
-import { hentTidligereGrunnlagsdataForVedtak } from '~api/revurderingApi';
-import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
-import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
+import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
+import VisBeregning from '~src/components/beregningOgSimulering/beregning/VisBeregning';
+import { Utbetalingssimulering } from '~src/components/beregningOgSimulering/simulering/simulering';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import { useApiCall } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Regulering } from '~types/Regulering';
-import { Vedtak } from '~types/Vedtak';
-import { formatDateTime } from '~utils/date/dateUtils';
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import { useApiCall } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Regulering } from '~src/types/Regulering';
+import { Vedtak } from '~src/types/Vedtak';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from './reguleringVedtaksoppsummering-nb';
-import styles from './reguleringVedtaksoppsummering.module.less';
+import * as styles from './reguleringVedtaksoppsummering.module.less';
 
 interface Props {
     sakId: string;

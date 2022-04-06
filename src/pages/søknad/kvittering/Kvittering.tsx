@@ -5,22 +5,22 @@ import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
-import { fetchSøknadutskrift } from '~api/pdfApi';
-import { OpprettetSøknad } from '~api/søknadApi';
-import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
-import { SuccessIcon } from '~components/icons/Icons';
-import * as personSlice from '~features/person/person.slice';
-import * as søknadslice from '~features/søknad/søknad.slice';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Søknadstype } from '~types/Søknad';
-import { showName } from '~utils/person/personUtils';
+import { ApiError } from '~src/api/apiClient';
+import { fetchSøknadutskrift } from '~src/api/pdfApi';
+import { OpprettetSøknad } from '~src/api/søknadApi';
+import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
+import { SuccessIcon } from '~src/components/icons/Icons';
+import * as personSlice from '~src/features/person/person.slice';
+import * as søknadslice from '~src/features/søknad/søknad.slice';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Søknadstype } from '~src/types/Søknad';
+import { showName } from '~src/utils/person/personUtils';
 
 import messages from './kvittering-nb';
-import styles from './kvittering.module.less';
+import * as styles from './kvittering.module.less';
 
 const Kvittering = () => {
     const dispatch = useAppDispatch();
@@ -82,7 +82,7 @@ const Kvittering = () => {
                     ([saksnummerOgSøknad, søker]) => {
                         return (
                             <div className={styles.container}>
-                                <div className={styles.textContainer}>
+                                <div>
                                     <Panel border className={styles.headingpanel}>
                                         <SuccessIcon className={styles.successIcon} />
                                         <Heading level="1" size="large" className={styles.headingContainer}>

@@ -2,18 +2,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import * as revurderingActions from '~features/revurdering/revurderingActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { GjeldendeGrunnlagsdata } from '~pages/saksbehandling/revurdering/uførhet/GjeldendeGrunnlagsdata';
-import { FormData } from '~pages/saksbehandling/steg/uføre/types';
-import { vurderingsperiodeTilFormData } from '~pages/saksbehandling/steg/uføre/UføreperiodeForm';
-import { UførhetForm } from '~pages/saksbehandling/steg/uføre/UførhetForm';
-import { schema } from '~pages/saksbehandling/steg/uføre/validation';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { RevurderingStegProps } from '~types/Revurdering';
-import * as DateUtils from '~utils/date/dateUtils';
-import { erGregulering } from '~utils/revurdering/revurderingUtils';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import * as revurderingActions from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { GjeldendeGrunnlagsdata } from '~src/pages/saksbehandling/revurdering/uførhet/GjeldendeGrunnlagsdata';
+import { FormData } from '~src/pages/saksbehandling/steg/uføre/types';
+import { vurderingsperiodeTilFormData } from '~src/pages/saksbehandling/steg/uføre/UføreperiodeForm';
+import { UførhetForm } from '~src/pages/saksbehandling/steg/uføre/UførhetForm';
+import { schema } from '~src/pages/saksbehandling/steg/uføre/validation';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { RevurderingStegProps } from '~src/types/Revurdering';
+import * as DateUtils from '~src/utils/date/dateUtils';
+import { erGregulering } from '~src/utils/revurdering/revurderingUtils';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 

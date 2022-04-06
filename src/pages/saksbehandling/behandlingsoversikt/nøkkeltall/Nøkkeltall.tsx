@@ -2,15 +2,15 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Label, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 
-import { pipe } from '~/lib/fp';
-import { hentNøkkeltall } from '~api/nøkkeltallApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { useApiCall } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { ferdigBehandlet, ikkeFerdigbehandlet, søknader } from '~utils/nøkkeltall/nøkkeltallUtils';
+import { hentNøkkeltall } from '~src/api/nøkkeltallApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { pipe } from '~src/lib/fp';
+import { useApiCall } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { ferdigBehandlet, ikkeFerdigbehandlet, søknader } from '~src/utils/nøkkeltall/nøkkeltallUtils';
 
 import messages from './nøkkeltall-nb';
-import styles from './nøkkeltall.module.less';
+import * as styles from './nøkkeltall.module.less';
 
 const Rad = ({ label, verdi, bold = false }: { label: string; verdi: undefined | number; bold?: boolean }) => (
     <li className={styles.item}>

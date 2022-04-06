@@ -4,9 +4,9 @@ import React from 'react';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 
-import styles from './stansoppsummeringsblokk.module.less';
+import * as styles from './stansoppsummeringsblokk.module.less';
 
 interface Props {
     tittel: string;

@@ -6,30 +6,30 @@ import React, { useState } from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import { FnrInput } from '~components/FnrInput/FnrInput';
-import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { lagreBosituasjonsgrunnlag } from '~features/revurdering/revurderingActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { MessageFormatter, useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { RevurderingStegProps } from '~types/Revurdering';
-import * as DateUtils from '~utils/date/dateUtils';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { FnrInput } from '~src/components/FnrInput/FnrInput';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { lagreBosituasjonsgrunnlag } from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { RevurderingStegProps } from '~src/types/Revurdering';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedMessages from '../revurdering-nb';
-import sharedStyles from '../revurdering.module.less';
+import * as sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import { BosituasjonFormData, bosituasjonFormValidation, getDefaultValues } from './bosituasjonForm';
 import messages from './bosituasjonForm-nb';
-import styles from './bosituasjonForm.module.less';
+import * as styles from './bosituasjonForm.module.less';
 
 const BosituasjonFormPage = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
@@ -116,7 +116,6 @@ const BosituasjonFormPage = (props: RevurderingStegProps) => {
                         />
                         <Feiloppsummering
                             tittel={formatMessage('feiloppsummering.title')}
-                            className={styles.feiloppsummering}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
                             hidden={Object.values(errors).length <= 0}
                         />

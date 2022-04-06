@@ -2,15 +2,15 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, GuidePanel, Heading, Loader } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 
-import { startRegulering } from '~api/reguleringApi';
-import * as reguleringApi from '~api/reguleringApi';
-import DatePicker from '~components/datePicker/DatePicker';
-import { pipe } from '~lib/fp';
-import { useApiCall } from '~lib/hooks';
-import { Nullable } from '~lib/types';
-import { toStringDateOrNull } from '~utils/date/dateUtils';
+import { startRegulering } from '~src/api/reguleringApi';
+import * as reguleringApi from '~src/api/reguleringApi';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import { pipe } from '~src/lib/fp';
+import { useApiCall } from '~src/lib/hooks';
+import { Nullable } from '~src/lib/types';
+import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
-import styles from '../index.module.less';
+import * as styles from '../index.module.less';
 
 const StartGRegulering = () => {
     const [reguleringsstatus, reguler] = useApiCall(startRegulering);

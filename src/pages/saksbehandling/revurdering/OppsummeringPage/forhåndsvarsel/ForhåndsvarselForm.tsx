@@ -5,22 +5,22 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import * as pdfApi from '~api/pdfApi';
-import { Forhåndsvarselhandling } from '~api/revurderingApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '~components/brevInput/BrevInput';
-import * as RevurderingActions from '~features/revurdering/revurderingActions';
-import { useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
-import { UNDERSCORE_REGEX } from '~pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
-import { InformasjonsRevurdering } from '~types/Revurdering';
+import * as pdfApi from '~src/api/pdfApi';
+import { Forhåndsvarselhandling } from '~src/api/revurderingApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { BrevInput } from '~src/components/brevInput/BrevInput';
+import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
+import { InformasjonsRevurdering } from '~src/types/Revurdering';
 
 import messages from './forhåndsvarselForm-nb';
-import styles from './forhåndsvarselForm.module.less';
+import * as styles from './forhåndsvarselForm.module.less';
 
 export type ForhåndsvarselFormData = {
     forhåndsvarselhandling: Nullable<Forhåndsvarselhandling>;

@@ -4,18 +4,18 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { Person } from '~api/personApi';
-import * as innsendingSlice from '~features/søknad/innsending.slice';
-import { useI18n } from '~lib/i18n';
-import { trackEvent } from '~lib/tracking/amplitude';
-import { søknadSendInn } from '~lib/tracking/trackingEvents';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Person } from '~src/api/personApi';
+import * as innsendingSlice from '~src/features/søknad/innsending.slice';
+import { useI18n } from '~src/lib/i18n';
+import { trackEvent } from '~src/lib/tracking/amplitude';
+import { søknadSendInn } from '~src/lib/tracking/trackingEvents';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
+import * as sharedStyles from '../../steg-shared.module.less';
 
 import messages from './oppsummering-nb';
-import styles from './oppsummering.module.less';
+import * as styles from './oppsummering.module.less';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {

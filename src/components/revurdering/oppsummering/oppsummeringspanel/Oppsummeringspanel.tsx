@@ -3,7 +3,7 @@ import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import styles from './oppsummeringspanel.module.less';
+import * as styles from './oppsummeringspanel.module.less';
 
 export enum Oppsummeringsikon {
     Liste,

@@ -6,24 +6,28 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { ErrorIcon, InformationIcon } from '~components/icons/Icons';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
-import { useUserContext } from '~context/userContext';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { pipe } from '~lib/fp';
-import { useAsyncActionCreator } from '~lib/hooks';
-import * as Routes from '~lib/routes';
-import { Behandling } from '~types/Behandling';
-import { Sak } from '~types/Sak';
-import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
-import { erIverksatt, erTilAttestering, hentSisteVurdertSaksbehandlingssteg } from '~utils/behandling/behandlingUtils';
-import { formatDate } from '~utils/date/dateUtils';
-import { søknadMottatt } from '~utils/søknad/søknadUtils';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { ErrorIcon, InformationIcon } from '~src/components/icons/Icons';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
+import { useUserContext } from '~src/context/userContext';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { pipe } from '~src/lib/fp';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import * as Routes from '~src/lib/routes';
+import { Behandling } from '~src/types/Behandling';
+import { Sak } from '~src/types/Sak';
+import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
+import {
+    erIverksatt,
+    erTilAttestering,
+    hentSisteVurdertSaksbehandlingssteg,
+} from '~src/utils/behandling/behandlingUtils';
+import { formatDate } from '~src/utils/date/dateUtils';
+import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
 import { AvsluttOgStartFortsettButtons } from './Sakintro';
-import styles from './sakintro.module.less';
+import * as styles from './sakintro.module.less';
 
 const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
     switch (type) {
@@ -231,7 +235,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
                 </div>
             )}
 
-            <div className={styles.søknadsbehandlingKnapper}>
+            <div>
                 {erTilAttestering(behandling) && user.isAttestant && user.navIdent !== behandling.saksbehandler ? (
                     <LinkAsButton
                         variant="secondary"

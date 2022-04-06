@@ -1,4 +1,4 @@
-import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
+import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

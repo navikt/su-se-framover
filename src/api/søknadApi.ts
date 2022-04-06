@@ -1,7 +1,7 @@
-import { Nullable } from '~lib/types';
-import { AvvistBrevConfig } from '~pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
-import { Sak } from '~types/Sak';
-import { LukkSøknadBegrunnelse, Søknad, SøknadInnhold } from '~types/Søknad';
+import { Nullable } from '~src/lib/types';
+import { AvvistBrevConfig } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
+import { Sak } from '~src/types/Sak';
+import { LukkSøknadBegrunnelse, Søknad, SøknadInnhold } from '~src/types/Søknad';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

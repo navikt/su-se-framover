@@ -1,5 +1,5 @@
-import { Nullable } from '~lib/types';
-import { Periode } from '~types/Periode';
+import { Nullable } from '~src/lib/types';
+import { Periode } from '~src/types/Periode';
 
 import { Uføregrunnlag } from './Uføregrunnlag';
 

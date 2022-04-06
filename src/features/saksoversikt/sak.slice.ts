@@ -1,30 +1,30 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createAsyncThunk, createSlice, Dictionary } from '@reduxjs/toolkit';
 
-import { ApiError } from '~api/apiClient';
-import * as behandlingApi from '~api/behandlingApi';
-import * as dokumentApi from '~api/dokumentApi';
-import * as sakApi from '~api/sakApi';
-import * as søknadApi from '~api/søknadApi';
-import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~api/søknadApi';
-import * as klageActions from '~features/klage/klageActions';
-import * as revurderingActions from '~features/revurdering/revurderingActions';
-import { pipe } from '~lib/fp';
-import { Nullable } from '~lib/types';
-import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
-import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
-import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
-import { Fradrag } from '~types/Fradrag';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { Klage } from '~types/Klage';
-import { Periode } from '~types/Periode';
-import { Restans } from '~types/Restans';
-import { Revurdering } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
-import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { ApiError } from '~src/api/apiClient';
+import * as behandlingApi from '~src/api/behandlingApi';
+import * as dokumentApi from '~src/api/dokumentApi';
+import * as sakApi from '~src/api/sakApi';
+import * as søknadApi from '~src/api/søknadApi';
+import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~src/api/søknadApi';
+import * as klageActions from '~src/features/klage/klageActions';
+import * as revurderingActions from '~src/features/revurdering/revurderingActions';
+import { pipe } from '~src/lib/fp';
+import { Nullable } from '~src/lib/types';
+import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
+import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
+import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
+import { Fradrag } from '~src/types/Fradrag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Klage } from '~src/types/Klage';
+import { Periode } from '~src/types/Periode';
+import { Restans } from '~src/types/Restans';
+import { Revurdering } from '~src/types/Revurdering';
+import { Sak } from '~src/types/Sak';
+import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
     Sak,

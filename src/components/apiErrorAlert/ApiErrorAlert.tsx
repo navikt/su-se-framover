@@ -2,11 +2,11 @@ import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
-import { ApiError } from '~api/apiClient';
-import { useI18n } from '~lib/i18n';
+import { ApiError } from '~src/api/apiClient';
+import { useI18n } from '~src/lib/i18n';
 
 import messages from './ApiErrorAlert-nb';
-import styles from './apierroralert.module.less';
+import * as styles from './apierroralert.module.less';
 import { ApiErrorCode } from './apiErrorCode';
 
 interface Props {

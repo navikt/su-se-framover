@@ -2,18 +2,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import { UførhetFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { FormData } from '~pages/saksbehandling/steg/uføre/types';
-import { vurderingsperiodeTilFormData } from '~pages/saksbehandling/steg/uføre/UføreperiodeForm';
-import { UførhetForm } from '~pages/saksbehandling/steg/uføre/UførhetForm';
-import { schema } from '~pages/saksbehandling/steg/uføre/validation';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import * as DateUtils from '~utils/date/dateUtils';
+import { UførhetFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { FormData } from '~src/pages/saksbehandling/steg/uføre/types';
+import { vurderingsperiodeTilFormData } from '~src/pages/saksbehandling/steg/uføre/UføreperiodeForm';
+import { UførhetForm } from '~src/pages/saksbehandling/steg/uføre/UførhetForm';
+import { schema } from '~src/pages/saksbehandling/steg/uføre/validation';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 import { VilkårsvurderingBaseProps } from '../types';
 

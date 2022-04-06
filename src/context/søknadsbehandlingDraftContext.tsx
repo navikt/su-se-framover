@@ -2,7 +2,7 @@ import debounce from 'lodash.debounce';
 import React, { createContext, useContext, useState } from 'react';
 import { UseFormWatch } from 'react-hook-form';
 
-import { Vilkårtype } from '~types/Vilkårsvurdering';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 type DraftKey = Vilkårtype | 'SendTilAttesteringPage';
 

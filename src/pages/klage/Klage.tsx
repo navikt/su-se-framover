@@ -2,21 +2,21 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Framdriftsindikator from '~components/framdriftsindikator/Framdriftsindikator';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { KlageSteg } from '~pages/saksbehandling/types';
-import { Sak } from '~types/Sak';
+import Framdriftsindikator from '~src/components/framdriftsindikator/Framdriftsindikator';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { KlageSteg } from '~src/pages/saksbehandling/types';
+import { Sak } from '~src/types/Sak';
 import {
     erKlageVilkårsvurdertUtfyltEllerSenere,
     getDefaultFramdriftsindikatorLinjer,
     getFramdriftsindikatorLinjer,
     getPartialFramdriftsindikatorLinjeInfo,
-} from '~utils/klage/klageUtils';
+} from '~src/utils/klage/klageUtils';
 
 import AvvistKlage from './avvistKlage/AvvistKlage';
 import messages from './klage-nb';
-import styles from './klage.module.less';
+import * as styles from './klage.module.less';
 import SendKlageTilAttestering from './sendKlageTilAttestering/SendKlageTilAttestering';
 import VurderFormkrav from './vurderFormkrav/VurderFormkrav';
 import VurderingAvKlage from './vurderingAvKlage/VurderingAvKlage';

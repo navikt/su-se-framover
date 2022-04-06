@@ -4,26 +4,26 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { BooleanRadioGroup } from '~/components/formElements/FormElements';
-import søknadSlice, { ForVeilederDigitalSøknad } from '~/features/søknad/søknad.slice';
-import { Person } from '~api/personApi';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import TextProvider from '~components/TextProvider';
-import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
-import { Vergemål } from '~features/søknad/types';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n, Languages } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Søknadstype } from '~types/Søknad';
+import { Person } from '~src/api/personApi';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import TextProvider from '~src/components/TextProvider';
+import søknadSlice, { ForVeilederDigitalSøknad } from '~src/features/søknad/søknad.slice';
+import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
+import { Vergemål } from '~src/features/søknad/types';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { useI18n, Languages } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Søknadstype } from '~src/types/Søknad';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
+import * as sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './forVeileder-nb';
-import styles from './forVeileder.module.less';
+import * as styles from './forVeileder.module.less';
 
 type FormData = ForVeilederDigitalSøknad;
 

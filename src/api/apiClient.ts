@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
-import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
-import Config from '~config';
+import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
+import Config from '~src/config';
 
 export enum ErrorCode {
     Unauthorized = 403,
