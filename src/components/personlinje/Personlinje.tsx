@@ -106,7 +106,7 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                             <GenderIcon kjønn={eps.kjønn ?? Kjønn.Ukjent} />
                             <BodyShort>{showName(eps.navn)}</BodyShort>
                             <CopyToClipboard
-                                copyText={formatFnr(eps.fnr)}
+                                copyText={eps.fnr}
                                 popoverText={formatMessage('ariaLabel.kopierteFnr')}
                                 size="small"
                             >
