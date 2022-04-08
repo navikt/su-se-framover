@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import styles from './framdriftsindikator.module.less';
+import * as styles from './framdriftsindikator.module.less';
 
 export enum Linjestatus {
     Ok,

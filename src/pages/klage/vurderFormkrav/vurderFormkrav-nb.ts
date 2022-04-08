@@ -1,5 +1,5 @@
-import { Svarord } from '~types/Klage';
-import { VedtakType } from '~types/Vedtak';
+import { Svarord } from '~src/types/Klage';
+import { VedtakType } from '~src/types/Vedtak';
 
 const vedtakMessages: { [key in VedtakType]: string } = {
     [VedtakType.SØKNAD]: 'Søknad',

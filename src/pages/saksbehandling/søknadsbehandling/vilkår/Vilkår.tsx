@@ -1,13 +1,13 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { Person } from '~api/personApi';
-import Beregning from '~components/beregningOgSimulering/beregning/Beregning';
-import * as Routes from '~lib/routes';
-import { Sak } from '~types/Sak';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
-import { createVilkårUrl } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { Person } from '~src/api/personApi';
+import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning';
+import * as Routes from '~src/lib/routes';
+import { Sak } from '~src/types/Sak';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
+import { createVilkårUrl } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';
 import Flyktning from '../flyktning/Flyktning';
@@ -21,7 +21,7 @@ import Sats from '../sats/Sats';
 import Uførhet from '../uførhet/Uførhet';
 import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
 
-import styles from './vilkår.module.less';
+import * as styles from './vilkår.module.less';
 
 const Vilkår = (props: { sak: Sak; søker: Person }) => {
     const { vilkar = Vilkårtype.Virkningstidspunkt, ...urlParams } =

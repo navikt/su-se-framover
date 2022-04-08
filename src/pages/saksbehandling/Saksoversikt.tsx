@@ -5,35 +5,35 @@ import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Personlinje from '~components/personlinje/Personlinje';
-import { SøknadsbehandlingDraftProvider } from '~context/søknadsbehandlingDraftContext';
-import * as personSlice from '~features/person/person.slice';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { pipe } from '~lib/fp';
-import { Languages } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Behandlingsoversikt } from '~pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Personlinje from '~src/components/personlinje/Personlinje';
+import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
+import * as personSlice from '~src/features/person/person.slice';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { pipe } from '~src/lib/fp';
+import { Languages } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Behandlingsoversikt } from '~src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './saksoversikt-nb';
-import styles from './saksoversikt.module.less';
+import * as styles from './saksoversikt.module.less';
 import Gjenoppta from './stans/gjenoppta/gjenoppta';
 
 const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(
     () => import('./søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
 );
-const Vedtaksoppsummering = React.lazy(() => import('~pages/saksbehandling/vedtak/Vedtaksoppsummering'));
+const Vedtaksoppsummering = React.lazy(() => import('~src/pages/saksbehandling/vedtak/Vedtaksoppsummering'));
 const AvsluttBehandling = React.lazy(() => import('./avsluttBehandling/AvsluttBehandling'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
-const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter/DokumenterPage'));
+const DokumenterPage = React.lazy(() => import('~src/pages/saksbehandling/dokumenter/DokumenterPage'));
 const StansPage = React.lazy(() => import('./stans/Stans'));
-const OpprettKlage = React.lazy(() => import('~pages/klage/opprettKlage/OpprettKlage'));
-const Klage = React.lazy(() => import('~pages/klage/Klage'));
-const NyDatoForKontrollsamtale = React.lazy(() => import('~pages/kontrollsamtale/KontrollsamtalePage'));
+const OpprettKlage = React.lazy(() => import('~src/pages/klage/opprettKlage/OpprettKlage'));
+const Klage = React.lazy(() => import('~src/pages/klage/Klage'));
+const NyDatoForKontrollsamtale = React.lazy(() => import('~src/pages/kontrollsamtale/KontrollsamtalePage'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();

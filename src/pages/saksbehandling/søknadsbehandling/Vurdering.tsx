@@ -1,10 +1,10 @@
 import { Button } from '@navikt/ds-react';
 import React from 'react';
 
-import { useI18n } from '~lib/i18n';
+import { useI18n } from '~src/lib/i18n';
 
 import sharedI18n from './sharedI18n-nb';
-import styles from './vurdering.module.less';
+import * as styles from './vurdering.module.less';
 
 export const Vurderingknapper = (props: {
     onTilbakeClick(): void;

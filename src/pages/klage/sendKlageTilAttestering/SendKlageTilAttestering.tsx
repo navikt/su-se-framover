@@ -1,24 +1,23 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import OppsummeringAvKlage from '~components/oppsummeringAvKlage/OppsummeringAvKlage';
-import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { KlageSteg } from '~pages/saksbehandling/types';
-import { Klage } from '~types/Klage';
-import { Vedtak } from '~types/Vedtak';
-import { erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
+import * as klageActions from '~src/features/klage/klageActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { KlageSteg } from '~src/pages/saksbehandling/types';
+import { Klage } from '~src/types/Klage';
+import { Vedtak } from '~src/types/Vedtak';
+import { erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
-import sharedStyles from '../klage.module.less';
+import * as sharedStyles from '../klage.module.less';
 
 import messages from './sendKlageTilAttestering-nb';
-import styles from './sendKlageTilAttestering.module.less';
+import * as styles from './sendKlageTilAttestering.module.less';
 
 const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker: Vedtak[] }) => {
     const history = useHistory();

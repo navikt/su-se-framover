@@ -6,16 +6,16 @@ import * as React from 'react';
 import { Control, Controller, useWatch } from 'react-hook-form';
 import { v4 as uuid } from 'uuid';
 
-import DatePicker from '~components/datePicker/DatePicker';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import { getDateErrorMessage } from '~lib/validering';
-import { FormData, UføreperiodeFormData } from '~pages/saksbehandling/steg/uføre/types';
-import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import * as DateUtils from '~utils/date/dateUtils';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { getDateErrorMessage } from '~src/lib/validering';
+import { FormData, UføreperiodeFormData } from '~src/pages/saksbehandling/steg/uføre/types';
+import { UføreResultat, VurderingsperiodeUføre } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 import messages from './uførhet-nb';
-import styles from './uførhet.module.less';
+import * as styles from './uførhet.module.less';
 
 export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføreperiodeFormData => ({
     id: uuid(),

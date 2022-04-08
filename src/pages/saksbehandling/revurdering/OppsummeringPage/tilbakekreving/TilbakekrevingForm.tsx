@@ -6,17 +6,17 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import * as RevurderingActions from '~features/revurdering/revurderingActions';
-import { useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import yup from '~lib/validering';
-import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
-import { VelgForhåndsvarselForm } from '~pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
-import { InformasjonsRevurdering } from '~types/Revurdering';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import yup from '~src/lib/validering';
+import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import { VelgForhåndsvarselForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
+import { InformasjonsRevurdering } from '~src/types/Revurdering';
 
 import messages from './tilbakekrevingForm-nb';
-import styles from './tilbakekrevingForm.module.less';
+import * as styles from './tilbakekrevingForm.module.less';
 
 export enum Tilbakekrevingsavgjørelse {
     TILBAKEKREV = 'TILBAKEKREV',

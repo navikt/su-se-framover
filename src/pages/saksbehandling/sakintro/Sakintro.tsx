@@ -6,27 +6,27 @@ import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { FeatureToggle } from '~api/featureToggleApi';
-import { ÅpentBrev } from '~assets/Illustrations';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { useFeatureToggle } from '~lib/featureToggles';
-import { ApiResult, useNotificationFromLocation } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
-import { Behandling } from '~types/Behandling';
-import { Sak } from '~types/Sak';
-import { Søknad } from '~types/Søknad';
-import { erIverksatt } from '~utils/behandling/behandlingUtils';
-import { splittAvsluttedeOgÅpneRevurderinger } from '~utils/revurdering/revurderingUtils';
-import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~utils/søknad/søknadUtils';
+import { FeatureToggle } from '~src/api/featureToggleApi';
+import { ÅpentBrev } from '~src/assets/Illustrations';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { useFeatureToggle } from '~src/lib/featureToggles';
+import { ApiResult, useNotificationFromLocation } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
+import { Behandling } from '~src/types/Behandling';
+import { Sak } from '~src/types/Sak';
+import { Søknad } from '~src/types/Søknad';
+import { erIverksatt } from '~src/utils/behandling/behandlingUtils';
+import { splittAvsluttedeOgÅpneRevurderinger } from '~src/utils/revurdering/revurderingUtils';
+import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~src/utils/søknad/søknadUtils';
 
 import KlageLister from './KlageLister';
 import ReguleringLister from './ReguleringLister';
 import { AvsluttedeRevurderinger, ÅpneRevurderinger } from './RevurderingsLister';
 import messages from './sakintro-nb';
-import styles from './sakintro.module.less';
+import * as styles from './sakintro.module.less';
 import { AvslåtteSøknader, IverksattInnvilgedeSøknader, LukkedeSøknader, ÅpneSøknader } from './SøknadsLister';
 
 const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotificationState> }) => {

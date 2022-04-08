@@ -2,8 +2,8 @@ import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 
-import { pipe } from '~lib/fp';
-import { Restans } from '~types/Restans';
+import { pipe } from '~src/lib/fp';
+import { Restans } from '~src/types/Restans';
 
 export type RestansKolonne = 'saksnummer' | 'typeBehandling' | 'status' | 'behandlingStartet';
 export type AriaSortVerdi = 'ascending' | 'descending';

@@ -1,11 +1,11 @@
-import { Nullable } from '~lib/types';
-import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
-import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
-import { Fradrag } from '~types/Fradrag';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { Periode } from '~types/Periode';
-import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { Nullable } from '~src/lib/types';
+import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
+import { Fradrag } from '~src/types/Fradrag';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Periode } from '~src/types/Periode';
+import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

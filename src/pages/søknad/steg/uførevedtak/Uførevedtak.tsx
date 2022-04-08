@@ -3,17 +3,17 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { BooleanRadioGroup } from '~/components/formElements/FormElements';
-import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/i18n';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
+import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { useI18n } from '~src/lib/i18n';
+import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~src/lib/validering';
+import { useAppSelector, useAppDispatch } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
+import * as sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './uførevedtak-nb';
@@ -53,7 +53,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
             }}
             className={sharedStyles.container}
         >
-            <SøknadSpørsmålsgruppe className={sharedStyles.formContainer} withoutLegend>
+            <SøknadSpørsmålsgruppe withoutLegend>
                 <BooleanRadioGroup
                     name="harUførevedtak"
                     legend={formatMessage('uførevedtak.label')}

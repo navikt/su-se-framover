@@ -4,18 +4,18 @@ import * as Eq from 'fp-ts/Eq';
 import * as O from 'fp-ts/Option';
 import * as React from 'react';
 
-import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/i18n';
-import { eqNullable } from '~lib/types';
-import { Fradrag, FradragTilhører } from '~types/Fradrag';
-import { eqStringPeriode } from '~types/Periode';
-import { groupByEq } from '~utils/array/arrayUtils';
-import * as DateUtils from '~utils/date/dateUtils';
-import { formatCurrency } from '~utils/format/formatUtils';
-import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { pipe } from '~src/lib/fp';
+import { useI18n } from '~src/lib/i18n';
+import { eqNullable } from '~src/lib/types';
+import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
+import { eqStringPeriode } from '~src/types/Periode';
+import { groupByEq } from '~src/utils/array/arrayUtils';
+import * as DateUtils from '~src/utils/date/dateUtils';
+import { formatCurrency } from '~src/utils/format/formatUtils';
+import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
 
 import messages from './fradragoppsummering-nb';
-import styles from './fradragoppsummering.module.less';
+import * as styles from './fradragoppsummering.module.less';
 
 const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
     const { intl, formatMessage } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
@@ -56,7 +56,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                             <BodyShort size="small" className={styles.detailedLinje}>
                                                 {formatMessage('fradrag.utenlandsk.beløp')}
                                             </BodyShort>
-                                            <BodyShort size="small" className={styles.alignTextRight}>
+                                            <BodyShort size="small">
                                                 {formatCurrency(fradrag.utenlandskInntekt.beløpIUtenlandskValuta, {
                                                     currency: fradrag.utenlandskInntekt.valuta,
                                                 })}
@@ -64,7 +64,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                             <BodyShort size="small" className={styles.detailedLinje}>
                                                 {formatMessage('fradrag.utenlandsk.kurs')}
                                             </BodyShort>
-                                            <BodyShort size="small" className={styles.alignTextRight}>
+                                            <BodyShort size="small">
                                                 {intl.formatNumber(fradrag.utenlandskInntekt.kurs)}
                                             </BodyShort>
                                         </>

@@ -15,33 +15,33 @@ import {
 } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import * as personApi from '~api/personApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~components/datePicker/DatePicker';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import { Personkort } from '~components/personkort/Personkort';
-import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
-import FormuevilkårOppsummering from '~components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
-import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { Periode } from '~types/Periode';
-import { RevurderingStegProps } from '~types/Revurdering';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
-import { regnUtFormDataVerdier, verdierId } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
-import sharedFormueMessages from '~utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
+import * as personApi from '~src/api/personApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { Personkort } from '~src/components/personkort/Personkort';
+import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
+import FormuevilkårOppsummering from '~src/components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { lagreFormuegrunnlag } from '~src/features/revurdering/revurderingActions';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { Formuegrenser } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { Periode } from '~src/types/Periode';
+import { RevurderingStegProps } from '~src/types/Revurdering';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { regnUtFormDataVerdier, verdierId } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './formue-nb';
-import styles from './formue.module.less';
+import * as styles from './formue.module.less';
 import {
     erFormueVilkårOppfylt,
     FormueFormData,
@@ -142,7 +142,6 @@ const Formue = (props: RevurderingStegProps) => {
                         </div>
                         <Feiloppsummering
                             tittel={formatMessage('feiloppsummering.tittel')}
-                            className={styles.feiloppsummering}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
                             hidden={isValid || !isSubmitted}
                         />
@@ -317,7 +316,7 @@ const FormueBlokk = (props: {
                 erVilkårOppfylt={erVilkårOppfylt}
             />
 
-            <div className={styles.begrunnelseContainer}>
+            <div>
                 <Controller
                     control={props.formController}
                     name={`${blokkName}.begrunnelse`}

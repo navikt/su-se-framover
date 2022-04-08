@@ -3,19 +3,19 @@ import { Back, FileContent } from '@navikt/ds-icons';
 import { Alert, Button, Heading, Ingress, LinkPanel, Loader, Tag } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
-import { ÅpentBrev } from '~assets/Illustrations';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { MessageFormatter, useI18n } from '~lib/i18n';
-import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
-import { Sak } from '~types/Sak';
-import * as DateUtils from '~utils/date/dateUtils';
-import { getBlob } from '~utils/dokumentUtils';
+import { ÅpentBrev } from '~src/assets/Illustrations';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
+import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
+import { Sak } from '~src/types/Sak';
+import * as DateUtils from '~src/utils/date/dateUtils';
+import { getBlob } from '~src/utils/dokumentUtils';
 
 import messages from './dokumenterPage-nb';
-import styles from './dokumenterPage.module.less';
+import * as styles from './dokumenterPage.module.less';
 
 const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typeof messages> }) => (
     <div className={styles.headerContainer}>

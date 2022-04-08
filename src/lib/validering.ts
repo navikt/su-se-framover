@@ -2,7 +2,7 @@ import { FormikErrors } from 'formik';
 import { FieldError, FieldErrors } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { FeiloppsummeringFeil } from '~components/feiloppsummering/Feiloppsummering';
+import { FeiloppsummeringFeil } from '~src/components/feiloppsummering/Feiloppsummering';
 
 function label(data: Partial<yup.TestMessageParams>) {
     return data.label ?? 'Feltet';

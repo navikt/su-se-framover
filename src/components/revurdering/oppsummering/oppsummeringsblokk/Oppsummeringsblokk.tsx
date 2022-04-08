@@ -5,26 +5,26 @@ import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import * as React from 'react';
 
-import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
-import { maxBy } from '~lib/fp';
-import { MessageFormatter, useI18n } from '~lib/i18n';
-import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { Attestering } from '~types/Behandling';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
+import { maxBy } from '~src/lib/fp';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { Attestering } from '~src/types/Behandling';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
     Revurdering,
     RevurderingsStatus,
     UtbetalingsRevurderingStatus,
-} from '~types/Revurdering';
-import * as DateUtils from '~utils/date/dateUtils';
+} from '~src/types/Revurdering';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 import Vedtaksinformasjon from '../vedtaksinformasjon/Vedtaksinformasjon';
 
 import messages from './oppsummeringsblokk-nb';
-import styles from './oppsummeringsblokk.module.less';
+import * as styles from './oppsummeringsblokk.module.less';
 
 const Intro = (props: { revurdering: Revurdering }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });

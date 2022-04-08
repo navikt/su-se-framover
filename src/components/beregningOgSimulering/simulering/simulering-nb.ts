@@ -1,4 +1,4 @@
-import { SimulertUtbetalingstype } from '~types/Simulering';
+import { SimulertUtbetalingstype } from '~src/types/Simulering';
 
 export const simulertUtbetaling: { [key in SimulertUtbetalingstype]: string } = {
     [SimulertUtbetalingstype.INGEN_UTBETALING]: 'Ingen utbetaling',

@@ -4,19 +4,19 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { BooleanRadioGroup, CollapsableFormElementDescription } from '~/components/formElements/FormElements';
-import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
-import { TypeOppholdstillatelse } from '~features/søknad/types';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup, CollapsableFormElementDescription } from '~src/components/formElements/FormElements';
+import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
+import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
+import { TypeOppholdstillatelse } from '~src/features/søknad/types';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
+import * as sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './flyktningstatus-oppholdstillatelse-nb';
@@ -81,7 +81,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
             })}
             className={sharedStyles.container}
         >
-            <SøknadSpørsmålsgruppe withoutLegend className={sharedStyles.formContainer}>
+            <SøknadSpørsmålsgruppe withoutLegend>
                 <Controller
                     control={form.control}
                     name="erFlyktning"

@@ -2,13 +2,13 @@ import { Checkbox, Label } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 
-import DatePicker from '~components/datePicker/DatePicker';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import { RestansStatus, RestansType } from '~types/Restans';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { RestansStatus, RestansType } from '~src/types/Restans';
 
 import messages from './filter-nb';
-import styles from './filter.module.less';
+import * as styles from './filter.module.less';
 
 export type RestansTypeFilter = {
     [RestansType.SØKNADSBEHANDLING]: boolean;
@@ -88,7 +88,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                 </div>
             )}
             {props.type && (
-                <div className={styles.filterbehandling}>
+                <div>
                     <Label className={styles.label}>{formatMessage('behandlingstype')}</Label>
                     {Object.entries(props.type).map(([key, value]) => (
                         <Checkbox
@@ -102,7 +102,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                 </div>
             )}
             {props.status && (
-                <div className={styles.filterbehandling}>
+                <div>
                     <Label className={styles.label}>{formatMessage('behandlingsstatus')}</Label>
                     {Object.entries(props.status).map(([key, value]) => (
                         <Checkbox
@@ -116,7 +116,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                 </div>
             )}
             {props.resultat && (
-                <div className={styles.filterbehandling}>
+                <div>
                     <Label className={styles.label}>{formatMessage('resultat')}</Label>
                     {Object.entries(props.resultat).map(([key, value]) => (
                         <Checkbox

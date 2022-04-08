@@ -1,12 +1,12 @@
 import { formatISO } from 'date-fns';
 
-import { Nullable } from '~lib/types';
-import { TilbakekrevingsbehandlingFormData } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { UnderkjennelseGrunn } from '~types/Behandling';
-import { Fradrag } from '~types/Fradrag';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { Periode } from '~types/Periode';
+import { Nullable } from '~src/lib/types';
+import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Fradrag } from '~src/types/Fradrag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Periode } from '~src/types/Periode';
 import {
     BeslutningEtterForhåndsvarsling,
     BosituasjonRequest,
@@ -23,7 +23,7 @@ import {
     StansAvYtelse,
     UnderkjentRevurdering,
     UtenlandsoppholdRequest,
-} from '~types/Revurdering';
+} from '~src/types/Revurdering';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 

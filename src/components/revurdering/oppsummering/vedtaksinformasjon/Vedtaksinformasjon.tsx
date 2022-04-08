@@ -2,12 +2,12 @@ import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
-import { Utenlandsoppsummering } from '~components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
-import { useI18n } from '~lib/i18n';
-import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
+import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
+import { useI18n } from '~src/lib/i18n';
+import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { FormueResultat, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import {
     bosituasjonErlik,
     formueErlik,
@@ -15,17 +15,17 @@ import {
     GrunnlagsdataOgVilkårsvurderinger,
     uføreErlik,
     utenlandsoppholdErlik,
-} from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InformasjonsRevurdering, Vurderingstatus } from '~types/Revurdering';
-import { regnUtFormuegrunnlag } from '~utils/revurdering/formue/RevurderFormueUtils';
-import { sjekkBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
+import { regnUtFormuegrunnlag } from '~src/utils/revurdering/formue/RevurderFormueUtils';
+import { sjekkBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
 
 import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
-import styles from './vedtaksinformasjon.module.less';
+import * as styles from './vedtaksinformasjon.module.less';
 
 const Rad = (props: {
     overskrift?: boolean;

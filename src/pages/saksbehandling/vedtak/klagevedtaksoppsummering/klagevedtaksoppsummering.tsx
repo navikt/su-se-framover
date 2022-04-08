@@ -1,8 +1,8 @@
 import React from 'react';
 
-import OppsummeringAvKlage from '~components/oppsummeringAvKlage/OppsummeringAvKlage';
-import { Klage } from '~types/Klage';
-import { Vedtak } from '~types/Vedtak';
+import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
+import { Klage } from '~src/types/Klage';
+import { Vedtak } from '~src/types/Vedtak';
 
 interface Props {
     vedtak: Vedtak;

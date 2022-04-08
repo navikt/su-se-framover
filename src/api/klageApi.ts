@@ -1,7 +1,7 @@
-import { Nullable } from '~lib/types';
-import { UnderkjennelseGrunn } from '~types/Behandling';
-import { Klage } from '~types/Klage';
-import { FormkravRequest, VurderingRequest } from '~utils/klage/klageUtils';
+import { Nullable } from '~src/lib/types';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Klage } from '~src/types/Klage';
+import { FormkravRequest, VurderingRequest } from '~src/utils/klage/klageUtils';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

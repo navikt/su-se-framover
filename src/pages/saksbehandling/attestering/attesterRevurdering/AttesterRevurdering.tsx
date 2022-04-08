@@ -3,34 +3,34 @@ import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import * as PdfApi from '~api/pdfApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { AttesteringsForm } from '~components/attestering/AttesteringsForm';
-import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
-import * as RevurderingActions from '~features/revurdering/revurderingActions';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { pipe } from '~lib/fp';
-import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import { Tilbakekrevingsavgjørelse } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { useAppDispatch } from '~redux/Store';
-import { UnderkjennelseGrunn } from '~types/Behandling';
-import { InformasjonsRevurdering, InformasjonsRevurderingStatus, Revurdering } from '~types/Revurdering';
+import * as PdfApi from '~src/api/pdfApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
+import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
+import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { pipe } from '~src/lib/fp';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { useAppDispatch } from '~src/redux/Store';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { InformasjonsRevurdering, InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
 import {
     erRevurderingTilAttestering,
     erGregulering,
     hentAvkortingFraRevurdering,
     periodenInneholderTilbakekrevingOgAndreTyper,
     harSimulering,
-} from '~utils/revurdering/revurderingUtils';
+} from '~src/utils/revurdering/revurderingUtils';
 
-import SharedStyles from '../sharedStyles.module.less';
+import * as SharedStyles from '../sharedStyles.module.less';
 
 import messages from './attesterRevurdering-nb';
-import styles from './attesterRevurdering.module.less';
+import * as styles from './attesterRevurdering.module.less';
 
 const AttesterRevurdering = (props: {
     sakInfo: { sakId: string; saksnummer: number };

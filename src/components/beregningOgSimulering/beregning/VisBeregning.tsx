@@ -7,18 +7,18 @@ import * as S from 'fp-ts/string';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import messages from '~components/beregningOgSimulering/beregning/beregning-nb';
-import { combineOptions, pipe } from '~lib/fp';
-import { useI18n } from '~lib/i18n';
-import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~types/Beregning';
-import { Fradrag, Fradragstype } from '~types/Fradrag';
-import { Sats } from '~types/Sats';
-import { groupBy, groupByEq } from '~utils/array/arrayUtils';
-import { formatMonthYear } from '~utils/date/dateUtils';
-import { formatCurrency } from '~utils/format/formatUtils';
-import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import messages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
+import { combineOptions, pipe } from '~src/lib/fp';
+import { useI18n } from '~src/lib/i18n';
+import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';
+import { Fradrag, Fradragstype } from '~src/types/Fradrag';
+import { Sats } from '~src/types/Sats';
+import { groupBy, groupByEq } from '~src/utils/array/arrayUtils';
+import { formatMonthYear } from '~src/utils/date/dateUtils';
+import { formatCurrency } from '~src/utils/format/formatUtils';
+import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
 
-import styles from './visBeregning.module.less';
+import * as styles from './visBeregning.module.less';
 
 interface Props {
     beregningsTittel?: string;

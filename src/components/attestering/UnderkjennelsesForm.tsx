@@ -2,12 +2,12 @@ import { Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 
-import { useI18n } from '~lib/i18n';
-import { UnderkjennelseGrunn, underkjennelsesGrunnTextMapper } from '~types/Behandling';
+import { useI18n } from '~src/lib/i18n';
+import { UnderkjennelseGrunn, underkjennelsesGrunnTextMapper } from '~src/types/Behandling';
 
 import { AttesteringFormData } from './AttesteringsForm';
 import messages from './attesteringsForm-nb';
-import styles from './attesteringsForm.module.less';
+import * as styles from './attesteringsForm.module.less';
 
 const UnderkjennelsesForm = (props: { control: Control<AttesteringFormData> }) => {
     const { formatMessage } = useI18n({ messages });

@@ -2,7 +2,7 @@ import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
-import styles from './faktablokk.module.less';
+import * as styles from './faktablokk.module.less';
 
 export const FaktaSpacing: Fakta = { faktatype: 'spacing' };
 export function customFakta(element: JSX.Element): CustomFakta {

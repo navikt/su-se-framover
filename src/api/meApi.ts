@@ -1,4 +1,4 @@
-import { LoggedInUser } from '~types/LoggedInUser';
+import { LoggedInUser } from '~src/types/LoggedInUser';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

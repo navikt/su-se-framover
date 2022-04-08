@@ -1,4 +1,4 @@
-import { Fradrag, Fradragstype } from '~types/Fradrag';
+import { Fradrag, Fradragstype } from '~src/types/Fradrag';
 
 export const velgbareFradragstyper = Object.values(Fradragstype).filter(
     (f) =>

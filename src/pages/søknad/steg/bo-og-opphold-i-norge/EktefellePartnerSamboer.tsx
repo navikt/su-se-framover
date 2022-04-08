@@ -1,15 +1,15 @@
 import { FormikErrors } from 'formik';
 import React, { useMemo } from 'react';
 
-import { FnrInput } from '~components/FnrInput/FnrInput';
-import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import { EPSFormData } from '~features/søknad/types';
-import { useI18n } from '~lib/i18n';
-import { keyOf, Nullable } from '~lib/types';
+import { FnrInput } from '~src/components/FnrInput/FnrInput';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { EPSFormData } from '~src/features/søknad/types';
+import { useI18n } from '~src/lib/i18n';
+import { keyOf, Nullable } from '~src/lib/types';
 
 import messages from './bo-og-opphold-i-norge-nb';
-import styles from './ektefelle-partner-samboer.module.less';
+import * as styles from './ektefelle-partner-samboer.module.less';
 
 interface Props {
     id: string;

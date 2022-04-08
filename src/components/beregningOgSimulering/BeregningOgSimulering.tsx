@@ -1,13 +1,13 @@
 import { Label } from '@navikt/ds-react';
 import React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import { Behandling } from '~types/Behandling';
-import { erBeregnetAvslag } from '~utils/behandling/behandlingUtils';
+import { useI18n } from '~src/lib/i18n';
+import { Behandling } from '~src/types/Behandling';
+import { erBeregnetAvslag } from '~src/utils/behandling/behandlingUtils';
 
 import messages from './beregning/beregning-nb';
 import VisBeregning from './beregning/VisBeregning';
-import styles from './beregningOgSimulering.module.less';
+import * as styles from './beregningOgSimulering.module.less';
 import { VisSimulering } from './simulering/simulering';
 
 const VisBeregningOgSimulering = (props: { behandling: Behandling }) => {

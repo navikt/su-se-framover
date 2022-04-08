@@ -5,21 +5,21 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { LukkSøknadBodyTypes } from '~api/søknadApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { pickRemoteData } from '~lib/fp';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { LukkSøknadBegrunnelse, Søknad, Søknadstype } from '~types/Søknad';
+import { LukkSøknadBodyTypes } from '~src/api/søknadApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { pickRemoteData } from '~src/lib/fp';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { LukkSøknadBegrunnelse, Søknad, Søknadstype } from '~src/types/Søknad';
 
 import AvslåttSøknad from '../../avslag/AvslåttSøknad';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
 import Avvist from './Avvist';
 import nb from './lukkSøknad-nb';
-import styles from './lukkSøknad.module.less';
+import * as styles from './lukkSøknad.module.less';
 import {
     lukkSøknadInitialValues,
     LukkSøknadOgAvsluttSøknadsbehandlingFormData,

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
 
-import styles from './circleWithIcon.module.less';
+import * as styles from './circleWithIcon.module.less';
 
 interface CircleWithIconProps {
     icon: React.ReactNode;

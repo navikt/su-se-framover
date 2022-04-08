@@ -3,11 +3,11 @@ import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import * as personSlice from '~features/person/person.slice';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useAsyncActionCreator } from '~lib/hooks';
-import * as Routes from '~lib/routes';
-import { useAppDispatch } from '~redux/Store';
+import * as personSlice from '~src/features/person/person.slice';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import * as Routes from '~src/lib/routes';
+import { useAppDispatch } from '~src/redux/Store';
 
 const VelgSakKnapp = (props: { label: string; saksnummer: string }) => {
     const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);

@@ -4,28 +4,28 @@ import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import * as PdfApi from '~api/pdfApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
-import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Sak } from '~types/Sak';
-import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import * as PdfApi from '~src/api/pdfApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
+import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Sak } from '~src/types/Sak';
+import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import {
     erAvslått,
     erUnderkjent,
     erSimulert,
     erBeregnetAvslag,
     erVilkårsvurderingerVurdertAvslag,
-} from '~utils/behandling/behandlingUtils';
-import { createVilkårUrl, mapToVilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~src/utils/behandling/behandlingUtils';
+import { createVilkårUrl, mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import messages from './sendTilAttesteringPage-nb';
-import styles from './sendTilAttesteringPage.module.less';
+import * as styles from './sendTilAttesteringPage.module.less';
 
 interface FormData {
     fritekst: string;

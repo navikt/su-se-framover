@@ -2,16 +2,16 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader, TextField } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 
-import { fetchPerson, Person } from '~api/personApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { Personkort } from '~components/personkort/Personkort';
-import { pipe } from '~lib/fp';
-import { useApiCall } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
+import { fetchPerson, Person } from '~src/api/personApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { Personkort } from '~src/components/personkort/Personkort';
+import { pipe } from '~src/lib/fp';
+import { useApiCall } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
 
 import messages from './FnrInput-nb';
-import styles from './FnrInput.module.less';
+import * as styles from './FnrInput.module.less';
 
 interface FnrInputProps {
     label?: string;

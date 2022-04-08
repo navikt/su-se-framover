@@ -1,4 +1,4 @@
-import { Nøkkeltall } from '~types/Nøkkeltall';
+import { Nøkkeltall } from '~src/types/Nøkkeltall';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

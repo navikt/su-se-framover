@@ -2,20 +2,20 @@ import { Alert } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import { keyOf } from '~lib/types';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { SøknadInnhold } from '~types/Søknad';
-import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';
-import { Vilkårsinformasjon, vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { useI18n } from '~src/lib/i18n';
+import { keyOf } from '~src/lib/types';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { SøknadInnhold } from '~src/types/Søknad';
+import { kalkulerTotaltAntallDagerIUtlandet } from '~src/utils/date/dateUtils';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/opphold-i-utlandet/oppholdIUtlandet-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { customFakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import styles from './faktablokker.module.less';
+import * as styles from './faktablokker.module.less';
 import { FaktablokkProps } from './faktablokkUtils';
 
 export interface UtenlandsoppholdVilkårsblokkPros {

@@ -1,13 +1,16 @@
 import { BodyShort } from '@navikt/ds-react';
 import React from 'react';
 
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
-import { useI18n } from '~lib/i18n';
-import { FormueVilkår, VurderingsperiodeFormue } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import * as DateUtils from '~utils/date/dateUtils';
+import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { useI18n } from '~src/lib/i18n';
+import {
+    FormueVilkår,
+    VurderingsperiodeFormue,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 import messages from './formuevilkåroppsummering-nb';
-import styles from './formuevilkåroppsummering.module.less';
+import * as styles from './formuevilkåroppsummering.module.less';
 
 const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår }) => (
     <ul>
@@ -32,14 +35,8 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
                 verdi={DateUtils.formatPeriode(vurdering.periode)}
             />
             <div className={styles.titler}>
-                <BodyShort className={styles.formueVerdiTittel}>
-                    {intl.formatMessage({ id: 'gjeldendeformue.søker' })}
-                </BodyShort>
-                {eps && (
-                    <BodyShort className={styles.formueVerdiTittel}>
-                        {intl.formatMessage({ id: 'gjeldendeformue.eps' })}
-                    </BodyShort>
-                )}
+                <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.søker' })}</BodyShort>
+                {eps && <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.eps' })}</BodyShort>}
             </div>
             <OppsummeringPar
                 className={styles.oppsummeringstriple}

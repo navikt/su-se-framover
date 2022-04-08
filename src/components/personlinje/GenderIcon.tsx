@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { Kjønn } from '~api/personApi';
-import * as Icons from '~assets/Icons';
+import { Kjønn } from '~src/api/personApi';
+import * as Icons from '~src/assets/Icons';
 
 const GenderIcon = (props: { kjønn: Kjønn }) => {
     switch (props.kjønn) {

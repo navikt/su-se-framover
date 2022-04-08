@@ -6,28 +6,28 @@ import * as O from 'fp-ts/Option';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import * as revurderingActions from '~features/revurdering/revurderingActions';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InformasjonsRevurdering, Vurderingstatus } from '~types/Revurdering';
-import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
+import { ApiError } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Framdriftsindikator, { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import * as revurderingActions from '~src/features/revurdering/revurderingActions';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
+import { Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
 import {
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
-} from '~utils/revurdering/revurderingUtils';
+} from '~src/utils/revurdering/revurderingUtils';
 
 import SkjemaelementFeilmelding from '../../../components/formElements/SkjemaelementFeilmelding';
 import { RevurderingSteg } from '../types';
 
 import Formue from './formue/Formue';
 import sharedMessages, { stegmessages } from './revurdering-nb';
-import styles from './revurdering.module.less';
+import * as styles from './revurdering.module.less';
 
 const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
 const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));

@@ -1,5 +1,5 @@
-import { Nullable } from '~lib/types';
-import { TilbakekrevingsbehandlingFormData } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { Nullable } from '~src/lib/types';
+import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 
 import { Attestering } from './Behandling';
 import { Beregning } from './Beregning';

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { ActionReducerMapBuilder, AsyncThunk, CaseReducer, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
-import { ApiClientResult, ApiError } from '~api/apiClient';
+import { ApiClientResult, ApiError } from '~src/api/apiClient';
 
 export const handleAsyncThunk = <State, A, B, C>(
     builder: ActionReducerMapBuilder<State>,

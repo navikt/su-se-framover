@@ -1,11 +1,11 @@
 import * as Sentry from '@sentry/browser';
 import React, { ErrorInfo } from 'react';
 
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 
 import SkjemaelementFeilmelding from '../formElements/SkjemaelementFeilmelding';
 
-import styles from './errorBoundary.module.less';
+import * as styles from './errorBoundary.module.less';
 
 class ErrorBoundary extends React.Component<unknown, { hasError: boolean; error?: Error; eventId?: string }> {
     constructor(props: unknown) {

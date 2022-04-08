@@ -1,6 +1,6 @@
-import { Nullable } from '~lib/types';
-import { FormueVerdier } from '~types/Behandlingsinformasjon';
-import { SøknadInnhold } from '~types/Søknad';
+import { Nullable } from '~src/lib/types';
+import { FormueVerdier } from '~src/types/Behandlingsinformasjon';
+import { SøknadInnhold } from '~src/types/Søknad';
 
 function totalVerdiKjøretøy(kjøretøyArray: Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>) {
     return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);

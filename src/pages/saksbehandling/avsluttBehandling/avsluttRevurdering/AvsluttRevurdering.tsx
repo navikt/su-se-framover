@@ -3,23 +3,23 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm, UseFormWatch } from 'react-hook-form';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
-import * as pdfApi from '~api/pdfApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { avsluttRevurdering } from '~features/revurdering/revurderingActions';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { Revurdering } from '~types/Revurdering';
-import { erForhåndsvarselSendtEllerBesluttet } from '~utils/revurdering/revurderingUtils';
+import * as pdfApi from '~src/api/pdfApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { avsluttRevurdering } from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { Revurdering } from '~src/types/Revurdering';
+import { erForhåndsvarselSendtEllerBesluttet } from '~src/utils/revurdering/revurderingUtils';
 
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
 import messages from './avsluttRevurdering-nb';
-import styles from './avsluttRevurdering.module.less';
+import * as styles from './avsluttRevurdering.module.less';
 
 interface AvsluttRevurderingFormData {
     fritekst: Nullable<string>;

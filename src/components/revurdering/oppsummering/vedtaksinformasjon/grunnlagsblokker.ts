@@ -1,12 +1,12 @@
-import { MessageFormatter, UseI18N } from '~lib/i18n';
+import { MessageFormatter, UseI18N } from '~src/lib/i18n';
 import {
     erBosituasjonFullstendig,
     BosituasjonTyper,
     Bosituasjon,
-} from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { UføreResultat, UføreVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { formatPeriode } from '~utils/date/dateUtils';
-import { formatCurrency } from '~utils/format/formatUtils';
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { UføreResultat, UføreVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatCurrency } from '~src/utils/format/formatUtils';
 
 import messages from './vedtaksinformasjon-nb';
 

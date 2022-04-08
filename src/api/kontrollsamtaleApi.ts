@@ -1,5 +1,5 @@
-import { Kontrollsamtale } from '~types/Kontrollsamtale';
-import { toStringDateOrNull } from '~utils/date/dateUtils';
+import { Kontrollsamtale } from '~src/types/Kontrollsamtale';
+import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import apiClient from './apiClient';
 

@@ -5,18 +5,18 @@ import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { ErrorCode } from '~api/apiClient';
-import { fetchPerson, Kjønn, Person, Sivilstand as ISivilstand, SivilstandTyper } from '~api/personApi';
-import { useApiCall } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { showName, formatFnr } from '~utils/person/personUtils';
+import { ErrorCode } from '~src/api/apiClient';
+import { fetchPerson, Kjønn, Person, Sivilstand as ISivilstand, SivilstandTyper } from '~src/api/personApi';
+import { useApiCall } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { showName, formatFnr } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
 import GenderIcon from './GenderIcon';
 import messages from './personlinje-nb';
-import styles from './personlinje.module.less';
+import * as styles from './personlinje.module.less';
 
 const Separator = () => (
     <BodyShort as="span" className={styles.separator}>

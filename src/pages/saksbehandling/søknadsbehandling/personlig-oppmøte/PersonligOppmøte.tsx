@@ -7,36 +7,36 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import { PersonligOppmøteFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { pipe } from '~lib/fp';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { eqNullable, Nullable } from '~lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { Behandlingsstatus } from '~types/Behandling';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { PersonligOppmøteFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { pipe } from '~src/lib/fp';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { eqNullable, Nullable } from '~src/lib/types';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { Behandlingsstatus } from '~src/types/Behandling';
 import {
     PersonligOppmøteStatus,
     PersonligOppmøte as PersonligOppmøteType,
     Behandlingsinformasjon,
-} from '~types/Behandlingsinformasjon';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
-import { erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
-import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~src/types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
+import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
+import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurderingknapper } from '../Vurdering';
 
 import messages from './personligOppmøte-nb';
-import styles from './personligOppmøte.module.less';
+import * as styles from './personligOppmøte.module.less';
 
 enum GrunnForManglendePersonligOppmøte {
     SykMedLegeerklæringOgFullmakt = 'SykMedLegeerklæringOgFullmakt',

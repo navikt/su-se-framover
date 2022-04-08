@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { ApiError } from '~api/apiClient';
-import * as MeApi from '~api/meApi';
-import { LoggedInUser } from '~types/LoggedInUser';
+import { ApiError } from '~src/api/apiClient';
+import * as MeApi from '~src/api/meApi';
+import { LoggedInUser } from '~src/types/LoggedInUser';
 
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '../../redux/utils';
 

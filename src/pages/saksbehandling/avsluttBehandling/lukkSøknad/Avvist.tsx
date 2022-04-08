@@ -3,16 +3,16 @@ import { Button, Loader, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { FieldErrors } from 'react-hook-form';
 
-import * as søknadApi from '~api/søknadApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import { useBrevForhåndsvisning } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import { LukkSøknadBegrunnelse } from '~types/Søknad';
+import * as søknadApi from '~src/api/søknadApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import { useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { LukkSøknadBegrunnelse } from '~src/types/Søknad';
 
 import nb from './lukkSøknad-nb';
-import styles from './lukkSøknad.module.less';
+import * as styles from './lukkSøknad.module.less';
 import { AvvistBrevtyper } from './lukkSøknadUtils';
 
 interface AvvistFormData {
@@ -99,14 +99,9 @@ const Avvist = (props: AvvistProps) => {
                 </div>
             )}
             {props.avvistFormData.skalSendesBrev !== null && (
-                <div className={styles.buttonsContainer}>
+                <div>
                     {props.avvistFormData.skalSendesBrev && (
-                        <Button
-                            variant="secondary"
-                            className={styles.seBrevKnapp}
-                            type="button"
-                            onClick={handleHentBrevClick}
-                        >
+                        <Button variant="secondary" type="button" onClick={handleHentBrevClick}>
                             {formatMessage('knapp.seBrev')}
                             {RemoteData.isPending(brevStatus) && <Loader />}
                         </Button>

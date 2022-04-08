@@ -1,7 +1,7 @@
 import isEqual from 'lodash.isequal';
 
-import { Nullable } from '~lib/types';
-import { Fradrag } from '~types/Fradrag';
+import { Nullable } from '~src/lib/types';
+import { Fradrag } from '~src/types/Fradrag';
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';

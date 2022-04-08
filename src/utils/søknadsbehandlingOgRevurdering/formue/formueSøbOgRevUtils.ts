@@ -2,9 +2,9 @@ import * as DateFns from 'date-fns';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 
-import { Nullable } from '~lib/types';
-import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { summerFormue } from '~utils/revurdering/formue/RevurderFormueUtils';
+import { Nullable } from '~src/lib/types';
+import { Formuegrenser } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { summerFormue } from '~src/utils/revurdering/formue/RevurderFormueUtils';
 
 export interface VerdierFormData {
     verdiPåBolig: string;

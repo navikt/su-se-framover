@@ -3,26 +3,26 @@ import { Alert, Button, Loader } from '@navikt/ds-react';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ApiError, ErrorMessage } from '~api/apiClient';
-import { BeregnOgSimuler } from '~api/revurderingApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import apiErrorMessages from '~components/apiErrorAlert/ApiErrorAlert-nb';
-import { ApiErrorCode } from '~components/apiErrorAlert/apiErrorCode';
-import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
-import * as RevurderingActions from '~features/revurdering/revurderingActions';
-import { pipe } from '~lib/fp';
-import { useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { VelgForhåndsvarselForm } from '~pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
+import { ApiError, ErrorMessage } from '~src/api/apiClient';
+import { BeregnOgSimuler } from '~src/api/revurderingApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
+import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
+import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
+import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
+import { pipe } from '~src/lib/fp';
+import { useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { VelgForhåndsvarselForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
 import {
     getOppsummeringsformState,
     hentBrevsending,
     OppsummeringState,
-} from '~pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
-import { TilbakekrevingForm } from '~pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { useAppDispatch } from '~redux/Store';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+} from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
+import { TilbakekrevingForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { useAppDispatch } from '~src/redux/Store';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     BeregnetIngenEndring,
     BeslutningEtterForhåndsvarsling,
@@ -30,7 +30,7 @@ import {
     InformasjonsRevurderingStatus,
     SimulertRevurdering,
     UnderkjentRevurdering,
-} from '~types/Revurdering';
+} from '~src/types/Revurdering';
 import {
     erBeregnetIngenEndring,
     erRevurderingSimulert,
@@ -38,13 +38,13 @@ import {
     harBeregninger,
     harSimulering,
     periodenInneholderTilbakekrevingOgAndreTyper,
-} from '~utils/revurdering/revurderingUtils';
+} from '~src/utils/revurdering/revurderingUtils';
 
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import { ResultatEtterForhåndsvarselform, SendTilAttesteringForm } from './oppsummeringPageForms/OppsummeringPageForms';
 import messages from './revurderingOppsummeringPage-nb';
-import styles from './revurderingOppsummeringPage.module.less';
+import * as styles from './revurderingOppsummeringPage.module.less';
 
 const OppsummeringshandlingForm = (props: {
     sakId: string;

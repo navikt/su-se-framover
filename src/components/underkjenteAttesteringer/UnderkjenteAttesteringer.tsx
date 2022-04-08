@@ -1,12 +1,12 @@
 import { Alert, BodyShort, Label } from '@navikt/ds-react';
 import React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import { Attestering, UnderkjennelseGrunn } from '~types/Behandling';
-import { formatDateTime } from '~utils/date/dateUtils';
+import { useI18n } from '~src/lib/i18n';
+import { Attestering, UnderkjennelseGrunn } from '~src/types/Behandling';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from './underkjenteAttestering-nb';
-import styles from './underkjenteAttesteringer.module.less';
+import * as styles from './underkjenteAttesteringer.module.less';
 
 const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
     const underkjenteAttesteringer = props.attesteringer.filter((att) => att.underkjennelse != null);

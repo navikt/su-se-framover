@@ -1,4 +1,4 @@
-import { Periode } from '~types/Periode';
+import { Periode } from '~src/types/Periode';
 
 import { Formuegrunnlag } from './Formuegrunnlag';
 

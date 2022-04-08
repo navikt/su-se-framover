@@ -3,17 +3,17 @@ import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Personlinje from '~components/personlinje/Personlinje';
-import * as personSlice from '~features/person/person.slice';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { erInformasjonsRevurdering } from '~utils/revurdering/revurderingUtils';
+import Personlinje from '~src/components/personlinje/Personlinje';
+import * as personSlice from '~src/features/person/person.slice';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { pipe } from '~src/lib/fp';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './attestering-nb';
-import styles from './attestering.module.less';
+import * as styles from './attestering.module.less';
 import AttesterKlage from './attesterKlage/AttesterKlage';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
 import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';

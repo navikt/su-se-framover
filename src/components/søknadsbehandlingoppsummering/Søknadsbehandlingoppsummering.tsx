@@ -1,21 +1,21 @@
 import { Heading, Label, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 
-import VisBeregningOgSimulering from '~components/beregningOgSimulering/BeregningOgSimulering';
-import { SatsVilkårsblokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
-import VilkårsOppsummering from '~components/oppsummering/vilkårsOppsummering/VilkårsOppsummering';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import { Behandling, Behandlingsperiode } from '~types/Behandling';
-import { Periode } from '~types/Periode';
-import { Sak } from '~types/Sak';
-import { Vedtak } from '~types/Vedtak';
-import * as DateUtils from '~utils/date/dateUtils';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import VisBeregningOgSimulering from '~src/components/beregningOgSimulering/BeregningOgSimulering';
+import { SatsVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
+import VilkårsOppsummering from '~src/components/oppsummering/vilkårsOppsummering/VilkårsOppsummering';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { Behandling, Behandlingsperiode } from '~src/types/Behandling';
+import { Periode } from '~src/types/Periode';
+import { Sak } from '~src/types/Sak';
+import { Vedtak } from '~src/types/Vedtak';
+import * as DateUtils from '~src/utils/date/dateUtils';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import messages from './søknadsbehandling-nb';
 import SøknadsbehandlingHeader from './SøknadsbehandlingHeader';
-import styles from './søknadsbehandlingoppsummering.module.less';
+import * as styles from './søknadsbehandlingoppsummering.module.less';
 
 interface Props {
     sak: Sak;

@@ -5,23 +5,23 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useHistory } from 'react-router-dom';
 
-import * as pdfApi from '~api/pdfApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import yup from '~lib/validering';
-import { KlageSteg } from '~pages/saksbehandling/types';
-import { Klage, KlageStatus } from '~types/Klage';
-import { erKlageAvvist } from '~utils/klage/klageUtils';
+import * as pdfApi from '~src/api/pdfApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import * as klageActions from '~src/features/klage/klageActions';
+import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import yup from '~src/lib/validering';
+import { KlageSteg } from '~src/pages/saksbehandling/types';
+import { Klage, KlageStatus } from '~src/types/Klage';
+import { erKlageAvvist } from '~src/utils/klage/klageUtils';
 
-import sharedStyles from '../klage.module.less';
+import * as sharedStyles from '../klage.module.less';
 
 import messages from './avvistKlage-nb';
-import styles from './avvistKlage.module.less';
+import * as styles from './avvistKlage.module.less';
 
 interface AvvistKlageFormData {
     fritekstTilBrev: string;

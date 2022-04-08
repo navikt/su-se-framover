@@ -1,4 +1,4 @@
-import { OmgjørVedtakÅrsak, OmgjørVedtakUtfall, OpprettholdVedtakHjemmel, KlageVurderingType } from '~types/Klage';
+import { OmgjørVedtakÅrsak, OmgjørVedtakUtfall, OpprettholdVedtakHjemmel, KlageVurderingType } from '~src/types/Klage';
 
 const omgjørVedtakÅrsakMessages: { [key in OmgjørVedtakÅrsak]: string } = {
     [OmgjørVedtakÅrsak.FEIL_LOVANVENDELSE]: 'Feil lovanvendelse',

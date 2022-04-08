@@ -2,21 +2,21 @@ import { Alert, Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 
-import { MessageFormatter, useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
-import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
-import { SøknadInnhold } from '~types/Søknad';
-import { formatCurrency } from '~utils/format/formatUtils';
-import { regnUtFormueVerdier } from '~utils/søknadsbehandling/formue/formueUtils';
-import { delerBoligMedFormatted } from '~utils/søknadsbehandling/søknadsbehandlingUtils';
-import { Vilkårsinformasjon, vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/formue/formue-nb';
+import { Behandlingsinformasjon, FormueStatus } from '~src/types/Behandlingsinformasjon';
+import { SøknadInnhold } from '~src/types/Søknad';
+import { formatCurrency } from '~src/utils/format/formatUtils';
+import { regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
+import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import styles from './faktablokker.module.less';
+import * as styles from './faktablokker.module.less';
 import { FaktablokkProps } from './faktablokkUtils';
 
 export const FormueFaktablokk = (props: FaktablokkProps) => {

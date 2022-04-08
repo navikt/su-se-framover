@@ -1,4 +1,4 @@
-import { Navn } from '~api/personApi';
+import { Navn } from '~src/api/personApi';
 
 export function showName(navn: Navn) {
     const mellomnavn = navn.mellomnavn ? ` ${navn.mellomnavn} ` : ' ';

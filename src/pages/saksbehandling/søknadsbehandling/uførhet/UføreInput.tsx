@@ -1,9 +1,9 @@
 import { BodyShort, TextField, Label } from '@navikt/ds-react';
 import React from 'react';
 
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 
-import styles from './Uførhet.module.less';
+import * as styles from './Uførhet.module.less';
 
 export const UførhetInput = (props: {
     tittel: string;

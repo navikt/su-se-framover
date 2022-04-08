@@ -4,17 +4,17 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { BooleanRadioGroup } from '~/components/formElements/FormElements';
-import søknadSlice, { Kjøretøy, SøknadState } from '~/features/søknad/søknad.slice';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/i18n';
-import { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import søknadSlice, { Kjøretøy, SøknadState } from '~src/features/søknad/søknad.slice';
+import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { useI18n } from '~src/lib/i18n';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../../steg-shared.module.less';
+import * as sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
 import { formueValideringSchema } from '../formueSøknadUtils';
 import KjøretøyInputFelter from '../kjøretøyInputfelter/KjøretøyInputFelter';

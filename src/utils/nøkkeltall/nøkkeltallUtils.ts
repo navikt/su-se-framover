@@ -1,4 +1,4 @@
-import { Søknader } from '~types/Nøkkeltall';
+import { Søknader } from '~src/types/Nøkkeltall';
 
 export const ferdigBehandlet = (søknader: Søknader) =>
     søknader.iverksatteInnvilget + søknader.iverksatteAvslag + søknader.lukket;

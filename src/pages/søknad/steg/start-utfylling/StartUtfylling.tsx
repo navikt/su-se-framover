@@ -1,27 +1,25 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, ContentContainer, Heading, Loader, StepIndicator } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { fetchMe } from '~api/meApi';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { Personkort } from '~components/personkort/Personkort';
-import { useUserContext } from '~context/userContext';
-import { DelerBoligMed } from '~features/søknad/types';
-import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/i18n';
-import * as routes from '~lib/routes';
-import { trackEvent } from '~lib/tracking/amplitude';
-import { søknadNesteSteg } from '~lib/tracking/trackingEvents';
-import styles from '~pages/søknad/index.module.less';
-import messages from '~pages/søknad/nb';
-import { Steg } from '~pages/søknad/steg/Steg';
-import { Søknadsteg } from '~pages/søknad/types';
-import { useAppSelector } from '~redux/Store';
-import { Rolle } from '~types/LoggedInUser';
-import { Søknadstype } from '~types/Søknad';
+import { fetchMe } from '~src/api/meApi';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { Personkort } from '~src/components/personkort/Personkort';
+import { useUserContext } from '~src/context/userContext';
+import { DelerBoligMed } from '~src/features/søknad/types';
+import { pipe } from '~src/lib/fp';
+import { useI18n } from '~src/lib/i18n';
+import * as routes from '~src/lib/routes';
+import * as styles from '~src/pages/søknad/index.module.less';
+import messages from '~src/pages/søknad/nb';
+import { Steg } from '~src/pages/søknad/steg/Steg';
+import { Søknadsteg } from '~src/pages/søknad/types';
+import { useAppSelector } from '~src/redux/Store';
+import { Rolle } from '~src/types/LoggedInUser';
+import { Søknadstype } from '~src/types/Søknad';
 
 export const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
@@ -39,13 +37,6 @@ export const StartUtfylling = () => {
             if (!RemoteData.isSuccess(søkerFraStore)) {
                 return;
             }
-
-            trackEvent(
-                søknadNesteSteg({
-                    ident: søkerFraStore.value.aktorId,
-                    steg: step,
-                })
-            );
         });
     }, [step]);
 

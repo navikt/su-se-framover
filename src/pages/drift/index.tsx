@@ -4,16 +4,16 @@ import * as React from 'react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
-import { ApiError } from '~api/apiClient';
-import { fetchBakoverStatus, patchSøknader, SøknadResponse, konsistensavstemming } from '~api/driftApi';
-import { useApiCall } from '~lib/hooks';
-import { Nullable } from '~lib/types';
-import Nøkkeltall from '~pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
-import { toIsoDateOnlyString } from '~utils/date/dateUtils';
+import { ApiError } from '~src/api/apiClient';
+import { fetchBakoverStatus, patchSøknader, SøknadResponse, konsistensavstemming } from '~src/api/driftApi';
+import { useApiCall } from '~src/lib/hooks';
+import { Nullable } from '~src/lib/types';
+import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
+import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import StartGRegulering from './components/StartGRegulering';
 import { SøknadTabellDrift } from './components/SøknadTabell';
-import styles from './index.module.less';
+import * as styles from './index.module.less';
 
 enum Knapp {
     FIX_SØKNADER,
@@ -62,11 +62,11 @@ const Drift = () => {
     return (
         <div className={styles.container}>
             <div>
-                <h1 className={styles.header}>Drift</h1>
+                <h1>Drift</h1>
             </div>
 
             <div>
-                <h1 className={styles.header}>Status</h1>
+                <h1>Status</h1>
                 <div className={styles.statusContainer}>
                     {RemoteData.isSuccess(statusBakover) ? (
                         <Alert className={styles.alert} variant="success">
@@ -80,7 +80,7 @@ const Drift = () => {
                 </div>
             </div>
             <div>
-                <h1 className={styles.header}>Actions</h1>
+                <h1>Actions</h1>
                 <div className={styles.actionsContainer}>
                     <Button variant="secondary" className={styles.knapp} type="button" onClick={fixSøknader}>
                         Fix Søknader

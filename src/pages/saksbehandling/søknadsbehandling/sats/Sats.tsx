@@ -8,35 +8,35 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { Sats as FaktiskSats } from '~/types/Sats';
-import { Person, fetchPerson } from '~api/personApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
-import { Personkort } from '~components/personkort/Personkort';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
-import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { pipe } from '~lib/fp';
-import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
-import { MessageFormatter, useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { eqNullable, Nullable } from '~lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { SøknadInnhold } from '~types/Søknad';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { Person, fetchPerson } from '~src/api/personApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { SatsFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
+import { Personkort } from '~src/components/personkort/Personkort';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
+import { lagreBosituasjonGrunnlag } from '~src/features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { pipe } from '~src/lib/fp';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { eqNullable, Nullable } from '~src/lib/types';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Sats as FaktiskSats } from '~src/types/Sats';
+import { SøknadInnhold } from '~src/types/Søknad';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
-import styles from './sats.module.less';
+import * as styles from './sats.module.less';
 
 enum BosituasjonsValg {
     DELER_BOLIG_MED_VOKSNE = 'DELER_BOLIG_MED_VOKSNE',
@@ -304,10 +304,8 @@ const SatsForm = (props: SatsProps) => {
                         className={styles.formContainer}
                     >
                         {eps && (
-                            <div className={styles.personkortContainer}>
-                                <Label className={styles.personkortTittel} spacing>
-                                    {props.formatMessage('display.eps.label')}
-                                </Label>
+                            <div>
+                                <Label spacing>{props.formatMessage('display.eps.label')}</Label>
                                 <Personkort person={eps} />
                             </div>
                         )}

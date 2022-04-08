@@ -3,21 +3,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Route, Switch, useHistory } from 'react-router';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import * as revurderingActions from '~features/revurdering/revurderingActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { Revurdering, OpprettetRevurderingGrunn, Gjenopptak } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import * as revurderingActions from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { Revurdering, OpprettetRevurderingGrunn, Gjenopptak } from '~src/types/Revurdering';
+import { Sak } from '~src/types/Sak';
 
 import messages from './gjenoppta-nb';
-import styles from './gjenoppta.module.less';
+import * as styles from './gjenoppta.module.less';
 import GjenopptaOppsummering from './gjenopptaOppsummering';
 
 interface Props {

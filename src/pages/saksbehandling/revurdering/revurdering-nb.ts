@@ -1,5 +1,5 @@
-import { RevurderingSteg } from '~pages/saksbehandling/types';
-import { OpprettetRevurderingGrunn } from '~types/Revurdering';
+import { RevurderingSteg } from '~src/pages/saksbehandling/types';
+import { OpprettetRevurderingGrunn } from '~src/types/Revurdering';
 
 export const stegmessages: { [key in RevurderingSteg]: string } = {
     [RevurderingSteg.Periode]: 'Periode',

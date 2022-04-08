@@ -1,9 +1,9 @@
 import { Table } from '@navikt/ds-react';
 import React from 'react';
 
-import { SøknadResponse } from '~api/driftApi';
+import { SøknadResponse } from '~src/api/driftApi';
 
-import styles from '../index.module.less';
+import * as styles from '../index.module.less';
 
 const Rad = (props: {
     type: 'Journalpost' | 'Oppgave' | 'Brevbestilling';

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { SøknadState } from '~features/søknad/søknad.slice';
-import { useI18n } from '~lib/i18n';
-import epsFormueMessages from '~pages/søknad/steg/formue/epsFormue/ektefellesformue-nb';
-import formueMessages from '~pages/søknad/steg/formue/søkersFormue/dinformue-nb';
+import { SøknadState } from '~src/features/søknad/søknad.slice';
+import { useI18n } from '~src/lib/i18n';
+import epsFormueMessages from '~src/pages/søknad/steg/formue/epsFormue/ektefellesformue-nb';
+import formueMessages from '~src/pages/søknad/steg/formue/søkersFormue/dinformue-nb';
 
 import { kjøretøyMessages } from '../../formue/kjøretøyInputfelter/KjøretøyInputFelter';
 

@@ -1,5 +1,5 @@
-import { DelerBoligMed } from '~features/søknad/types';
-import { Nullable } from '~lib/types';
+import { DelerBoligMed } from '~src/features/søknad/types';
+import { Nullable } from '~src/lib/types';
 
 export function delerBoligMedFormatted(delerBoligMed: Nullable<DelerBoligMed>) {
     switch (delerBoligMed) {

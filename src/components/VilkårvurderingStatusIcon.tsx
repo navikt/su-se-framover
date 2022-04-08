@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 import { ErrorIcon, SuccessIcon, WarningIcon } from './icons/Icons';
 
