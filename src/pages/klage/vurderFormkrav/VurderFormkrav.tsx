@@ -6,7 +6,8 @@ import * as B from 'fp-ts/lib/boolean';
 import * as S from 'fp-ts/string';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
