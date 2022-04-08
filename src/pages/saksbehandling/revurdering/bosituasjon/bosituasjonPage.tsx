@@ -30,15 +30,15 @@ import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
+import messages from './bosituasjonForm-nb';
+import styles from './bosituasjonForm.module.less';
 import {
     BosituasjonFormData,
     BosituasjonFormItemData,
     bosituasjonFormSchema,
     bosituasjonTilFormItemData,
     nyBosituasjon,
-} from './bosituasjonForm';
-import messages from './bosituasjonForm-nb';
-import styles from './bosituasjonForm.module.less';
+} from './bosituasjonPageUtils';
 import GjeldendeBosituasjon from './GjeldendeBosituasjon';
 
 const BosituasjonPage = (props: RevurderingStegProps) => {
