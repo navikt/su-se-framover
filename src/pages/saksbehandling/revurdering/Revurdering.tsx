@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~types/Revurdering';
 import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
+import * as DateUtils from '~utils/date/dateUtils';
 import {
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
@@ -31,7 +32,7 @@ import styles from './revurdering.module.less';
 
 const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
 const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
-const BosituasjonFormPage = React.lazy(() => import('./bosituasjon/BosituasjonFormPage'));
+const BosituasjonPage = React.lazy(() => import('./bosituasjon/bosituasjonPage'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
 const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
@@ -234,13 +235,18 @@ const RevurderingstegPage = (props: {
                         );
                     case RevurderingSteg.Bosituasjon:
                         return (
-                            <BosituasjonFormPage
+                            <BosituasjonPage
+                                eksisterendeBosituasjoner={value.bosituasjon}
+                                nyeBosituasjoner={
+                                    props.informasjonsRevurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon
+                                }
                                 sakId={props.sakId}
-                                revurdering={props.informasjonsRevurdering}
-                                grunnlagsdataOgVilkårsvurderinger={value}
-                                forrige={props.forrige}
+                                revurderingId={props.informasjonsRevurdering.id}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                forrige={props.forrige}
                                 avsluttUrl={props.avsluttUrl}
+                                minDate={DateUtils.parseIsoDateOnly(props.informasjonsRevurdering.periode.fraOgMed)}
+                                maxDate={DateUtils.parseIsoDateOnly(props.informasjonsRevurdering.periode.tilOgMed)}
                             />
                         );
                     case RevurderingSteg.Formue:

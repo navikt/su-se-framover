@@ -1,9 +1,14 @@
 export default {
     'form.begrunnelse': 'Begrunnelse',
-    'form.delerSøkerBolig': 'Deler søker bolig med noen over 18 år?',
+    'form.delerBolig': 'Deler søker bolig med noen over 18 år?',
     'form.erEPSUførFlyktning': 'Er ektefelle/samboer ufør flyktning?',
     'form.epsFnr': 'Ektefelle/samboers fødelsnummer',
     'form.harSøkerEPS': 'Har søker ektefelle eller samboer?',
+    'form.beskrivelse': 'Beskrivelse',
+    'form.fjern.bosituasjon': 'Slett',
+    'form.ny.bosituasjon': 'Ny',
+    'form.fraOgMed': 'Fra og med',
+    'form.tilOgMed': 'Til og med',
 
     'eksisterende.vedtakinfo.tittel': 'Eksisterende vedtaksinformasjon',
     'eksisterende.vedtakinfo.søkerBorMed': 'Søker bor med',

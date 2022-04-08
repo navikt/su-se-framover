@@ -320,10 +320,7 @@ export const lagreBosituasjonsgrunnlag = createAsyncThunk<
     const res = await revurderingApi.lagreBosituasjonsgrunnlag({
         sakId: arg.sakId,
         revurderingId: arg.revurderingId,
-        epsFnr: arg.epsFnr,
-        delerBolig: arg.delerBolig,
-        erEPSUførFlyktning: arg.erEPSUførFlyktning,
-        begrunnelse: arg.begrunnelse,
+        bosituasjoner: arg.bosituasjoner,
     });
     if (res.status === 'ok') {
         return res.data;
