@@ -23,12 +23,6 @@
     gap: @spacing;
 }
 
-.grunnlagsliste {
-    > * {
-        margin-bottom: @spacing-xxs;
-    }
-}
-
 .formItemContainer {
     display: flex;
     flex-direction: column;
@@ -46,10 +40,23 @@
     height: min-content;
 }
 
+.formItemInputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+}
+
 //gjeldendeBosituasjon
+
 .informasjonsbitContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: @spacing-xl;
     margin-bottom: @spacing-xxs;
+}
+
+.grunnlagsliste {
+    > * {
+        margin-bottom: @spacing-xxs;
+    }
 }
