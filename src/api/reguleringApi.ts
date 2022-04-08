@@ -1,3 +1,5 @@
+import { Fradrag } from '~src/types/Fradrag';
+import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import { Regulering } from '~src/types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -23,5 +25,24 @@ export async function hentSakerMedÅpneBehandlinger(): Promise<ApiClientResult<n
     return apiClient({
         url: `/reguleringer/saker/apneBehandlinger`,
         method: 'GET',
+    });
+}
+
+export async function regulerManuelt({
+    reguleringId,
+    fradrag,
+    uføre,
+}: {
+    reguleringId: string;
+    fradrag: Fradrag[];
+    uføre: Uføregrunnlag[];
+}): Promise<ApiClientResult<Regulering>> {
+    return apiClient({
+        url: `reguleringer/manuell/${reguleringId}`,
+        method: 'POST',
+        body: {
+            fradrag,
+            uføre,
+        },
     });
 }

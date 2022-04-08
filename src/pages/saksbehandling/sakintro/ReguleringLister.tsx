@@ -53,6 +53,17 @@ const ReguleringLister = (props: Props) => {
                                     >
                                         {formatMessage('regulering.seOppsummering')}
                                     </LinkAsButton>
+                                ) : regulering.reguleringstype === Reguleringstype.MANUELL ? (
+                                    <LinkAsButton
+                                        variant="secondary"
+                                        size="small"
+                                        href={Routes.manuellRegulering.createURL({
+                                            sakId: props.sakId,
+                                            reguleringId: regulering.id,
+                                        })}
+                                    >
+                                        {formatMessage('regulering.manuell.start')}
+                                    </LinkAsButton>
                                 ) : null}
                             </>
                         );

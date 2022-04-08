@@ -222,6 +222,11 @@ export const klage: Route<{
     absPath: '/saksoversikt/:sakId/klage/:klageId/:steg/',
     createURL: (args) => `/saksoversikt/${args.sakId}/klage/${args.klageId}/${args.steg}/`,
 };
+//---------------Regulering-------------------------
+export const manuellRegulering: Route<{ sakId: string; reguleringId: string }> = {
+    path: '/saksoversikt/:sakId/reguler/:reguleringId',
+    createURL: (args) => `/saksoversikt/${args.sakId}/reguler/${args.reguleringId}`,
+};
 
 export interface SuccessNotificationState {
     notification?: string;

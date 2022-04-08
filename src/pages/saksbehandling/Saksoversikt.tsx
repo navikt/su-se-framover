@@ -40,6 +40,7 @@ const RevurderingIntroPage = React.lazy(
 const GjenopptaOppsummering = React.lazy(
     () => import('~src/pages/saksbehandling/stans/gjenoppta/gjenopptaOppsummering')
 );
+const ManuellReguleringPage = React.lazy(() => import('~src/pages/saksbehandling/regulering/ManuellRegulering'));
 
 const Saksoversikt = () => {
     const urlParams = routes.useRouteParams<typeof routes.saksoversiktValgtSak>();
@@ -134,6 +135,15 @@ const Saksoversikt = () => {
                                         element={
                                             <div className={styles.mainContent}>
                                                 <Gjenoppta sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={Routes.manuellRegulering.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <ManuellReguleringPage sak={sak} />
                                             </div>
                                         }
                                     />

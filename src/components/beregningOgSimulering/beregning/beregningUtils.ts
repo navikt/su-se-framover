@@ -1,5 +1,8 @@
+import { formatISO } from 'date-fns';
+
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
+import { Periode } from '~src/types/Periode';
 import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import { FradragFormData } from './fradragInputs/FradragInputs';
@@ -29,4 +32,31 @@ export const fradragTilFradragFormData = (fradrag: Fradrag): FradragFormData => 
         fraOgMed: toDateOrNull(fradrag.periode?.fraOgMed),
         tilOgMed: toDateOrNull(fradrag.periode?.tilOgMed),
     },
+});
+
+export const fradragFormdataTilFradrag = (f: FradragFormData, defaultPeriode: Periode<Date>): Fradrag => ({
+    //valdiering sikrer at feltet ikke er null
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    periode:
+        f.periode?.fraOgMed && f.periode.tilOgMed
+            ? {
+                  fraOgMed: formatISO(f.periode.fraOgMed, { representation: 'date' }),
+                  tilOgMed: formatISO(f.periode.tilOgMed, { representation: 'date' }),
+              }
+            : {
+                  fraOgMed: formatISO(defaultPeriode.fraOgMed, { representation: 'date' }),
+                  tilOgMed: formatISO(defaultPeriode.tilOgMed, { representation: 'date' }),
+              },
+
+    beløp: parseInt(f.beløp!, 10),
+    type: f.type!,
+    utenlandskInntekt: f.fraUtland
+        ? {
+              beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
+              valuta: f.utenlandskInntekt.valuta,
+              kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
+          }
+        : null,
+    tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
+    /* eslint-enable @typescript-eslint/no-non-null-assertion */
 });

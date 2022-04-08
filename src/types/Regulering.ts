@@ -2,6 +2,7 @@ import { Nullable } from '~src/lib/types';
 
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 
 export interface Regulering {
@@ -10,6 +11,7 @@ export interface Regulering {
     opprettet: string;
     sakId: string;
     saksnummer: number;
+    periode: Periode<string>;
     reguleringstype: Reguleringstype;
     jobbType: JobbType;
     erFerdigstilt: boolean;

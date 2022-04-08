@@ -48,7 +48,7 @@ interface EndringAvFradragFormData {
 }
 
 const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
-    const { intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    const { intl } = useI18n({ messages: { ...messages } });
     return (
         <div>
             <Heading level="2" size="large" spacing>
@@ -61,7 +61,7 @@ const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
 
 const EndringAvFradrag = (props: RevurderingStegProps) => {
     const { intl } = useI18n({
-        messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...fradragstypeMessages },
+        messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages },
     });
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
