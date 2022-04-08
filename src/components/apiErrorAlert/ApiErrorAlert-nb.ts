@@ -11,6 +11,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
         'Bosituasjon og inntekt må revurderes siden det finnes flere bosituasjonsperioder',
     [ApiErrorCode.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'Informasjon i bosituasjon samsvarer ikke med formue',
+    [ApiErrorCode.BOSITUASJONSPERIODER_OVERLAPPER]: 'Periodene i bosituasjonene overlapper',
     [ApiErrorCode.DELVIS_OPPHØR]: 'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     [ApiErrorCode.DEPOSITUM_IKKE_MINDRE_ENN_INNSKUDD]: 'Depositum kan ikke være høyere enn innskudd',
     [ApiErrorCode.EPS_ALDER_ER_NULL]: 'Alder til EPS er Null',
