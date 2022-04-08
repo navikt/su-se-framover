@@ -309,7 +309,6 @@ export async function lagreFradragsgrunnlag(
 export async function lagreBosituasjonsgrunnlag(
     data: BosituasjonRequest
 ): Promise<ApiClientResult<{ revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] }>> {
-    console.log(data);
     return apiClient({
         url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/bosituasjongrunnlag`,
         method: 'POST',

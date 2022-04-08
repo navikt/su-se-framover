@@ -4,7 +4,7 @@ import { Delete } from '@navikt/ds-icons';
 import { Button, Panel, Textarea } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { startOfMonth, endOfMonth } from 'date-fns';
-import React, { useState } from 'react';
+import React from 'react';
 import { Control, Controller, useFieldArray, useForm, UseFormWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -53,6 +53,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
     const {
         control,
         watch,
+        setValue,
         handleSubmit,
         formState: { errors },
     } = useForm<BosituasjonFormData>({
@@ -74,9 +75,9 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         tilOgMed: DateUtils.toIsoDateOnlyString(b.tilOgMed!),
                     },
-                    epsFnr: b.epsFnr,
-                    delerBolig: b.delerBolig,
-                    erEPSUførFlyktning: b.erEPSUførFlyktning,
+                    epsFnr: b.harEPS ? b.epsFnr : null,
+                    delerBolig: b.harEPS ? null : b.delerBolig,
+                    erEPSUførFlyktning: b.harEPS && b.epsAlder && b.epsAlder < 67 ? b.erEPSUførFlyktning : null,
                     begrunnelse: b.begrunnelse,
                 })),
             },
@@ -102,6 +103,9 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                                     <BosituasjonFormItem
                                         controller={control}
                                         watch={watch}
+                                        update={(idx: number, data: BosituasjonFormItemData) => {
+                                            setValue(`bosituasjoner.${idx}`, data);
+                                        }}
                                         data={item}
                                         index={idx}
                                         onDelete={() => items.remove(idx)}
@@ -156,6 +160,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
 export const BosituasjonFormItem = (props: {
     controller: Control<BosituasjonFormData>;
     watch: UseFormWatch<BosituasjonFormData>;
+    update: (idx: number, data: BosituasjonFormItemData) => void;
     data: BosituasjonFormItemData;
     index: number;
     bosituasjonArrayLengde: number;
@@ -248,6 +253,13 @@ export const BosituasjonFormItem = (props: {
                     <BosituasjonFormItemEps
                         formControl={props.controller}
                         index={props.index}
+                        setEpsAlder={(alder: Nullable<number>) => {
+                            props.update(props.index, {
+                                ...watch,
+                                epsAlder: alder,
+                            });
+                        }}
+                        epsAlder={watch.epsAlder}
                         formatMessage={formatMessage}
                     />
                 )}
@@ -286,43 +298,42 @@ export const BosituasjonFormItem = (props: {
 const BosituasjonFormItemEps = (props: {
     formControl: Control<BosituasjonFormData>;
     index: number;
+    setEpsAlder: (alder: Nullable<number>) => void;
+    epsAlder: Nullable<number>;
     formatMessage: MessageFormatter<typeof messages>;
-}) => {
-    const [epsAlder, setEpsAlder] = useState<Nullable<number>>(null);
-    return (
-        <div className={styles.epsFormContainer}>
+}) => (
+    <div className={styles.epsFormContainer}>
+        <Controller
+            control={props.formControl}
+            name={`bosituasjoner.${props.index}.epsFnr`}
+            render={({ field, fieldState }) => (
+                <FnrInput
+                    label={props.formatMessage('form.epsFnr')}
+                    inputId="epsFnr"
+                    name={`bosituasjoner.${props.index}.epsFnr`}
+                    onFnrChange={field.onChange}
+                    fnr={field.value ?? ''}
+                    feil={fieldState.error?.message}
+                    getHentetPerson={(person) => {
+                        props.setEpsAlder(person?.alder ?? null);
+                    }}
+                />
+            )}
+        />
+        {props.epsAlder && props.epsAlder < 67 && (
             <Controller
                 control={props.formControl}
-                name={`bosituasjoner.${props.index}.epsFnr`}
+                name={`bosituasjoner.${props.index}.erEPSUførFlyktning`}
                 render={({ field, fieldState }) => (
-                    <FnrInput
-                        label={props.formatMessage('form.epsFnr')}
-                        inputId="epsFnr"
-                        name={`bosituasjoner.${props.index}.epsFnr`}
-                        onFnrChange={field.onChange}
-                        fnr={field.value ?? ''}
-                        feil={fieldState.error?.message}
-                        getHentetPerson={(person) => {
-                            setEpsAlder(person?.alder ?? null);
-                        }}
+                    <BooleanRadioGroup
+                        legend={props.formatMessage('form.erEPSUførFlyktning')}
+                        error={fieldState.error?.message}
+                        {...field}
                     />
                 )}
             />
-            {epsAlder && epsAlder < 67 && (
-                <Controller
-                    control={props.formControl}
-                    name={`bosituasjoner.${props.index}.erEPSUførFlyktning`}
-                    render={({ field, fieldState }) => (
-                        <BooleanRadioGroup
-                            legend={props.formatMessage('form.erEPSUførFlyktning')}
-                            error={fieldState.error?.message}
-                            {...field}
-                        />
-                    )}
-                />
-            )}
-        </div>
-    );
-};
+        )}
+    </div>
+);
 
 export default BosituasjonPage;

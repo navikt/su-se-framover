@@ -84,7 +84,6 @@ export const bosituasjonFormSchema = yup
                                     name: 'er eps ufør flyktning',
                                     message: 'Feltet må fylles ut',
                                     test: function () {
-                                        console.log(this.parent);
                                         if (this.parent.epsAlder && this.parent.epsAlder < 67) {
                                             return this.parent.erEPSUførFlyktning !== null;
                                         }
