@@ -4,6 +4,7 @@ import * as Eq from 'fp-ts/Eq';
 import * as O from 'fp-ts/Option';
 import * as React from 'react';
 
+import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable } from '~src/lib/types';
@@ -12,7 +13,6 @@ import { eqStringPeriode } from '~src/types/Periode';
 import { groupByEq } from '~src/utils/array/arrayUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
-import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
 
 import messages from './fradragoppsummering-nb';
 import * as styles from './fradragoppsummering.module.less';

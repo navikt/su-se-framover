@@ -16,7 +16,8 @@ import {
     FradragFormData,
     FradragInputs,
     fradragSchema,
-} from '~src/components/beregningOgSimulering/beregning/FradragInputs';
+} from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
+import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import BeregningFaktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -36,7 +37,6 @@ import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/behandlingUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
-import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
@@ -245,7 +245,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 feltnavn="fradrag"
                                 fradrag={formik.values.fradrag}
                                 errors={formik.errors.fradrag}
-                                intl={intl}
                                 onChange={formik.handleChange}
                                 onFradragChange={(index, value) => {
                                     formik.setFieldValue(`fradrag[${index}]`, value);

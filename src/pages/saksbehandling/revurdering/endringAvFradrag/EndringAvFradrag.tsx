@@ -12,7 +12,8 @@ import {
     FradragFormData,
     FradragInputs,
     fradragSchema,
-} from '~src/components/beregningOgSimulering/beregning/FradragInputs';
+} from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
+import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Fradragoppsummering from '~src/components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -22,12 +23,10 @@ import { useI18n } from '~src/lib/i18n';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { Fradrag, Fradragstype, FradragTilhører } from '~src/types/Fradrag';
-import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Fradrag, FradragTilhører, IkkeVelgbareFradragstyper } from '~src/types/Fradrag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
-import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -144,7 +143,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     >
                         <div>
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
-                                (fradrag) => fradrag.type === Fradragstype.AvkortingUtenlandsopphold
+                                (fradrag) => fradrag.type === IkkeVelgbareFradragstyper.AvkortingUtenlandsopphold
                             ) && (
                                 <Alert variant={'info'}>{intl.formatMessage({ id: 'alert.advarsel.avkorting' })}</Alert>
                             )}
@@ -158,7 +157,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                     feltnavn="fradrag"
                                     fradrag={formik.values.fradrag}
                                     errors={formik.errors.fradrag}
-                                    intl={intl}
                                     onChange={formik.handleChange}
                                     onFradragChange={(index, value) => {
                                         formik.setFieldValue(`fradrag[${index}]`, value);

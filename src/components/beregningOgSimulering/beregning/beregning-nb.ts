@@ -6,17 +6,6 @@ export default {
 
     'beregning.behandlingErIkkeFerdig': 'Behandlingen er ikke ferdig.',
 
-    'display.checkbox.fraUtland': 'Fra utland',
-    'display.checkbox.tilhørerEPS': 'Ektefelle/samboer',
-
-    'display.fradrag.type': 'Type',
-    'display.fradrag.beløp': 'Beløp per måned',
-
-    'display.input.beløpIUtenlandskValuta': 'Månedsbeløp i utenlandsk valuta',
-    'display.input.kurs': 'Kurs ved utregning',
-    'display.input.kurs.desimal': 'Skriv desimal med punktum',
-    'display.input.valuta': 'Valuta',
-
     'display.simulerer': 'Simulerer',
 
     'display.totaltBeløp': 'Totalt beløp',
@@ -31,23 +20,6 @@ export default {
     'feilmelding.ukjentFeil': 'Ukjent feil',
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
 
-    'fradrag.heading': 'Fradrag',
-
-    'fradrag.type.emptyLabel': 'Velg fradragstype',
-
-    'fradrag.utenlandsk.beløp': 'Månedsbeløp i utenlandsk valuta',
-    'fradrag.utenlandsk.kurs': 'Kurs',
-
-    'fradrag.delerAvPeriode': 'Deler av perioden',
-    'fradrag.delerAvPeriode.fom': 'Fra og med',
-    'fradrag.delerAvPeriode.tom': 'Til og med',
-    'fradrag.delerAvPeriode.utHeleStønadsperioden': 'Ut hele stønadsperioden',
-
-    'fradrag.eps.fribeløp': 'Fribeløp',
-
-    'knapp.fradrag.leggtil': 'Legg til fradrag',
-    'knapp.fradrag.leggtil.annet': 'Legg til et annet fradrag',
-    'knapp.fradrag.fjern': 'Fjern fradrag',
     'knapp.startBeregning': 'Start beregning',
     'knapp.startNyBeregning': 'Ny beregning',
 

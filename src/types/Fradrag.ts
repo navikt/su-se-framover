@@ -38,17 +38,34 @@ export enum FradragTilhører {
     EPS = 'EPS',
 }
 
-export enum Fradragstype {
-    NAVytelserTilLivsopphold = 'NAVytelserTilLivsopphold',
+export type Fradragstype = VelgbareFradragstyper | IkkeVelgbareFradragstyper;
+
+export enum VelgbareFradragstyper {
+    Sosialstønad = 'Sosialstønad',
+    Uføretrygd = 'Uføretrygd',
+    Alderspensjon = 'Alderspensjon',
+    Arbeidsavklaringspenger = 'Arbeidsavklaringspenger',
+    Dagpenger = 'Dagpenger',
+    SupplerendeStønad = 'SupplerendeStønad',
+    //AFP
+    AvtalefestetPensjon = 'AvtalefestetPensjon',
+    AvtalefestetPensjonPrivat = 'AvtalefestetPensjonPrivat',
+
+    Sykepenger = 'Sykepenger',
+    Gjenlevendepensjon = 'Gjenlevendepensjon',
     Arbeidsinntekt = 'Arbeidsinntekt',
     OffentligPensjon = 'OffentligPensjon',
-    PrivatPensjon = 'PrivatPensjon',
-    Sosialstønad = 'Sosialstønad',
-    Kontantstøtte = 'Kontantstøtte',
     Introduksjonsstønad = 'Introduksjonsstønad',
     Kvalifiseringsstønad = 'Kvalifiseringsstønad',
+    PrivatPensjon = 'PrivatPensjon',
+    Kontantstøtte = 'Kontantstøtte',
     BidragEtterEkteskapsloven = 'BidragEtterEkteskapsloven',
     Kapitalinntekt = 'Kapitalinntekt',
+    Annet = 'Annet',
+}
+
+export enum IkkeVelgbareFradragstyper {
+    NAVytelserTilLivsopphold = 'NAVytelserTilLivsopphold',
     ForventetInntekt = 'ForventetInntekt',
     BeregnetFradragEPS = 'BeregnetFradragEPS',
     UnderMinstenivå = 'UnderMinstenivå',
