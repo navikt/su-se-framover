@@ -1,10 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import { Button, Panel, Textarea } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { startOfMonth, endOfMonth } from 'date-fns';
 import React, { useState } from 'react';
-import { Control, Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Control, Controller, useFieldArray, useForm, UseFormWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
@@ -19,6 +20,8 @@ import { MessageFormatter, useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Periode } from '~types/Periode';
+import { RevurderingStegProps } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -28,11 +31,9 @@ import RevurderingsperiodeHeader from '../revurderingsperiodeheader/Revurderings
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import {
-    BosituasjonerFormProps,
     BosituasjonFormData,
     BosituasjonFormItemData,
-    BosituasjonFormItemProps,
-    BosituasjonPageProps,
+    bosituasjonFormSchema,
     bosituasjonTilFormItemData,
     nyBosituasjon,
 } from './bosituasjonForm';
@@ -40,64 +41,32 @@ import messages from './bosituasjonForm-nb';
 import styles from './bosituasjonForm.module.less';
 import GjeldendeBosituasjon from './GjeldendeBosituasjon';
 
-const BosituasjonPage = (props: BosituasjonPageProps) => {
+const BosituasjonPage = (props: RevurderingStegProps) => {
+    const history = useHistory();
+    const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const defaultVerdier = (bosituasjoner: Bosituasjon[]): BosituasjonFormItemData[] => {
         return bosituasjoner.map((b) => bosituasjonTilFormItemData(b)) ?? [];
     };
 
-    const form = useForm<BosituasjonFormData>({
+    const {
+        control,
+        watch,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<BosituasjonFormData>({
         defaultValues: {
-            bosituasjoner: defaultVerdier(props.nyeBosituasjoner),
+            bosituasjoner: defaultVerdier(props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon),
         },
-        //TODO fiks validering
-        //resolver: yupResolver(bosituasjonFormValidation(epsAlder)),
+        resolver: yupResolver(bosituasjonFormSchema),
     });
-    return (
-        <ToKolonner
-            tittel={
-                <RevurderingsperiodeHeader
-                    periode={{
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        fraOgMed: DateUtils.toIsoDateOnlyString(props.minDate!),
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        tilOgMed: DateUtils.toIsoDateOnlyString(props.maxDate!),
-                    }}
-                />
-            }
-        >
-            {{
-                left: (
-                    <BosituasjonForm
-                        form={form}
-                        sakId={props.sakId}
-                        revurderingId={props.revurderingId}
-                        nesteUrl={props.nesteUrl}
-                        forrige={props.forrige}
-                        avsluttUrl={props.avsluttUrl}
-                        minDate={props.minDate}
-                        maxDate={props.maxDate}
-                    />
-                ),
-                right: (
-                    <GjeldendeBosituasjon bosituasjon={props.eksisterendeBosituasjoner} formatMessage={formatMessage} />
-                ),
-            }}
-        </ToKolonner>
-    );
-};
 
-export const BosituasjonForm = (props: BosituasjonerFormProps) => {
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
-    const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
-    const history = useHistory();
-
-    const handleSubmit = (data: BosituasjonFormData, gåtil: 'neste' | 'avbryt') =>
+    const lagreBosituasjon = (data: BosituasjonFormData, gåtil: 'neste' | 'avbryt') =>
         lagre(
             {
                 sakId: props.sakId,
-                revurderingId: props.revurderingId,
+                revurderingId: props.revurdering.id,
                 bosituasjoner: data.bosituasjoner.map((b) => ({
                     periode: {
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -115,62 +84,99 @@ export const BosituasjonForm = (props: BosituasjonerFormProps) => {
         );
 
     const items = useFieldArray({
-        control: props.form.control,
+        control: control,
         name: 'bosituasjoner',
     });
 
     return (
-        <form
-            className={classNames(sharedStyles.revurderingContainer, styles.container)}
-            onSubmit={props.form.handleSubmit((values) => handleSubmit(values, 'neste'))}
-        >
-            <ul className={styles.periodeliste}>
-                {items.fields.map((item, idx) => (
-                    <li key={item.id}>
-                        <BosituasjonFormItem
-                            form={props.form}
-                            data={item}
-                            index={idx}
-                            onDelete={() => items.remove(idx)}
-                            minDate={props.minDate}
-                            maxDate={props.maxDate}
+        <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
+            {{
+                left: (
+                    <form
+                        className={classNames(sharedStyles.revurderingContainer, styles.container)}
+                        onSubmit={handleSubmit((values) => lagreBosituasjon(values, 'neste'))}
+                    >
+                        <ul className={styles.periodeliste}>
+                            {items.fields.map((item, idx) => (
+                                <li key={item.id}>
+                                    <BosituasjonFormItem
+                                        controller={control}
+                                        watch={watch}
+                                        data={item}
+                                        index={idx}
+                                        onDelete={() => items.remove(idx)}
+                                        bosituasjonArrayLengde={items.fields.length}
+                                        revurderingsperiode={{
+                                            fraOgMed: props.revurdering.periode.fraOgMed,
+                                            tilOgMed: props.revurdering.periode.tilOgMed,
+                                        }}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                        <div className={styles.nyPeriodeKnappContainer}>
+                            <Button
+                                variant="secondary"
+                                type="button"
+                                onClick={() => items.append(nyBosituasjon(), { shouldFocus: true })}
+                            >
+                                {formatMessage('form.ny.bosituasjon')}
+                            </Button>
+                        </div>
+                        <Feiloppsummering
+                            tittel={formatMessage('feiloppsummering.title')}
+                            className={styles.feiloppsummering}
+                            feil={hookFormErrorsTilFeiloppsummering(errors)}
+                            hidden={Object.values(errors).length <= 0}
                         />
-                    </li>
-                ))}
-            </ul>
-            <div className={styles.nyPeriodeKnappContainer}>
-                <Button
-                    variant="secondary"
-                    type="button"
-                    onClick={() => items.append(nyBosituasjon(), { shouldFocus: true })}
-                >
-                    {formatMessage('form.ny.bosituasjon')}
-                </Button>
-            </div>
-            {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-            {RemoteData.isSuccess(status) && <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />}
-            <RevurderingBunnknapper
-                tilbake={props.forrige}
-                loading={RemoteData.isPending(status)}
-                onLagreOgFortsettSenereClick={props.form.handleSubmit((values: BosituasjonFormData) =>
-                    handleSubmit(values, 'avbryt')
-                )}
-            />
-        </form>
+                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
+                        {RemoteData.isSuccess(status) && (
+                            <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                        )}
+                        <RevurderingBunnknapper
+                            tilbake={props.forrige}
+                            loading={RemoteData.isPending(status)}
+                            onLagreOgFortsettSenereClick={handleSubmit((values: BosituasjonFormData) =>
+                                lagreBosituasjon(values, 'avbryt')
+                            )}
+                        />
+                    </form>
+                ),
+                right: (
+                    <GjeldendeBosituasjon
+                        bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                        formatMessage={formatMessage}
+                    />
+                ),
+            }}
+        </ToKolonner>
     );
 };
 
-export const BosituasjonFormItem = (props: BosituasjonFormItemProps) => {
+export const BosituasjonFormItem = (props: {
+    controller: Control<BosituasjonFormData>;
+    watch: UseFormWatch<BosituasjonFormData>;
+    data: BosituasjonFormItemData;
+    index: number;
+    bosituasjonArrayLengde: number;
+    revurderingsperiode: Periode<string>;
+    onDelete: () => void;
+}) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
-    const [epsAlder, setEpsAlder] = useState<Nullable<number>>(null);
-    const harEPS = props.form.watch(`bosituasjoner.${props.index}.harEPS`);
+    const watch = props.watch().bosituasjoner[props.index];
+
+    const revurderingsperiode = {
+        fraOgMed: new Date(props.revurderingsperiode.fraOgMed),
+        tilOgMed: new Date(props.revurderingsperiode.tilOgMed),
+    };
+
     return (
         <Panel className={styles.formItemContainer} border>
             <div className={styles.periodeContainer}>
                 <div className={styles.periodeContainer}>
                     <Controller
                         name={`bosituasjoner.${props.index}.fraOgMed`}
-                        control={props.form.control}
+                        control={props.controller}
                         defaultValue={props.data.fraOgMed}
                         render={({ field, fieldState }) => (
                             <DatePicker
@@ -182,34 +188,38 @@ export const BosituasjonFormItem = (props: BosituasjonFormItemProps) => {
                                 showMonthYearPicker
                                 isClearable
                                 autoComplete="off"
-                                minDate={props.minDate}
-                                maxDate={props.maxDate}
                                 onChange={(date: Nullable<Date>) => field.onChange(date ? startOfMonth(date) : null)}
+                                minDate={revurderingsperiode.fraOgMed}
+                                maxDate={revurderingsperiode.tilOgMed}
+                                startDate={field.value}
+                                endDate={watch.tilOgMed}
                             />
                         )}
                     />
                     <Controller
                         name={`bosituasjoner.${props.index}.tilOgMed`}
-                        control={props.form.control}
+                        control={props.controller}
                         defaultValue={props.data.tilOgMed}
                         render={({ field, fieldState }) => (
                             <DatePicker
-                                label={formatMessage('form.tilOgMed')}
                                 id={field.name}
+                                label={formatMessage('form.tilOgMed')}
                                 feil={getDateErrorMessage(fieldState.error)}
                                 {...field}
                                 dateFormat="MM/yyyy"
                                 showMonthYearPicker
                                 isClearable
                                 autoComplete="off"
-                                minDate={props.minDate}
-                                maxDate={props.maxDate}
                                 onChange={(date: Date) => field.onChange(date ? endOfMonth(date) : date)}
+                                minDate={watch.fraOgMed}
+                                maxDate={revurderingsperiode.tilOgMed}
+                                startDate={watch.fraOgMed}
+                                endDate={field.value}
                             />
                         )}
                     />
                 </div>
-                {props.onDelete && (
+                {props.onDelete && props.bosituasjonArrayLengde > 1 && (
                     <Button
                         variant="secondary"
                         className={styles.slettknapp}
@@ -222,9 +232,9 @@ export const BosituasjonFormItem = (props: BosituasjonFormItemProps) => {
                 )}
             </div>
 
-            <div className={styles.vertical}>
+            <div className={styles.formItemInputContainer}>
                 <Controller
-                    control={props.form.control}
+                    control={props.controller}
                     name={`bosituasjoner.${props.index}.harEPS`}
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
@@ -234,18 +244,16 @@ export const BosituasjonFormItem = (props: BosituasjonFormItemProps) => {
                         />
                     )}
                 />
-                {harEPS && (
+                {watch.harEPS && (
                     <BosituasjonFormItemEps
-                        formControl={props.form.control}
+                        formControl={props.controller}
                         index={props.index}
-                        setEpsAlder={setEpsAlder}
-                        epsAlder={epsAlder}
                         formatMessage={formatMessage}
                     />
                 )}
-                {harEPS === false && (
+                {watch.harEPS === false && (
                     <Controller
-                        control={props.form.control}
+                        control={props.controller}
                         name={`bosituasjoner.${props.index}.delerBolig`}
                         render={({ field, fieldState }) => (
                             <BooleanRadioGroup
@@ -257,7 +265,7 @@ export const BosituasjonFormItem = (props: BosituasjonFormItemProps) => {
                     />
                 )}
                 <Controller
-                    control={props.form.control}
+                    control={props.controller}
                     name={`bosituasjoner.${props.index}.begrunnelse`}
                     render={({ field, fieldState }) => (
                         <Textarea
@@ -270,59 +278,51 @@ export const BosituasjonFormItem = (props: BosituasjonFormItemProps) => {
                         />
                     )}
                 />
-                <Feiloppsummering
-                    tittel={formatMessage('feiloppsummering.title')}
-                    className={styles.feiloppsummering}
-                    feil={hookFormErrorsTilFeiloppsummering(props.form.formState.errors)}
-                    hidden={Object.values(props.form.formState.errors).length <= 0}
-                />
             </div>
         </Panel>
     );
 };
 
-export interface BosituasjonFormItemEpsProps {
+const BosituasjonFormItemEps = (props: {
     formControl: Control<BosituasjonFormData>;
     index: number;
-    setEpsAlder: (alder: Nullable<number>) => void;
-    epsAlder: Nullable<number>;
     formatMessage: MessageFormatter<typeof messages>;
-}
-
-export const BosituasjonFormItemEps = (props: BosituasjonFormItemEpsProps) => (
-    <div className={styles.epsFormContainer}>
-        <Controller
-            control={props.formControl}
-            name={`bosituasjoner.${props.index}.epsFnr`}
-            render={({ field, fieldState }) => (
-                <FnrInput
-                    label={props.formatMessage('form.epsFnr')}
-                    inputId="epsFnr"
-                    name={`bosituasjoner.${props.index}.epsFnr`}
-                    autoComplete="on"
-                    onFnrChange={field.onChange}
-                    fnr={field.value ?? ''}
-                    feil={fieldState.error?.message}
-                    getHentetPerson={(person) => {
-                        props.setEpsAlder(person?.alder ?? null);
-                    }}
-                />
-            )}
-        />
-        {props.epsAlder && props.epsAlder < 67 && (
+}) => {
+    const [epsAlder, setEpsAlder] = useState<Nullable<number>>(null);
+    return (
+        <div className={styles.epsFormContainer}>
             <Controller
                 control={props.formControl}
-                name={`bosituasjoner.${props.index}.erEPSUførFlyktning`}
+                name={`bosituasjoner.${props.index}.epsFnr`}
                 render={({ field, fieldState }) => (
-                    <BooleanRadioGroup
-                        legend={props.formatMessage('form.erEPSUførFlyktning')}
-                        error={fieldState.error?.message}
-                        {...field}
+                    <FnrInput
+                        label={props.formatMessage('form.epsFnr')}
+                        inputId="epsFnr"
+                        name={`bosituasjoner.${props.index}.epsFnr`}
+                        onFnrChange={field.onChange}
+                        fnr={field.value ?? ''}
+                        feil={fieldState.error?.message}
+                        getHentetPerson={(person) => {
+                            setEpsAlder(person?.alder ?? null);
+                        }}
                     />
                 )}
             />
-        )}
-    </div>
-);
+            {epsAlder && epsAlder < 67 && (
+                <Controller
+                    control={props.formControl}
+                    name={`bosituasjoner.${props.index}.erEPSUførFlyktning`}
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={props.formatMessage('form.erEPSUførFlyktning')}
+                            error={fieldState.error?.message}
+                            {...field}
+                        />
+                    )}
+                />
+            )}
+        </div>
+    );
+};
 
 export default BosituasjonPage;

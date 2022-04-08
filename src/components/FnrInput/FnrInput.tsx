@@ -20,19 +20,9 @@ interface FnrInputProps {
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
     feil?: React.ReactNode;
-    autoComplete?: string;
     getHentetPerson: (person: Nullable<Person>) => void;
 }
-export const FnrInput = ({
-    label,
-    inputId,
-    name,
-    fnr,
-    onFnrChange,
-    feil,
-    autoComplete,
-    getHentetPerson,
-}: FnrInputProps) => {
+export const FnrInput = ({ label, inputId, name, fnr, onFnrChange, feil, getHentetPerson }: FnrInputProps) => {
     const { formatMessage } = useI18n({ messages });
 
     const [personStatus, hentPerson] = useApiCall(fetchPerson);
@@ -66,7 +56,6 @@ export const FnrInput = ({
                 value={fnr ?? ''}
                 maxLength={11}
                 error={feil}
-                autoComplete={autoComplete}
             />
 
             {pipe(

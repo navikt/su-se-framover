@@ -17,7 +17,6 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~types/Revurdering';
 import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
-import * as DateUtils from '~utils/date/dateUtils';
 import {
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
@@ -236,17 +235,12 @@ const RevurderingstegPage = (props: {
                     case RevurderingSteg.Bosituasjon:
                         return (
                             <BosituasjonPage
-                                eksisterendeBosituasjoner={value.bosituasjon}
-                                nyeBosituasjoner={
-                                    props.informasjonsRevurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon
-                                }
                                 sakId={props.sakId}
-                                revurderingId={props.informasjonsRevurdering.id}
+                                revurdering={props.informasjonsRevurdering}
+                                grunnlagsdataOgVilkårsvurderinger={value}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
                                 forrige={props.forrige}
                                 avsluttUrl={props.avsluttUrl}
-                                minDate={DateUtils.parseIsoDateOnly(props.informasjonsRevurdering.periode.fraOgMed)}
-                                maxDate={DateUtils.parseIsoDateOnly(props.informasjonsRevurdering.periode.tilOgMed)}
                             />
                         );
                     case RevurderingSteg.Formue:
