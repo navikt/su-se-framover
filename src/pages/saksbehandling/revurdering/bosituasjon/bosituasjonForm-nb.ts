@@ -4,9 +4,9 @@ export default {
     'form.erEPSUførFlyktning': 'Er ektefelle/samboer ufør flyktning?',
     'form.epsFnr': 'Ektefelle/samboers fødelsnummer',
     'form.harSøkerEPS': 'Har søker ektefelle eller samboer?',
-    'form.beskrivelse': 'Beskrivelse',
+    'form.beskrivelse': 'Unngå personsensitive opplysninger',
     'form.fjern.bosituasjon': 'Slett',
-    'form.ny.bosituasjon': 'Ny',
+    'form.ny.bosituasjon': 'Ny periode for opplysning',
     'form.fraOgMed': 'Fra og med',
     'form.tilOgMed': 'Til og med',
 
