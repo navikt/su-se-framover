@@ -4,9 +4,8 @@ import { Button, Panel, Textarea } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { startOfMonth, endOfMonth } from 'date-fns';
 import React, { useState } from 'react';
-import { Control, Controller, useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
+import { Control, Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
@@ -28,46 +27,21 @@ import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
+import {
+    BosituasjonerFormProps,
+    BosituasjonFormData,
+    BosituasjonFormItemData,
+    BosituasjonFormItemProps,
+    BosituasjonPageProps,
+    bosituasjonTilFormItemData,
+    nyBosituasjon,
+} from './bosituasjonForm';
 import messages from './bosituasjonForm-nb';
 import styles from './bosituasjonForm.module.less';
 import GjeldendeBosituasjon from './GjeldendeBosituasjon';
 
-interface BosituasjonPageProps {
-    eksisterendeBosituasjoner: Bosituasjon[];
-    nyeBosituasjoner: Bosituasjon[];
-    sakId: string;
-    revurderingId: string;
-    nesteUrl: string;
-    forrige: { url: string; visModal: boolean };
-    avsluttUrl: string;
-    minDate: Nullable<Date>;
-    maxDate: Nullable<Date>;
-}
-
-export interface BosituasjonFormItemData {
-    id: string;
-    fraOgMed: Nullable<Date>;
-    tilOgMed: Nullable<Date>;
-    harEPS: Nullable<boolean>;
-    epsFnr: Nullable<string>;
-    delerBolig: Nullable<boolean>;
-    erEPSUførFlyktning: Nullable<boolean>;
-    begrunnelse: Nullable<string>;
-}
-
 const BosituasjonPage = (props: BosituasjonPageProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
-
-    const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): BosituasjonFormItemData => ({
-        id: uuid(),
-        fraOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.fraOgMed),
-        tilOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.tilOgMed),
-        harEPS: bosituasjon.fnr !== null,
-        epsFnr: bosituasjon.fnr,
-        delerBolig: bosituasjon.delerBolig,
-        erEPSUførFlyktning: bosituasjon.ektemakeEllerSamboerUførFlyktning,
-        begrunnelse: bosituasjon.begrunnelse,
-    });
 
     const defaultVerdier = (bosituasjoner: Bosituasjon[]): BosituasjonFormItemData[] => {
         return bosituasjoner.map((b) => bosituasjonTilFormItemData(b)) ?? [];
@@ -114,17 +88,6 @@ const BosituasjonPage = (props: BosituasjonPageProps) => {
     );
 };
 
-export interface BosituasjonerFormProps {
-    form: UseFormReturn<BosituasjonFormData>;
-    sakId: string;
-    revurderingId: string;
-    nesteUrl: string;
-    forrige: { url: string; visModal: boolean };
-    avsluttUrl: string;
-    minDate: Nullable<Date>;
-    maxDate: Nullable<Date>;
-}
-
 export const BosituasjonForm = (props: BosituasjonerFormProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
@@ -151,21 +114,11 @@ export const BosituasjonForm = (props: BosituasjonerFormProps) => {
             () => history.push(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
         );
 
-    const nyBosituasjon = (): BosituasjonFormItemData => ({
-        id: uuid(),
-        fraOgMed: null,
-        tilOgMed: null,
-        harEPS: null,
-        epsFnr: null,
-        delerBolig: null,
-        erEPSUførFlyktning: null,
-        begrunnelse: null,
-    });
-
     const items = useFieldArray({
         control: props.form.control,
         name: 'bosituasjoner',
     });
+
     return (
         <form
             className={classNames(sharedStyles.revurderingContainer, styles.container)}
@@ -206,19 +159,6 @@ export const BosituasjonForm = (props: BosituasjonerFormProps) => {
         </form>
     );
 };
-
-export interface BosituasjonFormData {
-    bosituasjoner: BosituasjonFormItemData[];
-}
-
-interface BosituasjonFormItemProps {
-    form: UseFormReturn<BosituasjonFormData>;
-    data: BosituasjonFormItemData;
-    index: number;
-    minDate: Nullable<Date>;
-    maxDate: Nullable<Date>;
-    onDelete: () => void;
-}
 
 export const BosituasjonFormItem = (props: BosituasjonFormItemProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
