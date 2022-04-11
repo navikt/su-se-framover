@@ -58,7 +58,7 @@
         "@sentry/cli": "^1.74.3",
         "@types/jest": "^27.4.1",
         "@types/react-collapse": "^5.0.1",
-        "@types/react-datepicker": "^4.3.4",
+        "@types/react-datepicker": "^4.4.0",
         "amplitude-js": "^8.18.1",
         "autoprefixer": "^10.4.4",
         "classnames": "^2.3.1",
