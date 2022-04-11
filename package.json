@@ -98,7 +98,7 @@
         "@parcel/transformer-less": "^2.4.1",
         "@parcel/utils": "^2.4.1",
         "@testing-library/react": "^12.1.4",
-        "@testing-library/react-hooks": "^7.0.2",
+        "@testing-library/react-hooks": "^8.0.0",
         "@types/amplitude-js": "^8.16.0",
         "@types/classnames": "^2.3.1",
         "@types/lodash.debounce": "^4.0.6",
