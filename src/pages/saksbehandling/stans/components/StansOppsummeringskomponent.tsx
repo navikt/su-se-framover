@@ -1,18 +1,18 @@
 import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Beregningblokk from '~components/revurdering/oppsummering/beregningblokk/Beregningblokk';
-import StansOppsummeringsblokk from '~components/revurdering/oppsummering/stansoppsummeringsblokk/stans/stansoppsummeringsblokk';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { Revurdering } from '~types/Revurdering';
+import { ApiError } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Beregningblokk from '~src/components/revurdering/oppsummering/beregningblokk/Beregningblokk';
+import StansOppsummeringsblokk from '~src/components/revurdering/oppsummering/stansoppsummeringsblokk/stans/stansoppsummeringsblokk';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { Revurdering } from '~src/types/Revurdering';
 
 import messages from '../stans-nb';
-import styles from '../stans.module.less';
+import * as styles from '../stans.module.less';
 
 interface KnappProps {
     tekst: string;

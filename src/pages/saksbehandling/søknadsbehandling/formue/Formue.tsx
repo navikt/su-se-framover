@@ -19,44 +19,44 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Control, Controller, useForm, UseFormTrigger } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { ErrorCode } from '~api/apiClient';
-import * as personApi from '~api/personApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
-import { Personkort } from '~components/personkort/Personkort';
-import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
-import personSlice from '~features/person/person.slice';
-import sakSliceActions, * as sakSlice from '~features/saksoversikt/sak.slice';
-import { focusAfterTimeout } from '~lib/formUtils';
-import { pipe } from '~lib/fp';
-import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
-import { Behandling } from '~types/Behandling';
-import { FormueStatus, Formue as FormueType } from '~types/Behandlingsinformasjon';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { removeSpaces } from '~utils/format/formatUtils';
-import { showName } from '~utils/person/personUtils';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { ErrorCode } from '~src/api/apiClient';
+import * as personApi from '~src/api/personApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import { FormueFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
+import { Personkort } from '~src/components/personkort/Personkort';
+import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
+import personSlice from '~src/features/person/person.slice';
+import sakSliceActions, * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~src/lib/formUtils';
+import { pipe } from '~src/lib/fp';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~src/lib/validering';
+import { useAppDispatch } from '~src/redux/Store';
+import { Behandling } from '~src/types/Behandling';
+import { FormueStatus, Formue as FormueType } from '~src/types/Behandlingsinformasjon';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { removeSpaces } from '~src/utils/format/formatUtils';
+import { showName } from '~src/utils/person/personUtils';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import {
     getSenesteHalvGVerdi,
     regnUtFormDataVerdier,
     VerdierFormData,
     verdierId,
-} from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
-import sharedFormueMessages from '~utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
+} from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
 import sharedI18n from '../sharedI18n-nb';
 import { Vurderingknapper } from '../Vurdering';
 
 import messages from './formue-nb';
-import styles from './formue.module.less';
+import * as styles from './formue.module.less';
 import {
     FormueFormData,
     getFormueInitialValues,

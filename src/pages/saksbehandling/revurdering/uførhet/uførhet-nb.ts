@@ -1,4 +1,4 @@
-import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
+import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 
 export default {
     ...sharedMessages,

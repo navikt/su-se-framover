@@ -1,4 +1,4 @@
-import { Nullable } from '~lib/types';
+import { Nullable } from '~src/lib/types';
 
 export interface Kontrollsamtale {
     id: string;

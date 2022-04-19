@@ -1,4 +1,4 @@
-import { InformasjonSomRevurderes } from '~types/Revurdering';
+import { InformasjonSomRevurderes } from '~src/types/Revurdering';
 
 export const informasjonSomRevurderes: { [key in InformasjonSomRevurderes]: string } = {
     [InformasjonSomRevurderes.Uførhet]: 'Uførhet',

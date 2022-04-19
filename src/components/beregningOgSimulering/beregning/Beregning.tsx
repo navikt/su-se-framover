@@ -11,38 +11,38 @@ import * as S from 'fp-ts/lib/string';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import {
     FradragFormData,
     FradragInputs,
     fradragSchema,
-} from '~components/beregningOgSimulering/beregning/FradragInputs';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import BeregningFaktablokk from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { eqNullable, Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { VilkårsvurderingBaseProps } from '~pages/saksbehandling/søknadsbehandling/types';
-import { Vurderingknapper } from '~pages/saksbehandling/søknadsbehandling/Vurdering';
-import { useAppDispatch } from '~redux/Store';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
-import { Fradrag, FradragTilhører } from '~types/Fradrag';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { kanSimuleres } from '~utils/behandling/behandlingUtils';
-import * as DateUtils from '~utils/date/dateUtils';
-import { fjernFradragSomIkkeErValgbare } from '~utils/fradrag/fradragUtil';
-import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+} from '~src/components/beregningOgSimulering/beregning/FradragInputs';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import BeregningFaktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { eqNullable, Nullable } from '~src/lib/types';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
+import { Vurderingknapper } from '~src/pages/saksbehandling/søknadsbehandling/Vurdering';
+import { useAppDispatch } from '~src/redux/Store';
+import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
+import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { kanSimuleres } from '~src/utils/behandling/behandlingUtils';
+import * as DateUtils from '~src/utils/date/dateUtils';
+import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
+import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 
 import messages from './beregning-nb';
-import styles from './beregning.module.less';
+import * as styles from './beregning.module.less';
 import { UtenlandskInntektFormData } from './beregningstegTypes';
 import { erIGyldigStatusForÅKunneBeregne, fradragTilFradragFormData } from './beregningUtils';
 import VisBeregning from './VisBeregning';

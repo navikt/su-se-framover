@@ -1,13 +1,13 @@
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
-import { FormueStatus, PersonligOppmøteStatus, Vilkårstatus } from '~types/Behandlingsinformasjon';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { Sak } from '~types/Sak';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
+import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
+import { FormueStatus, PersonligOppmøteStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Sak } from '~src/types/Sak';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import {
     mapToVilkårsinformasjon,
     vilkårsinformasjonForBeregningssteg,
-} from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 export const findBehandling = (sak: Sak, behandlingId: string) => sak.behandlinger.find((b) => b.id === behandlingId);
 

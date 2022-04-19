@@ -3,10 +3,10 @@ import { Button, Textarea } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { FieldError } from 'react-hook-form';
 
-import { ApiClientResult, ApiError } from '~api/apiClient';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import { ApiClientResult, ApiError } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 
-import styles from './brevInput.module.less';
+import * as styles from './brevInput.module.less';
 
 export interface BrevInputProps {
     tekst: string;

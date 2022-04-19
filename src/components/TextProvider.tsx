@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IntlProvider, MessageFormatElement } from 'react-intl';
 
-import { Languages } from '~lib/i18n';
+import { Languages } from '~src/lib/i18n';
 
 const TextProvider = <T extends Record<string, string> | Record<string, MessageFormatElement[]>>(props: {
     messages: { [key in Languages]: T };

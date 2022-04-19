@@ -1,9 +1,9 @@
 import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 
-import { Nullable } from '~lib/types';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
-import { Beregning } from '~types/Beregning';
+import { Nullable } from '~src/lib/types';
+import { RevurderingSteg } from '~src/pages/saksbehandling/types';
+import { Beregning } from '~src/types/Beregning';
 import {
     BeregnetIngenEndring,
     Forhåndsvarseltype,
@@ -21,8 +21,8 @@ import {
     UnderkjentRevurdering,
     UtbetalingsRevurderingStatus,
     Vurderingstatus,
-} from '~types/Revurdering';
-import { Simulering, SimulertUtbetalingstype } from '~types/Simulering';
+} from '~src/types/Revurdering';
+import { Simulering, SimulertUtbetalingstype } from '~src/types/Simulering';
 
 export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
     return 'fritekstTilBrev' in r && 'informasjonSomRevurderes' in r;

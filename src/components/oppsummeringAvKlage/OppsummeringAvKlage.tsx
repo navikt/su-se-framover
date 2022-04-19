@@ -3,29 +3,29 @@ import { BodyShort, Label, Heading, Button } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
-import * as pdfApi from '~api/pdfApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { InformationIcon } from '~components/icons/Icons';
+import * as pdfApi from '~src/api/pdfApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { InformationIcon } from '~src/components/icons/Icons';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import {
     OppsummeringPar,
     OppsummeringsParSortering,
-} from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
-import { useBrevForhåndsvisning } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Klage, KlageStatus, KlageVurderingType } from '~types/Klage';
-import { Vedtak } from '~types/Vedtak';
-import { erKlageOmgjort, erKlageOpprettholdt } from '~utils/klage/klageUtils';
+} from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Klage, KlageStatus, KlageVurderingType } from '~src/types/Klage';
+import { Vedtak } from '~src/types/Vedtak';
+import { erKlageOmgjort, erKlageOpprettholdt } from '~src/utils/klage/klageUtils';
 
 import formkravMessages from '../../pages/klage/vurderFormkrav/vurderFormkrav-nb';
 import vurderingMessages from '../../pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
 import * as DateUtils from '../../utils/date/dateUtils';
 
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
-import styles from './oppsummeringAvKlage.module.less';
+import * as styles from './oppsummeringAvKlage.module.less';
 
 const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({

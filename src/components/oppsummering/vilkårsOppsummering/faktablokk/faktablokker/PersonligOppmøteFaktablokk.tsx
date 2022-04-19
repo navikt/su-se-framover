@@ -1,11 +1,11 @@
 import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
-import { GrunnForPapirinnsending } from '~features/søknad/types';
-import { useI18n } from '~lib/i18n';
-import { PersonligOppmøteStatus } from '~types/Behandlingsinformasjon';
-import { Søknadstype } from '~types/Søknad';
-import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { GrunnForPapirinnsending } from '~src/features/søknad/types';
+import { useI18n } from '~src/lib/i18n';
+import { PersonligOppmøteStatus } from '~src/types/Behandlingsinformasjon';
+import { Søknadstype } from '~src/types/Søknad';
+import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/personlig-oppmøte/personligOppmøte-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';

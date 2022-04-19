@@ -1,12 +1,12 @@
 import { Heading, Ingress } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import { Periode } from '~types/Periode';
-import * as DateUtils from '~utils/date/dateUtils';
+import { useI18n } from '~src/lib/i18n';
+import { Periode } from '~src/types/Periode';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 import messages from './revurderingsperiodeheader-nb';
-import styles from './revurderingsperiodeheader.module.less';
+import * as styles from './revurderingsperiodeheader.module.less';
 
 const RevurderingsperiodeHeader = (props: { periode: Periode<string> }) => {
     const { intl } = useI18n({ messages });

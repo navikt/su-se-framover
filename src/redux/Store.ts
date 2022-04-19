@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 
-import søknadSlice from '~/features/søknad/søknad.slice';
-import me from '~features/me/me.slice';
-import person from '~features/person/person.slice';
-import sakSlice from '~features/saksoversikt/sak.slice';
-import innsending from '~features/søknad/innsending.slice';
+import me from '~src/features/me/me.slice';
+import person from '~src/features/person/person.slice';
+import sakSlice from '~src/features/saksoversikt/sak.slice';
+import innsending from '~src/features/søknad/innsending.slice';
+import søknadSlice from '~src/features/søknad/søknad.slice';
 
 const store = configureStore({
     reducer: {

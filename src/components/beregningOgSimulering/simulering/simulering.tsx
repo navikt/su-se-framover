@@ -6,17 +6,17 @@ import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import React from 'react';
 
-import sharedMessages from '~components/beregningOgSimulering/beregning/beregning-nb';
-import { combineOptions, pipe } from '~lib/fp';
-import { useI18n } from '~lib/i18n';
-import { useAppSelector } from '~redux/Store';
-import { Behandling } from '~types/Behandling';
-import { Simulering, SimulertUtbetalingstype } from '~types/Simulering';
-import { groupWhile } from '~utils/array/arrayUtils';
-import { formatMonthYear } from '~utils/date/dateUtils';
-import { formatCurrency } from '~utils/format/formatUtils';
+import sharedMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
+import { combineOptions, pipe } from '~src/lib/fp';
+import { useI18n } from '~src/lib/i18n';
+import { useAppSelector } from '~src/redux/Store';
+import { Behandling } from '~src/types/Behandling';
+import { Simulering, SimulertUtbetalingstype } from '~src/types/Simulering';
+import { groupWhile } from '~src/utils/array/arrayUtils';
+import { formatMonthYear } from '~src/utils/date/dateUtils';
+import { formatCurrency } from '~src/utils/format/formatUtils';
 
-import styles from '../beregning/visBeregning.module.less';
+import * as styles from '../beregning/visBeregning.module.less';
 
 import messages from './simulering-nb';
 

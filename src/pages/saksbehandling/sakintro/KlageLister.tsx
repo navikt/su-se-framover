@@ -3,16 +3,16 @@ import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import React from 'react';
 
-import { InformationIcon } from '~components/icons/Icons';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
-import { useUserContext } from '~context/userContext';
-import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { AvsluttKlageStatus, Klage, KlageStatus, Utfall } from '~types/Klage';
-import { Vedtak } from '~types/Vedtak';
-import { formatDate } from '~utils/date/dateUtils';
+import { InformationIcon } from '~src/components/icons/Icons';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
+import { useUserContext } from '~src/context/userContext';
+import { pipe } from '~src/lib/fp';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { AvsluttKlageStatus, Klage, KlageStatus, Utfall } from '~src/types/Klage';
+import { Vedtak } from '~src/types/Vedtak';
+import { formatDate } from '~src/utils/date/dateUtils';
 import {
     erKlageAvsluttet,
     erKlageFerdigbehandlet,
@@ -21,12 +21,12 @@ import {
     erKlageTilAttestering,
     hentSisteVedtattUtfall,
     hentSisteVurderteSteg,
-} from '~utils/klage/klageUtils';
+} from '~src/utils/klage/klageUtils';
 
 import Oversiktslinje, { Informasjonslinje } from './components/Oversiktslinje';
 import { AvsluttOgStartFortsettButtons } from './Sakintro';
 import messages from './sakintro-nb';
-import styles from './sakintro.module.less';
+import * as styles from './sakintro.module.less';
 
 const KlageLister = (props: { sakId: string; klager: Klage[]; vedtak: Vedtak[] }) => {
     const { formatMessage } = useI18n({ messages });

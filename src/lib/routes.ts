@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 
-import * as Routes from '~lib/routes';
-import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '~pages/saksbehandling/types';
-import { Søknadsteg } from '~pages/søknad/types';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
+import * as Routes from '~src/lib/routes';
+import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '~src/pages/saksbehandling/types';
+import { Søknadsteg } from '~src/pages/søknad/types';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 interface Route<T> {
     path: string;

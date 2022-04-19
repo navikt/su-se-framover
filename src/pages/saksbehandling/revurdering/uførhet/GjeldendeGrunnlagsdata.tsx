@@ -1,13 +1,13 @@
 import { BodyShort, Heading, Label } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import messages from '~pages/saksbehandling/revurdering/uførhet/uførhet-nb';
-import styles from '~pages/saksbehandling/steg/uføre/uførhet.module.less';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { formatPeriode } from '~utils/date/dateUtils';
-import { formatCurrency } from '~utils/format/formatUtils';
+import { useI18n } from '~src/lib/i18n';
+import messages from '~src/pages/saksbehandling/revurdering/uførhet/uførhet-nb';
+import * as styles from '~src/pages/saksbehandling/steg/uføre/uførhet.module.less';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatCurrency } from '~src/utils/format/formatUtils';
 
 export const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger }) => {
     const { formatMessage } = useI18n({ messages });

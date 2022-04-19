@@ -1,19 +1,18 @@
 // eslint-disable-next-line
-import { hot } from 'react-hot-loader';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading, Link, Loader } from '@navikt/ds-react';
 import React, { useEffect, Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 
-import { ErrorCode } from '~/api/apiClient';
-import Config from '~/config';
-import { FeatureToggle } from '~api/featureToggleApi';
-import { UserProvider } from '~context/userContext';
-import { FeatureToggleProvider, useFeatureToggle } from '~lib/featureToggles';
-import { pipe } from '~lib/fp';
-import enableHotjar from '~lib/tracking/hotjar';
-import { LoggedInUser } from '~types/LoggedInUser';
+import { ErrorCode } from '~src/api/apiClient';
+import { LOGIN_URL } from '~src/api/authUrl';
+import { FeatureToggle } from '~src/api/featureToggleApi';
+import { UserProvider } from '~src/context/userContext';
+import { FeatureToggleProvider, useFeatureToggle } from '~src/lib/featureToggles';
+import { pipe } from '~src/lib/fp';
+import enableHotjar from '~src/lib/tracking/hotjar';
+import { LoggedInUser } from '~src/types/LoggedInUser';
 
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import Header from './components/header/Header';
@@ -21,15 +20,14 @@ import WithDocTitle from './components/WithDocTitle';
 import * as meSlice from './features/me/me.slice';
 import * as routes from './lib/routes';
 import Store, { useAppDispatch, useAppSelector } from './redux/Store';
-import styles from './root.module.less';
-
+import * as styles from './root.module.less';
 import './externalStyles';
 
-const Attestering = React.lazy(() => import('~pages/saksbehandling/attestering/Attestering'));
-const Drift = React.lazy(() => import('~pages/drift'));
-const HomePage = React.lazy(() => import('~pages/HomePage'));
-const Saksoversikt = React.lazy(() => import('~pages/saksbehandling/Saksoversikt'));
-const Soknad = React.lazy(() => import('~pages/søknad'));
+const Attestering = React.lazy(() => import('~/src/pages/saksbehandling/attestering/Attestering'));
+const Drift = React.lazy(() => import('~/src/pages/drift'));
+const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
+const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));
+const Soknad = React.lazy(() => import('~/src/pages/søknad'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -121,7 +119,7 @@ const ContentWrapper: React.FC = (props) => {
                                             ? 'Ikke tilgang'
                                             : 'En feil oppstod'}
                                     </Heading>
-                                    <Link href={`${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`}>
+                                    <Link href={`${LOGIN_URL}?redirectTo=${window.location.pathname}`}>
                                         Logg inn på nytt
                                     </Link>
                                 </div>
@@ -136,4 +134,4 @@ const ContentWrapper: React.FC = (props) => {
 };
 
 /* eslint-disable-next-line no-undef */
-export default hot(module)(Root);
+export default Root;

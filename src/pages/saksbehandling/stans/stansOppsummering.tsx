@@ -1,18 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
-import * as revurderingApi from '~api/revurderingApi';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import { fetchSak } from '~features/saksoversikt/sak.slice';
-import { useApiCall } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import sharedMessages from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { useAppDispatch } from '~redux/Store';
-import { UtbetalingsRevurderingStatus } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
+import * as revurderingApi from '~src/api/revurderingApi';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { fetchSak } from '~src/features/saksoversikt/sak.slice';
+import { useApiCall } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { useAppDispatch } from '~src/redux/Store';
+import { UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
+import { Sak } from '~src/types/Sak';
 
 import StansOppsummeringskomponent from './components/StansOppsummeringskomponent';
 import messages from './stans-nb';

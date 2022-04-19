@@ -2,20 +2,20 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { pipe } from '~lib/fp';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { Nullable } from '~lib/types';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { pipe } from '~src/lib/fp';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { Nullable } from '~src/lib/types';
 import {
     Filter,
     hentFiltrerteVerdier,
     RestansResultatFilter,
     RestansTypeFilter,
-} from '~pages/saksbehandling/behandlingsoversikt/filter/Filter';
-import RestanserTabell from '~pages/saksbehandling/restans/Restanser';
-import { Restans, RestansStatus, RestansType } from '~types/Restans';
-import { toDateOrNull } from '~utils/date/dateUtils';
+} from '~src/pages/saksbehandling/behandlingsoversikt/filter/Filter';
+import RestanserTabell from '~src/pages/saksbehandling/restans/Restanser';
+import { Restans, RestansStatus, RestansType } from '~src/types/Restans';
+import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
 

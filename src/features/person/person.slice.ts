@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { ApiError } from '~api/apiClient';
-import * as personApi from '~api/personApi';
-import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
+import { ApiError } from '~src/api/apiClient';
+import * as personApi from '~src/api/personApi';
+import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 
 export const fetchPerson = createAsyncThunk<personApi.Person, { fnr: string }, { rejectValue: ApiError }>(
     'person/fetch',

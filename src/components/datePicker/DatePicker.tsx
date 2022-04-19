@@ -4,9 +4,9 @@ import * as React from 'react';
 import ReactDatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import { v4 as uuid } from 'uuid';
 
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 
-import styles from './datePicker.module.less';
+import * as styles from './datePicker.module.less';
 
 interface Props extends Omit<ReactDatePickerProps, 'selected' | 'value'> {
     label: string;

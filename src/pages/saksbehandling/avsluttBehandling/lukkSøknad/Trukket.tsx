@@ -3,15 +3,15 @@ import { Datepicker } from '@navikt/ds-datepicker';
 import { Button, Label, Loader } from '@navikt/ds-react';
 import React from 'react';
 
-import * as søknadApi from '~api/søknadApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import { useBrevForhåndsvisning } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { LukkSøknadBegrunnelse } from '~types/Søknad';
+import * as søknadApi from '~src/api/søknadApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { LukkSøknadBegrunnelse } from '~src/types/Søknad';
 
 import nb from './lukkSøknad-nb';
-import styles from './lukkSøknad.module.less';
+import * as styles from './lukkSøknad.module.less';
 
 interface TrukketProps {
     søknadOpprettet: string;
@@ -56,7 +56,6 @@ const Trukket = (props: TrukketProps) => {
             </div>
             <Button
                 variant="secondary"
-                className={styles.seBrevKnapp}
                 type="button"
                 onClick={() => {
                     props.onRequestValidate(() => {

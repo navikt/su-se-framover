@@ -1,10 +1,10 @@
 import * as DateFns from 'date-fns';
 
-import { Nullable } from '~lib/types';
-import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
-import { FormData, UføreperiodeFormData } from '~pages/saksbehandling/steg/uføre/types';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import * as DateUtils from '~utils/date/dateUtils';
+import { Nullable } from '~src/lib/types';
+import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
+import { FormData, UføreperiodeFormData } from '~src/pages/saksbehandling/steg/uføre/types';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
     yup.object<UføreperiodeFormData>({

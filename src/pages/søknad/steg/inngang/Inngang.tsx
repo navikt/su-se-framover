@@ -6,26 +6,26 @@ import { pipe } from 'fp-ts/function';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import * as sakApi from '~api/sakApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import Personsøk from '~components/Personsøk/Personsøk';
-import * as personSlice from '~features/person/person.slice';
-import søknadSlice from '~features/søknad/søknad.slice';
-import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
-import { MessageFormatter, useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Periode } from '~types/Periode';
-import { Søknadstype } from '~types/Søknad';
-import { formatDate } from '~utils/date/dateUtils';
-import { er67EllerEldre } from '~utils/person/personUtils';
+import * as sakApi from '~src/api/sakApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import Personsøk from '~src/components/Personsøk/Personsøk';
+import * as personSlice from '~src/features/person/person.slice';
+import søknadSlice from '~src/features/søknad/søknad.slice';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Periode } from '~src/types/Periode';
+import { Søknadstype } from '~src/types/Søknad';
+import { formatDate } from '~src/utils/date/dateUtils';
+import { er67EllerEldre } from '~src/utils/person/personUtils';
 
 import nb from './inngang-nb';
-import styles from './inngang.module.less';
+import * as styles from './inngang.module.less';
 
 const SakinfoAlert = ({
     harÅpenSøknad,
@@ -195,9 +195,7 @@ const index = (props: { nesteUrl: string }) => {
                 <Heading level="2" size="small" spacing>
                     {formatMessage('finnSøker.tittel')}
                 </Heading>
-                <BodyLong className={styles.finnSøkerTekst} spacing>
-                    {formatMessage('finnSøker.tekst')}
-                </BodyLong>
+                <BodyLong spacing>{formatMessage('finnSøker.tekst')}</BodyLong>
                 <div>
                     <Personsøk
                         onReset={() => {

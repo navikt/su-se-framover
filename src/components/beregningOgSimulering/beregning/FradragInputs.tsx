@@ -7,18 +7,18 @@ import { FormikErrors } from 'formik';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import InntektFraUtland from '~components/beregningOgSimulering/beregning/InntektFraUtland';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import { Nullable, KeyDict } from '~lib/types';
-import yup, { validateStringAsPositiveNumber } from '~lib/validering';
-import { Fradragstype } from '~types/Fradrag';
-import { toStringDateOrNull } from '~utils/date/dateUtils';
-import { velgbareFradragstyper } from '~utils/fradrag/fradragUtil';
+import InntektFraUtland from '~src/components/beregningOgSimulering/beregning/InntektFraUtland';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { Nullable, KeyDict } from '~src/lib/types';
+import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
+import { Fradragstype } from '~src/types/Fradrag';
+import { toStringDateOrNull } from '~src/utils/date/dateUtils';
+import { velgbareFradragstyper } from '~src/utils/fradrag/fradragUtil';
 
 import DatePicker from '../../datePicker/DatePicker';
 
 import { UtenlandskInntektFormData } from './beregningstegTypes';
-import styles from './fradragInputs.module.less';
+import * as styles from './fradragInputs.module.less';
 
 export interface FradragFormData {
     type: Nullable<Fradragstype>;

@@ -1,10 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { ApiError } from '~api/apiClient';
-import * as klageApi from '~api/klageApi';
-import { UnderkjennelseGrunn } from '~types/Behandling';
-import { Klage } from '~types/Klage';
-import { FormkravRequest, VurderingRequest } from '~utils/klage/klageUtils';
+import { ApiError } from '~src/api/apiClient';
+import * as klageApi from '~src/api/klageApi';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Klage } from '~src/types/Klage';
+import { FormkravRequest, VurderingRequest } from '~src/utils/klage/klageUtils';
 
 export const opprettKlage = createAsyncThunk<
     Klage,

@@ -1,13 +1,13 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnhold } from '~types/Søknad';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { useI18n } from '~src/lib/i18n';
+import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { SøknadInnhold } from '~src/types/Søknad';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import { FastOppholdVilkårsblokk } from './faktablokk/faktablokker/FastOppholdFaktablokk';
 import { FlyktningVilkårsblokk } from './faktablokk/faktablokker/FlyktningFaktablokk';
@@ -18,7 +18,7 @@ import { PersonligOppmøteVilkårsblokk } from './faktablokk/faktablokker/Person
 import { UførhetVilkårsblokk } from './faktablokk/faktablokker/UførhetFaktablokk';
 import { UtenlandsoppholdVilkårsblokk } from './faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import messages from './vilkårsOppsummering-nb';
-import styles from './vilkårsOppsummering.module.less';
+import * as styles from './vilkårsOppsummering.module.less';
 
 const VilkårsOppsummering = (props: {
     søknadInnhold: SøknadInnhold;

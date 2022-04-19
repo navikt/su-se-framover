@@ -2,10 +2,10 @@ import { Fieldset, TextField } from '@navikt/ds-react';
 import { FormikErrors } from 'formik';
 import * as React from 'react';
 
-import SøknadInputliste from '~features/søknad/søknadInputliste/SøknadInputliste';
-import { useI18n } from '~lib/i18n';
+import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
+import { useI18n } from '~src/lib/i18n';
 
-import styles from './trygdeytelserInputs.module.less';
+import * as styles from './trygdeytelserInputs.module.less';
 
 export const trygdeytelserMessages = {
     'trygdeytelserIUtlandet.beløp': 'Hvor mye får du i lokal valuta i måneden?',

@@ -2,7 +2,7 @@ import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
-import styles from './oppsummeringspar.module.less';
+import * as styles from './oppsummeringspar.module.less';
 
 export enum OppsummeringsParSortering {
     Horisontalt = 'horisontalt',

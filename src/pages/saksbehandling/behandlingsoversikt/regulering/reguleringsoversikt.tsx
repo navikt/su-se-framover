@@ -5,14 +5,14 @@ import { contramap } from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import React from 'react';
 
-import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
-import VelgSakKnapp from '~components/velgSakKnapp/velgSakKnapp';
-import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/i18n';
-import { Regulering } from '~types/Regulering';
+import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
+import VelgSakKnapp from '~src/components/velgSakKnapp/velgSakKnapp';
+import { pipe } from '~src/lib/fp';
+import { useI18n } from '~src/lib/i18n';
+import { Regulering } from '~src/types/Regulering';
 
 import messages from './regulering-nb';
-import styles from './regulering.module.less';
+import * as styles from './regulering.module.less';
 
 interface Props {
     manuelle: Regulering[];

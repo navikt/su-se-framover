@@ -1,14 +1,14 @@
 import * as DateFns from 'date-fns';
 
-import { Nullable } from '~lib/types';
-import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
-import { Formuegrenser, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { FormuegrunnlagFormue, FormuegrunnlagVerdier } from '~types/Revurdering';
-import * as DateUtils from '~utils/date/dateUtils';
+import { Nullable } from '~src/lib/types';
+import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
+import { Formuegrenser, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { FormuegrunnlagFormue, FormuegrunnlagVerdier } from '~src/types/Revurdering';
+import * as DateUtils from '~src/utils/date/dateUtils';
 import {
     getSenesteHalvGVerdi,
     VerdierFormData,
-} from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+} from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 export interface FormueFormData {
     formue: FormueData[];

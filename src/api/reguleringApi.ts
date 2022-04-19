@@ -1,4 +1,4 @@
-import { Regulering } from '~types/Regulering';
+import { Regulering } from '~src/types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

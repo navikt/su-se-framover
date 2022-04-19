@@ -7,27 +7,27 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ApiError } from '~api/apiClient';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import { useI18n } from '~lib/i18n';
-import { keyOf, Nullable } from '~lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import sharedMessages, { opprettetRevurderingGrunn } from '~pages/saksbehandling/revurdering/revurdering-nb';
-import { FormValues } from '~pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage';
+import { ApiError } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { useI18n } from '~src/lib/i18n';
+import { keyOf, Nullable } from '~src/lib/types';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import sharedMessages, { opprettetRevurderingGrunn } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { FormValues } from '~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage';
 import {
     gyldigeÅrsaker,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
     OpprettetRevurderingGrunn,
-} from '~types/Revurdering';
+} from '~src/types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
-import sharedStyles from '../revurdering.module.less';
+import * as sharedStyles from '../revurdering.module.less';
 
 import messages, { informasjonSomRevurderes } from './revurderingIntro-nb';
-import styles from './revurderingIntro.module.less';
+import * as styles from './revurderingIntro.module.less';
 
 interface OpprettRevurderingFormData extends Omit<FormValues, 'fraOgMed' | 'årsak' | 'begrunnelse'> {
     fraOgMed: Nullable<Date>;

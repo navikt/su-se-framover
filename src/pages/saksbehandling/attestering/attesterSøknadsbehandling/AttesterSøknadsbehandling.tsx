@@ -3,19 +3,19 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
-import { Person } from '~api/personApi';
-import { AttesteringsForm } from '~components/attestering/AttesteringsForm';
-import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
-import { Sak } from '~types/Sak';
-import { erIverksatt, erTilAttestering } from '~utils/behandling/behandlingUtils';
+import { Person } from '~src/api/personApi';
+import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
+import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Sak } from '~src/types/Sak';
+import { erIverksatt, erTilAttestering } from '~src/utils/behandling/behandlingUtils';
 
 import messages from './attesterSøknadsbehandling-nb';
-import styles from './attesterSøknadsbehandling.module.less';
+import * as styles from './attesterSøknadsbehandling.module.less';
 
 const Attesteringsinnhold = ({
     intl,

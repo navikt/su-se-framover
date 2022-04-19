@@ -19,20 +19,19 @@ import * as A from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
-import * as pdfApi from '~api/pdfApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { eqNullable, Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { KlageSteg } from '~pages/saksbehandling/types';
+import * as pdfApi from '~src/api/pdfApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import * as klageActions from '~src/features/klage/klageActions';
+import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { eqNullable, Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { KlageSteg } from '~src/pages/saksbehandling/types';
 import {
     Klage,
     OmgjørVedtakUtfall,
@@ -40,13 +39,13 @@ import {
     OpprettholdVedtakHjemmel,
     KlageVurderingType,
     KlageStatus,
-} from '~types/Klage';
-import { erKlageVurdert, erKlageVurdertBekreftet } from '~utils/klage/klageUtils';
+} from '~src/types/Klage';
+import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
-import sharedStyles from '../klage.module.less';
+import * as sharedStyles from '../klage.module.less';
 
 import messages from './VurderingAvKlage-nb';
-import styles from './vurderingAvKlage.module.less';
+import * as styles from './vurderingAvKlage.module.less';
 
 interface OmgjørFormData {
     årsak: Nullable<OmgjørVedtakÅrsak>;

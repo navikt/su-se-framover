@@ -2,14 +2,14 @@ import { Ingress } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { Person, Kjønn } from '~api/personApi';
-import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
-import { Nullable } from '~lib/types';
-import { formatFnr, showName } from '~utils/person/personUtils';
+import { Person, Kjønn } from '~src/api/personApi';
+import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~src/assets/Icons';
+import { Nullable } from '~src/lib/types';
+import { formatFnr, showName } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
-import styles from './personkort.module.less';
+import * as styles from './personkort.module.less';
 
 const KjønnIkon = (props: { kjønn: Nullable<Kjønn> }) => {
     switch (props.kjønn) {

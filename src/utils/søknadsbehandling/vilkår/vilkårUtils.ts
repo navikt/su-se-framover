@@ -1,19 +1,19 @@
-import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
+import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import {
     Behandlingsinformasjon,
     FormueStatus,
     PersonligOppmøteStatus,
     PersonligOppmøte,
     Vilkårstatus,
-} from '~types/Behandlingsinformasjon';
-import { erBosituasjonFullstendig } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+} from '~src/types/Behandlingsinformasjon';
+import { erBosituasjonFullstendig } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
     Routes.saksbehandlingVilkårsvurdering.createURL({

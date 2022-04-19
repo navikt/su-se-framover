@@ -3,14 +3,14 @@ import * as DateFns from 'date-fns';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { SuccessIcon, WarningIcon } from '~components/icons/Icons';
-import { DateFormats, useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { KanStansesEllerGjenopptas } from '~types/Sak';
-import { compareUtbetalingsperiode, Utbetalingsperiode } from '~types/Utbetalingsperiode';
+import { SuccessIcon, WarningIcon } from '~src/components/icons/Icons';
+import { DateFormats, useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { KanStansesEllerGjenopptas } from '~src/types/Sak';
+import { compareUtbetalingsperiode, Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
 
 import messages from './utbetalinger-nb';
-import styles from './utbetalinger.module.less';
+import * as styles from './utbetalinger.module.less';
 
 export const Utbetalinger = (props: {
     sakId: string;

@@ -1,7 +1,7 @@
-import { IngenAdresseGrunn } from '~api/personApi';
-import { AdresseFraSøknad } from '~features/søknad/søknad.slice';
-import { DelerBoligMed, GrunnForPapirinnsending, Vergemål } from '~features/søknad/types';
-import { Nullable } from '~lib/types';
+import { IngenAdresseGrunn } from '~src/api/personApi';
+import { AdresseFraSøknad } from '~src/features/søknad/søknad.slice';
+import { DelerBoligMed, GrunnForPapirinnsending, Vergemål } from '~src/features/søknad/types';
+import { Nullable } from '~src/lib/types';
 
 export interface Søknad {
     id: string;

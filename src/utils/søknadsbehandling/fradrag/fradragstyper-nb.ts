@@ -1,4 +1,4 @@
-import { Fradragstype } from '~types/Fradrag';
+import { Fradragstype } from '~src/types/Fradrag';
 
 export const fradragstypeMessages: { [key in Fradragstype]: string } = {
     [Fradragstype.NAVytelserTilLivsopphold]: 'NAV-ytelser til livsopphold',

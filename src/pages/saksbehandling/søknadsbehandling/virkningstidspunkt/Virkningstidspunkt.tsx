@@ -7,33 +7,33 @@ import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 import * as React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
-import { ApiError, ErrorCode } from '~api/apiClient';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~components/datePicker/DatePicker';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import Faktablokk from '~components/oppsummering/vilkårsOppsummering/faktablokk/Faktablokk';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
-import * as SakSlice from '~features/saksoversikt/sak.slice';
-import { nullableMap, pipe } from '~lib/fp';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { eqNullable, Nullable } from '~lib/types';
-import yup, { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
-import * as DateUtils from '~utils/date/dateUtils';
-import { formatDate } from '~utils/date/dateUtils';
-import { er67EllerEldre } from '~utils/person/personUtils';
+import { ApiError, ErrorCode } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import Faktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/Faktablokk';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
+import * as SakSlice from '~src/features/saksoversikt/sak.slice';
+import { nullableMap, pipe } from '~src/lib/fp';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { eqNullable, Nullable } from '~src/lib/types';
+import yup, { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import * as DateUtils from '~src/utils/date/dateUtils';
+import { formatDate } from '~src/utils/date/dateUtils';
+import { er67EllerEldre } from '~src/utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurderingknapper } from '../Vurdering';
 
 import messages from './virkningstidspunkt-nb';
-import styles from './virkningstidspunkt.module.less';
+import * as styles from './virkningstidspunkt.module.less';
 
 interface FormData {
     fraOgMed: Nullable<Date>;

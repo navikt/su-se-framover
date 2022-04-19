@@ -1,11 +1,11 @@
 import { Textarea } from '@navikt/ds-react';
 import React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
 
 import nb from './avslåttSøknad-nb';
-import styles from './avslåttSøknad.module.less';
+import * as styles from './avslåttSøknad.module.less';
 
 interface Props {
     fritekstValue: Nullable<string>;

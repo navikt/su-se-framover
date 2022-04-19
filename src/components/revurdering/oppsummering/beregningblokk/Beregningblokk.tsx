@@ -1,26 +1,26 @@
 import { Alert, BodyLong, Heading, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 
-import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
-import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
-import simulertUtbetaling from '~components/beregningOgSimulering/simulering/simulering-nb';
-import { useI18n } from '~lib/i18n';
-import { Oppsummeringsfelt } from '~pages/søknad/steg/oppsummering/components/Oppsummeringsfelt';
-import { InformasjonsRevurderingStatus, Revurdering } from '~types/Revurdering';
-import { formatPeriode } from '~utils/date/dateUtils';
-import { formatCurrency } from '~utils/format/formatUtils';
+import VisBeregning from '~src/components/beregningOgSimulering/beregning/VisBeregning';
+import { Utbetalingssimulering } from '~src/components/beregningOgSimulering/simulering/simulering';
+import simulertUtbetaling from '~src/components/beregningOgSimulering/simulering/simulering-nb';
+import { useI18n } from '~src/lib/i18n';
+import { Oppsummeringsfelt } from '~src/pages/søknad/steg/oppsummering/components/Oppsummeringsfelt';
+import { InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
+import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatCurrency } from '~src/utils/format/formatUtils';
 import {
     erGregulering,
     erRevurderingIngenEndring,
     harBeregninger,
     harSimulering,
     hentAvkortingFraRevurdering,
-} from '~utils/revurdering/revurderingUtils';
+} from '~src/utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
 import messages from './beregningblokk-nb';
-import styles from './beregningblokk.module.less';
+import * as styles from './beregningblokk.module.less';
 
 const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...simulertUtbetaling } });

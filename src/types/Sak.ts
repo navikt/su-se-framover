@@ -1,5 +1,5 @@
-import { Nullable } from '~lib/types';
-import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
+import { Nullable } from '~src/lib/types';
+import { Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
 
 import { Behandling } from './Behandling';
 import { Klage } from './Klage';

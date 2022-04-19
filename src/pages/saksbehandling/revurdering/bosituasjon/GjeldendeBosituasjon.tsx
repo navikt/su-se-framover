@@ -1,10 +1,10 @@
 import { Heading, Label } from '@navikt/ds-react';
 import React from 'react';
 
-import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
-import { MessageFormatter } from '~lib/i18n';
-import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import * as DateUtils from '~utils/date/dateUtils';
+import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { MessageFormatter } from '~src/lib/i18n';
+import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 import messages from './bosituasjonForm-nb';
 import styles from './bosituasjonForm.module.less';

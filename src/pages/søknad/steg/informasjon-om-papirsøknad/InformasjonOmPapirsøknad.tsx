@@ -5,22 +5,22 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import søknadSlice, { ForVeilederPapirsøknad } from '~/features/søknad/søknad.slice';
-import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import TextProvider from '~components/TextProvider';
-import { GrunnForPapirinnsending } from '~features/søknad/types';
-import { useI18n, Languages } from '~lib/i18n';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Søknadstype } from '~types/Søknad';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import TextProvider from '~src/components/TextProvider';
+import søknadSlice, { ForVeilederPapirsøknad } from '~src/features/søknad/søknad.slice';
+import { GrunnForPapirinnsending } from '~src/features/søknad/types';
+import { useI18n, Languages } from '~src/lib/i18n';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Søknadstype } from '~src/types/Søknad';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
+import * as sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './informasjonOmPapirsøknad-nb';
-import styles from './informasjonOmPapirsøknad.module.less';
+import * as styles from './informasjonOmPapirsøknad.module.less';
 
 type FormData = ForVeilederPapirsøknad;
 
@@ -84,7 +84,6 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                     setHasSubmitted(true);
                     formik.handleSubmit(e);
                 }}
-                className={styles.foo}
             >
                 <div className={styles.inputContainer}>
                     <Label as="label" htmlFor="mottaksdato">

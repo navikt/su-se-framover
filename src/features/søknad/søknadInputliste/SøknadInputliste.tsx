@@ -4,7 +4,7 @@ import { Button, OverridableComponent, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import styles from './søknadInputliste.module.less';
+import * as styles from './søknadInputliste.module.less';
 
 interface SøknadInputlisteProps {
     children: React.ReactNode[];
@@ -30,7 +30,7 @@ const SøknadInputliste = React.forwardRef((props, ref) => (
     <div ref={ref} className={props.className}>
         <ol className={styles.liste}>
             {React.Children.map(props.children, (c, idx) => (
-                <Panel as="li" key={idx} border className={styles.panel}>
+                <Panel as="li" key={idx} border>
                     {c}
                 </Panel>
             ))}
@@ -46,7 +46,7 @@ const Listeelement: SøknadInputlisteItemComponent = React.forwardRef(
         <Component ref={ref} className={classNames(styles.itemContainer, className)} {...rest}>
             <div className={styles.itemContent}>{children}</div>
             <div className={styles.slettContainer}>
-                <Button variant="tertiary" type="button" onClick={onFjernClick} className={styles.slettknapp}>
+                <Button variant="tertiary" type="button" onClick={onFjernClick}>
                     Fjern <DeleteFilled />
                 </Button>
             </div>

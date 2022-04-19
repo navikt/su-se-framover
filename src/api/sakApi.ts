@@ -1,5 +1,5 @@
-import { Restans } from '~types/Restans';
-import { BegrensetSakinfo, Sak } from '~types/Sak';
+import { Restans } from '~src/types/Restans';
+import { BegrensetSakinfo, Sak } from '~src/types/Sak';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

@@ -2,26 +2,26 @@ import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { AttesteringsForm } from '~components/attestering/AttesteringsForm';
-import OppsummeringAvKlage from '~components/oppsummeringAvKlage/OppsummeringAvKlage';
-import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { UnderkjennelseGrunn } from '~types/Behandling';
-import { Klage } from '~types/Klage';
-import { Vedtak } from '~types/Vedtak';
+import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
+import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
+import * as klageActions from '~src/features/klage/klageActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Klage } from '~src/types/Klage';
+import { Vedtak } from '~src/types/Vedtak';
 import {
     erKlageINoenFormForAvvist,
     erKlageOpprettholdt,
     erKlageTilAttestering,
     erKlageTilAttesteringAvvist,
-} from '~utils/klage/klageUtils';
+} from '~src/utils/klage/klageUtils';
 
-import sharedStyles from '../sharedStyles.module.less';
+import * as sharedStyles from '../sharedStyles.module.less';
 
 import messages from './attesterKlage-nb';
-import styles from './attesterKlage.module.less';
+import * as styles from './attesterKlage.module.less';
 
 const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak[] }) => {
     const { formatMessage } = useI18n({ messages });

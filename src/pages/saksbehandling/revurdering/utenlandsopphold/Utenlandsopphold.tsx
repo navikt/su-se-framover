@@ -6,25 +6,25 @@ import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~components/datePicker/DatePicker';
-import { Utenlandsoppsummering } from '~components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import { lagreUtenlandsopphold } from '~features/revurdering/revurderingActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import yup, { getDateErrorMessage } from '~lib/validering';
-import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
-import revurderingmessages, { stegmessages } from '~pages/saksbehandling/revurdering/revurdering-nb';
-import sharedStyles from '~pages/saksbehandling/revurdering/revurdering.module.less';
-import RevurderingsperiodeHeader from '~pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { Utenlandsoppholdstatus } from '~types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { RevurderingStegProps } from '~types/Revurdering';
-import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~utils/date/dateUtils';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { lagreUtenlandsopphold } from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import yup, { getDateErrorMessage } from '~src/lib/validering';
+import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
+import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
+import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { RevurderingStegProps } from '~src/types/Revurdering';
+import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import messages from './utenlandsopphold-nb';
-import styles from './utenlandsopphold.module.less';
+import * as styles from './utenlandsopphold.module.less';
 
 interface UtenlandsoppholdForm {
     utenlandsopphold: UtenlandsoppholdFormData[];

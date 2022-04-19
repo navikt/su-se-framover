@@ -3,20 +3,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { avsluttKlage } from '~features/klage/klageActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import yup from '~lib/validering';
-import { Klage } from '~types/Klage';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { avsluttKlage } from '~src/features/klage/klageActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import yup from '~src/lib/validering';
+import { Klage } from '~src/types/Klage';
 
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
 import messages from './avsluttKlage-nb';
-import styles from './avsluttKlage.module.less';
+import * as styles from './avsluttKlage.module.less';
 
 interface AvsluttKlageFormData {
     begrunnelse: string;

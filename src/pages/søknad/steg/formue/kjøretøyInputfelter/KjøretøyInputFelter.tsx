@@ -3,10 +3,10 @@ import { FormikErrors } from 'formik';
 import * as React from 'react';
 import { FieldError } from 'react-hook-form';
 
-import SøknadInputliste from '~features/søknad/søknadInputliste/SøknadInputliste';
-import { useI18n } from '~lib/i18n';
+import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
+import { useI18n } from '~src/lib/i18n';
 
-import styles from './kjøretøyInputFelter.module.less';
+import * as styles from './kjøretøyInputFelter.module.less';
 
 export const kjøretøyMessages = {
     'kjøretøy.regNr': 'Registreringsnummer',

@@ -1,10 +1,10 @@
 import { BodyShort, Label } from '@navikt/ds-react';
 import React from 'react';
 
-import { useI18n } from '~lib/i18n';
-import { Restans } from '~types/Restans';
+import { useI18n } from '~src/lib/i18n';
+import { Restans } from '~src/types/Restans';
 
-import styles from './antallBehandlinger.module.less';
+import * as styles from './antallBehandlinger.module.less';
 
 const messages = {
     behandlinger: 'behandlinger',

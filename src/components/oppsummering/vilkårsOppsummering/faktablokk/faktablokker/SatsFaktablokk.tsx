@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { DelerBoligMed } from '~features/søknad/types';
-import { useI18n } from '~lib/i18n';
-import { keyOf } from '~lib/types';
-import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { Sats } from '~types/Sats';
-import { SøknadInnhold } from '~types/Søknad';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { DelerBoligMed } from '~src/features/søknad/types';
+import { useI18n } from '~src/lib/i18n';
+import { keyOf } from '~src/lib/types';
+import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Sats } from '~src/types/Sats';
+import { SøknadInnhold } from '~src/types/Søknad';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/sats/sats-nb';
 import { delerBoligMedFormatted } from '../../../../../utils/søknadsbehandling/søknadsbehandlingUtils';

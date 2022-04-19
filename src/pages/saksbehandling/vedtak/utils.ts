@@ -1,12 +1,12 @@
-import { Nullable } from '~lib/types';
-import { Behandling } from '~types/Behandling';
-import { Klage } from '~types/Klage';
-import { Regulering } from '~types/Regulering';
-import { IverksattRevurdering } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
-import { Vedtak } from '~types/Vedtak';
-import { erKlageFerdigbehandlet } from '~utils/klage/klageUtils';
-import { erRevurderingIverksatt } from '~utils/revurdering/revurderingUtils';
+import { Nullable } from '~src/lib/types';
+import { Behandling } from '~src/types/Behandling';
+import { Klage } from '~src/types/Klage';
+import { Regulering } from '~src/types/Regulering';
+import { IverksattRevurdering } from '~src/types/Revurdering';
+import { Sak } from '~src/types/Sak';
+import { Vedtak } from '~src/types/Vedtak';
+import { erKlageFerdigbehandlet } from '~src/utils/klage/klageUtils';
+import { erRevurderingIverksatt } from '~src/utils/revurdering/revurderingUtils';
 
 interface Søknadsbehandlingsoppsummering {
     behandling: Behandling;

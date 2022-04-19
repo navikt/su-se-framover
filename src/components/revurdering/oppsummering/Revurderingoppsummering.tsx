@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import Beregningblokk from '~components/revurdering/oppsummering/beregningblokk/Beregningblokk';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InformasjonsRevurdering } from '~types/Revurdering';
+import Beregningblokk from '~src/components/revurdering/oppsummering/beregningblokk/Beregningblokk';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { InformasjonsRevurdering } from '~src/types/Revurdering';
 
 import Oppsummeringsblokk from './oppsummeringsblokk/Oppsummeringsblokk';
-import styles from './revurderingoppsummering.module.less';
+import * as styles from './revurderingoppsummering.module.less';
 
 const Revurderingoppsummering = (props: {
     revurdering: InformasjonsRevurdering;

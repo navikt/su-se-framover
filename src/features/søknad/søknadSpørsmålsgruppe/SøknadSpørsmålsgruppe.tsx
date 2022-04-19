@@ -2,7 +2,7 @@ import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import styles from './søknadSpørsmålsgruppe.module.less';
+import * as styles from './søknadSpørsmålsgruppe.module.less';
 
 type SøknadSpørsmålsgruppeProps = {
     className?: string;

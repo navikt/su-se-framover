@@ -1,13 +1,13 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
-import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import VilkårvurderingStatusIcon from '~src/components/VilkårvurderingStatusIcon';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 import messages from './vilkårsOppsummering-nb';
-import styles from './vilkårsOppsummering.module.less';
+import * as styles from './vilkårsOppsummering.module.less';
 
 const Vilkårsblokk = (props: {
     status?: VilkårVurderingStatus;

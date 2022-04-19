@@ -1,10 +1,6 @@
-import crypto from 'crypto';
-import { IncomingMessage, ServerResponse } from 'http';
-
 import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
-import exphbs from 'express-handlebars';
 import helmet from 'helmet';
 
 import setupAuth from './auth';
@@ -43,34 +39,17 @@ export default async function startServer() {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    app.use((_req, res, next) => {
-        res.locals.cspNonce = crypto.randomBytes(16).toString('hex');
-        next();
-    });
-
-    app.engine(
-        '.html',
-        exphbs({
-            extname: '.html',
-            compilerOptions: {},
-        })
-    );
     app.set('views', Config.server.frontendDir);
     app.set('view engine', '.html');
 
     app.use(
         helmet({
-            contentSecurityPolicy: !Config.isDev
+            contentSecurityPolicy: Config.isDev
                 ? {
                       directives: {
                           defaultSrc: ["'self'", 'data:'],
                           imgSrc: ["'self'", 'data:', ...hotjarCsp.imgSrc],
-                          scriptSrc: [
-                              "'self'",
-                              (_req: IncomingMessage, res: ServerResponse) =>
-                                  `'nonce-${(res as unknown as { locals: { cspNonce: string } }).locals.cspNonce}'`,
-                              ...hotjarCsp.scriptSrc,
-                          ],
+                          scriptSrc: ["'self'", ...hotjarCsp.scriptSrc],
                           styleSrc: ["'self'", 'fonts.googleapis.com', 'data: ', "'unsafe-inline'"],
                           connectSrc: [
                               "'self'",

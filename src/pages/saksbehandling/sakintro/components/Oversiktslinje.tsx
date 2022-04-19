@@ -1,7 +1,7 @@
 import { Heading, Panel, Label, BodyShort } from '@navikt/ds-react';
 import React from 'react';
 
-import styles from './oversiktslinje.module.less';
+import * as styles from './oversiktslinje.module.less';
 
 interface Props<T> {
     entries: T[];

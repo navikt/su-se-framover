@@ -6,18 +6,18 @@ import * as React from 'react';
 import { useState } from 'react';
 import { useHistory } from 'react-router';
 
-import { ApiError } from '~api/apiClient';
-import * as kontrollsamtaleApi from '~api/kontrollsamtaleApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~components/datePicker/DatePicker';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import { useApiCall } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { Nullable } from '~lib/types';
-import { Kontrollsamtale } from '~types/Kontrollsamtale';
-import { formatDate, toDateOrNull } from '~utils/date/dateUtils';
+import { ApiError } from '~src/api/apiClient';
+import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import DatePicker from '~src/components/datePicker/DatePicker';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { useApiCall } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { Kontrollsamtale } from '~src/types/Kontrollsamtale';
+import { formatDate, toDateOrNull } from '~src/utils/date/dateUtils';
 
-import styles from './kontrollsamtalePage.module.less';
+import * as styles from './kontrollsamtalePage.module.less';
 import messages from './message-nb';
 
 interface Props {
@@ -53,7 +53,7 @@ const KontrollsamtalePage = (props: Props) => {
                             {formatMessage('kontrollsamtale')}
                         </Heading>
                         {!props.kanKalleInn ? (
-                            <SkjemaelementFeilmelding className={styles.feilmelding}>
+                            <SkjemaelementFeilmelding>
                                 {formatMessage('ingenUtbetalingsperioder')}
                             </SkjemaelementFeilmelding>
                         ) : (

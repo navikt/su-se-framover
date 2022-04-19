@@ -1,6 +1,6 @@
-import { Adresse } from '~api/personApi';
-import { Nullable } from '~lib/types';
-import { EktefellePartnerSamboer } from '~types/Søknad';
+import { Adresse } from '~src/api/personApi';
+import { Nullable } from '~src/lib/types';
+import { EktefellePartnerSamboer } from '~src/types/Søknad';
 
 import { AdresseFraSøknad, SøknadState } from './søknad.slice';
 import { EPSFormData } from './types';

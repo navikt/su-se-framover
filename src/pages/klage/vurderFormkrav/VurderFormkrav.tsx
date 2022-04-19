@@ -9,20 +9,20 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import LinkAsButton from '~components/linkAsButton/LinkAsButton';
-import ToKolonner from '~components/toKolonner/ToKolonner';
-import * as klageActions from '~features/klage/klageActions';
-import { useAsyncActionCreator } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
-import { eqNullable, Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { KlageSteg } from '~pages/saksbehandling/types';
-import { Svarord, Klage, KlageInnenforFristen, KlageErUnderskrevet } from '~types/Klage';
-import { Vedtak } from '~types/Vedtak';
-import { formatDateTime } from '~utils/date/dateUtils';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import * as klageActions from '~src/features/klage/klageActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { eqNullable, Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { KlageSteg } from '~src/pages/saksbehandling/types';
+import { Svarord, Klage, KlageInnenforFristen, KlageErUnderskrevet } from '~src/types/Klage';
+import { Vedtak } from '~src/types/Vedtak';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 import {
     erKlageAvvist,
     erKlageOpprettet,
@@ -30,12 +30,12 @@ import {
     erKlageVilkårsvurdertAvvist,
     erKlageVilkårsvurdertBekreftetEllerSenere,
     erKlageVurdert,
-} from '~utils/klage/klageUtils';
+} from '~src/utils/klage/klageUtils';
 
-import sharedStyles from '../klage.module.less';
+import * as sharedStyles from '../klage.module.less';
 
 import messages from './vurderFormkrav-nb';
-import styles from './vurderFormkrav.module.less';
+import * as styles from './vurderFormkrav.module.less';
 
 const eqFormData = struct<FormData>({
     vedtakId: eqNullable(S.Eq),

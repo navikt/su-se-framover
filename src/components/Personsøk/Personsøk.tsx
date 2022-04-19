@@ -2,18 +2,18 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader, Search } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 
-import { Person } from '~api/personApi';
-import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
-import { pipe } from '~lib/fp';
-import { ApiResult } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
-import { removeSpaces } from '~utils/format/formatUtils';
+import { Person } from '~src/api/personApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { pipe } from '~src/lib/fp';
+import { ApiResult } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { removeSpaces } from '~src/utils/format/formatUtils';
 
 import { Personkort } from '../personkort/Personkort';
 
 import messages from './personsøk-nb';
-import styles from './personsøk.module.less';
+import * as styles from './personsøk.module.less';
 
 interface PersonsøkProps {
     person: ApiResult<Person>;
@@ -45,7 +45,7 @@ const Personsøk = (props: PersonsøkProps) => {
 
     return (
         <div className={styles.personsøk}>
-            <div className={styles.inputContainer}>
+            <div>
                 <Search
                     label={
                         props.onFetchBySaksnummer

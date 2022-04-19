@@ -1,9 +1,9 @@
 import { v4 as uuid } from 'uuid';
 
-import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import * as DateUtils from '~utils/date/dateUtils';
+import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
+import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import * as DateUtils from '~src/utils/date/dateUtils';
 
 export interface BosituasjonFormData {
     bosituasjoner: BosituasjonFormItemData[];
