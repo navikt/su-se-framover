@@ -2,6 +2,10 @@ import * as DateFns from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
+import {
+    Bosituasjon,
+    bosituasjonPåDato,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Formuegrenser, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { FormuegrunnlagFormue, FormuegrunnlagVerdier } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -35,27 +39,31 @@ const getTomFormueVerdier = (): VerdierFormData => {
     };
 };
 
-export const getTomFormueData = (epsFnr: Nullable<string>): FormueData => {
+export const getTomFormueData = (periode?: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }): FormueData => {
     return {
-        epsFnr: epsFnr,
-        periode: { fraOgMed: null, tilOgMed: null },
+        epsFnr: null,
+        periode: periode ?? { fraOgMed: null, tilOgMed: null },
         søkersFormue: getTomFormueVerdier(),
-        epsFormue: epsFnr ? getTomFormueVerdier() : null,
+        epsFormue: null,
         begrunnelse: null,
     };
 };
 
-export const getDefaultValues = (formueVilkår: Nullable<FormueVilkår>, epsFnr: Nullable<string>): FormueFormData => {
+export const getDefaultValues = (
+    formueVilkår: Nullable<FormueVilkår>,
+    bosituasjonsgrunnlag: Bosituasjon[]
+): FormueFormData => {
     if (!formueVilkår) {
         return {
-            formue: [getTomFormueData(epsFnr)],
+            formue: [getTomFormueData()],
         };
     }
 
     return {
         formue: formueVilkår.vurderinger.map((formue) => {
+            const epsFnr = bosituasjonPåDato(bosituasjonsgrunnlag, formue.periode.fraOgMed)?.fnr;
             return {
-                epsFnr: epsFnr,
+                epsFnr: epsFnr ?? null,
                 periode: {
                     fraOgMed: new Date(formue.periode.fraOgMed),
                     tilOgMed: new Date(formue.periode.tilOgMed),

@@ -85,3 +85,14 @@ export const erBosituasjonFullstendig = (b: Bosituasjon): b is FullstendigBositu
         BosituasjonTyper.ENSLIG,
     ].includes(b.type);
 };
+
+export const bosituasjonPåDato = (bosituasjonsgrunnlag: Bosituasjon[], dato: string) =>
+    bosituasjonsgrunnlag.find((bg) => bg.periode.fraOgMed <= dato && dato <= bg.periode.tilOgMed);
+
+export const bosituasjonHarEps = (bosituasjon: Bosituasjon) =>
+    [
+        BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING,
+        BosituasjonTyper.EPS_OVER_67,
+        BosituasjonTyper.EPS_UFØR_FLYKTNING,
+        BosituasjonTyper.UFULLSTENDIG_HAR_EPS,
+    ].includes(bosituasjon.type);

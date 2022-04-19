@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Panel, Accordion, Button, Loader, Textarea, TextField, Heading, Label, BodyShort } from '@navikt/ds-react';
+import { Panel, Accordion, Button, Textarea, TextField, Heading, Label, BodyShort, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
@@ -29,10 +29,14 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import {
+    Bosituasjon,
+    bosituasjonPåDato,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Formuegrenser } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
-import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 import { regnUtFormDataVerdier, verdierId } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
@@ -55,8 +59,6 @@ const Formue = (props: RevurderingStegProps) => {
     const formuegrenser = props.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
     const history = useHistory();
     const { formatMessage } = useI18n({ messages });
-    const [epsStatus, hentEPS] = useApiCall(personApi.fetchPerson);
-    const epsFnr = hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger).fnr;
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
 
     const {
@@ -66,7 +68,10 @@ const Formue = (props: RevurderingStegProps) => {
         watch,
         formState: { errors, isValid, isSubmitted },
     } = useForm<FormueFormData>({
-        defaultValues: getDefaultValues(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue, epsFnr),
+        defaultValues: getDefaultValues(
+            props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue,
+            props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon
+        ),
         resolver: yupResolver(revurderFormueSchema),
     });
 
@@ -90,15 +95,6 @@ const Formue = (props: RevurderingStegProps) => {
         );
     };
 
-    useEffect(() => {
-        if (RemoteData.isSuccess(epsStatus) && epsStatus.value.fnr === epsFnr) {
-            return;
-        }
-        if (epsFnr) {
-            hentEPS(epsFnr);
-        }
-    }, [epsFnr, hentEPS, epsStatus]);
-
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
@@ -107,8 +103,6 @@ const Formue = (props: RevurderingStegProps) => {
                         onSubmit={handleSubmit((values) => lagreFormuegrunnlaget(values, 'neste'))}
                         className={styles.container}
                     >
-                        {RemoteData.isPending(epsStatus) && <Loader />}
-                        {RemoteData.isFailure(epsStatus) && <ApiErrorAlert error={epsStatus.error} />}
                         <ul className={styles.formueBlokkContainer}>
                             {formueArray.fields.map((field, index) => (
                                 <li key={field.id}>
@@ -117,12 +111,17 @@ const Formue = (props: RevurderingStegProps) => {
                                             revurderingsperiode={props.revurdering.periode}
                                             blokkIndex={index}
                                             blokkField={field}
+                                            bosituasjonsgrunnlag={
+                                                props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon
+                                            }
                                             formueArrayLengde={formueArray.fields.length}
-                                            eps={RemoteData.isSuccess(epsStatus) ? epsStatus.value : null}
                                             formController={control}
                                             triggerValidation={trigger}
                                             onSlettClick={() => formueArray.remove(index)}
                                             formuegrenser={formuegrenser}
+                                            resetFormueData={(periode) =>
+                                                formueArray.update(index, getTomFormueData(periode))
+                                            }
                                             watch={watch}
                                         />
                                     </Panel>
@@ -134,7 +133,7 @@ const Formue = (props: RevurderingStegProps) => {
                                 variant="secondary"
                                 type="button"
                                 onClick={() => {
-                                    formueArray.append(getTomFormueData(epsFnr));
+                                    formueArray.append(getTomFormueData());
                                 }}
                             >
                                 {formatMessage('knapp.nyPeriode')}
@@ -181,14 +180,13 @@ const FormueBlokk = (props: {
     blokkField: FieldArrayWithId<FormueFormData>;
     formuegrenser: Formuegrenser[];
     formueArrayLengde: number;
-    eps: Nullable<personApi.Person>;
+    bosituasjonsgrunnlag: Bosituasjon[];
     formController: Control<FormueFormData>;
+    resetFormueData: (periode: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }) => void;
     triggerValidation: UseFormTrigger<FormueFormData>;
     onSlettClick: (index: number) => void;
     watch: UseFormWatch<FormueFormData>;
 }) => {
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
-    const blokkName = `formue.${props.blokkIndex}` as const;
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
         regnUtFormDataVerdier(props.blokkField.søkersFormue)
     );
@@ -197,11 +195,27 @@ const FormueBlokk = (props: {
     );
 
     const watch = props.watch().formue[props.blokkIndex];
+    const fraOgMed = watch.periode.fraOgMed;
+    const bosituasjon = fraOgMed
+        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          bosituasjonPåDato(props.bosituasjonsgrunnlag, toStringDateOrNull(fraOgMed)!)
+        : undefined;
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const [epsStatus, hentEPS, resetToInitial] = useApiCall(personApi.fetchPerson);
+    const blokkName = `formue.${props.blokkIndex}` as const;
+
+    useEffect(() => {
+        if (bosituasjon?.fnr) {
+            hentEPS(bosituasjon.fnr);
+        } else {
+            resetToInitial();
+        }
+    }, [bosituasjon?.fnr]);
 
     const erVilkårOppfylt = erFormueVilkårOppfylt(
         søkersBekreftetFormue,
         epsBekreftetFormue,
-        watch.periode.fraOgMed,
+        fraOgMed,
         props.formuegrenser
     );
 
@@ -228,7 +242,11 @@ const FormueBlokk = (props: {
                                 autoComplete="off"
                                 value={field.value}
                                 onChange={(date: Date | null) => {
-                                    field.onChange(date ? DateFns.startOfMonth(date) : null);
+                                    props.resetFormueData({
+                                        fraOgMed: date ? DateFns.startOfMonth(date) : null,
+                                        tilOgMed: props.blokkField.periode.tilOgMed,
+                                    });
+                                    //field.onChange(date ? DateFns.startOfMonth(date) : null);
                                 }}
                                 feil={getDateErrorMessage(fieldState.error)}
                                 minDate={revurderingsperiode.fraOgMed}
@@ -252,7 +270,10 @@ const FormueBlokk = (props: {
                                 autoComplete="off"
                                 value={field.value}
                                 onChange={(date: Date | null) => {
-                                    field.onChange(date ? DateFns.endOfMonth(date) : null);
+                                    props.resetFormueData({
+                                        fraOgMed: props.blokkField.periode.fraOgMed,
+                                        tilOgMed: date ? DateFns.endOfMonth(date) : null,
+                                    });
                                 }}
                                 feil={getDateErrorMessage(fieldState.error)}
                                 minDate={watch.periode.fraOgMed}
@@ -279,59 +300,64 @@ const FormueBlokk = (props: {
                 )}
             </div>
 
-            {props.eps && (
-                <div className={styles.personkortContainer}>
-                    <Label>{formatMessage('personkort.eps')}</Label>
-                    <Personkort person={props.eps} />
-                </div>
-            )}
+            {props.blokkField.periode.fraOgMed && props.blokkField.periode.tilOgMed && (
+                <>
+                    {RemoteData.isPending(epsStatus) && <Loader />}
+                    {RemoteData.isSuccess(epsStatus) && (
+                        <div className={styles.personkortContainer}>
+                            <Label>{formatMessage('personkort.eps')}</Label>
+                            <Personkort person={epsStatus.value} />
+                        </div>
+                    )}
 
-            <div className={styles.formuePanelerContainer}>
-                <Accordion>
-                    <FormuePanel
-                        tilhører={'Søkers'}
-                        blokkIndex={props.blokkIndex}
-                        sumFormue={søkersBekreftetFormue}
-                        setBekreftetFormue={setSøkersBekreftetFormue}
-                        formController={props.formController}
-                        triggerValidation={props.triggerValidation}
-                        watch={props.watch}
+                    <div className={styles.formuePanelerContainer}>
+                        <Accordion>
+                            <FormuePanel
+                                tilhører={'Søkers'}
+                                blokkIndex={props.blokkIndex}
+                                sumFormue={søkersBekreftetFormue}
+                                setBekreftetFormue={setSøkersBekreftetFormue}
+                                formController={props.formController}
+                                triggerValidation={props.triggerValidation}
+                                watch={props.watch}
+                            />
+                            {bosituasjon?.fnr && (
+                                <FormuePanel
+                                    tilhører={'Ektefelle/Samboers'}
+                                    blokkIndex={props.blokkIndex}
+                                    sumFormue={epsBekreftetFormue}
+                                    setBekreftetFormue={setEPSBekreftetFormue}
+                                    formController={props.formController}
+                                    triggerValidation={props.triggerValidation}
+                                    watch={props.watch}
+                                />
+                            )}
+                        </Accordion>
+                    </div>
+
+                    <Formuestatus
+                        bekreftetFormue={søkersBekreftetFormue + epsBekreftetFormue}
+                        erVilkårOppfylt={erVilkårOppfylt}
                     />
-                    {props.eps && (
-                        <FormuePanel
-                            tilhører={'Ektefelle/Samboers'}
-                            blokkIndex={props.blokkIndex}
-                            sumFormue={epsBekreftetFormue}
-                            setBekreftetFormue={setEPSBekreftetFormue}
-                            formController={props.formController}
-                            triggerValidation={props.triggerValidation}
-                            watch={props.watch}
-                        />
-                    )}
-                </Accordion>
-            </div>
 
-            <Formuestatus
-                bekreftetFormue={søkersBekreftetFormue + epsBekreftetFormue}
-                erVilkårOppfylt={erVilkårOppfylt}
-            />
-
-            <div>
-                <Controller
-                    control={props.formController}
-                    name={`${blokkName}.begrunnelse`}
-                    defaultValue={props.blokkField.begrunnelse}
-                    render={({ field, fieldState }) => (
-                        <Textarea
-                            label={formatMessage('revurdering.begrunnelse')}
-                            value={field.value ?? ''}
-                            onChange={field.onChange}
-                            error={fieldState.error?.message}
-                            description={formatMessage('revurdering.begrunnelse.description')}
+                    <div>
+                        <Controller
+                            control={props.formController}
+                            name={`${blokkName}.begrunnelse`}
+                            defaultValue={props.blokkField.begrunnelse}
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    label={formatMessage('revurdering.begrunnelse')}
+                                    value={field.value ?? ''}
+                                    onChange={field.onChange}
+                                    error={fieldState.error?.message}
+                                    description={formatMessage('revurdering.begrunnelse.description')}
+                                />
+                            )}
                         />
-                    )}
-                />
-            </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 };
