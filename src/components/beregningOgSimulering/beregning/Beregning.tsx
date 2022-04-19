@@ -278,7 +278,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 }}
                             />
                         </div>
-
                         <div className={styles.textareaContainer}>
                             <Textarea
                                 label={formatMessage('input.label.begrunnelse')}
@@ -289,7 +288,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 description={formatMessage('input.begrunnelse.description')}
                             />
                         </div>
-
                         <Heading level="2" size="medium">
                             Beregning
                             {props.behandling.beregning &&
@@ -327,12 +325,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 </Alert>
                             )}
                         </div>
-
                         {RemoteData.isFailure(lagreFradragstatus) && <ApiErrorAlert error={lagreFradragstatus.error} />}
                         {RemoteData.isFailure(beregningStatus) && <ApiErrorAlert error={beregningStatus.error} />}
                         {needsBeregning && (
-                            <Alert variant="warning">{formatMessage('alert.advarsel.kjørBeregningFørst')}</Alert>
+                            <div className={styles.advarselKjørBeregning}>
+                                <Alert variant="warning">{formatMessage('alert.advarsel.kjørBeregningFørst')}</Alert>
+                            </div>
                         )}
+
                         {pipe(
                             simuleringStatus,
                             RemoteData.fold(
