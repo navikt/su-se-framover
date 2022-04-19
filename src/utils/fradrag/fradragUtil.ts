@@ -1,4 +1,7 @@
-import { Fradrag, Fradragstype, VelgbareFradragstyper } from '~src/types/Fradrag';
+import { Fradrag, IkkeVelgbareFradragstyper, VelgbareFradragstyper } from '~src/types/Fradrag';
 
-export const fjernFradragSomIkkeErValgbare = (fradrag: Fradrag[]) =>
-    fradrag.filter((f) => (Object.values(VelgbareFradragstyper) as Fradragstype[]).includes(f.type));
+export const fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold = (fradrag: Fradrag[]) => {
+    return fradrag.filter((f) =>
+        [...Object.values(VelgbareFradragstyper), IkkeVelgbareFradragstyper.NAVytelserTilLivsopphold].includes(f.type)
+    );
+};

@@ -26,7 +26,7 @@ import { useAppDispatch } from '~src/redux/Store';
 import { Fradrag, FradragTilhører, IkkeVelgbareFradragstyper } from '~src/types/Fradrag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
+import { fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -119,9 +119,9 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     });
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
-            fradrag: fjernFradragSomIkkeErValgbare(props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag).map(
-                fradragTilFradragFormData
-            ),
+            fradrag: fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold(
+                props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag
+            ).map(fradragTilFradragFormData),
         },
         async onSubmit(values) {
             await save(values, () => history.push(props.nesteUrl));

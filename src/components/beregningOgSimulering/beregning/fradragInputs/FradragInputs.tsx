@@ -10,7 +10,7 @@ import SkjemaelementFeilmelding from '~src/components/formElements/Skjemaelement
 import { useI18n } from '~src/lib/i18n';
 import { Nullable, KeyDict } from '~src/lib/types';
 import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
-import { Fradragstype, VelgbareFradragstyper } from '~src/types/Fradrag';
+import { Fradragstype, IkkeVelgbareFradragstyper, VelgbareFradragstyper } from '~src/types/Fradrag';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import DatePicker from '../../../datePicker/DatePicker';
@@ -97,6 +97,9 @@ const FradragsSelection = (props: {
                     {formatMessage(f)}
                 </option>
             ))}
+            <option disabled value={IkkeVelgbareFradragstyper.NAVytelserTilLivsopphold}>
+                {formatMessage(IkkeVelgbareFradragstyper.NAVytelserTilLivsopphold)}
+            </option>
         </Select>
     );
 };
@@ -116,7 +119,13 @@ const utenlandskInntekt = yup
 
 export const fradragSchema = yup.object<FradragFormData>({
     beløp: validateStringAsPositiveNumber,
-    type: yup.string().defined().oneOf(Object.values(VelgbareFradragstyper), 'Du må velge en fradragstype'),
+    type: yup
+        .string()
+        .defined()
+        .oneOf(
+            [...Object.values(VelgbareFradragstyper), IkkeVelgbareFradragstyper.NAVytelserTilLivsopphold],
+            'Du må velge en fradragstype'
+        ),
     fraUtland: yup.boolean(),
     utenlandskInntekt: utenlandskInntekt,
     tilhørerEPS: yup.boolean(),
