@@ -23,11 +23,11 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
 import { Fradrag, Fradragstype, FradragTilhører } from '~src/types/Fradrag';
+import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
 import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
-import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -152,10 +152,9 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                         <div>
                             <div className={styles.fradragInputsContainer}>
                                 <FradragInputs
-                                    harEps={
-                                        hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger)
-                                            .fnr !== null
-                                    }
+                                    harEps={props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.some(
+                                        bosituasjonHarEps
+                                    )}
                                     feltnavn="fradrag"
                                     fradrag={formik.values.fradrag}
                                     errors={formik.errors.fradrag}
