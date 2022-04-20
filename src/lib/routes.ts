@@ -103,9 +103,9 @@ export const saksbehandlingSendTilAttestering: Route<{
 export const saksbehandlingVilkårsvurdering: Route<{
     sakId: string;
     behandlingId: string;
-    vilkar?: Vilkårtype;
+    vilkar: Vilkårtype;
 }> = {
-    path: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vilkår}/:vilkar?/`,
+    path: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vilkår}/:vilkar/`,
     createURL: ({ vilkar = Vilkårtype.Virkningstidspunkt, ...args }) =>
         `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vilkår}/${vilkar}`,
 };

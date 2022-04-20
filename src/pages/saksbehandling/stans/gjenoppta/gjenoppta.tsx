@@ -3,8 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Switch, useHistory } from 'react-router-dom';
-import { CompatRoute } from 'react-router-dom-v5-compat';
+import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
@@ -19,7 +18,6 @@ import { Sak } from '~src/types/Sak';
 
 import messages from './gjenoppta-nb';
 import * as styles from './gjenoppta.module.less';
-import GjenopptaOppsummering from './gjenopptaOppsummering';
 
 interface Props {
     sak: Sak;
@@ -45,7 +43,7 @@ function hentDefaultVerdier(r: Nullable<Revurdering>): FormData {
 }
 
 const Gjenoppta = (props: Props) => {
-    const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansRoute>();
+    const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansOppsummeringRoute>();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const history = useHistory();
 
@@ -99,61 +97,56 @@ const Gjenoppta = (props: Props) => {
             <Heading level="1" size="large" className={styles.tittel}>
                 {formatMessage('gjenoppta.tittel')}
             </Heading>
-            <Switch>
-                <CompatRoute path={Routes.gjenopptaStansOppsummeringRoute.path}>
-                    <GjenopptaOppsummering sak={props.sak} />
-                </CompatRoute>
-                <form className={styles.container} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
-                    <Controller
-                        control={form.control}
-                        name="årsak"
-                        render={({ field, fieldState }) => (
-                            <Select
-                                error={fieldState.error?.message}
-                                value={field.value ?? undefined}
-                                onChange={field.onChange}
-                                label={formatMessage('gjenoppta.årsak.tittel')}
-                            >
-                                <option>{formatMessage('gjenoppta.årsak.label')}</option>
-                                <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
-                                    {formatMessage(OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING)}
-                                </option>
-                            </Select>
-                        )}
-                    />
-
-                    <Controller
-                        control={form.control}
-                        name="begrunnelse"
-                        render={({ field, fieldState }) => (
-                            <Textarea
-                                label="Begrunnelse"
-                                name="begrunnelse"
-                                value={field.value}
-                                onChange={field.onChange}
-                                error={fieldState.error?.message}
-                            />
-                        )}
-                    />
-                    {RemoteData.isFailure(status) && (
-                        <div className={styles.error}>
-                            <ApiErrorAlert error={status.error} />
-                        </div>
-                    )}
-                    <div className={styles.knapper}>
-                        <Button
-                            variant="secondary"
-                            onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
+            <form className={styles.container} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
+                <Controller
+                    control={form.control}
+                    name="årsak"
+                    render={({ field, fieldState }) => (
+                        <Select
+                            error={fieldState.error?.message}
+                            value={field.value ?? undefined}
+                            onChange={field.onChange}
+                            label={formatMessage('gjenoppta.årsak.tittel')}
                         >
-                            {formatMessage('gjenoppta.oppsummering.tilbake')}
-                        </Button>
-                        <Button variant="secondary">
-                            {formatMessage('gjenoppta.oppsummering.iverksett')}
-                            {RemoteData.isPending(gjenopptaStatus) && <Loader />}
-                        </Button>
+                            <option>{formatMessage('gjenoppta.årsak.label')}</option>
+                            <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
+                                {formatMessage(OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING)}
+                            </option>
+                        </Select>
+                    )}
+                />
+
+                <Controller
+                    control={form.control}
+                    name="begrunnelse"
+                    render={({ field, fieldState }) => (
+                        <Textarea
+                            label="Begrunnelse"
+                            name="begrunnelse"
+                            value={field.value}
+                            onChange={field.onChange}
+                            error={fieldState.error?.message}
+                        />
+                    )}
+                />
+                {RemoteData.isFailure(status) && (
+                    <div className={styles.error}>
+                        <ApiErrorAlert error={status.error} />
                     </div>
-                </form>
-            </Switch>
+                )}
+                <div className={styles.knapper}>
+                    <Button
+                        variant="secondary"
+                        onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
+                    >
+                        {formatMessage('gjenoppta.oppsummering.tilbake')}
+                    </Button>
+                    <Button variant="secondary">
+                        {formatMessage('gjenoppta.oppsummering.iverksett')}
+                        {RemoteData.isPending(gjenopptaStatus) && <Loader />}
+                    </Button>
+                </div>
+            </form>
         </>
     );
 };

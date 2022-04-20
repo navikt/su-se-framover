@@ -4,7 +4,7 @@ import { Heading, Link, Loader } from '@navikt/ds-react';
 import React, { useEffect, Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch, useLocation } from 'react-router-dom';
-import { CompatRouter } from 'react-router-dom-v5-compat';
+import { CompatRouter, CompatRoute } from 'react-router-dom-v5-compat';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { LOGIN_URL } from '~src/api/authUrl';
@@ -53,9 +53,9 @@ const Root = () => (
                             <Suspense fallback={<Loader />}>
                                 <ScrollToTop />
                                 <Switch>
-                                    <Route exact path={routes.home.path}>
+                                    <CompatRoute exact path={routes.home.path}>
                                         <WithDocTitle title="Hjem" Page={HomePage} />
-                                    </Route>
+                                    </CompatRoute>
                                     <Route path={routes.soknad.path}>
                                         <WithDocTitle title="Søknad" Page={Soknad} />
                                     </Route>
@@ -65,16 +65,13 @@ const Root = () => (
                                     <Route path={routes.saksoversiktIndex.path}>
                                         <WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />
                                     </Route>
-                                    <Route path={routes.saksoversiktIndex.path}>
-                                        <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />
-                                    </Route>
                                     <Route path={routes.attestering.path}>
                                         <WithDocTitle title="Attestering" Page={Attestering} />
                                     </Route>
-                                    <Route path={routes.drift.path}>
+                                    <CompatRoute path={routes.drift.path}>
                                         <WithDocTitle title="Drift" Page={Drift} />
-                                    </Route>
-                                    <Route>404</Route>
+                                    </CompatRoute>
+                                    <CompatRouter>404</CompatRouter>
                                 </Switch>
                             </Suspense>
                         </ContentWrapper>
