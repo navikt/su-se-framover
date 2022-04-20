@@ -4,6 +4,7 @@ import { isEmpty } from 'fp-ts/lib/Array';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Personlinje from '~src/components/personlinje/Personlinje';
@@ -13,7 +14,6 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { Languages } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Behandlingsoversikt } from '~src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
@@ -83,22 +83,22 @@ const Saksoversikt = () => {
                                     />
                                     <div className={styles.container}>
                                         <Switch>
-                                            <Route path={Routes.klageOpprett.createURL({ sakId: sak.id })}>
+                                            <CompatRoute path={Routes.klageOpprett.createURL({ sakId: sak.id })}>
                                                 <div className={styles.mainContent}>
                                                     <OpprettKlage sak={sak} />
                                                 </div>
-                                            </Route>
+                                            </CompatRoute>
                                             <Route path={Routes.klage.path}>
                                                 <div className={styles.mainContent}>
                                                     <Klage sak={sak} />
                                                 </div>
                                             </Route>
-                                            <Route path={Routes.stansRoute.path}>
+                                            <Route path={Routes.stansRoot.path}>
                                                 <div className={styles.mainContent}>
                                                     <StansPage sak={sak} />
                                                 </div>
                                             </Route>
-                                            <Route path={Routes.gjenopptaStansRoute.path}>
+                                            <Route path={Routes.gjenopptaStansRoot.path}>
                                                 <div className={styles.mainContent}>
                                                     <Gjenoppta sak={sak} />
                                                 </div>
@@ -130,11 +130,11 @@ const Saksoversikt = () => {
                                                     />
                                                 </div>
                                             </Route>
-                                            <Route path={Routes.vedtaksoppsummering.path}>
+                                            <CompatRoute path={Routes.vedtaksoppsummering.path}>
                                                 <div className={styles.mainContent}>
                                                     <Vedtaksoppsummering sak={sak} />
                                                 </div>
-                                            </Route>
+                                            </CompatRoute>
                                             <Route path={Routes.saksoversiktValgtBehandling.path}>
                                                 <SøknadsbehandlingDraftProvider>
                                                     <div className={styles.mainContent}>
@@ -149,21 +149,21 @@ const Saksoversikt = () => {
                                                     </div>
                                                 </SøknadsbehandlingDraftProvider>
                                             </Route>
-                                            <Route path={Routes.alleDokumenterForSak.path}>
+                                            <CompatRoute path={Routes.alleDokumenterForSak.path}>
                                                 <div className={styles.mainContent}>
                                                     <DokumenterPage sak={sak} />
                                                 </div>
-                                            </Route>
-                                            <Route path={Routes.kontrollsamtale.path}>
+                                            </CompatRoute>
+                                            <CompatRoute path={Routes.kontrollsamtale.path} exact>
                                                 <div className={styles.mainContent}>
                                                     <NyDatoForKontrollsamtale
                                                         sakId={sak.id}
                                                         kanKalleInn={!isEmpty(sak.utbetalinger)}
                                                     />
                                                 </div>
-                                            </Route>
+                                            </CompatRoute>
 
-                                            <Route path="*">
+                                            <Route path={Routes.saksoversiktValgtSak.path}>
                                                 <Sakintro sak={sak} />
                                             </Route>
                                         </Switch>
@@ -172,9 +172,6 @@ const Saksoversikt = () => {
                             )
                         )
                     )}
-                </Route>
-                <Route path={Routes.saksoversiktIndex.path}>
-                    <Behandlingsoversikt sak={sak} søker={søker} />
                 </Route>
             </Switch>
         </IntlProvider>

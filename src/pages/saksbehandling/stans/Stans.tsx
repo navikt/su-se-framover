@@ -3,7 +3,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Switch, useHistory } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
@@ -103,13 +104,13 @@ const Stans = (props: Props) => {
 
     return (
         <Switch>
-            <Route path={Routes.stansOppsummeringRoute.path}>
+            <CompatRoute path={Routes.stansOppsummeringRoute.path}>
                 <Heading level="1" size="large" className={styles.tittel}>
                     {formatMessage('stans.tittel')}
                 </Heading>
                 <StansOppsummering sak={props.sak} />
-            </Route>
-            <Route path="*">
+            </CompatRoute>
+            <CompatRoute path={Routes.stansRoot.path}>
                 <form className={styles.pageContainer} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
                     <Heading level="1" size="large" className={styles.tittel}>
                         {formatMessage('stans.tittel')}
@@ -189,7 +190,7 @@ const Stans = (props: Props) => {
                         </div>
                     </div>
                 </form>
-            </Route>
+            </CompatRoute>
         </Switch>
     );
 };

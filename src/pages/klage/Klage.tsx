@@ -1,6 +1,7 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import Framdriftsindikator from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { useI18n } from '~src/lib/i18n';
@@ -48,18 +49,6 @@ const Klage = (props: { sak: Sak }) => {
         });
     };
 
-    const pathsForFramdriftsindikator = lagFramdriftsindikatorLinjer()
-        .filter(
-            (l) =>
-                l.url !==
-                Routes.klage.createURL({
-                    sakId: props.sak.id,
-                    klageId: klage.id,
-                    steg: KlageSteg.Oppsummering,
-                })
-        )
-        .map((l) => l.url);
-
     return (
         <div className={styles.pageContainer}>
             <Switch>
@@ -68,11 +57,16 @@ const Klage = (props: { sak: Sak }) => {
                         {formatMessage('page.tittel')}
                     </Heading>
                     <div className={styles.klageContainerMedFramdriftsindikator}>
-                        <Route path={pathsForFramdriftsindikator}>
-                            <Framdriftsindikator aktivId={urlParams.steg} elementer={lagFramdriftsindikatorLinjer()} />
-                        </Route>
+                        {urlParams.steg !== KlageSteg.Oppsummering && (
+                            <CompatRoute path={Routes.klage.path}>
+                                <Framdriftsindikator
+                                    aktivId={urlParams.steg}
+                                    elementer={lagFramdriftsindikatorLinjer()}
+                                />
+                            </CompatRoute>
+                        )}
 
-                        <Route
+                        <CompatRoute
                             path={Routes.klage.createURL({
                                 sakId: props.sak.id,
                                 klageId: klage.id,
@@ -80,8 +74,8 @@ const Klage = (props: { sak: Sak }) => {
                             })}
                         >
                             <VurderFormkrav sakId={props.sak.id} vedtaker={props.sak.vedtak} klage={klage} />
-                        </Route>
-                        <Route
+                        </CompatRoute>
+                        <CompatRoute
                             path={Routes.klage.createURL({
                                 sakId: props.sak.id,
                                 klageId: klage.id,
@@ -89,8 +83,8 @@ const Klage = (props: { sak: Sak }) => {
                             })}
                         >
                             <VurderingAvKlage sakId={props.sak.id} klage={klage} />
-                        </Route>
-                        <Route
+                        </CompatRoute>
+                        <CompatRoute
                             path={Routes.klage.createURL({
                                 sakId: props.sak.id,
                                 klageId: klage.id,
@@ -98,18 +92,18 @@ const Klage = (props: { sak: Sak }) => {
                             })}
                         >
                             <AvvistKlage sakId={props.sak.id} klage={klage} />
-                        </Route>
+                        </CompatRoute>
                     </div>
-
-                    <Route
+                    <CompatRoute
                         path={Routes.klage.createURL({
                             sakId: props.sak.id,
                             klageId: klage.id,
                             steg: KlageSteg.Oppsummering,
                         })}
+                        exact
                     >
                         <SendKlageTilAttestering sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
-                    </Route>
+                    </CompatRoute>
                 </>
             </Switch>
         </div>

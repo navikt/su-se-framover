@@ -3,7 +3,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Switch, useHistory } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
@@ -13,7 +14,7 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
-import { Revurdering, OpprettetRevurderingGrunn, Gjenopptak } from '~src/types/Revurdering';
+import { Gjenopptak, OpprettetRevurderingGrunn, Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
 
 import messages from './gjenoppta-nb';
@@ -99,9 +100,9 @@ const Gjenoppta = (props: Props) => {
                 {formatMessage('gjenoppta.tittel')}
             </Heading>
             <Switch>
-                <Route path={Routes.gjenopptaStansOppsummeringRoute.path}>
+                <CompatRoute path={Routes.gjenopptaStansOppsummeringRoute.path}>
                     <GjenopptaOppsummering sak={props.sak} />
-                </Route>
+                </CompatRoute>
                 <form className={styles.container} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
                     <Controller
                         control={form.control}

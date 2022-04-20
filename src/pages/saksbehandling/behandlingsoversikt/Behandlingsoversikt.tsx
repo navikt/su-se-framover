@@ -1,23 +1,19 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading } from '@navikt/ds-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 import * as A from 'fp-ts/Array';
 import React, { useEffect, useState } from 'react';
 
-import { Person } from '~src/api/personApi';
 import { hentReguleringsstatus } from '~src/api/reguleringApi';
 import { Person as PersonIkon } from '~src/assets/Icons';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
-import { ApiResult, useApiCall } from '~src/lib/hooks';
+import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { useAppDispatch } from '~src/redux/Store';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Regulering, Reguleringstype } from '~src/types/Regulering';
-import { Sak } from '~src/types/Sak';
 
 import messages from './behandlingsoversikt-nb';
 import * as styles from './behandlingsoversikt.module.less';
@@ -37,11 +33,6 @@ const splittAutomatiskeOgManuelleReguleringer = (reguleringer: Regulering[]) => 
     );
 };
 
-interface Props {
-    søker: ApiResult<Person>;
-    sak: ApiResult<Sak>;
-}
-
 enum Tab {
     ÅPNE_BEHANDLINGER = 'ÅPNE_BEHANDLINGER',
     FERDIGE_BEHANDLINGER = 'FERDIGE_BEHANDLINGER',
@@ -49,8 +40,9 @@ enum Tab {
     REGULERING = 'REGULERING',
 }
 
-export const Behandlingsoversikt = ({ sak, søker }: Props) => {
+const Behandlingsoversikt = () => {
     const dispatch = useAppDispatch();
+    const { søker } = useAppSelector((s) => ({ søker: s.søker.søker }));
     const { formatMessage } = useI18n({ messages });
     const [, hentReguleringer] = useApiCall(hentReguleringsstatus);
     const [reguleringer, setReguleringer] = useState<{ automatiske: Regulering[]; manuelle: Regulering[] }>({
@@ -102,9 +94,6 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
                     }}
                     person={søker}
                 />
-                {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
-                    <ApiErrorAlert className={styles.alert} error={sak.error} />
-                )}
             </div>
 
             <Tabs.Root
@@ -144,3 +133,5 @@ export const Behandlingsoversikt = ({ sak, søker }: Props) => {
         </div>
     );
 };
+
+export default Behandlingsoversikt;

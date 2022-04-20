@@ -28,6 +28,9 @@ const Attestering = React.lazy(() => import('~/src/pages/saksbehandling/attester
 const Drift = React.lazy(() => import('~/src/pages/drift'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));
+const Behandlingsoversikt = React.lazy(
+    () => import('~/src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt')
+);
 const Soknad = React.lazy(() => import('~/src/pages/søknad'));
 
 const ScrollToTop = () => {
@@ -55,6 +58,12 @@ const Root = () => (
                                     </Route>
                                     <Route path={routes.soknad.path}>
                                         <WithDocTitle title="Søknad" Page={Soknad} />
+                                    </Route>
+                                    <Route path={routes.saksoversiktValgtSak.path}>
+                                        <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />
+                                    </Route>
+                                    <Route path={routes.saksoversiktIndex.path}>
+                                        <WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />
                                     </Route>
                                     <Route path={routes.saksoversiktIndex.path}>
                                         <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />

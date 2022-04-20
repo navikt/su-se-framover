@@ -49,14 +49,14 @@ export const søkandskvittering: Route<never> = {
 
 //-------------Saksoversikt--------------------------------
 export const saksoversiktIndex: Route<never> = {
-    path: '/saksoversikt/:sakId?/:behandlingId?/:meny?/:vilkar?/',
+    path: '/saksoversikt/',
     createURL: () => '/saksoversikt',
 };
 
 export const saksoversiktValgtSak: Route<{
     sakId: string;
 }> = {
-    path: '/saksoversikt/:sakId/:behandlingId?/:meny?/',
+    path: '/saksoversikt/:sakId/',
     createURL: (args) => `/saksoversikt/${args.sakId}`,
 };
 
@@ -148,14 +148,24 @@ export const attesterKlage: Route<{ sakId: string; klageId: string }> = {
 };
 
 //---------------Stans------------------------------
-export const stansRoute: Route<{ sakId: string; revurderingId?: string }> = {
-    path: `/saksoversikt/:sakId/stans/:revurderingId?`,
-    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/stans/${revurderingId ?? ''}`,
+export const stansRoot: Route<{ sakId: string }> = {
+    path: `/saksoversikt/:sakId/stans`,
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/stans`,
+};
+
+export const stansRoute: Route<{ sakId: string; revurderingId: string }> = {
+    path: `/saksoversikt/:sakId/stans/:revurderingId`,
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/stans/${revurderingId}`,
 };
 
 export const stansOppsummeringRoute: Route<{ sakId: string; revurderingId: string }> = {
     path: '/saksoversikt/:sakId/stans/:revurderingId/oppsummering',
     createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/stans/${revurderingId}/oppsummering`,
+};
+
+export const gjenopptaStansRoot: Route<{ sakId: string }> = {
+    path: '/saksoversikt/:sakId/gjenoppta/',
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/gjenoppta/`,
 };
 
 export const gjenopptaStansRoute: Route<{ sakId: string; revurderingId?: string }> = {
