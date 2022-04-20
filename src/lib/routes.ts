@@ -111,6 +111,7 @@ export const saksbehandlingSendTilAttestering: Route<{
 }> = {
     path: `/:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
     absPath: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
+    absPath: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
     createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vedtak}/`,
 };
 
