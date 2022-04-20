@@ -3,7 +3,7 @@ import { Alert, Label, Fieldset, BodyLong } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -239,7 +239,7 @@ const MultiTidsperiodevelger = (props: {
 const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const utenlandsopphold = useAppSelector((s) => s.soknad.utenlandsopphold);
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
     const save = (values: FormData) => {
@@ -262,7 +262,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
         },
         onSubmit: (values) => {
             save(values);
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -434,7 +434,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     previous={{
                         onClick: () => {
                             save(formik.values);
-                            history.push(props.forrigeUrl);
+                            navigate(props.forrigeUrl);
                         },
                     }}
                     avbryt={{

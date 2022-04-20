@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as pdfApi from '~src/api/pdfApi';
 import { Forhåndsvarselhandling } from '~src/api/revurderingApi';
@@ -35,7 +35,7 @@ export const VelgForhåndsvarselForm = (props: {
     defaultVedtakstekst?: string;
 }) => {
     const { formatMessage } = useI18n({ messages });
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
         RevurderingActions.sendRevurderingTilAttestering,
@@ -45,8 +45,7 @@ export const VelgForhåndsvarselForm = (props: {
             fritekstTilBrev: args.vedtaksbrevtekst,
             skalFøreTilBrevutsending: args.skalFøreTilBrevutsending,
         }),
-        () =>
-            history.push(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId))
+        () => navigate(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId))
     );
 
     const [lagreForhåndsvarselState, lagreForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
@@ -64,7 +63,7 @@ export const VelgForhåndsvarselForm = (props: {
         (args) => {
             switch (args.forhåndsvarselhandling) {
                 case Forhåndsvarselhandling.Forhåndsvarsle:
-                    history.push(
+                    navigate(
                         Routes.createSakIntroLocation(formatMessage('notification.sendtForhåndsvarsel'), props.sakId)
                     );
                     return;

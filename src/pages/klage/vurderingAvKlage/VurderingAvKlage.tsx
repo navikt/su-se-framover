@@ -19,7 +19,7 @@ import * as A from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
-import { useHistory, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -113,7 +113,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
 });
 
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     const [lagreVurderingAvKlageStatus, lagreVurderingAvKlage] = useAsyncActionCreator(
@@ -176,18 +176,18 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
 
     const handleLagreVurderingAvKlageClick = (data: VurderingAvKlageFormData) => {
         if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
 
         lagreVurderingAvKlage(lagOpprettholdApiBody(data), () => {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
         });
     };
 
     const handleBekreftOgFortsettSubmit = (data: VurderingAvKlageFormData) => {
         if (erKlageVurdertBekreftet(props.klage) && !isDirty) {
-            history.push(
+            navigate(
                 Routes.klage.createURL({
                     sakId: props.sakId,
                     klageId: props.klage.id,
@@ -203,7 +203,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                     klageId: props.klage.id,
                 },
                 () => {
-                    history.push(
+                    navigate(
                         Routes.klage.createURL({
                             sakId: props.sakId,
                             klageId: props.klage.id,

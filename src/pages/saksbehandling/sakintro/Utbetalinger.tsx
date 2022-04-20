@@ -1,7 +1,7 @@
 import { Button, Heading, Panel } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { SuccessIcon, WarningIcon } from '~src/components/icons/Icons';
 import { DateFormats, useI18n } from '~src/lib/i18n';
@@ -18,7 +18,7 @@ export const Utbetalinger = (props: {
     kanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
 }) => {
     const { formatMessage, formatDate } = useI18n({ messages });
-    const history = useHistory();
+    const navigate = useNavigate();
     const { utbetalingsperioder, kanStansesEllerGjenopptas } = props;
 
     if (utbetalingsperioder.length === 0) {
@@ -79,9 +79,7 @@ export const Utbetalinger = (props: {
                             <Button
                                 variant="secondary"
                                 size="small"
-                                onClick={() =>
-                                    history.push(Routes.gjenopptaStansRoute.createURL({ sakId: props.sakId }))
-                                }
+                                onClick={() => navigate(Routes.gjenopptaStansRoot.createURL({ sakId: props.sakId }))}
                             >
                                 {formatMessage('display.utbetalingsperiode.gjenopptaUtbetaling')}
                             </Button>
@@ -90,7 +88,7 @@ export const Utbetalinger = (props: {
                                 <Button
                                     variant="danger"
                                     size="small"
-                                    onClick={() => history.push(Routes.stansRoot.createURL({ sakId: props.sakId }))}
+                                    onClick={() => navigate(Routes.stansRoot.createURL({ sakId: props.sakId }))}
                                 >
                                     {formatMessage('display.utbetalingsperiode.stoppUtbetaling')}
                                 </Button>

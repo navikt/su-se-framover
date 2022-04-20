@@ -1,6 +1,6 @@
 import { Button } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { useI18n } from '~src/lib/i18n';
@@ -21,7 +21,7 @@ interface Props {
 const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const { formatMessage } = useI18n({ messages });
-    const history = useHistory();
+    const navigate = useNavigate();
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
 
     const vedtaksinformasjon = vedtak
@@ -66,7 +66,7 @@ const Vedtaksoppsummering = (props: Props) => {
     return (
         <div className={styles.container}>
             <Oppsummering />
-            <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={history.goBack}>
+            <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={() => navigate(-1)}>
                 {formatMessage('knapp.tilbake')}
             </Button>
         </div>

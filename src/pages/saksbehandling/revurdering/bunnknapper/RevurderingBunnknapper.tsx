@@ -1,6 +1,6 @@
 import { Button } from '@navikt/ds-react';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useI18n } from '~src/lib/i18n';
 
@@ -18,7 +18,7 @@ export const RevurderingBunnknapper = ({
     onLagreOgFortsettSenereClick?: () => void;
     nesteKnappTekst?: string;
 }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n } });
     const [knappTrykket, setKnappTrykket] = useState<'neste' | 'avslutt' | undefined>(undefined);
@@ -42,7 +42,7 @@ export const RevurderingBunnknapper = ({
                     />
                 </>
             ) : (
-                tilbakeknapp(() => history.push(tilbake.url))
+                tilbakeknapp(() => navigate(tilbake.url))
             );
         }
         return tilbakeknapp(tilbake.onTilbakeClick);

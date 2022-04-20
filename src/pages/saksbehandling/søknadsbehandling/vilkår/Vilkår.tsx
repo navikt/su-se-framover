@@ -23,28 +23,31 @@ import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
 import * as styles from './vilkår.module.less';
 
 const Vilkår = (props: { sak: Sak; søker: Person }) => {
-    const { vilkar = Vilkårtype.Virkningstidspunkt, ...urlParams } =
-        Routes.useRouteParams<typeof Routes.saksbehandlingVilkårsvurdering>();
-    const behandling = props.sak.behandlinger.find((b) => b.id === urlParams.behandlingId);
+    const {
+        vilkar = Vilkårtype.Virkningstidspunkt,
+        sakId,
+        behandlingId,
+    } = Routes.useRouteParams<typeof Routes.saksbehandlingVilkårsvurdering>();
+    const behandling = props.sak.behandlinger.find((b) => b.id === behandlingId);
 
-    if (!(behandling && urlParams.sakId && urlParams.behandlingId)) {
+    if (!(behandling && sakId && behandlingId)) {
         return <div>404</div>;
     }
 
     const vilkårUrl = (vilkårType: Vilkårtype) =>
         createVilkårUrl({
-            behandlingId: urlParams.behandlingId,
-            sakId: urlParams.sakId,
+            behandlingId: behandlingId,
+            sakId: sakId,
             vilkar: vilkårType,
         });
 
     const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
-        sakId: urlParams.sakId,
+        sakId: sakId,
         behandlingId: behandling.id,
     });
 
     const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({
-        sakId: urlParams.sakId,
+        sakId: sakId,
     });
 
     return (
@@ -56,7 +59,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={saksoversiktUrl}
                         nesteUrl={vilkårUrl(Vilkårtype.Uførhet)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.Uførhet && (
@@ -64,7 +67,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
                         nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.Flyktning && (
@@ -72,7 +75,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={vilkårUrl(Vilkårtype.Uførhet)}
                         nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.LovligOpphold && (
@@ -80,7 +83,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={vilkårUrl(Vilkårtype.Flyktning)}
                         nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.FastOppholdINorge && (
@@ -88,7 +91,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
                         nesteUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.Institusjonsopphold && (
@@ -96,7 +99,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
                         nesteUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.OppholdIUtlandet && (
@@ -104,7 +107,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
                         nesteUrl={vilkårUrl(Vilkårtype.Formue)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.Formue && (
@@ -113,7 +116,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
                         søker={props.søker}
                         nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.PersonligOppmøte && (
@@ -121,7 +124,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
                         nesteUrl={vilkårUrl(Vilkårtype.Sats)}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.Sats && (
@@ -131,7 +134,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         nesteUrl={
                             erVilkårsvurderingerVurdertAvslag(behandling) ? vedtakUrl : vilkårUrl(Vilkårtype.Beregning)
                         }
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
                 {vilkar === Vilkårtype.Beregning && (
@@ -139,7 +142,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                         behandling={behandling}
                         forrigeUrl={vilkårUrl(Vilkårtype.Sats)}
                         nesteUrl={vedtakUrl}
-                        sakId={urlParams.sakId}
+                        sakId={sakId}
                     />
                 )}
             </div>

@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup, CollapsableFormElementDescription } from '~src/components/formElements/FormElements';
@@ -60,7 +60,7 @@ const schema = yup.object<FormData>({
 const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const flyktningstatusFraStore = useAppSelector((s) => s.soknad.flyktningstatus);
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const form = useForm<FormData>({
         defaultValues: flyktningstatusFraStore,
@@ -76,7 +76,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
         <form
             onSubmit={form.handleSubmit((values) => {
                 dispatch(søknadSlice.actions.flyktningstatusUpdated(values));
-                history.push(props.nesteUrl);
+                navigate(props.nesteUrl);
                 focusAfterTimeout(feiloppsummeringref)();
             })}
             className={sharedStyles.container}
@@ -216,7 +216,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 previous={{
                     onClick: () => {
                         dispatch(søknadSlice.actions.flyktningstatusUpdated(form.getValues()));
-                        history.push(props.forrigeUrl);
+                        navigate(props.forrigeUrl);
                     },
                 }}
                 avbryt={{

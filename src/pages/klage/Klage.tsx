@@ -54,7 +54,7 @@ const Klage = (props: { sak: Sak }) => {
             </Heading>
             <div className={styles.klageContainerMedFramdriftsindikator}>
                 {urlParams.steg !== KlageSteg.Oppsummering && (
-                    <Framdriftsindikator aktivId={urlParams.steg} elementer={lagFramdriftsindikatorLinjer()} />
+                    <Framdriftsindikator aktivId={urlParams.steg ?? ''} elementer={lagFramdriftsindikatorLinjer()} />
                 )}
                 {urlParams.steg == KlageSteg.Formkrav && (
                     <VurderFormkrav sakId={props.sak.id} vedtaker={props.sak.vedtak} klage={klage} />

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as revurderingApi from '~src/api/revurderingApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -24,7 +24,7 @@ interface Props {
 
 const StansOppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.stansOppsummeringRoute>();
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
@@ -46,7 +46,7 @@ const StansOppsummering = (props: Props) => {
     const iverksettOgGåVidere = () => {
         iverksettStans({ sakId: props.sak.id, revurderingId: revurdering.id }, async () => {
             await dispatch(fetchSak({ fnr: props.sak.fnr }));
-            history.push(Routes.createSakIntroLocation(formatMessage('stans.notification'), props.sak.id));
+            navigate(Routes.createSakIntroLocation(formatMessage('stans.notification'), props.sak.id));
         });
     };
 
@@ -80,7 +80,7 @@ const StansOppsummering = (props: Props) => {
                         tilbake: {
                             tekst: formatMessage('stans.bunnknapper.tilbake'),
                             onClick: () =>
-                                history.push(
+                                navigate(
                                     Routes.stansRoute.createURL({ sakId: props.sak.id, revurderingId: revurdering.id })
                                 ),
                         },

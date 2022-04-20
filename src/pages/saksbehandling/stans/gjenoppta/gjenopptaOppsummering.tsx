@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as revurderingApi from '~src/api/revurderingApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -26,7 +26,7 @@ interface Props {
 const GjenopptaOppsummering = ({ sak }: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansOppsummeringRoute>();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const revurdering = sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
@@ -47,7 +47,7 @@ const GjenopptaOppsummering = ({ sak }: Props) => {
     const iverksettOgGåVidere = () => {
         iverksettGjenopptak({ sakId: sak.id, revurderingId: revurdering.id }, async () => {
             await dispatch(fetchSak({ fnr: sak.fnr }));
-            history.push(Routes.createSakIntroLocation(formatMessage('gjenoppta.notification'), sak.id));
+            navigate(Routes.createSakIntroLocation(formatMessage('gjenoppta.notification'), sak.id));
         });
     };
     const erIverksatt = revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK;
@@ -79,7 +79,7 @@ const GjenopptaOppsummering = ({ sak }: Props) => {
                     tilbake: {
                         tekst: formatMessage('gjenoppta.oppsummering.tilbake'),
                         onClick: () =>
-                            history.push(
+                            navigate(
                                 Routes.gjenopptaStansRoute.createURL({ sakId: sak.id, revurderingId: revurdering.id })
                             ),
                     },

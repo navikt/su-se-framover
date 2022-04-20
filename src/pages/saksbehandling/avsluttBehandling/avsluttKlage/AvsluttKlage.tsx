@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { avsluttKlage } from '~src/features/klage/klageActions';
@@ -27,7 +27,7 @@ const schema = yup.object<AvsluttKlageFormData>({
 });
 
 const AvsluttKlage = (props: { sakId: string; klage: Klage }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     const [avsluttStatus, avsluttAction] = useAsyncActionCreator(avsluttKlage);
@@ -46,7 +46,7 @@ const AvsluttKlage = (props: { sakId: string; klage: Klage }) => {
             },
             () => {
                 const message = formatMessage('avslutt.klageHarBlittAvsluttet');
-                return history.push(Routes.createSakIntroLocation(message, props.sakId));
+                return navigate(Routes.createSakIntroLocation(message, props.sakId));
             }
         );
     };

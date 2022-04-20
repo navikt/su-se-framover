@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -38,7 +38,7 @@ const AttesterRevurdering = (props: {
 }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
-    const history = useHistory();
+    const navigate = useNavigate();
     const revurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
     const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
     const dispatch = useAppDispatch();
@@ -84,14 +84,14 @@ const AttesterRevurdering = (props: {
         iverksett({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id }, () => {
             dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.saksnummer.toString() }));
             const message = formatMessage('attester.iverksatt');
-            history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
+            navigate(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
         });
     };
 
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) => {
         underkjenn({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id, grunn, kommentar }, () => {
             const message = formatMessage('attester.sendtTilbake');
-            history.push(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
+            navigate(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
         });
     };
 

@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm, UseFormWatch } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -32,7 +32,7 @@ const schema = yup.object<AvsluttRevurderingFormData>({
 });
 
 const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     const [avsluttRevurderingStatus, avsluttRevurderingAction] = useAsyncActionCreator(avsluttRevurdering);
@@ -54,7 +54,7 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
             },
             () => {
                 const message = formatMessage('avslutt.revurderingHarBlittAvsluttet');
-                return history.push(Routes.createSakIntroLocation(message, props.sakId));
+                return navigate(Routes.createSakIntroLocation(message, props.sakId));
             }
         );
     };

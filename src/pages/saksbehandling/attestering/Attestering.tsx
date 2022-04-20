@@ -1,15 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
-import { Switch } from 'react-router-dom';
-import { CompatRoute } from 'react-router-dom-v5-compat';
+import { Routes, Route } from 'react-router-dom';
 
 import Personlinje from '~src/components/personlinje/Personlinje';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
+import * as routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
@@ -21,12 +20,12 @@ import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSø
 
 const Attestering = () => {
     const dispatch = useAppDispatch();
-    const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
+    const urlParams = routes.useRouteParams<typeof routes.attestering>();
     const { formatMessage } = useI18n({ messages });
     const { sak, søker } = useAppSelector((s) => ({ sak: s.sak.sak, søker: s.søker.søker }));
 
     useEffect(() => {
-        if (RemoteData.isInitial(sak)) {
+        if (RemoteData.isInitial(sak) && urlParams.sakId) {
             dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
         }
     }, [sak._tag]);
@@ -53,24 +52,33 @@ const Attestering = () => {
                         }}
                     />
                     <div className={styles.attesteringsKomponentContainer}>
-                        <Switch>
-                            <CompatRoute path={Routes.attesterSøknadsbehandling.path}>
-                                <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
-                            </CompatRoute>
-                            <CompatRoute path={Routes.attesterRevurdering.path}>
-                                <AttesterRevurdering
-                                    sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
-                                    informasjonsRevurderinger={sakValue.revurderinger.filter(erInformasjonsRevurdering)}
-                                />
-                            </CompatRoute>
-                            <CompatRoute path={Routes.attesterKlage.path}>
-                                <AttesterKlage
-                                    sakId={sakValue.id}
-                                    klager={sakValue.klager}
-                                    vedtaker={sakValue.vedtak}
-                                />
-                            </CompatRoute>
-                        </Switch>
+                        <Routes>
+                            <Route
+                                path={routes.attesterSøknadsbehandling.path}
+                                element={<AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />}
+                            />
+                            <Route
+                                path={routes.attesterRevurdering.path}
+                                element={
+                                    <AttesterRevurdering
+                                        sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
+                                        informasjonsRevurderinger={sakValue.revurderinger.filter(
+                                            erInformasjonsRevurdering
+                                        )}
+                                    />
+                                }
+                            />
+                            <Route
+                                path={routes.attesterKlage.path}
+                                element={
+                                    <AttesterKlage
+                                        sakId={sakValue.id}
+                                        klager={sakValue.klager}
+                                        vedtaker={sakValue.vedtak}
+                                    />
+                                }
+                            />
+                        </Routes>
                     </div>
                 </div>
             )

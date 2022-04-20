@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -26,7 +26,7 @@ type FormData = SøknadState['formue'];
 const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const formueFraStore = useAppSelector((s) => s.soknad.formue);
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const form = useForm<FormData>({
         defaultValues: formueFraStore,
@@ -41,7 +41,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
         <form
             onSubmit={form.handleSubmit((values) => {
                 dispatch(søknadSlice.actions.formueUpdated(values));
-                history.push(props.nesteUrl);
+                navigate(props.nesteUrl);
                 focusAfterTimeout(feiloppsummeringref)();
             })}
             className={sharedStyles.container}
@@ -456,7 +456,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 previous={{
                     onClick: () => {
                         dispatch(søknadSlice.actions.formueUpdated(form.getValues()));
-                        history.push(props.forrigeUrl);
+                        navigate(props.forrigeUrl);
                     },
                 }}
                 avbryt={{

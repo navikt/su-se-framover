@@ -3,12 +3,13 @@ import { Back, FileContent } from '@navikt/ds-icons';
 import { Alert, Button, Heading, Ingress, LinkPanel, Loader, Tag } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
+import { saksoversiktValgtSak } from '~src/lib/routes';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Sak } from '~src/types/Sak';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -37,7 +38,7 @@ const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typ
 
 const DokumenterPage = (props: { sak: Sak }) => {
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const { formatMessage } = useI18n({ messages });
 
@@ -113,7 +114,11 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                 )
                         )
                     )}
-                    <Button className={styles.tilbakeknapp} variant="secondary" onClick={history.goBack}>
+                    <Button
+                        className={styles.tilbakeknapp}
+                        variant="secondary"
+                        onClick={() => navigate(saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
+                    >
                         <Back />
                         {formatMessage('knapp.tilbake')}
                     </Button>

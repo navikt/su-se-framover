@@ -13,7 +13,7 @@ import {
     UseFormTrigger,
     UseFormWatch,
 } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as personApi from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -57,7 +57,7 @@ import {
 
 const Formue = (props: RevurderingStegProps) => {
     const formuegrenser = props.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
 
@@ -89,7 +89,7 @@ const Formue = (props: RevurderingStegProps) => {
             },
             (res) => {
                 if (res.feilmeldinger.length === 0) {
-                    history.push(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl);
+                    navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl);
                 }
             }
         );

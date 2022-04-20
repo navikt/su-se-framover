@@ -4,13 +4,13 @@ import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '
 import * as DateFns from 'date-fns';
 import { pipe } from 'fp-ts/function';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
-import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import søknadSlice from '~src/features/søknad/søknad.slice';
@@ -99,8 +99,9 @@ const SakinfoAlert = ({
 const index = (props: { nesteUrl: string }) => {
     const { søker } = useAppSelector((s) => s.søker);
     const dispatch = useAppDispatch();
-    const history = useHistory();
-    const isPapirsøknad = history.location.search.includes('papirsoknad');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isPapirsøknad = location.search.includes('papirsoknad');
     const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);
     const [erBekreftet, setErBekreftet] = React.useState<boolean>(false);
 
@@ -120,7 +121,7 @@ const index = (props: { nesteUrl: string }) => {
             dispatch(
                 søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad)
             );
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         }
     };
 

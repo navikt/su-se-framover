@@ -7,7 +7,7 @@ import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 import * as React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -88,7 +88,7 @@ const schema = yup
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();
     const søker = useAppSelector((state) => state.søker.søker);
@@ -154,14 +154,14 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const handleSubmit: SubmitHandler<FormData> = async (x) => {
         if (eqBehandlingsperiode.equals(form.getValues(), initialValues)) {
             clearDraft();
-            return history.push(props.nesteUrl);
+            return navigate(props.nesteUrl);
         }
 
         setSavingState(RemoteData.pending);
 
         const res = await save(x);
         if (RemoteData.isSuccess(res)) {
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         } else {
             setSavingState(res);
         }
@@ -171,7 +171,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
 
         const res = await save(x);
         if (RemoteData.isSuccess(res)) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
         } else {
             setSavingState(res);
         }
@@ -253,7 +253,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                             />
                             <Vurderingknapper
                                 onTilbakeClick={() => {
-                                    history.push(props.forrigeUrl);
+                                    navigate(props.forrigeUrl);
                                 }}
                                 onLagreOgFortsettSenereClick={form.handleSubmit(handleLagreOgFortsettSenereClick)}
                             />

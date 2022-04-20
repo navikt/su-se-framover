@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Heading } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -59,7 +59,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
         messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...fradragstypeMessages },
     });
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
     const [savingState, setSavingState] = React.useState<
         RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
@@ -126,7 +126,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
             ).map(fradragTilFradragFormData),
         },
         async onSubmit(values) {
-            await save(values, () => history.push(props.nesteUrl));
+            await save(values, () => navigate(props.nesteUrl));
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -211,7 +211,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                 onLagreOgFortsettSenereClick={() => {
                                     setHasSubmitted(true);
                                     customFormikSubmit(formik, () =>
-                                        save(formik.values, () => history.push(props.avsluttUrl))
+                                        save(formik.values, () => navigate(props.avsluttUrl))
                                     );
                                 }}
                                 loading={RemoteData.isPending(savingState)}

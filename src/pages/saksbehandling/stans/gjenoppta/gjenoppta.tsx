@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
@@ -45,7 +45,7 @@ function hentDefaultVerdier(r: Nullable<Revurdering>): FormData {
 const Gjenoppta = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansOppsummeringRoute>();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const [gjenopptaStatus, gjenoppta] = useAsyncActionCreator(revurderingActions.gjenoppta);
@@ -76,14 +76,14 @@ const Gjenoppta = (props: Props) => {
             return;
         }
         const args = {
-            sakId: urlParams.sakId,
+            sakId: urlParams.sakId ?? '',
             årsak: values.årsak,
             begrunnelse: values.begrunnelse,
         };
         const onSuccess = (gjenopptak: Gjenopptak) => {
-            history.push(
+            navigate(
                 Routes.gjenopptaStansOppsummeringRoute.createURL({
-                    sakId: urlParams.sakId,
+                    sakId: urlParams.sakId ?? '',
                     revurderingId: gjenopptak.id,
                 })
             );
@@ -137,7 +137,7 @@ const Gjenoppta = (props: Props) => {
                 <div className={styles.knapper}>
                     <Button
                         variant="secondary"
-                        onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
+                        onClick={() => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
                     >
                         {formatMessage('gjenoppta.oppsummering.tilbake')}
                     </Button>

@@ -9,7 +9,7 @@ import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import * as S from 'fp-ts/lib/string';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import {
@@ -76,7 +76,7 @@ function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): F
 
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
@@ -187,7 +187,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
         if (!kanSimuleres(props.behandling)) {
             if (props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG) {
-                return history.push(props.nesteUrl);
+                return navigate(props.nesteUrl);
             }
 
             return setNeedsBeregning(true);
@@ -198,7 +198,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
             },
-            () => history.push(props.nesteUrl)
+            () => navigate(props.nesteUrl)
         );
     };
 
@@ -347,7 +347,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
+                                navigate(props.forrigeUrl);
                             }}
                             onNesteClick={() => {
                                 handleNesteClick();
@@ -356,7 +356,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
                                         lagreFradragOgBeregn(formik.values, () => {
-                                            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+                                            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
                                         });
                                     }
                                 });

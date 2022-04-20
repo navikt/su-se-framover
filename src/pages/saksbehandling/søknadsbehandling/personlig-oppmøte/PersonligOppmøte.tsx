@@ -5,7 +5,7 @@ import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -227,7 +227,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const advarselRef = useRef<HTMLDivElement>(null);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const initialValues = getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte);
 
@@ -281,7 +281,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             )
         ) {
             clearDraft();
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
 
@@ -298,7 +298,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             },
             () => {
                 clearDraft();
-                history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             }
         );
     };
@@ -332,7 +332,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             !erVilkårsvurderingerVurdertAvslag(props.behandling)
         ) {
             clearDraft();
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
             return;
         }
 
@@ -350,14 +350,14 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             (res) => {
                 clearDraft();
                 if (res.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
-                    history.push(
+                    navigate(
                         Routes.saksbehandlingSendTilAttestering.createURL({
                             sakId: props.sakId,
                             behandlingId: props.behandling.id,
                         })
                     );
                 } else {
-                    history.push(props.nesteUrl);
+                    navigate(props.nesteUrl);
                 }
             }
         );
@@ -503,7 +503,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
+                                navigate(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={form.handleSubmit(
                                 handleLagreOgFortsettSenere,

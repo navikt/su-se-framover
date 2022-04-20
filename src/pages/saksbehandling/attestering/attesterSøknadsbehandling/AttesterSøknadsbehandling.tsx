@@ -1,7 +1,7 @@
 import { Alert } from '@navikt/ds-react';
 import React from 'react';
 import { IntlShape } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
@@ -26,12 +26,12 @@ const Attesteringsinnhold = ({
     søker: Person;
     intl: IntlShape;
 }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [iverksettStatus, attesteringIverksett] = useAsyncActionCreator(sakSlice.attesteringIverksett);
     const [underkjennStatus, attesteringUnderkjent] = useAsyncActionCreator(sakSlice.attesteringUnderkjenn);
     const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const redirectTilSaksoversikt = (message: string) => {
-        history.push(Routes.createSakIntroLocation(message, props.sak.id));
+        navigate(Routes.createSakIntroLocation(message, props.sak.id));
     };
 
     const iverksettCallback = () =>

@@ -5,7 +5,7 @@ import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -56,7 +56,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     );
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
-    const history = useHistory();
+    const navigate = useNavigate();
     const initialValues = {
         status: props.behandling.behandlingsinformasjon.lovligOpphold?.status ?? null,
         begrunnelse: props.behandling.behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
@@ -72,7 +72,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
 
         if (eqFormData.equals(values, initialValues)) {
             clearDraft();
-            history.push(nesteUrl);
+            navigate(nesteUrl);
             return;
         }
 
@@ -89,7 +89,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             },
             () => {
                 clearDraft();
-                history.push(nesteUrl);
+                navigate(nesteUrl);
             }
         );
     };
@@ -165,7 +165,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
+                                navigate(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={form.handleSubmit(
                                 handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),

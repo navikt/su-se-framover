@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { startOfMonth, endOfMonth } from 'date-fns';
 import React from 'react';
 import { Control, Controller, useFieldArray, useForm, UseFormWatch } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
@@ -42,7 +42,7 @@ import {
 import GjeldendeBosituasjon from './GjeldendeBosituasjon';
 
 const BosituasjonPage = (props: RevurderingStegProps) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
@@ -81,7 +81,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                     begrunnelse: b.begrunnelse,
                 })),
             },
-            () => history.push(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
+            () => navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
         );
 
     const items = useFieldArray({

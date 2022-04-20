@@ -1,7 +1,7 @@
 import { Alert } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -29,7 +29,7 @@ const schema = yup.object<FormData>({
 const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: string }) => {
     const harVedtakFraStore = useAppSelector((s) => s.soknad.harUførevedtak);
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -37,7 +37,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
         },
         onSubmit: (values) => {
             dispatch(søknadSlice.actions.harUførevedtakUpdated(values.harUførevedtak));
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         },
         validationSchema: schema,
     });
@@ -86,7 +86,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
                 previous={{
                     onClick: () => {
                         dispatch(søknadSlice.actions.harUførevedtakUpdated(formik.values.harUførevedtak));
-                        history.push(props.forrigeUrl);
+                        navigate(props.forrigeUrl);
                     },
                     handleClickAsAvbryt: true,
                 }}

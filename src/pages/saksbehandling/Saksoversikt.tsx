@@ -3,8 +3,7 @@ import { Loader } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Route, Switch, useHistory } from 'react-router-dom';
-import { CompatRoute } from 'react-router-dom-v5-compat';
+import { useNavigate, Routes, Route } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Personlinje from '~src/components/personlinje/Personlinje';
@@ -13,8 +12,7 @@ import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { Languages } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
-import GjenopptaOppsummering from '~src/pages/saksbehandling/stans/gjenoppta/gjenopptaOppsummering';
+import * as routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
@@ -36,10 +34,16 @@ const StansPage = React.lazy(() => import('./stans/Stans'));
 const OpprettKlage = React.lazy(() => import('~src/pages/klage/opprettKlage/OpprettKlage'));
 const Klage = React.lazy(() => import('~src/pages/klage/Klage'));
 const NyDatoForKontrollsamtale = React.lazy(() => import('~src/pages/kontrollsamtale/KontrollsamtalePage'));
+const RevurderingIntroPage = React.lazy(
+    () => import('~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage')
+);
+const GjenopptaOppsummering = React.lazy(
+    () => import('~src/pages/saksbehandling/stans/gjenoppta/gjenopptaOppsummering')
+);
 
 const Saksoversikt = () => {
-    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
-    const history = useHistory();
+    const urlParams = routes.useRouteParams<typeof routes.saksoversiktValgtSak>();
+    const navigate = useNavigate();
 
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const dispatch = useAppDispatch();
@@ -60,7 +64,7 @@ const Saksoversikt = () => {
         }
     }, [sak._tag, søker._tag]);
 
-    const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
+    const rerouteToSak = (id: string) => navigate(routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
@@ -79,101 +83,145 @@ const Saksoversikt = () => {
                         <>
                             <Personlinje søker={søker} sakInfo={{ sakId: sak.id, saksnummer: sak.saksnummer }} />
                             <div className={styles.container}>
-                                <Switch>
-                                    <CompatRoute path={Routes.klageOpprett.createURL({ sakId: sak.id })}>
-                                        <div className={styles.mainContent}>
-                                            <OpprettKlage sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <CompatRoute path={Routes.klage.path}>
-                                        <div className={styles.mainContent}>
-                                            <Klage sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <CompatRoute path={Routes.stansOppsummeringRoute.path}>
-                                        <div className={styles.mainContent}>
-                                            <StansOppsummering sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <CompatRoute path={Routes.stansRoot.path}>
-                                        <div className={styles.mainContent}>
-                                            <StansPage sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <CompatRoute path={Routes.gjenopptaStansOppsummeringRoute.path}>
-                                        <div className={styles.mainContent}>
-                                            <GjenopptaOppsummering sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <CompatRoute path={Routes.gjenopptaStansRoot.path}>
-                                        <div className={styles.mainContent}>
-                                            <Gjenoppta sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <CompatRoute path={Routes.avsluttBehandling.path}>
-                                        <div className={styles.mainContent}>
-                                            <AvsluttBehandling sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <Route path={Routes.revurderValgtSak.path}>
-                                        <div className={styles.mainContent}>
-                                            <Revurdering
-                                                sakId={sak.id}
-                                                utbetalinger={sak.utbetalinger}
-                                                informasjonsRevurderinger={sak.revurderinger.filter(
-                                                    erInformasjonsRevurdering
-                                                )}
-                                            />
-                                        </div>
-                                    </Route>
-                                    <Route path={Routes.revurderValgtRevurdering.path}>
-                                        <div className={styles.mainContent}>
-                                            <Revurdering
-                                                sakId={sak.id}
-                                                utbetalinger={sak.utbetalinger}
-                                                informasjonsRevurderinger={sak.revurderinger.filter(
-                                                    erInformasjonsRevurdering
-                                                )}
-                                            />
-                                        </div>
-                                    </Route>
-                                    <CompatRoute path={Routes.vedtaksoppsummering.path}>
-                                        <div className={styles.mainContent}>
-                                            <Vedtaksoppsummering sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <Route path={Routes.saksoversiktValgtBehandling.path}>
-                                        <SøknadsbehandlingDraftProvider>
+                                <Routes>
+                                    <Route
+                                        path={routes.klageOpprett.path}
+                                        element={
                                             <div className={styles.mainContent}>
-                                                <Switch>
-                                                    <CompatRoute path={Routes.saksbehandlingSendTilAttestering.path}>
-                                                        <SendTilAttesteringPage sak={sak} />
-                                                    </CompatRoute>
-                                                    <CompatRoute path={Routes.saksbehandlingVilkårsvurdering.path}>
-                                                        <Vilkår sak={sak} søker={søker} />
-                                                    </CompatRoute>
-                                                </Switch>
+                                                <OpprettKlage sak={sak} />
                                             </div>
-                                        </SøknadsbehandlingDraftProvider>
-                                    </Route>
-                                    <CompatRoute path={Routes.alleDokumenterForSak.path}>
-                                        <div className={styles.mainContent}>
-                                            <DokumenterPage sak={sak} />
-                                        </div>
-                                    </CompatRoute>
-                                    <CompatRoute path={Routes.kontrollsamtale.path} exact>
-                                        <div className={styles.mainContent}>
-                                            <NyDatoForKontrollsamtale
-                                                sakId={sak.id}
-                                                kanKalleInn={!isEmpty(sak.utbetalinger)}
-                                            />
-                                        </div>
-                                    </CompatRoute>
+                                        }
+                                    />
 
-                                    <CompatRoute path={Routes.saksoversiktValgtSak.path}>
-                                        <Sakintro sak={sak} />
-                                    </CompatRoute>
-                                </Switch>
+                                    <Route
+                                        path={routes.klage.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <Klage sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.stansOppsummeringRoute.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <StansOppsummering sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.stansRoot.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <StansPage sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.gjenopptaStansOppsummeringRoute.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <GjenopptaOppsummering sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.gjenopptaStansRoot.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <Gjenoppta sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.avsluttBehandling.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <AvsluttBehandling sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.revurderValgtSak.path}
+                                        element={
+                                            <RevurderingIntroPage
+                                                sakId={sak.id}
+                                                utbetalinger={sak.utbetalinger}
+                                                informasjonsRevurdering={undefined}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        path={routes.revurderValgtRevurdering.path + '*'}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <Revurdering
+                                                    sakId={sak.id}
+                                                    utbetalinger={sak.utbetalinger}
+                                                    informasjonsRevurderinger={sak.revurderinger.filter(
+                                                        erInformasjonsRevurdering
+                                                    )}
+                                                />
+                                            </div>
+                                        }
+                                    />
+                                    <Route
+                                        path={routes.vedtaksoppsummering.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <Vedtaksoppsummering sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.saksbehandlingSendTilAttestering.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <SendTilAttesteringPage sak={sak} />
+                                            </div>
+                                        }
+                                    />
+                                    <Route
+                                        path={routes.saksbehandlingVilkårsvurdering.path}
+                                        element={
+                                            <SøknadsbehandlingDraftProvider>
+                                                <div className={styles.mainContent}>
+                                                    <Vilkår sak={sak} søker={søker} />
+                                                </div>
+                                            </SøknadsbehandlingDraftProvider>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.alleDokumenterForSak.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <DokumenterPage sak={sak} />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route
+                                        path={routes.kontrollsamtale.path}
+                                        element={
+                                            <div className={styles.mainContent}>
+                                                <NyDatoForKontrollsamtale
+                                                    sakId={sak.id}
+                                                    kanKalleInn={!isEmpty(sak.utbetalinger)}
+                                                />
+                                            </div>
+                                        }
+                                    />
+
+                                    <Route path={'/'} element={<Sakintro sak={sak} />} />
+                                </Routes>
                             </div>
                         </>
                     )

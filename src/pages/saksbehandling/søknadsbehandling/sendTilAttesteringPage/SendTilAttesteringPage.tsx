@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
 import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -34,10 +34,10 @@ interface FormData {
 const SendTilAttesteringPage = (props: { sak: Sak }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(sakSlice.sendTilAttestering);
     const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
-    const { behandlingId } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
+    const { behandlingId = '' } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
     const behandling = props.sak.behandlinger.find((x) => x.id === behandlingId);
 
     const initialValues: FormData = { fritekst: behandling?.fritekstTilBrev ?? '' };
@@ -77,7 +77,7 @@ const SendTilAttesteringPage = (props: { sak: Sak }) => {
             () => {
                 clearDraft();
                 const message = formatMessage('vedtak.sendtTilAttestering');
-                history.push(Routes.createSakIntroLocation(message, props.sak.id));
+                navigate(Routes.createSakIntroLocation(message, props.sak.id));
             }
         );
     };

@@ -6,7 +6,7 @@ import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Person, fetchPerson } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -171,7 +171,7 @@ const getValidationSchema = (eps: Nullable<Person>) => {
 const Sats = (props: VilkårsvurderingBaseProps) => {
     const [epsStatus, fetchEps] = useApiCall(fetchPerson);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const history = useHistory();
+    const navigate = useNavigate();
     const epsFnr = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)?.fnr;
 
     useEffect(() => {
@@ -204,7 +204,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                     <SkjemaelementFeilmelding>{formatMessage('feilmelding.pdlFeil')}</SkjemaelementFeilmelding>
                     <Button
                         onClick={() => {
-                            history.push(props.forrigeUrl);
+                            navigate(props.forrigeUrl);
                         }}
                     >
                         {formatMessage('knapp.tilbake')}
@@ -240,7 +240,7 @@ function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasj
 }
 
 const SatsForm = (props: SatsProps) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const [lagreBosituasjonStatus, lagreBosituasjon] = useAsyncActionCreator(lagreBosituasjonGrunnlag);
 
@@ -277,7 +277,7 @@ const SatsForm = (props: SatsProps) => {
 
         if (eqBosituasjon.equals(bosituasjonsgrunnlag, props.bosituasjon)) {
             clearDraft();
-            history.push(nesteUrl);
+            navigate(nesteUrl);
             return;
         }
 
@@ -290,7 +290,7 @@ const SatsForm = (props: SatsProps) => {
             },
             () => {
                 clearDraft();
-                history.push(nesteUrl);
+                navigate(nesteUrl);
             }
         );
     };
@@ -370,7 +370,7 @@ const SatsForm = (props: SatsProps) => {
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
+                                navigate(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={form.handleSubmit(
                                 handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
