@@ -66,7 +66,8 @@ function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): F
                 valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
                 kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
             },
-            type: f.type,
+            kategori: f.fradragskategoriWrapper.kategori,
+            spesifisertkategori: f.fradragskategoriWrapper.spesifisertKategori,
             tilhørerEPS: f.tilhører === FradragTilhører.EPS,
         })),
         begrunnelse: begrunnelse ?? '',
@@ -136,7 +137,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                           },
 
                 beløp: parseInt(f.beløp!, 10),
-                type: f.type!,
+                kategori: f.kategori!,
+                spesifisertKategori: f.spesifisertkategori,
                 utenlandskInntekt: f.fraUtland
                     ? {
                           beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
@@ -264,7 +266,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                             {
                                                 periode: null,
                                                 beløp: null,
-                                                type: null,
+                                                kategori: null,
+                                                spesifisertkategori: null,
                                                 fraUtland: false,
                                                 utenlandskInntekt: {
                                                     beløpIUtenlandskValuta: '',
@@ -388,7 +391,8 @@ const eqPeriode = struct<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>
 });
 
 const eqFradragFormData = struct<FradragFormData>({
-    type: eqNullable(S.Eq),
+    kategori: eqNullable(S.Eq),
+    spesifisertkategori: eqNullable(S.Eq),
     beløp: eqNullable(S.Eq),
     fraUtland: B.Eq,
     utenlandskInntekt: eqUtenlandskInntekt,

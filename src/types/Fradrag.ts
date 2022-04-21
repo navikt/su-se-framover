@@ -6,12 +6,26 @@ import { eqNullable, Nullable } from '~src/lib/types';
 
 import { Periode } from './Periode';
 
-export interface Fradrag {
+export interface LagreFradragsgrunnlangInnsending {
     periode: Nullable<Periode<string>>;
-    type: Fradragstype;
+    kategori: Fradragskategori;
+    spesifisertKategori: Nullable<string>;
     beløp: number;
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
     tilhører: FradragTilhører;
+}
+
+export interface Fradrag {
+    periode: Nullable<Periode<string>>;
+    fradragskategoriWrapper: FradragskategoriWrapper;
+    beløp: number;
+    utenlandskInntekt: Nullable<UtenlandskInntekt>;
+    tilhører: FradragTilhører;
+}
+
+interface FradragskategoriWrapper {
+    kategori: Fradragskategori;
+    spesifisertKategori: Nullable<string>;
 }
 
 const eqUtenlandskInntekt = struct<UtenlandskInntekt>({
@@ -20,8 +34,13 @@ const eqUtenlandskInntekt = struct<UtenlandskInntekt>({
     valuta: S.Eq,
 });
 
+const eqFradragskategoriWrapper = struct<FradragskategoriWrapper>({
+    kategori: S.Eq,
+    spesifisertKategori: eqNullable(S.Eq),
+});
+
 export const eqFradragBortsettFraPeriode = struct<Omit<Fradrag, 'periode'>>({
-    type: S.Eq,
+    fradragskategoriWrapper: eqFradragskategoriWrapper,
     beløp: N.Eq,
     utenlandskInntekt: eqNullable(eqUtenlandskInntekt),
     tilhører: S.Eq,
@@ -38,9 +57,9 @@ export enum FradragTilhører {
     EPS = 'EPS',
 }
 
-export type Fradragstype = VelgbareFradragstyper | IkkeVelgbareFradragstyper;
+export type Fradragskategori = VelgbareFradragskategorier | IkkeVelgbareFradragskategorier;
 
-export enum VelgbareFradragstyper {
+export enum VelgbareFradragskategorier {
     Sosialstønad = 'Sosialstønad',
     Uføretrygd = 'Uføretrygd',
     Alderspensjon = 'Alderspensjon',
@@ -64,7 +83,7 @@ export enum VelgbareFradragstyper {
     Annet = 'Annet',
 }
 
-export enum IkkeVelgbareFradragstyper {
+export enum IkkeVelgbareFradragskategorier {
     NAVytelserTilLivsopphold = 'NAVytelserTilLivsopphold',
     ForventetInntekt = 'ForventetInntekt',
     BeregnetFradragEPS = 'BeregnetFradragEPS',

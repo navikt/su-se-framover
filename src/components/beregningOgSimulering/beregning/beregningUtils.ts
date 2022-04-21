@@ -2,6 +2,8 @@ import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
 import { toDateOrNull } from '~src/utils/date/dateUtils';
 
+import { FradragFormData } from './fradragInputs/FradragInputs';
+
 export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
     [
         Behandlingsstatus.BEREGNET_AVSLAG,
@@ -12,9 +14,10 @@ export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
         Behandlingsstatus.UNDERKJENT_INNVILGET,
     ].some((status) => status === behandling.status);
 
-export const fradragTilFradragFormData = (fradrag: Fradrag) => ({
-    type: fradrag.type || null,
+export const fradragTilFradragFormData = (fradrag: Fradrag): FradragFormData => ({
+    kategori: fradrag.fradragskategoriWrapper.kategori || null,
     beløp: fradrag.beløp.toString() || null,
+    spesifisertkategori: fradrag.fradragskategoriWrapper.spesifisertKategori,
     fraUtland: fradrag.utenlandskInntekt !== null,
     utenlandskInntekt: {
         beløpIUtenlandskValuta: fradrag.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',

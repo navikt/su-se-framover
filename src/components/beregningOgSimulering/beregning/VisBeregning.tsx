@@ -11,7 +11,7 @@ import fradragstypeMessages from '~src/components/beregningOgSimulering/beregnin
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';
-import { Fradrag, IkkeVelgbareFradragstyper } from '~src/types/Fradrag';
+import { Fradrag, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Sats } from '~src/types/Sats';
 import { groupBy, groupByEq } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
@@ -20,7 +20,12 @@ import { formatCurrency } from '~src/utils/format/formatUtils';
 import * as styles from './visBeregning.module.less';
 
 const getFradragsnøkkel = (f: Fradrag) =>
-    [f.type, f.utenlandskInntekt?.kurs ?? '', f.utenlandskInntekt?.valuta ?? '', f.tilhører].join('-');
+    [
+        f.fradragskategoriWrapper.kategori,
+        f.utenlandskInntekt?.kurs ?? '',
+        f.utenlandskInntekt?.valuta ?? '',
+        f.tilhører,
+    ].join('-');
 
 const getBenyttedeFradrag = (månedsberegning: Månedsberegning): Fradrag[] =>
     pipe(
@@ -29,7 +34,10 @@ const getBenyttedeFradrag = (månedsberegning: Månedsberegning): Fradrag[] =>
         (grupperteFradrag) =>
             Object.values(grupperteFradrag).map<Fradrag>((fradrag) => ({
                 beløp: fradrag.reduce((acc, f) => acc + f.beløp, 0),
-                type: fradrag[0].type,
+                fradragskategoriWrapper: {
+                    kategori: fradrag[0].fradragskategoriWrapper.kategori,
+                    spesifisertKategori: fradrag[0].fradragskategoriWrapper.spesifisertKategori,
+                },
                 tilhører: fradrag[0].tilhører,
                 utenlandskInntekt: fradrag[0].utenlandskInntekt,
                 periode: fradrag[0].periode,
@@ -75,20 +83,20 @@ const VisBenyttetEpsFradrag = ({
         // Hvis denne finns så eksisterer det fradrag for EPS i aktuell måned
         <DetaljertFradrag
             tittel={{
-                label: formatMessage(fradrag.type),
+                label: formatMessage(fradrag.fradragskategoriWrapper.kategori),
                 verdi: formatCurrency(-fradrag.beløp),
             }}
             detaljer={[
                 ...epsInputFradrag.flatMap((f) => {
                     if (!f.utenlandskInntekt) {
                         return {
-                            label: formatMessage(f.type),
+                            label: formatMessage(f.fradragskategoriWrapper.kategori),
                             verdi: formatCurrency(-f.beløp),
                         };
                     }
                     return [
                         {
-                            label: formatMessage(f.type),
+                            label: formatMessage(f.fradragskategoriWrapper.kategori),
                             verdi: formatCurrency(-f.beløp),
                         },
                         {
@@ -186,12 +194,13 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                     ),
                                     pipe(
                                         S.Ord,
-                                        Ord.contramap((f: Fradrag) => f.type)
+                                        Ord.contramap((f: Fradrag) => f.fradragskategoriWrapper.kategori)
                                     ),
                                 ]),
                                 arr.map((fradrag) => (
                                     <li key={getFradragsnøkkel(fradrag) + index} className={styles.linje}>
-                                        {fradrag.type === IkkeVelgbareFradragstyper.BeregnetFradragEPS ? (
+                                        {fradrag.fradragskategoriWrapper.kategori ===
+                                        IkkeVelgbareFradragskategorier.BeregnetFradragEPS ? (
                                             <VisBenyttetEpsFradrag
                                                 fradrag={fradrag}
                                                 epsInputFradrag={månedsberegninger[0].epsInputFradrag}
@@ -200,7 +209,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                         ) : fradrag.utenlandskInntekt !== null ? (
                                             <DetaljertFradrag
                                                 tittel={{
-                                                    label: formatMessage(fradrag.type),
+                                                    label: formatMessage(fradrag.fradragskategoriWrapper.kategori),
                                                     verdi: formatCurrency(-fradrag.beløp),
                                                 }}
                                                 detaljer={[
@@ -221,7 +230,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                             />
                                         ) : (
                                             <>
-                                                <span>{formatMessage(fradrag.type)}</span>
+                                                <span>{formatMessage(fradrag.fradragskategoriWrapper.kategori)}</span>
                                                 <span>{formatCurrency(-fradrag.beløp)}</span>
                                             </>
                                         )}
@@ -232,7 +241,9 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                 return (
                                     månedsberegninger[0].epsInputFradrag.length === 0 ||
                                     benyttedeFradrag.some(
-                                        (fradrag) => fradrag.type === IkkeVelgbareFradragstyper.BeregnetFradragEPS
+                                        (fradrag) =>
+                                            fradrag.fradragskategoriWrapper.kategori ===
+                                            IkkeVelgbareFradragskategorier.BeregnetFradragEPS
                                     ) // Beregnet fradrag er når det er over fribeløp
                                 );
                             }) ? null : (
@@ -241,7 +252,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                     <DetaljertFradrag
                                         tittel={{
                                             label:
-                                                formatMessage(IkkeVelgbareFradragstyper.BeregnetFradragEPS) +
+                                                formatMessage(IkkeVelgbareFradragskategorier.BeregnetFradragEPS) +
                                                 ' (lavere enn fribeløp, ikke inkludert)',
                                             verdi: formatCurrency(0),
                                         }}
@@ -249,13 +260,13 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                             ...månedsberegninger[0].epsInputFradrag.flatMap((f) => {
                                                 if (!f.utenlandskInntekt) {
                                                     return {
-                                                        label: formatMessage(f.type),
+                                                        label: formatMessage(f.fradragskategoriWrapper.kategori),
                                                         verdi: formatCurrency(-f.beløp),
                                                     };
                                                 }
                                                 return [
                                                     {
-                                                        label: formatMessage(f.type),
+                                                        label: formatMessage(f.fradragskategoriWrapper.kategori),
                                                         verdi: formatCurrency(-f.beløp),
                                                     },
                                                     {

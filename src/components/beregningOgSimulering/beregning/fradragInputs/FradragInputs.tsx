@@ -10,7 +10,7 @@ import SkjemaelementFeilmelding from '~src/components/formElements/Skjemaelement
 import { useI18n } from '~src/lib/i18n';
 import { Nullable, KeyDict } from '~src/lib/types';
 import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
-import { Fradragstype, IkkeVelgbareFradragstyper, VelgbareFradragstyper } from '~src/types/Fradrag';
+import { Fradragskategori, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import DatePicker from '../../../datePicker/DatePicker';
@@ -21,7 +21,8 @@ import styles from './fradragInputs.module.less';
 import InntektFraUtland from './InntektFraUtland';
 
 export interface FradragFormData {
-    type: Nullable<Fradragstype>;
+    kategori: Nullable<Fradragskategori>;
+    spesifisertkategori: Nullable<string>;
     beløp: Nullable<string>;
     fraUtland: boolean;
     utenlandskInntekt: UtenlandskInntektFormData;
@@ -33,7 +34,8 @@ export interface FradragFormData {
 }
 
 const FradragObjectKeys: KeyDict<FradragFormData> = {
-    type: 'type',
+    kategori: 'kategori',
+    spesifisertkategori: 'spesifisertkategori',
     beløp: 'beløp',
     fraUtland: 'fraUtland',
     utenlandskInntekt: 'utenlandskInntekt',
@@ -92,13 +94,13 @@ const FradragsSelection = (props: {
             error={props.feil}
         >
             <option value="">{formatMessage('fradrag.type.emptyLabel')}</option>
-            {Object.values(VelgbareFradragstyper).map((f) => (
+            {Object.values(VelgbareFradragskategorier).map((f) => (
                 <option value={f} key={f}>
                     {formatMessage(f)}
                 </option>
             ))}
-            <option disabled value={IkkeVelgbareFradragstyper.NAVytelserTilLivsopphold}>
-                {formatMessage(IkkeVelgbareFradragstyper.NAVytelserTilLivsopphold)}
+            <option disabled value={IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold}>
+                {formatMessage(IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold)}
             </option>
         </Select>
     );
@@ -119,13 +121,17 @@ const utenlandskInntekt = yup
 
 export const fradragSchema = yup.object<FradragFormData>({
     beløp: validateStringAsPositiveNumber,
-    type: yup
+    kategori: yup
         .string()
         .defined()
         .oneOf(
-            [...Object.values(VelgbareFradragstyper), IkkeVelgbareFradragstyper.NAVytelserTilLivsopphold],
+            [...Object.values(VelgbareFradragskategorier), IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold],
             'Du må velge en fradragstype'
         ),
+    spesifisertkategori: yup.string().defined().when(FradragObjectKeys.kategori, {
+        is: VelgbareFradragskategorier.Annet,
+        then: yup.string().required(),
+    }),
     fraUtland: yup.boolean(),
     utenlandskInntekt: utenlandskInntekt,
     tilhørerEPS: yup.boolean(),
@@ -171,12 +177,13 @@ export const FradragInputs = (props: {
             {props.fradrag.map((fradrag, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
                 const name = `${props.feltnavn}[${index}]`;
-                const typeId = `${name}.${FradragObjectKeys.type}`;
+                const typeId = `${name}.${FradragObjectKeys.kategori}`;
                 const belopId = `${name}.${FradragObjectKeys.beløp}`;
                 const fraUtlandId = `${name}.${FradragObjectKeys.fraUtland}`;
                 const periode = `${name}.${FradragObjectKeys.periode}`;
                 const tilhørerEPSId = `${name}.${FradragObjectKeys.tilhørerEPS}`;
                 const utenlandskInntektId = `${name}.${FradragObjectKeys.utenlandskInntekt}`;
+                const spesifisertTypeId = `${name}.${FradragObjectKeys.spesifisertkategori}`;
 
                 const visDelerAvPeriode = Boolean(
                     fradrag.periode &&
@@ -198,10 +205,10 @@ export const FradragInputs = (props: {
                                         onChange={props.onChange}
                                         id={typeId}
                                         name={typeId}
-                                        value={fradrag.type?.toString() ?? ''}
+                                        value={fradrag.kategori?.toString() ?? ''}
                                         feil={
                                             errorForLinje && typeof errorForLinje === 'object'
-                                                ? errorForLinje.type
+                                                ? errorForLinje.kategori
                                                 : undefined
                                         }
                                     />
@@ -225,6 +232,21 @@ export const FradragInputs = (props: {
                                     </Button>
                                 </div>
                             </div>
+                            {fradrag.kategori === VelgbareFradragskategorier.Annet && (
+                                <div className={styles.spesifiserFradragsTypeContainer}>
+                                    <TextField
+                                        label={formatMessage('fradrag.input.spesifiserFradrag')}
+                                        name={spesifisertTypeId}
+                                        value={fradrag.spesifisertkategori ?? ''}
+                                        onChange={props.onChange}
+                                        error={
+                                            errorForLinje && typeof errorForLinje === 'object'
+                                                ? errorForLinje.spesifisertkategori
+                                                : undefined
+                                        }
+                                    />
+                                </div>
+                            )}
                             <div className={styles.checkboxContainer}>
                                 {(props.harEps || fradrag.tilhørerEPS) && (
                                     <Checkbox

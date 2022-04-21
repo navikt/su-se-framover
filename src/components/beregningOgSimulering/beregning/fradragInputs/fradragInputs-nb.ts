@@ -1,33 +1,33 @@
-import { IkkeVelgbareFradragstyper, VelgbareFradragstyper } from '~src/types/Fradrag';
+import { IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 
-const velgbareFradragstypeMessages: { [key in VelgbareFradragstyper]: string } = {
-    [VelgbareFradragstyper.Sosialstønad]: 'Sosialstønad',
-    [VelgbareFradragstyper.Uføretrygd]: 'Uføretrygd',
-    [VelgbareFradragstyper.Alderspensjon]: 'Alderspensjon',
-    [VelgbareFradragstyper.Arbeidsavklaringspenger]: 'Arbeidsavklaringspenger',
-    [VelgbareFradragstyper.Dagpenger]: 'Dagpenger',
-    [VelgbareFradragstyper.SupplerendeStønad]: 'Supplerende stønad',
-    [VelgbareFradragstyper.AvtalefestetPensjon]: 'Avtalefestet pensjon (AFP)',
-    [VelgbareFradragstyper.AvtalefestetPensjonPrivat]: 'Avtalefestet pensjon privat (AFP)',
-    [VelgbareFradragstyper.Sykepenger]: 'Sykepenger',
-    [VelgbareFradragstyper.Gjenlevendepensjon]: 'Gjenlevendepensjon',
-    [VelgbareFradragstyper.Arbeidsinntekt]: 'Arbeidsinntekt',
-    [VelgbareFradragstyper.OffentligPensjon]: 'Offentlig pensjon',
-    [VelgbareFradragstyper.Introduksjonsstønad]: 'Introduksjonsstønad',
-    [VelgbareFradragstyper.Kvalifiseringsstønad]: 'Kvalifiseringsstønad',
-    [VelgbareFradragstyper.PrivatPensjon]: 'Privat pensjon',
-    [VelgbareFradragstyper.Kontantstøtte]: 'Kontantstøtte',
-    [VelgbareFradragstyper.BidragEtterEkteskapsloven]: 'Bidrag etter ekteskapsloven',
-    [VelgbareFradragstyper.Kapitalinntekt]: 'Kapitalinntekt',
-    [VelgbareFradragstyper.Annet]: 'Annet',
+const velgbareFradragskategoriMessages: { [key in VelgbareFradragskategorier]: string } = {
+    [VelgbareFradragskategorier.Sosialstønad]: 'Sosialstønad',
+    [VelgbareFradragskategorier.Uføretrygd]: 'Uføretrygd',
+    [VelgbareFradragskategorier.Alderspensjon]: 'Alderspensjon',
+    [VelgbareFradragskategorier.Arbeidsavklaringspenger]: 'Arbeidsavklaringspenger',
+    [VelgbareFradragskategorier.Dagpenger]: 'Dagpenger',
+    [VelgbareFradragskategorier.SupplerendeStønad]: 'Supplerende stønad',
+    [VelgbareFradragskategorier.AvtalefestetPensjon]: 'Avtalefestet pensjon (AFP)',
+    [VelgbareFradragskategorier.AvtalefestetPensjonPrivat]: 'Avtalefestet pensjon privat (AFP)',
+    [VelgbareFradragskategorier.Sykepenger]: 'Sykepenger',
+    [VelgbareFradragskategorier.Gjenlevendepensjon]: 'Gjenlevendepensjon',
+    [VelgbareFradragskategorier.Arbeidsinntekt]: 'Arbeidsinntekt',
+    [VelgbareFradragskategorier.OffentligPensjon]: 'Offentlig pensjon',
+    [VelgbareFradragskategorier.Introduksjonsstønad]: 'Introduksjonsstønad',
+    [VelgbareFradragskategorier.Kvalifiseringsstønad]: 'Kvalifiseringsstønad',
+    [VelgbareFradragskategorier.PrivatPensjon]: 'Privat pensjon',
+    [VelgbareFradragskategorier.Kontantstøtte]: 'Kontantstøtte',
+    [VelgbareFradragskategorier.BidragEtterEkteskapsloven]: 'Bidrag etter ekteskapsloven',
+    [VelgbareFradragskategorier.Kapitalinntekt]: 'Kapitalinntekt',
+    [VelgbareFradragskategorier.Annet]: 'Annet',
 };
 
-const ikkeVelgbareFradragstypeMessages: { [key in IkkeVelgbareFradragstyper]: string } = {
-    [IkkeVelgbareFradragstyper.NAVytelserTilLivsopphold]: 'NAV-ytelser til livsopphold',
-    [IkkeVelgbareFradragstyper.ForventetInntekt]: 'Forventet inntekt etter uførhet',
-    [IkkeVelgbareFradragstyper.BeregnetFradragEPS]: 'Ektefelle/samboer totalt',
-    [IkkeVelgbareFradragstyper.UnderMinstenivå]: 'Beløp under minstegrense for utbetaling',
-    [IkkeVelgbareFradragstyper.AvkortingUtenlandsopphold]: 'Avkorting for utenlandsopphold',
+const ikkeVelgbareFradragskategoriMessages: { [key in IkkeVelgbareFradragskategorier]: string } = {
+    [IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold]: 'NAV-ytelser til livsopphold',
+    [IkkeVelgbareFradragskategorier.ForventetInntekt]: 'Forventet inntekt etter uførhet',
+    [IkkeVelgbareFradragskategorier.BeregnetFradragEPS]: 'Ektefelle/samboer totalt',
+    [IkkeVelgbareFradragskategorier.UnderMinstenivå]: 'Beløp under minstegrense for utbetaling',
+    [IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold]: 'Avkorting for utenlandsopphold',
 };
 export default {
     'display.checkbox.fraUtland': 'Fra utland',
@@ -44,6 +44,7 @@ export default {
     'fradrag.heading': 'Fradrag',
 
     'fradrag.type.emptyLabel': 'Velg fradragstype',
+    'fradrag.input.spesifiserFradrag': 'Spesifiser fradragstypen',
 
     'fradrag.utenlandsk.beløp': 'Månedsbeløp i utenlandsk valuta',
     'fradrag.utenlandsk.kurs': 'Kurs',
@@ -59,7 +60,7 @@ export default {
     'knapp.fradrag.leggtil.annet': 'Legg til et annet fradrag',
     'knapp.fradrag.fjern': 'Fjern fradrag',
 
-    ...velgbareFradragstypeMessages,
-    ...ikkeVelgbareFradragstypeMessages,
+    ...velgbareFradragskategoriMessages,
+    ...ikkeVelgbareFradragskategoriMessages,
     'fradrag.suffix.eps': '(ektefelle/samboer)',
 };

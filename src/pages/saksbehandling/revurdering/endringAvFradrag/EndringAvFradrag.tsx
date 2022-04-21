@@ -23,7 +23,7 @@ import { useI18n } from '~src/lib/i18n';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { Fradrag, FradragTilhører, IkkeVelgbareFradragstyper } from '~src/types/Fradrag';
+import { Fradrag, FradragTilhører, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
@@ -90,7 +90,10 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     /* valideringa sjekker at f.beløp og f.type ikke er null */
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: Number.parseInt(f.beløp!, 10),
-                    type: f.type!,
+                    fradragskategoriWrapper: {
+                        kategori: f.kategori!,
+                        spesifisertKategori: f.spesifisertkategori,
+                    },
                     utenlandskInntekt: f.fraUtland
                         ? {
                               beløpIUtenlandskValuta: Number.parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
@@ -143,7 +146,9 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     >
                         <div>
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
-                                (fradrag) => fradrag.type === IkkeVelgbareFradragstyper.AvkortingUtenlandsopphold
+                                (fradrag) =>
+                                    fradrag.fradragskategoriWrapper.kategori ===
+                                    IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold
                             ) && (
                                 <Alert variant={'info'}>{intl.formatMessage({ id: 'alert.advarsel.avkorting' })}</Alert>
                             )}
@@ -178,7 +183,8 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                                 ...formik.values.fradrag,
                                                 {
                                                     beløp: null,
-                                                    type: null,
+                                                    kategori: null,
+                                                    spesifisertkategori: null,
                                                     fraUtland: false,
                                                     utenlandskInntekt: {
                                                         beløpIUtenlandskValuta: '',
