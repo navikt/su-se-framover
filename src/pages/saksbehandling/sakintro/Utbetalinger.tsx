@@ -90,7 +90,7 @@ export const Utbetalinger = (props: {
                                 <Button
                                     variant="danger"
                                     size="small"
-                                    onClick={() => history.push(Routes.stansRoute.createURL({ sakId: props.sakId }))}
+                                    onClick={() => history.push(Routes.stansRoot.createURL({ sakId: props.sakId }))}
                                 >
                                     {formatMessage('display.utbetalingsperiode.stoppUtbetaling')}
                                 </Button>

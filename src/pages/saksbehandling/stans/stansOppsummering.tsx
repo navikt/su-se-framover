@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ import { Sak } from '~src/types/Sak';
 
 import StansOppsummeringskomponent from './components/StansOppsummeringskomponent';
 import messages from './stans-nb';
+import * as styles from './stans.module.less';
 
 interface Props {
     sak: Sak;
@@ -66,25 +67,32 @@ const StansOppsummering = (props: Props) => {
     }
 
     return (
-        <StansOppsummeringskomponent
-            revurdering={revurdering}
-            inputs={oppsummeringsinputs}
-            error={error}
-            knapper={{
-                tilbake: {
-                    tekst: formatMessage('stans.bunnknapper.tilbake'),
-                    onClick: () =>
-                        history.push(
-                            Routes.stansRoute.createURL({ sakId: props.sak.id, revurderingId: revurdering.id })
-                        ),
-                },
-                neste: {
-                    tekst: formatMessage('stans.oppsummering.iverksett'),
-                    onClick: iverksettOgGåVidere,
-                    spinner: RemoteData.isPending(iverksettStatus),
-                },
-            }}
-        />
+        <div className={styles.pageContainer}>
+            <Heading level="1" size="large" className={styles.tittel}>
+                {formatMessage('stans.tittel')}
+            </Heading>
+            <div className={styles.content}>
+                <StansOppsummeringskomponent
+                    revurdering={revurdering}
+                    inputs={oppsummeringsinputs}
+                    error={error}
+                    knapper={{
+                        tilbake: {
+                            tekst: formatMessage('stans.bunnknapper.tilbake'),
+                            onClick: () =>
+                                history.push(
+                                    Routes.stansRoute.createURL({ sakId: props.sak.id, revurderingId: revurdering.id })
+                                ),
+                        },
+                        neste: {
+                            tekst: formatMessage('stans.oppsummering.iverksett'),
+                            onClick: iverksettOgGåVidere,
+                            spinner: RemoteData.isPending(iverksettStatus),
+                        },
+                    }}
+                />
+            </div>
+        </div>
     );
 };
 
