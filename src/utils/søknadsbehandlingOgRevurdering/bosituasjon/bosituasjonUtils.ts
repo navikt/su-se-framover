@@ -10,7 +10,3 @@ export const hentBosituasjongrunnlag = (g: GrunnlagsdataOgVilkårsvurderinger): 
 
     return g.bosituasjon[0];
 };
-
-export const hentAlleBosituasjonsgrunnlag = (g: GrunnlagsdataOgVilkårsvurderinger): Bosituasjon[] => {
-    return g.bosituasjon;
-};

@@ -11,6 +11,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
         'Bosituasjon og inntekt må revurderes siden det finnes flere bosituasjonsperioder',
     [ApiErrorCode.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'Informasjon i bosituasjon samsvarer ikke med formue',
+    [ApiErrorCode.BOSITUASJON_MANGLER_FOR_PERIODER]: 'Bosituasjon mangler for hele eller deler av behandlingsperioden',
     [ApiErrorCode.BOSITUASJONSPERIODER_OVERLAPPER]: 'Periodene i bosituasjonene overlapper',
     [ApiErrorCode.DELVIS_OPPHØR]: 'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     [ApiErrorCode.DEPOSITUM_IKKE_MINDRE_ENN_INNSKUDD]: 'Depositum kan ikke være høyere enn innskudd',
@@ -86,10 +87,10 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.IKKE_TILGANG_TIL_JOURNALPOST]: 'Har ikke tilgang til journalpost',
     [ApiErrorCode.IKKE_TILGANG_TIL_PERSON]: 'Du har ikke tilgang til å se informasjon om denne brukeren',
     [ApiErrorCode.INGEN_BOSITUASJON_FOR_FRADRAGSPERIODER]:
-        'Bosituasjon eksisterer ikke for en/flere av perioder for fradrag',
+        'Bosituasjon eksisterer ikke for en eller flere av perioder for fradrag',
     [ApiErrorCode.INGEN_FORMUE_FOR_BOSITUASJONSPERIODE]:
-        'Formue mangler for en/flere perioder hvor det eksisterer bosituasjon.',
-    [ApiErrorCode.INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE]: 'Formue for EPS mangler for en/flere perioder',
+        'Formue mangler for en eller flere perioder hvor det eksisterer bosituasjon.',
+    [ApiErrorCode.INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE]: 'Formue for EPS mangler for en eller flere perioder',
     [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
         'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',

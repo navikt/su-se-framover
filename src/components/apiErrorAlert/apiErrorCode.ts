@@ -8,6 +8,7 @@ export enum ApiErrorCode {
     BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES = 'bosituasjon_med_flere_perioder_må_revurderes',
     BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE = 'bosituasjon_samsvarer_ikke_med_formue',
     BOSITUASJONSPERIODER_OVERLAPPER = 'bosituasjonsperioder_overlapper',
+    BOSITUASJON_MANGLER_FOR_PERIODER = 'bosituasjon_mangler_for_perioder',
     DELVIS_OPPHØR = 'delvis_opphør',
     DEPOSITUM_IKKE_MINDRE_ENN_INNSKUDD = 'depositum_ikke_mindre_enn_innskudd',
     EPS_ALDER_ER_NULL = 'eps_alder_er_null',

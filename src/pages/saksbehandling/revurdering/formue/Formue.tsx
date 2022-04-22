@@ -246,7 +246,6 @@ const FormueBlokk = (props: {
                                         fraOgMed: date ? DateFns.startOfMonth(date) : null,
                                         tilOgMed: props.blokkField.periode.tilOgMed,
                                     });
-                                    //field.onChange(date ? DateFns.startOfMonth(date) : null);
                                 }}
                                 feil={getDateErrorMessage(fieldState.error)}
                                 minDate={revurderingsperiode.fraOgMed}
