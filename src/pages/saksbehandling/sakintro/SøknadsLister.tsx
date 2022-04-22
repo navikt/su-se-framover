@@ -18,7 +18,6 @@ import * as Routes from '~src/lib/routes';
 import { Behandling } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
-import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import {
     erIverksatt,
     erTilAttestering,
@@ -195,7 +194,6 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                             (response) => {
                                 history.push(
                                     Routes.saksbehandlingVilkårsvurdering.createURL({
-                                        vilkar: Vilkårtype.Virkningstidspunkt,
                                         sakId: props.sakId,
                                         behandlingId: response.id,
                                     })

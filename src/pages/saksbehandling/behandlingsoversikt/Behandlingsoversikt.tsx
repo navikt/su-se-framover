@@ -1,21 +1,23 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading } from '@navikt/ds-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 import * as A from 'fp-ts/Array';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
+import { Person } from '~src/api/personApi';
 import { hentReguleringsstatus } from '~src/api/reguleringApi';
 import { Person as PersonIkon } from '~src/assets/Icons';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
-import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
-import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { useAppDispatch } from '~src/redux/Store';
 import { Regulering, Reguleringstype } from '~src/types/Regulering';
+import { Sak } from '~src/types/Sak';
 
 import messages from './behandlingsoversikt-nb';
 import * as styles from './behandlingsoversikt.module.less';
@@ -35,6 +37,11 @@ const splittAutomatiskeOgManuelleReguleringer = (reguleringer: Regulering[]) => 
     );
 };
 
+interface Props {
+    søker: ApiResult<Person>;
+    sak: ApiResult<Sak>;
+}
+
 enum Tab {
     ÅPNE_BEHANDLINGER = 'ÅPNE_BEHANDLINGER',
     FERDIGE_BEHANDLINGER = 'FERDIGE_BEHANDLINGER',
@@ -42,11 +49,8 @@ enum Tab {
     REGULERING = 'REGULERING',
 }
 
-const Behandlingsoversikt = () => {
+export const Behandlingsoversikt = ({ sak, søker }: Props) => {
     const dispatch = useAppDispatch();
-    const history = useHistory();
-    const { søker } = useAppSelector((s) => ({ søker: s.søker.søker }));
-    const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const { formatMessage } = useI18n({ messages });
     const [, hentReguleringer] = useApiCall(hentReguleringsstatus);
     const [reguleringer, setReguleringer] = useState<{ automatiske: Regulering[]; manuelle: Regulering[] }>({
@@ -88,20 +92,19 @@ const Behandlingsoversikt = () => {
                     }}
                     onFetchByFnr={(fnr) => {
                         dispatch(personSlice.fetchPerson({ fnr }));
-                        hentSak({ fnr }, (res) =>
-                            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }))
-                        );
+                        dispatch(sakSlice.fetchSak({ fnr }));
                     }}
                     onFetchBySaksnummer={async (saksnummer) => {
                         const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
                         if (sakSlice.fetchSak.fulfilled.match(res)) {
-                            hentSak({ fnr: res.payload.fnr }, (res) =>
-                                history.push(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }))
-                            );
+                            dispatch(personSlice.fetchPerson({ fnr: res.payload.fnr }));
                         }
                     }}
                     person={søker}
                 />
+                {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
+                    <ApiErrorAlert className={styles.alert} error={sak.error} />
+                )}
             </div>
 
             <Tabs.Root
@@ -141,5 +144,3 @@ const Behandlingsoversikt = () => {
         </div>
     );
 };
-
-export default Behandlingsoversikt;

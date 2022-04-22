@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning';
@@ -51,97 +52,102 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
         <div className={styles.container}>
             <SaksbehandlingFramdriftsindikator sakId={props.sak.id} behandling={behandling} vilkår={vilkar} />
             <div className={styles.content}>
-                {vilkar === Vilkårtype.Virkningstidspunkt && (
-                    <Virkningstidspunkt
-                        behandling={behandling}
-                        forrigeUrl={saksoversiktUrl}
-                        nesteUrl={vilkårUrl(Vilkårtype.Uførhet)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.Uførhet && (
-                    <Uførhet
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
-                        nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.Flyktning && (
-                    <Flyktning
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.Uførhet)}
-                        nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.LovligOpphold && (
-                    <LovligOppholdINorge
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.Flyktning)}
-                        nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.FastOppholdINorge && (
-                    <FastOppholdINorge
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
-                        nesteUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.Institusjonsopphold && (
-                    <Institusjonsopphold
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
-                        nesteUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.OppholdIUtlandet && (
-                    <OppholdIUtlandet
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
-                        nesteUrl={vilkårUrl(Vilkårtype.Formue)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.Formue && (
-                    <Formue
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
-                        søker={props.søker}
-                        nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.PersonligOppmøte && (
-                    <PersonligOppmøte
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
-                        nesteUrl={vilkårUrl(Vilkårtype.Sats)}
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.Sats && (
-                    <Sats
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
-                        nesteUrl={
-                            erVilkårsvurderingerVurdertAvslag(behandling) ? vedtakUrl : vilkårUrl(Vilkårtype.Beregning)
-                        }
-                        sakId={urlParams.sakId}
-                    />
-                )}
-                {vilkar === Vilkårtype.Beregning && (
-                    <Beregning
-                        behandling={behandling}
-                        forrigeUrl={vilkårUrl(Vilkårtype.Sats)}
-                        nesteUrl={vedtakUrl}
-                        sakId={urlParams.sakId}
-                    />
-                )}
+                <Switch>
+                    <Route path={vilkårUrl(Vilkårtype.Virkningstidspunkt)}>
+                        <Virkningstidspunkt
+                            behandling={behandling}
+                            forrigeUrl={saksoversiktUrl}
+                            nesteUrl={vilkårUrl(Vilkårtype.Uførhet)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.Uførhet)}>
+                        <Uførhet
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.Flyktning)}>
+                        <Flyktning
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Uførhet)}
+                            nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.LovligOpphold)}>
+                        <LovligOppholdINorge
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.FastOppholdINorge)}>
+                        <FastOppholdINorge
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.Institusjonsopphold)}>
+                        <Institusjonsopphold
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
+                            nesteUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.OppholdIUtlandet)}>
+                        <OppholdIUtlandet
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Formue)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.Formue)}>
+                        <Formue
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
+                            søker={props.søker}
+                            nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.PersonligOppmøte)}>
+                        <PersonligOppmøte
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Sats)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.Sats)}>
+                        <Sats
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            nesteUrl={
+                                erVilkårsvurderingerVurdertAvslag(behandling)
+                                    ? vedtakUrl
+                                    : vilkårUrl(Vilkårtype.Beregning)
+                            }
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={vilkårUrl(Vilkårtype.Beregning)}>
+                        <Beregning
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Sats)}
+                            nesteUrl={vedtakUrl}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path="*">404</Route>
+                </Switch>
             </div>
         </div>
     );

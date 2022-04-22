@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
-import { Switch } from 'react-router-dom';
-import { CompatRoute } from 'react-router-dom-v5-compat';
+import { Switch, Route } from 'react-router-dom';
 
 import Personlinje from '~src/components/personlinje/Personlinje';
 import * as personSlice from '~src/features/person/person.slice';
@@ -54,22 +53,22 @@ const Attestering = () => {
                     />
                     <div className={styles.attesteringsKomponentContainer}>
                         <Switch>
-                            <CompatRoute path={Routes.attesterSøknadsbehandling.path}>
+                            <Route path={Routes.attesterSøknadsbehandling.path}>
                                 <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
-                            </CompatRoute>
-                            <CompatRoute path={Routes.attesterRevurdering.path}>
+                            </Route>
+                            <Route path={Routes.attesterRevurdering.path}>
                                 <AttesterRevurdering
                                     sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
                                     informasjonsRevurderinger={sakValue.revurderinger.filter(erInformasjonsRevurdering)}
                                 />
-                            </CompatRoute>
-                            <CompatRoute path={Routes.attesterKlage.path}>
+                            </Route>
+                            <Route path={Routes.attesterKlage.path}>
                                 <AttesterKlage
                                     sakId={sakValue.id}
                                     klager={sakValue.klager}
                                     vedtaker={sakValue.vedtak}
                                 />
-                            </CompatRoute>
+                            </Route>
                         </Switch>
                     </div>
                 </div>
