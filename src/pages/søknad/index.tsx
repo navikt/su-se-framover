@@ -1,6 +1,7 @@
 import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Switch, useHistory } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
@@ -33,11 +34,11 @@ const index = () => {
             </div>
             <div className={styles.contentContainer}>
                 <Switch>
-                    <Route exact={true} path={routes.soknadsutfylling.path}>
+                    <CompatRoute exact={true} path={routes.soknadsutfylling.path}>
                         <StartUtfylling />
-                    </Route>
+                    </CompatRoute>
                     <Switch>
-                        <Route exact={true} path={routes.soknad.path}>
+                        <CompatRoute exact={true} path={routes.soknad.path}>
                             <SøknadInfoWrapper>
                                 <Infoside
                                     nesteUrl={routes.soknadPersonSøk.createURL({
@@ -45,8 +46,8 @@ const index = () => {
                                     })}
                                 />
                             </SøknadInfoWrapper>
-                        </Route>
-                        <Route exact={true} path={routes.soknadPersonSøk.path}>
+                        </CompatRoute>
+                        <CompatRoute exact={true} path={routes.soknadPersonSøk.path}>
                             <SøknadInfoWrapper>
                                 <Inngang
                                     nesteUrl={routes.soknadsutfylling.createURL({
@@ -55,12 +56,12 @@ const index = () => {
                                     })}
                                 />
                             </SøknadInfoWrapper>
-                        </Route>
-                        <Route exact={true} path={routes.søkandskvittering.path}>
+                        </CompatRoute>
+                        <CompatRoute exact={true} path={routes.søkandskvittering.path}>
                             <SøknadInfoWrapper>
                                 <Kvittering />
                             </SøknadInfoWrapper>
-                        </Route>
+                        </CompatRoute>
                     </Switch>
                 </Switch>
             </div>
