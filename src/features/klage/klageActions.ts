@@ -29,15 +29,7 @@ export const opprettKlage = createAsyncThunk<
 export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectValue: ApiError }>(
     'klage/vurderFormkrav',
     async (
-        {
-            sakId,
-            klageId,
-            vedtakId,
-            innenforFristen,
-            klagesDetPåKonkreteElementerIVedtaket,
-            erUnderskrevet,
-            begrunnelse,
-        },
+        { sakId, klageId, vedtakId, innenforFristen, klagesDetPåKonkreteElementerIVedtaket, erUnderskrevet },
         thunkApi
     ) => {
         const res = await klageApi.vilkårsvurder({
@@ -47,7 +39,6 @@ export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectV
             innenforFristen,
             klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet,
-            begrunnelse,
         });
         if (res.status === 'ok') {
             return res.data;

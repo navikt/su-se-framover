@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Select, Loader, Textarea, RadioGroup, Radio, Alert } from '@navikt/ds-react';
+import { Button, Select, Loader, RadioGroup, Radio, Alert } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as B from 'fp-ts/lib/boolean';
 import * as S from 'fp-ts/string';
@@ -42,7 +42,6 @@ const eqFormData = struct<FormData>({
     innenforFristen: eqNullable(S.Eq),
     klagesDetPåKonkreteElementerIVedtaket: eqNullable(B.Eq),
     erUnderskrevet: eqNullable(S.Eq),
-    begrunnelse: eqNullable(S.Eq),
 });
 
 interface Props {
@@ -56,7 +55,6 @@ interface FormData {
     innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
     erUnderskrevet: Nullable<KlageErUnderskrevet>;
-    begrunnelse: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
@@ -72,7 +70,6 @@ const schema = yup.object<FormData>({
         .defined()
         .required()
         .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
-    begrunnelse: yup.string().defined().required(),
 });
 
 const VurderFormkrav = (props: Props) => {
@@ -86,7 +83,6 @@ const VurderFormkrav = (props: Props) => {
         innenforFristen: props.klage.innenforFristen,
         klagesDetPåKonkreteElementerIVedtaket: props.klage.klagesDetPåKonkreteElementerIVedtaket,
         erUnderskrevet: props.klage.erUnderskrevet,
-        begrunnelse: props.klage.begrunnelse,
     };
 
     const {
@@ -117,7 +113,6 @@ const VurderFormkrav = (props: Props) => {
                 innenforFristen: values.innenforFristen,
                 klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
                 erUnderskrevet: values.erUnderskrevet,
-                begrunnelse: values.begrunnelse,
             },
             () => {
                 history.push(
@@ -157,7 +152,6 @@ const VurderFormkrav = (props: Props) => {
                 innenforFristen: values.innenforFristen,
                 klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
                 erUnderskrevet: values.erUnderskrevet,
-                begrunnelse: values.begrunnelse,
             },
             () => {
                 bekreft(
@@ -259,20 +253,6 @@ const VurderFormkrav = (props: Props) => {
                                 >
                                     {fyllInRadioGruppe()}
                                 </RadioGroup>
-                            )}
-                        />
-
-                        <Controller
-                            control={control}
-                            name="begrunnelse"
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    {...field}
-                                    value={field.value ?? ''}
-                                    error={fieldState.error?.message}
-                                    label={formatMessage('formkrav.begrunnelse.label')}
-                                    description={formatMessage('formkrav.begrunnelse.description')}
-                                />
                             )}
                         />
 
