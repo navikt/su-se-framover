@@ -32,7 +32,7 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { Vurderingknapper } from '~src/pages/saksbehandling/søknadsbehandling/Vurdering';
 import { useAppDispatch } from '~src/redux/Store';
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
-import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
+import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/behandlingUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -138,7 +138,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
                 beløp: parseInt(f.beløp!, 10),
                 kategori: f.kategori!,
-                spesifisertKategori: f.spesifisertkategori,
+                spesifisertKategori: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
                 utenlandskInntekt: f.fraUtland
                     ? {
                           beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
