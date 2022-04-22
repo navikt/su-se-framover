@@ -172,7 +172,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const [epsStatus, fetchEps] = useApiCall(fetchPerson);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
-    const epsFnr = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)?.fnr;
+    const epsFnr = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr;
 
     useEffect(() => {
         if (epsFnr) {

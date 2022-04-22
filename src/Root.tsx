@@ -3,8 +3,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading, Link, Loader } from '@navikt/ds-react';
 import React, { useEffect, Suspense } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Switch, useLocation } from 'react-router-dom';
-import { CompatRouter, CompatRoute } from 'react-router-dom-v5-compat';
+import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { LOGIN_URL } from '~src/api/authUrl';
@@ -28,9 +27,6 @@ const Attestering = React.lazy(() => import('~/src/pages/saksbehandling/attester
 const Drift = React.lazy(() => import('~/src/pages/drift'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));
-const Behandlingsoversikt = React.lazy(
-    () => import('~/src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt')
-);
 const Soknad = React.lazy(() => import('~/src/pages/søknad'));
 
 const ScrollToTop = () => {
@@ -43,44 +39,43 @@ const ScrollToTop = () => {
     return null;
 };
 
-const Root = () => (
-    <Provider store={Store}>
-        <ErrorBoundary>
-            <FeatureToggleProvider>
-                <BrowserRouter>
-                    <CompatRouter>
-                        <ContentWrapper>
-                            <Suspense fallback={<Loader />}>
-                                <ScrollToTop />
-                                <Switch>
-                                    <CompatRoute exact path={routes.home.path}>
-                                        <WithDocTitle title="Hjem" Page={HomePage} />
-                                    </CompatRoute>
-                                    <Route path={routes.soknad.path}>
-                                        <WithDocTitle title="Søknad" Page={Soknad} />
-                                    </Route>
-                                    <Route path={routes.saksoversiktValgtSak.path}>
-                                        <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />
-                                    </Route>
-                                    <Route path={routes.saksoversiktIndex.path}>
-                                        <WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />
-                                    </Route>
-                                    <Route path={routes.attestering.path}>
-                                        <WithDocTitle title="Attestering" Page={Attestering} />
-                                    </Route>
-                                    <CompatRoute path={routes.drift.path}>
-                                        <WithDocTitle title="Drift" Page={Drift} />
-                                    </CompatRoute>
-                                    <CompatRouter>404</CompatRouter>
-                                </Switch>
-                            </Suspense>
-                        </ContentWrapper>
-                    </CompatRouter>
-                </BrowserRouter>
-            </FeatureToggleProvider>
-        </ErrorBoundary>
-    </Provider>
-);
+const Root = () => {
+    return (
+        <Provider store={Store}>
+            <ErrorBoundary>
+                <FeatureToggleProvider>
+                    <Router>
+                        <Route>
+                            <ContentWrapper>
+                                <Suspense fallback={<Loader />}>
+                                    <ScrollToTop />
+                                    <Switch>
+                                        <Route exact path={routes.home.path}>
+                                            <WithDocTitle title="Hjem" Page={HomePage} />
+                                        </Route>
+                                        <Route path={routes.soknad.path}>
+                                            <WithDocTitle title="Søknad" Page={Soknad} />
+                                        </Route>
+                                        <Route path={routes.saksoversiktIndex.path}>
+                                            <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />
+                                        </Route>
+                                        <Route path={routes.attestering.path}>
+                                            <WithDocTitle title="Attestering" Page={Attestering} />
+                                        </Route>
+                                        <Route path={routes.drift.path}>
+                                            <WithDocTitle title="Drift" Page={Drift} />
+                                        </Route>
+                                        <Route>404</Route>
+                                    </Switch>
+                                </Suspense>
+                            </ContentWrapper>
+                        </Route>
+                    </Router>
+                </FeatureToggleProvider>
+            </ErrorBoundary>
+        </Provider>
+    );
+};
 
 const ContentWrapper: React.FC = (props) => {
     const loggedInUser = useAppSelector((s) => s.me.me);

@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
@@ -19,6 +19,7 @@ import { Sak } from '~src/types/Sak';
 
 import messages from './stans-nb';
 import * as styles from './stans.module.less';
+import StansOppsummering from './stansOppsummering';
 
 interface Props {
     sak: Sak;
@@ -101,81 +102,95 @@ const Stans = (props: Props) => {
     };
 
     return (
-        <form className={styles.pageContainer} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
-            <Heading level="1" size="large" className={styles.tittel}>
-                {formatMessage('stans.tittel')}
-            </Heading>
-            <div className={styles.content}>
-                <Controller
-                    control={form.control}
-                    name="årsak"
-                    render={({ field, fieldState }) => (
-                        <Select
-                            error={fieldState.error?.message}
-                            value={field.value ?? undefined}
-                            onChange={field.onChange}
-                            label={formatMessage('stans.årsak.tittel')}
-                        >
-                            <option>{formatMessage('stans.årsak.label')}</option>
-                            <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
-                                {formatMessage(OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING)}
-                            </option>
-                        </Select>
-                    )}
-                />
-                <Controller
-                    control={form.control}
-                    name="stansDato"
-                    render={({ field, fieldState }) => (
-                        <DatePicker
-                            label={formatMessage('stans.dato.label')}
-                            dateFormat="MM/yyyy"
-                            showMonthYearPicker
-                            isClearable
-                            autoComplete="off"
-                            value={field.value}
-                            onChange={(date: Date | null) => field.onChange(date)}
-                            feil={getDateErrorMessage(fieldState.error)}
+        <Switch>
+            <Route path={Routes.stansOppsummeringRoute.path}>
+                <Heading level="1" size="large" className={styles.tittel}>
+                    {formatMessage('stans.tittel')}
+                </Heading>
+                <StansOppsummering sak={props.sak} />
+            </Route>
+            <Route path="*">
+                <form className={styles.pageContainer} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
+                    <Heading level="1" size="large" className={styles.tittel}>
+                        {formatMessage('stans.tittel')}
+                    </Heading>
+                    <div className={styles.content}>
+                        <Controller
+                            control={form.control}
+                            name="årsak"
+                            render={({ field, fieldState }) => (
+                                <Select
+                                    error={fieldState.error?.message}
+                                    value={field.value ?? undefined}
+                                    onChange={field.onChange}
+                                    label={formatMessage('stans.årsak.tittel')}
+                                >
+                                    <option>{formatMessage('stans.årsak.label')}</option>
+                                    <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
+                                        {formatMessage(OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING)}
+                                    </option>
+                                </Select>
+                            )}
                         />
-                    )}
-                />
-                <Controller
-                    control={form.control}
-                    name="begrunnelse"
-                    render={({ field, fieldState }) => (
-                        <Textarea
-                            label="Begrunnelse"
+                        <Controller
+                            control={form.control}
+                            name="stansDato"
+                            render={({ field, fieldState }) => (
+                                <DatePicker
+                                    label={formatMessage('stans.dato.label')}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                    isClearable
+                                    autoComplete="off"
+                                    value={field.value}
+                                    onChange={(date: Date | null) => field.onChange(date)}
+                                    feil={getDateErrorMessage(fieldState.error)}
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
                             name="begrunnelse"
-                            value={field.value}
-                            onChange={field.onChange}
-                            error={fieldState.error?.message}
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    label="Begrunnelse"
+                                    name="begrunnelse"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    error={fieldState.error?.message}
+                                />
+                            )}
                         />
-                    )}
-                />
-                {RemoteData.isFailure(status) && (
-                    <div className={styles.error}>
-                        <ApiErrorAlert error={status.error} />
+                        {RemoteData.isFailure(status) && (
+                            <div className={styles.error}>
+                                <ApiErrorAlert error={status.error} />
+                            </div>
+                        )}
+                        <div className={styles.bunnknapper}>
+                            <Button
+                                variant="secondary"
+                                onClick={() => {
+                                    if (urlParams.revurderingId) {
+                                        return history.push(
+                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })
+                                        );
+                                    }
+                                    history.goBack();
+                                }}
+                            >
+                                {formatMessage('stans.bunnknapper.tilbake')}
+                            </Button>
+                            <Button variant="secondary">
+                                {formatMessage('stans.bunnknapper.neste')}
+                                {(RemoteData.isPending(opprettStatus) || RemoteData.isPending(oppdaterStatus)) && (
+                                    <Loader />
+                                )}
+                            </Button>
+                        </div>
                     </div>
-                )}
-                <div className={styles.bunnknapper}>
-                    <Button
-                        variant="secondary"
-                        onClick={() => {
-                            if (urlParams.revurderingId) {
-                                return history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
-                            }
-                            history.goBack();
-                        }}
-                    >
-                        {formatMessage('stans.bunnknapper.tilbake')}
-                    </Button>
-                    <Button variant="secondary">
-                        {formatMessage('stans.bunnknapper.neste')}
-                        {(RemoteData.isPending(opprettStatus) || RemoteData.isPending(oppdaterStatus)) && <Loader />}
-                    </Button>
-                </div>
-            </div>
-        </form>
+                </form>
+            </Route>
+        </Switch>
     );
 };
 

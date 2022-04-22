@@ -4,8 +4,7 @@ import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
 import React from 'react';
-import { Switch } from 'react-router-dom';
-import { CompatRoute } from 'react-router-dom-v5-compat';
+import { Route, Switch } from 'react-router-dom';
 
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -124,7 +123,7 @@ const RevurderingPage = (props: {
     return (
         <div className={styles.pageContainer}>
             <Switch>
-                <CompatRoute
+                <Route
                     path={Routes.revurderValgtSak.createURL({
                         sakId: props.sakId,
                     })}
@@ -134,7 +133,7 @@ const RevurderingPage = (props: {
                         utbetalinger={props.utbetalinger}
                         informasjonsRevurdering={undefined}
                     />
-                </CompatRoute>
+                </Route>
                 {!påbegyntRevurdering ? (
                     <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>
                 ) : (
@@ -142,20 +141,20 @@ const RevurderingPage = (props: {
                         <Heading level="1" size="large" className={styles.tittel}>
                             {formatMessage('revurdering.tittel')}
                         </Heading>
-                        <CompatRoute path={createRevurderingsPath(RevurderingSteg.Periode)}>
+                        <Route path={createRevurderingsPath(RevurderingSteg.Periode)}>
                             <RevurderingIntroPage
                                 sakId={props.sakId}
                                 utbetalinger={props.utbetalinger}
                                 informasjonsRevurdering={påbegyntRevurdering}
                             />
-                        </CompatRoute>
+                        </Route>
                         <div className={styles.sideMedFramdriftsindikatorContainer}>
-                            {alleSteg.map((s) => s.id).includes(urlParams.steg) && (
+                            <Route path={alleSteg.map((s) => s.url)}>
                                 <Framdriftsindikator
                                     aktivId={urlParams.steg}
                                     elementer={aktiveSteg(påbegyntRevurdering)}
                                 />
-                            )}
+                            </Route>
                             {aktiveSteg(påbegyntRevurdering).map((el, idx) => {
                                 const forrigeUrl = aktiveSteg(påbegyntRevurdering)[idx - 1]?.url;
                                 const forrige = forrigeUrl
@@ -165,7 +164,7 @@ const RevurderingPage = (props: {
                                     aktiveSteg(revurdering)[idx + 1]?.url ??
                                     createRevurderingsPath(RevurderingSteg.Oppsummering);
                                 return (
-                                    <CompatRoute path={el.url} key={el.id}>
+                                    <Route path={el.url} key={el.id}>
                                         <RevurderingstegPage
                                             steg={el.id}
                                             sakId={props.sakId}
@@ -175,11 +174,11 @@ const RevurderingPage = (props: {
                                             nesteUrl={nesteUrl}
                                             avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                                         />
-                                    </CompatRoute>
+                                    </Route>
                                 );
                             })}
                         </div>
-                        <CompatRoute path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
+                        <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
                             <RevurderingOppsummeringPage
                                 sakId={props.sakId}
                                 revurdering={påbegyntRevurdering}
@@ -193,7 +192,7 @@ const RevurderingPage = (props: {
                                 }
                                 grunnlagsdataOgVilkårsvurderinger={grunnlag}
                             />
-                        </CompatRoute>
+                        </Route>
                     </>
                 )}
             </Switch>
