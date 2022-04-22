@@ -43,7 +43,6 @@ const EktefellePartnerSamboer = (props: Props) => {
                     });
                 }}
                 feil={props.feil?.fnr}
-                autoComplete="off"
                 getHentetPerson={(person) => {
                     props.onChange({
                         ...epsFormData,

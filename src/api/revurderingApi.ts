@@ -312,12 +312,7 @@ export async function lagreBosituasjonsgrunnlag(
     return apiClient({
         url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/bosituasjongrunnlag`,
         method: 'POST',
-        body: {
-            epsFnr: data.epsFnr,
-            erEPSUførFlyktning: data.erEPSUførFlyktning,
-            delerBolig: data.delerBolig,
-            begrunnelse: data.begrunnelse,
-        },
+        body: data,
     });
 }
 

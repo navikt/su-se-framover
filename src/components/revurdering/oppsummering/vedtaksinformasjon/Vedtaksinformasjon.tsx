@@ -18,7 +18,6 @@ import {
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 import { regnUtFormuegrunnlag } from '~src/utils/revurdering/formue/RevurderFormueUtils';
-import { sjekkBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
@@ -66,20 +65,11 @@ const Vilkårvisning = (props: { grunnlagsblokker: Grunnlagsblokk[] }) => (
 const Bosituasjonblokk = (props: { nyeData: Bosituasjon[]; gamleData: Bosituasjon[] }) => {
     const i18n = useI18n({ messages });
 
-    const nyeBosituasjongrunnlag = sjekkBosituasjongrunnlag(props.nyeData);
-    if (!nyeBosituasjongrunnlag) return null;
-
-    const gamleBosituasjongrunnlag = sjekkBosituasjongrunnlag(props.gamleData);
-
     return (
         <Rad radTittel={i18n.formatMessage('radTittel.bosituasjon')}>
             {{
-                venstre: (
-                    <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(nyeBosituasjongrunnlag, i18n)} />
-                ),
-                høyre: gamleBosituasjongrunnlag ? (
-                    <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(gamleBosituasjongrunnlag, i18n)} />
-                ) : null,
+                venstre: <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(props.nyeData, i18n)} />,
+                høyre: <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(props.gamleData, i18n)} />,
             }}
         </Rad>
     );

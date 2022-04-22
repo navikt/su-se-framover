@@ -212,10 +212,16 @@ export enum Vurderingstatus {
 export interface BosituasjonRequest {
     sakId: string;
     revurderingId: string;
-    epsFnr: Nullable<string>;
-    erEPSUførFlyktning: Nullable<boolean>;
-    delerBolig: Nullable<boolean>;
-    begrunnelse: Nullable<string>;
+    bosituasjoner: Array<{
+        periode: {
+            fraOgMed: string;
+            tilOgMed: string;
+        };
+        epsFnr: Nullable<string>;
+        delerBolig: Nullable<boolean>;
+        erEPSUførFlyktning: Nullable<boolean>;
+        begrunnelse: Nullable<string>;
+    }>;
 }
 
 export interface UtenlandsoppholdRequest {

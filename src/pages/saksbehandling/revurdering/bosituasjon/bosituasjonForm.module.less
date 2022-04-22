@@ -6,16 +6,44 @@
     gap: @spacing;
 }
 
+.nyPeriodeKnappContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.periodeliste {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+}
+
 .epsFormContainer {
     display: flex;
     flex-direction: column;
     gap: @spacing;
 }
 
-.grunnlagsliste {
-    > * {
-        margin-bottom: @spacing-xxs;
-    }
+.formItemContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+    padding: @spacing-s;
+}
+
+.periodeContainer {
+    display: flex;
+    gap: @spacing;
+}
+
+.slettknapp {
+    margin-left: auto;
+    height: min-content;
+}
+
+.formItemInputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
 }
 
 .informasjonsbitContainer {
@@ -23,4 +51,10 @@
     grid-template-columns: 1fr 1fr;
     gap: @spacing-xl;
     margin-bottom: @spacing-xxs;
+}
+
+.grunnlagsliste {
+    > * {
+        margin-bottom: @spacing-xxs;
+    }
 }

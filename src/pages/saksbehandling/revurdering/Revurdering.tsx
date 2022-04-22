@@ -31,7 +31,7 @@ import * as styles from './revurdering.module.less';
 
 const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
 const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
-const BosituasjonFormPage = React.lazy(() => import('./bosituasjon/BosituasjonFormPage'));
+const BosituasjonPage = React.lazy(() => import('./bosituasjon/bosituasjonPage'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
 const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
@@ -234,12 +234,12 @@ const RevurderingstegPage = (props: {
                         );
                     case RevurderingSteg.Bosituasjon:
                         return (
-                            <BosituasjonFormPage
+                            <BosituasjonPage
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
-                                forrige={props.forrige}
                                 nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                forrige={props.forrige}
                                 avsluttUrl={props.avsluttUrl}
                             />
                         );

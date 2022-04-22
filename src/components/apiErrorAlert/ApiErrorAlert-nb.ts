@@ -11,6 +11,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
         'Bosituasjon og inntekt må revurderes siden det finnes flere bosituasjonsperioder',
     [ApiErrorCode.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'Informasjon i bosituasjon samsvarer ikke med formue',
+    [ApiErrorCode.BOSITUASJON_MANGLER_FOR_PERIODER]: 'Bosituasjon mangler for hele eller deler av behandlingsperioden',
+    [ApiErrorCode.BOSITUASJONSPERIODER_OVERLAPPER]: 'Periodene i bosituasjonene overlapper',
     [ApiErrorCode.DELVIS_OPPHØR]: 'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     [ApiErrorCode.DEPOSITUM_IKKE_MINDRE_ENN_INNSKUDD]: 'Depositum kan ikke være høyere enn innskudd',
     [ApiErrorCode.EPS_ALDER_ER_NULL]: 'Alder til EPS er Null',
@@ -84,6 +86,11 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Revurderingen er ikke i riktig tilstand for å beslutte forhåndsvarslingen',
     [ApiErrorCode.IKKE_TILGANG_TIL_JOURNALPOST]: 'Har ikke tilgang til journalpost',
     [ApiErrorCode.IKKE_TILGANG_TIL_PERSON]: 'Du har ikke tilgang til å se informasjon om denne brukeren',
+    [ApiErrorCode.INGEN_BOSITUASJON_FOR_FRADRAGSPERIODER]:
+        'Bosituasjon eksisterer ikke for en eller flere av perioder for fradrag',
+    [ApiErrorCode.INGEN_FORMUE_FOR_BOSITUASJONSPERIODE]:
+        'Formue mangler for en eller flere perioder hvor det eksisterer bosituasjon.',
+    [ApiErrorCode.INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE]: 'Formue for EPS mangler for en eller flere perioder',
     [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
         'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
@@ -183,11 +190,16 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'Uføregrad og/eller forventet inntekt mangler',
     [ApiErrorCode.UGYLDIG_BEREGNINGSGRUNNLAG]: 'Ugyldig beregningsgrunnlag',
     [ApiErrorCode.UGYLDIG_BODY]: 'Ugyldig data som ble innsendt',
+    [ApiErrorCode.UGYLDIG_BOSITUASJON]: 'Bosituasjon er ugyldig.',
     [ApiErrorCode.UGYLDIG_DATO]: 'Ugyldig dato',
     [ApiErrorCode.UGYLDIG_FØDSELSNUMMER]: 'Ugyldig fødselsnummer',
     [ApiErrorCode.UGYLDIG_GRUNN_FOR_UNDERKJENNING]: 'Ugyldig underkjennelses grunn',
     [ApiErrorCode.UGYLDIG_INPUT]: 'Ugyldig input',
     [ApiErrorCode.UGYLDIG_JOURNALPOSTID]: 'Ugyldig journalpostID',
+    [ApiErrorCode.UGYLDIG_KOMBINASJON_BOSITUASJON_FORMUE]:
+        'Kombinasjonen av bosituasjon og formue er ugyldig for hele eller deler av perioden',
+    [ApiErrorCode.UGYLDIG_KOMBINASJON_BOSITUASJON_FRADRAG]:
+        'Kombinasjonen av bosituasjon og fradrag er ugyldig for hele eller deler av perioden',
     [ApiErrorCode.UGYLDIG_MOTTATT_DATO]: 'Ugyldig mottatt dato',
     [ApiErrorCode.UGYLDIG_OMGJØRINGSUTFALL]: 'Ugyldig omgjøringsutfall',
     [ApiErrorCode.UGYLDIG_OMGJØRINGSÅRSAK]: 'Ugyldig omgjøringsårsak',
