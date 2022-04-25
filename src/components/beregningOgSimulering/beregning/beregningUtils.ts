@@ -15,9 +15,9 @@ export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
     ].some((status) => status === behandling.status);
 
 export const fradragTilFradragFormData = (fradrag: Fradrag): FradragFormData => ({
-    kategori: fradrag.fradragskategoriWrapper.kategori || null,
+    kategori: fradrag.type || null,
     beløp: fradrag.beløp.toString() || null,
-    spesifisertkategori: fradrag.fradragskategoriWrapper.spesifisertKategori,
+    spesifisertkategori: fradrag.beskrivelse,
     fraUtland: fradrag.utenlandskInntekt !== null,
     utenlandskInntekt: {
         beløpIUtenlandskValuta: fradrag.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',

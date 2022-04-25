@@ -20,12 +20,7 @@ import { formatCurrency } from '~src/utils/format/formatUtils';
 import * as styles from './visBeregning.module.less';
 
 const getFradragsnøkkel = (f: Fradrag) =>
-    [
-        f.fradragskategoriWrapper.kategori,
-        f.utenlandskInntekt?.kurs ?? '',
-        f.utenlandskInntekt?.valuta ?? '',
-        f.tilhører,
-    ].join('-');
+    [f.type, f.utenlandskInntekt?.kurs ?? '', f.utenlandskInntekt?.valuta ?? '', f.tilhører].join('-');
 
 const getBenyttedeFradrag = (månedsberegning: Månedsberegning): Fradrag[] =>
     pipe(
@@ -34,10 +29,8 @@ const getBenyttedeFradrag = (månedsberegning: Månedsberegning): Fradrag[] =>
         (grupperteFradrag) =>
             Object.values(grupperteFradrag).map<Fradrag>((fradrag) => ({
                 beløp: fradrag.reduce((acc, f) => acc + f.beløp, 0),
-                fradragskategoriWrapper: {
-                    kategori: fradrag[0].fradragskategoriWrapper.kategori,
-                    spesifisertKategori: fradrag[0].fradragskategoriWrapper.spesifisertKategori,
-                },
+                type: fradrag[0].type,
+                beskrivelse: fradrag[0].beskrivelse,
                 tilhører: fradrag[0].tilhører,
                 utenlandskInntekt: fradrag[0].utenlandskInntekt,
                 periode: fradrag[0].periode,
@@ -78,25 +71,25 @@ const VisBenyttetEpsFradrag = ({
     epsInputFradrag: Fradrag[];
     epsFribeløp: number;
 }) => {
-    const { formatMessage, formatNumber } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    const { formatMessage, intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
     return (
         // Hvis denne finns så eksisterer det fradrag for EPS i aktuell måned
         <DetaljertFradrag
             tittel={{
-                label: formatMessage(fradrag.fradragskategoriWrapper.kategori),
+                label: formatMessage(fradrag.type),
                 verdi: formatCurrency(-fradrag.beløp),
             }}
             detaljer={[
                 ...epsInputFradrag.flatMap((f) => {
                     if (!f.utenlandskInntekt) {
                         return {
-                            label: formatMessage(f.fradragskategoriWrapper.kategori),
+                            label: formatMessage(f.type),
                             verdi: formatCurrency(-f.beløp),
                         };
                     }
                     return [
                         {
-                            label: formatMessage(f.fradragskategoriWrapper.kategori),
+                            label: formatMessage(f.type),
                             verdi: formatCurrency(-f.beløp),
                         },
                         {
@@ -108,7 +101,7 @@ const VisBenyttetEpsFradrag = ({
                         },
                         {
                             label: formatMessage('fradrag.utenlandsk.kurs'),
-                            verdi: formatNumber(f.utenlandskInntekt.kurs),
+                            verdi: intl.formatNumber(f.utenlandskInntekt.kurs),
                             epsUtland: true,
                         },
                     ];
@@ -123,7 +116,7 @@ const VisBenyttetEpsFradrag = ({
 };
 
 const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; beregning: Beregning }) => {
-    const { formatMessage, formatNumber } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    const { formatMessage, intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
 
     return (
         <div className={styles.beregningdetaljer}>
@@ -194,13 +187,12 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                     ),
                                     pipe(
                                         S.Ord,
-                                        Ord.contramap((f: Fradrag) => f.fradragskategoriWrapper.kategori)
+                                        Ord.contramap((f: Fradrag) => f.type)
                                     ),
                                 ]),
                                 arr.map((fradrag) => (
                                     <li key={getFradragsnøkkel(fradrag) + index} className={styles.linje}>
-                                        {fradrag.fradragskategoriWrapper.kategori ===
-                                        IkkeVelgbareFradragskategorier.BeregnetFradragEPS ? (
+                                        {fradrag.type === IkkeVelgbareFradragskategorier.BeregnetFradragEPS ? (
                                             <VisBenyttetEpsFradrag
                                                 fradrag={fradrag}
                                                 epsInputFradrag={månedsberegninger[0].epsInputFradrag}
@@ -209,7 +201,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                         ) : fradrag.utenlandskInntekt !== null ? (
                                             <DetaljertFradrag
                                                 tittel={{
-                                                    label: formatMessage(fradrag.fradragskategoriWrapper.kategori),
+                                                    label: formatMessage(fradrag.type),
                                                     verdi: formatCurrency(-fradrag.beløp),
                                                 }}
                                                 detaljer={[
@@ -224,13 +216,13 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                                     },
                                                     {
                                                         label: formatMessage('fradrag.utenlandsk.kurs'),
-                                                        verdi: formatNumber(fradrag.utenlandskInntekt.kurs),
+                                                        verdi: intl.formatNumber(fradrag.utenlandskInntekt.kurs),
                                                     },
                                                 ]}
                                             />
                                         ) : (
                                             <>
-                                                <span>{formatMessage(fradrag.fradragskategoriWrapper.kategori)}</span>
+                                                <span>{formatMessage(fradrag.type)}</span>
                                                 <span>{formatCurrency(-fradrag.beløp)}</span>
                                             </>
                                         )}
@@ -241,9 +233,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                 return (
                                     månedsberegninger[0].epsInputFradrag.length === 0 ||
                                     benyttedeFradrag.some(
-                                        (fradrag) =>
-                                            fradrag.fradragskategoriWrapper.kategori ===
-                                            IkkeVelgbareFradragskategorier.BeregnetFradragEPS
+                                        (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.BeregnetFradragEPS
                                     ) // Beregnet fradrag er når det er over fribeløp
                                 );
                             }) ? null : (
@@ -260,13 +250,13 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                             ...månedsberegninger[0].epsInputFradrag.flatMap((f) => {
                                                 if (!f.utenlandskInntekt) {
                                                     return {
-                                                        label: formatMessage(f.fradragskategoriWrapper.kategori),
+                                                        label: formatMessage(f.type),
                                                         verdi: formatCurrency(-f.beløp),
                                                     };
                                                 }
                                                 return [
                                                     {
-                                                        label: formatMessage(f.fradragskategoriWrapper.kategori),
+                                                        label: formatMessage(f.type),
                                                         verdi: formatCurrency(-f.beløp),
                                                     },
                                                     {
@@ -281,7 +271,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                                     },
                                                     {
                                                         label: formatMessage('fradrag.utenlandsk.kurs'),
-                                                        verdi: formatNumber(f.utenlandskInntekt.kurs),
+                                                        verdi: intl.formatNumber(f.utenlandskInntekt.kurs),
                                                         epsUtland: true,
                                                     },
                                                 ];

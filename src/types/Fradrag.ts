@@ -8,8 +8,8 @@ import { Periode } from './Periode';
 
 export interface LagreFradragsgrunnlangInnsending {
     periode: Nullable<Periode<string>>;
-    kategori: Fradragskategori;
-    spesifisertKategori: Nullable<string>;
+    type: Fradragskategori;
+    beskrivelse: Nullable<string>;
     beløp: number;
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
     tilhører: FradragTilhører;
@@ -17,15 +17,11 @@ export interface LagreFradragsgrunnlangInnsending {
 
 export interface Fradrag {
     periode: Nullable<Periode<string>>;
-    fradragskategoriWrapper: FradragskategoriWrapper;
+    type: Fradragskategori;
+    beskrivelse: Nullable<string>;
     beløp: number;
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
     tilhører: FradragTilhører;
-}
-
-interface FradragskategoriWrapper {
-    kategori: Fradragskategori;
-    spesifisertKategori: Nullable<string>;
 }
 
 const eqUtenlandskInntekt = struct<UtenlandskInntekt>({
@@ -34,13 +30,9 @@ const eqUtenlandskInntekt = struct<UtenlandskInntekt>({
     valuta: S.Eq,
 });
 
-const eqFradragskategoriWrapper = struct<FradragskategoriWrapper>({
-    kategori: S.Eq,
-    spesifisertKategori: eqNullable(S.Eq),
-});
-
 export const eqFradragBortsettFraPeriode = struct<Omit<Fradrag, 'periode'>>({
-    fradragskategoriWrapper: eqFradragskategoriWrapper,
+    type: S.Eq,
+    beskrivelse: eqNullable(S.Eq),
     beløp: N.Eq,
     utenlandskInntekt: eqNullable(eqUtenlandskInntekt),
     tilhører: S.Eq,

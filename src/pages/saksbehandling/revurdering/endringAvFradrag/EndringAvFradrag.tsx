@@ -26,7 +26,7 @@ import { useAppDispatch } from '~src/redux/Store';
 import { Fradrag, FradragTilhører, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
+import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -90,10 +90,8 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     /* valideringa sjekker at f.beløp og f.type ikke er null */
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: Number.parseInt(f.beløp!, 10),
-                    fradragskategoriWrapper: {
-                        kategori: f.kategori!,
-                        spesifisertKategori: f.spesifisertkategori,
-                    },
+                    type: f.kategori!,
+                    beskrivelse: f.spesifisertkategori,
                     utenlandskInntekt: f.fraUtland
                         ? {
                               beløpIUtenlandskValuta: Number.parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
@@ -122,7 +120,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     });
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
-            fradrag: fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold(
+            fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
                 props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag
             ).map(fradragTilFradragFormData),
         },
@@ -146,9 +144,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     >
                         <div>
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
-                                (fradrag) =>
-                                    fradrag.fradragskategoriWrapper.kategori ===
-                                    IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold
+                                (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold
                             ) && (
                                 <Alert variant={'info'}>{intl.formatMessage({ id: 'alert.advarsel.avkorting' })}</Alert>
                             )}

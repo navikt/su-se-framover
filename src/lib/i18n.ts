@@ -23,7 +23,6 @@ export interface UseI18N<T extends Record<string, string> | void> {
         values?: Record<string, PrimitiveType | FormatXMLElementFn<string, X>>
     ): X;
     formatDate(date: string | Date, dateFormat?: DateFormats): string;
-    formatNumber(num: number): string;
 }
 
 export type MessageFormatter<T extends Record<string, string>> = UseI18N<T>['formatMessage'];
@@ -48,12 +47,5 @@ export const useI18n = <T extends Record<string, string>>(args: { messages: T })
         [intl]
     );
 
-    const formatNumber = React.useCallback(
-        (num: number) => {
-            return intl.formatNumber(num);
-        },
-        [intl]
-    );
-
-    return { intl, formatMessage, formatDate, formatNumber };
+    return { intl, formatMessage, formatDate };
 };

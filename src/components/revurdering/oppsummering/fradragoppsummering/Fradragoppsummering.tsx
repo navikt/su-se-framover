@@ -18,7 +18,7 @@ import messages from './fradragoppsummering-nb';
 import * as styles from './fradragoppsummering.module.less';
 
 const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
-    const { formatMessage, formatNumber } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    const { formatMessage, intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
     return (
         <ul className={styles.periodeliste}>
             {pipe(
@@ -44,7 +44,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                             {fradragsgruppe.map((fradrag, idx) => (
                                 <li key={idx} className={styles.linje}>
                                     <span>
-                                        {`${formatMessage(fradrag.fradragskategoriWrapper.kategori)}${
+                                        {`${formatMessage(fradrag.type)}${
                                             fradrag.tilhører === FradragTilhører.EPS
                                                 ? ' ' + formatMessage('fradrag.suffix.eps')
                                                 : ''
@@ -65,7 +65,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                                 {formatMessage('fradrag.utenlandsk.kurs')}
                                             </BodyShort>
                                             <BodyShort size="small">
-                                                {formatNumber(fradrag.utenlandskInntekt.kurs)}
+                                                {intl.formatNumber(fradrag.utenlandskInntekt.kurs)}
                                             </BodyShort>
                                         </>
                                     )}

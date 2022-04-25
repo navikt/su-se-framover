@@ -36,7 +36,7 @@ import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/type
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/behandlingUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
+import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
@@ -54,7 +54,7 @@ interface FormData {
 
 function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): FormData {
     return {
-        fradrag: fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold(fradrag).map((f) => ({
+        fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) => ({
             periode: {
                 fraOgMed: DateUtils.toDateOrNull(f.periode?.fraOgMed),
                 tilOgMed: DateUtils.toDateOrNull(f.periode?.tilOgMed),
@@ -66,8 +66,8 @@ function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): F
                 valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
                 kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
             },
-            kategori: f.fradragskategoriWrapper.kategori,
-            spesifisertkategori: f.fradragskategoriWrapper.spesifisertKategori,
+            kategori: f.type,
+            spesifisertkategori: f.beskrivelse,
             tilhørerEPS: f.tilhører === FradragTilhører.EPS,
         })),
         begrunnelse: begrunnelse ?? '',
@@ -137,8 +137,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                           },
 
                 beløp: parseInt(f.beløp!, 10),
-                kategori: f.kategori!,
-                spesifisertKategori: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
+                type: f.kategori!,
+                beskrivelse: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
                 utenlandskInntekt: f.fraUtland
                     ? {
                           beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
@@ -374,7 +374,7 @@ function erFradragUlike(fradrag: Fradrag[] | undefined, formFradrag: FradragForm
     if (!fradrag) return true;
 
     const fradragFraDatabase =
-        fjernFradragSomIkkeErVelgbareEksludertNavYtelserTilLivsopphold(fradrag).map(fradragTilFradragFormData);
+        fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map(fradragTilFradragFormData);
 
     return !getEq(eqFradragFormData).equals(formFradrag, fradragFraDatabase);
 }
