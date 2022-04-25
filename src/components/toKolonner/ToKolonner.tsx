@@ -7,7 +7,7 @@ const ToKolonner = (props: {
     tittel: string | JSX.Element;
     children: {
         left: JSX.Element;
-        right: JSX.Element;
+        right: JSX.Element | null;
     };
 }) => (
     <div className={styles.contentContainer}>

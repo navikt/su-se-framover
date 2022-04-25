@@ -163,13 +163,9 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                         )}
                     </form>
                 ),
-                //Begrunnelse finnes når man har vært gjennom formkravene
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 right: props.klage.begrunnelse ? (
                     <InformasjonTilAttestant formkravBegrunnelse={props.klage.begrunnelse} />
-                ) : (
-                    <></>
-                ),
+                ) : null,
             }}
         </ToKolonner>
     );
