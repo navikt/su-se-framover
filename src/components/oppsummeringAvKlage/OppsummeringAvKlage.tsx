@@ -157,12 +157,14 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
                 />
             </div>
 
-            <OppsummeringPar
-                label={formatMessage('formkrav.begrunnelse.label')}
-                verdi={props.klage.begrunnelse}
-                sorteres={OppsummeringsParSortering.Vertikalt}
-                className={styles.formkravBegrunnelse}
-            />
+            {props.klage.begrunnelse && (
+                <OppsummeringPar
+                    label={formatMessage('formkrav.begrunnelse.label')}
+                    verdi={props.klage.begrunnelse}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    className={styles.formkravBegrunnelse}
+                />
+            )}
         </div>
     );
 };
