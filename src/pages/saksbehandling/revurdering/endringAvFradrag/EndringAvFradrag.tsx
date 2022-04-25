@@ -12,7 +12,8 @@ import {
     FradragFormData,
     FradragInputs,
     fradragSchema,
-} from '~src/components/beregningOgSimulering/beregning/FradragInputs';
+} from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
+import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Fradragoppsummering from '~src/components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -22,12 +23,11 @@ import { useI18n } from '~src/lib/i18n';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { Fradrag, Fradragstype, FradragTilhører } from '~src/types/Fradrag';
+import { Fradrag, FradragTilhører, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
-import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -91,7 +91,8 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     /* valideringa sjekker at f.beløp og f.type ikke er null */
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: Number.parseInt(f.beløp!, 10),
-                    type: f.type!,
+                    type: f.kategori!,
+                    beskrivelse: f.spesifisertkategori,
                     utenlandskInntekt: f.fraUtland
                         ? {
                               beløpIUtenlandskValuta: Number.parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
@@ -120,9 +121,9 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     });
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
-            fradrag: fjernFradragSomIkkeErValgbare(props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag).map(
-                fradragTilFradragFormData
-            ),
+            fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
+                props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag
+            ).map(fradragTilFradragFormData),
         },
         async onSubmit(values) {
             await save(values, () => history.push(props.nesteUrl));
@@ -144,7 +145,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     >
                         <div>
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
-                                (fradrag) => fradrag.type === Fradragstype.AvkortingUtenlandsopphold
+                                (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold
                             ) && (
                                 <Alert variant={'info'}>{intl.formatMessage({ id: 'alert.advarsel.avkorting' })}</Alert>
                             )}
@@ -158,7 +159,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                     feltnavn="fradrag"
                                     fradrag={formik.values.fradrag}
                                     errors={formik.errors.fradrag}
-                                    intl={intl}
                                     onChange={formik.handleChange}
                                     onFradragChange={(index, value) => {
                                         formik.setFieldValue(`fradrag[${index}]`, value);
@@ -180,7 +180,8 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                                 ...formik.values.fradrag,
                                                 {
                                                     beløp: null,
-                                                    type: null,
+                                                    kategori: null,
+                                                    spesifisertkategori: null,
                                                     fraUtland: false,
                                                     utenlandskInntekt: {
                                                         beløpIUtenlandskValuta: '',

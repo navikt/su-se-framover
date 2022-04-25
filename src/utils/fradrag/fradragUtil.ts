@@ -1,14 +1,10 @@
-import { Fradrag, Fradragstype } from '~src/types/Fradrag';
+import { Fradrag, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 
-export const velgbareFradragstyper = Object.values(Fradragstype).filter(
-    (f) =>
-        ![
-            Fradragstype.BeregnetFradragEPS,
-            Fradragstype.UnderMinstenivå,
-            Fradragstype.AvkortingUtenlandsopphold,
-            Fradragstype.ForventetInntekt,
-        ].includes(f)
-);
-
-export const fjernFradragSomIkkeErValgbare = (fradrag: Fradrag[]) =>
-    fradrag.filter((f) => (f.type ? velgbareFradragstyper.includes(f.type) : true));
+export const fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold = (fradrag: Fradrag[]) => {
+    return fradrag.filter((f) =>
+        [
+            ...Object.values(VelgbareFradragskategorier),
+            IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold,
+        ].includes(f.type)
+    );
+};

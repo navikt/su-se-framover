@@ -2,20 +2,23 @@ import { TextField, Label, Select } from '@navikt/ds-react';
 import { currencies } from 'country-data-list';
 import { FormikErrors } from 'formik';
 import React from 'react';
-import { IntlShape } from 'react-intl';
 
+import { useI18n } from '~src/lib/i18n';
 import { UtenlandskInntekt } from '~src/types/Fradrag';
 
-import { UtenlandskInntektFormData } from './beregningstegTypes';
-import * as styles from './fradragInputs.module.less';
+import { UtenlandskInntektFormData } from '../beregningstegTypes';
+
+import messages from './fradragInputs-nb';
+import styles from './fradragInputs.module.less';
 
 const InntektFraUtland = (props: {
     name: string;
     value: UtenlandskInntektFormData;
     onChange: (e: UtenlandskInntektFormData) => void;
     errors: FormikErrors<UtenlandskInntekt> | undefined;
-    intl: IntlShape;
 }) => {
+    const { formatMessage } = useI18n({ messages });
+
     const beløpId = `${props.name}.beløp`;
     const kursId = `${props.name}.kurs`;
     const valutaId = `${props.name}.valuta`;
@@ -23,11 +26,11 @@ const InntektFraUtland = (props: {
     return (
         <div className={styles.utlandOgPeriodeContainer}>
             <Label as="label" htmlFor={beløpId} className={styles.label}>
-                {props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
+                {formatMessage('display.input.beløpIUtenlandskValuta')}
             </Label>
             <TextField
                 id={beløpId}
-                label={props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
+                label={formatMessage('display.input.beløpIUtenlandskValuta')}
                 name={beløpId}
                 hideLabel
                 value={props.value.beløpIUtenlandskValuta}
@@ -40,12 +43,12 @@ const InntektFraUtland = (props: {
                 error={!!props.errors?.beløpIUtenlandskValuta}
             />
             <Label as="label" htmlFor={valutaId} className={styles.label}>
-                {props.intl.formatMessage({ id: 'display.input.valuta' })}
+                {formatMessage('display.input.valuta')}
             </Label>
             <Select
                 id={valutaId}
                 name={valutaId}
-                label={props.intl.formatMessage({ id: 'display.input.valuta' })}
+                label={formatMessage('display.input.valuta')}
                 hideLabel
                 value={props.value.valuta}
                 onChange={(a) =>
@@ -67,13 +70,13 @@ const InntektFraUtland = (props: {
             </Select>
             <div className={styles.labelAndDescription}>
                 <Label as="label" htmlFor={kursId} className={styles.label}>
-                    {props.intl.formatMessage({ id: 'display.input.kurs' })}
+                    {formatMessage('display.input.kurs')}
                 </Label>
-                <p className={styles.description}>{props.intl.formatMessage({ id: 'display.input.kurs.desimal' })}</p>
+                <p className={styles.description}>{formatMessage('display.input.kurs.desimal')}</p>
             </div>
             <TextField
                 id={kursId}
-                label={props.intl.formatMessage({ id: 'display.input.kurs' })}
+                label={formatMessage('display.input.kurs')}
                 hideLabel
                 name={kursId}
                 value={props.value.kurs}

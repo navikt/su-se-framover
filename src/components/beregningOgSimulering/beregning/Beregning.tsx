@@ -16,7 +16,8 @@ import {
     FradragFormData,
     FradragInputs,
     fradragSchema,
-} from '~src/components/beregningOgSimulering/beregning/FradragInputs';
+} from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
+import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import BeregningFaktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -31,12 +32,11 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { Vurderingknapper } from '~src/pages/saksbehandling/søknadsbehandling/Vurdering';
 import { useAppDispatch } from '~src/redux/Store';
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
-import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
+import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/behandlingUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
-import fradragstypeMessages from '~src/utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
@@ -54,7 +54,7 @@ interface FormData {
 
 function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): FormData {
     return {
-        fradrag: fjernFradragSomIkkeErValgbare(fradrag).map((f) => ({
+        fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) => ({
             periode: {
                 fraOgMed: DateUtils.toDateOrNull(f.periode?.fraOgMed),
                 tilOgMed: DateUtils.toDateOrNull(f.periode?.tilOgMed),
@@ -66,7 +66,8 @@ function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): F
                 valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
                 kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
             },
-            type: f.type,
+            kategori: f.type,
+            spesifisertkategori: f.beskrivelse,
             tilhørerEPS: f.tilhører === FradragTilhører.EPS,
         })),
         begrunnelse: begrunnelse ?? '',
@@ -76,7 +77,7 @@ function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): F
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
-    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
     const [lagreFradragstatus, lagreFradrag] = useAsyncActionCreator(sakSlice.lagreFradrag);
@@ -109,7 +110,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     }, []);
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling) || stønadsperiode === null) {
-        return <div>{intl.formatMessage({ id: 'beregning.behandlingErIkkeFerdig' })}</div>;
+        return <div>{formatMessage('beregning.behandlingErIkkeFerdig')}</div>;
     }
 
     const { draft, clearDraft, useDraftFromFormikValues } = useSøknadsbehandlingDraftContextFor<FormData>(
@@ -136,7 +137,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                           },
 
                 beløp: parseInt(f.beløp!, 10),
-                type: f.type!,
+                type: f.kategori!,
+                beskrivelse: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
                 utenlandskInntekt: f.fraUtland
                     ? {
                           beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
@@ -220,7 +222,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     useDraftFromFormikValues(formik.values);
 
     return (
-        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
                     <form
@@ -230,7 +232,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     >
                         {props.behandling.simuleringForAvkortingsvarsel && (
                             <Alert variant={'info'} className={styles.avkortingAlert}>
-                                {intl.formatMessage({ id: 'alert.advarsel.avkorting' })}
+                                {formatMessage('alert.advarsel.avkorting')}
                             </Alert>
                         )}
                         <Heading level="2" size="medium">
@@ -245,7 +247,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 feltnavn="fradrag"
                                 fradrag={formik.values.fradrag}
                                 errors={formik.errors.fradrag}
-                                intl={intl}
                                 onChange={formik.handleChange}
                                 onFradragChange={(index, value) => {
                                     formik.setFieldValue(`fradrag[${index}]`, value);
@@ -265,7 +266,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                             {
                                                 periode: null,
                                                 beløp: null,
-                                                type: null,
+                                                kategori: null,
+                                                spesifisertkategori: null,
                                                 fraUtland: false,
                                                 utenlandskInntekt: {
                                                     beløpIUtenlandskValuta: '',
@@ -279,18 +281,16 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 }}
                             />
                         </div>
-
                         <div className={styles.textareaContainer}>
                             <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                                label={formatMessage('input.label.begrunnelse')}
                                 name="begrunnelse"
                                 onChange={formik.handleChange}
                                 value={formik.values.begrunnelse ?? ''}
                                 error={formik.errors.begrunnelse}
-                                description={intl.formatMessage({ id: 'input.begrunnelse.description' })}
+                                description={formatMessage('input.begrunnelse.description')}
                             />
                         </div>
-
                         <Heading level="2" size="medium">
                             Beregning
                             {props.behandling.beregning &&
@@ -302,7 +302,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             {formik.errors && (
                                 <Feiloppsummering
                                     feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                                    tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                                    tittel={formatMessage('feiloppsummering.title')}
                                     hidden={!formikErrorsHarFeil(formik.errors)}
                                     className={styles.feiloppsummering}
                                 />
@@ -313,35 +313,34 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 type="submit"
                             >
                                 {props.behandling.beregning
-                                    ? intl.formatMessage({ id: 'knapp.startNyBeregning' })
-                                    : intl.formatMessage({ id: 'knapp.startBeregning' })}
+                                    ? formatMessage('knapp.startNyBeregning')
+                                    : formatMessage('knapp.startBeregning')}
                             </Button>
 
                             {props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG && (
                                 <Alert variant="warning" className={styles.avslagadvarsel}>
-                                    {intl.formatMessage({
-                                        id:
-                                            props.behandling.beregning &&
+                                    {formatMessage(
+                                        props.behandling.beregning &&
                                             props.behandling.beregning.månedsberegninger.some((m) => m.beløp > 0)
-                                                ? 'beregning.nullutbetalingIStartEllerSlutt'
-                                                : 'beregning.førerTilAvslag',
-                                    })}
+                                            ? 'beregning.nullutbetalingIStartEllerSlutt'
+                                            : 'beregning.førerTilAvslag'
+                                    )}
                                 </Alert>
                             )}
                         </div>
-
                         {RemoteData.isFailure(lagreFradragstatus) && <ApiErrorAlert error={lagreFradragstatus.error} />}
                         {RemoteData.isFailure(beregningStatus) && <ApiErrorAlert error={beregningStatus.error} />}
                         {needsBeregning && (
-                            <Alert variant="warning">
-                                {intl.formatMessage({ id: 'alert.advarsel.kjørBeregningFørst' })}
-                            </Alert>
+                            <div className={styles.advarselKjørBeregning}>
+                                <Alert variant="warning">{formatMessage('alert.advarsel.kjørBeregningFørst')}</Alert>
+                            </div>
                         )}
+
                         {pipe(
                             simuleringStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => <Loader title={intl.formatMessage({ id: 'display.simulerer' })} />,
+                                () => <Loader title={formatMessage('display.simulerer')} />,
                                 (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
@@ -374,7 +373,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 function erFradragUlike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {
     if (!fradrag) return true;
 
-    const fradragFraDatabase = fjernFradragSomIkkeErValgbare(fradrag).map(fradragTilFradragFormData);
+    const fradragFraDatabase =
+        fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map(fradragTilFradragFormData);
 
     return !getEq(eqFradragFormData).equals(formFradrag, fradragFraDatabase);
 }
@@ -391,7 +391,8 @@ const eqPeriode = struct<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>
 });
 
 const eqFradragFormData = struct<FradragFormData>({
-    type: eqNullable(S.Eq),
+    kategori: eqNullable(S.Eq),
+    spesifisertkategori: eqNullable(S.Eq),
     beløp: eqNullable(S.Eq),
     fraUtland: B.Eq,
     utenlandskInntekt: eqUtenlandskInntekt,

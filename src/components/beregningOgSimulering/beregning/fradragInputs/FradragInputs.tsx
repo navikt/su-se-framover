@@ -5,23 +5,24 @@ import { lastDayOfMonth } from 'date-fns';
 import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
 import React from 'react';
-import { IntlShape } from 'react-intl';
 
-import InntektFraUtland from '~src/components/beregningOgSimulering/beregning/InntektFraUtland';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { useI18n } from '~src/lib/i18n';
 import { Nullable, KeyDict } from '~src/lib/types';
 import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
-import { Fradragstype } from '~src/types/Fradrag';
+import { Fradragskategori, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
-import { velgbareFradragstyper } from '~src/utils/fradrag/fradragUtil';
 
-import DatePicker from '../../datePicker/DatePicker';
+import DatePicker from '../../../datePicker/DatePicker';
+import { UtenlandskInntektFormData } from '../beregningstegTypes';
 
-import { UtenlandskInntektFormData } from './beregningstegTypes';
-import * as styles from './fradragInputs.module.less';
+import messages from './fradragInputs-nb';
+import styles from './fradragInputs.module.less';
+import InntektFraUtland from './InntektFraUtland';
 
 export interface FradragFormData {
-    type: Nullable<Fradragstype>;
+    kategori: Nullable<Fradragskategori>;
+    spesifisertkategori: Nullable<string>;
     beløp: Nullable<string>;
     fraUtland: boolean;
     utenlandskInntekt: UtenlandskInntektFormData;
@@ -33,7 +34,8 @@ export interface FradragFormData {
 }
 
 const FradragObjectKeys: KeyDict<FradragFormData> = {
-    type: 'type',
+    kategori: 'kategori',
+    spesifisertkategori: 'spesifisertkategori',
     beløp: 'beløp',
     fraUtland: 'fraUtland',
     utenlandskInntekt: 'utenlandskInntekt',
@@ -79,24 +81,30 @@ const FradragsSelection = (props: {
     value: string;
     onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     feil: string | undefined;
-    intl: IntlShape;
-}) => (
-    <Select
-        onChange={props.onChange}
-        id={props.id}
-        name={props.name}
-        value={props.value}
-        label={props.label}
-        error={props.feil}
-    >
-        <option value="">{props.intl.formatMessage({ id: 'fradrag.type.emptyLabel' })}</option>
-        {velgbareFradragstyper.map((f) => (
-            <option value={f} key={f}>
-                {props.intl.formatMessage({ id: f })}
+}) => {
+    const { formatMessage } = useI18n({ messages });
+
+    return (
+        <Select
+            onChange={props.onChange}
+            id={props.id}
+            name={props.name}
+            value={props.value}
+            label={props.label}
+            error={props.feil}
+        >
+            <option value="">{formatMessage('fradrag.type.emptyLabel')}</option>
+            {Object.values(VelgbareFradragskategorier).map((f) => (
+                <option value={f} key={f}>
+                    {formatMessage(f)}
+                </option>
+            ))}
+            <option disabled value={IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold}>
+                {formatMessage(IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold)}
             </option>
-        ))}
-    </Select>
-);
+        </Select>
+    );
+};
 
 const utenlandskInntekt = yup
     .object<UtenlandskInntektFormData>()
@@ -113,7 +121,17 @@ const utenlandskInntekt = yup
 
 export const fradragSchema = yup.object<FradragFormData>({
     beløp: validateStringAsPositiveNumber,
-    type: yup.string().defined().oneOf(velgbareFradragstyper, 'Du må velge en fradragstype'),
+    kategori: yup
+        .string()
+        .defined()
+        .oneOf(
+            [...Object.values(VelgbareFradragskategorier), IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold],
+            'Du må velge en fradragstype'
+        ),
+    spesifisertkategori: yup.string().defined().when(FradragObjectKeys.kategori, {
+        is: VelgbareFradragskategorier.Annet,
+        then: yup.string().required(),
+    }),
     fraUtland: yup.boolean(),
     utenlandskInntekt: utenlandskInntekt,
     tilhørerEPS: yup.boolean(),
@@ -146,24 +164,26 @@ export const FradragInputs = (props: {
     fradrag: FradragFormData[];
     feltnavn: string;
     errors: string | string[] | Array<FormikErrors<FradragFormData>> | undefined;
-    intl: IntlShape;
     onChange: (e: React.ChangeEvent<unknown>) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
     onFradragChange: (index: number, value: FradragFormData) => void;
     beregningsDato: Nullable<{ fom: Nullable<Date>; tom: Nullable<Date> }>;
 }) => {
+    const { formatMessage } = useI18n({ messages });
+
     return (
         <div className={styles.fradragContainer}>
             {props.fradrag.map((fradrag, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
                 const name = `${props.feltnavn}[${index}]`;
-                const typeId = `${name}.${FradragObjectKeys.type}`;
+                const typeId = `${name}.${FradragObjectKeys.kategori}`;
                 const belopId = `${name}.${FradragObjectKeys.beløp}`;
                 const fraUtlandId = `${name}.${FradragObjectKeys.fraUtland}`;
                 const periode = `${name}.${FradragObjectKeys.periode}`;
                 const tilhørerEPSId = `${name}.${FradragObjectKeys.tilhørerEPS}`;
                 const utenlandskInntektId = `${name}.${FradragObjectKeys.utenlandskInntekt}`;
+                const spesifisertTypeId = `${name}.${FradragObjectKeys.spesifisertkategori}`;
 
                 const visDelerAvPeriode = Boolean(
                     fradrag.periode &&
@@ -181,20 +201,19 @@ export const FradragInputs = (props: {
                             <div className={styles.fradragTypeOgBelopContainer}>
                                 <div className={styles.fradragTypeOgBelopInputs}>
                                     <FradragsSelection
-                                        label={props.intl.formatMessage({ id: 'display.fradrag.type' })}
+                                        label={formatMessage('display.fradrag.type')}
                                         onChange={props.onChange}
                                         id={typeId}
                                         name={typeId}
-                                        value={fradrag.type?.toString() ?? ''}
+                                        value={fradrag.kategori?.toString() ?? ''}
                                         feil={
                                             errorForLinje && typeof errorForLinje === 'object'
-                                                ? errorForLinje.type
+                                                ? errorForLinje.kategori
                                                 : undefined
                                         }
-                                        intl={props.intl}
                                     />
                                     <InputWithFollowText
-                                        tittel={props.intl.formatMessage({ id: 'display.fradrag.beløp' })}
+                                        tittel={formatMessage('display.fradrag.beløp')}
                                         inputName={belopId}
                                         value={fradrag.beløp?.toString() ?? ''}
                                         inputTekst="NOK"
@@ -213,6 +232,21 @@ export const FradragInputs = (props: {
                                     </Button>
                                 </div>
                             </div>
+                            {fradrag.kategori === VelgbareFradragskategorier.Annet && (
+                                <div className={styles.spesifiserFradragsTypeContainer}>
+                                    <TextField
+                                        label={formatMessage('fradrag.input.spesifiserFradrag')}
+                                        name={spesifisertTypeId}
+                                        value={fradrag.spesifisertkategori ?? ''}
+                                        onChange={props.onChange}
+                                        error={
+                                            errorForLinje && typeof errorForLinje === 'object'
+                                                ? errorForLinje.spesifisertkategori
+                                                : undefined
+                                        }
+                                    />
+                                </div>
+                            )}
                             <div className={styles.checkboxContainer}>
                                 {(props.harEps || fradrag.tilhørerEPS) && (
                                     <Checkbox
@@ -222,7 +256,7 @@ export const FradragInputs = (props: {
                                         onChange={props.onChange}
                                         disabled={!props.harEps}
                                     >
-                                        {props.intl.formatMessage({ id: 'display.checkbox.tilhørerEPS' })}
+                                        {formatMessage('display.checkbox.tilhørerEPS')}
                                     </Checkbox>
                                 )}
                                 <Checkbox
@@ -243,7 +277,7 @@ export const FradragInputs = (props: {
                                         props.onChange(e);
                                     }}
                                 >
-                                    {props.intl.formatMessage({ id: 'display.checkbox.fraUtland' })}
+                                    {formatMessage('display.checkbox.fraUtland')}
                                 </Checkbox>
                                 <Checkbox
                                     name={periode}
@@ -261,7 +295,7 @@ export const FradragInputs = (props: {
                                     }
                                     className={styles.checkbox}
                                 >
-                                    {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode' })}
+                                    {formatMessage('fradrag.delerAvPeriode')}
                                 </Checkbox>
                             </div>
                             {fradrag.fraUtland && (
@@ -285,7 +319,6 @@ export const FradragInputs = (props: {
                                             ? errorForLinje.utenlandskInntekt
                                             : undefined
                                     }
-                                    intl={props.intl}
                                 />
                             )}
                             {visDelerAvPeriode && (
@@ -293,7 +326,7 @@ export const FradragInputs = (props: {
                                     <div className={styles.fraOgMed}>
                                         <DatePicker
                                             id={`${periode}.fraOgMed`}
-                                            label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.fom' })}
+                                            label={formatMessage('fradrag.delerAvPeriode.fom')}
                                             value={
                                                 fradrag.periode?.fraOgMed ? new Date(fradrag.periode.fraOgMed) : null
                                             }
@@ -325,7 +358,7 @@ export const FradragInputs = (props: {
                                         <div>
                                             <DatePicker
                                                 id={`${periode}.tilOgMed`}
-                                                label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
+                                                label={formatMessage('fradrag.delerAvPeriode.tom')}
                                                 value={
                                                     fradrag.periode?.tilOgMed
                                                         ? new Date(fradrag.periode.tilOgMed)
@@ -365,8 +398,8 @@ export const FradragInputs = (props: {
             <div className={styles.leggTilNyttFradragContainer}>
                 <Button variant="secondary" onClick={() => props.onLeggTilClick()} type="button" size="small">
                     {props.fradrag.length === 0
-                        ? props.intl.formatMessage({ id: 'knapp.fradrag.leggtil' })
-                        : props.intl.formatMessage({ id: 'knapp.fradrag.leggtil.annet' })}
+                        ? formatMessage('knapp.fradrag.leggtil')
+                        : formatMessage('knapp.fradrag.leggtil.annet')}
                 </Button>
             </div>
         </div>

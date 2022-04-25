@@ -6,9 +6,19 @@ import { eqNullable, Nullable } from '~src/lib/types';
 
 import { Periode } from './Periode';
 
+export interface LagreFradragsgrunnlangInnsending {
+    periode: Nullable<Periode<string>>;
+    type: Fradragskategori;
+    beskrivelse: Nullable<string>;
+    beløp: number;
+    utenlandskInntekt: Nullable<UtenlandskInntekt>;
+    tilhører: FradragTilhører;
+}
+
 export interface Fradrag {
     periode: Nullable<Periode<string>>;
-    type: Fradragstype;
+    type: Fradragskategori;
+    beskrivelse: Nullable<string>;
     beløp: number;
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
     tilhører: FradragTilhører;
@@ -22,6 +32,7 @@ const eqUtenlandskInntekt = struct<UtenlandskInntekt>({
 
 export const eqFradragBortsettFraPeriode = struct<Omit<Fradrag, 'periode'>>({
     type: S.Eq,
+    beskrivelse: eqNullable(S.Eq),
     beløp: N.Eq,
     utenlandskInntekt: eqNullable(eqUtenlandskInntekt),
     tilhører: S.Eq,
@@ -38,17 +49,34 @@ export enum FradragTilhører {
     EPS = 'EPS',
 }
 
-export enum Fradragstype {
-    NAVytelserTilLivsopphold = 'NAVytelserTilLivsopphold',
+export type Fradragskategori = VelgbareFradragskategorier | IkkeVelgbareFradragskategorier;
+
+export enum VelgbareFradragskategorier {
+    Sosialstønad = 'Sosialstønad',
+    Uføretrygd = 'Uføretrygd',
+    Alderspensjon = 'Alderspensjon',
+    Arbeidsavklaringspenger = 'Arbeidsavklaringspenger',
+    Dagpenger = 'Dagpenger',
+    SupplerendeStønad = 'SupplerendeStønad',
+    //AFP
+    AvtalefestetPensjon = 'AvtalefestetPensjon',
+    AvtalefestetPensjonPrivat = 'AvtalefestetPensjonPrivat',
+
+    Sykepenger = 'Sykepenger',
+    Gjenlevendepensjon = 'Gjenlevendepensjon',
     Arbeidsinntekt = 'Arbeidsinntekt',
     OffentligPensjon = 'OffentligPensjon',
-    PrivatPensjon = 'PrivatPensjon',
-    Sosialstønad = 'Sosialstønad',
-    Kontantstøtte = 'Kontantstøtte',
     Introduksjonsstønad = 'Introduksjonsstønad',
     Kvalifiseringsstønad = 'Kvalifiseringsstønad',
+    PrivatPensjon = 'PrivatPensjon',
+    Kontantstøtte = 'Kontantstøtte',
     BidragEtterEkteskapsloven = 'BidragEtterEkteskapsloven',
     Kapitalinntekt = 'Kapitalinntekt',
+    Annet = 'Annet',
+}
+
+export enum IkkeVelgbareFradragskategorier {
+    NAVytelserTilLivsopphold = 'NAVytelserTilLivsopphold',
     ForventetInntekt = 'ForventetInntekt',
     BeregnetFradragEPS = 'BeregnetFradragEPS',
     UnderMinstenivå = 'UnderMinstenivå',
