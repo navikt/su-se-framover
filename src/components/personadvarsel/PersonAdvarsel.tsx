@@ -14,7 +14,7 @@ interface EtikettInfo {
     variant: TagVariant;
 }
 
-const TagWithBlack = (props: { etikett: EtikettInfo }) => {
+export const TagWithBlack = (props: { etikett: EtikettInfo }) => {
     return (
         <Tag
             className={classNames(styles.etikett, {
@@ -30,8 +30,8 @@ const TagWithBlack = (props: { etikett: EtikettInfo }) => {
     );
 };
 
-export const PersonAdvarsel = (props: { person: Person }) => {
-    const { adressebeskyttelse, skjermet } = props.person;
+export const getEtiketter = (person: Person) => {
+    const { adressebeskyttelse, skjermet } = person;
     const etiketter: EtikettInfo[] = [];
 
     if (adressebeskyttelse && adressebeskyttelse !== Adressebeskyttelse.Ugradert) {
@@ -46,25 +46,30 @@ export const PersonAdvarsel = (props: { person: Person }) => {
             variant: 'error',
         });
     }
-    if ('vergemål' in props.person && props.person.vergemål) {
+    if ('vergemål' in person && person.vergemål) {
         etiketter.push({
             text: 'Vergemål',
             variant: 'warning',
         });
     }
-    if ('fullmakt' in props.person && props.person.fullmakt) {
+    if ('fullmakt' in person && person.fullmakt) {
         etiketter.push({
             text: 'Fullmakt',
             variant: 'warning',
         });
     }
-    if (props.person.dødsdato) {
+    if (person.dødsdato) {
         etiketter.push({
-            text: `Død ${DateFns.format(new Date(props.person.dødsdato), 'dd.MM.yyyy')}`,
+            text: `Død ${DateFns.format(new Date(person.dødsdato), 'dd.MM.yyyy')}`,
             variant: 'black',
         });
     }
 
+    return etiketter;
+};
+
+export const PersonAdvarsel = (props: { person: Person }) => {
+    const etiketter = getEtiketter(props.person);
     return (
         <div className={styles.container}>
             {etiketter.map((etikett) => (

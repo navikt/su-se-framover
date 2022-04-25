@@ -2,33 +2,18 @@ import { Ingress } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { Person, Kjønn } from '~src/api/personApi';
-import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~src/assets/Icons';
-import { Nullable } from '~src/lib/types';
-import { formatFnr, showName } from '~src/utils/person/personUtils';
-
-import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
+import { Kjønn, Navn, Person } from '~src/api/personApi';
+import GenderIcon from '~src/components/personlinje/GenderIcon';
 
 import * as styles from './personkort.module.less';
-
-const KjønnIkon = (props: { kjønn: Nullable<Kjønn> }) => {
-    switch (props.kjønn) {
-        case Kjønn.Kvinne:
-            return <KjønnKvinne />;
-        case Kjønn.Mann:
-            return <KjønnMann />;
-        case Kjønn.Ukjent:
-            return <KjønnUkjent />;
-    }
-    return null;
-};
+import { PersonAdvarsel } from './PersonkortHelper';
 
 export const Personkort = (props: { person: Person; variant?: 'normal' | 'wide' }) => {
     return (
         <div className={classNames(styles.personkortContainer, styles[`variant-${props.variant ?? 'normal'}`])}>
             <div>
                 <span className={styles.personkortSVG}>
-                    <KjønnIkon kjønn={props.person.kjønn} />
+                    <GenderIcon kjønn={props.person.kjønn ?? Kjønn.Ukjent} />
                 </span>
             </div>
             <Ingress as="div" className={styles.personalia}>
@@ -52,3 +37,10 @@ export const Personkort = (props: { person: Person; variant?: 'normal' | 'wide' 
         </div>
     );
 };
+
+const showName = (navn: Navn) => {
+    const mellomnavn = navn.mellomnavn ? ` ${navn.mellomnavn} ` : ' ';
+    return `${navn.fornavn}${mellomnavn}${navn.etternavn}`;
+};
+
+const formatFnr = (fnr: string) => `${fnr.substr(0, 6)} ${fnr.substr(6, 11)}`;
