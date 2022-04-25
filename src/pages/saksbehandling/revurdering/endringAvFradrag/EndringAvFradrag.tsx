@@ -24,6 +24,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
 import { Fradrag, FradragTilhører, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
+import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
