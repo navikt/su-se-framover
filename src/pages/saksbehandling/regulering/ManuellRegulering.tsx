@@ -11,7 +11,8 @@ import {
     fradragTilFradragFormData,
 } from '~src/components/beregningOgSimulering/beregning/beregningUtils';
 import { FradragFormData, FradragInputs } from '~src/components/beregningOgSimulering/beregning/FradragInputs';
-import { useApiCall } from '~src/lib/hooks';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -38,6 +39,7 @@ const ManuellRegulering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.manuellRegulering>();
     const regulering = props.sak.reguleringer.find((r) => r.id === urlParams.reguleringId);
     const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
+    const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const history = useHistory();
 
     const BackButton = () => (
@@ -73,18 +75,25 @@ const ManuellRegulering = (props: Props) => {
             fradrag: fjernFradragSomIkkeErValgbare(fradrag).map(fradragTilFradragFormData),
         },
         onSubmit: (values) =>
-            reguler({
-                uføre: values.uføre,
-                reguleringId: regulering.id,
-                fradrag: values.fradrag.map((f) =>
-                    fradragFormdataTilFradrag(f, {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed)!,
-                    })
-                ),
-            }),
+            reguler(
+                {
+                    uføre: values.uføre,
+                    reguleringId: regulering.id,
+                    fradrag: values.fradrag.map((f) =>
+                        fradragFormdataTilFradrag(f, {
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                            fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                            tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed)!,
+                        })
+                    ),
+                },
+                () => {
+                    hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
+                        history.push(Routes.createSakIntroLocation(formatMessage('notification'), props.sak.id));
+                    });
+                }
+            ),
     });
 
     return (
@@ -106,7 +115,7 @@ const ManuellRegulering = (props: Props) => {
                             return (
                                 <div key={u.id}>
                                     <p>
-                                        {`${formatMessage('ieu.verdi.tidligere')} }: ${
+                                        {`${formatMessage('ieu.verdi.tidligere')}: ${
                                             uføregrunnlag[index].forventetInntekt
                                         } kr`}
                                     </p>
@@ -183,7 +192,7 @@ const ManuellRegulering = (props: Props) => {
                 <div className={styles.knapper}>
                     <BackButton />
                     {(harRegulerbarIEU || harRegulerbarFradrag) && (
-                        <Button type="submit" className={styles.submit}>
+                        <Button type="submit" className={styles.submit} loading={RemoteData.isPending(regulerStatus)}>
                             {formatMessage('knapper.send')}
                         </Button>
                     )}

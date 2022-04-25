@@ -17,6 +17,7 @@ export interface Regulering {
     erFerdigstilt: boolean;
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
+    saksbehandler: string;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }
 

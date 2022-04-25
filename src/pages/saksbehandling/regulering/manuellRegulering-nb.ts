@@ -9,4 +9,5 @@ export default {
     'ieu.verdi.tidligere': 'Tidligere verdi',
     'knapper.tilbake': 'Tilbake',
     'knapper.send': 'Send inn',
+    notification: 'Regulering har blitt gjennomført',
 };
