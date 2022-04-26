@@ -19,6 +19,7 @@ export interface Regulering {
     simulering: Nullable<Simulering>;
     saksbehandler: string;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    avsluttet: { begrunnelse: string };
 }
 
 interface JobbType {

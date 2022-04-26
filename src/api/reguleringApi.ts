@@ -28,6 +28,22 @@ export async function hentSakerMedÅpneBehandlinger(): Promise<ApiClientResult<n
     });
 }
 
+export async function avsluttRegulering({
+    reguleringId,
+    begrunnelse,
+}: {
+    reguleringId: string;
+    begrunnelse: string;
+}): Promise<ApiClientResult<void>> {
+    return apiClient({
+        url: `/reguleringer/avslutt/${reguleringId}`,
+        method: 'POST',
+        body: {
+            begrunnelse,
+        },
+    });
+}
+
 export async function regulerManuelt({
     reguleringId,
     fradrag,
