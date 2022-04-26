@@ -1,6 +1,5 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
 
 import Framdriftsindikator from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { useI18n } from '~src/lib/i18n';
@@ -48,70 +47,24 @@ const Klage = (props: { sak: Sak }) => {
         });
     };
 
-    const pathsForFramdriftsindikator = lagFramdriftsindikatorLinjer()
-        .filter(
-            (l) =>
-                l.url !==
-                Routes.klage.createURL({
-                    sakId: props.sak.id,
-                    klageId: klage.id,
-                    steg: KlageSteg.Oppsummering,
-                })
-        )
-        .map((l) => l.url);
-
     return (
         <div className={styles.pageContainer}>
-            <Switch>
-                <>
-                    <Heading level="1" size="large" className={styles.pageTittel}>
-                        {formatMessage('page.tittel')}
-                    </Heading>
-                    <div className={styles.klageContainerMedFramdriftsindikator}>
-                        <Route path={pathsForFramdriftsindikator}>
-                            <Framdriftsindikator aktivId={urlParams.steg} elementer={lagFramdriftsindikatorLinjer()} />
-                        </Route>
-
-                        <Route
-                            path={Routes.klage.createURL({
-                                sakId: props.sak.id,
-                                klageId: klage.id,
-                                steg: KlageSteg.Formkrav,
-                            })}
-                        >
-                            <VurderFormkrav sakId={props.sak.id} vedtaker={props.sak.vedtak} klage={klage} />
-                        </Route>
-                        <Route
-                            path={Routes.klage.createURL({
-                                sakId: props.sak.id,
-                                klageId: klage.id,
-                                steg: KlageSteg.Vurdering,
-                            })}
-                        >
-                            <VurderingAvKlage sakId={props.sak.id} klage={klage} />
-                        </Route>
-                        <Route
-                            path={Routes.klage.createURL({
-                                sakId: props.sak.id,
-                                klageId: klage.id,
-                                steg: KlageSteg.Avvisning,
-                            })}
-                        >
-                            <AvvistKlage sakId={props.sak.id} klage={klage} />
-                        </Route>
-                    </div>
-
-                    <Route
-                        path={Routes.klage.createURL({
-                            sakId: props.sak.id,
-                            klageId: klage.id,
-                            steg: KlageSteg.Oppsummering,
-                        })}
-                    >
-                        <SendKlageTilAttestering sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
-                    </Route>
-                </>
-            </Switch>
+            <Heading level="1" size="large" className={styles.pageTittel}>
+                {formatMessage('page.tittel')}
+            </Heading>
+            <div className={styles.klageContainerMedFramdriftsindikator}>
+                {urlParams.steg !== KlageSteg.Oppsummering && (
+                    <Framdriftsindikator aktivId={urlParams.steg} elementer={lagFramdriftsindikatorLinjer()} />
+                )}
+                {urlParams.steg == KlageSteg.Formkrav && (
+                    <VurderFormkrav sakId={props.sak.id} vedtaker={props.sak.vedtak} klage={klage} />
+                )}
+                {urlParams.steg == KlageSteg.Vurdering && <VurderingAvKlage sakId={props.sak.id} klage={klage} />}
+                {urlParams.steg == KlageSteg.Avvisning && <AvvistKlage sakId={props.sak.id} klage={klage} />}
+                {urlParams.steg == KlageSteg.Oppsummering && (
+                    <SendKlageTilAttestering sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
+                )}
+            </div>
         </div>
     );
 };
