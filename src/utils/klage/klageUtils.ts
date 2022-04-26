@@ -25,6 +25,7 @@ import {
     Utfall,
     AvsluttKlageStatus,
 } from '~src/types/Klage';
+
 export interface FormkravRequest {
     sakId: string;
     klageId: string;
@@ -32,7 +33,6 @@ export interface FormkravRequest {
     innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
     erUnderskrevet: Nullable<KlageErUnderskrevet>;
-    begrunnelse: Nullable<string>;
 }
 
 export interface VurderingRequest {
