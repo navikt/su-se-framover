@@ -20,6 +20,18 @@ export interface Regulering {
     saksbehandler: string;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     avsluttet: { begrunnelse: string };
+    årsakForManuell: ÅrsakForManuell[];
+}
+
+export enum ÅrsakForManuell {
+    FradragMåHåndteresManuelt = 'FradragMåHåndteresManuelt',
+    YtelseErMidlertidigStanset = 'YtelseErMidlertidigStanset',
+    ForventetInntektErStørreEnn0 = 'ForventetInntektErStørreEnn0',
+    DelvisOpphør = 'DelvisOpphør',
+    VedtakstidslinjeErIkkeSammenhengende = 'VedtakstidslinjeErIkkeSammenhengende',
+    PågåendeAvkortingEllerBehovForFremtidigAvkorting = 'PågåendeAvkortingEllerBehovForFremtidigAvkorting',
+    AvventerKravgrunnlag = 'AvventerKravgrunnlag',
+    UtbetalingFeilet = 'UtbetalingFeilet',
 }
 
 interface JobbType {

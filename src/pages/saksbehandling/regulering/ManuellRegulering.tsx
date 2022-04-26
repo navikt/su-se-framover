@@ -18,6 +18,7 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { Fradragstype } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
+import { ÅrsakForManuell } from '~src/types/Regulering';
 import { Sak } from '~src/types/Sak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
@@ -69,6 +70,34 @@ const ManuellRegulering = (props: Props) => {
     const harRegulerbarFradrag = fradrag.some((f) =>
         [Fradragstype.NAVytelserTilLivsopphold, Fradragstype.OffentligPensjon].includes(f.type)
     );
+
+    const hentProblemer = (årsaker: ÅrsakForManuell[]) =>
+        årsaker.filter(
+            (årsak) =>
+                årsak !== ÅrsakForManuell.ForventetInntektErStørreEnn0 &&
+                årsak !== ÅrsakForManuell.FradragMåHåndteresManuelt
+        );
+
+    const hentTekstForManuellÅrsak = (årsak: ÅrsakForManuell): string => {
+        switch (årsak) {
+            case ÅrsakForManuell.FradragMåHåndteresManuelt:
+            case ÅrsakForManuell.ForventetInntektErStørreEnn0:
+                return '';
+
+            case ÅrsakForManuell.YtelseErMidlertidigStanset:
+                return formatMessage('manuell.årsak.stans');
+            case ÅrsakForManuell.DelvisOpphør:
+            case ÅrsakForManuell.VedtakstidslinjeErIkkeSammenhengende:
+                return formatMessage('manuell.årsak.hull');
+            case ÅrsakForManuell.PågåendeAvkortingEllerBehovForFremtidigAvkorting:
+                return formatMessage('manuell.årsak.avkorting');
+            case ÅrsakForManuell.AvventerKravgrunnlag:
+                return formatMessage('manuell.årsak.avventarKravgrunnlag');
+            case ÅrsakForManuell.UtbetalingFeilet:
+                return formatMessage('manuell.årsak.utbetalingFeilet');
+        }
+    };
+
     const formik = useFormik<FormData>({
         initialValues: {
             uføre: uføregrunnlag,
@@ -96,6 +125,7 @@ const ManuellRegulering = (props: Props) => {
             ),
     });
 
+    const problemer = hentProblemer(regulering.årsakForManuell);
     return (
         <form onSubmit={formik.handleSubmit} className={styles.form}>
             <Heading level="1" size="large" className={styles.tittel}>
@@ -103,7 +133,7 @@ const ManuellRegulering = (props: Props) => {
             </Heading>
 
             <div className={styles.container}>
-                <div className={styles.ieu}>
+                <div className={styles.regulering}>
                     <Heading level="2" size="medium" className={styles.kategoriTittel}>
                         {formatMessage('reguler.ieu')}
                     </Heading>
@@ -139,7 +169,7 @@ const ManuellRegulering = (props: Props) => {
                     )}
                 </div>
 
-                <div>
+                <div className={styles.regulering}>
                     <Heading level="2" size="medium" className={styles.kategoriTittel}>
                         {formatMessage('reguler.fradrag')}
                     </Heading>
@@ -188,14 +218,19 @@ const ManuellRegulering = (props: Props) => {
                         <p>{formatMessage('ingen.fradrag')}.</p>
                     )}
                 </div>
+                {problemer.length > 0 && (
+                    <Alert className={styles.advarsel} variant="warning">
+                        {problemer.map((problem, index) => (
+                            <p key={index}>{hentTekstForManuellÅrsak(problem)}</p>
+                        ))}
+                    </Alert>
+                )}
                 {RemoteData.isFailure(regulerStatus) && <ApiErrorAlert error={regulerStatus.error} />}
                 <div className={styles.knapper}>
                     <BackButton />
-                    {(harRegulerbarIEU || harRegulerbarFradrag) && (
-                        <Button type="submit" className={styles.submit} loading={RemoteData.isPending(regulerStatus)}>
-                            {formatMessage('knapper.send')}
-                        </Button>
-                    )}
+                    <Button type="submit" className={styles.submit} loading={RemoteData.isPending(regulerStatus)}>
+                        {formatMessage('knapper.send')}
+                    </Button>
                 </div>
             </div>
         </form>
