@@ -32,45 +32,40 @@ const index = () => {
                 </Heading>
             </div>
             <div className={styles.contentContainer}>
-                <Routes>
-                    <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
-                    <Route
-                        path={'/'}
-                        element={
-                            <SøknadInfoWrapper>
-                                <Infoside
-                                    nesteUrl={routes.soknadPersonSøk.createURL({
-                                        papirsøknad: isPapirsøknad,
-                                    })}
-                                />
-                            </SøknadInfoWrapper>
-                        }
-                    />
-                    <Route
-                        path={routes.soknadPersonSøk.path}
-                        element={
-                            <SøknadInfoWrapper>
-                                <Inngang
-                                    nesteUrl={routes.soknadsutfylling.createURL({
-                                        step: Søknadsteg.Uførevedtak,
-                                        papirsøknad: isPapirsøknad,
-                                    })}
-                                />
-                            </SøknadInfoWrapper>
-                        }
-                    />
-                    <Route
-                        path={routes.søkandskvittering.path}
-                        element={
-                            <SøknadInfoWrapper>
-                                <Kvittering />
-                            </SøknadInfoWrapper>
-                        }
-                    />
-                </Routes>
+                <SøknadInfoWrapper>
+                    <SøknadRoutes isPapirsøknad={isPapirsøknad} />
+                </SøknadInfoWrapper>
             </div>
         </div>
     );
 };
+
+const SøknadRoutes = ({ isPapirsøknad }: { isPapirsøknad: boolean }) => (
+    <Routes>
+        <Route
+            path={'/'}
+            element={
+                <Infoside
+                    nesteUrl={routes.soknadPersonSøk.createURL({
+                        papirsøknad: isPapirsøknad,
+                    })}
+                />
+            }
+        />
+        <Route
+            path={routes.soknadPersonSøk.path}
+            element={
+                <Inngang
+                    nesteUrl={routes.soknadsutfylling.createURL({
+                        step: Søknadsteg.Uførevedtak,
+                        papirsøknad: isPapirsøknad,
+                    })}
+                />
+            }
+        />
+        <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
+        <Route path={routes.søkandskvittering.path} element={<Kvittering />} />
+    </Routes>
+);
 
 export default index;

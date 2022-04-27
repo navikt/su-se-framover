@@ -3,6 +3,7 @@ import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
+import { Person } from '~src/api/personApi';
 import Personlinje from '~src/components/personlinje/Personlinje';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -10,6 +11,7 @@ import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Sak } from '~src/types/Sak';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './attestering-nb';
@@ -52,38 +54,34 @@ const Attestering = () => {
                         }}
                     />
                     <div className={styles.attesteringsKomponentContainer}>
-                        <Routes>
-                            <Route
-                                path={routes.attesterSøknadsbehandling.path}
-                                element={<AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />}
-                            />
-                            <Route
-                                path={routes.attesterRevurdering.path}
-                                element={
-                                    <AttesterRevurdering
-                                        sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
-                                        informasjonsRevurderinger={sakValue.revurderinger.filter(
-                                            erInformasjonsRevurdering
-                                        )}
-                                    />
-                                }
-                            />
-                            <Route
-                                path={routes.attesterKlage.path}
-                                element={
-                                    <AttesterKlage
-                                        sakId={sakValue.id}
-                                        klager={sakValue.klager}
-                                        vedtaker={sakValue.vedtak}
-                                    />
-                                }
-                            />
-                        </Routes>
+                        <AttesteringRoutes sak={sakValue} søker={søkerValue} />
                     </div>
                 </div>
             )
         )
     );
 };
+
+const AttesteringRoutes = ({ sak, søker }: { sak: Sak; søker: Person }) => (
+    <Routes>
+        <Route
+            path={routes.attesterSøknadsbehandling.path}
+            element={<AttesterSøknadsbehandling sak={sak} søker={søker} />}
+        />
+        <Route
+            path={routes.attesterRevurdering.path}
+            element={
+                <AttesterRevurdering
+                    sakInfo={{ sakId: sak.id, saksnummer: sak.saksnummer }}
+                    informasjonsRevurderinger={sak.revurderinger.filter(erInformasjonsRevurdering)}
+                />
+            }
+        />
+        <Route
+            path={routes.attesterKlage.path}
+            element={<AttesterKlage sakId={sak.id} klager={sak.klager} vedtaker={sak.vedtak} />}
+        />
+    </Routes>
+);
 
 export default Attestering;
