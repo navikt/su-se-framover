@@ -54,7 +54,7 @@
         "@navikt/ds-react-internal": "^0.12.27",
         "@radix-ui/react-tabs": "^0.1.5",
         "@reduxjs/toolkit": "^1.8.1",
-        "@sentry/browser": "^6.19.6",
+        "@sentry/browser": "^6.19.7",
         "@sentry/cli": "^1.74.4",
         "@types/jest": "^27.4.1",
         "@types/react-collapse": "^5.0.1",
