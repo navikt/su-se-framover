@@ -13,6 +13,7 @@ import * as Routes from '~src/lib/routes';
 import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { erIverksatt, erTilAttestering } from '~src/utils/behandling/behandlingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './attesterSøknadsbehandling-nb';
 import * as styles from './attesterSøknadsbehandling.module.less';
@@ -95,11 +96,6 @@ const Attesteringsinnhold = ({
         </div>
     );
 };
-
-interface AttesteringContext {
-    sak: Sak;
-    søker: Person;
-}
 
 const AttesterSøknadsbehandling = () => {
     const props = useOutletContext<AttesteringContext>();

@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as PdfApi from '~src/api/pdfApi';
-import { Person } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
@@ -20,7 +19,6 @@ import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb
 import { useAppDispatch } from '~src/redux/Store';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
-import { Sak } from '~src/types/Sak';
 import {
     erGregulering,
     erInformasjonsRevurdering,
@@ -29,16 +27,12 @@ import {
     hentAvkortingFraRevurdering,
     periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~src/utils/revurdering/revurderingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import * as SharedStyles from '../sharedStyles.module.less';
 
 import messages from './attesterRevurdering-nb';
 import * as styles from './attesterRevurdering.module.less';
-
-interface AttesteringContext {
-    sak: Sak;
-    søker: Person;
-}
 
 const AttesterRevurdering = () => {
     const { sak } = useOutletContext<AttesteringContext>();
