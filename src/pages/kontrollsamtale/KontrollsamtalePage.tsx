@@ -4,8 +4,9 @@ import { Alert, BodyLong, Button, Heading, Loader } from '@navikt/ds-react';
 import startOfTomorrow from 'date-fns/startOfTomorrow';
 import * as React from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { isEmpty } from '~node_modules/fp-ts/lib/Array';
 import { ApiError } from '~src/api/apiClient';
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -16,16 +17,15 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Kontrollsamtale } from '~src/types/Kontrollsamtale';
 import { formatDate, toDateOrNull } from '~src/utils/date/dateUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import * as styles from './kontrollsamtalePage.module.less';
 import messages from './message-nb';
 
-interface Props {
-    sakId: string;
-    kanKalleInn: boolean;
-}
-
-const KontrollsamtalePage = (props: Props) => {
+const KontrollsamtalePage = () => {
+    const props = useOutletContext<AttesteringContext>();
+    const sakId = props.sak.id;
+    const kanKalleInn = !isEmpty(props.sak.utbetalinger);
     const [nyDatoStatus, settNyDatoPost] = useApiCall(kontrollsamtaleApi.settNyDatoForKontrollsamtale);
     const [nesteKontrollsamtale, fetchNesteKontrollsamtale] = useApiCall(kontrollsamtaleApi.fetchNesteKontrollsamtale);
     const [nyDato, settNyDato] = useState<Nullable<Date>>(null);
@@ -34,12 +34,12 @@ const KontrollsamtalePage = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     const handleNyDatoForKontrollsamtaleClick = (nyDato: Date) => {
-        settNyDatoPost({ sakId: props.sakId, nyDato: nyDato }, () => fetchNesteKontrollsamtale(props.sakId));
+        settNyDatoPost({ sakId: sakId, nyDato: nyDato }, () => fetchNesteKontrollsamtale(sakId));
     };
 
     React.useEffect(() => {
-        fetchNesteKontrollsamtale(props.sakId);
-    }, [props.sakId]);
+        fetchNesteKontrollsamtale(sakId);
+    }, [sakId]);
 
     return (
         <div className={styles.kontrollsamtalePage}>
@@ -52,7 +52,7 @@ const KontrollsamtalePage = (props: Props) => {
                         <Heading level="1" size="large">
                             {formatMessage('kontrollsamtale')}
                         </Heading>
-                        {!props.kanKalleInn ? (
+                        {!kanKalleInn ? (
                             <SkjemaelementFeilmelding>
                                 {formatMessage('ingenUtbetalingsperioder')}
                             </SkjemaelementFeilmelding>

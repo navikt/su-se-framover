@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
@@ -14,14 +14,10 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { Gjenopptak, OpprettetRevurderingGrunn, Revurdering } from '~src/types/Revurdering';
-import { Sak } from '~src/types/Sak';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './gjenoppta-nb';
 import * as styles from './gjenoppta.module.less';
-
-interface Props {
-    sak: Sak;
-}
 
 interface FormData {
     årsak: Nullable<OpprettetRevurderingGrunn>;
@@ -42,7 +38,8 @@ function hentDefaultVerdier(r: Nullable<Revurdering>): FormData {
     };
 }
 
-const Gjenoppta = (props: Props) => {
+const Gjenoppta = () => {
+    const props = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansOppsummeringRoute>();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const navigate = useNavigate();

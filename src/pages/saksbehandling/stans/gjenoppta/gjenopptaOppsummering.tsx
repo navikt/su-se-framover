@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as revurderingApi from '~src/api/revurderingApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -13,17 +13,14 @@ import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb
 import * as styles from '~src/pages/saksbehandling/stans/gjenoppta/gjenoppta.module.less';
 import { useAppDispatch } from '~src/redux/Store';
 import { UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
-import { Sak } from '~src/types/Sak';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import StansOppsummeringskomponent from '../components/StansOppsummeringskomponent';
 
 import messages from './gjenoppta-nb';
 
-interface Props {
-    sak: Sak;
-}
-
-const GjenopptaOppsummering = ({ sak }: Props) => {
+const GjenopptaOppsummering = () => {
+    const { sak } = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansOppsummeringRoute>();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const navigate = useNavigate();

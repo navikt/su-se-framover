@@ -1,11 +1,11 @@
 import { Button } from '@navikt/ds-react';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Sak } from '~src/types/Sak';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
 import ReguleringVedtaksoppsummering from './reguleringsvedtaksoppsummering/reguleringVedtaksoppsummering';
@@ -14,11 +14,8 @@ import { hentInformasjonKnyttetTilVedtak, hentKlagevedtakFraKlageinstans } from 
 import messages from './vedtaksoppsummering-nb';
 import * as styles from './vedtaksoppsummering.module.less';
 
-interface Props {
-    sak: Sak;
-}
-
-const Vedtaksoppsummering = (props: Props) => {
+const Vedtaksoppsummering = () => {
+    const props = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();

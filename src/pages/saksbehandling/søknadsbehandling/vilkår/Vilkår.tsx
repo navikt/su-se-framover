@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Person } from '~src/api/personApi';
+import { useOutletContext } from '~node_modules/react-router-dom';
 import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import * as Routes from '~src/lib/routes';
-import { Sak } from '~src/types/Sak';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { createVilkårUrl } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';
@@ -23,7 +23,8 @@ import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
 
 import * as styles from './vilkår.module.less';
 
-const Vilkår = (props: { sak: Sak; søker: Person }) => {
+const Vilkår = () => {
+    const props = useOutletContext<AttesteringContext>();
     const {
         vilkar = Vilkårtype.Virkningstidspunkt,
         sakId,
