@@ -11,7 +11,6 @@ import { Sats } from './Sats';
 export interface Beregning {
     id: string;
     opprettet: string;
-    sats: Sats;
     fraOgMed: string;
     tilOgMed: string;
     månedsberegninger: Månedsberegning[];
