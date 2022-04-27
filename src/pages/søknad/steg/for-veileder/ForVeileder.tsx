@@ -2,7 +2,7 @@ import { Alert, RadioGroup, Radio, Label, BodyShort } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -41,7 +41,7 @@ const schema = yup.object<FormData>({
 });
 
 const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -68,7 +68,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
         },
         onSubmit: (values) => {
             save(values);
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -171,7 +171,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                 <Bunnknapper
                     previous={{
                         onClick: () => {
-                            history.push(props.forrigeUrl);
+                            navigate(props.forrigeUrl);
                         },
                     }}
                     avbryt={{

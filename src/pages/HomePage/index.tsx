@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
@@ -9,7 +9,7 @@ import { Rolle } from '~src/types/LoggedInUser';
 import * as styles from './homePage.module.less';
 
 const HomePage = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const user = useUserContext();
     const harTilgangTilDrift = user.roller.includes(Rolle.Drift);
     const harTilgangTilVeileder = user.roller.includes(Rolle.Veileder);
@@ -18,11 +18,11 @@ const HomePage = () => {
 
     React.useEffect(() => {
         if (user.roller.length === 1 && user.roller[0] === Rolle.Veileder) {
-            history.replace(Routes.soknad.createURL());
+            navigate(Routes.soknad.createURL(), { replace: true });
         } else if (user.roller.every((r) => [Rolle.Saksbehandler, Rolle.Attestant].includes(r))) {
-            history.replace(Routes.saksoversiktIndex.createURL());
+            navigate(Routes.saksoversiktIndex.createURL(), { replace: true });
         } else if (user.roller.length === 1 && harTilgangTilDrift) {
-            history.replace(Routes.drift.createURL());
+            navigate(Routes.drift.createURL(), { replace: true });
         }
     }, [user]);
 

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader } from '@navikt/ds-react';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { BeregnOgSimuler } from '~src/api/revurderingApi';
@@ -54,7 +54,7 @@ const OppsummeringshandlingForm = (props: {
     feilmeldinger: ErrorMessage[];
     varselmeldinger: ErrorMessage[];
 }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...messages, ...apiErrorMessages } });
     const feilRef = React.useRef<HTMLDivElement>(null);
 
@@ -73,7 +73,7 @@ const OppsummeringshandlingForm = (props: {
             };
         },
         () => {
-            history.push(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId));
+            navigate(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId));
         }
     );
 
@@ -99,15 +99,15 @@ const OppsummeringshandlingForm = (props: {
         (args) => {
             switch (args.beslutningEtterForhåndsvarsel) {
                 case BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger:
-                    history.push(props.førsteRevurderingstegUrl);
+                    navigate(props.førsteRevurderingstegUrl);
                     break;
                 case BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger:
-                    history.push(
+                    navigate(
                         Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId)
                     );
                     break;
                 case BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer:
-                    history.push(
+                    navigate(
                         Routes.createSakIntroLocation(formatMessage('notification.avsluttetRevurdering'), props.sakId)
                     );
             }
@@ -176,7 +176,7 @@ const RevurderingOppsummeringPage = (props: {
     grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     React.useEffect(() => {
@@ -218,7 +218,7 @@ const RevurderingOppsummeringPage = (props: {
             (err) => (
                 <div className={styles.content}>
                     <ApiErrorAlert error={err} />
-                    <Button variant="secondary" onClick={() => history.push(props.forrigeUrl)}>
+                    <Button variant="secondary" onClick={() => navigate(props.forrigeUrl)}>
                         {formatMessage('knapp.tilbake')}
                     </Button>
                 </div>

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
 import { useAppDispatch } from '~src/redux/Store';
@@ -16,11 +16,11 @@ export const useDocTitle = (title: string) => {
 
 export const useNotificationFromLocation = () => {
     const [locationState, setLocationState] = useState<SuccessNotificationState | null>(null);
-    const history = useHistory();
-    const location = useLocation<SuccessNotificationState>();
+    const navigate = useNavigate();
+    const location = useLocation();
     React.useEffect(() => {
-        setLocationState(location.state);
-        history.replace(location.pathname, null);
+        setLocationState(location.state as SuccessNotificationState);
+        navigate(location.pathname, { replace: true, state: null });
     }, []);
     return locationState;
 };

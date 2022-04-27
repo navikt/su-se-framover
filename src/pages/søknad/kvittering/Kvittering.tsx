@@ -3,7 +3,7 @@ import { Attachment } from '@navikt/ds-icons';
 import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Panel } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ApiError } from '~src/api/apiClient';
 import { fetchSøknadutskrift } from '~src/api/pdfApi';
@@ -24,7 +24,7 @@ import * as styles from './kvittering.module.less';
 
 const Kvittering = () => {
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const søknad = useAppSelector((state) => state.innsending.søknad);
     const søker = useAppSelector((state) => state.søker.søker);
     const søknadstype = useAppSelector((state) => state.soknad.forVeileder.type);
@@ -38,9 +38,9 @@ const Kvittering = () => {
         dispatch(søknadslice.default.actions.resetSøknad());
 
         if (søknadstype === Søknadstype.Papirsøknad && sakId) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: sakId }));
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sakId }));
         } else {
-            history.push(Routes.soknad.createURL());
+            navigate(Routes.soknad.createURL());
         }
     };
 

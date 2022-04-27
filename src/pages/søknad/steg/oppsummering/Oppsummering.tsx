@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
@@ -17,7 +17,7 @@ import * as styles from './oppsummering.module.less';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [søknadFraStore, innsending] = useAppSelector((s) => [s.soknad, s.innsending.søknad]);
     const { intl } = useI18n({ messages });
     const dispatch = useAppDispatch();
@@ -30,7 +30,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
             })
         );
         if (innsendingSlice.sendSøknad.fulfilled.match(res)) {
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         }
     };
 
@@ -60,7 +60,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                 <Bunnknapper
                     previous={{
                         onClick: () => {
-                            history.push(props.forrigeUrl);
+                            navigate(props.forrigeUrl);
                         },
                     }}
                     next={{

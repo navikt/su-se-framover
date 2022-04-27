@@ -4,7 +4,7 @@ import { Alert, Checkbox, Label, Radio, RadioGroup } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { FormikErrors, useFormik } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Adresse, IngenAdresseGrunn, Person } from '~src/api/personApi';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -163,7 +163,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
 
     const boOgOppholdFraStore = soknad.boOgOpphold;
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
     const save = (values: FormData) => {
@@ -198,7 +198,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
         },
         onSubmit: (values) => {
             save(values);
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -485,7 +485,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                 previous={{
                     onClick: () => {
                         save(formik.values);
-                        history.push(props.forrigeUrl);
+                        navigate(props.forrigeUrl);
                     },
                 }}
                 avbryt={{

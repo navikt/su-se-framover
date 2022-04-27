@@ -6,8 +6,7 @@ import * as B from 'fp-ts/lib/boolean';
 import * as S from 'fp-ts/string';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -73,7 +72,7 @@ const schema = yup.object<FormData>({
 });
 
 const VurderFormkrav = (props: Props) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [lagreStatus, lagre] = useAsyncActionCreator(klageActions.vurderFormkrav);
     const [bekreftStatus, bekreft] = useAsyncActionCreator(klageActions.bekreftFormkrav);
@@ -97,7 +96,7 @@ const VurderFormkrav = (props: Props) => {
 
     const handleLagreFormkrav = (values: FormData) => {
         if (eqFormData.equals(values, initialValues)) {
-            history.push(
+            navigate(
                 Routes.saksoversiktValgtSak.createURL({
                     sakId: props.sakId,
                 })
@@ -115,7 +114,7 @@ const VurderFormkrav = (props: Props) => {
                 erUnderskrevet: values.erUnderskrevet,
             },
             () => {
-                history.push(
+                navigate(
                     Routes.saksoversiktValgtSak.createURL({
                         sakId: props.sakId,
                     })
@@ -129,7 +128,7 @@ const VurderFormkrav = (props: Props) => {
     };
 
     const navigerTilNesteSide = (klage: Klage) => {
-        history.push(
+        navigate(
             Routes.klage.createURL({
                 sakId: props.sakId,
                 klageId: props.klage.id,

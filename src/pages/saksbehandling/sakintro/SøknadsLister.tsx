@@ -4,7 +4,7 @@ import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import React from 'react';
 import { IntlShape } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { ErrorIcon, InformationIcon } from '~src/components/icons/Icons';
@@ -174,7 +174,7 @@ export const IverksattInnvilgedeSøknader = (props: {
 };
 
 const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: string; intl: IntlShape }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [behandlingStatus, startBehandling] = useAsyncActionCreator(sakSlice.startBehandling);
 
     return (
@@ -193,7 +193,7 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                                 søknadId: props.søknadId,
                             },
                             (response) => {
-                                history.push(
+                                navigate(
                                     Routes.saksbehandlingVilkårsvurdering.createURL({
                                         vilkar: Vilkårtype.Virkningstidspunkt,
                                         sakId: props.sakId,

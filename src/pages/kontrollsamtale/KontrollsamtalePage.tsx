@@ -4,7 +4,7 @@ import { Alert, BodyLong, Button, Heading, Loader } from '@navikt/ds-react';
 import startOfTomorrow from 'date-fns/startOfTomorrow';
 import * as React from 'react';
 import { useState } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import { ApiError } from '~src/api/apiClient';
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
@@ -29,7 +29,7 @@ const KontrollsamtalePage = (props: Props) => {
     const [nyDatoStatus, settNyDatoPost] = useApiCall(kontrollsamtaleApi.settNyDatoForKontrollsamtale);
     const [nesteKontrollsamtale, fetchNesteKontrollsamtale] = useApiCall(kontrollsamtaleApi.fetchNesteKontrollsamtale);
     const [nyDato, settNyDato] = useState<Nullable<Date>>(null);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const { formatMessage } = useI18n({ messages });
 
@@ -98,7 +98,7 @@ const KontrollsamtalePage = (props: Props) => {
                     </>
                 )
             )(nesteKontrollsamtale)}
-            <Button className={styles.tilbakeknapp} variant="secondary" onClick={history.goBack}>
+            <Button className={styles.tilbakeknapp} variant="secondary" onClick={() => navigate(-1)}>
                 <Back />
                 {formatMessage('tilbake')}
             </Button>

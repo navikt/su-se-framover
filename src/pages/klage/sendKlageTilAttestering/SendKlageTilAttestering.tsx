@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
@@ -20,7 +20,7 @@ import messages from './sendKlageTilAttestering-nb';
 import * as styles from './sendKlageTilAttestering.module.less';
 
 const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker: Vedtak[] }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(klageActions.sendTilAttestering);
@@ -32,9 +32,7 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
                 klageId: props.klage.id,
             },
             () => {
-                history.push(
-                    Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId)
-                );
+                navigate(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId));
             }
         );
     };
@@ -82,7 +80,7 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
                 <Button
                     variant="secondary"
                     onClick={() =>
-                        history.push(
+                        navigate(
                             Routes.klage.createURL({
                                 sakId: props.sakId,
                                 klageId: props.klage.id,

@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Select } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { LukkSøknadBodyTypes } from '~src/api/søknadApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -30,7 +30,7 @@ import {
 import Trukket from './Trukket';
 
 const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: nb });
     const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(sakSlice.lukkSøknad);
     const [avslagManglendeDokStatus, avslåPgaManglendeDok, resetAvslagManglendeDokStatus] = useAsyncActionCreator(
@@ -54,7 +54,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 },
                 () => {
                     const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    return history.push(Routes.createSakIntroLocation(message, props.sakId));
+                    return navigate(Routes.createSakIntroLocation(message, props.sakId));
                 }
             );
         } else {
@@ -65,7 +65,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 },
                 () => {
                     const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    history.push(Routes.createSakIntroLocation(message, props.sakId));
+                    navigate(Routes.createSakIntroLocation(message, props.sakId));
                 }
             );
         }

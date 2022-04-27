@@ -1,6 +1,6 @@
 import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -32,7 +32,7 @@ interface Props {
 
 const StansOppsummeringskomponent = (props: Props) => {
     const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const { revurdering, inputs, error, knapper } = props;
 
@@ -48,7 +48,7 @@ const StansOppsummeringskomponent = (props: Props) => {
                 </div>
             )}
             <div className={styles.iverksett}>
-                <Button variant="secondary" onClick={knapper?.tilbake?.onClick ?? history.goBack}>
+                <Button variant="secondary" onClick={() => knapper?.tilbake?.onClick() ?? navigate(-1)}>
                     {knapper?.tilbake?.tekst ?? intl.formatMessage({ id: 'stans.bunnknapper.tilbake' })}
                     {knapper?.tilbake?.spinner && <Loader />}
                 </Button>

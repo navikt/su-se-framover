@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
@@ -47,7 +47,7 @@ function hentDefaultVerdier(r: Nullable<Revurdering>): FormData {
 }
 
 const Stans = (props: Props) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const urlParams = Routes.useRouteParams<typeof Routes.stansRoute>();
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId) ?? null;
 
@@ -83,15 +83,15 @@ const Stans = (props: Props) => {
         }
 
         const args = {
-            sakId: urlParams.sakId,
+            sakId: urlParams.sakId ?? '',
             fraOgMed: values.stansDato,
             årsak: values.årsak,
             begrunnelse: values.begrunnelse,
         };
         const onSuccess = (stansAvYtelse: StansAvYtelse) => {
-            history.push(
+            navigate(
                 Routes.stansOppsummeringRoute.createURL({
-                    sakId: urlParams.sakId,
+                    sakId: urlParams.sakId ?? '',
                     revurderingId: stansAvYtelse.id,
                 })
             );
@@ -162,9 +162,9 @@ const Stans = (props: Props) => {
                         variant="secondary"
                         onClick={() => {
                             if (urlParams.revurderingId) {
-                                return history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
+                                return navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
                             }
-                            history.goBack();
+                            navigate(-1);
                         }}
                     >
                         {formatMessage('stans.bunnknapper.tilbake')}

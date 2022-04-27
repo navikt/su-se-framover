@@ -3,7 +3,7 @@ import { Label, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
@@ -46,7 +46,7 @@ const schema = yup.object<FormData>({
 });
 
 const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -70,7 +70,7 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                   },
         onSubmit: (values) => {
             save(values);
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -157,7 +157,7 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                 <Bunnknapper
                     previous={{
                         onClick: () => {
-                            history.push(props.forrigeUrl);
+                            navigate(props.forrigeUrl);
                         },
                     }}
                     avbryt={{

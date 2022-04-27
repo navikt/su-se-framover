@@ -1,6 +1,6 @@
 import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
@@ -25,7 +25,7 @@ import * as styles from './attesterKlage.module.less';
 
 const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak[] }) => {
     const { formatMessage } = useI18n({ messages });
-    const history = useHistory();
+    const navigate = useNavigate();
     const urlParams = Routes.useRouteParams<typeof Routes.attesterKlage>();
 
     const klage = props.klager.find((k) => k.id === urlParams.klageId);
@@ -78,7 +78,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
                         klageId: klage.id,
                     },
                     () => {
-                        history.push(Routes.createSakIntroLocation(formatMessage('notification.avvist'), props.sakId));
+                        navigate(Routes.createSakIntroLocation(formatMessage('notification.avvist'), props.sakId));
                     }
                 ),
             status: avvisStatus,
@@ -94,9 +94,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
                         klageId: klage.id,
                     },
                     () => {
-                        history.push(
-                            Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId)
-                        );
+                        navigate(Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId));
                     }
                 ),
             status: oversendStatus,
@@ -112,7 +110,7 @@ const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak
                 kommentar: kommentar,
             },
             () => {
-                history.push(Routes.createSakIntroLocation(formatMessage('notification.underkjent'), props.sakId));
+                navigate(Routes.createSakIntroLocation(formatMessage('notification.underkjent'), props.sakId));
             }
         );
 

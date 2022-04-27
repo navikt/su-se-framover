@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -11,7 +11,7 @@ import { useAppDispatch } from '~src/redux/Store';
 
 const VelgSakKnapp = (props: { label: string; saksnummer: string }) => {
     const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
-    const { push } = useHistory();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     return (
@@ -21,7 +21,7 @@ const VelgSakKnapp = (props: { label: string; saksnummer: string }) => {
                 dispatch(personSlice.default.actions.resetSøker());
                 dispatch(sakSlice.default.actions.resetSak());
                 hentSak({ saksnummer: props.saksnummer }, (sak) => {
-                    push(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
+                    navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
                 });
             }}
         >

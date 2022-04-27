@@ -1,6 +1,6 @@
 import * as DateFns from 'date-fns';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
     oppdaterRevurderingsPeriode as oppdaterRevurdering,
@@ -29,7 +29,7 @@ const RevurderingIntroPage = (props: {
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
     const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const forrigeUrl = Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId });
@@ -48,7 +48,7 @@ const RevurderingIntroPage = (props: {
     const endre = async (arg: FormValues, goTo: 'neste' | 'avbryt') => {
         const response = await dispatch(thunk(arg));
         if ((props.informasjonsRevurdering ? oppdaterRevurdering : opprettRevurdering).fulfilled.match(response)) {
-            history.push(
+            navigate(
                 goTo === 'avbryt'
                     ? forrigeUrl
                     : Routes.revurderValgtRevurdering.createURL({

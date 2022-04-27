@@ -3,7 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
 import * as A from 'fp-ts/Array';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { hentReguleringsstatus } from '~src/api/reguleringApi';
 import { Person as PersonIkon } from '~src/assets/Icons';
@@ -44,7 +44,7 @@ enum Tab {
 
 const Behandlingsoversikt = () => {
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { søker } = useAppSelector((s) => ({ søker: s.søker.søker }));
     const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const { formatMessage } = useI18n({ messages });
@@ -88,15 +88,13 @@ const Behandlingsoversikt = () => {
                     }}
                     onFetchByFnr={(fnr) => {
                         dispatch(personSlice.fetchPerson({ fnr }));
-                        hentSak({ fnr }, (res) =>
-                            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }))
-                        );
+                        hentSak({ fnr }, (res) => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id })));
                     }}
                     onFetchBySaksnummer={async (saksnummer) => {
                         const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
                         if (sakSlice.fetchSak.fulfilled.match(res)) {
                             hentSak({ fnr: res.payload.fnr }, (res) =>
-                                history.push(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }))
+                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }))
                             );
                         }
                     }}

@@ -3,7 +3,7 @@ import { Alert, ContentContainer, Heading, Loader, StepIndicator } from '@navikt
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { fetchMe } from '~src/api/meApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -27,7 +27,7 @@ export const StartUtfylling = () => {
     const { step } = useParams<{ step: Søknadsteg }>();
     const { formatMessage } = useI18n({ messages });
     const user = useUserContext();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [sisteStartetSteg, setSisteStartetSteg] = useState(0);
     const isLocal = process.env.NODE_ENV === 'development';
 
@@ -116,7 +116,7 @@ export const StartUtfylling = () => {
                                         onStepChange={(index) => {
                                             const nyttSteg = steg[index];
                                             if (nyttSteg) {
-                                                history.push(
+                                                navigate(
                                                     routes.soknadsutfylling.createURL({
                                                         step: nyttSteg.step,
                                                     })
@@ -137,7 +137,7 @@ export const StartUtfylling = () => {
                                     </StepIndicator>
                                     <Steg
                                         title={steg.find((s) => s.step === step)?.label || ''}
-                                        step={step}
+                                        step={step ?? Søknadsteg.Uførevedtak}
                                         søknad={søknad}
                                         søker={søker}
                                         erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}

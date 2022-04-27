@@ -17,7 +17,7 @@ import {
 import { startOfMonth } from 'date-fns/esm';
 import React, { useState, useEffect, useRef } from 'react';
 import { Control, Controller, useForm, UseFormTrigger } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import * as personApi from '~src/api/personApi';
@@ -121,7 +121,7 @@ const Formue = (props: {
     sakId: string;
     søker: personApi.Person;
 }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [eps, fetchEps, resetEpsToInitial] = useApiCall(personApi.fetchPerson);
@@ -181,7 +181,7 @@ const Formue = (props: {
 
         if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) && erEktefelleUendret) {
             clearDraft();
-            history.push(nesteUrl);
+            navigate(nesteUrl);
             return;
         }
 
@@ -200,7 +200,7 @@ const Formue = (props: {
                     },
                     () => {
                         clearDraft();
-                        history.push(nesteUrl);
+                        navigate(nesteUrl);
                     }
                 );
             }
@@ -275,7 +275,7 @@ const Formue = (props: {
             () => {
                 dispatch(sakSliceActions.actions.resetSak());
                 dispatch(personSlice.actions.resetSøker());
-                history.push(Routes.home.createURL());
+                navigate(Routes.home.createURL());
             }
         );
     };
@@ -480,7 +480,7 @@ const Formue = (props: {
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
+                                navigate(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={form.handleSubmit(
                                 handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),

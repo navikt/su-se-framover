@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyShort, Button, HelpText, Label, Textarea, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -32,7 +32,7 @@ const schema = yup.object<AvvistKlageFormData>({
 });
 
 const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     const [lagreFritekstStatus, lagreFritekst] = useAsyncActionCreator(klageActions.lagreAvvistFritekst);
@@ -54,7 +54,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
 
     const handleOnLagre = (fritekstTilBrev: string) => {
         lagreFritekst({ sakId: props.sakId, klageId: props.klage.id, fritekstTilBrev: fritekstTilBrev }, () => {
-            history.push(
+            navigate(
                 Routes.saksoversiktValgtSak.createURL({
                     sakId: props.sakId,
                 })
@@ -65,9 +65,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     const handleBekreftOgFortsettSubmit = (data: AvvistKlageFormData) => {
         lagreFritekst({ sakId: props.sakId, klageId: props.klage.id, fritekstTilBrev: data.fritekstTilBrev }, () => {
             sendTilAttestering({ sakId: props.sakId, klageId: props.klage.id }, () => {
-                history.push(
-                    Routes.createSakIntroLocation(formatMessage('avvistKlage.sendtTilAttestering'), props.sakId)
-                );
+                navigate(Routes.createSakIntroLocation(formatMessage('avvistKlage.sendtTilAttestering'), props.sakId));
             });
         });
     };

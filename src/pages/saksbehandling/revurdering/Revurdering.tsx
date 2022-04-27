@@ -4,16 +4,18 @@ import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
 import React from 'react';
-import { Switch } from 'react-router-dom';
-import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import Framdriftsindikator, { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
-import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import Framdriftsindikator, {
+    Linje,
+    Linjestatus,
+    Seksjon,
+} from '~src/components/framdriftsindikator/Framdriftsindikator';
+import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
+import * as routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
@@ -44,7 +46,7 @@ const RevurderingPage = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...stegmessages } });
 
-    const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
+    const urlParams = routes.useRouteParams<typeof routes.revurderValgtRevurdering>();
 
     const påbegyntRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
 
@@ -65,10 +67,10 @@ const RevurderingPage = (props: {
     }, [grunnlag._tag, påbegyntRevurdering?.id]);
 
     const createRevurderingsPath = (steg: RevurderingSteg) => {
-        return Routes.revurderValgtRevurdering.createURL({
+        return routes.revurderValgtRevurdering.createURL({
             sakId: props.sakId,
             steg: steg,
-            revurderingId: urlParams.revurderingId,
+            revurderingId: urlParams.revurderingId ?? '',
         });
     };
 
@@ -87,7 +89,7 @@ const RevurderingPage = (props: {
                     <div className={styles.knappContainer}>
                         <LinkAsButton
                             variant="secondary"
-                            href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+                            href={routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                         >
                             {formatMessage('knapp.avslutt')}
                         </LinkAsButton>
@@ -121,90 +123,73 @@ const RevurderingPage = (props: {
             )
         );
 
+    if (!påbegyntRevurdering) {
+        return <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>;
+    }
+
+    const forrigeOgNesteUrl = (
+        aktivtSteg: RevurderingSteg | undefined
+    ): { forrige: { url: string; visModal: boolean }; neste: string } => {
+        const steg = aktiveSteg(påbegyntRevurdering);
+        const idx = steg.findIndex((s) => s.id === aktivtSteg);
+        const forrigeUrl = steg[idx - 1]?.url;
+
+        const forrige = forrigeUrl
+            ? { url: forrigeUrl, visModal: false }
+            : { url: createRevurderingsPath(RevurderingSteg.Periode), visModal: true };
+        const neste = steg[idx + 1]?.url ?? createRevurderingsPath(RevurderingSteg.Oppsummering);
+        return { forrige, neste };
+    };
+
     return (
         <div className={styles.pageContainer}>
-            <Switch>
-                <CompatRoute
-                    path={Routes.revurderValgtSak.createURL({
+            <Heading level="1" size="large" className={styles.tittel}>
+                {formatMessage('revurdering.tittel')}
+            </Heading>
+            {urlParams.steg === RevurderingSteg.Periode && (
+                <RevurderingIntroPage
+                    sakId={props.sakId}
+                    utbetalinger={props.utbetalinger}
+                    informasjonsRevurdering={påbegyntRevurdering}
+                />
+            )}
+            {urlParams.steg === RevurderingSteg.Oppsummering && (
+                <RevurderingOppsummeringPage
+                    sakId={props.sakId}
+                    revurdering={påbegyntRevurdering}
+                    forrigeUrl={
+                        aktiveSteg(påbegyntRevurdering)[aktiveSteg(påbegyntRevurdering).length - 1]?.url ??
+                        createRevurderingsPath(RevurderingSteg.Periode)
+                    }
+                    førsteRevurderingstegUrl={
+                        aktiveSteg(påbegyntRevurdering)[0]?.url ?? createRevurderingsPath(RevurderingSteg.Periode)
+                    }
+                    grunnlagsdataOgVilkårsvurderinger={grunnlag}
+                />
+            )}
+            {urlParams.steg !== RevurderingSteg.Periode && urlParams.steg !== RevurderingSteg.Oppsummering && (
+                <RevurderingstegPage
+                    steg={urlParams.steg}
+                    sakId={props.sakId}
+                    aktiveSteg={aktiveSteg(påbegyntRevurdering)}
+                    informasjonsRevurdering={påbegyntRevurdering}
+                    grunnlagsdataOgVilkårsvurderinger={grunnlag}
+                    forrige={forrigeOgNesteUrl(urlParams.steg).forrige}
+                    nesteUrl={forrigeOgNesteUrl(urlParams.steg).neste}
+                    avsluttUrl={routes.saksoversiktValgtSak.createURL({
                         sakId: props.sakId,
                     })}
-                >
-                    <RevurderingIntroPage
-                        sakId={props.sakId}
-                        utbetalinger={props.utbetalinger}
-                        informasjonsRevurdering={undefined}
-                    />
-                </CompatRoute>
-                {!påbegyntRevurdering ? (
-                    <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>
-                ) : (
-                    <>
-                        <Heading level="1" size="large" className={styles.tittel}>
-                            {formatMessage('revurdering.tittel')}
-                        </Heading>
-                        <CompatRoute path={createRevurderingsPath(RevurderingSteg.Periode)}>
-                            <RevurderingIntroPage
-                                sakId={props.sakId}
-                                utbetalinger={props.utbetalinger}
-                                informasjonsRevurdering={påbegyntRevurdering}
-                            />
-                        </CompatRoute>
-                        <div className={styles.sideMedFramdriftsindikatorContainer}>
-                            {alleSteg.map((s) => s.id).includes(urlParams.steg) && (
-                                <Framdriftsindikator
-                                    aktivId={urlParams.steg}
-                                    elementer={aktiveSteg(påbegyntRevurdering)}
-                                />
-                            )}
-                            {aktiveSteg(påbegyntRevurdering).map((el, idx) => {
-                                const forrigeUrl = aktiveSteg(påbegyntRevurdering)[idx - 1]?.url;
-                                const forrige = forrigeUrl
-                                    ? { url: forrigeUrl, visModal: false }
-                                    : { url: createRevurderingsPath(RevurderingSteg.Periode), visModal: true };
-                                const nesteUrl = (revurdering: InformasjonsRevurdering) =>
-                                    aktiveSteg(revurdering)[idx + 1]?.url ??
-                                    createRevurderingsPath(RevurderingSteg.Oppsummering);
-                                return (
-                                    <CompatRoute path={el.url} key={el.id}>
-                                        <RevurderingstegPage
-                                            steg={el.id}
-                                            sakId={props.sakId}
-                                            informasjonsRevurdering={påbegyntRevurdering}
-                                            grunnlagsdataOgVilkårsvurderinger={grunnlag}
-                                            forrige={forrige}
-                                            nesteUrl={nesteUrl}
-                                            avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
-                                        />
-                                    </CompatRoute>
-                                );
-                            })}
-                        </div>
-                        <CompatRoute path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
-                            <RevurderingOppsummeringPage
-                                sakId={props.sakId}
-                                revurdering={påbegyntRevurdering}
-                                forrigeUrl={
-                                    aktiveSteg(påbegyntRevurdering)[aktiveSteg(påbegyntRevurdering).length - 1]?.url ??
-                                    createRevurderingsPath(RevurderingSteg.Periode)
-                                }
-                                førsteRevurderingstegUrl={
-                                    aktiveSteg(påbegyntRevurdering)[0]?.url ??
-                                    createRevurderingsPath(RevurderingSteg.Periode)
-                                }
-                                grunnlagsdataOgVilkårsvurderinger={grunnlag}
-                            />
-                        </CompatRoute>
-                    </>
-                )}
-            </Switch>
+                />
+            )}
         </div>
     );
 };
 
 const RevurderingstegPage = (props: {
-    steg: RevurderingSteg;
+    steg: RevurderingSteg | undefined;
     forrige: { url: string; visModal: boolean };
-    nesteUrl: (revurdering: InformasjonsRevurdering) => string;
+    aktiveSteg: Array<Linje | Seksjon>;
+    nesteUrl: string;
     avsluttUrl: string;
     sakId: string;
     informasjonsRevurdering: InformasjonsRevurdering;
@@ -221,65 +206,61 @@ const RevurderingstegPage = (props: {
                 </div>
             ),
             (value) => {
-                switch (props.steg) {
-                    case RevurderingSteg.Uførhet:
-                        return (
+                return (
+                    <div className={styles.sideMedFramdriftsindikatorContainer}>
+                        {props.steg && <Framdriftsindikator aktivId={props.steg} elementer={props.aktiveSteg} />}
+                        {props.steg === RevurderingSteg.Uførhet && (
                             <Uførhet
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
                                 forrige={props.forrige}
-                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}
                             />
-                        );
-                    case RevurderingSteg.Bosituasjon:
-                        return (
+                        )}
+                        {props.steg === RevurderingSteg.Bosituasjon && (
                             <BosituasjonPage
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
-                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                nesteUrl={props.nesteUrl}
                                 forrige={props.forrige}
                                 avsluttUrl={props.avsluttUrl}
                             />
-                        );
-                    case RevurderingSteg.Formue:
-                        return (
+                        )}
+                        {props.steg === RevurderingSteg.Formue && (
                             <Formue
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
                                 forrige={props.forrige}
-                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}
                             />
-                        );
-                    case RevurderingSteg.EndringAvFradrag:
-                        return (
+                        )}
+                        {props.steg === RevurderingSteg.EndringAvFradrag && (
                             <EndringAvFradrag
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
                                 forrige={props.forrige}
-                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}
                             />
-                        );
-                    case RevurderingSteg.Utenlandsopphold:
-                        return (
+                        )}
+                        {props.steg === RevurderingSteg.Utenlandsopphold && (
                             <UtenlandsoppholdPage
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
                                 forrige={props.forrige}
-                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                                nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}
                             />
-                        );
-                    default:
-                        return null;
-                }
+                        )}
+                    </div>
+                );
             }
         )
     );

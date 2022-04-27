@@ -5,7 +5,7 @@ import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -56,7 +56,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     );
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const initialValues = {
         status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status ?? null,
@@ -73,7 +73,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
 
         if (eqFormData.equals(values, initialValues)) {
             clearDraft();
-            history.push(nesteUrl);
+            navigate(nesteUrl);
             return;
         }
 
@@ -90,7 +90,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             },
             () => {
                 clearDraft();
-                history.push(nesteUrl);
+                navigate(nesteUrl);
             }
         );
     };
@@ -166,7 +166,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
+                                navigate(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={form.handleSubmit(
                                 handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),

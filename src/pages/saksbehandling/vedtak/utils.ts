@@ -75,7 +75,7 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
     return null;
 }
 
-export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string): Nullable<KlageOppsummering> {
+export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string | undefined): Nullable<KlageOppsummering> {
     const klageMedKlageinstansvedtak = sak.klager.find((k) => k.id === klageId);
     if (klageMedKlageinstansvedtak && erKlageFerdigbehandlet(klageMedKlageinstansvedtak)) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -1,7 +1,7 @@
 import { TextField } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -25,7 +25,7 @@ type FormData = SøknadState['inntekt'];
 const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const ektefelle = useAppSelector((s) => s.soknad.ektefelle);
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
@@ -33,7 +33,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
         initialValues: ektefelle.inntekt,
         onSubmit: (values) => {
             save(values);
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
         },
         validationSchema: inntektsValideringSchema('eps'),
         validateOnChange: hasSubmitted,
@@ -267,7 +267,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     previous={{
                         onClick: () => {
                             save(formik.values);
-                            history.push(props.forrigeUrl);
+                            navigate(props.forrigeUrl);
                         },
                     }}
                     avbryt={{ toRoute: props.avbrytUrl }}

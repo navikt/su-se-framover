@@ -4,7 +4,7 @@ import { Button, Heading, HelpText, Loader, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
@@ -49,7 +49,7 @@ const OpprettKlage = (props: { sak: Sak }) => {
             journalpostId: '',
         },
     });
-    const history = useHistory();
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -63,7 +63,7 @@ const OpprettKlage = (props: { sak: Sak }) => {
                         datoKlageMottatt: DateFns.formatISO(values.datoKlageMottatt, { representation: 'date' }),
                     },
                     (klage) => {
-                        history.push(
+                        navigate(
                             Routes.klage.createURL({ sakId: props.sak.id, klageId: klage.id, steg: KlageSteg.Formkrav })
                         );
                     }

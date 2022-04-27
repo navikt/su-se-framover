@@ -4,7 +4,7 @@ import { Delete } from '@navikt/ds-icons';
 import { Button, Heading, Panel, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
@@ -61,7 +61,7 @@ const schemaValidation = yup.object<UtenlandsoppholdForm>({
 
 const Utenlandsopphold = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...stegmessages, ...revurderingmessages } });
-    const history = useHistory();
+    const navigate = useNavigate();
     const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger ?? [
         { status: undefined, begrunnelse: null, periode: props.revurdering.periode },
     ];
@@ -97,7 +97,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                     },
                 })),
             },
-            () => history.push(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
+            () => navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
         );
     };
 

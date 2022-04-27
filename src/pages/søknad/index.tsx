@@ -1,7 +1,6 @@
 import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
-import { Switch, useHistory } from 'react-router-dom';
-import { CompatRoute } from 'react-router-dom-v5-compat';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
@@ -21,8 +20,8 @@ const SøknadInfoWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 const index = () => {
-    const history = useHistory();
-    const isPapirsøknad = history.location.search.includes('papirsoknad');
+    const location = useLocation();
+    const isPapirsøknad = location.search.includes('papirsoknad');
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -33,12 +32,11 @@ const index = () => {
                 </Heading>
             </div>
             <div className={styles.contentContainer}>
-                <Switch>
-                    <CompatRoute exact={true} path={routes.soknadsutfylling.path}>
-                        <StartUtfylling />
-                    </CompatRoute>
-                    <Switch>
-                        <CompatRoute exact={true} path={routes.soknad.path}>
+                <Routes>
+                    <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
+                    <Route
+                        path={'/'}
+                        element={
                             <SøknadInfoWrapper>
                                 <Infoside
                                     nesteUrl={routes.soknadPersonSøk.createURL({
@@ -46,8 +44,11 @@ const index = () => {
                                     })}
                                 />
                             </SøknadInfoWrapper>
-                        </CompatRoute>
-                        <CompatRoute exact={true} path={routes.soknadPersonSøk.path}>
+                        }
+                    />
+                    <Route
+                        path={routes.soknadPersonSøk.path}
+                        element={
                             <SøknadInfoWrapper>
                                 <Inngang
                                     nesteUrl={routes.soknadsutfylling.createURL({
@@ -56,14 +57,17 @@ const index = () => {
                                     })}
                                 />
                             </SøknadInfoWrapper>
-                        </CompatRoute>
-                        <CompatRoute exact={true} path={routes.søkandskvittering.path}>
+                        }
+                    />
+                    <Route
+                        path={routes.søkandskvittering.path}
+                        element={
                             <SøknadInfoWrapper>
                                 <Kvittering />
                             </SøknadInfoWrapper>
-                        </CompatRoute>
-                    </Switch>
-                </Switch>
+                        }
+                    />
+                </Routes>
             </div>
         </div>
     );

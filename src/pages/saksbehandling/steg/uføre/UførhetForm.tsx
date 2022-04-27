@@ -4,7 +4,7 @@ import { Button } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { ApiError } from '~src/api/apiClient';
@@ -38,7 +38,7 @@ interface Props {
 
 export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Props) => {
     const { formatMessage } = useI18n({ messages });
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const lagTomUføreperiode = (): UføreperiodeFormData => ({
         id: uuid(),
@@ -72,7 +72,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
     return (
         <form
             onSubmit={form.handleSubmit(
-                (values) => onFormSubmit(values, () => history.push(props.nesteUrl)),
+                (values) => onFormSubmit(values, () => navigate(props.nesteUrl)),
                 focusAfterTimeout(feiloppsummeringRef)
             )}
         >
@@ -120,7 +120,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
             <RevurderingBunnknapper
                 tilbake={props.forrige}
                 onLagreOgFortsettSenereClick={form.handleSubmit((values: FormData) =>
-                    onFormSubmit(values, () => history.push(props.avsluttUrl))
+                    onFormSubmit(values, () => navigate(props.avsluttUrl))
                 )}
                 loading={RemoteData.isPending(savingState)}
             />

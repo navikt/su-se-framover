@@ -5,7 +5,7 @@ import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/lib/string';
 import React, { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -61,7 +61,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         sakSlice.lagreBehandlingsinformasjon
     );
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const history = useHistory();
+    const navigate = useNavigate();
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
 
     const initialValues: FormData = {
@@ -75,7 +75,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     );
 
     const goToVedtak = () => {
-        history.push(
+        navigate(
             Routes.saksbehandlingSendTilAttestering.createURL({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -88,7 +88,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
 
         if (eqFormData.equals(values, initialValues)) {
             clearDraft();
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
 
@@ -105,7 +105,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
             },
             () => {
                 clearDraft();
-                history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             }
         );
     };
@@ -120,7 +120,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                 return;
             }
 
-            history.push(props.nesteUrl);
+            navigate(props.nesteUrl);
             return;
         }
 
@@ -141,7 +141,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                     goToVedtak();
                     return;
                 }
-                history.push(props.nesteUrl);
+                navigate(props.nesteUrl);
             }
         );
     };
@@ -246,7 +246,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
+                                navigate(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={form.handleSubmit(
                                 handleLagreOgFortsettSenere,

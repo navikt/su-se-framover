@@ -3,8 +3,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading, Link, Loader } from '@navikt/ds-react';
 import React, { useEffect, Suspense } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Switch, useLocation } from 'react-router-dom';
-import { CompatRouter, CompatRoute } from 'react-router-dom-v5-compat';
+import { BrowserRouter, useLocation, Routes, Route } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { LOGIN_URL } from '~src/api/authUrl';
@@ -48,34 +47,35 @@ const Root = () => (
         <ErrorBoundary>
             <FeatureToggleProvider>
                 <BrowserRouter>
-                    <CompatRouter>
-                        <ContentWrapper>
-                            <Suspense fallback={<Loader />}>
-                                <ScrollToTop />
-                                <Switch>
-                                    <CompatRoute exact path={routes.home.path}>
-                                        <WithDocTitle title="Hjem" Page={HomePage} />
-                                    </CompatRoute>
-                                    <Route path={routes.soknad.path}>
-                                        <WithDocTitle title="Søknad" Page={Soknad} />
-                                    </Route>
-                                    <Route path={routes.saksoversiktValgtSak.path}>
-                                        <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />
-                                    </Route>
-                                    <Route path={routes.saksoversiktIndex.path}>
-                                        <WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />
-                                    </Route>
-                                    <Route path={routes.attestering.path}>
-                                        <WithDocTitle title="Attestering" Page={Attestering} />
-                                    </Route>
-                                    <CompatRoute path={routes.drift.path}>
-                                        <WithDocTitle title="Drift" Page={Drift} />
-                                    </CompatRoute>
-                                    <CompatRouter>404</CompatRouter>
-                                </Switch>
-                            </Suspense>
-                        </ContentWrapper>
-                    </CompatRouter>
+                    <ContentWrapper>
+                        <Suspense fallback={<Loader />}>
+                            <ScrollToTop />
+                            <Routes>
+                                <Route
+                                    path={routes.home.path}
+                                    element={<WithDocTitle title="Hjem" Page={HomePage} />}
+                                />
+                                <Route
+                                    path={routes.soknad.path + '*'}
+                                    element={<WithDocTitle title="Søknad" Page={Soknad} />}
+                                />
+                                <Route
+                                    path={routes.saksoversiktValgtSak.path + '*'}
+                                    element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
+                                />
+                                <Route
+                                    path={routes.saksoversiktIndex.path}
+                                    element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
+                                />
+                                <Route
+                                    path={routes.attestering.path + '*'}
+                                    element={<WithDocTitle title="Attestering" Page={Attestering} />}
+                                />
+                                <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
+                                <Route path="*" element={<>404</>} />
+                            </Routes>
+                        </Suspense>
+                    </ContentWrapper>
                 </BrowserRouter>
             </FeatureToggleProvider>
         </ErrorBoundary>
