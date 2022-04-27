@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Attachment } from '@navikt/ds-icons';
 import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Panel } from '@navikt/ds-react';
-import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +11,7 @@ import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import { SuccessIcon } from '~src/components/icons/Icons';
 import * as personSlice from '~src/features/person/person.slice';
 import * as søknadslice from '~src/features/søknad/søknad.slice';
+import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';

@@ -1,10 +1,9 @@
-import { pipe } from 'fp-ts/lib/function';
 import { toNullable } from 'fp-ts/lib/Option';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 
 import { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
-import { maxBy } from '~src/lib/fp';
+import { pipe, maxBy } from '~src/lib/fp';
 import { MessageFormatter } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';

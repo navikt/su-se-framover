@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Heading, Loader } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
-import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
 import React from 'react';
 
@@ -14,6 +13,7 @@ import Framdriftsindikator, {
 } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
+import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';

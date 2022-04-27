@@ -6,7 +6,6 @@ import { getEq } from 'fp-ts/Array';
 import * as B from 'fp-ts/lib/boolean';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
-import { pipe } from 'fp-ts/lib/function';
 import * as S from 'fp-ts/lib/string';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +22,7 @@ import BeregningFaktablokk from '~src/components/oppsummering/vilkårsOppsummeri
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';

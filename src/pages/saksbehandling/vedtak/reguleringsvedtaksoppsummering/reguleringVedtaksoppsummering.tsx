@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Label, Panel } from '@navikt/ds-react';
-import { pipe } from 'fp-ts/lib/function';
 import React, { useEffect } from 'react';
 
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
@@ -10,6 +9,7 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Regulering } from '~src/types/Regulering';
