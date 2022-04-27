@@ -1,6 +1,6 @@
 import * as A from 'fp-ts/Array';
-import { pipe } from 'fp-ts/lib/function';
 
+import { pipe } from '~src/lib/fp';
 import { Nullable } from '~src/lib/types';
 import { RevurderingSteg } from '~src/pages/saksbehandling/types';
 import { Beregning } from '~src/types/Beregning';

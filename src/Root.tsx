@@ -12,6 +12,7 @@ import { UserProvider } from '~src/context/userContext';
 import { FeatureToggleProvider, useFeatureToggle } from '~src/lib/featureToggles';
 import { pipe } from '~src/lib/fp';
 import enableHotjar from '~src/lib/tracking/hotjar';
+import Attestering from '~src/pages/saksbehandling/attestering/Attestering';
 import { LoggedInUser } from '~src/types/LoggedInUser';
 
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
@@ -21,9 +22,9 @@ import * as meSlice from './features/me/me.slice';
 import * as routes from './lib/routes';
 import Store, { useAppDispatch, useAppSelector } from './redux/Store';
 import * as styles from './root.module.less';
+
 import './externalStyles';
 
-const Attestering = React.lazy(() => import('~/src/pages/saksbehandling/attestering/Attestering'));
 const Drift = React.lazy(() => import('~/src/pages/drift'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));

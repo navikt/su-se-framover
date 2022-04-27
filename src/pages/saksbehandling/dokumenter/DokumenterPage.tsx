@@ -1,12 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Back, FileContent } from '@navikt/ds-icons';
 import { Alert, Button, Heading, Ingress, LinkPanel, Loader, Tag } from '@navikt/ds-react';
-import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { saksoversiktValgtSak } from '~src/lib/routes';

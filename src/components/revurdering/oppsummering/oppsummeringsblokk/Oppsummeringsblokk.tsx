@@ -1,12 +1,11 @@
 import { BodyShort, Label } from '@navikt/ds-react';
-import { pipe } from 'fp-ts/lib/function';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import * as React from 'react';
 
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
-import { maxBy } from '~src/lib/fp';
+import { pipe, maxBy } from '~src/lib/fp';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { Attestering } from '~src/types/Behandling';

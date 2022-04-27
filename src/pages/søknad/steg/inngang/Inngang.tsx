@@ -2,7 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Attachment } from '@navikt/ds-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { pipe } from 'fp-ts/function';
 import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -14,6 +13,7 @@ import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import søknadSlice from '~src/features/søknad/søknad.slice';
+import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
