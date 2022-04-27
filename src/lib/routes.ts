@@ -111,7 +111,6 @@ export const saksbehandlingSendTilAttestering: Route<{
 }> = {
     path: `/:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
     absPath: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
-    absPath: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
     createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vedtak}/`,
 };
 
@@ -153,19 +152,19 @@ export const attestering: Route<{ sakId: string }> = {
 };
 
 export const attesterSøknadsbehandling: Route<{ sakId: string; behandlingId: string }> = {
-    path: '/behandling/:behandlingId/',
+    path: 'behandling/:behandlingId/',
     absPath: '/attestering/:sakId/behandling/:behandlingId/',
     createURL: (args) => `/attestering/${args.sakId}/behandling/${args.behandlingId}`,
 };
 
 export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }> = {
-    path: '/revurdering/:revurderingId/',
+    path: 'revurdering/:revurderingId/',
     absPath: '/attestering/:sakId/revurdering/:revurderingId/',
     createURL: (args) => `/attestering/${args.sakId}/revurdering/${args.revurderingId}`,
 };
 
 export const attesterKlage: Route<{ sakId: string; klageId: string }> = {
-    path: '/klage/:klageId/',
+    path: 'klage/:klageId/',
     absPath: '/attestering/:sakId/klage/:klageId/',
     createURL: (args) => `/attestering/${args.sakId}/klage/${args.klageId}`,
 };

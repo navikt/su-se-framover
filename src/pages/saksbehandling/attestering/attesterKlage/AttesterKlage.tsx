@@ -1,7 +1,8 @@
 import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
+import { Person } from '~src/api/personApi';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~src/features/klage/klageActions';
@@ -9,8 +10,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Klage } from '~src/types/Klage';
-import { Vedtak } from '~src/types/Vedtak';
+import { Sak } from '~src/types/Sak';
 import {
     erKlageINoenFormForAvvist,
     erKlageOpprettholdt,
@@ -23,7 +23,14 @@ import * as sharedStyles from '../sharedStyles.module.less';
 import messages from './attesterKlage-nb';
 import * as styles from './attesterKlage.module.less';
 
-const AttesterKlage = (props: { sakId: string; klager: Klage[]; vedtaker: Vedtak[] }) => {
+interface AttesteringContext {
+    sak: Sak;
+    søker: Person;
+}
+
+const AttesterKlage = () => {
+    const { sak } = useOutletContext<AttesteringContext>();
+    const props = { sakId: sak.id, klager: sak.klager, vedtaker: sak.vedtak };
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
     const urlParams = Routes.useRouteParams<typeof Routes.attesterKlage>();

@@ -13,6 +13,9 @@ import { FeatureToggleProvider, useFeatureToggle } from '~src/lib/featureToggles
 import { pipe } from '~src/lib/fp';
 import enableHotjar from '~src/lib/tracking/hotjar';
 import Attestering from '~src/pages/saksbehandling/attestering/Attestering';
+import AttesterKlage from '~src/pages/saksbehandling/attestering/attesterKlage/AttesterKlage';
+import AttesterRevurdering from '~src/pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
+import AttesterSøknadsbehandling from '~src/pages/saksbehandling/attestering/attesterSøknadsbehandling/AttesterSøknadsbehandling';
 import { LoggedInUser } from '~src/types/LoggedInUser';
 
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
@@ -51,36 +54,35 @@ const Root = () => (
                     <ContentWrapper>
                         <Suspense fallback={<Loader />}>
                             <ScrollToTop />
-                            <Routes>
-                                <Route
-                                    path={routes.home.path}
-                                    element={<WithDocTitle title="Hjem" Page={HomePage} />}
-                                />
-                                <Route
-                                    path={routes.soknad.path + '*'}
-                                    element={<WithDocTitle title="Søknad" Page={Soknad} />}
-                                />
-                                <Route
-                                    path={routes.saksoversiktValgtSak.path + '*'}
-                                    element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
-                                />
-                                <Route
-                                    path={routes.saksoversiktIndex.path}
-                                    element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
-                                />
-                                <Route
-                                    path={routes.attestering.path + '*'}
-                                    element={<WithDocTitle title="Attestering" Page={Attestering} />}
-                                />
-                                <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
-                                <Route path="*" element={<>404</>} />
-                            </Routes>
+                            <AppRoutes />
                         </Suspense>
                     </ContentWrapper>
                 </BrowserRouter>
             </FeatureToggleProvider>
         </ErrorBoundary>
     </Provider>
+);
+
+const AppRoutes = () => (
+    <Routes>
+        <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
+        <Route path={routes.soknad.path + '*'} element={<WithDocTitle title="Søknad" Page={Soknad} />} />
+        <Route
+            path={routes.saksoversiktValgtSak.path + '*'}
+            element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
+        />
+        <Route
+            path={routes.saksoversiktIndex.path}
+            element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
+        />
+        <Route path={routes.attestering.path + '*'} element={<WithDocTitle title="Attestering" Page={Attestering} />}>
+            <Route path={routes.attesterSøknadsbehandling.path} element={<AttesterSøknadsbehandling />} />
+            <Route path={routes.attesterRevurdering.path} element={<AttesterRevurdering />} />
+            <Route path={routes.attesterKlage.path} element={<AttesterKlage />} />
+        </Route>
+        <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
+        <Route path="*" element={<>404</>} />
+    </Routes>
 );
 
 const ContentWrapper: React.FC = (props) => {
