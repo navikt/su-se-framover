@@ -21,7 +21,7 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
-import { IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
+import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import { ÅrsakForManuell } from '~src/types/Regulering';
 import { Sak } from '~src/types/Sak';
@@ -127,12 +127,7 @@ const ManuellRegulering = (props: Props) => {
                 const { uføre, fradrag } = gjeldendeVedtaksdata.grunnlagsdataOgVilkårsvurderinger;
                 const uføregrunnlag = uføre?.vurderinger.map((v) => v?.grunnlag).filter(filtrerRegulerbarIEU) ?? [];
                 const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
-                const harRegulerbarFradrag = fradrag.some((f) =>
-                    [
-                        IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold,
-                        VelgbareFradragskategorier.OffentligPensjon,
-                    ].includes(f.type)
-                );
+                const harRegulerbarFradrag = fradrag.some((f) => måReguleresManuelt(f.type));
 
                 const hentProblemer = (årsaker: ÅrsakForManuell[]) =>
                     årsaker.filter(
@@ -168,6 +163,7 @@ const ManuellRegulering = (props: Props) => {
                         <Heading level="1" size="large" className={styles.tittel}>
                             {formatMessage('tittel')}
                         </Heading>
+                        <p>{`${formatMessage('periode')}: ${DateUtils.formatPeriode(regulering.periode)}`}</p>
 
                         <div className={styles.container}>
                             <div className={styles.regulering}>
@@ -180,7 +176,7 @@ const ManuellRegulering = (props: Props) => {
                                         if (u.forventetInntekt === 0) return null;
 
                                         return (
-                                            <div key={u.id}>
+                                            <div key={u.id} className={styles.ieu}>
                                                 <p>
                                                     {`${formatMessage('ieu.verdi.tidligere')}: ${
                                                         uføregrunnlag[index].forventetInntekt
@@ -196,9 +192,9 @@ const ManuellRegulering = (props: Props) => {
                                                             e.currentTarget.value
                                                         )
                                                     }
-                                                    label={`Ny verdi for perioden ${DateUtils.formatPeriode(
-                                                        u.periode
-                                                    )}`}
+                                                    label={formatMessage('ieu', {
+                                                        dato: DateUtils.formatPeriode(u.periode),
+                                                    })}
                                                 />
                                             </div>
                                         );

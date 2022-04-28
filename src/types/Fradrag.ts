@@ -82,3 +82,35 @@ export enum IkkeVelgbareFradragskategorier {
     UnderMinstenivå = 'UnderMinstenivå',
     AvkortingUtenlandsopphold = 'AvkortingUtenlandsopphold',
 }
+
+export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
+    switch (fradrag) {
+        case VelgbareFradragskategorier.Alderspensjon:
+        case VelgbareFradragskategorier.Arbeidsavklaringspenger:
+        case VelgbareFradragskategorier.AvtalefestetPensjon:
+        case VelgbareFradragskategorier.AvtalefestetPensjonPrivat:
+        case VelgbareFradragskategorier.Dagpenger:
+        case VelgbareFradragskategorier.Gjenlevendepensjon:
+        case VelgbareFradragskategorier.Introduksjonsstønad:
+        case VelgbareFradragskategorier.Kvalifiseringsstønad:
+        case VelgbareFradragskategorier.OffentligPensjon:
+        case VelgbareFradragskategorier.SupplerendeStønad:
+        case VelgbareFradragskategorier.Uføretrygd:
+            return true;
+        case VelgbareFradragskategorier.Annet: // ???
+        case VelgbareFradragskategorier.Sykepenger: // Usikker
+        case VelgbareFradragskategorier.Arbeidsinntekt:
+        case VelgbareFradragskategorier.Kapitalinntekt:
+        case VelgbareFradragskategorier.PrivatPensjon:
+        case VelgbareFradragskategorier.Kontantstøtte: // Usikker
+        case VelgbareFradragskategorier.BidragEtterEkteskapsloven: // Usikker
+        case VelgbareFradragskategorier.Sosialstønad:
+            return false;
+        case IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold:
+        case IkkeVelgbareFradragskategorier.ForventetInntekt:
+        case IkkeVelgbareFradragskategorier.BeregnetFradragEPS:
+        case IkkeVelgbareFradragskategorier.UnderMinstenivå:
+        case IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold:
+            return false;
+    }
+};

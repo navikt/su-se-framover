@@ -63,6 +63,5 @@ export default {
     'regulering.manuell': 'Manuell regulering',
     'regulering.manuell.start': 'Start regulering',
     'regulering.avslutt': 'Avslutt behandling',
-    'regulering.g': 'G-regulering',
     'regulering.seOppsummering': 'Se oppsummering',
 };

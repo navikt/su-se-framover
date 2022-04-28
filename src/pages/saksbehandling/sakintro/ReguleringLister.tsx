@@ -37,7 +37,6 @@ const ReguleringLister = (props: Props) => {
                                         : formatMessage('regulering.manuell')}
                                 </Heading>
                                 <Informasjonslinje label="Opprettet" value={() => formatDate(regulering.opprettet)} />
-                                <Informasjonslinje label="Jobbnavn" value={() => formatMessage('regulering.g')} />
                             </>
                         );
                     },

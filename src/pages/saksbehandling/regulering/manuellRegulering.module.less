@@ -27,8 +27,13 @@
 
     .container {
         max-width: @container-sm;
+
         .regulering {
             margin-bottom: @spacing;
+
+            .ieu:not(:last-child) {
+                margin-bottom: @spacing;
+            }
         }
 
         .kategoriTittel {
