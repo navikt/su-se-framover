@@ -94,11 +94,13 @@ const FradragsSelection = (props: {
             error={props.feil}
         >
             <option value="">{formatMessage('fradrag.type.emptyLabel')}</option>
-            {Object.values(VelgbareFradragskategorier).map((f) => (
-                <option value={f} key={f}>
-                    {formatMessage(f)}
-                </option>
-            ))}
+            {Object.values(VelgbareFradragskategorier)
+                .sort()
+                .map((f) => (
+                    <option value={f} key={f}>
+                        {formatMessage(f)}
+                    </option>
+                ))}
             <option disabled value={IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold}>
                 {formatMessage(IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold)}
             </option>
