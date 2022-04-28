@@ -17,7 +17,9 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { soknadsutfylling } from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
+import { Søknadsteg } from '~src/pages/søknad/types';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Periode } from '~src/types/Periode';
 import { Søknadstype } from '~src/types/Søknad';
@@ -96,7 +98,11 @@ const SakinfoAlert = ({
     );
 };
 
-const index = (props: { nesteUrl: string }) => {
+const index = (props: { isPapirsøknad?: boolean }) => {
+    const nesteUrl = soknadsutfylling.createURL({
+        step: Søknadsteg.Uførevedtak,
+        papirsøknad: props.isPapirsøknad,
+    });
     const { søker } = useAppSelector((s) => s.søker);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -121,7 +127,7 @@ const index = (props: { nesteUrl: string }) => {
             dispatch(
                 søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad)
             );
-            navigate(props.nesteUrl);
+            navigate(nesteUrl);
         }
     };
 

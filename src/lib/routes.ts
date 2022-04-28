@@ -31,25 +31,25 @@ export const drift: Route<never> = {
 
 //-------------Søknad--------------------------------
 export const soknad: Route<never> = {
-    path: '/soknad/',
+    path: '/soknad/*',
     absPath: '/soknad/',
     createURL: () => '/soknad/',
 };
 
 export const soknadPersonSøk: Route<{ papirsøknad?: boolean }> = {
-    path: '/personsok',
+    path: 'personsok',
     absPath: '/soknad/personsok',
     createURL: (args) => '/soknad/personsok' + (args.papirsøknad ? '?papirsoknad=true' : ''),
 };
 
 export const soknadsutfylling: Route<{ step: Søknadsteg; papirsøknad?: boolean }> = {
-    path: '/utfylling/:step',
+    path: 'utfylling/:step',
     absPath: '/soknad/utfylling/:step',
     createURL: (args) => `/soknad/utfylling/${args.step}`,
 };
 
 export const søkandskvittering: Route<never> = {
-    path: '/kvittering',
+    path: 'kvittering',
     absPath: '/soknad/kvittering',
     createURL: () => `/soknad/kvittering`,
 };
@@ -64,7 +64,7 @@ export const saksoversiktIndex: Route<never> = {
 export const saksoversiktValgtSak: Route<{
     sakId: string;
 }> = {
-    path: '/saksoversikt/:sakId/',
+    path: '/saksoversikt/:sakId/*',
     absPath: '/saksoversikt/:sakId/',
     createURL: (args) => `/saksoversikt/${args.sakId}`,
 };
@@ -137,7 +137,7 @@ export const alleDokumenterForSak: Route<{ sakId: string }> = {
 
 //---------------Attestering-------------------------
 export const attestering: Route<{ sakId: string }> = {
-    path: '/attestering/:sakId/',
+    path: '/attestering/:sakId/*',
     absPath: '/attestering/:sakId/',
     createURL: (args) => `/attestering/${args.sakId}`,
 };
