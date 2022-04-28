@@ -159,7 +159,7 @@ const Stans = () => {
                         variant="secondary"
                         onClick={() => {
                             if (urlParams.revurderingId) {
-                                return navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
+                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
                             }
                             navigate(-1);
                         }}

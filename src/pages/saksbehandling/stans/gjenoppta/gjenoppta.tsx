@@ -13,7 +13,7 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
-import { Gjenopptak, OpprettetRevurderingGrunn, Revurdering } from '~src/types/Revurdering';
+import { OpprettetRevurderingGrunn, Revurdering } from '~src/types/Revurdering';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './gjenoppta-nb';
@@ -77,11 +77,10 @@ const Gjenoppta = () => {
             årsak: values.årsak,
             begrunnelse: values.begrunnelse,
         };
-        const onSuccess = (gjenopptak: Gjenopptak) => {
+        const onSuccess = () => {
             navigate(
-                Routes.gjenopptaStansOppsummeringRoute.createURL({
+                Routes.saksoversiktValgtSak.createURL({
                     sakId: urlParams.sakId ?? '',
-                    revurderingId: gjenopptak.id,
                 })
             );
         };

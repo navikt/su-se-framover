@@ -48,7 +48,12 @@ const StansOppsummeringskomponent = (props: Props) => {
                 </div>
             )}
             <div className={styles.iverksett}>
-                <Button variant="secondary" onClick={() => knapper?.tilbake?.onClick() ?? navigate(-1)}>
+                <Button
+                    variant="secondary"
+                    onClick={() => {
+                        knapper?.tilbake?.onClick ? knapper.tilbake.onClick() : navigate(-1);
+                    }}
+                >
                     {knapper?.tilbake?.tekst ?? intl.formatMessage({ id: 'stans.bunnknapper.tilbake' })}
                     {knapper?.tilbake?.spinner && <Loader />}
                 </Button>

@@ -162,7 +162,7 @@ export const attesterKlage: Route<{ sakId: string; klageId: string }> = {
 
 //---------------Stans------------------------------
 export const stansRoot: Route<{ sakId: string }> = {
-    path: 'stans',
+    path: 'stans/*',
     absPath: '/saksoversikt/:sakId/stans',
     createURL: ({ sakId }) => `/saksoversikt/${sakId}/stans`,
 };

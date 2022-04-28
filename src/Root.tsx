@@ -26,6 +26,8 @@ import Store from './redux/Store';
 import './externalStyles';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 
+import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
+
 const Drift = React.lazy(() => import('~/src/pages/drift'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));
@@ -35,7 +37,6 @@ const Behandlingsoversikt = React.lazy(
 const Soknad = React.lazy(() => import('~/src/pages/søknad'));
 const Gjenoppta = React.lazy(() => import('~/src/pages/saksbehandling/stans/gjenoppta/gjenoppta'));
 const StansOppsummering = React.lazy(() => import('~src/pages/saksbehandling/stans/stansOppsummering'));
-const Vilkår = React.lazy(() => import('~/src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(
     () => import('~/src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
 );
@@ -90,7 +91,7 @@ const AppRoutes = () => {
         <Routes>
             <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
             <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Soknad} />}>
-                <Route path={''} element={<Infoside isPapirsøknad={isPapirsøknad} />} />
+                <Route index element={<Infoside isPapirsøknad={isPapirsøknad} />} />
                 <Route path={routes.soknadPersonSøk.path} element={<Inngang isPapirsøknad={isPapirsøknad} />} />
                 <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
                 <Route path={routes.søkandskvittering.path} element={<Kvittering />} />
@@ -99,12 +100,13 @@ const AppRoutes = () => {
                 path={routes.saksoversiktValgtSak.path}
                 element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
             >
-                <Route path="" element={<Sakintro />} />
+                <Route index element={<Sakintro />} />
                 <Route path={routes.klageRoot.path}>
                     <Route path={routes.klageOpprett.path} element={<OpprettKlage />} />
                     <Route path={routes.klage.path} element={<Klage />} />
                 </Route>
                 <Route path={routes.stansRoot.path}>
+                    <Route index element={<StansPage />} />
                     <Route path={routes.stansRoute.path} element={<StansPage />} />
                     <Route path={routes.stansOppsummeringRoute.path} element={<StansOppsummering />} />
                 </Route>
