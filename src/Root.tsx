@@ -5,6 +5,15 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { FeatureToggleProvider } from '~src/lib/featureToggles';
+import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
+
+import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
+import WithDocTitle from './components/WithDocTitle';
+import * as routes from './lib/routes';
+import Store from './redux/Store';
+import './externalStyles';
+import { ContentWrapper } from './utils/router/ContentWrapper';
+
 const Attestering = React.lazy(() => import('~src/pages/saksbehandling/attestering/Attestering'));
 const AttesterKlage = React.lazy(() => import('~src/pages/saksbehandling/attestering/attesterKlage/AttesterKlage'));
 const AttesterRevurdering = React.lazy(
@@ -17,17 +26,6 @@ const Kvittering = React.lazy(() => import('~src/pages/søknad/kvittering/Kvitte
 const Infoside = React.lazy(() => import('~src/pages/søknad/steg/infoside/Infoside'));
 const Inngang = React.lazy(() => import('~src/pages/søknad/steg/inngang/Inngang'));
 const StartUtfylling = React.lazy(() => import('~src/pages/søknad/steg/start-utfylling/StartUtfylling'));
-
-import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
-import WithDocTitle from './components/WithDocTitle';
-import * as routes from './lib/routes';
-import Store from './redux/Store';
-
-import './externalStyles';
-import { ContentWrapper } from './utils/router/ContentWrapper';
-
-import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
-
 const Drift = React.lazy(() => import('~/src/pages/drift'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));

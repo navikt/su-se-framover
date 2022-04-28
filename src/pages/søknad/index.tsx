@@ -7,12 +7,6 @@ import { useI18n } from '~src/lib/i18n';
 import * as styles from './index.module.less';
 import messages from './nb';
 
-const SøknadInfoWrapper = ({ children }: { children: React.ReactNode }) => (
-    <div className={styles.content}>
-        <div className={styles.infoContainer}>{children}</div>
-    </div>
-);
-
 const index = () => {
     const { formatMessage } = useI18n({ messages });
 
@@ -24,9 +18,11 @@ const index = () => {
                 </Heading>
             </div>
             <div className={styles.contentContainer}>
-                <SøknadInfoWrapper>
-                    <Outlet />
-                </SøknadInfoWrapper>
+                <div className={styles.content}>
+                    <div className={styles.infoContainer}>
+                        <Outlet />
+                    </div>
+                </div>
             </div>
         </div>
     );
