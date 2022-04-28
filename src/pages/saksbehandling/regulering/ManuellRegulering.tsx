@@ -3,7 +3,7 @@ import { Alert, Button, Heading, Loader, TextField } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import * as reguleringApi from '~src/api/reguleringApi';
 import * as sakApi from '~src/api/sakApi';
@@ -12,19 +12,22 @@ import {
     fradragFormdataTilFradrag,
     fradragTilFradragFormData,
 } from '~src/components/beregningOgSimulering/beregning/beregningUtils';
-import { FradragFormData, FradragInputs } from '~src/components/beregningOgSimulering/beregning/FradragInputs';
+import {
+    FradragFormData,
+    FradragInputs,
+} from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
-import { Fradragstype } from '~src/types/Fradrag';
+import { IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import { ÅrsakForManuell } from '~src/types/Regulering';
 import { Sak } from '~src/types/Sak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
-import { fjernFradragSomIkkeErValgbare } from '~src/utils/fradrag/fradragUtil';
+import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
 import messages from './manuellRegulering-nb';
 import styles from './manuellRegulering.module.less';
@@ -46,11 +49,11 @@ const ManuellRegulering = (props: Props) => {
     );
     const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
     const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const BackButton = () => (
         <Button
-            onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
+            onClick={() => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
             variant="secondary"
             type="button"
         >
@@ -89,7 +92,7 @@ const ManuellRegulering = (props: Props) => {
                 },
                 () => {
                     hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
-                        history.push(Routes.createSakIntroLocation(formatMessage('notification'), props.sak.id));
+                        navigate(Routes.createSakIntroLocation(formatMessage('notification'), props.sak.id));
                     });
                 }
             ),
@@ -107,9 +110,9 @@ const ManuellRegulering = (props: Props) => {
                         data.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger
                             .map((v) => v?.grunnlag)
                             .filter(filtrerRegulerbarIEU) ?? [],
-                    fradrag: fjernFradragSomIkkeErValgbare(data.grunnlagsdataOgVilkårsvurderinger.fradrag).map(
-                        fradragTilFradragFormData
-                    ),
+                    fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
+                        data.grunnlagsdataOgVilkårsvurderinger.fradrag
+                    ).map(fradragTilFradragFormData),
                 })
         );
     }, []);
@@ -125,7 +128,10 @@ const ManuellRegulering = (props: Props) => {
                 const uføregrunnlag = uføre?.vurderinger.map((v) => v?.grunnlag).filter(filtrerRegulerbarIEU) ?? [];
                 const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
                 const harRegulerbarFradrag = fradrag.some((f) =>
-                    [Fradragstype.NAVytelserTilLivsopphold, Fradragstype.OffentligPensjon].includes(f.type)
+                    [
+                        IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold,
+                        VelgbareFradragskategorier.OffentligPensjon,
+                    ].includes(f.type)
                 );
 
                 const hentProblemer = (årsaker: ÅrsakForManuell[]) =>
@@ -183,7 +189,7 @@ const ManuellRegulering = (props: Props) => {
 
                                                 <TextField
                                                     size="medium"
-                                                    value={u.forventetInntekt}
+                                                    value={u.forventetInntekt.toString()}
                                                     onChange={(e) =>
                                                         formik.setFieldValue(
                                                             `uføre.${index}.forventetInntekt`,
@@ -221,7 +227,8 @@ const ManuellRegulering = (props: Props) => {
                                                     {
                                                         periode: null,
                                                         beløp: null,
-                                                        type: null,
+                                                        kategori: null,
+                                                        spesifisertkategori: null,
                                                         fraUtland: false,
                                                         utenlandskInntekt: {
                                                             beløpIUtenlandskValuta: '',

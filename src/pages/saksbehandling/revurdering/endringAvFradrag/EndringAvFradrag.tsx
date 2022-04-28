@@ -13,7 +13,6 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
-import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Fradragoppsummering from '~src/components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';

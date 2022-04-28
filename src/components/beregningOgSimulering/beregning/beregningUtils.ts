@@ -1,7 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
-import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
+import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Periode } from '~src/types/Periode';
 import { toDateOrNull } from '~src/utils/date/dateUtils';
 
@@ -49,7 +49,7 @@ export const fradragFormdataTilFradrag = (f: FradragFormData, defaultPeriode: Pe
               },
 
     beløp: parseInt(f.beløp!, 10),
-    type: f.type!,
+    type: f.kategori!,
     utenlandskInntekt: f.fraUtland
         ? {
               beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
@@ -58,5 +58,6 @@ export const fradragFormdataTilFradrag = (f: FradragFormData, defaultPeriode: Pe
           }
         : null,
     tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
+    beskrivelse: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
     /* eslint-enable @typescript-eslint/no-non-null-assertion */
 });

@@ -224,7 +224,8 @@ export const klage: Route<{
 };
 //---------------Regulering-------------------------
 export const manuellRegulering: Route<{ sakId: string; reguleringId: string }> = {
-    path: '/saksoversikt/:sakId/reguler/:reguleringId',
+    path: '/reguler/:reguleringId',
+    absPath: '/saksoversikt/:sakId/reguler/:reguleringId',
     createURL: (args) => `/saksoversikt/${args.sakId}/reguler/${args.reguleringId}`,
 };
 

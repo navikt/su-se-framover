@@ -140,7 +140,7 @@ const Saksoversikt = () => {
                                     />
 
                                     <Route
-                                        path={Routes.manuellRegulering.path}
+                                        path={routes.manuellRegulering.path}
                                         element={
                                             <div className={styles.mainContent}>
                                                 <ManuellReguleringPage sak={sak} />
