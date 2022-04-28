@@ -29,7 +29,7 @@ const RevurderingIntroPage = () => {
     const props = {
         sakId: sak.id,
         utbetalinger: sak.utbetalinger,
-        informasjonsRevurderinger: sak.revurderinger.filter(erInformasjonsRevurdering), //TODO: Skal passe for begge
+        informasjonsRevurderinger: sak.revurderinger.filter(erInformasjonsRevurdering),
     };
     const informasjonsRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
