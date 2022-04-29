@@ -96,17 +96,16 @@ export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
         case VelgbareFradragskategorier.OffentligPensjon:
         case VelgbareFradragskategorier.SupplerendeStønad:
         case VelgbareFradragskategorier.Uføretrygd:
+        case IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold:
             return true;
-        case VelgbareFradragskategorier.Annet: // ???
-        case VelgbareFradragskategorier.Sykepenger: // Usikker
+        case VelgbareFradragskategorier.Annet:
+        case VelgbareFradragskategorier.Sykepenger:
         case VelgbareFradragskategorier.Arbeidsinntekt:
         case VelgbareFradragskategorier.Kapitalinntekt:
         case VelgbareFradragskategorier.PrivatPensjon:
-        case VelgbareFradragskategorier.Kontantstøtte: // Usikker
-        case VelgbareFradragskategorier.BidragEtterEkteskapsloven: // Usikker
+        case VelgbareFradragskategorier.Kontantstøtte:
+        case VelgbareFradragskategorier.BidragEtterEkteskapsloven:
         case VelgbareFradragskategorier.Sosialstønad:
-            return false;
-        case IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold:
         case IkkeVelgbareFradragskategorier.ForventetInntekt:
         case IkkeVelgbareFradragskategorier.BeregnetFradragEPS:
         case IkkeVelgbareFradragskategorier.UnderMinstenivå:
