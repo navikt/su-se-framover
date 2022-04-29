@@ -23,7 +23,12 @@ import { useI18n } from '~src/lib/i18n';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { Fradrag, FradragTilhører, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
+import {
+    Fradrag,
+    FradragTilhører,
+    IkkeVelgbareFradragskategorier,
+    VelgbareFradragskategorier,
+} from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -92,7 +97,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: Number.parseInt(f.beløp!, 10),
                     type: f.kategori!,
-                    beskrivelse: f.spesifisertkategori,
+                    beskrivelse: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
                     utenlandskInntekt: f.fraUtland
                         ? {
                               beløpIUtenlandskValuta: Number.parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
