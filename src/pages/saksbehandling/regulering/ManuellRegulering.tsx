@@ -129,33 +129,6 @@ const ManuellRegulering = (props: Props) => {
                 const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
                 const harRegulerbarFradrag = fradrag.some((f) => måReguleresManuelt(f.type));
 
-                const hentProblemer = (årsaker: ÅrsakForManuell[]) =>
-                    årsaker.filter(
-                        (årsak) =>
-                            årsak !== ÅrsakForManuell.ForventetInntektErStørreEnn0 &&
-                            årsak !== ÅrsakForManuell.FradragMåHåndteresManuelt
-                    );
-
-                const hentTekstForManuellÅrsak = (årsak: ÅrsakForManuell): string => {
-                    switch (årsak) {
-                        case ÅrsakForManuell.FradragMåHåndteresManuelt:
-                        case ÅrsakForManuell.ForventetInntektErStørreEnn0:
-                            return '';
-
-                        case ÅrsakForManuell.YtelseErMidlertidigStanset:
-                            return formatMessage('manuell.årsak.stans');
-                        case ÅrsakForManuell.DelvisOpphør:
-                        case ÅrsakForManuell.VedtakstidslinjeErIkkeSammenhengende:
-                            return formatMessage('manuell.årsak.hull');
-                        case ÅrsakForManuell.PågåendeAvkortingEllerBehovForFremtidigAvkorting:
-                            return formatMessage('manuell.årsak.avkorting');
-                        case ÅrsakForManuell.AvventerKravgrunnlag:
-                            return formatMessage('manuell.årsak.avventarKravgrunnlag');
-                        case ÅrsakForManuell.UtbetalingFeilet:
-                            return formatMessage('manuell.årsak.utbetalingFeilet');
-                    }
-                };
-
                 const problemer = hentProblemer(regulering.årsakForManuell);
 
                 return (
@@ -257,7 +230,7 @@ const ManuellRegulering = (props: Props) => {
                             {problemer.length > 0 && (
                                 <Alert className={styles.advarsel} variant="warning">
                                     {problemer.map((problem, index) => (
-                                        <p key={index}>{hentTekstForManuellÅrsak(problem)}</p>
+                                        <p key={index}>{hentTekstForManuellÅrsak(problem, formatMessage)}</p>
                                     ))}
                                 </Alert>
                             )}
@@ -278,6 +251,36 @@ const ManuellRegulering = (props: Props) => {
             }
         )
     );
+};
+
+const hentProblemer = (årsaker: ÅrsakForManuell[]) =>
+    årsaker.filter(
+        (årsak) =>
+            årsak !== ÅrsakForManuell.ForventetInntektErStørreEnn0 &&
+            årsak !== ÅrsakForManuell.FradragMåHåndteresManuelt
+    );
+
+const hentTekstForManuellÅrsak = (
+    årsak: ÅrsakForManuell,
+    formatMessage: (id: keyof typeof messages) => string
+): string => {
+    switch (årsak) {
+        case ÅrsakForManuell.FradragMåHåndteresManuelt:
+        case ÅrsakForManuell.ForventetInntektErStørreEnn0:
+            return '';
+
+        case ÅrsakForManuell.YtelseErMidlertidigStanset:
+            return formatMessage('manuell.årsak.stans');
+        case ÅrsakForManuell.DelvisOpphør:
+        case ÅrsakForManuell.VedtakstidslinjeErIkkeSammenhengende:
+            return formatMessage('manuell.årsak.hull');
+        case ÅrsakForManuell.PågåendeAvkortingEllerBehovForFremtidigAvkorting:
+            return formatMessage('manuell.årsak.avkorting');
+        case ÅrsakForManuell.AvventerKravgrunnlag:
+            return formatMessage('manuell.årsak.avventarKravgrunnlag');
+        case ÅrsakForManuell.UtbetalingFeilet:
+            return formatMessage('manuell.årsak.utbetalingFeilet');
+    }
 };
 
 export default ManuellRegulering;
