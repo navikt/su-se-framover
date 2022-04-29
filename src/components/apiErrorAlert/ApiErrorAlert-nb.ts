@@ -169,6 +169,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     [ApiErrorCode.SISTE_UTBETALING_ER_IKKE_STANS]: 'Feil ved kontroll av simulering',
     [ApiErrorCode.SISTE_VEDTAK_IKKE_STANS]: 'Sending av utbetaling til oppdrag feilet',
+    [ApiErrorCode.SPESIFISERT_FRADRAG_SKAL_IKKE_HA_BESKRIVELSE]: 'Et valgt fradragskategori skal ikke spesifiseres',
     [ApiErrorCode.STANSDATO_IKKE_FØRSTE_I_INNEVÆRENDE_ELLER_NESTE_MÅNED]:
         'Stansdato er ikke første dato i inneværende eller neste måned',
     [ApiErrorCode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]:
@@ -222,6 +223,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UKJENT_FEIL]: 'Ukjent feil',
     [ApiErrorCode.UKJENT_FEIL]: 'Ukjent feil',
     [ApiErrorCode.UKJENT_FEIL_VED_HENTING_AV_JOURNALPOST]: 'Ukjent feil ved henting av journalpost',
+    [ApiErrorCode.USPESIFISIERT_FRADRAG_KREVER_BESKRIVELSE]: 'Et fradrag som er "Annet" må spesifiseres',
     [ApiErrorCode.UTBETALING_ALLEREDE_OPPHØRT]: 'Utbetaling allerede opphørt',
     [ApiErrorCode.UTBETALING_ALLEREDE_STANSET]: 'Utbetaling allerede stanset',
     [ApiErrorCode.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'Fradrag mangler valuta',
