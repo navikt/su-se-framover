@@ -1,7 +1,7 @@
 import { Nullable } from '~src/lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
-import { LagreFradragsgrunnlangInnsending } from '~src/types/Fradrag';
+import { Fradrag } from '~src/types/Fradrag';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from '~src/types/Periode';
@@ -45,7 +45,7 @@ export async function startBeregning(
 export async function lagreFradragsgrunnlag(
     sakId: string,
     behandlingId: string,
-    fradrag: LagreFradragsgrunnlangInnsending[]
+    fradrag: Fradrag[]
 ): Promise<ApiClientResult<Behandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/grunnlag/fradrag`,

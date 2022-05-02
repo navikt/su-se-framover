@@ -15,7 +15,7 @@ import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemote
 import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
-import { LagreFradragsgrunnlangInnsending } from '~src/types/Fradrag';
+import { Fradrag } from '~src/types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -243,7 +243,7 @@ export const startBeregning = createAsyncThunk<
 
 export const lagreFradrag = createAsyncThunk<
     Behandling,
-    { sakId: string; behandlingId: string; fradrag: LagreFradragsgrunnlangInnsending[] },
+    { sakId: string; behandlingId: string; fradrag: Fradrag[] },
     { rejectValue: ApiError }
 >('beregning/grunnlag/fradrag', async ({ sakId, behandlingId, fradrag }, thunkApi) => {
     const res = await behandlingApi.lagreFradragsgrunnlag(sakId, behandlingId, fradrag);

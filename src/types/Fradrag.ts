@@ -6,15 +6,6 @@ import { eqNullable, Nullable } from '~src/lib/types';
 
 import { Periode } from './Periode';
 
-export interface LagreFradragsgrunnlangInnsending {
-    periode: Nullable<Periode<string>>;
-    type: Fradragskategori;
-    beskrivelse: Nullable<string>;
-    beløp: number;
-    utenlandskInntekt: Nullable<UtenlandskInntekt>;
-    tilhører: FradragTilhører;
-}
-
 export interface Fradrag {
     periode: Nullable<Periode<string>>;
     type: Fradragskategori;
@@ -83,6 +74,10 @@ export enum IkkeVelgbareFradragskategorier {
     AvkortingUtenlandsopphold = 'AvkortingUtenlandsopphold',
 }
 
+/**
+ * Dokumentasjon over hvilke fradragskategorier som reguleres finnes på:
+ * https://confluence.adeo.no/display/TESUS/G-regulering
+ */
 export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
     switch (fradrag) {
         case VelgbareFradragskategorier.Alderspensjon:
