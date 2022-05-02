@@ -67,9 +67,8 @@ const ReguleringLister = (props: Props) => {
                                             variant="secondary"
                                             size="small"
                                             onClick={() =>
-                                                avsluttRegulering(
-                                                    { reguleringId: regulering.id, begrunnelse: 'test' },
-                                                    () => location.reload()
+                                                avsluttRegulering({ reguleringId: regulering.id }, () =>
+                                                    location.reload()
                                                 )
                                             }
                                         >
