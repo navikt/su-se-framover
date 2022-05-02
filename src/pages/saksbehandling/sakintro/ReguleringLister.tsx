@@ -29,6 +29,7 @@ const ReguleringLister = (props: Props) => {
             <Oversiktslinje kategoriTekst={formatMessage('regulering.tittel')} entries={props.reguleringer}>
                 {{
                     oversiktsinformasjon: (regulering) => {
+                        const vedtak = props.vedtak.find((v) => v.behandlingId === regulering.id);
                         return (
                             <>
                                 <Heading size="small" level="3" spacing>
@@ -36,7 +37,12 @@ const ReguleringLister = (props: Props) => {
                                         ? formatMessage('regulering.automatisk')
                                         : formatMessage('regulering.manuell')}
                                 </Heading>
-                                <Informasjonslinje label="Opprettet" value={() => formatDate(regulering.opprettet)} />
+                                {vedtak && (
+                                    <Informasjonslinje
+                                        label={formatMessage('regulering.iverksattDato')}
+                                        value={() => formatDate(vedtak.opprettet)}
+                                    />
+                                )}
                             </>
                         );
                     },

@@ -64,4 +64,5 @@ export default {
     'regulering.manuell.start': 'Start regulering',
     'regulering.avslutt': 'Avslutt behandling',
     'regulering.seOppsummering': 'Se oppsummering',
+    'regulering.iverksattDato': 'Iverksatt dato',
 };
