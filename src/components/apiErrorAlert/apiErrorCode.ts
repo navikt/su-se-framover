@@ -192,4 +192,6 @@ export enum ApiErrorCode {
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
     ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER = 'åpen_revurdering_gjenopptak_eksisterer',
     ÅPEN_REVURDERING_STANS_EKSISTERER = 'åpen_revurdering_stans_eksisterer',
+    REGULERING_AVVENTER_KRAVGRUNNLAG = 'regulering_avventer_kravgrunnlag',
+    REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING = 'regulering_har_pågående_eller_behov_for_avkorting',
 }

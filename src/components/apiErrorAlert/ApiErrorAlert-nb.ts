@@ -248,6 +248,10 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.BEREGNING_FEILET]: 'BEREGNING_FEILET',
     [ApiErrorCode.STANSET_YTELSE_MÅ_STARTES_FØR_DEN_KAN_REGULERES]:
         'Stans av ytelse må gjenopptas før den kan reguleres',
+    [ApiErrorCode.REGULERING_AVVENTER_KRAVGRUNNLAG]:
+        'Saken avventer kravgrunnlag. Regulering kan kjøres når vi fått svar fra oppdrag.',
+    [ApiErrorCode.REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING]:
+        'Saken har pågående eller behov for fremtidig avkorting. Reguleringen må håndteres gjennom revurdering.',
 };
 export default messages;
 
