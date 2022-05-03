@@ -1,17 +1,18 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
+import { useOutletContext } from '~node_modules/react-router-dom';
 import Framdriftsindikator from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { KlageSteg } from '~src/pages/saksbehandling/types';
-import { Sak } from '~src/types/Sak';
 import {
     erKlageVilkårsvurdertUtfyltEllerSenere,
     getDefaultFramdriftsindikatorLinjer,
     getFramdriftsindikatorLinjer,
     getPartialFramdriftsindikatorLinjeInfo,
 } from '~src/utils/klage/klageUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import AvvistKlage from './avvistKlage/AvvistKlage';
 import messages from './klage-nb';
@@ -20,7 +21,8 @@ import SendKlageTilAttestering from './sendKlageTilAttestering/SendKlageTilAttes
 import VurderFormkrav from './vurderFormkrav/VurderFormkrav';
 import VurderingAvKlage from './vurderingAvKlage/VurderingAvKlage';
 
-const Klage = (props: { sak: Sak }) => {
+const Klage = () => {
+    const props = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.klage>();
     const klage = props.sak.klager.find((k) => k.id === urlParams.klageId);
     const { formatMessage } = useI18n({ messages });

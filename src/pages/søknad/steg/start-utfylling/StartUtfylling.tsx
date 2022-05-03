@@ -21,7 +21,7 @@ import { useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
 import { Søknadstype } from '~src/types/Søknad';
 
-export const StartUtfylling = () => {
+const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
     const søknad = useAppSelector((s) => s.soknad);
     const { step } = useParams<{ step: Søknadsteg }>();
@@ -152,3 +152,5 @@ export const StartUtfylling = () => {
         </div>
     );
 };
+
+export default StartUtfylling;

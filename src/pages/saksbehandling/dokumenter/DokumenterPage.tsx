@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Back, FileContent } from '@navikt/ds-icons';
 import { Alert, Button, Heading, Ingress, LinkPanel, Loader, Tag } from '@navikt/ds-react';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -11,9 +11,9 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { saksoversiktValgtSak } from '~src/lib/routes';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
-import { Sak } from '~src/types/Sak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './dokumenterPage-nb';
 import * as styles from './dokumenterPage.module.less';
@@ -36,7 +36,8 @@ const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typ
     </div>
 );
 
-const DokumenterPage = (props: { sak: Sak }) => {
+const DokumenterPage = () => {
+    const props = useOutletContext<AttesteringContext>();
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
     const navigate = useNavigate();
 

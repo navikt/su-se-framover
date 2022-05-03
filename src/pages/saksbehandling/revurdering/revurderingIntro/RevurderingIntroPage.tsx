@@ -1,6 +1,6 @@
 import * as DateFns from 'date-fns';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import {
     oppdaterRevurderingsPeriode as oppdaterRevurdering,
@@ -8,9 +8,10 @@ import {
 } from '~src/features/revurdering/revurderingActions';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { InformasjonSomRevurderes, InformasjonsRevurdering, OpprettetRevurderingGrunn } from '~src/types/Revurdering';
-import { compareUtbetalingsperiode, Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
-import { finnNesteRevurderingsteg } from '~src/utils/revurdering/revurderingUtils';
+import { InformasjonSomRevurderes, OpprettetRevurderingGrunn } from '~src/types/Revurdering';
+import { compareUtbetalingsperiode } from '~src/types/Utbetalingsperiode';
+import { erInformasjonsRevurdering, finnNesteRevurderingsteg } from '~src/utils/revurdering/revurderingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
@@ -21,11 +22,16 @@ export interface FormValues {
     begrunnelse: string;
 }
 
-const RevurderingIntroPage = (props: {
-    sakId: string;
-    utbetalinger: Utbetalingsperiode[];
-    informasjonsRevurdering: InformasjonsRevurdering | undefined;
-}) => {
+const RevurderingIntroPage = () => {
+    const { sak } = useOutletContext<AttesteringContext>();
+    const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
+
+    const props = {
+        sakId: sak.id,
+        utbetalinger: sak.utbetalinger,
+        informasjonsRevurderinger: sak.revurderinger.filter(erInformasjonsRevurdering),
+    };
+    const informasjonsRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
     const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
 
@@ -34,10 +40,10 @@ const RevurderingIntroPage = (props: {
 
     const forrigeUrl = Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId });
     const thunk = (arg: FormValues) =>
-        props.informasjonsRevurdering
+        informasjonsRevurdering
             ? oppdaterRevurdering({
                   sakId: props.sakId,
-                  revurderingId: props.informasjonsRevurdering.id,
+                  revurderingId: informasjonsRevurdering.id,
                   ...arg,
               })
             : opprettRevurdering({
@@ -47,7 +53,7 @@ const RevurderingIntroPage = (props: {
 
     const endre = async (arg: FormValues, goTo: 'neste' | 'avbryt') => {
         const response = await dispatch(thunk(arg));
-        if ((props.informasjonsRevurdering ? oppdaterRevurdering : opprettRevurdering).fulfilled.match(response)) {
+        if ((informasjonsRevurdering ? oppdaterRevurdering : opprettRevurdering).fulfilled.match(response)) {
             navigate(
                 goTo === 'avbryt'
                     ? forrigeUrl
@@ -70,7 +76,7 @@ const RevurderingIntroPage = (props: {
         <RevurderingIntroForm
             save={endre}
             tilbakeUrl={forrigeUrl}
-            revurdering={props.informasjonsRevurdering}
+            revurdering={informasjonsRevurdering}
             maxFraOgMed={DateFns.parseISO(sisteUtbetaling.tilOgMed)}
             minFraOgMed={DateFns.parseISO(førsteUtbetaling.fraOgMed)}
             opprettRevurderingStatus={opprettRevurderingStatus}

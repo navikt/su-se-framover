@@ -1,30 +1,31 @@
 // eslint-disable-next-line
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Heading, Link, Loader } from '@navikt/ds-react';
-import React, { useEffect, Suspense } from 'react';
+import { Loader } from '@navikt/ds-react';
+import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, useLocation, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
-import { ErrorCode } from '~src/api/apiClient';
-import { LOGIN_URL } from '~src/api/authUrl';
-import { FeatureToggle } from '~src/api/featureToggleApi';
-import { UserProvider } from '~src/context/userContext';
-import { FeatureToggleProvider, useFeatureToggle } from '~src/lib/featureToggles';
-import { pipe } from '~src/lib/fp';
-import enableHotjar from '~src/lib/tracking/hotjar';
-import Attestering from '~src/pages/saksbehandling/attestering/Attestering';
-import { LoggedInUser } from '~src/types/LoggedInUser';
+import { FeatureToggleProvider } from '~src/lib/featureToggles';
+import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
-import Header from './components/header/Header';
 import WithDocTitle from './components/WithDocTitle';
-import * as meSlice from './features/me/me.slice';
 import * as routes from './lib/routes';
-import Store, { useAppDispatch, useAppSelector } from './redux/Store';
-import * as styles from './root.module.less';
-
+import Store from './redux/Store';
 import './externalStyles';
+import { ContentWrapper } from './utils/router/ContentWrapper';
 
+const Attestering = React.lazy(() => import('~src/pages/saksbehandling/attestering/Attestering'));
+const AttesterKlage = React.lazy(() => import('~src/pages/saksbehandling/attestering/attesterKlage/AttesterKlage'));
+const AttesterRevurdering = React.lazy(
+    () => import('~src/pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering')
+);
+const AttesterSøknadsbehandling = React.lazy(
+    () => import('~src/pages/saksbehandling/attestering/attesterSøknadsbehandling/AttesterSøknadsbehandling')
+);
+const Kvittering = React.lazy(() => import('~src/pages/søknad/kvittering/Kvittering'));
+const Infoside = React.lazy(() => import('~src/pages/søknad/steg/infoside/Infoside'));
+const Inngang = React.lazy(() => import('~src/pages/søknad/steg/inngang/Inngang'));
+const StartUtfylling = React.lazy(() => import('~src/pages/søknad/steg/start-utfylling/StartUtfylling'));
 const Drift = React.lazy(() => import('~/src/pages/drift'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));
@@ -32,6 +33,26 @@ const Behandlingsoversikt = React.lazy(
     () => import('~/src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt')
 );
 const Soknad = React.lazy(() => import('~/src/pages/søknad'));
+const Gjenoppta = React.lazy(() => import('~/src/pages/saksbehandling/stans/gjenoppta/gjenoppta'));
+const StansOppsummering = React.lazy(() => import('~src/pages/saksbehandling/stans/stansOppsummering'));
+const SendTilAttesteringPage = React.lazy(
+    () => import('~/src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
+);
+const Vedtaksoppsummering = React.lazy(() => import('~src/pages/saksbehandling/vedtak/Vedtaksoppsummering'));
+const AvsluttBehandling = React.lazy(() => import('~/src/pages/saksbehandling/avsluttBehandling/AvsluttBehandling'));
+const Revurdering = React.lazy(() => import('~/src/pages/saksbehandling/revurdering/Revurdering'));
+const Sakintro = React.lazy(() => import('~/src/pages/saksbehandling/sakintro/Sakintro'));
+const DokumenterPage = React.lazy(() => import('~src/pages/saksbehandling/dokumenter/DokumenterPage'));
+const StansPage = React.lazy(() => import('~/src/pages/saksbehandling/stans/Stans'));
+const OpprettKlage = React.lazy(() => import('~src/pages/klage/opprettKlage/OpprettKlage'));
+const Klage = React.lazy(() => import('~src/pages/klage/Klage'));
+const NyDatoForKontrollsamtale = React.lazy(() => import('~src/pages/kontrollsamtale/KontrollsamtalePage'));
+const RevurderingIntroPage = React.lazy(
+    () => import('~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage')
+);
+const GjenopptaOppsummering = React.lazy(
+    () => import('~src/pages/saksbehandling/stans/gjenoppta/gjenopptaOppsummering')
+);
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -51,30 +72,7 @@ const Root = () => (
                     <ContentWrapper>
                         <Suspense fallback={<Loader />}>
                             <ScrollToTop />
-                            <Routes>
-                                <Route
-                                    path={routes.home.path}
-                                    element={<WithDocTitle title="Hjem" Page={HomePage} />}
-                                />
-                                <Route
-                                    path={routes.soknad.path + '*'}
-                                    element={<WithDocTitle title="Søknad" Page={Soknad} />}
-                                />
-                                <Route
-                                    path={routes.saksoversiktValgtSak.path + '*'}
-                                    element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
-                                />
-                                <Route
-                                    path={routes.saksoversiktIndex.path}
-                                    element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
-                                />
-                                <Route
-                                    path={routes.attestering.path + '*'}
-                                    element={<WithDocTitle title="Attestering" Page={Attestering} />}
-                                />
-                                <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
-                                <Route path="*" element={<>404</>} />
-                            </Routes>
+                            <AppRoutes />
                         </Suspense>
                     </ContentWrapper>
                 </BrowserRouter>
@@ -83,59 +81,57 @@ const Root = () => (
     </Provider>
 );
 
-const ContentWrapper: React.FC = (props) => {
-    const loggedInUser = useAppSelector((s) => s.me.me);
-
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        if (RemoteData.isInitial(loggedInUser)) {
-            dispatch(meSlice.fetchMe());
-        }
-    }, [loggedInUser._tag]);
-
-    const hotjarToggle = useFeatureToggle(FeatureToggle.Hotjar);
-    useEffect(() => {
-        hotjarToggle && enableHotjar();
-    }, [hotjarToggle]);
+const AppRoutes = () => {
+    const location = useLocation();
+    const isPapirsøknad = location.search.includes('papirsoknad');
 
     return (
-        <div>
-            <a href="#main-content" className="sr-only sr-only-focusable">
-                Hopp til innhold
-            </a>
-            <Header
-                user={pipe(
-                    loggedInUser,
-                    RemoteData.getOrElse<unknown, LoggedInUser | null>(() => null)
-                )}
+        <Routes>
+            <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
+            <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Soknad} />}>
+                <Route index element={<Infoside isPapirsøknad={isPapirsøknad} />} />
+                <Route path={routes.soknadPersonSøk.path} element={<Inngang isPapirsøknad={isPapirsøknad} />} />
+                <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
+                <Route path={routes.søkandskvittering.path} element={<Kvittering />} />
+            </Route>
+            <Route
+                path={routes.saksoversiktValgtSak.path}
+                element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
+            >
+                <Route index element={<Sakintro />} />
+                <Route path={routes.klageRoot.path}>
+                    <Route path={routes.klageOpprett.path} element={<OpprettKlage />} />
+                    <Route path={routes.klage.path} element={<Klage />} />
+                </Route>
+                <Route path={routes.stansRoot.path}>
+                    <Route index element={<StansPage />} />
+                    <Route path={routes.stansRoute.path} element={<StansPage />} />
+                    <Route path={routes.stansOppsummeringRoute.path} element={<StansOppsummering />} />
+                </Route>
+                <Route path={routes.gjenopptaStansRoot.path} element={<Gjenoppta />}>
+                    <Route path={routes.gjenopptaStansOppsummeringRoute.path} element={<GjenopptaOppsummering />} />
+                </Route>
+                <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
+                <Route path={routes.revurderValgtSak.path} element={<RevurderingIntroPage />} />
+                <Route path={routes.revurderValgtRevurdering.path} element={<Revurdering />} />
+                <Route path={routes.vedtaksoppsummering.path} element={<Vedtaksoppsummering />} />
+                <Route path={routes.saksbehandlingSendTilAttestering.path} element={<SendTilAttesteringPage />} />
+                <Route path={routes.saksbehandlingVilkårsvurdering.path} element={<Vilkår />} />
+                <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />
+                <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
+            </Route>
+            <Route
+                path={routes.saksoversiktIndex.path}
+                element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
             />
-            <main className={styles.contentContainer} id="main-content" tabIndex={-1}>
-                {pipe(
-                    loggedInUser,
-                    RemoteData.fold(
-                        () => <Loader />,
-                        () => <Loader />,
-                        (err) => {
-                            return (
-                                <div className={styles.ikkeTilgangContainer}>
-                                    <Heading level="1" size="medium" className={styles.overskrift}>
-                                        {err.statusCode === ErrorCode.NotAuthenticated ||
-                                        err.statusCode === ErrorCode.Unauthorized
-                                            ? 'Ikke tilgang'
-                                            : 'En feil oppstod'}
-                                    </Heading>
-                                    <Link href={`${LOGIN_URL}?redirectTo=${window.location.pathname}`}>
-                                        Logg inn på nytt
-                                    </Link>
-                                </div>
-                            );
-                        },
-                        (u) => <UserProvider user={u}>{props.children}</UserProvider>
-                    )
-                )}
-            </main>
-        </div>
+            <Route path={routes.attestering.path} element={<WithDocTitle title="Attestering" Page={Attestering} />}>
+                <Route path={routes.attesterSøknadsbehandling.path} element={<AttesterSøknadsbehandling />} />
+                <Route path={routes.attesterRevurdering.path} element={<AttesterRevurdering />} />
+                <Route path={routes.attesterKlage.path} element={<AttesterKlage />} />
+            </Route>
+            <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
+            <Route path="*" element={<>404</>} />
+        </Routes>
     );
 };
 

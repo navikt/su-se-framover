@@ -4,6 +4,7 @@ import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
 import React from 'react';
 
+import { useOutletContext } from '~node_modules/react-router-dom';
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, {
@@ -19,11 +20,12 @@ import * as routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
-import { Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
 import {
+    erInformasjonsRevurdering,
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
 } from '~src/utils/revurdering/revurderingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import SkjemaelementFeilmelding from '../../../components/formElements/SkjemaelementFeilmelding';
 import { RevurderingSteg } from '../types';
@@ -39,11 +41,13 @@ const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFr
 const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 
-const RevurderingPage = (props: {
-    sakId: string;
-    utbetalinger: Utbetalingsperiode[];
-    informasjonsRevurderinger: InformasjonsRevurdering[];
-}) => {
+const RevurderingPage = () => {
+    const { sak } = useOutletContext<AttesteringContext>();
+    const props = {
+        sakId: sak.id,
+        utbetalinger: sak.utbetalinger,
+        informasjonsRevurderinger: sak.revurderinger.filter(erInformasjonsRevurdering),
+    };
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...stegmessages } });
 
     const urlParams = routes.useRouteParams<typeof routes.revurderValgtRevurdering>();
@@ -146,13 +150,7 @@ const RevurderingPage = (props: {
             <Heading level="1" size="large" className={styles.tittel}>
                 {formatMessage('revurdering.tittel')}
             </Heading>
-            {urlParams.steg === RevurderingSteg.Periode && (
-                <RevurderingIntroPage
-                    sakId={props.sakId}
-                    utbetalinger={props.utbetalinger}
-                    informasjonsRevurdering={påbegyntRevurdering}
-                />
-            )}
+            {urlParams.steg === RevurderingSteg.Periode && <RevurderingIntroPage />}
             {urlParams.steg === RevurderingSteg.Oppsummering && (
                 <RevurderingOppsummeringPage
                     sakId={props.sakId}

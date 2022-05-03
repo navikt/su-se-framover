@@ -4,7 +4,7 @@ import { Alert, Button, LinkPanel, Loader, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
@@ -16,10 +16,10 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
 import { Behandling } from '~src/types/Behandling';
-import { Sak } from '~src/types/Sak';
 import { Søknad } from '~src/types/Søknad';
 import { erIverksatt } from '~src/utils/behandling/behandlingUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~src/utils/revurdering/revurderingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~src/utils/søknad/søknadUtils';
 
 import KlageLister from './KlageLister';
@@ -42,7 +42,8 @@ enum NyBehandling {
     KLAGE = 'KLAGE',
 }
 
-const Sakintro = (props: { sak: Sak }) => {
+const Sakintro = () => {
+    const props = useOutletContext<AttesteringContext>();
     const { intl } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
 
