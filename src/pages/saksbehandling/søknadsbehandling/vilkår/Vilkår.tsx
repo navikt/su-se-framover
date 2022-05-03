@@ -1,6 +1,6 @@
 import React from 'react';
+import { useOutletContext } from 'react-router-dom';
 
-import { useOutletContext } from '~node_modules/react-router-dom';
 import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import * as Routes from '~src/lib/routes';
