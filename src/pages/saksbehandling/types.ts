@@ -15,6 +15,7 @@ export enum RevurderingSteg {
     Bosituasjon = 'bosituasjon',
     Formue = 'formue',
     Utenlandsopphold = 'utenlandsopphold',
+    Opplysningsplikt = 'opplysningsplikt',
     Oppsummering = 'oppsummering',
 }
 

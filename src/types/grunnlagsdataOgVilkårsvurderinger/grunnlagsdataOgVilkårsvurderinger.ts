@@ -5,6 +5,7 @@ import { Fradrag } from '~src/types/Fradrag';
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';
+import { OpplysningspliktVilkår } from './opplysningsplikt/Opplysningsplikt';
 import { UføreVilkår } from './uføre/Uførevilkår';
 import { Utenlandsopphold } from './utenlandsopphold/Utenlandsopphold';
 
@@ -14,6 +15,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     bosituasjon: Bosituasjon[];
     formue: FormueVilkår;
     utenlandsopphold: Nullable<Utenlandsopphold>;
+    opplysningsplikt: Nullable<OpplysningspliktVilkår>;
 }
 
 export const uføreErlik = (ny: Nullable<UføreVilkår>, gammel: Nullable<UføreVilkår>) => {

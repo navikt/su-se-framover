@@ -18,6 +18,7 @@ import {
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
     IverksattRevurdering,
+    OpplysningspliktRequest,
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
     Revurdering,
@@ -337,6 +338,22 @@ export const lagreUtenlandsopphold = createAsyncThunk<
         sakId: arg.sakId,
         revurderingId: arg.revurderingId,
         utenlandsopphold: arg.utenlandsopphold,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreOpplysningsplikt = createAsyncThunk<
+    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    OpplysningspliktRequest,
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/opplysningsplikt/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreOpplysningsplikt({
+        id: arg.id,
+        type: arg.type,
+        data: arg.data,
     });
     if (res.status === 'ok') {
         return res.data;

@@ -202,6 +202,7 @@ export enum InformasjonSomRevurderes {
     Bosituasjon = 'Bosituasjon',
     Formue = 'Formue',
     Utenlandsopphold = 'Utenlandsopphold',
+    Opplysningsplikt = 'Opplysningsplikt',
 }
 
 export enum Vurderingstatus {
@@ -228,6 +229,18 @@ export interface UtenlandsoppholdRequest {
     sakId: string;
     revurderingId: string;
     utenlandsopphold: Utenlandsperiode[];
+}
+
+export interface OpplysningspliktRequest {
+    id: string;
+    type: string;
+    data: Array<{
+        periode: {
+            fraOgMed: string;
+            tilOgMed: string;
+        };
+        beskrivelse: Nullable<string>;
+    }>;
 }
 
 export interface FormuegrunnlagVerdier {

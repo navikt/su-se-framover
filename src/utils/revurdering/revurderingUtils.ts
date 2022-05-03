@@ -121,6 +121,7 @@ export const revurderingstegrekkefølge = [
     RevurderingSteg.Formue,
     RevurderingSteg.Utenlandsopphold,
     RevurderingSteg.EndringAvFradrag,
+    RevurderingSteg.Opplysningsplikt,
 ];
 
 export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) => {
@@ -135,6 +136,8 @@ export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) =
             return InformasjonSomRevurderes.Formue;
         case RevurderingSteg.Utenlandsopphold:
             return InformasjonSomRevurderes.Utenlandsopphold;
+        case RevurderingSteg.Opplysningsplikt:
+            return InformasjonSomRevurderes.Opplysningsplikt;
     }
     return null;
 };

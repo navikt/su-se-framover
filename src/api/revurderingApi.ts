@@ -15,6 +15,7 @@ import {
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
     IverksattRevurdering,
+    OpplysningspliktRequest,
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
     Revurdering,
@@ -324,6 +325,20 @@ export async function lagreUtenlandsopphold(
         method: 'POST',
         body: {
             utenlandsopphold: data.utenlandsopphold,
+        },
+    });
+}
+
+export async function lagreOpplysningsplikt(
+    data: OpplysningspliktRequest
+): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
+    return apiClient({
+        url: `/vilkar/opplysningsplikt`,
+        method: 'POST',
+        body: {
+            id: data.id,
+            type: data.type,
+            data: data.data,
         },
     });
 }
