@@ -3,7 +3,7 @@ import { Alert, Button, Heading, Loader, TextField } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as reguleringApi from '~src/api/reguleringApi';
 import * as sakApi from '~src/api/sakApi';
@@ -24,24 +24,21 @@ import { Nullable } from '~src/lib/types';
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import { ÅrsakForManuell } from '~src/types/Regulering';
-import { Sak } from '~src/types/Sak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './manuellRegulering-nb';
 import styles from './manuellRegulering.module.less';
-
-interface Props {
-    sak: Sak;
-}
 interface FormData {
     uføre: Uføregrunnlag[];
     fradrag: FradragFormData[];
 }
 
-const ManuellRegulering = (props: Props) => {
+const ManuellRegulering = () => {
     const { formatMessage } = useI18n({ messages });
+    const props = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.manuellRegulering>();
     const regulering = props.sak.reguleringer.find((r) => r.id === urlParams.reguleringId);
     const [gjeldendeGrunnlagsdataOgVilkårsvurderinger, hentGjeldendeGrunnlagsdataOgVilkårsvurderinger] = useApiCall(

@@ -4,7 +4,7 @@ import { Button, Heading, HelpText, Loader, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
@@ -16,7 +16,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import yup from '~src/lib/validering';
 import { KlageSteg } from '~src/pages/saksbehandling/types';
-import { Sak } from '~src/types/Sak';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from '../klage-nb';
 
@@ -41,7 +41,8 @@ const schema = yup.object<FormData>({
         .max(DateFns.endOfDay(new Date())),
 });
 
-const OpprettKlage = (props: { sak: Sak }) => {
+const OpprettKlage = () => {
+    const props = useOutletContext<AttesteringContext>();
     const [opprettKlageStatus, opprettKlage] = useAsyncActionCreator(klageActions.opprettKlage);
     const { handleSubmit, register, control, formState } = useForm<FormData>({
         resolver: yupResolver(schema),

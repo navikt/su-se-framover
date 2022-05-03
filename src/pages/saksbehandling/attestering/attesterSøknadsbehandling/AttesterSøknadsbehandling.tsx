@@ -1,7 +1,7 @@
 import { Alert } from '@navikt/ds-react';
 import React from 'react';
 import { IntlShape } from 'react-intl';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
@@ -13,6 +13,7 @@ import * as Routes from '~src/lib/routes';
 import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { erIverksatt, erTilAttestering } from '~src/utils/behandling/behandlingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './attesterSøknadsbehandling-nb';
 import * as styles from './attesterSøknadsbehandling.module.less';
@@ -96,7 +97,8 @@ const Attesteringsinnhold = ({
     );
 };
 
-const AttesterSøknadsbehandling = (props: { sak: Sak; søker: Person }) => {
+const AttesterSøknadsbehandling = () => {
+    const props = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.attesterSøknadsbehandling>();
     const { intl } = useI18n({ messages });
 

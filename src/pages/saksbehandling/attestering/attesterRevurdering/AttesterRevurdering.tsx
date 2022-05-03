@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -18,28 +18,31 @@ import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurderin
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { InformasjonsRevurdering, InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
+import { InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
 import {
-    erRevurderingTilAttestering,
     erGregulering,
+    erInformasjonsRevurdering,
+    erRevurderingTilAttestering,
+    harSimulering,
     hentAvkortingFraRevurdering,
     periodenInneholderTilbakekrevingOgAndreTyper,
-    harSimulering,
 } from '~src/utils/revurdering/revurderingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import * as SharedStyles from '../sharedStyles.module.less';
 
 import messages from './attesterRevurdering-nb';
 import * as styles from './attesterRevurdering.module.less';
 
-const AttesterRevurdering = (props: {
-    sakInfo: { sakId: string; saksnummer: number };
-    informasjonsRevurderinger: InformasjonsRevurdering[];
-}) => {
+const AttesterRevurdering = () => {
+    const { sak } = useOutletContext<AttesteringContext>();
+    const sakId = sak.id;
+    const saksnummer = sak.saksnummer;
+    const informasjonsRevurderinger = sak.revurderinger.filter(erInformasjonsRevurdering);
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const navigate = useNavigate();
-    const revurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
+    const revurdering = informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
     const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
     const dispatch = useAppDispatch();
     const [iverksettStatus, iverksett] = useAsyncActionCreator(RevurderingActions.iverksettRevurdering);
@@ -54,7 +57,7 @@ const AttesterRevurdering = (props: {
         }
         hentGrunnlagsdataOgVilkårsvurderinger({
             revurderingId: revurdering.id,
-            sakId: props.sakInfo.sakId,
+            sakId: sakId,
         });
     }, [revurdering?.id]);
 
@@ -75,23 +78,23 @@ const AttesterRevurdering = (props: {
     }
 
     const handleShowBrevClick = async () => {
-        hentPdf({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id, fritekst: null }, (data) => {
+        hentPdf({ sakId: sakId, revurderingId: revurdering.id, fritekst: null }, (data) => {
             window.open(URL.createObjectURL(data));
         });
     };
 
     const iverksettCallback = () => {
-        iverksett({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id }, () => {
-            dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.saksnummer.toString() }));
+        iverksett({ sakId: sakId, revurderingId: revurdering.id }, () => {
+            dispatch(sakSlice.fetchSak({ saksnummer: saksnummer.toString() }));
             const message = formatMessage('attester.iverksatt');
-            navigate(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
+            navigate(Routes.createSakIntroLocation(message, sakId));
         });
     };
 
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) => {
-        underkjenn({ sakId: props.sakInfo.sakId, revurderingId: revurdering.id, grunn, kommentar }, () => {
+        underkjenn({ sakId: sakId, revurderingId: revurdering.id, grunn, kommentar }, () => {
             const message = formatMessage('attester.sendtTilbake');
-            navigate(Routes.createSakIntroLocation(message, props.sakInfo.sakId));
+            navigate(Routes.createSakIntroLocation(message, sakId));
         });
     };
 
@@ -137,7 +140,7 @@ const AttesterRevurdering = (props: {
                     )}
 
                     <AttesteringsForm
-                        sakId={props.sakInfo.sakId}
+                        sakId={sakId}
                         iverksett={{
                             fn: iverksettCallback,
                             status: iverksettStatus,

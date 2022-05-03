@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import Personlinje from '~src/components/personlinje/Personlinje';
 import * as personSlice from '~src/features/person/person.slice';
@@ -10,13 +10,9 @@ import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './attestering-nb';
 import * as styles from './attestering.module.less';
-import AttesterKlage from './attesterKlage/AttesterKlage';
-import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
-import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';
 
 const Attestering = () => {
     const dispatch = useAppDispatch();
@@ -52,33 +48,7 @@ const Attestering = () => {
                         }}
                     />
                     <div className={styles.attesteringsKomponentContainer}>
-                        <Routes>
-                            <Route
-                                path={routes.attesterSøknadsbehandling.path}
-                                element={<AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />}
-                            />
-                            <Route
-                                path={routes.attesterRevurdering.path}
-                                element={
-                                    <AttesterRevurdering
-                                        sakInfo={{ sakId: sakValue.id, saksnummer: sakValue.saksnummer }}
-                                        informasjonsRevurderinger={sakValue.revurderinger.filter(
-                                            erInformasjonsRevurdering
-                                        )}
-                                    />
-                                }
-                            />
-                            <Route
-                                path={routes.attesterKlage.path}
-                                element={
-                                    <AttesterKlage
-                                        sakId={sakValue.id}
-                                        klager={sakValue.klager}
-                                        vedtaker={sakValue.vedtak}
-                                    />
-                                }
-                            />
-                        </Routes>
+                        <Outlet context={{ sak: sakValue, søker: søkerValue }} />
                     </div>
                 </div>
             )

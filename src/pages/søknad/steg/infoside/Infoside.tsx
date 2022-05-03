@@ -3,11 +3,15 @@ import React from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';
+import { soknadPersonSøk } from '~src/lib/routes';
 
 import messages from './infoside-nb';
 import * as styles from './infoside.module.less';
 
-const Infoside = (props: { nesteUrl: string }) => {
+const Infoside = (props: { isPapirsøknad?: boolean }) => {
+    const nesteUrl = soknadPersonSøk.createURL({
+        papirsøknad: props.isPapirsøknad,
+    });
     const suUførFlyktningLink = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-ufor-flyktning';
     const merOmSuForUføreLink =
         'https://www.nav.no/no/person/pensjon/andre-pensjonsordninger/supplerende-stonad-for-ufore-flyktninger';
@@ -74,7 +78,7 @@ const Infoside = (props: { nesteUrl: string }) => {
                 </BodyLong>
             </section>
 
-            <LinkAsButton variant="primary" href={props.nesteUrl} className={styles.knapp}>
+            <LinkAsButton variant="primary" href={nesteUrl} className={styles.knapp}>
                 {formatMessage('knapp.neste')}
             </LinkAsButton>
         </div>

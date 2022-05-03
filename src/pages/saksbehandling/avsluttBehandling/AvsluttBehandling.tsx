@@ -1,9 +1,10 @@
 import { Alert, Heading, Panel } from '@navikt/ds-react';
 import React from 'react';
 
+import { useOutletContext } from '~node_modules/react-router-dom';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Sak } from '~src/types/Sak';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './avsluttBehandling-nb';
 import * as styles from './avsluttBehandling.module.less';
@@ -11,7 +12,8 @@ import AvsluttKlage from './avsluttKlage/AvsluttKlage';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad';
 
-const AvsluttBehandling = (props: { sak: Sak }) => {
+const AvsluttBehandling = () => {
+    const props = useOutletContext<AttesteringContext>();
     const { formatMessage } = useI18n({ messages });
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttBehandling>();
 

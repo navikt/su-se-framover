@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
 import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -13,7 +13,6 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Sak } from '~src/types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import {
     erAvslått,
@@ -22,6 +21,7 @@ import {
     erBeregnetAvslag,
     erVilkårsvurderingerVurdertAvslag,
 } from '~src/utils/behandling/behandlingUtils';
+import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import messages from './sendTilAttesteringPage-nb';
@@ -31,7 +31,8 @@ interface FormData {
     fritekst: string;
 }
 
-const SendTilAttesteringPage = (props: { sak: Sak }) => {
+const SendTilAttesteringPage = () => {
+    const props = useOutletContext<AttesteringContext>();
     const { formatMessage } = useI18n({ messages });
 
     const navigate = useNavigate();
