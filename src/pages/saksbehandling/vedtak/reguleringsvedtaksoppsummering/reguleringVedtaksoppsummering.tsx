@@ -12,7 +12,7 @@ import Oppsummeringspanel, {
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { Regulering } from '~src/types/Regulering';
+import { Regulering, Reguleringstype } from '~src/types/Regulering';
 import { Vedtak } from '~src/types/Vedtak';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 
@@ -64,7 +64,15 @@ const ReguleringVedtaksoppsummering = (props: Props) => {
 
                                 <div>
                                     <Label>{formatMessage('oppsummering.utført.label')}</Label>
-                                    <BodyShort>{formatMessage('automatisk')}</BodyShort>
+                                    <BodyShort>
+                                        {props.regulering.reguleringstype === Reguleringstype.AUTOMATISK
+                                            ? formatMessage('automatisk')
+                                            : formatMessage('manuell')}
+                                    </BodyShort>
+                                </div>
+                                <div>
+                                    <Label>{formatMessage('oppsummering.saksbehandler.label')}</Label>
+                                    <BodyShort>{props.regulering.saksbehandler}</BodyShort>
                                 </div>
                             </div>
                             {/* // TODO ai: Lag oppsummering for uførhet */}

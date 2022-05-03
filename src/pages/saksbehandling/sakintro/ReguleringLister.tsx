@@ -1,7 +1,9 @@
-import { Heading } from '@navikt/ds-react';
+import { Button, Heading } from '@navikt/ds-react';
 import React from 'react';
 
+import * as reguleringApi from '~src/api/reguleringApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Regulering, Reguleringstype } from '~src/types/Regulering';
@@ -20,12 +22,14 @@ interface Props {
 
 const ReguleringLister = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
+    const [, avsluttRegulering] = useApiCall(reguleringApi.avsluttRegulering);
 
     return (
         <div className={styles.søknadsContainer}>
             <Oversiktslinje kategoriTekst={formatMessage('regulering.tittel')} entries={props.reguleringer}>
                 {{
                     oversiktsinformasjon: (regulering) => {
+                        const vedtak = props.vedtak.find((v) => v.behandlingId === regulering.id);
                         return (
                             <>
                                 <Heading size="small" level="3" spacing>
@@ -33,8 +37,12 @@ const ReguleringLister = (props: Props) => {
                                         ? formatMessage('regulering.automatisk')
                                         : formatMessage('regulering.manuell')}
                                 </Heading>
-                                <Informasjonslinje label="Opprettet" value={() => formatDate(regulering.opprettet)} />
-                                <Informasjonslinje label="Jobbnavn" value={() => formatMessage('regulering.g')} />
+                                {vedtak && (
+                                    <Informasjonslinje
+                                        label={formatMessage('regulering.iverksattDato')}
+                                        value={() => formatDate(vedtak.opprettet)}
+                                    />
+                                )}
                             </>
                         );
                     },
@@ -53,6 +61,30 @@ const ReguleringLister = (props: Props) => {
                                     >
                                         {formatMessage('regulering.seOppsummering')}
                                     </LinkAsButton>
+                                ) : regulering.reguleringstype === Reguleringstype.MANUELL ? (
+                                    <div className={styles.reguleringKnapper}>
+                                        <Button
+                                            variant="secondary"
+                                            size="small"
+                                            onClick={() =>
+                                                avsluttRegulering({ reguleringId: regulering.id }, () =>
+                                                    location.reload()
+                                                )
+                                            }
+                                        >
+                                            {formatMessage('regulering.avslutt')}
+                                        </Button>
+                                        <LinkAsButton
+                                            variant="primary"
+                                            size="small"
+                                            href={Routes.manuellRegulering.createURL({
+                                                sakId: props.sakId,
+                                                reguleringId: regulering.id,
+                                            })}
+                                        >
+                                            {formatMessage('regulering.manuell.start')}
+                                        </LinkAsButton>
+                                    </div>
                                 ) : null}
                             </>
                         );

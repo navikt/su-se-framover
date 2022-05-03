@@ -1,0 +1,49 @@
+@import '~/src/styles/variables.less';
+
+.feil {
+    display: flex;
+    padding-top: @spacing;
+    flex-direction: column;
+    gap: @spacing;
+}
+
+.advarsel {
+    margin-bottom: @spacing;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    > * {
+        padding: @spacing-xs @spacing-xxl;
+    }
+
+    .tittel {
+        width: 100%;
+        border-bottom: 1px solid @navBorder;
+    }
+
+    .container {
+        max-width: @container-sm;
+
+        .regulering {
+            margin-bottom: @spacing;
+
+            .ieu:not(:last-child) {
+                margin-bottom: @spacing;
+            }
+        }
+
+        .kategoriTittel {
+            margin-bottom: @spacing-xs;
+        }
+
+        .knapper {
+            display: flex;
+            margin-top: @spacing;
+            gap: @spacing-xs;
+        }
+    }
+}

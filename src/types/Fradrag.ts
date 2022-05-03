@@ -6,15 +6,6 @@ import { eqNullable, Nullable } from '~src/lib/types';
 
 import { Periode } from './Periode';
 
-export interface LagreFradragsgrunnlangInnsending {
-    periode: Nullable<Periode<string>>;
-    type: Fradragskategori;
-    beskrivelse: Nullable<string>;
-    beløp: number;
-    utenlandskInntekt: Nullable<UtenlandskInntekt>;
-    tilhører: FradragTilhører;
-}
-
 export interface Fradrag {
     periode: Nullable<Periode<string>>;
     type: Fradragskategori;
@@ -82,3 +73,38 @@ export enum IkkeVelgbareFradragskategorier {
     UnderMinstenivå = 'UnderMinstenivå',
     AvkortingUtenlandsopphold = 'AvkortingUtenlandsopphold',
 }
+
+/**
+ * Dokumentasjon over hvilke fradragskategorier som reguleres finnes på:
+ * https://confluence.adeo.no/display/TESUS/G-regulering
+ */
+export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
+    switch (fradrag) {
+        case VelgbareFradragskategorier.Alderspensjon:
+        case VelgbareFradragskategorier.Arbeidsavklaringspenger:
+        case VelgbareFradragskategorier.AvtalefestetPensjon:
+        case VelgbareFradragskategorier.AvtalefestetPensjonPrivat:
+        case VelgbareFradragskategorier.Dagpenger:
+        case VelgbareFradragskategorier.Gjenlevendepensjon:
+        case VelgbareFradragskategorier.Introduksjonsstønad:
+        case VelgbareFradragskategorier.Kvalifiseringsstønad:
+        case VelgbareFradragskategorier.OffentligPensjon:
+        case VelgbareFradragskategorier.SupplerendeStønad:
+        case VelgbareFradragskategorier.Uføretrygd:
+        case IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold:
+            return true;
+        case VelgbareFradragskategorier.Annet:
+        case VelgbareFradragskategorier.Sykepenger:
+        case VelgbareFradragskategorier.Arbeidsinntekt:
+        case VelgbareFradragskategorier.Kapitalinntekt:
+        case VelgbareFradragskategorier.PrivatPensjon:
+        case VelgbareFradragskategorier.Kontantstøtte:
+        case VelgbareFradragskategorier.BidragEtterEkteskapsloven:
+        case VelgbareFradragskategorier.Sosialstønad:
+        case IkkeVelgbareFradragskategorier.ForventetInntekt:
+        case IkkeVelgbareFradragskategorier.BeregnetFradragEPS:
+        case IkkeVelgbareFradragskategorier.UnderMinstenivå:
+        case IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold:
+            return false;
+    }
+};

@@ -53,6 +53,7 @@ const RevurderingIntroPage = React.lazy(
 const GjenopptaOppsummering = React.lazy(
     () => import('~src/pages/saksbehandling/stans/gjenoppta/gjenopptaOppsummering')
 );
+const ManuellReguleringPage = React.lazy(() => import('~src/pages/saksbehandling/regulering/ManuellRegulering'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -119,6 +120,7 @@ const AppRoutes = () => {
                 <Route path={routes.saksbehandlingVilkårsvurdering.path} element={<Vilkår />} />
                 <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />
                 <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
+                <Route path={routes.manuellRegulering.path} element={<ManuellReguleringPage />} />
             </Route>
             <Route
                 path={routes.saksoversiktIndex.path}

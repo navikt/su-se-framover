@@ -61,6 +61,8 @@ export default {
     'regulering.tittel': 'Regulering',
     'regulering.automatisk': 'Automatisk regulering',
     'regulering.manuell': 'Manuell regulering',
-    'regulering.g': 'G-regulering',
+    'regulering.manuell.start': 'Start regulering',
+    'regulering.avslutt': 'Avslutt behandling',
     'regulering.seOppsummering': 'Se oppsummering',
+    'regulering.iverksattDato': 'Iverksatt dato',
 };

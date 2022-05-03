@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Loader, Textarea } from '@navikt/ds-react';
-import { formatISO } from 'date-fns';
 import { useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
 import * as B from 'fp-ts/lib/boolean';
@@ -32,7 +31,7 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { Vurderingknapper } from '~src/pages/saksbehandling/søknadsbehandling/Vurdering';
 import { useAppDispatch } from '~src/redux/Store';
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
-import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/types/Fradrag';
+import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/behandlingUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -44,7 +43,11 @@ import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI
 import messages from './beregning-nb';
 import * as styles from './beregning.module.less';
 import { UtenlandskInntektFormData } from './beregningstegTypes';
-import { erIGyldigStatusForÅKunneBeregne, fradragTilFradragFormData } from './beregningUtils';
+import {
+    erIGyldigStatusForÅKunneBeregne,
+    fradragFormdataTilFradrag,
+    fradragTilFradragFormData,
+} from './beregningUtils';
 import VisBeregning from './VisBeregning';
 
 interface FormData {
@@ -122,33 +125,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         lagreFradrag({
             sakId: props.sakId,
             behandlingId: props.behandling.id,
-            fradrag: values.fradrag.map((f) => ({
-                //valdiering sikrer at feltet ikke er null
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                periode:
-                    f.periode?.fraOgMed && f.periode.tilOgMed
-                        ? {
-                              fraOgMed: formatISO(f.periode.fraOgMed, { representation: 'date' }),
-                              tilOgMed: formatISO(f.periode.tilOgMed, { representation: 'date' }),
-                          }
-                        : {
-                              fraOgMed: formatISO(stønadsperiode.fom!, { representation: 'date' }),
-                              tilOgMed: formatISO(stønadsperiode.tom!, { representation: 'date' }),
-                          },
-
-                beløp: parseInt(f.beløp!, 10),
-                type: f.kategori!,
-                beskrivelse: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
-                utenlandskInntekt: f.fraUtland
-                    ? {
-                          beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
-                          valuta: f.utenlandskInntekt.valuta,
-                          kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
-                      }
-                    : null,
-                tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
-            })),
+            fradrag: values.fradrag.map((f) =>
+                fradragFormdataTilFradrag(f, {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    fraOgMed: stønadsperiode.fom!,
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    tilOgMed: stønadsperiode.tom!,
+                })
+            ),
         });
 
     const lagreFradragOgBeregn = async (values: FormData, onSuccess: (behandling: Behandling) => void) => {

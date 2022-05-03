@@ -29,6 +29,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FANT_IKKE_PERSON]: 'Fant ikke personen',
     [ApiErrorCode.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'Fant ikke person eller saksbehandlers navn',
     [ApiErrorCode.FEIL_VED_LAGRING_AV_BREV_OG_KLAGE]: 'Feil ved lagring av brev og klage',
+    [ApiErrorCode.FANT_IKKE_REGULERING]: 'Fant ikke regulering',
     [ApiErrorCode.FANT_IKKE_REVURDERING]: 'Fant ikke revurdering',
     [ApiErrorCode.FANT_IKKE_SAK]: 'Fant ikke sak',
     [ApiErrorCode.FANT_IKKE_SAK_ELLER_FEIL_FORMAT]: 'Fant ikke sak, eller feil format på spørring',
@@ -242,6 +243,11 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER]:
         'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
     [ApiErrorCode.ÅPEN_REVURDERING_STANS_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
+    [ApiErrorCode.KAN_IKKE_REGULERE_STANSET_SAK]: 'Kan ikke regulere en stanset sak',
+    [ApiErrorCode.KUNNE_IKKE_FERDIGSTILLE_REGULERING]: 'Kunne ikke ferdigstille regulering',
+    [ApiErrorCode.BEREGNING_FEILET]: 'BEREGNING_FEILET',
+    [ApiErrorCode.STANSET_YTELSE_MÅ_STARTES_FØR_DEN_KAN_REGULERES]:
+        'Stans av ytelse må gjenopptas før den kan reguleres',
 };
 export default messages;
 

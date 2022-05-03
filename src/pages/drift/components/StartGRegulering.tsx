@@ -58,6 +58,7 @@ const StartGRegulering = () => {
             <Button
                 onClick={() => reguler({ startDato: toStringDateOrNull(startDato) ?? '' })}
                 loading={RemoteData.isPending(reguleringsstatus)}
+                disabled={!RemoteData.isInitial(reguleringsstatus)}
             >
                 Start regulering
             </Button>
