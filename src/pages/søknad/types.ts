@@ -1,6 +1,13 @@
-export enum Søknadsteg {
+export enum Uføresteg {
     Uførevedtak = 'uforevedtak',
     FlyktningstatusOppholdstillatelse = 'flyktning-oppholdstillatelse',
+}
+
+export enum Alderssteg {
+    Alderspensjon = 'alderspensjon',
+}
+
+export enum Fellessteg {
     BoOgOppholdINorge = 'opphold-i-norge',
     DinFormue = 'formue',
     DinInntekt = 'inntekt',
@@ -11,3 +18,5 @@ export enum Søknadsteg {
     Oppsummering = 'oppsummering',
     InformasjonOmPapirsøknad = 'informasjon-om-papirsoknad',
 }
+
+export type Søknadssteg = Uføresteg | Alderssteg | Fellessteg;

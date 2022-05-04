@@ -88,6 +88,11 @@ export enum Søknadstype {
     Papirsøknad = 'Papirsøknad',
 }
 
+export enum Søknadstema {
+    Alder = 'alder',
+    Uføre = 'ufore',
+}
+
 interface Formue {
     borIBolig: Nullable<boolean>;
     verdiPåBolig: Nullable<number>;

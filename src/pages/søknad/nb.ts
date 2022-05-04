@@ -1,17 +1,20 @@
-import { Søknadsteg } from '~src/pages/søknad/types';
+import { Alderssteg, Fellessteg, Søknadssteg, Uføresteg } from '~src/pages/søknad/types';
 
-export const steg: { [key in Søknadsteg]: string } = {
-    [Søknadsteg.Uførevedtak]: 'Uførevedtak',
-    [Søknadsteg.FlyktningstatusOppholdstillatelse]: 'Flyktningstatus',
-    [Søknadsteg.BoOgOppholdINorge]: 'Bo og opphold i Norge',
-    [Søknadsteg.DinFormue]: 'Din formue',
-    [Søknadsteg.DinInntekt]: 'Din inntekt',
-    [Søknadsteg.EktefellesFormue]: 'Ektefelle/samboers formue',
-    [Søknadsteg.EktefellesInntekt]: 'Ektefelle/samboers inntekt',
-    [Søknadsteg.ReiseTilUtlandet]: 'Reise til utlandet',
-    [Søknadsteg.ForVeileder]: 'For veileder',
-    [Søknadsteg.InformasjonOmPapirsøknad]: 'Informasjon om søknaden',
-    [Søknadsteg.Oppsummering]: 'Oppsummering',
+export const steg: { [key in Søknadssteg]: string } = {
+    [Uføresteg.Uførevedtak]: 'Uførevedtak',
+    [Uføresteg.FlyktningstatusOppholdstillatelse]: 'Flyktningstatus',
+
+    [Alderssteg.Alderspensjon]: 'Alderspensjon',
+
+    [Fellessteg.BoOgOppholdINorge]: 'Bo og opphold i Norge',
+    [Fellessteg.DinFormue]: 'Din formue',
+    [Fellessteg.DinInntekt]: 'Din inntekt',
+    [Fellessteg.EktefellesFormue]: 'Ektefelle/samboers formue',
+    [Fellessteg.EktefellesInntekt]: 'Ektefelle/samboers inntekt',
+    [Fellessteg.ReiseTilUtlandet]: 'Reise til utlandet',
+    [Fellessteg.ForVeileder]: 'For veileder',
+    [Fellessteg.InformasjonOmPapirsøknad]: 'Informasjon om søknaden',
+    [Fellessteg.Oppsummering]: 'Oppsummering',
 };
 
 export default {
@@ -23,6 +26,11 @@ export default {
     'feilmelding.tekst': 'En feil oppstod',
     'feilmelding.knapp': 'Start ny søknad',
 
-    infolinje: 'Søknad om supplerende stønad for uføre flyktninger',
+    'søknadsvelger.tittel': 'Velg type søknad',
+    alderssøknad: 'Alderssøknad',
+    uføresøknad: 'Uføresøknad',
+
+    infolinjeUføre: 'Søknad om supplerende stønad for uføre flyktninger',
+    infolinjeAlder: 'Søknad om supplerende stønad for personer som har fylt 67 år',
     ...steg,
 };

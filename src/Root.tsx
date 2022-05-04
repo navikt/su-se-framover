@@ -25,6 +25,7 @@ const AttesterSøknadsbehandling = React.lazy(
 const Kvittering = React.lazy(() => import('~src/pages/søknad/kvittering/Kvittering'));
 const Infoside = React.lazy(() => import('~src/pages/søknad/steg/infoside/Infoside'));
 const Inngang = React.lazy(() => import('~src/pages/søknad/steg/inngang/Inngang'));
+const Søknadsvelger = React.lazy(() => import('~src/pages/søknad/Søknadsvelger'));
 const StartUtfylling = React.lazy(() => import('~src/pages/søknad/steg/start-utfylling/StartUtfylling'));
 const Drift = React.lazy(() => import('~/src/pages/drift'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
@@ -82,60 +83,58 @@ const Root = () => (
     </Provider>
 );
 
-const AppRoutes = () => {
-    const location = useLocation();
-    const isPapirsøknad = location.search.includes('papirsoknad');
-
-    return (
-        <Routes>
-            <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
-            <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Soknad} />}>
-                <Route index element={<Infoside isPapirsøknad={isPapirsøknad} />} />
-                <Route path={routes.soknadPersonSøk.path} element={<Inngang isPapirsøknad={isPapirsøknad} />} />
+const AppRoutes = () => (
+    <Routes>
+        <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
+        <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Soknad} />}>
+            <Route index element={<Søknadsvelger />} />
+            <Route path={routes.soknadtema.path}>
+                <Route index element={<Infoside />} />
+                <Route path={routes.soknadPersonSøk.path} element={<Inngang />} />
                 <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
                 <Route path={routes.søkandskvittering.path} element={<Kvittering />} />
             </Route>
-            <Route
-                path={routes.saksoversiktValgtSak.path}
-                element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
-            >
-                <Route index element={<Sakintro />} />
-                <Route path={routes.klageRoot.path}>
-                    <Route path={routes.klageOpprett.path} element={<OpprettKlage />} />
-                    <Route path={routes.klage.path} element={<Klage />} />
-                </Route>
-                <Route path={routes.stansRoot.path}>
-                    <Route index element={<StansPage />} />
-                    <Route path={routes.stansRoute.path} element={<StansPage />} />
-                    <Route path={routes.stansOppsummeringRoute.path} element={<StansOppsummering />} />
-                </Route>
-                <Route path={routes.gjenopptaStansRoot.path} element={<Gjenoppta />}>
-                    <Route path={routes.gjenopptaStansOppsummeringRoute.path} element={<GjenopptaOppsummering />} />
-                </Route>
-                <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
-                <Route path={routes.revurderValgtSak.path} element={<RevurderingIntroPage />} />
-                <Route path={routes.revurderValgtRevurdering.path} element={<Revurdering />} />
-                <Route path={routes.vedtaksoppsummering.path} element={<Vedtaksoppsummering />} />
-                <Route path={routes.saksbehandlingSendTilAttestering.path} element={<SendTilAttesteringPage />} />
-                <Route path={routes.saksbehandlingVilkårsvurdering.path} element={<Vilkår />} />
-                <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />
-                <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
-                <Route path={routes.manuellRegulering.path} element={<ManuellReguleringPage />} />
+        </Route>
+        <Route
+            path={routes.saksoversiktValgtSak.path}
+            element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
+        >
+            <Route index element={<Sakintro />} />
+            <Route path={routes.klageRoot.path}>
+                <Route path={routes.klageOpprett.path} element={<OpprettKlage />} />
+                <Route path={routes.klage.path} element={<Klage />} />
             </Route>
-            <Route
-                path={routes.saksoversiktIndex.path}
-                element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
-            />
-            <Route path={routes.attestering.path} element={<WithDocTitle title="Attestering" Page={Attestering} />}>
-                <Route path={routes.attesterSøknadsbehandling.path} element={<AttesterSøknadsbehandling />} />
-                <Route path={routes.attesterRevurdering.path} element={<AttesterRevurdering />} />
-                <Route path={routes.attesterKlage.path} element={<AttesterKlage />} />
+            <Route path={routes.stansRoot.path}>
+                <Route index element={<StansPage />} />
+                <Route path={routes.stansRoute.path} element={<StansPage />} />
+                <Route path={routes.stansOppsummeringRoute.path} element={<StansOppsummering />} />
             </Route>
-            <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
-            <Route path="*" element={<>404</>} />
-        </Routes>
-    );
-};
+            <Route path={routes.gjenopptaStansRoot.path} element={<Gjenoppta />}>
+                <Route path={routes.gjenopptaStansOppsummeringRoute.path} element={<GjenopptaOppsummering />} />
+            </Route>
+            <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
+            <Route path={routes.revurderValgtSak.path} element={<RevurderingIntroPage />} />
+            <Route path={routes.revurderValgtRevurdering.path} element={<Revurdering />} />
+            <Route path={routes.vedtaksoppsummering.path} element={<Vedtaksoppsummering />} />
+            <Route path={routes.saksbehandlingSendTilAttestering.path} element={<SendTilAttesteringPage />} />
+            <Route path={routes.saksbehandlingVilkårsvurdering.path} element={<Vilkår />} />
+            <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />
+            <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
+            <Route path={routes.manuellRegulering.path} element={<ManuellReguleringPage />} />
+        </Route>
+        <Route
+            path={routes.saksoversiktIndex.path}
+            element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
+        />
+        <Route path={routes.attestering.path} element={<WithDocTitle title="Attestering" Page={Attestering} />}>
+            <Route path={routes.attesterSøknadsbehandling.path} element={<AttesterSøknadsbehandling />} />
+            <Route path={routes.attesterRevurdering.path} element={<AttesterRevurdering />} />
+            <Route path={routes.attesterKlage.path} element={<AttesterKlage />} />
+        </Route>
+        <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
+        <Route path="*" element={<>404</>} />
+    </Routes>
+);
 
 /* eslint-disable-next-line no-undef */
 export default Root;

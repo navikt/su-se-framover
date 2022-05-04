@@ -1,16 +1,22 @@
 import { BodyLong, GuidePanel, Heading, Ingress, Link } from '@navikt/ds-react';
 import React from 'react';
+import { useOutletContext } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';
 import { soknadPersonSøk } from '~src/lib/routes';
+import { SøknadContext } from '~src/pages/søknad';
+import { getSøknadstematekst } from '~src/pages/søknad/utils';
+import { Søknadstema } from '~src/types/Søknad';
 
 import messages from './infoside-nb';
 import * as styles from './infoside.module.less';
 
-const Infoside = (props: { isPapirsøknad?: boolean }) => {
+const Infoside = () => {
+    const { isPapirsøknad, soknadstema } = useOutletContext<SøknadContext>();
     const nesteUrl = soknadPersonSøk.createURL({
-        papirsøknad: props.isPapirsøknad,
+        soknadstema,
+        papirsøknad: isPapirsøknad,
     });
     const suUførFlyktningLink = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-ufor-flyktning';
     const merOmSuForUføreLink =
@@ -30,7 +36,10 @@ const Infoside = (props: { isPapirsøknad?: boolean }) => {
             </GuidePanel>
 
             <Heading level="1" size="xlarge" spacing>
-                {formatMessage('page.tittel')}
+                {getSøknadstematekst(soknadstema, {
+                    [Søknadstema.Uføre]: formatMessage('page.tittel.uføre'),
+                    [Søknadstema.Alder]: formatMessage('page.tittel.alder'),
+                })}
             </Heading>
 
             <section className={styles.section}>

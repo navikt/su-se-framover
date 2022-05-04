@@ -12,7 +12,7 @@ import boOgOppholdMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/b
 import flyktningstatusMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import uførevedtakMessages from '~src/pages/søknad/steg/uførevedtak/uførevedtak-nb';
 import utenlandsoppholdMessages from '~src/pages/søknad/steg/utenlandsopphold/utenlandsopphold-nb';
-import { Søknadsteg } from '~src/pages/søknad/types';
+import { Søknadssteg } from '~src/pages/søknad/types';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 
 import * as sharedStyles from '../../../steg-shared.module.less';
@@ -43,7 +43,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Email /> {formatMessage(Søknadsteg.Uførevedtak)}
+                            <Email /> {formatMessage(Søknadssteg.Uførevedtak)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -51,14 +51,14 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             label={formatMessage('uførevedtak.label')}
                             verdi={søknad.harUførevedtak ? 'Ja' : søknad.harUførevedtak === false ? 'Nei' : 'Ubesvart'}
                         />
-                        <EndreSvar path={Søknadsteg.Uførevedtak} søker={søker} />
+                        <EndreSvar path={Søknadssteg.Uførevedtak} søker={søker} />
                     </Accordion.Content>
                 </Accordion.Item>
 
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <FileContent /> {formatMessage(Søknadsteg.FlyktningstatusOppholdstillatelse)}
+                            <FileContent /> {formatMessage(Søknadssteg.FlyktningstatusOppholdstillatelse)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -126,14 +126,14 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 verdi={søknad.flyktningstatus.statsborgerskapAndreLandFritekst}
                             />
                         )}
-                        <EndreSvar path={Søknadsteg.FlyktningstatusOppholdstillatelse} søker={søker} />
+                        <EndreSvar path={Søknadssteg.FlyktningstatusOppholdstillatelse} søker={søker} />
                     </Accordion.Content>
                 </Accordion.Item>
 
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Home /> {formatMessage(Søknadsteg.BoOgOppholdINorge)}
+                            <Home /> {formatMessage(Søknadssteg.BoOgOppholdINorge)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -234,31 +234,31 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             }
                         />
 
-                        <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
+                        <EndreSvar path={Søknadssteg.BoOgOppholdINorge} søker={søker} />
                     </Accordion.Content>
                 </Accordion.Item>
 
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Saving /> {formatMessage(Søknadsteg.DinFormue)}
+                            <Saving /> {formatMessage(Søknadssteg.DinFormue)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
                         <FormueOppsummering formue={søknad.formue} tilhører={'søker'} />
-                        <EndreSvar path={Søknadsteg.DinFormue} søker={søker} />
+                        <EndreSvar path={Søknadssteg.DinFormue} søker={søker} />
                     </Accordion.Content>
                 </Accordion.Item>
 
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Calculator /> {formatMessage(Søknadsteg.DinInntekt)}
+                            <Calculator /> {formatMessage(Søknadssteg.DinInntekt)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
                         <InntektsOppsummering inntekt={søknad.inntekt} tilhører={'søker'} />
-                        <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
+                        <EndreSvar path={Søknadssteg.DinInntekt} søker={søker} />
                     </Accordion.Content>
                 </Accordion.Item>
 
@@ -267,23 +267,23 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         <Accordion.Item>
                             <Accordion.Header type="button">
                                 <div className={styles.headerContent}>
-                                    <Saving /> {formatMessage(Søknadsteg.EktefellesFormue)}
+                                    <Saving /> {formatMessage(Søknadssteg.EktefellesFormue)}
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
                                 <FormueOppsummering formue={søknad.ektefelle.formue} tilhører={'eps'} />
-                                <EndreSvar path={Søknadsteg.EktefellesFormue} søker={søker} />
+                                <EndreSvar path={Søknadssteg.EktefellesFormue} søker={søker} />
                             </Accordion.Content>
                         </Accordion.Item>
                         <Accordion.Item>
                             <Accordion.Header type="button">
                                 <div className={styles.headerContent}>
-                                    <Calculator /> {formatMessage(Søknadsteg.EktefellesInntekt)}
+                                    <Calculator /> {formatMessage(Søknadssteg.EktefellesInntekt)}
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
                                 <InntektsOppsummering inntekt={søknad.ektefelle.inntekt} tilhører={'eps'} />
-                                <EndreSvar path={Søknadsteg.EktefellesInntekt} søker={søker} />
+                                <EndreSvar path={Søknadssteg.EktefellesInntekt} søker={søker} />
                             </Accordion.Content>
                         </Accordion.Item>
                     </>
@@ -292,7 +292,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Plane /> {formatMessage(Søknadsteg.ReiseTilUtlandet)}
+                            <Plane /> {formatMessage(Søknadssteg.ReiseTilUtlandet)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -373,7 +373,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 ))}
                             </ul>
                         )}
-                        <EndreSvar path={Søknadsteg.ReiseTilUtlandet} søker={søker} />
+                        <EndreSvar path={Søknadssteg.ReiseTilUtlandet} søker={søker} />
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>

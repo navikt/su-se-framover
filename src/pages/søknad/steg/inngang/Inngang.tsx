@@ -3,7 +3,7 @@ import { Attachment } from '@navikt/ds-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -19,10 +19,11 @@ import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { soknadsutfylling } from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
-import { Søknadsteg } from '~src/pages/søknad/types';
+import { SøknadContext } from '~src/pages/søknad';
+import { Alderssteg, Uføresteg } from '~src/pages/søknad/types';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Periode } from '~src/types/Periode';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstema, Søknadstype } from '~src/types/Søknad';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 
@@ -98,16 +99,16 @@ const SakinfoAlert = ({
     );
 };
 
-const index = (props: { isPapirsøknad?: boolean }) => {
-    const nesteUrl = soknadsutfylling.createURL({
-        step: Søknadsteg.Uførevedtak,
-        papirsøknad: props.isPapirsøknad,
+const index = () => {
+    const { isPapirsøknad, soknadstema } = useOutletContext<SøknadContext>();
+    const startstegUrl = soknadsutfylling.createURL({
+        step: soknadstema === Søknadstema.Uføre ? Uføresteg.Uførevedtak : Alderssteg.Alderspensjon,
+        soknadstema: soknadstema,
+        papirsøknad: isPapirsøknad,
     });
     const { søker } = useAppSelector((s) => s.søker);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
-    const isPapirsøknad = location.search.includes('papirsoknad');
     const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);
     const [erBekreftet, setErBekreftet] = React.useState<boolean>(false);
 
@@ -127,7 +128,7 @@ const index = (props: { isPapirsøknad?: boolean }) => {
             dispatch(
                 søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad)
             );
-            navigate(nesteUrl);
+            navigate(startstegUrl);
         }
     };
 

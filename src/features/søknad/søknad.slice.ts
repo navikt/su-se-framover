@@ -2,8 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Adresse, IngenAdresseGrunn } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
-
-import { Søknadstype } from '../../types/Søknad';
+import { Søknadstype } from '~src/types/Søknad';
 
 import {
     DelerBoligMed,
@@ -36,6 +35,7 @@ export interface SøknadState {
         statsborgerskapAndreLand: Nullable<boolean>;
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };
+    harSøktAlderspensjon: Nullable<boolean>;
     boOgOpphold: {
         borOgOppholderSegINorge: Nullable<boolean>;
         delerBoligMedPersonOver18: Nullable<boolean>;
@@ -158,6 +158,7 @@ const initialState = (type: Søknadstype = Søknadstype.DigitalSøknad): Søknad
         statsborgerskapAndreLand: null,
         statsborgerskapAndreLandFritekst: null,
     },
+    harSøktAlderspensjon: null,
     boOgOpphold: {
         borOgOppholderSegINorge: null,
         delerBoligMedPersonOver18: null,
@@ -212,6 +213,9 @@ export default createSlice({
         },
         flyktningstatusUpdated(state, action: PayloadAction<SøknadState['flyktningstatus']>) {
             state.flyktningstatus = action.payload;
+        },
+        harSøktAlderspensjonUpdated(state, action: PayloadAction<boolean | null>) {
+            state.harSøktAlderspensjon = action.payload;
         },
         boOgOppholdUpdated(state, action: PayloadAction<SøknadState['boOgOpphold']>) {
             state.boOgOpphold = action.payload;
