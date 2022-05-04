@@ -19,6 +19,7 @@ const velgbareFradragskategoriMessages: { [key in VelgbareFradragskategorier]: s
     [VelgbareFradragskategorier.Kontantstøtte]: 'Kontantstøtte',
     [VelgbareFradragskategorier.BidragEtterEkteskapsloven]: 'Bidrag etter ekteskapsloven',
     [VelgbareFradragskategorier.Kapitalinntekt]: 'Kapitalinntekt',
+    [VelgbareFradragskategorier.Fosterhjemsgodtgjørelse]: 'Fosterhjemsgodtgjørelse',
     [VelgbareFradragskategorier.Annet]: 'Annet',
 };
 
