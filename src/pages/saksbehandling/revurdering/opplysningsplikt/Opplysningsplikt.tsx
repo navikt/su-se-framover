@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Button, Heading, Panel, Select } from '@navikt/ds-react';
+import { Button, Panel, Select } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsv
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
+import GjeldendeOpplysningsplikt from './GjeldendeOpplysningsplikt';
 import messages from './opplysningsplikt-nb';
 import * as styles from './opplysningsplikt.module.less';
 import { OpplysningspliktVilkårForm, schemaValidation } from './OpplysningspliktUtils';
@@ -185,11 +186,9 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                     </form>
                 ),
                 right: (
-                    <div>
-                        <Heading level="2" size="large" spacing>
-                            {formatMessage('eksisterende.vedtakinfo.tittel')}
-                        </Heading>
-                    </div>
+                    <GjeldendeOpplysningsplikt
+                        opplysningsplikter={props.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt?.vurderinger}
+                    />
                 ),
             }}
         </ToKolonner>

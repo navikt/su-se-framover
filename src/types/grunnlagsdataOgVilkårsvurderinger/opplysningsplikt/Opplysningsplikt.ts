@@ -2,7 +2,7 @@ import { Periode } from '~src/types/Periode';
 
 export interface VurderingsperiodeOpplysningsplikt {
     periode: Periode<string>;
-    beskrivelse: string;
+    beskrivelse: OpplysningspliktBeksrivelse;
 }
 
 export interface OpplysningspliktVilkår {

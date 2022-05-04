@@ -65,6 +65,13 @@ export const formueErlik = (ny: FormueVilkår, gammel: FormueVilkår) => {
     return isEqual(trimmedNy, trimmedGammel);
 };
 
+export const opplysningspliktErLik = (
+    ny: Nullable<OpplysningspliktVilkår>,
+    gammel: Nullable<OpplysningspliktVilkår>
+) => {
+    return isEqual(ny, gammel);
+};
+
 const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
 
 const trimIdFromObject = <T>(obj: T) => {
