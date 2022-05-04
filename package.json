@@ -50,7 +50,7 @@
         "@navikt/ds-css-internal": "^0.7.3",
         "@navikt/ds-datepicker": "^1.0.4",
         "@navikt/ds-icons": "^0.8.11",
-        "@navikt/ds-react": "^0.17.14",
+        "@navikt/ds-react": "^0.18.5",
         "@navikt/ds-react-internal": "^0.12.27",
         "@radix-ui/react-tabs": "^0.1.5",
         "@reduxjs/toolkit": "^1.8.1",
@@ -130,6 +130,6 @@
         "rimraf": "^3.0.2",
         "ts-jest": "^27.1.4",
         "ts-node": "^10.7.0",
-        "typescript": "^4.6.3"
+        "typescript": "^4.6.4"
     }
 }
