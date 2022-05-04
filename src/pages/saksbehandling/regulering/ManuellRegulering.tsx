@@ -100,6 +100,7 @@ const ManuellRegulering = () => {
             {
                 sakId: props.sak.id,
                 fraOgMed: regulering.periode.fraOgMed,
+                tilOgMed: regulering.periode.tilOgMed,
             },
             (data) =>
                 formik.setValues({

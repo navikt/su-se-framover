@@ -43,15 +43,18 @@ export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult
 export async function hentgjeldendeGrunnlagsdataOgVilkårsvurderinger({
     sakId,
     fraOgMed,
+    tilOgMed,
 }: {
     sakId: string;
     fraOgMed: string;
+    tilOgMed?: string;
 }): Promise<ApiClientResult<{ grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger }>> {
     return apiClient({
         url: `/saker/${sakId}/gjeldendeVedtaksdata`,
         method: 'POST',
         body: {
             fraOgMed: fraOgMed,
+            tilOgMed: tilOgMed ?? null,
         },
     });
 }
