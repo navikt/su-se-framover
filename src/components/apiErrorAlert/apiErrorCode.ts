@@ -178,6 +178,7 @@ export enum ApiErrorCode {
     UKJENT_BREVTYPE = 'ukjent_brevtype',
     UKJENT_FEIL = 'ukjent_feil',
     UKJENT_FEIL_VED_HENTING_AV_JOURNALPOST = 'ukjent_feil_ved_henting_av_journalpost',
+    UKJENT_FRADRAGSTYPE = 'ukjent_fradragstype',
     USPESIFISIERT_FRADRAG_KREVER_BESKRIVELSE = 'uspesifisiert_fradrag_krever_beskrivelse',
     UTBETALING_ALLEREDE_OPPHØRT = 'utbetaling_allerede_opphørt',
     UTBETALING_ALLEREDE_STANSET = 'utbetaling_allerede_stanset',

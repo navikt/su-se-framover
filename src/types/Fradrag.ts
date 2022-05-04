@@ -63,6 +63,7 @@ export enum VelgbareFradragskategorier {
     Kontantstøtte = 'Kontantstøtte',
     BidragEtterEkteskapsloven = 'BidragEtterEkteskapsloven',
     Kapitalinntekt = 'Kapitalinntekt',
+    Fosterhjemsgodtgjørelse = 'Fosterhjemsgodtgjørelse',
     Annet = 'Annet',
 }
 
@@ -85,6 +86,7 @@ export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
         case VelgbareFradragskategorier.AvtalefestetPensjon:
         case VelgbareFradragskategorier.AvtalefestetPensjonPrivat:
         case VelgbareFradragskategorier.Dagpenger:
+        case VelgbareFradragskategorier.Fosterhjemsgodtgjørelse:
         case VelgbareFradragskategorier.Gjenlevendepensjon:
         case VelgbareFradragskategorier.Introduksjonsstønad:
         case VelgbareFradragskategorier.Kvalifiseringsstønad:
