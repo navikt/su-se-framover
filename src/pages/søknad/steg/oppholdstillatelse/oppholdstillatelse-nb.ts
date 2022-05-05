@@ -1,6 +1,6 @@
 import { TypeOppholdstillatelse } from '~src/features/søknad/types';
 
-const typeOppholdstillatelse: { [key in TypeOppholdstillatelse]: string } = {
+export const typeOppholdstillatelse: { [key in TypeOppholdstillatelse]: string } = {
     [TypeOppholdstillatelse.Midlertidig]: 'Midlertidig',
     [TypeOppholdstillatelse.Permanent]: 'Permanent',
 };

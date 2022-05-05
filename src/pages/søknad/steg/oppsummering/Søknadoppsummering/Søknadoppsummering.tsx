@@ -3,16 +3,19 @@ import { Accordion } from '@navikt/ds-react';
 import React from 'react';
 import { RawIntlProvider, FormattedDate } from 'react-intl';
 
-import { Person } from '~src/api/personApi';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
-import { useI18n } from '~src/lib/i18n';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
 import stegMessages from '~src/pages/søknad/nb';
+import alderspensjonMessages from '~src/pages/søknad/steg/alderspensjon/alderspensjon-nb';
 import boOgOppholdMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import flyktningstatusMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
+import oppholdstillatelseMessages from '~src/pages/søknad/steg/oppholdstillatelse/oppholdstillatelse-nb';
 import uførevedtakMessages from '~src/pages/søknad/steg/uførevedtak/uførevedtak-nb';
 import utenlandsoppholdMessages from '~src/pages/søknad/steg/utenlandsopphold/utenlandsopphold-nb';
-import { Søknadssteg } from '~src/pages/søknad/types';
+import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
+import { Søknadstema } from '~src/types/Søknad';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 
 import * as sharedStyles from '../../../steg-shared.module.less';
@@ -25,11 +28,16 @@ import { ingenAdresseGrunnTekst } from './OppsummeringUtils';
 import oppsummeringMessages from './søknadsoppsummering-nb';
 import * as styles from './søknadsoppsummering.module.less';
 
-const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
+const booleanSvar = (bool: Nullable<boolean>, formatMessage: MessageFormatter<typeof oppsummeringMessages>) =>
+    bool ? formatMessage('ja') : bool === false ? formatMessage('nei') : formatMessage('ubesvart');
+
+const Søknadoppsummering = ({ søknad, søknadstema }: { søknad: SøknadState; søknadstema: Søknadstema }) => {
     const { intl, formatMessage } = useI18n({
         messages: {
             ...stegMessages,
             ...uførevedtakMessages,
+            ...alderspensjonMessages,
+            ...oppholdstillatelseMessages,
             ...flyktningstatusMessages,
             ...boOgOppholdMessages,
             ...utenlandsoppholdMessages,
@@ -40,122 +48,27 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
     return (
         <RawIntlProvider value={intl}>
             <Accordion>
-                <Accordion.Item>
-                    <Accordion.Header type="button">
-                        <div className={styles.headerContent}>
-                            <Email /> {formatMessage(Søknadssteg.Uførevedtak)}
-                        </div>
-                    </Accordion.Header>
-                    <Accordion.Content>
-                        <Oppsummeringsfelt
-                            label={formatMessage('uførevedtak.label')}
-                            verdi={søknad.harUførevedtak ? 'Ja' : søknad.harUførevedtak === false ? 'Nei' : 'Ubesvart'}
-                        />
-                        <EndreSvar path={Søknadssteg.Uførevedtak} søker={søker} />
-                    </Accordion.Content>
-                </Accordion.Item>
+                {søknadstema === Søknadstema.Uføre && (
+                    <UføreOppsummering søknad={søknad} formatMessage={formatMessage} />
+                )}
+                {søknadstema === Søknadstema.Alder && (
+                    <AlderspensjonOppsummering søknad={søknad} formatMessage={formatMessage} />
+                )}
 
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <FileContent /> {formatMessage(Søknadssteg.FlyktningstatusOppholdstillatelse)}
-                        </div>
-                    </Accordion.Header>
-                    <Accordion.Content>
-                        <Oppsummeringsfelt
-                            label={formatMessage('flyktning.label')}
-                            verdi={
-                                søknad.flyktningstatus.erFlyktning
-                                    ? 'Ja'
-                                    : søknad.flyktningstatus.erFlyktning === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-                        <Oppsummeringsfelt
-                            label={formatMessage('norsk.statsborger.label')}
-                            verdi={
-                                søknad.flyktningstatus.erNorskStatsborger
-                                    ? 'Ja'
-                                    : søknad.flyktningstatus.erNorskStatsborger === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-
-                        {søknad.flyktningstatus.erNorskStatsborger === false && (
-                            <Oppsummeringsfelt
-                                label={formatMessage('oppholdstillatelse.label')}
-                                verdi={
-                                    søknad.flyktningstatus.harOppholdstillatelse
-                                        ? 'Ja'
-                                        : søknad.flyktningstatus.harOppholdstillatelse === false
-                                        ? 'Nei'
-                                        : 'Ubesvart'
-                                }
-                            />
-                        )}
-
-                        {søknad.flyktningstatus.harOppholdstillatelse && (
-                            <Oppsummeringsfelt
-                                label={formatMessage('oppholdstillatelse.type')}
-                                verdi={
-                                    søknad.flyktningstatus.typeOppholdstillatelse === 'permanent'
-                                        ? 'Permanent'
-                                        : søknad.flyktningstatus.typeOppholdstillatelse === 'midlertidig'
-                                        ? 'Midlertidig'
-                                        : 'Ubesvart'
-                                }
-                            />
-                        )}
-
-                        <Oppsummeringsfelt
-                            label={formatMessage('statsborger.andre.land.label')}
-                            verdi={
-                                søknad.flyktningstatus.statsborgerskapAndreLand
-                                    ? 'Ja'
-                                    : søknad.flyktningstatus.statsborgerskapAndreLand === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-
-                        {søknad.flyktningstatus.statsborgerskapAndreLand && (
-                            <Oppsummeringsfelt
-                                label={formatMessage('statsborger.andre.land.fritekst')}
-                                verdi={søknad.flyktningstatus.statsborgerskapAndreLandFritekst}
-                            />
-                        )}
-                        <EndreSvar path={Søknadssteg.FlyktningstatusOppholdstillatelse} søker={søker} />
-                    </Accordion.Content>
-                </Accordion.Item>
-
-                <Accordion.Item>
-                    <Accordion.Header type="button">
-                        <div className={styles.headerContent}>
-                            <Home /> {formatMessage(Søknadssteg.BoOgOppholdINorge)}
+                            <Home /> {formatMessage(Fellessteg.BoOgOppholdINorge)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
                         <Oppsummeringsfelt
                             label={formatMessage('borOgOppholderSegINorge.label')}
-                            verdi={
-                                søknad.boOgOpphold.borOgOppholderSegINorge
-                                    ? 'Ja'
-                                    : søknad.boOgOpphold.borOgOppholderSegINorge === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
+                            verdi={booleanSvar(søknad.boOgOpphold.borOgOppholderSegINorge, formatMessage)}
                         />
                         <Oppsummeringsfelt
                             label={formatMessage('delerBoligMed.delerBoligMedPersonOver18')}
-                            verdi={
-                                søknad.boOgOpphold.delerBoligMedPersonOver18
-                                    ? 'Ja'
-                                    : søknad.boOgOpphold.delerBoligMedPersonOver18 === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
+                            verdi={booleanSvar(søknad.boOgOpphold.delerBoligMedPersonOver18, formatMessage)}
                         />
                         {søknad.boOgOpphold.delerBoligMedPersonOver18 && (
                             <Oppsummeringsfelt
@@ -179,7 +92,9 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                     <Oppsummeringsfelt
                                         label={formatMessage('delerBoligMed.epsUførFlyktning')}
                                         verdi={
-                                            søknad.boOgOpphold.ektefellePartnerSamboer?.erUførFlyktning ? 'Ja' : 'Nei'
+                                            søknad.boOgOpphold.ektefellePartnerSamboer?.erUførFlyktning
+                                                ? formatMessage('ja')
+                                                : formatMessage('nei')
                                         }
                                     />
                                 </>
@@ -187,13 +102,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                         <Oppsummeringsfelt
                             label={formatMessage('innlagtPåInstitusjon.label')}
-                            verdi={
-                                søknad.boOgOpphold.innlagtPåInstitusjon
-                                    ? 'Ja'
-                                    : søknad.boOgOpphold.innlagtPåInstitusjon === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
+                            verdi={booleanSvar(søknad.boOgOpphold.innlagtPåInstitusjon, formatMessage)}
                         />
 
                         {søknad.boOgOpphold.innlagtPåInstitusjon && (
@@ -219,7 +128,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 ) : (
                                     <Oppsummeringsfelt
                                         label={formatMessage('innlagtPåInstitusjon.fortsattInnlagt')}
-                                        verdi={søknad.boOgOpphold.fortsattInnlagt ? 'Ja' : 'Nei'}
+                                        verdi={booleanSvar(søknad.boOgOpphold.fortsattInnlagt, formatMessage)}
                                     />
                                 )}
                             </>
@@ -230,35 +139,36 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             verdi={
                                 søknad.boOgOpphold.borPåAdresse
                                     ? formatAdresse(søknad.boOgOpphold.borPåAdresse)
-                                    : ingenAdresseGrunnTekst(søknad.boOgOpphold.ingenAdresseGrunn, intl) ?? 'Ubesvart'
+                                    : ingenAdresseGrunnTekst(søknad.boOgOpphold.ingenAdresseGrunn, intl) ??
+                                      formatMessage('ubesvart')
                             }
                         />
 
-                        <EndreSvar path={Søknadssteg.BoOgOppholdINorge} søker={søker} />
+                        <EndreSvar path={Fellessteg.BoOgOppholdINorge} />
                     </Accordion.Content>
                 </Accordion.Item>
 
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Saving /> {formatMessage(Søknadssteg.DinFormue)}
+                            <Saving /> {formatMessage(Fellessteg.DinFormue)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
                         <FormueOppsummering formue={søknad.formue} tilhører={'søker'} />
-                        <EndreSvar path={Søknadssteg.DinFormue} søker={søker} />
+                        <EndreSvar path={Fellessteg.DinFormue} />
                     </Accordion.Content>
                 </Accordion.Item>
 
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Calculator /> {formatMessage(Søknadssteg.DinInntekt)}
+                            <Calculator /> {formatMessage(Fellessteg.DinInntekt)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
                         <InntektsOppsummering inntekt={søknad.inntekt} tilhører={'søker'} />
-                        <EndreSvar path={Søknadssteg.DinInntekt} søker={søker} />
+                        <EndreSvar path={Fellessteg.DinInntekt} />
                     </Accordion.Content>
                 </Accordion.Item>
 
@@ -267,23 +177,23 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         <Accordion.Item>
                             <Accordion.Header type="button">
                                 <div className={styles.headerContent}>
-                                    <Saving /> {formatMessage(Søknadssteg.EktefellesFormue)}
+                                    <Saving /> {formatMessage(Fellessteg.EktefellesFormue)}
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
                                 <FormueOppsummering formue={søknad.ektefelle.formue} tilhører={'eps'} />
-                                <EndreSvar path={Søknadssteg.EktefellesFormue} søker={søker} />
+                                <EndreSvar path={Fellessteg.EktefellesFormue} />
                             </Accordion.Content>
                         </Accordion.Item>
                         <Accordion.Item>
                             <Accordion.Header type="button">
                                 <div className={styles.headerContent}>
-                                    <Calculator /> {formatMessage(Søknadssteg.EktefellesInntekt)}
+                                    <Calculator /> {formatMessage(Fellessteg.EktefellesInntekt)}
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
                                 <InntektsOppsummering inntekt={søknad.ektefelle.inntekt} tilhører={'eps'} />
-                                <EndreSvar path={Søknadssteg.EktefellesInntekt} søker={søker} />
+                                <EndreSvar path={Fellessteg.EktefellesInntekt} />
                             </Accordion.Content>
                         </Accordion.Item>
                     </>
@@ -292,19 +202,13 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Plane /> {formatMessage(Søknadssteg.ReiseTilUtlandet)}
+                            <Plane /> {formatMessage(Fellessteg.ReiseTilUtlandet)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
                         <Oppsummeringsfelt
                             label={formatMessage('harReistSiste90.label')}
-                            verdi={
-                                søknad.utenlandsopphold.harReistTilUtlandetSiste90dager
-                                    ? 'Ja'
-                                    : søknad.utenlandsopphold.harReistTilUtlandetSiste90dager === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
+                            verdi={booleanSvar(søknad.utenlandsopphold.harReistTilUtlandetSiste90dager, formatMessage)}
                         />
                         {søknad.utenlandsopphold.harReistTilUtlandetSiste90dager && (
                             <ul>
@@ -316,7 +220,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                                 item.utreisedato ? (
                                                     <FormattedDate value={item.utreisedato} />
                                                 ) : (
-                                                    'Ubesvart'
+                                                    formatMessage('ubesvart')
                                                 )
                                             }
                                         />
@@ -326,7 +230,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                                 item.innreisedato ? (
                                                     <FormattedDate value={item.innreisedato} />
                                                 ) : (
-                                                    'Ubesvart'
+                                                    formatMessage('ubesvart')
                                                 )
                                             }
                                         />
@@ -337,13 +241,10 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                         <Oppsummeringsfelt
                             label={formatMessage('skalReiseNeste12.label')}
-                            verdi={
-                                søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder
-                                    ? 'Ja'
-                                    : søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
+                            verdi={booleanSvar(
+                                søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder,
+                                formatMessage
+                            )}
                         />
                         {søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder && (
                             <ul>
@@ -355,7 +256,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                                 item.utreisedato ? (
                                                     <FormattedDate value={item.utreisedato} />
                                                 ) : (
-                                                    'Ubesvart'
+                                                    formatMessage('ubesvart')
                                                 )
                                             }
                                         />
@@ -365,7 +266,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                                 item.innreisedato ? (
                                                     <FormattedDate value={item.innreisedato} />
                                                 ) : (
-                                                    'Ubesvart'
+                                                    formatMessage('ubesvart')
                                                 )
                                             }
                                         />
@@ -373,12 +274,177 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 ))}
                             </ul>
                         )}
-                        <EndreSvar path={Søknadssteg.ReiseTilUtlandet} søker={søker} />
+                        <EndreSvar path={Fellessteg.ReiseTilUtlandet} />
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>
         </RawIntlProvider>
     );
 };
+
+const UføreOppsummering = ({
+    søknad,
+    formatMessage,
+}: {
+    søknad: SøknadState;
+    formatMessage: MessageFormatter<
+        typeof uførevedtakMessages & typeof flyktningstatusMessages & typeof stegMessages & typeof oppsummeringMessages
+    >;
+}) => (
+    <>
+        <Accordion.Item>
+            <Accordion.Header type="button">
+                <div className={styles.headerContent}>
+                    <Email /> {formatMessage(Uføresteg.Uførevedtak)}
+                </div>
+            </Accordion.Header>
+            <Accordion.Content>
+                <Oppsummeringsfelt
+                    label={formatMessage('uførevedtak.label')}
+                    verdi={booleanSvar(søknad.harUførevedtak, formatMessage)}
+                />
+                <EndreSvar path={Uføresteg.Uførevedtak} />
+            </Accordion.Content>
+        </Accordion.Item>
+
+        <Accordion.Item>
+            <Accordion.Header type="button">
+                <div className={styles.headerContent}>
+                    <FileContent /> {formatMessage(Uføresteg.FlyktningstatusOppholdstillatelse)}
+                </div>
+            </Accordion.Header>
+            <Accordion.Content>
+                <Oppsummeringsfelt
+                    label={formatMessage('flyktning.label')}
+                    verdi={booleanSvar(søknad.flyktningstatus.erFlyktning, formatMessage)}
+                />
+                <Oppsummeringsfelt
+                    label={formatMessage('norsk.statsborger.label')}
+                    verdi={booleanSvar(søknad.flyktningstatus.erNorskStatsborger, formatMessage)}
+                />
+
+                {søknad.flyktningstatus.erNorskStatsborger === false && (
+                    <Oppsummeringsfelt
+                        label={formatMessage('oppholdstillatelse.label')}
+                        verdi={booleanSvar(søknad.flyktningstatus.harOppholdstillatelse, formatMessage)}
+                    />
+                )}
+
+                {søknad.flyktningstatus.harOppholdstillatelse && (
+                    <Oppsummeringsfelt
+                        label={formatMessage('oppholdstillatelse.type')}
+                        verdi={
+                            søknad.flyktningstatus.typeOppholdstillatelse
+                                ? formatMessage(søknad.flyktningstatus.typeOppholdstillatelse)
+                                : formatMessage('ubesvart')
+                        }
+                    />
+                )}
+
+                <Oppsummeringsfelt
+                    label={formatMessage('statsborger.andre.land.label')}
+                    verdi={booleanSvar(søknad.flyktningstatus.statsborgerskapAndreLand, formatMessage)}
+                />
+
+                {søknad.flyktningstatus.statsborgerskapAndreLand && (
+                    <Oppsummeringsfelt
+                        label={formatMessage('statsborger.andre.land.fritekst')}
+                        verdi={søknad.flyktningstatus.statsborgerskapAndreLandFritekst}
+                    />
+                )}
+                <EndreSvar path={Uføresteg.FlyktningstatusOppholdstillatelse} />
+            </Accordion.Content>
+        </Accordion.Item>
+    </>
+);
+
+const AlderspensjonOppsummering = ({
+    søknad,
+    formatMessage,
+}: {
+    søknad: SøknadState;
+    formatMessage: MessageFormatter<
+        typeof alderspensjonMessages &
+            typeof oppholdstillatelseMessages &
+            typeof stegMessages &
+            typeof oppsummeringMessages
+    >;
+}) => (
+    <>
+        <Accordion.Item>
+            <Accordion.Header type="button">
+                <div className={styles.headerContent}>
+                    <Email /> {formatMessage(Alderssteg.Alderspensjon)}
+                </div>
+            </Accordion.Header>
+            <Accordion.Content>
+                <Oppsummeringsfelt
+                    label={formatMessage('alderspensjon.label')}
+                    verdi={booleanSvar(søknad.harSøktAlderspensjon, formatMessage)}
+                />
+                <EndreSvar path={Alderssteg.Alderspensjon} />
+            </Accordion.Content>
+        </Accordion.Item>
+
+        <Accordion.Item>
+            <Accordion.Header type="button">
+                <div className={styles.headerContent}>
+                    <FileContent /> {formatMessage(Alderssteg.Oppholdstillatelse)}
+                </div>
+            </Accordion.Header>
+            <Accordion.Content>
+                <Oppsummeringsfelt
+                    label={formatMessage('statsborger.label')}
+                    verdi={booleanSvar(søknad.oppholdstillatelse.erNorskStatsborger, formatMessage)}
+                />
+
+                {søknad.oppholdstillatelse.erNorskStatsborger === false && (
+                    <Oppsummeringsfelt
+                        label={formatMessage('eøsborger.label')}
+                        verdi={booleanSvar(søknad.oppholdstillatelse.eøsborger, formatMessage)}
+                    />
+                )}
+
+                {søknad.oppholdstillatelse.erNorskStatsborger === false && (
+                    <Oppsummeringsfelt
+                        label={formatMessage('oppholdstillatelse.label')}
+                        verdi={booleanSvar(søknad.oppholdstillatelse.harOppholdstillatelse, formatMessage)}
+                    />
+                )}
+
+                {søknad.oppholdstillatelse.erNorskStatsborger === false && (
+                    <Oppsummeringsfelt
+                        label={formatMessage('familieforening.label')}
+                        verdi={booleanSvar(søknad.oppholdstillatelse.familieforening, formatMessage)}
+                    />
+                )}
+
+                {søknad.oppholdstillatelse.erNorskStatsborger === false && (
+                    <Oppsummeringsfelt
+                        label={formatMessage('typeOppholdstillatelse.label')}
+                        verdi={
+                            søknad.oppholdstillatelse.typeOppholdstillatelse
+                                ? formatMessage(søknad.oppholdstillatelse.typeOppholdstillatelse)
+                                : formatMessage('ubesvart')
+                        }
+                    />
+                )}
+
+                <Oppsummeringsfelt
+                    label={formatMessage('statsborgerskapAndreLand.label')}
+                    verdi={booleanSvar(søknad.oppholdstillatelse.statsborgerskapAndreLand, formatMessage)}
+                />
+
+                {søknad.oppholdstillatelse.statsborgerskapAndreLand && (
+                    <Oppsummeringsfelt
+                        label={formatMessage('statsborgerskapAndreLand.label')}
+                        verdi={søknad.oppholdstillatelse.statsborgerskapAndreLandFritekst}
+                    />
+                )}
+                <EndreSvar path={Alderssteg.Oppholdstillatelse} />
+            </Accordion.Content>
+        </Accordion.Item>
+    </>
+);
 
 export default Søknadoppsummering;

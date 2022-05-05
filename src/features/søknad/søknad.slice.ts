@@ -41,7 +41,7 @@ export interface SøknadState {
         eøsborger: Nullable<boolean>;
         harOppholdstillatelse: Nullable<boolean>;
         familieforening: Nullable<boolean>;
-        typeOppholdstillatelse: Nullable<string>;
+        typeOppholdstillatelse: Nullable<TypeOppholdstillatelse>;
         statsborgerskapAndreLand: Nullable<boolean>;
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };

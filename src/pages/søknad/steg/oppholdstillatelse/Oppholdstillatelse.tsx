@@ -11,6 +11,7 @@ import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgr
 import { TypeOppholdstillatelse } from '~src/features/søknad/types';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
@@ -43,10 +44,17 @@ const schema = yup.object<FormData>({
         .defined()
         .when('erNorskStatsborger', { is: false, then: yup.boolean().required('Fyll ut spørsmål om familieforening') }),
     typeOppholdstillatelse: yup
-        .string()
+        .mixed<Nullable<TypeOppholdstillatelse>>()
         .nullable()
         .defined()
-        .when('erNorskStatsborger', { is: false, then: yup.string().required('Fyll ut type oppholdstillatelse') }),
+        .when('erNorskStatsborger', {
+            is: false,
+            then: yup
+                .mixed()
+                .nullable()
+                .oneOf(Object.values(TypeOppholdstillatelse), 'Du må velge type oppholdstillatelse')
+                .required(),
+        }),
     statsborgerskapAndreLand: yup.boolean().nullable().required('Fyll ut om du har statsborgerskap i andre land'),
     statsborgerskapAndreLandFritekst: yup
         .string()
