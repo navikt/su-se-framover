@@ -195,4 +195,5 @@ export enum ApiErrorCode {
     ÅPEN_REVURDERING_STANS_EKSISTERER = 'åpen_revurdering_stans_eksisterer',
     REGULERING_AVVENTER_KRAVGRUNNLAG = 'regulering_avventer_kravgrunnlag',
     REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING = 'regulering_har_pågående_eller_behov_for_avkorting',
+    REGULERING_UGYLDIG_TILSTAND = 'regulering_ugyldig_tilstand',
 }

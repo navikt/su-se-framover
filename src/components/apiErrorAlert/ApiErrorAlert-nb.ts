@@ -252,6 +252,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Saken avventer kravgrunnlag. Regulering kan kjøres når vi fått svar fra oppdrag.',
     [ApiErrorCode.REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING]:
         'Saken har pågående eller behov for fremtidig avkorting. Reguleringen må håndteres gjennom revurdering.',
+    [ApiErrorCode.REGULERING_UGYLDIG_TILSTAND]: 'Reguleringen er i ett ugyldigt tilstand',
 };
 export default messages;
 

@@ -62,7 +62,11 @@ export default {
     'regulering.automatisk': 'Automatisk regulering',
     'regulering.manuell': 'Manuell regulering',
     'regulering.manuell.start': 'Start regulering',
+    'regulering.avsluttet': 'Avsluttet regulering',
     'regulering.avslutt': 'Avslutt behandling',
     'regulering.seOppsummering': 'Se oppsummering',
     'regulering.iverksattDato': 'Iverksatt dato',
+    'regulering.modal.tittel': 'Er du sikker på at du ønsker å lukke reguleringen?',
+    'regulering.modal.avbryt': 'Avbryt',
+    'regulering.modal.lukk': 'Lukk regulering',
 };
