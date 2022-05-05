@@ -66,7 +66,7 @@ const ShowSteg = (props: {
     søker: Person;
     erSaksbehandler: boolean;
 }) => {
-    const avbrytUrl = props.erSaksbehandler // TOOD: Hva er egentlig ønsket funksjonalitet her?
+    const avbrytUrl = props.erSaksbehandler // TODO: Hva er egentlig ønsket funksjonalitet her?
         ? routes.soknadPersonSøk.createURL({
               papirsøknad: props.søknad.forVeileder.type === Søknadstype.Papirsøknad,
               soknadstema: props.soknadstema,

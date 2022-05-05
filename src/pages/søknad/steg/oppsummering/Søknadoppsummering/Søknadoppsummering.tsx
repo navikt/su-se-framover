@@ -3,7 +3,7 @@ import { Accordion } from '@navikt/ds-react';
 import React from 'react';
 import { RawIntlProvider, FormattedDate } from 'react-intl';
 
-import { SøknadState } from '~src/features/søknad/søknad.slice';
+import { AlderssøknadState, SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
@@ -362,7 +362,7 @@ const AlderspensjonOppsummering = ({
     søknad,
     formatMessage,
 }: {
-    søknad: SøknadState;
+    søknad: AlderssøknadState;
     formatMessage: MessageFormatter<
         typeof alderspensjonMessages &
             typeof oppholdstillatelseMessages &

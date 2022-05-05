@@ -23,7 +23,7 @@ const SuHeader = (props: Props) => {
                 <>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
                         <Header.Title
-                            href={Routes.soknadPersonSøk.createURL({
+                            href={Routes.soknadtema.createURL({
                                 papirsøknad: true,
                             })}
                         >

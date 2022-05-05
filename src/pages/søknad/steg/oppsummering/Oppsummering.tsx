@@ -9,6 +9,7 @@ import * as innsendingSlice from '~src/features/søknad/innsending.slice';
 import { useI18n } from '~src/lib/i18n';
 import { SøknadContext } from '~src/pages/søknad';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Søknadstema } from '~src/types/Søknad';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import * as sharedStyles from '../../steg-shared.module.less';
@@ -25,14 +26,28 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const dispatch = useAppDispatch();
 
     const handleSubmit = async () => {
-        const res = await dispatch(
-            innsendingSlice.sendSøknad({
-                søknad: søknadFraStore,
-                søker: props.søker,
-            })
-        );
-        if (innsendingSlice.sendSøknad.fulfilled.match(res)) {
-            navigate(props.nesteUrl);
+        if (soknadstema === Søknadstema.Uføre) {
+            const res = await dispatch(
+                innsendingSlice.sendUføresøknad({
+                    søknad: søknadFraStore,
+                    søker: props.søker,
+                })
+            );
+            if (innsendingSlice.sendUføresøknad.fulfilled.match(res)) {
+                navigate(props.nesteUrl);
+            }
+        }
+
+        if (soknadstema === Søknadstema.Alder) {
+            const res = await dispatch(
+                innsendingSlice.sendAldersøknad({
+                    søknad: søknadFraStore,
+                    søker: props.søker,
+                })
+            );
+            if (innsendingSlice.sendAldersøknad.fulfilled.match(res)) {
+                navigate(props.nesteUrl);
+            }
         }
     };
 

@@ -25,7 +25,9 @@ export interface Kjøretøy {
     kjøretøyDeEier: string;
 }
 
-export interface SøknadState {
+export type SøknadState = UføresøknadState & AlderssøknadState;
+
+export interface UføresøknadState extends SøknadFellesState {
     harUførevedtak: Nullable<boolean>;
     flyktningstatus: {
         harOppholdstillatelse: Nullable<boolean>;
@@ -35,6 +37,9 @@ export interface SøknadState {
         statsborgerskapAndreLand: Nullable<boolean>;
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };
+}
+
+export interface AlderssøknadState extends SøknadFellesState {
     harSøktAlderspensjon: Nullable<boolean>;
     oppholdstillatelse: {
         erNorskStatsborger: Nullable<boolean>;
@@ -45,6 +50,9 @@ export interface SøknadState {
         statsborgerskapAndreLand: Nullable<boolean>;
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };
+}
+
+export interface SøknadFellesState {
     boOgOpphold: {
         borOgOppholderSegINorge: Nullable<boolean>;
         delerBoligMedPersonOver18: Nullable<boolean>;
@@ -229,7 +237,7 @@ export default createSlice({
         harUførevedtakUpdated(state, action: PayloadAction<boolean | null>) {
             state.harUførevedtak = action.payload;
         },
-        oppholdstillatelseUpdated(state, action: PayloadAction<SøknadState['oppholdstillatelse']>) {
+        oppholdstillatelseUpdated(state, action: PayloadAction<AlderssøknadState['oppholdstillatelse']>) {
             state.oppholdstillatelse = action.payload;
         },
         flyktningstatusUpdated(state, action: PayloadAction<SøknadState['flyktningstatus']>) {
