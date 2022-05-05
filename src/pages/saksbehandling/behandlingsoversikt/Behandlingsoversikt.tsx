@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading } from '@navikt/ds-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
@@ -7,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { hentReguleringsstatus } from '~src/api/reguleringApi';
 import { Person as PersonIkon } from '~src/assets/Icons';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -43,10 +45,11 @@ enum Tab {
 }
 
 const Behandlingsoversikt = () => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const { søker } = useAppSelector((s) => ({ søker: s.søker.søker }));
-    const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const [personStatus, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
     const [, hentReguleringer] = useApiCall(hentReguleringsstatus);
     const [reguleringer, setReguleringer] = useState<{ automatiske: Regulering[]; manuelle: Regulering[] }>({
@@ -84,22 +87,27 @@ const Behandlingsoversikt = () => {
                 <Personsøk
                     onReset={() => {
                         dispatch(personSlice.default.actions.resetSøker());
-                        dispatch(sakSlice.default.actions.resetSak());
+                        resetSak();
                     }}
                     onFetchByFnr={(fnr) => {
-                        dispatch(personSlice.fetchPerson({ fnr }));
-                        hentSak({ fnr }, (res) => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id })));
+                        fetchPerson({ fnr });
+                        fetchSak({ fnr }, (res) => {
+                            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }));
+                        });
                     }}
-                    onFetchBySaksnummer={async (saksnummer) => {
-                        const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
-                        if (sakSlice.fetchSak.fulfilled.match(res)) {
-                            hentSak({ fnr: res.payload.fnr }, (res) =>
-                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }))
-                            );
-                        }
+                    onFetchBySaksnummer={(saksnummer) => {
+                        fetchSak({ saksnummer }, (res) => {
+                            fetchPerson({ fnr: res.fnr }, () => {
+                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }));
+                            });
+                        });
                     }}
                     person={søker}
                 />
+
+                {RemoteData.isFailure(sakStatus) && !RemoteData.isFailure(personStatus) && (
+                    <ApiErrorAlert error={sakStatus.error} className={styles.feilmelding} />
+                )}
             </div>
 
             <Tabs.Root
