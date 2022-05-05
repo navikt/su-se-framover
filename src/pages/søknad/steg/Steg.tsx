@@ -16,6 +16,7 @@ import Formue from '~src/pages/søknad/steg/formue/søkersFormue/DinFormue';
 import InformasjonOmPapirsøknad from '~src/pages/søknad/steg/informasjon-om-papirsøknad/InformasjonOmPapirsøknad';
 import EktefellesInntekt from '~src/pages/søknad/steg/inntekt/epsInntekt/EktefellesInntekt';
 import Inntekt from '~src/pages/søknad/steg/inntekt/søkersInntekt/Inntekt';
+import Oppholdstillatelse from '~src/pages/søknad/steg/oppholdstillatelse/Oppholdstillatelse';
 import Oppsummering from '~src/pages/søknad/steg/oppsummering/Oppsummering';
 import Uførevedtak from '~src/pages/søknad/steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from '~src/pages/søknad/steg/utenlandsopphold/Utenlandsopphold';
@@ -98,8 +99,16 @@ const ShowSteg = (props: {
         case Alderssteg.Alderspensjon:
             return (
                 <Alderspensjon
-                    nesteUrl={stegUrl(Fellessteg.BoOgOppholdINorge)}
+                    nesteUrl={stegUrl(Alderssteg.Oppholdstillatelse)}
                     forrigeUrl={avbrytUrl}
+                    avbrytUrl={avbrytUrl}
+                />
+            );
+        case Alderssteg.Oppholdstillatelse:
+            return (
+                <Oppholdstillatelse
+                    nesteUrl={stegUrl(Fellessteg.BoOgOppholdINorge)}
+                    forrigeUrl={stegUrl(Alderssteg.Alderspensjon)}
                     avbrytUrl={avbrytUrl}
                 />
             );
@@ -109,7 +118,7 @@ const ShowSteg = (props: {
                     forrigeUrl={stegUrl(
                         props.soknadstema === Søknadstema.Uføre
                             ? Uføresteg.FlyktningstatusOppholdstillatelse
-                            : Alderssteg.Alderspensjon
+                            : Alderssteg.Oppholdstillatelse
                     )}
                     nesteUrl={stegUrl(Fellessteg.DinFormue)}
                     avbrytUrl={avbrytUrl}

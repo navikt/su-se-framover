@@ -5,6 +5,7 @@ export const steg: { [key in Søknadssteg]: string } = {
     [Uføresteg.FlyktningstatusOppholdstillatelse]: 'Flyktningstatus',
 
     [Alderssteg.Alderspensjon]: 'Alderspensjon',
+    [Alderssteg.Oppholdstillatelse]: 'Oppholdstillatelse',
 
     [Fellessteg.BoOgOppholdINorge]: 'Bo og opphold i Norge',
     [Fellessteg.DinFormue]: 'Din formue',

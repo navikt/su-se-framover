@@ -5,6 +5,7 @@ export enum Uføresteg {
 
 export enum Alderssteg {
     Alderspensjon = 'alderspensjon',
+    Oppholdstillatelse = 'oppholdstillatelse',
 }
 
 export enum Fellessteg {

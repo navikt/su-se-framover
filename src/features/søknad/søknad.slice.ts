@@ -36,6 +36,15 @@ export interface SøknadState {
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };
     harSøktAlderspensjon: Nullable<boolean>;
+    oppholdstillatelse: {
+        erNorskStatsborger: Nullable<boolean>;
+        eøsborger: Nullable<boolean>;
+        harOppholdstillatelse: Nullable<boolean>;
+        familieforening: Nullable<boolean>;
+        typeOppholdstillatelse: Nullable<string>;
+        statsborgerskapAndreLand: Nullable<boolean>;
+        statsborgerskapAndreLandFritekst: Nullable<string>;
+    };
     boOgOpphold: {
         borOgOppholderSegINorge: Nullable<boolean>;
         delerBoligMedPersonOver18: Nullable<boolean>;
@@ -159,6 +168,15 @@ const initialState = (type: Søknadstype = Søknadstype.DigitalSøknad): Søknad
         statsborgerskapAndreLandFritekst: null,
     },
     harSøktAlderspensjon: null,
+    oppholdstillatelse: {
+        erNorskStatsborger: null,
+        eøsborger: null,
+        harOppholdstillatelse: null,
+        familieforening: null,
+        typeOppholdstillatelse: null,
+        statsborgerskapAndreLand: null,
+        statsborgerskapAndreLandFritekst: null,
+    },
     boOgOpphold: {
         borOgOppholderSegINorge: null,
         delerBoligMedPersonOver18: null,
@@ -210,6 +228,9 @@ export default createSlice({
         },
         harUførevedtakUpdated(state, action: PayloadAction<boolean | null>) {
             state.harUførevedtak = action.payload;
+        },
+        oppholdstillatelseUpdated(state, action: PayloadAction<SøknadState['oppholdstillatelse']>) {
+            state.oppholdstillatelse = action.payload;
         },
         flyktningstatusUpdated(state, action: PayloadAction<SøknadState['flyktningstatus']>) {
             state.flyktningstatus = action.payload;

@@ -51,6 +51,10 @@ const StartUtfylling = () => {
             step: Alderssteg.Alderspensjon,
             onlyIf: soknadstema === Søknadstema.Alder,
         },
+        {
+            step: Alderssteg.Oppholdstillatelse,
+            onlyIf: soknadstema === Søknadstema.Alder,
+        },
         { step: Fellessteg.BoOgOppholdINorge },
         { step: Fellessteg.DinFormue },
         {
