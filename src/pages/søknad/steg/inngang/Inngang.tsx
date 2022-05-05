@@ -16,7 +16,6 @@ import søknadSlice from '~src/features/søknad/søknad.slice';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
 import { soknadsutfylling } from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { SøknadContext } from '~src/pages/søknad';
@@ -237,7 +236,7 @@ const index = () => {
                 </div>
             </div>
             <div className={styles.knapperContainer}>
-                <LinkAsButton variant="secondary" href={Routes.soknad.createURL()}>
+                <LinkAsButton variant="secondary" href={'/soknad'}>
                     {formatMessage('knapp.forrige')}
                 </LinkAsButton>
                 <Button

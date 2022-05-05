@@ -1,8 +1,9 @@
 import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Navigate } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { ALDERSØKNAD_FEATURE_ENABLED } from '~src/lib/featureToggles';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { SøknadContext } from '~src/pages/søknad/index';
@@ -15,6 +16,15 @@ const Søknadsvelger = () => {
     const { isPapirsøknad } = useOutletContext<SøknadContext>();
     const { formatMessage } = useI18n({ messages });
 
+    if (!ALDERSØKNAD_FEATURE_ENABLED) {
+        return (
+            <Navigate
+                replace
+                to={Routes.soknadtema.createURL({ papirsøknad: isPapirsøknad, soknadstema: Søknadstema.Uføre })}
+            />
+        );
+    }
+
     return (
         <div className={styles.søknadsvelger}>
             <Heading level="2" size="small">
@@ -22,7 +32,7 @@ const Søknadsvelger = () => {
             </Heading>
             <div className={styles.buttonGroup}>
                 <LinkAsButton
-                    href={Routes.soknadPersonSøk.createURL({
+                    href={Routes.soknadtema.createURL({
                         papirsøknad: isPapirsøknad,
                         soknadstema: Søknadstema.Alder,
                     })}
@@ -30,7 +40,7 @@ const Søknadsvelger = () => {
                     {formatMessage('alderssøknad')}
                 </LinkAsButton>
                 <LinkAsButton
-                    href={Routes.soknadPersonSøk.createURL({
+                    href={Routes.soknadtema.createURL({
                         papirsøknad: isPapirsøknad,
                         soknadstema: Søknadstema.Uføre,
                     })}
