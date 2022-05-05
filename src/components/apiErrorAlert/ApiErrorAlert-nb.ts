@@ -164,7 +164,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK]: 'Ugyldig årsak for revurdering',
     [ApiErrorCode.REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV]:
         'Revurderingen er ikke forhåndsvarslet for å vise brev',
-    [ApiErrorCode.SAKSNUMMER_IKKE_GYLDIG]: 'Saksnnummer er ikke gyldig',
+    [ApiErrorCode.SAKSNUMMER_IKKE_GYLDIG]: 'Saksnummer er ikke gyldig',
     [ApiErrorCode.SENERE_STØNADSPERIODE_EKSISTERER]: 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
     [ApiErrorCode.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]:
         'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',

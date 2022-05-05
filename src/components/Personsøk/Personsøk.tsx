@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader, Search } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { Person } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -15,21 +16,29 @@ import { Personkort } from '../personkort/Personkort';
 import messages from './personsøk-nb';
 import * as styles from './personsøk.module.less';
 
-interface PersonsøkProps {
+interface Props {
     person: ApiResult<Person>;
     onFetchByFnr: (fnr: string) => void;
     onFetchBySaksnummer?: (saksnummer: string) => void;
     onReset: () => void;
 }
+interface Form {
+    fnr: string;
+}
 
-const Personsøk = (props: PersonsøkProps) => {
+const Personsøk = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     const [inputErrorMessage, setInputErrorMsg] = React.useState<string | null>(null);
+    const { control, handleSubmit } = useForm<Form>({
+        defaultValues: {
+            fnr: '',
+        },
+    });
 
-    const handleSubmit = (search: string) => {
+    const submitHandler = (formData: Form) => {
         setInputErrorMsg(null);
-        const strippedSearch = removeSpaces(search);
+        const strippedSearch = removeSpaces(formData.fnr);
         if (!Number(strippedSearch)) {
             return setInputErrorMsg(formatMessage('feilmelding.måVareTall'));
         }
@@ -45,28 +54,35 @@ const Personsøk = (props: PersonsøkProps) => {
 
     return (
         <div className={styles.personsøk}>
-            <div>
-                <Search
-                    label={
-                        props.onFetchBySaksnummer
-                            ? `${formatMessage('input.fnr.label')} / ${formatMessage('input.fnr.saksnummer')}`
-                            : formatMessage('input.fnr.label')
-                    }
-                    onSearch={(e) => handleSubmit(e as string)}
-                    onClear={props.onReset}
-                    onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                            handleSubmit(event.currentTarget.value);
-                        }
-                    }}
-                    type="primary"
-                >
-                    <Search.Button>
-                        {RemoteData.isPending(props.person) ? <Loader /> : formatMessage('knapp.søk')}
-                    </Search.Button>
-                </Search>
+            <form onSubmit={handleSubmit(submitHandler)}>
+                <Controller
+                    control={control}
+                    name="fnr"
+                    render={({ field }) => (
+                        <Search
+                            value={field.value}
+                            onChange={field.onChange}
+                            label={
+                                props.onFetchBySaksnummer
+                                    ? `${formatMessage('input.fnr.label')} / ${formatMessage('input.fnr.saksnummer')}`
+                                    : formatMessage('input.fnr.label')
+                            }
+                            onClear={props.onReset}
+                            onKeyDown={(event) => {
+                                if (event.key === 'Enter') {
+                                    handleSubmit(submitHandler);
+                                }
+                            }}
+                            type="primary"
+                        >
+                            <Search.Button>
+                                {RemoteData.isPending(props.person) ? <Loader /> : formatMessage('knapp.søk')}
+                            </Search.Button>
+                        </Search>
+                    )}
+                />
                 {inputErrorMessage && <SkjemaelementFeilmelding>{inputErrorMessage}</SkjemaelementFeilmelding>}
-            </div>
+            </form>
             <div className={styles.personkortWrapper}>
                 {pipe(
                     props.person,
