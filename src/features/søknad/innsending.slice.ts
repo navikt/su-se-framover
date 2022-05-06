@@ -1,82 +1,37 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
 import * as personApi from '~src/api/personApi';
 import * as søknadApi from '~src/api/søknadApi';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
-import { SøknadInnhold, Søknadstype } from '~src/types/Søknad';
 
-import { SøknadState } from './søknad.slice';
-import { DelerBoligMed } from './types';
-import { toAdresseFraSøknad, toEktefellePartnerSamboer, toFormue, toInntekt } from './utils';
+import { AlderssøknadState, SøknadState } from './søknad.slice';
+import { toAldersinnsending, toUføreinnsending } from './utils';
 
-export const sendSøknad = createAsyncThunk<
+export const sendUføresøknad = createAsyncThunk<
     søknadApi.OpprettetSøknad,
     { søknad: SøknadState; søker: personApi.Person },
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
-    const søknadDto: SøknadInnhold = {
-        personopplysninger: {
-            fnr: søker.fnr,
-        },
-        uførevedtak: {
-            harUførevedtak: søknad.harUførevedtak!,
-        },
-        flyktningsstatus: {
-            registrertFlyktning: søknad.flyktningstatus.erFlyktning!,
-        },
-        oppholdstillatelse: {
-            erNorskStatsborger: søknad.flyktningstatus.erNorskStatsborger!,
-            harOppholdstillatelse: søknad.flyktningstatus.harOppholdstillatelse,
-            typeOppholdstillatelse: søknad.flyktningstatus.typeOppholdstillatelse,
-            statsborgerskapAndreLand: søknad.flyktningstatus.statsborgerskapAndreLand!,
-            statsborgerskapAndreLandFritekst: søknad.flyktningstatus.statsborgerskapAndreLandFritekst,
-        },
-        boforhold: {
-            borOgOppholderSegINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
-            delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
-            delerBoligMed: søknad.boOgOpphold.delerBoligMed,
-            ektefellePartnerSamboer: toEktefellePartnerSamboer(søknad.boOgOpphold.ektefellePartnerSamboer),
-            innlagtPåInstitusjon: søknad.boOgOpphold.innlagtPåInstitusjon
-                ? {
-                      datoForInnleggelse: søknad.boOgOpphold.datoForInnleggelse,
-                      datoForUtskrivelse: søknad.boOgOpphold.datoForUtskrivelse,
-                      fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt,
-                  }
-                : null,
-            borPåAdresse: toAdresseFraSøknad(søknad.boOgOpphold.borPåAdresse),
-            ingenAdresseGrunn: søknad.boOgOpphold.ingenAdresseGrunn,
-        },
-        utenlandsopphold: {
-            registrertePerioder: søknad.utenlandsopphold.harReistDatoer,
-            planlagtePerioder: søknad.utenlandsopphold.skalReiseDatoer,
-        },
-        inntektOgPensjon: toInntekt(søknad.inntekt),
-        formue: toFormue(søknad.formue),
-        forNav:
-            søknad.forVeileder.type === Søknadstype.DigitalSøknad
-                ? {
-                      type: Søknadstype.DigitalSøknad,
-                      harFullmektigEllerVerge: søknad.forVeileder.harFullmektigEllerVerge,
-                  }
-                : {
-                      type: Søknadstype.Papirsøknad,
-                      mottaksdatoForSøknad: søknad.forVeileder.mottaksdatoForSøknad!,
-                      grunnForPapirinnsending: søknad.forVeileder.grunnForPapirinnsending!,
-                      annenGrunn: søknad.forVeileder.annenGrunn,
-                  },
-        ektefelle:
-            søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-                ? {
-                      formue: toFormue(søknad.ektefelle.formue),
-                      inntektOgPensjon: toInntekt(søknad.ektefelle.inntekt),
-                  }
-                : null,
-    };
+    const søknadDto = toUføreinnsending(søknad, søker.fnr);
 
     const res = await søknadApi.sendSøknad(søknadDto);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const sendAldersøknad = createAsyncThunk<
+    søknadApi.OpprettetSøknad,
+    { søknad: AlderssøknadState; søker: personApi.Person },
+    { rejectValue: ApiError }
+>('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
+    const søknadDto = toAldersinnsending(søknad, søker.fnr);
+
+    const res = await søknadApi.sendAlderssøknad(søknadDto);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -95,7 +50,7 @@ export default createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        handleAsyncThunk(builder, sendSøknad, {
+        handleAsyncThunk(builder, sendUføresøknad, {
             pending: (state) => {
                 state.søknad = RemoteData.pending;
             },

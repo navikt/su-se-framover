@@ -2,8 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Adresse, IngenAdresseGrunn } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
-
-import { Søknadstype } from '../../types/Søknad';
+import { Søknadstype } from '~src/types/Søknad';
 
 import {
     DelerBoligMed,
@@ -26,7 +25,9 @@ export interface Kjøretøy {
     kjøretøyDeEier: string;
 }
 
-export interface SøknadState {
+export type SøknadState = UføresøknadState & AlderssøknadState;
+
+export interface UføresøknadState extends SøknadFellesState {
     harUførevedtak: Nullable<boolean>;
     flyktningstatus: {
         harOppholdstillatelse: Nullable<boolean>;
@@ -36,6 +37,22 @@ export interface SøknadState {
         statsborgerskapAndreLand: Nullable<boolean>;
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };
+}
+
+export interface AlderssøknadState extends SøknadFellesState {
+    harSøktAlderspensjon: Nullable<boolean>;
+    oppholdstillatelse: {
+        erNorskStatsborger: Nullable<boolean>;
+        eøsborger: Nullable<boolean>;
+        harOppholdstillatelse: Nullable<boolean>;
+        familieforening: Nullable<boolean>;
+        typeOppholdstillatelse: Nullable<TypeOppholdstillatelse>;
+        statsborgerskapAndreLand: Nullable<boolean>;
+        statsborgerskapAndreLandFritekst: Nullable<string>;
+    };
+}
+
+export interface SøknadFellesState {
     boOgOpphold: {
         borOgOppholderSegINorge: Nullable<boolean>;
         delerBoligMedPersonOver18: Nullable<boolean>;
@@ -158,6 +175,16 @@ const initialState = (type: Søknadstype = Søknadstype.DigitalSøknad): Søknad
         statsborgerskapAndreLand: null,
         statsborgerskapAndreLandFritekst: null,
     },
+    harSøktAlderspensjon: null,
+    oppholdstillatelse: {
+        erNorskStatsborger: null,
+        eøsborger: null,
+        harOppholdstillatelse: null,
+        familieforening: null,
+        typeOppholdstillatelse: null,
+        statsborgerskapAndreLand: null,
+        statsborgerskapAndreLandFritekst: null,
+    },
     boOgOpphold: {
         borOgOppholderSegINorge: null,
         delerBoligMedPersonOver18: null,
@@ -210,8 +237,14 @@ export default createSlice({
         harUførevedtakUpdated(state, action: PayloadAction<boolean | null>) {
             state.harUførevedtak = action.payload;
         },
+        oppholdstillatelseUpdated(state, action: PayloadAction<AlderssøknadState['oppholdstillatelse']>) {
+            state.oppholdstillatelse = action.payload;
+        },
         flyktningstatusUpdated(state, action: PayloadAction<SøknadState['flyktningstatus']>) {
             state.flyktningstatus = action.payload;
+        },
+        harSøktAlderspensjonUpdated(state, action: PayloadAction<boolean | null>) {
+            state.harSøktAlderspensjon = action.payload;
         },
         boOgOppholdUpdated(state, action: PayloadAction<SøknadState['boOgOpphold']>) {
             state.boOgOpphold = action.payload;

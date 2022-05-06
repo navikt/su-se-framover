@@ -2,7 +2,8 @@ import { useParams } from 'react-router-dom';
 
 import * as Routes from '~src/lib/routes';
 import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '~src/pages/saksbehandling/types';
-import { Søknadsteg } from '~src/pages/søknad/types';
+import { Søknadssteg } from '~src/pages/søknad/types';
+import { Søknadstema } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 interface Route<T> {
@@ -36,16 +37,23 @@ export const soknad: Route<never> = {
     createURL: () => '/soknad/',
 };
 
-export const soknadPersonSøk: Route<{ papirsøknad?: boolean }> = {
-    path: 'personsok',
-    absPath: '/soknad/personsok',
-    createURL: (args) => '/soknad/personsok' + (args.papirsøknad ? '?papirsoknad=true' : ''),
+export const soknadtema: Route<{ soknadstema?: Søknadstema; papirsøknad?: boolean }> = {
+    path: ':soknadstema/*',
+    absPath: '/soknad/:soknadstema/',
+    createURL: (args) =>
+        `/soknad${args?.soknadstema ? '/' + args.soknadstema : ''}${args.papirsøknad ? '?papirsoknad=true' : ''}`,
 };
 
-export const soknadsutfylling: Route<{ step: Søknadsteg; papirsøknad?: boolean }> = {
+export const soknadPersonSøk: Route<{ papirsøknad?: boolean; soknadstema: Søknadstema }> = {
+    path: 'personsok',
+    absPath: '/soknad/:soknadstema/personsok',
+    createURL: (args) => `/soknad/${args.soknadstema}/personsok${args.papirsøknad ? '?papirsoknad=true' : ''}`,
+};
+
+export const soknadsutfylling: Route<{ step: Søknadssteg; soknadstema: Søknadstema; papirsøknad?: boolean }> = {
     path: 'utfylling/:step',
-    absPath: '/soknad/utfylling/:step',
-    createURL: (args) => `/soknad/utfylling/${args.step}`,
+    absPath: '/soknad/:soknadstema/utfylling/:step',
+    createURL: (args) => `/soknad/${args.soknadstema}/utfylling/${args.step}`,
 };
 
 export const søkandskvittering: Route<never> = {

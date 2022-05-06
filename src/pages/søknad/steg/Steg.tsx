@@ -1,12 +1,13 @@
 import { Heading, Ingress } from '@navikt/ds-react';
-import { useEffect } from 'react';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { Person } from '~src/api/personApi';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
 import * as routes from '~src/lib/routes';
 import * as styles from '~src/pages/søknad/index.module.less';
+import Alderspensjon from '~src/pages/søknad/steg/alderspensjon/Alderspensjon';
 import BoOgOppholdINorge from '~src/pages/søknad/steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
 import FlyktningstatusOppholdstillatelse from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';
 import ForVeileder from '~src/pages/søknad/steg/for-veileder/ForVeileder';
@@ -15,15 +16,17 @@ import Formue from '~src/pages/søknad/steg/formue/søkersFormue/DinFormue';
 import InformasjonOmPapirsøknad from '~src/pages/søknad/steg/informasjon-om-papirsøknad/InformasjonOmPapirsøknad';
 import EktefellesInntekt from '~src/pages/søknad/steg/inntekt/epsInntekt/EktefellesInntekt';
 import Inntekt from '~src/pages/søknad/steg/inntekt/søkersInntekt/Inntekt';
+import Oppholdstillatelse from '~src/pages/søknad/steg/oppholdstillatelse/Oppholdstillatelse';
 import Oppsummering from '~src/pages/søknad/steg/oppsummering/Oppsummering';
 import Uførevedtak from '~src/pages/søknad/steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from '~src/pages/søknad/steg/utenlandsopphold/Utenlandsopphold';
-import { Søknadsteg } from '~src/pages/søknad/types';
-import { Søknadstype } from '~src/types/Søknad';
+import { Alderssteg, Fellessteg, Søknadssteg, Uføresteg } from '~src/pages/søknad/types';
+import { Søknadstema, Søknadstype } from '~src/types/Søknad';
 
 export const Steg = (props: {
     title: string;
-    step: Søknadsteg;
+    step: Søknadssteg;
+    soknadstema: Søknadstema;
     søknad: SøknadState;
     søker: Person;
     erSaksbehandler: boolean;
@@ -47,6 +50,7 @@ export const Steg = (props: {
             </div>
             <ShowSteg
                 step={props.step}
+                soknadstema={props.soknadstema}
                 søknad={props.søknad}
                 søker={props.søker}
                 erSaksbehandler={props.erSaksbehandler}
@@ -55,119 +59,146 @@ export const Steg = (props: {
     );
 };
 
-const ShowSteg = (props: { step: Søknadsteg; søknad: SøknadState; søker: Person; erSaksbehandler: boolean }) => {
-    const avbrytUrl =
-        props.søknad.forVeileder.type === Søknadstype.Papirsøknad && props.erSaksbehandler
-            ? routes.soknadPersonSøk.createURL({ papirsøknad: true })
-            : routes.soknad.createURL();
-
-    const stegUrl = (steg: Søknadsteg) =>
+const ShowSteg = (props: {
+    step: Søknadssteg;
+    soknadstema: Søknadstema;
+    søknad: SøknadState;
+    søker: Person;
+    erSaksbehandler: boolean;
+}) => {
+    const avbrytUrl = routes.soknadPersonSøk.createURL({
+        papirsøknad: props.erSaksbehandler && props.søknad.forVeileder.type === Søknadstype.Papirsøknad,
+        soknadstema: props.soknadstema,
+    });
+    const stegUrl = (steg: Søknadssteg) =>
         routes.soknadsutfylling.createURL({
             step: steg,
+            soknadstema: props.soknadstema,
         });
 
     switch (props.step) {
-        case Søknadsteg.Uførevedtak:
+        case Uføresteg.Uførevedtak:
             return (
                 <Uførevedtak
                     forrigeUrl={avbrytUrl}
-                    nesteUrl={stegUrl(Søknadsteg.FlyktningstatusOppholdstillatelse)}
+                    nesteUrl={stegUrl(Uføresteg.FlyktningstatusOppholdstillatelse)}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.FlyktningstatusOppholdstillatelse:
+        case Uføresteg.FlyktningstatusOppholdstillatelse:
             return (
                 <FlyktningstatusOppholdstillatelse
-                    forrigeUrl={stegUrl(Søknadsteg.Uførevedtak)}
-                    nesteUrl={stegUrl(Søknadsteg.BoOgOppholdINorge)}
+                    forrigeUrl={stegUrl(Uføresteg.Uførevedtak)}
+                    nesteUrl={stegUrl(Fellessteg.BoOgOppholdINorge)}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.BoOgOppholdINorge:
+        case Alderssteg.Alderspensjon:
+            return (
+                <Alderspensjon
+                    nesteUrl={stegUrl(Alderssteg.Oppholdstillatelse)}
+                    forrigeUrl={avbrytUrl}
+                    avbrytUrl={avbrytUrl}
+                />
+            );
+        case Alderssteg.Oppholdstillatelse:
+            return (
+                <Oppholdstillatelse
+                    nesteUrl={stegUrl(Fellessteg.BoOgOppholdINorge)}
+                    forrigeUrl={stegUrl(Alderssteg.Alderspensjon)}
+                    avbrytUrl={avbrytUrl}
+                />
+            );
+        case Fellessteg.BoOgOppholdINorge:
             return (
                 <BoOgOppholdINorge
-                    forrigeUrl={stegUrl(Søknadsteg.FlyktningstatusOppholdstillatelse)}
-                    nesteUrl={stegUrl(Søknadsteg.DinFormue)}
+                    forrigeUrl={stegUrl(
+                        props.soknadstema === Søknadstema.Uføre
+                            ? Uføresteg.FlyktningstatusOppholdstillatelse
+                            : Alderssteg.Oppholdstillatelse
+                    )}
+                    nesteUrl={stegUrl(Fellessteg.DinFormue)}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.DinFormue:
+        case Fellessteg.DinFormue:
             return (
                 <Formue
-                    forrigeUrl={stegUrl(Søknadsteg.BoOgOppholdINorge)}
-                    nesteUrl={stegUrl(Søknadsteg.DinInntekt)}
+                    forrigeUrl={stegUrl(Fellessteg.BoOgOppholdINorge)}
+                    nesteUrl={stegUrl(Fellessteg.DinInntekt)}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.DinInntekt:
+        case Fellessteg.DinInntekt:
             return (
                 <Inntekt
-                    forrigeUrl={stegUrl(Søknadsteg.DinFormue)}
+                    forrigeUrl={stegUrl(Fellessteg.DinFormue)}
                     nesteUrl={
                         props.søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-                            ? stegUrl(Søknadsteg.EktefellesFormue)
-                            : stegUrl(Søknadsteg.ReiseTilUtlandet)
+                            ? stegUrl(Fellessteg.EktefellesFormue)
+                            : stegUrl(Fellessteg.ReiseTilUtlandet)
                     }
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.EktefellesFormue:
+        case Fellessteg.EktefellesFormue:
             return (
                 <EktefellesFormue
-                    forrigeUrl={stegUrl(Søknadsteg.DinInntekt)}
-                    nesteUrl={stegUrl(Søknadsteg.EktefellesInntekt)}
+                    forrigeUrl={stegUrl(Fellessteg.DinInntekt)}
+                    nesteUrl={stegUrl(Fellessteg.EktefellesInntekt)}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.EktefellesInntekt:
+        case Fellessteg.EktefellesInntekt:
             return (
                 <EktefellesInntekt
-                    forrigeUrl={stegUrl(Søknadsteg.EktefellesFormue)}
-                    nesteUrl={stegUrl(Søknadsteg.ReiseTilUtlandet)}
+                    forrigeUrl={stegUrl(Fellessteg.EktefellesFormue)}
+                    nesteUrl={stegUrl(Fellessteg.ReiseTilUtlandet)}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.ReiseTilUtlandet:
+        case Fellessteg.ReiseTilUtlandet:
             return (
                 <Utenlandsopphold
                     forrigeUrl={
                         props.søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-                            ? stegUrl(Søknadsteg.EktefellesInntekt)
-                            : stegUrl(Søknadsteg.DinInntekt)
+                            ? stegUrl(Fellessteg.EktefellesInntekt)
+                            : stegUrl(Fellessteg.DinInntekt)
                     }
                     nesteUrl={routes.soknadsutfylling.createURL({
+                        soknadstema: props.soknadstema,
                         step:
                             props.søknad.forVeileder.type === Søknadstype.DigitalSøknad
-                                ? Søknadsteg.ForVeileder
-                                : Søknadsteg.InformasjonOmPapirsøknad,
+                                ? Fellessteg.ForVeileder
+                                : Fellessteg.InformasjonOmPapirsøknad,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.ForVeileder:
+        case Fellessteg.ForVeileder:
             return (
                 <ForVeileder
                     søker={props.søker}
-                    forrigeUrl={stegUrl(Søknadsteg.ReiseTilUtlandet)}
-                    nesteUrl={stegUrl(Søknadsteg.Oppsummering)}
+                    forrigeUrl={stegUrl(Fellessteg.ReiseTilUtlandet)}
+                    nesteUrl={stegUrl(Fellessteg.Oppsummering)}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.InformasjonOmPapirsøknad:
+        case Fellessteg.InformasjonOmPapirsøknad:
             return (
                 <InformasjonOmPapirsøknad
-                    forrigeUrl={stegUrl(Søknadsteg.ReiseTilUtlandet)}
-                    nesteUrl={stegUrl(Søknadsteg.Oppsummering)}
+                    forrigeUrl={stegUrl(Fellessteg.ReiseTilUtlandet)}
+                    nesteUrl={stegUrl(Fellessteg.Oppsummering)}
                     avbrytUrl={avbrytUrl}
                 />
             );
-        case Søknadsteg.Oppsummering:
+        case Fellessteg.Oppsummering:
             return (
                 <Oppsummering
                     forrigeUrl={stegUrl(
                         props.søknad.forVeileder.type === Søknadstype.DigitalSøknad
-                            ? Søknadsteg.ForVeileder
-                            : Søknadsteg.InformasjonOmPapirsøknad
+                            ? Fellessteg.ForVeileder
+                            : Fellessteg.InformasjonOmPapirsøknad
                     )}
                     nesteUrl={routes.søkandskvittering.createURL()}
                     avbrytUrl={avbrytUrl}

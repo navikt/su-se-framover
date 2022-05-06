@@ -32,10 +32,12 @@ interface InnlagtPåInstitusjon {
     fortsattInnlagt: boolean;
 }
 
-export interface SøknadInnhold {
-    personopplysninger: {
-        fnr: string;
-    };
+export interface SøknadInnholdAlder extends SøknadFellesInnhold {
+    harSøktAlderspensjon: boolean;
+}
+
+export interface SøknadInnhold extends SøknadFellesInnhold {
+    // TODO: Skal endre navn til SøknadUføreInnhold, men brukes så mange steder (saksbehandling m.m.) så må avvente
     uførevedtak: {
         harUførevedtak: boolean;
     };
@@ -48,6 +50,12 @@ export interface SøknadInnhold {
         typeOppholdstillatelse: Nullable<string>;
         statsborgerskapAndreLand: boolean;
         statsborgerskapAndreLandFritekst: Nullable<string>;
+    };
+}
+
+export interface SøknadFellesInnhold {
+    personopplysninger: {
+        fnr: string;
     };
     boforhold: {
         borOgOppholderSegINorge: boolean;
@@ -86,6 +94,11 @@ export type ForNav = ForNavDigitalSøknad | ForNavPapirsøknad;
 export enum Søknadstype {
     DigitalSøknad = 'DigitalSøknad',
     Papirsøknad = 'Papirsøknad',
+}
+
+export enum Søknadstema {
+    Alder = 'alder',
+    Uføre = 'ufore',
 }
 
 interface Formue {

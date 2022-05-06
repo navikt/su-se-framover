@@ -1,7 +1,7 @@
 import { Nullable } from '~src/lib/types';
 import { AvvistBrevConfig } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
 import { Sak } from '~src/types/Sak';
-import { LukkSøknadBegrunnelse, Søknad, SøknadInnhold } from '~src/types/Søknad';
+import { LukkSøknadBegrunnelse, Søknad, SøknadInnhold, SøknadInnholdAlder } from '~src/types/Søknad';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -30,6 +30,10 @@ export interface OpprettetSøknad {
 
 export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<OpprettetSøknad>> {
     return apiClient({ url: '/soknad', method: 'POST', body: søknad });
+}
+
+export async function sendAlderssøknad(søknad: SøknadInnholdAlder): Promise<ApiClientResult<OpprettetSøknad>> {
+    return apiClient({ url: '/soknad/alder', method: 'POST', body: søknad });
 }
 
 export async function lukkSøknad(arg: { søknadId: string; body: LukkSøknadBodyTypes }): Promise<ApiClientResult<Sak>> {

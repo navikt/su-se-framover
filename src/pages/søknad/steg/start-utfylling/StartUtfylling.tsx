@@ -3,7 +3,7 @@ import { Alert, ContentContainer, Heading, Loader, StepIndicator } from '@navikt
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { fetchMe } from '~src/api/meApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -13,18 +13,19 @@ import { DelerBoligMed } from '~src/features/søknad/types';
 import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
+import { soknadsutfylling, useRouteParams } from '~src/lib/routes';
 import * as styles from '~src/pages/søknad/index.module.less';
 import messages from '~src/pages/søknad/nb';
 import { Steg } from '~src/pages/søknad/steg/Steg';
-import { Søknadsteg } from '~src/pages/søknad/types';
+import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
 import { useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstema, Søknadstype } from '~src/types/Søknad';
 
 const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
     const søknad = useAppSelector((s) => s.soknad);
-    const { step } = useParams<{ step: Søknadsteg }>();
+    const { step, soknadstema } = useRouteParams<typeof soknadsutfylling>();
     const { formatMessage } = useI18n({ messages });
     const user = useUserContext();
     const navigate = useNavigate();
@@ -41,53 +42,62 @@ const StartUtfylling = () => {
     }, [step]);
 
     const steg = [
-        { label: formatMessage(Søknadsteg.Uførevedtak), step: Søknadsteg.Uførevedtak },
+        { step: Uføresteg.Uførevedtak, onlyIf: soknadstema === Søknadstema.Uføre },
         {
-            label: formatMessage(Søknadsteg.FlyktningstatusOppholdstillatelse),
-            step: Søknadsteg.FlyktningstatusOppholdstillatelse,
+            step: Uføresteg.FlyktningstatusOppholdstillatelse,
+            onlyIf: soknadstema === Søknadstema.Uføre,
         },
-        { label: formatMessage(Søknadsteg.BoOgOppholdINorge), step: Søknadsteg.BoOgOppholdINorge },
-        { label: formatMessage(Søknadsteg.DinFormue), step: Søknadsteg.DinFormue },
         {
-            label: formatMessage(Søknadsteg.DinInntekt),
-            step: Søknadsteg.DinInntekt,
+            step: Alderssteg.Alderspensjon,
+            onlyIf: soknadstema === Søknadstema.Alder,
+        },
+        {
+            step: Alderssteg.Oppholdstillatelse,
+            onlyIf: soknadstema === Søknadstema.Alder,
+        },
+        { step: Fellessteg.BoOgOppholdINorge },
+        { step: Fellessteg.DinFormue },
+        {
+            step: Fellessteg.DinInntekt,
             hjelpetekst: formatMessage('steg.inntekt.hjelpetekst'),
         },
         {
-            label: formatMessage(Søknadsteg.EktefellesFormue),
-            step: Søknadsteg.EktefellesFormue,
+            step: Fellessteg.EktefellesFormue,
             onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
         },
         {
-            label: formatMessage(Søknadsteg.EktefellesInntekt),
-            step: Søknadsteg.EktefellesInntekt,
+            step: Fellessteg.EktefellesInntekt,
             onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
             hjelpetekst: formatMessage('steg.inntekt.hjelpetekst'),
         },
-        { label: formatMessage(Søknadsteg.ReiseTilUtlandet), step: Søknadsteg.ReiseTilUtlandet },
+        { step: Fellessteg.ReiseTilUtlandet },
         søknad.forVeileder.type === Søknadstype.Papirsøknad && user.roller.includes(Rolle.Saksbehandler)
-            ? { label: formatMessage(Søknadsteg.InformasjonOmPapirsøknad), step: Søknadsteg.InformasjonOmPapirsøknad }
-            : { label: formatMessage(Søknadsteg.ForVeileder), step: Søknadsteg.ForVeileder },
+            ? { step: Fellessteg.InformasjonOmPapirsøknad }
+            : { step: Fellessteg.ForVeileder },
         {
-            label: formatMessage(Søknadsteg.Oppsummering),
-            step: Søknadsteg.Oppsummering,
+            step: Fellessteg.Oppsummering,
             hjelpetekst: formatMessage('steg.oppsummering.hjelpetekst'),
         },
     ].filter((s) => s.onlyIf ?? true);
-    const aktivtSteg = steg.findIndex((s) => s.step === step);
+
+    const aktivtStegIndex = steg.findIndex((s) => s.step === step);
+    const aktivtSteg = steg[aktivtStegIndex];
 
     useEffect(() => {
-        if (aktivtSteg > sisteStartetSteg) {
-            setSisteStartetSteg(aktivtSteg);
+        if (aktivtStegIndex > sisteStartetSteg) {
+            setSisteStartetSteg(aktivtStegIndex);
         }
-    }, [aktivtSteg]);
+    }, [aktivtStegIndex]);
 
     const ManglendeData = () => (
         <ContentContainer className={classNames(styles.content, styles.feilmeldingContainer)}>
             <Alert variant="error" className={styles.feilmeldingTekst}>
                 {formatMessage('feilmelding.tekst')}
             </Alert>
-            <LinkAsButton variant="secondary" href={routes.soknadPersonSøk.createURL({})}>
+            <LinkAsButton
+                variant="secondary"
+                href={routes.soknadPersonSøk.createURL({ soknadstema: soknadstema ?? Søknadstema.Uføre })}
+            >
                 {formatMessage('feilmelding.knapp')}
             </LinkAsButton>
         </ContentContainer>
@@ -111,7 +121,7 @@ const StartUtfylling = () => {
                             <div className={styles.content}>
                                 <div className={styles.stegindikatorContainer}>
                                     <StepIndicator
-                                        activeStep={aktivtSteg}
+                                        activeStep={aktivtStegIndex}
                                         hideLabels
                                         onStepChange={(index) => {
                                             const nyttSteg = steg[index];
@@ -119,6 +129,7 @@ const StartUtfylling = () => {
                                                 navigate(
                                                     routes.soknadsutfylling.createURL({
                                                         step: nyttSteg.step,
+                                                        soknadstema: soknadstema ?? Søknadstema.Uføre,
                                                     })
                                                 );
                                             }
@@ -128,20 +139,23 @@ const StartUtfylling = () => {
                                             <StepIndicator.Step
                                                 key={index}
                                                 disabled={
-                                                    isLocal ? false : aktivtSteg !== index && index > sisteStartetSteg
+                                                    isLocal
+                                                        ? false
+                                                        : aktivtStegIndex !== index && index > sisteStartetSteg
                                                 }
                                             >
-                                                {s.label}
+                                                {formatMessage(s.step)}
                                             </StepIndicator.Step>
                                         ))}
                                     </StepIndicator>
                                     <Steg
-                                        title={steg.find((s) => s.step === step)?.label || ''}
-                                        step={step ?? Søknadsteg.Uførevedtak}
+                                        title={formatMessage(aktivtSteg?.step ?? Uføresteg.Uførevedtak)}
+                                        step={step ?? Uføresteg.Uførevedtak}
                                         søknad={søknad}
                                         søker={søker}
+                                        soknadstema={soknadstema ?? Søknadstema.Uføre}
                                         erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
-                                        hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
+                                        hjelpetekst={aktivtSteg?.hjelpetekst}
                                     />
                                 </div>
                             </div>

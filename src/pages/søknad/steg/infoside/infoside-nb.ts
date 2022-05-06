@@ -25,5 +25,6 @@ export default {
     'viktigÅVite.manglerDuDokumentasjon':
         'Mangler du dokumentasjon, kan du sende den inn på et senere tidspunkt. Du finner mer om dette på <navLink>nav.no.</navLink>',
 
-    'page.tittel': 'Start en ny søknad om supplerende stønad for uføre flyktninger',
+    'page.tittel.uføre': 'Start en ny søknad om supplerende stønad for uføre flyktninger',
+    'page.tittel.alder': 'Start en ny søknad om supplerende stønad for alder',
 };

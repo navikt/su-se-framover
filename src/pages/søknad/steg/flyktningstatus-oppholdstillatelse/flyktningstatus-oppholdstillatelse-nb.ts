@@ -1,4 +1,8 @@
+import { typeOppholdstillatelse } from '~src/pages/søknad/steg/oppholdstillatelse/oppholdstillatelse-nb';
+
 export default {
+    ...typeOppholdstillatelse,
+
     'flyktning.label': 'Er du registrert som flyktning?',
     'flyktning.måVæreFlyktning':
         'Du må ha flyktningstatus etter utlendingsloven § 28 for å ha rett på supplerende stønad. Du kan fremdeles søke, men vil sannsynligvis få avslag.',

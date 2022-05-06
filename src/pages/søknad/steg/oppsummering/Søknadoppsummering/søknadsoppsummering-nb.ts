@@ -1,4 +1,7 @@
 export default {
+    ja: 'Ja',
+    nei: 'Nei',
+    ubesvart: 'Ubesvart',
     'oppsummering.endreSvar': 'Endre svar',
     'boOgOpphold.adresse': 'Adresse',
     'boOgOpphold.ingenAdresseGrunn.annenAdresse': 'Bor på annen adresse.',
