@@ -61,7 +61,7 @@ export interface SøknadFellesState {
         innlagtPåInstitusjon: Nullable<boolean>;
         datoForInnleggelse: Nullable<string>;
         datoForUtskrivelse: Nullable<string>;
-        fortsattInnlagt: boolean;
+        fortsattInnlagt: Nullable<boolean>;
         borPåAdresse: Nullable<Adresse>;
         ingenAdresseGrunn: Nullable<IngenAdresseGrunn>;
     };
@@ -193,7 +193,7 @@ const initialState = (type: Søknadstype = Søknadstype.DigitalSøknad): Søknad
         innlagtPåInstitusjon: null,
         datoForInnleggelse: null,
         datoForUtskrivelse: null,
-        fortsattInnlagt: false,
+        fortsattInnlagt: null,
         borPåAdresse: null,
         ingenAdresseGrunn: null,
     },

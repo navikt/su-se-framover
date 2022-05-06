@@ -1,5 +1,5 @@
-import { FormikErrors } from 'formik';
 import React, { useMemo } from 'react';
+import { FieldErrors } from 'react-hook-form';
 
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -15,7 +15,7 @@ interface Props {
     id: string;
     onChange: (eps: EPSFormData) => void;
     value: Nullable<EPSFormData>;
-    feil?: FormikErrors<EPSFormData>;
+    feil?: FieldErrors<EPSFormData>;
 }
 const EktefellePartnerSamboer = (props: Props) => {
     const epsFormData: EPSFormData = props.value ?? {

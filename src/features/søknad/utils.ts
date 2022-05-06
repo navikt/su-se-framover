@@ -38,9 +38,9 @@ export const toFellessøknadsinnsending = (søknad: SøknadFellesState, fnr: str
         ektefellePartnerSamboer: toEktefellePartnerSamboer(søknad.boOgOpphold.ektefellePartnerSamboer),
         innlagtPåInstitusjon: søknad.boOgOpphold.innlagtPåInstitusjon
             ? {
-                  datoForInnleggelse: søknad.boOgOpphold.datoForInnleggelse,
-                  datoForUtskrivelse: søknad.boOgOpphold.datoForUtskrivelse,
-                  fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt,
+                  datoForInnleggelse: søknad.boOgOpphold.datoForInnleggelse!,
+                  datoForUtskrivelse: søknad.boOgOpphold.datoForUtskrivelse!,
+                  fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt!,
               }
             : null,
         borPåAdresse: toAdresseFraSøknad(søknad.boOgOpphold.borPåAdresse),
