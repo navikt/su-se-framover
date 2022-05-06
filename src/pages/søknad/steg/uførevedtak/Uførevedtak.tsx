@@ -1,15 +1,16 @@
 import { Alert } from '@navikt/ds-react';
-import { useFormik } from 'formik';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { yupResolver } from '~node_modules/@hookform/resolvers/yup';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~src/lib/validering';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppSelector, useAppDispatch } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -31,15 +32,11 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const formik = useFormik<FormData>({
-        initialValues: {
+    const form = useForm<FormData>({
+        resolver: yupResolver(schema),
+        defaultValues: {
             harUførevedtak: harVedtakFraStore,
         },
-        onSubmit: (values) => {
-            dispatch(søknadSlice.actions.harUførevedtakUpdated(values.harUførevedtak));
-            navigate(props.nesteUrl);
-        },
-        validationSchema: schema,
     });
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
@@ -47,27 +44,27 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
 
     return (
         <form
-            onSubmit={(e) => {
-                formik.handleSubmit(e);
+            onSubmit={form.handleSubmit((values) => {
+                dispatch(søknadSlice.actions.harUførevedtakUpdated(values.harUførevedtak));
+                navigate(props.nesteUrl);
                 focusAfterTimeout(feiloppsummeringref)();
-            }}
+            })}
             className={sharedStyles.container}
         >
             <SøknadSpørsmålsgruppe withoutLegend>
-                <BooleanRadioGroup
+                <Controller
+                    control={form.control}
                     name="harUførevedtak"
-                    legend={formatMessage('uførevedtak.label')}
-                    error={formik.errors.harUførevedtak}
-                    value={formik.values.harUførevedtak}
-                    onChange={(e) =>
-                        formik.setValues({
-                            ...formik.values,
-                            harUførevedtak: e,
-                        })
-                    }
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('uførevedtak.label')}
+                            error={fieldState.error?.message}
+                        />
+                    )}
                 />
             </SøknadSpørsmålsgruppe>
-            {formik.values.harUførevedtak === false && (
+            {form.watch('harUførevedtak') === false && (
                 <Alert variant="warning" className={sharedStyles.marginBottom}>
                     {formatMessage('uførevedtak.måSøkeUføretrygd.info')}
                 </Alert>
@@ -76,8 +73,8 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
                     tittel={formatMessage('feiloppsummering.title')}
-                    feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                    hidden={!formikErrorsHarFeil(formik.errors)}
+                    feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                    hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                     ref={feiloppsummeringref}
                 />
             </div>
@@ -85,7 +82,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
             <Bunnknapper
                 previous={{
                     onClick: () => {
-                        dispatch(søknadSlice.actions.harUførevedtakUpdated(formik.values.harUførevedtak));
+                        dispatch(søknadSlice.actions.harUførevedtakUpdated(form.getValues().harUførevedtak));
                         navigate(props.forrigeUrl);
                     },
                     handleClickAsAvbryt: true,
