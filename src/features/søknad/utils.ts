@@ -2,76 +2,91 @@ import { Adresse } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
 import { EktefellePartnerSamboer, SøknadFellesInnhold, SøknadInnholdAlder, Søknadstype } from '~src/types/Søknad';
 
-import { AdresseFraSøknad, AlderssøknadState, SøknadFellesState, SøknadState } from './søknad.slice';
+import { AdresseFraSøknad, AlderssøknadState, SøknadState, UføresøknadState } from './søknad.slice';
 import { DelerBoligMed, EPSFormData } from './types';
 
-export const toUføreinnsending = (søknad: SøknadState, fnr: string) => ({
+export const toUføreinnsending = (søknad: UføresøknadState, fnr: string) => ({
     uførevedtak: {
         harUførevedtak: søknad.harUførevedtak!,
     },
     flyktningsstatus: {
         registrertFlyktning: søknad.flyktningstatus.erFlyktning!,
     },
-    oppholdstillatelse: {
-        erNorskStatsborger: søknad.flyktningstatus.erNorskStatsborger!,
-        harOppholdstillatelse: søknad.flyktningstatus.harOppholdstillatelse,
-        typeOppholdstillatelse: søknad.flyktningstatus.typeOppholdstillatelse,
-        statsborgerskapAndreLand: søknad.flyktningstatus.statsborgerskapAndreLand!,
-        statsborgerskapAndreLandFritekst: søknad.flyktningstatus.statsborgerskapAndreLandFritekst,
-    },
     ...toFellessøknadsinnsending(søknad, fnr),
 });
 
 export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): SøknadInnholdAlder => ({
-    harSøktAlderspensjon: søknad.harSøktAlderspensjon!,
+    harSøktAlderspensjon: {
+        harSøktAlderspensjon: søknad.harSøktAlderspensjon!,
+    },
+    oppholdstillatelseAlder: {
+        eøsborger: søknad.oppholdstillatelse.eøsborger!,
+        familieforening: søknad.oppholdstillatelse.familieforening!,
+    },
     ...toFellessøknadsinnsending(søknad, fnr),
-}); // TODO: Få inn mapping
-
-export const toFellessøknadsinnsending = (søknad: SøknadFellesState, fnr: string): SøknadFellesInnhold => ({
-    personopplysninger: {
-        fnr: fnr,
-    },
-    boforhold: {
-        borOgOppholderSegINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
-        delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
-        delerBoligMed: søknad.boOgOpphold.delerBoligMed,
-        ektefellePartnerSamboer: toEktefellePartnerSamboer(søknad.boOgOpphold.ektefellePartnerSamboer),
-        innlagtPåInstitusjon: søknad.boOgOpphold.innlagtPåInstitusjon
-            ? {
-                  datoForInnleggelse: søknad.boOgOpphold.datoForInnleggelse!,
-                  datoForUtskrivelse: søknad.boOgOpphold.datoForUtskrivelse!,
-                  fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt!,
-              }
-            : null,
-        borPåAdresse: toAdresseFraSøknad(søknad.boOgOpphold.borPåAdresse),
-        ingenAdresseGrunn: søknad.boOgOpphold.ingenAdresseGrunn,
-    },
-    utenlandsopphold: {
-        registrertePerioder: søknad.utenlandsopphold.harReistDatoer,
-        planlagtePerioder: søknad.utenlandsopphold.skalReiseDatoer,
-    },
-    inntektOgPensjon: toInntekt(søknad.inntekt),
-    formue: toFormue(søknad.formue),
-    forNav:
-        søknad.forVeileder.type === Søknadstype.DigitalSøknad
-            ? {
-                  type: Søknadstype.DigitalSøknad,
-                  harFullmektigEllerVerge: søknad.forVeileder.harFullmektigEllerVerge,
-              }
-            : {
-                  type: Søknadstype.Papirsøknad,
-                  mottaksdatoForSøknad: søknad.forVeileder.mottaksdatoForSøknad!,
-                  grunnForPapirinnsending: søknad.forVeileder.grunnForPapirinnsending!,
-                  annenGrunn: søknad.forVeileder.annenGrunn,
-              },
-    ektefelle:
-        søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-            ? {
-                  formue: toFormue(søknad.ektefelle.formue),
-                  inntektOgPensjon: toInntekt(søknad.ektefelle.inntekt),
-              }
-            : null,
 });
+
+export const toFellessøknadsinnsending = (
+    søknad: AlderssøknadState | UføresøknadState,
+    fnr: string
+): SøknadFellesInnhold => {
+    const erAlderssøknad = (s: AlderssøknadState | UføresøknadState): s is AlderssøknadState =>
+        'oppholdstillatelse' in s && s.oppholdstillatelse.harOppholdstillatelse !== null;
+    const oppholdstillatelse = erAlderssøknad(søknad) ? søknad.oppholdstillatelse : søknad.flyktningstatus;
+
+    return {
+        personopplysninger: {
+            fnr: fnr,
+        },
+        boforhold: {
+            borOgOppholderSegINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
+            delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
+            delerBoligMed: søknad.boOgOpphold.delerBoligMed,
+            ektefellePartnerSamboer: toEktefellePartnerSamboer(søknad.boOgOpphold.ektefellePartnerSamboer),
+            innlagtPåInstitusjon: søknad.boOgOpphold.innlagtPåInstitusjon
+                ? {
+                      datoForInnleggelse: søknad.boOgOpphold.datoForInnleggelse!,
+                      datoForUtskrivelse: søknad.boOgOpphold.datoForUtskrivelse!,
+                      fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt!,
+                  }
+                : null,
+            borPåAdresse: toAdresseFraSøknad(søknad.boOgOpphold.borPåAdresse),
+            ingenAdresseGrunn: søknad.boOgOpphold.ingenAdresseGrunn,
+        },
+        oppholdstillatelse: {
+            erNorskStatsborger: oppholdstillatelse.erNorskStatsborger!,
+            harOppholdstillatelse: oppholdstillatelse.harOppholdstillatelse,
+            typeOppholdstillatelse: oppholdstillatelse.typeOppholdstillatelse,
+            statsborgerskapAndreLand: oppholdstillatelse.statsborgerskapAndreLand!,
+            statsborgerskapAndreLandFritekst: oppholdstillatelse.statsborgerskapAndreLandFritekst,
+        },
+        utenlandsopphold: {
+            registrertePerioder: søknad.utenlandsopphold.harReistDatoer,
+            planlagtePerioder: søknad.utenlandsopphold.skalReiseDatoer,
+        },
+        inntektOgPensjon: toInntekt(søknad.inntekt),
+        formue: toFormue(søknad.formue),
+        forNav:
+            søknad.forVeileder.type === Søknadstype.DigitalSøknad
+                ? {
+                      type: Søknadstype.DigitalSøknad,
+                      harFullmektigEllerVerge: søknad.forVeileder.harFullmektigEllerVerge,
+                  }
+                : {
+                      type: Søknadstype.Papirsøknad,
+                      mottaksdatoForSøknad: søknad.forVeileder.mottaksdatoForSøknad!,
+                      grunnForPapirinnsending: søknad.forVeileder.grunnForPapirinnsending!,
+                      annenGrunn: søknad.forVeileder.annenGrunn,
+                  },
+        ektefelle:
+            søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
+                ? {
+                      formue: toFormue(søknad.ektefelle.formue),
+                      inntektOgPensjon: toInntekt(søknad.ektefelle.inntekt),
+                  }
+                : null,
+    };
+};
 
 export const toEktefellePartnerSamboer = (eps: Nullable<EPSFormData>): Nullable<EktefellePartnerSamboer> => {
     if (eps?.fnr) {

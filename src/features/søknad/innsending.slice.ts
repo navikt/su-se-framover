@@ -7,17 +7,17 @@ import * as personApi from '~src/api/personApi';
 import * as søknadApi from '~src/api/søknadApi';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 
-import { AlderssøknadState, SøknadState } from './søknad.slice';
+import { AlderssøknadState, UføresøknadState } from './søknad.slice';
 import { toAldersinnsending, toUføreinnsending } from './utils';
 
 export const sendUføresøknad = createAsyncThunk<
     søknadApi.OpprettetSøknad,
-    { søknad: SøknadState; søker: personApi.Person },
+    { søknad: UføresøknadState; søker: personApi.Person },
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
     const søknadDto = toUføreinnsending(søknad, søker.fnr);
 
-    const res = await søknadApi.sendSøknad(søknadDto);
+    const res = await søknadApi.sendUføresøknad(søknadDto);
     if (res.status === 'ok') {
         return res.data;
     }

@@ -32,8 +32,16 @@ interface InnlagtPåInstitusjon {
     fortsattInnlagt: boolean;
 }
 
+interface OppholdstillatelseAlder {
+    eøsborger: boolean;
+    familieforening: boolean;
+}
+
 export interface SøknadInnholdAlder extends SøknadFellesInnhold {
-    harSøktAlderspensjon: boolean;
+    harSøktAlderspensjon: {
+        harSøktAlderspensjon: boolean;
+    };
+    oppholdstillatelseAlder: OppholdstillatelseAlder;
 }
 
 export interface SøknadInnhold extends SøknadFellesInnhold {
@@ -44,18 +52,18 @@ export interface SøknadInnhold extends SøknadFellesInnhold {
     flyktningsstatus: {
         registrertFlyktning: boolean;
     };
+}
+
+export interface SøknadFellesInnhold {
+    personopplysninger: {
+        fnr: string;
+    };
     oppholdstillatelse: {
         erNorskStatsborger: boolean;
         harOppholdstillatelse: Nullable<boolean>;
         typeOppholdstillatelse: Nullable<string>;
         statsborgerskapAndreLand: boolean;
         statsborgerskapAndreLandFritekst: Nullable<string>;
-    };
-}
-
-export interface SøknadFellesInnhold {
-    personopplysninger: {
-        fnr: string;
     };
     boforhold: {
         borOgOppholderSegINorge: boolean;
