@@ -23,7 +23,7 @@ export const toUføreinnsending = (søknad: SøknadState, fnr: string) => ({
 });
 
 export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): SøknadInnholdAlder => ({
-    harSøktAlderspensjon: søknad.harSøktAlderspensjon ?? false,
+    harSøktAlderspensjon: søknad.harSøktAlderspensjon!,
     ...toFellessøknadsinnsending(søknad, fnr),
 }); // TODO: Få inn mapping
 

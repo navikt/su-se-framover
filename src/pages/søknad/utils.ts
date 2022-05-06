@@ -9,7 +9,5 @@ export const getSøknadstematekst = (
             return text[Søknadstema.Alder];
         case Søknadstema.Uføre:
             return text[Søknadstema.Uføre];
-        default:
-            return '';
     }
 };
