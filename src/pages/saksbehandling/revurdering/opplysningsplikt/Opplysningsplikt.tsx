@@ -20,6 +20,8 @@ import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsv
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
+
 import GjeldendeOpplysningsplikt from './GjeldendeOpplysningsplikt';
 import messages from './opplysningsplikt-nb';
 import * as styles from './opplysningsplikt.module.less';
@@ -178,6 +180,9 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                             {formatMessage('periode.ny')}
                         </Button>
                         {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
+                        {RemoteData.isSuccess(status) && (
+                            <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                        )}
                         <RevurderingBunnknapper
                             tilbake={props.forrige}
                             loading={RemoteData.isPending(status)}
