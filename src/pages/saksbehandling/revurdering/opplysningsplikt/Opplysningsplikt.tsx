@@ -74,7 +74,11 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                     beskrivelse: v.beskrivelse,
                 })),
             },
-            () => navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
+            (res) => {
+                if (res.feilmeldinger.length === 0) {
+                    navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl);
+                }
+            }
         );
     };
 
