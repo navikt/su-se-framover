@@ -49,7 +49,7 @@ const Behandlingsoversikt = () => {
     const dispatch = useAppDispatch();
     const { søker } = useAppSelector((s) => ({ søker: s.søker.søker }));
     const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSak);
-    const [personStatus, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
+    const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
     const [, hentReguleringer] = useApiCall(hentReguleringsstatus);
     const [reguleringer, setReguleringer] = useState<{ automatiske: Regulering[]; manuelle: Regulering[] }>({
@@ -105,7 +105,7 @@ const Behandlingsoversikt = () => {
                     person={søker}
                 />
 
-                {RemoteData.isFailure(sakStatus) && !RemoteData.isFailure(personStatus) && (
+                {RemoteData.isFailure(sakStatus) && !RemoteData.isFailure(søker) && (
                     <ApiErrorAlert error={sakStatus.error} className={styles.feilmelding} />
                 )}
             </div>
