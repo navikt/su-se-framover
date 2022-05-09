@@ -37,6 +37,7 @@ const Personsøk = (props: Props) => {
     });
 
     const submitHandler = (formData: Form) => {
+        props.onReset();
         setInputErrorMsg(null);
         const strippedSearch = removeSpaces(formData.fnr);
         if (!Number(strippedSearch)) {
