@@ -3,6 +3,8 @@ import * as DateFns from 'date-fns';
 export const enum Utbetalingstype {
     NY = 'NY',
     OPPHØR = 'OPPHØR',
+    STANS = 'STANS',
+    GJENOPPTA = 'GJENOPPTA',
 }
 
 export interface Utbetalingsperiode {
