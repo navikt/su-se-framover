@@ -17,6 +17,8 @@ import { Restans, RestansStatus, RestansType } from '~src/types/Restans';
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
 
+import styles from './åpneBehandlinger.module.less';
+
 export const ÅpneBehandlinger = () => {
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentÅpneBehandlinger);
 
@@ -50,7 +52,7 @@ export const ÅpneBehandlinger = () => {
     };
 
     return (
-        <>
+        <div className={styles.åpnebehandlingerContainer}>
             <Filter
                 type={type}
                 status={status}
@@ -72,6 +74,6 @@ export const ÅpneBehandlinger = () => {
                     )
                 )
             )}
-        </>
+        </div>
     );
 };

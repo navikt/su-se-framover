@@ -19,6 +19,8 @@ import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
 
+import styles from './ferdigeBehandlinger.module.less';
+
 export const FerdigeBehandlinger = () => {
     const [hentFerdigeBehandlingerStatus, hentFerdigeBehandlinger] = useAsyncActionCreator(
         sakSlice.hentFerdigeBehandlinger
@@ -62,7 +64,7 @@ export const FerdigeBehandlinger = () => {
     };
 
     return (
-        <>
+        <div className={styles.ferdigeBehandlingerContainer}>
             <Filter
                 type={type}
                 resultat={resultat}
@@ -95,6 +97,6 @@ export const FerdigeBehandlinger = () => {
                     )
                 )
             )}
-        </>
+        </div>
     );
 };
