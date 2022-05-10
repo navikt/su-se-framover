@@ -200,7 +200,7 @@ const ShowSteg = (props: {
                             ? Fellessteg.ForVeileder
                             : Fellessteg.InformasjonOmPapirsøknad
                     )}
-                    nesteUrl={routes.søkandskvittering.createURL()}
+                    nesteUrl={routes.søknadskvittering.createURL()}
                     avbrytUrl={avbrytUrl}
                     søker={props.søker}
                 />
