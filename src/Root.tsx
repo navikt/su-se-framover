@@ -109,7 +109,8 @@ const AppRoutes = () => (
                 <Route path={routes.stansRoute.path} element={<StansPage />} />
                 <Route path={routes.stansOppsummeringRoute.path} element={<StansOppsummering />} />
             </Route>
-            <Route path={routes.gjenopptaStansRoot.path} element={<Gjenoppta />}>
+            <Route path={routes.gjenopptaStansRoot.path}>
+                <Route index element={<Gjenoppta />} />
                 <Route path={routes.gjenopptaStansOppsummeringRoute.path} element={<GjenopptaOppsummering />} />
             </Route>
             <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
