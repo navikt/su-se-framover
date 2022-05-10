@@ -25,6 +25,9 @@ function setup() {
             serveOptions: {
                 port: 1234,
             },
+            hmrOptions: {
+                port: 1234,
+            },
             defaultTargetOptions: {
                 shouldScopeHoist: false,
                 shouldOptimize: false,
