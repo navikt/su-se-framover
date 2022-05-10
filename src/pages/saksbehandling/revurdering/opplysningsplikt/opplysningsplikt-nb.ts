@@ -13,8 +13,8 @@ export default {
 
     'eksisterende.vedtakinfo.tittel': 'Eksisterende vedtaksinformasjon',
 
-    'select.label': 'Beskrivelse',
-    'select.defaultValue': 'Velg beskrivelse',
+    'select.label': 'Vurdering:',
+    'select.defaultValue': 'Velg vurdering',
 
     ...opplysningspliktTesktMapper,
 };
