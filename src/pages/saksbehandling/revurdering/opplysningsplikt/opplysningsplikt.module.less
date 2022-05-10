@@ -4,31 +4,28 @@
     display: flex;
     flex-direction: column;
     gap: @spacing;
+}
 
-    .periodeOgSlett {
-        position: relative;
-
-        .søppelbøtte {
-            height: fit-content;
-            position: absolute;
-            top: 0;
-            right: 0;
-            margin-left: auto;
-        }
-
-        .periode {
-            display: flex;
-            gap: @spacing-xs @spacing;
-            flex-wrap: wrap;
-
-            .dato {
-                max-width: 11.75rem;
-            }
-        }
-    }
+.vurderingOgSøppelbøtteContainer {
+    display: flex;
+    justify-content: space-between;
 
     .select {
         max-width: 20rem;
+    }
+
+    .søppelbøtte {
+        height: fit-content;
+    }
+}
+
+.periode {
+    display: flex;
+    gap: @spacing-xs @spacing;
+    flex-wrap: wrap;
+
+    .dato {
+        max-width: 11.75rem;
     }
 }
 

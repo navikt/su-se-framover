@@ -92,7 +92,27 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                     >
                         {fields.map((opplysningsplikt, index) => (
                             <Panel border key={opplysningsplikt.id} className={styles.panel}>
-                                <div className={styles.periodeOgSlett}>
+                                <div className={styles.vurderingOgSøppelbøtteContainer}>
+                                    <Controller
+                                        control={form.control}
+                                        name={`opplysningsplikt.${index}.beskrivelse`}
+                                        render={({ field, fieldState }) => (
+                                            <Select
+                                                className={styles.select}
+                                                {...field}
+                                                label={formatMessage('select.label')}
+                                                value={field.value ?? ''}
+                                                error={fieldState.error?.message}
+                                            >
+                                                <option value="">{formatMessage('select.defaultValue')}</option>
+                                                {Object.values(OpplysningspliktBeksrivelse).map((beskrivelse) => (
+                                                    <option value={beskrivelse} key={beskrivelse}>
+                                                        {formatMessage(beskrivelse)}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                        )}
+                                    />
                                     {fields.length > 1 && (
                                         <Button
                                             variant="secondary"
@@ -105,69 +125,50 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                                             <Delete />
                                         </Button>
                                     )}
-                                    <div className={styles.periode}>
-                                        <Controller
-                                            control={form.control}
-                                            name={`opplysningsplikt.${index}.periode.fraOgMed`}
-                                            render={({ field, fieldState }) => (
-                                                <DatePicker
-                                                    className={styles.dato}
-                                                    id={field.name}
-                                                    label={formatMessage('datepicker.fom')}
-                                                    dateFormat="MM/yyyy"
-                                                    showMonthYearPicker
-                                                    isClearable
-                                                    autoComplete="off"
-                                                    value={field.value}
-                                                    onChange={(date: Date | null) => field.onChange(date)}
-                                                    minDate={revurderingsperiode.fraOgMed}
-                                                    maxDate={revurderingsperiode.tilOgMed}
-                                                    feil={getDateErrorMessage(fieldState.error)}
-                                                />
-                                            )}
-                                        />
-                                        <Controller
-                                            control={form.control}
-                                            name={`opplysningsplikt.${index}.periode.tilOgMed`}
-                                            render={({ field, fieldState }) => (
-                                                <DatePicker
-                                                    className={styles.dato}
-                                                    id={field.name}
-                                                    label={formatMessage('datepicker.tom')}
-                                                    dateFormat="MM/yyyy"
-                                                    showMonthYearPicker
-                                                    isClearable
-                                                    autoComplete="off"
-                                                    value={field.value}
-                                                    onChange={(date: Date | null) => field.onChange(date)}
-                                                    minDate={revurderingsperiode.fraOgMed}
-                                                    maxDate={revurderingsperiode.tilOgMed}
-                                                    feil={getDateErrorMessage(fieldState.error)}
-                                                />
-                                            )}
-                                        />
-                                    </div>
                                 </div>
-                                <Controller
-                                    control={form.control}
-                                    name={`opplysningsplikt.${index}.beskrivelse`}
-                                    render={({ field, fieldState }) => (
-                                        <Select
-                                            className={styles.select}
-                                            {...field}
-                                            label={formatMessage('select.label')}
-                                            value={field.value ?? ''}
-                                            error={fieldState.error?.message}
-                                        >
-                                            <option value="">{formatMessage('select.defaultValue')}</option>
-                                            {Object.values(OpplysningspliktBeksrivelse).map((beskrivelse) => (
-                                                <option value={beskrivelse} key={beskrivelse}>
-                                                    {formatMessage(beskrivelse)}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    )}
-                                />
+
+                                <div className={styles.periode}>
+                                    <Controller
+                                        control={form.control}
+                                        name={`opplysningsplikt.${index}.periode.fraOgMed`}
+                                        render={({ field, fieldState }) => (
+                                            <DatePicker
+                                                className={styles.dato}
+                                                id={field.name}
+                                                label={formatMessage('datepicker.fom')}
+                                                dateFormat="MM/yyyy"
+                                                showMonthYearPicker
+                                                isClearable
+                                                autoComplete="off"
+                                                value={field.value}
+                                                onChange={(date: Date | null) => field.onChange(date)}
+                                                minDate={revurderingsperiode.fraOgMed}
+                                                maxDate={revurderingsperiode.tilOgMed}
+                                                feil={getDateErrorMessage(fieldState.error)}
+                                            />
+                                        )}
+                                    />
+                                    <Controller
+                                        control={form.control}
+                                        name={`opplysningsplikt.${index}.periode.tilOgMed`}
+                                        render={({ field, fieldState }) => (
+                                            <DatePicker
+                                                className={styles.dato}
+                                                id={field.name}
+                                                label={formatMessage('datepicker.tom')}
+                                                dateFormat="MM/yyyy"
+                                                showMonthYearPicker
+                                                isClearable
+                                                autoComplete="off"
+                                                value={field.value}
+                                                onChange={(date: Date | null) => field.onChange(date)}
+                                                minDate={revurderingsperiode.fraOgMed}
+                                                maxDate={revurderingsperiode.tilOgMed}
+                                                feil={getDateErrorMessage(fieldState.error)}
+                                            />
+                                        )}
+                                    />
+                                </div>
                             </Panel>
                         ))}
                         <Button
