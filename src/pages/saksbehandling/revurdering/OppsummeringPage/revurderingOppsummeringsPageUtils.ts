@@ -24,10 +24,10 @@ export const hentBrevsending = (revurdering: SimulertRevurdering | BeregnetIngen
 };
 
 export enum OppsummeringState {
-    ATTESTERING,
-    TILBAKEKREVING,
-    FORHÅNDSVARSLING,
-    ER_FORHÅNDSVARSLET,
+    ATTESTERING = 'ATTESTERING',
+    TILBAKEKREVING = 'TILBAKEKREVING',
+    FORHÅNDSVARSLING = 'FORHÅNDSVARSLING',
+    ER_FORHÅNDSVARSLET = 'ER_FORHÅNDSVARSLET',
 }
 
 export const getOppsummeringsformState = (revurdering: Revurdering): OppsummeringState => {

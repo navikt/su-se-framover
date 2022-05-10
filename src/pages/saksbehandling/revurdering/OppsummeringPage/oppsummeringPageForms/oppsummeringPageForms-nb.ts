@@ -31,4 +31,9 @@ export default {
         'Du finner detaljer om feilutbetalt beløp med periode lengre ned i brevet.\n' +
         '\n' +
         'Vi har kommet frem til at det feilutbetalte beløpet må betales tilbake fordi du (forsto / burde ha forstått) at det utbetalte beløpet skyldtes en feil.',
+
+    'opplysningsplikt.forhåndstekst':
+        'I brev av _____ bad vi deg om å levere dokumentasjon på _____ \n' +
+        '\n' +
+        'Du fikk 14 dagers first. Vi har ikke mottatt denne dokumentasjonen.',
 };

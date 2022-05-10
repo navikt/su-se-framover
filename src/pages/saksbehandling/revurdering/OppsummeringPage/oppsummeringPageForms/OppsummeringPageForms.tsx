@@ -14,6 +14,7 @@ import yup from '~src/lib/validering';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';
+import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
 
@@ -46,6 +47,8 @@ export const ResultatEtterForhåndsvarselform = (props: {
             tekstTilVedtaksbrev:
                 props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV
                     ? formatMessage('tilbakekreving.forhåndstekst')
+                    : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                    ? formatMessage('opplysningsplikt.forhåndstekst')
                     : '',
             tekstTilAvsluttRevurderingBrev: '',
             begrunnelse: '',
@@ -225,6 +228,8 @@ export const SendTilAttesteringForm = (props: {
                 ? props.revurdering.fritekstTilBrev
                 : tilbakekreving
                 ? formatMessage('tilbakekreving.forhåndstekst')
+                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                ? formatMessage('opplysningsplikt.forhåndstekst')
                 : '',
             skalFøreTilBrevutsending: props.brevsending === 'alltidSende' || harFritekst,
         },
