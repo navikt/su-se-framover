@@ -79,20 +79,6 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
                     .positive(),
                 otherwise: yup.number(),
             }) as yup.Schema<Nullable<string>>,
-        kontonummer: yup
-            .number()
-            .nullable()
-            .defined()
-            .when(keyOf<FormueFormData>('harDepositumskonto'), {
-                is: true,
-                then: yup
-                    .number()
-                    .typeError('Kontonummer må være et tall')
-                    .label('kontonummer')
-                    .nullable(false)
-                    .positive(),
-                otherwise: yup.number(),
-            }) as yup.Schema<Nullable<string>>,
         verdiPåEiendom: yup
             .number()
             .nullable()

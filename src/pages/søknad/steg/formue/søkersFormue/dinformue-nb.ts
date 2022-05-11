@@ -11,7 +11,6 @@ export default {
 
     'depositum.label': 'Har du en depositumskonto som leietaker?',
     'depositum.beløp': 'Beløp på depositumskontoen',
-    'depositum.kontonummer': 'Kontonummer',
 
     'eiendom.eierAndreEiendommer': 'Eier du andre eiendommer i Norge eller i andre land?',
     'eiendom.samledeVerdi': 'Eiendommenes samlede verdi',

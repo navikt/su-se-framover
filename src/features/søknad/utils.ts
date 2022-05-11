@@ -92,7 +92,6 @@ export const toFormue = (formue: SøknadState['formue']) => {
         boligBrukesTil: formue.borIBolig ? null : formue.boligBrukesTil,
 
         depositumsBeløp: formue.harDepositumskonto ? Number(formue.depositumsBeløp) : null,
-        kontonummer: formue.harDepositumskonto ? formue.kontonummer : null,
 
         verdiPåEiendom: formue.eierMerEnnEnBolig ? Number(formue.verdiPåEiendom) : null,
         eiendomBrukesTil: formue.eierMerEnnEnBolig ? formue.eiendomBrukesTil : null,

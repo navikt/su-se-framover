@@ -42,12 +42,6 @@ export const FormueOppsummering = ({
                     verdi={formue.depositumsBeløp ? formue.depositumsBeløp : 'Ubesvart'}
                 />
             )}
-            {formue.harDepositumskonto && (
-                <Oppsummeringsfelt
-                    label={formatMessage('depositum.kontonummer')}
-                    verdi={formue.kontonummer ? formue.kontonummer : 'Ubesvart'}
-                />
-            )}
 
             {formue.eierBolig && (
                 <Oppsummeringsfelt

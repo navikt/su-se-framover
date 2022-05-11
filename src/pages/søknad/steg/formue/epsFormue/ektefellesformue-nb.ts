@@ -11,7 +11,6 @@ export default {
 
     'depositum.label': 'Har ektefelle/samboer depositumskonto som leietaker?',
     'depositum.beløp': 'Beløpet på depositumskontoen',
-    'depositum.kontonummer': 'Kontonummer',
 
     'eiendom.eierAndreEiendommer': 'Eier ektefelle/samboer andre eiendommer i Norge eller i andre land?',
     'eiendom.samledeVerdi': 'Eiendommenes samlede verdi',
