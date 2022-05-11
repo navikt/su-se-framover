@@ -61,14 +61,12 @@ export async function lagreVirkningstidspunkt(arg: {
     behandlingId: string;
     fraOgMed: string;
     tilOgMed: string;
-    begrunnelse: string;
 }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/stønadsperiode`,
         method: 'POST',
         body: {
             periode: { fraOgMed: arg.fraOgMed, tilOgMed: arg.tilOgMed },
-            begrunnelse: arg.begrunnelse,
         },
     });
 }
