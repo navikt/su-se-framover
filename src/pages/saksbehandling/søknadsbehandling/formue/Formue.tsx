@@ -53,7 +53,7 @@ import {
 import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
 import sharedI18n from '../sharedI18n-nb';
-import { Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurderingknapper';
 
 import messages from './formue-nb';
 import * as styles from './formue.module.less';

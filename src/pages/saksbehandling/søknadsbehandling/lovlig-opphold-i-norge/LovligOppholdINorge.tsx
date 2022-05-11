@@ -26,7 +26,7 @@ import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import sharedI18n from '../sharedI18n-nb';
 import * as sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurderingknapper';
 
 import messages from './lovligOppholdINorge-nb';
 

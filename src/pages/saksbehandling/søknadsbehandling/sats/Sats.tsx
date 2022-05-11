@@ -33,7 +33,7 @@ import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurder
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurderingknapper';
 
 import messages from './sats-nb';
 import * as styles from './sats.module.less';
