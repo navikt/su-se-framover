@@ -65,7 +65,14 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         .defined()
                         .when('beslutningEtterForhåndsvarsel', {
                             is: BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger,
-                            then: yup.string().matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall'),
+                            then: yup
+                                .string()
+                                .matches(
+                                    UNDERSCORE_REGEX,
+                                    erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                                        ? 'Du må erstatte _____ med informasjon'
+                                        : 'Du må erstatte _____ med tall'
+                                ),
                         }),
                     tekstTilAvsluttRevurderingBrev: yup.string(),
                     begrunnelse: yup.string().required(),

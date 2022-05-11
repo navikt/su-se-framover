@@ -109,7 +109,12 @@ export const VelgForhåndsvarselForm = (props: {
                             then: yup
                                 .string()
                                 .nullable()
-                                .matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med informasjon')
+                                .matches(
+                                    UNDERSCORE_REGEX,
+                                    erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                                        ? 'Du må erstatte _____ med informasjon'
+                                        : 'Du må erstatte _____ med tall'
+                                )
                                 .required(),
                         }),
                 })
