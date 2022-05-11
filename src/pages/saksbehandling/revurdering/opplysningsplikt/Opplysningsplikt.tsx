@@ -59,7 +59,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
         control: form.control,
     });
 
-    const handleSubmit = async (form: OpplysningspliktVilkårForm, gåtil: 'neste' | 'avbryt') => {
+    const handleSubmit = async (form: OpplysningspliktVilkårForm, navigateUrl: string) => {
         lagre(
             {
                 id: props.revurdering.id,
@@ -76,7 +76,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
             },
             (res) => {
                 if (res.feilmeldinger.length === 0) {
-                    navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl);
+                    navigate(navigateUrl);
                 }
             }
         );
@@ -88,7 +88,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                 left: (
                     <form
                         className={sharedStyles.revurderingContainer}
-                        onSubmit={form.handleSubmit((values) => handleSubmit(values, 'neste'))}
+                        onSubmit={form.handleSubmit((values) => handleSubmit(values, props.nesteUrl))}
                     >
                         {fields.map((opplysningsplikt, index) => (
                             <Panel border key={opplysningsplikt.id} className={styles.panel}>
@@ -191,7 +191,9 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                         <RevurderingBunnknapper
                             tilbake={props.forrige}
                             loading={RemoteData.isPending(status)}
-                            onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'avbryt'))}
+                            onLagreOgFortsettSenereClick={form.handleSubmit((values) =>
+                                handleSubmit(values, props.avsluttUrl)
+                            )}
                         />
                     </form>
                 ),

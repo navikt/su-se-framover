@@ -243,7 +243,15 @@ export const SendTilAttesteringForm = (props: {
         resolver: yupResolver(
             yup.object<FormData>({
                 skalFøreTilBrevutsending: yup.boolean(),
-                vedtaksbrevtekst: yup.string().defined().matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall'),
+                vedtaksbrevtekst: yup
+                    .string()
+                    .defined()
+                    .matches(
+                        UNDERSCORE_REGEX,
+                        erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                            ? 'Du må erstatte _____ med informasjon'
+                            : 'Du må erstatte _____ med tall'
+                    ),
             })
         ),
     });

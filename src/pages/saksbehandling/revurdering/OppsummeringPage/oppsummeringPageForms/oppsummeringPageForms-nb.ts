@@ -33,7 +33,9 @@ export default {
         'Vi har kommet frem til at det feilutbetalte beløpet må betales tilbake fordi du (forsto / burde ha forstått) at det utbetalte beløpet skyldtes en feil.',
 
     'opplysningsplikt.forhåndstekst':
-        'I brev av _____ bad vi deg om å levere dokumentasjon på _____ \n' +
+        'I brev av _____ ble du bedt om å levere dokumentasjon på _____ innen 14 dager. Vi har ikke mottatt denne dokumentasjonen, ' +
+        'og kan derfor ikke vurdere om du fyller vilkårene for rett til supplerende stønad. ' +
+        'Det følger av § 18 at du er pliktig til å levere dokumentasjon som NAV trenger for å vurdere om du har rett på stønaden.\n' +
         '\n' +
-        'Du fikk 14 dagers first. Vi har ikke mottatt denne dokumentasjonen.',
+        '_____',
 };
