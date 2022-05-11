@@ -157,9 +157,10 @@ const Stans = () => {
                 <div className={styles.bunnknapper}>
                     <Button
                         variant="secondary"
+                        type="button"
                         onClick={() => {
                             if (urlParams.revurderingId) {
-                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
+                                return navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
                             }
                             navigate(-1);
                         }}

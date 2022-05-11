@@ -56,7 +56,7 @@ export const soknadsutfylling: Route<{ step: Søknadssteg; soknadstema: Søknads
     createURL: (args) => `/soknad/${args.soknadstema}/utfylling/${args.step}`,
 };
 
-export const søkandskvittering: Route<never> = {
+export const søknadskvittering: Route<never> = {
     path: 'kvittering',
     absPath: '/soknad/kvittering',
     createURL: () => `/soknad/kvittering`,
@@ -144,28 +144,22 @@ export const alleDokumenterForSak: Route<{ sakId: string }> = {
 };
 
 //---------------Attestering-------------------------
-export const attestering: Route<{ sakId: string }> = {
-    path: '/attestering/:sakId/*',
-    absPath: '/attestering/:sakId/',
-    createURL: (args) => `/attestering/${args.sakId}`,
-};
-
 export const attesterSøknadsbehandling: Route<{ sakId: string; behandlingId: string }> = {
-    path: 'behandling/:behandlingId/',
-    absPath: '/attestering/:sakId/behandling/:behandlingId/',
-    createURL: (args) => `/attestering/${args.sakId}/behandling/${args.behandlingId}`,
+    path: 'behandling/:behandlingId/attestering',
+    absPath: '/saksoversikt/:sakId/behandling/:behandlingId/attestering',
+    createURL: (args) => `/saksoversikt/${args.sakId}/behandling/${args.behandlingId}/attestering`,
 };
 
 export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }> = {
-    path: 'revurdering/:revurderingId/',
-    absPath: '/attestering/:sakId/revurdering/:revurderingId/',
-    createURL: (args) => `/attestering/${args.sakId}/revurdering/${args.revurderingId}`,
+    path: 'revurdering/:revurderingId/attestering',
+    absPath: '/saksoversikt/:sakId/revurdering/:revurderingId/attestering',
+    createURL: (args) => `/saksoversikt/${args.sakId}/revurdering/${args.revurderingId}/attestering`,
 };
 
 export const attesterKlage: Route<{ sakId: string; klageId: string }> = {
-    path: 'klage/:klageId/',
-    absPath: '/attestering/:sakId/klage/:klageId/',
-    createURL: (args) => `/attestering/${args.sakId}/klage/${args.klageId}`,
+    path: 'klage/:klageId/attestering',
+    absPath: 'saksoversikt/:sakId/klage/:klageId/attestering',
+    createURL: (args) => `/saksoversikt/${args.sakId}/klage/${args.klageId}/attestering`,
 };
 
 //---------------Stans------------------------------

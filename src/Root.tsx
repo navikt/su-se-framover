@@ -14,7 +14,6 @@ import Store from './redux/Store';
 import './externalStyles';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 
-const Attestering = React.lazy(() => import('~src/pages/saksbehandling/attestering/Attestering'));
 const AttesterKlage = React.lazy(() => import('~src/pages/saksbehandling/attestering/attesterKlage/AttesterKlage'));
 const AttesterRevurdering = React.lazy(
     () => import('~src/pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering')
@@ -92,7 +91,7 @@ const AppRoutes = () => (
                 <Route index element={<Infoside />} />
                 <Route path={routes.soknadPersonSøk.path} element={<Inngang />} />
                 <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
-                <Route path={routes.søkandskvittering.path} element={<Kvittering />} />
+                <Route path={routes.søknadskvittering.path} element={<Kvittering />} />
             </Route>
         </Route>
         <Route
@@ -113,6 +112,11 @@ const AppRoutes = () => (
                 <Route index element={<Gjenoppta />} />
                 <Route path={routes.gjenopptaStansOppsummeringRoute.path} element={<GjenopptaOppsummering />} />
             </Route>
+            <Route>
+                <Route path={routes.attesterSøknadsbehandling.path} element={<AttesterSøknadsbehandling />} />
+                <Route path={routes.attesterRevurdering.path} element={<AttesterRevurdering />} />
+                <Route path={routes.attesterKlage.path} element={<AttesterKlage />} />
+            </Route>
             <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
             <Route path={routes.revurderValgtSak.path} element={<RevurderingIntroPage />} />
             <Route path={routes.revurderValgtRevurdering.path} element={<Revurdering />} />
@@ -127,11 +131,6 @@ const AppRoutes = () => (
             path={routes.saksoversiktIndex.path}
             element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
         />
-        <Route path={routes.attestering.path} element={<WithDocTitle title="Attestering" Page={Attestering} />}>
-            <Route path={routes.attesterSøknadsbehandling.path} element={<AttesterSøknadsbehandling />} />
-            <Route path={routes.attesterRevurdering.path} element={<AttesterRevurdering />} />
-            <Route path={routes.attesterKlage.path} element={<AttesterKlage />} />
-        </Route>
         <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
         <Route path="*" element={<>404</>} />
     </Routes>

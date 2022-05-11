@@ -58,8 +58,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
         }));
     }
 
-    console.log(form.getValues());
-
     return (
         <form
             className={sharedStyles.container}
