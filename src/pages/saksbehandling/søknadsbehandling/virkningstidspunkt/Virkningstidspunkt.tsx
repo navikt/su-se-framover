@@ -90,7 +90,6 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const initialValues = {
         fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
         tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
-        begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? '',
     };
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Virkningstidspunkt,

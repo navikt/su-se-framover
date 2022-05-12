@@ -5,9 +5,7 @@ import VisBeregningOgSimulering from '~src/components/beregningOgSimulering/Bere
 import { SatsVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import VilkårsOppsummering from '~src/components/oppsummering/vilkårsOppsummering/VilkårsOppsummering';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
-import { Behandling, Behandlingsperiode } from '~src/types/Behandling';
-import { Periode } from '~src/types/Periode';
+import { Behandling } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -27,7 +25,7 @@ interface Props {
 
 const Søknadsbehandlingoppsummering = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
-    const periode = props.behandling.stønadsperiode ? getPeriode(props.behandling.stønadsperiode) : null;
+    const periode = props.behandling.stønadsperiode?.periode;
 
     return (
         <div>
@@ -51,14 +49,6 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
                         periode ? DateUtils.formatPeriode(periode) : formatMessage('virkningstidspunkt.periode.mangler')
                     }`}
                 </Heading>
-                {props.behandling.stønadsperiode?.begrunnelse && (
-                    <div>
-                        <Heading level="3" size="medium" spacing>
-                            {formatMessage('virkningstidspunkt.begrunnelse')}
-                        </Heading>
-                        <p>{props.behandling.stønadsperiode?.begrunnelse}</p>
-                    </div>
-                )}
             </div>
             <VilkårsOppsummering
                 grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
@@ -81,13 +71,5 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
         </div>
     );
 };
-
-function getPeriode(behandlingsperiode: Behandlingsperiode): Nullable<Periode<string>> {
-    const fraOgMed = behandlingsperiode.periode.fraOgMed;
-    const tilOgMed = behandlingsperiode.periode.tilOgMed;
-    if (fraOgMed === null || tilOgMed === null) return null;
-
-    return { fraOgMed: fraOgMed, tilOgMed: tilOgMed };
-}
 
 export default Søknadsbehandlingoppsummering;
