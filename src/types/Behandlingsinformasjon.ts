@@ -18,7 +18,6 @@ export enum Vilkårstatus {
 
 export interface Flyktning {
     status: Vilkårstatus;
-    begrunnelse: Nullable<string>;
 }
 
 export interface LovligOpphold {

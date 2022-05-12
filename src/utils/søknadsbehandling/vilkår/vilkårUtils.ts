@@ -100,7 +100,7 @@ export const mapToVilkårsinformasjon = (
         {
             status: getBehandlingsinformasjonStatus(flyktning),
             vilkårtype: Vilkårtype.Flyktning,
-            begrunnelse: behandlingsinformasjon.flyktning?.begrunnelse ?? null,
+            begrunnelse: null,
             erStartet: flyktning !== null,
         },
         {
