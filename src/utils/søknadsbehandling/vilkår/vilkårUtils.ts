@@ -94,7 +94,7 @@ export const mapToVilkårsinformasjon = (
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,
-            begrunnelse: uføre?.vurderinger[0]?.begrunnelse ?? null,
+            begrunnelse: null,
             erStartet: uføre !== null,
         },
         {

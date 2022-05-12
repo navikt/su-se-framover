@@ -168,7 +168,6 @@ export const lagreUføregrunnlag = createAsyncThunk<
             uføregrad: Nullable<number>;
             forventetInntekt: Nullable<number>;
             resultat: UføreResultat;
-            begrunnelse: Nullable<string>;
         }>;
     },
     { rejectValue: ApiError }

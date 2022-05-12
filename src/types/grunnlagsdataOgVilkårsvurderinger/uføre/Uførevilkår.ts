@@ -15,7 +15,6 @@ export interface VurderingsperiodeUføre {
     resultat: UføreResultat;
     grunnlag: Nullable<Uføregrunnlag>;
     periode: Periode<string>;
-    begrunnelse: Nullable<string>;
 }
 
 export enum UføreResultat {

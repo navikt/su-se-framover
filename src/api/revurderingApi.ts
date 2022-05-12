@@ -282,7 +282,6 @@ export async function lagreUføregrunnlag(arg: {
         uføregrad: Nullable<number>;
         forventetInntekt: Nullable<number>;
         resultat: UføreResultat;
-        begrunnelse: Nullable<string>;
     }>;
 }) {
     return apiClient<Uføregrunnlag>({

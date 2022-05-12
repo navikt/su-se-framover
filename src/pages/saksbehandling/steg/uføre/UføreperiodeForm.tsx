@@ -1,5 +1,5 @@
 import { Delete } from '@navikt/ds-icons';
-import { Button, Panel, Radio, RadioGroup, Textarea, TextField } from '@navikt/ds-react';
+import { Button, Panel, Radio, RadioGroup, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import * as React from 'react';
@@ -23,7 +23,6 @@ export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): Uføre
     tilOgMed: DateUtils.parseIsoDateOnly(u.periode.tilOgMed),
     uføregrad: u.grunnlag?.uføregrad.toString() ?? '',
     forventetInntekt: u.grunnlag?.forventetInntekt.toString() ?? '',
-    begrunnelse: u.begrunnelse,
     oppfylt: u.resultat,
 });
 
@@ -158,19 +157,6 @@ export const UføreperiodeForm = (props: Props) => {
                     )}
                 />
             </div>
-            <Controller
-                control={props.control}
-                name={`grunnlag.${props.index}.begrunnelse`}
-                render={({ field, fieldState }) => (
-                    <Textarea
-                        label={formatMessage('gjeldende.begrunnelse')}
-                        error={fieldState.error?.message}
-                        {...field}
-                        value={field.value ?? ''}
-                        description={formatMessage('input.begrunnelse.description')}
-                    />
-                )}
-            />
         </Panel>
     );
 };
