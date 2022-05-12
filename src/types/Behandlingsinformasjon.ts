@@ -22,7 +22,6 @@ export interface Flyktning {
 
 export interface LovligOpphold {
     status: Vilkårstatus;
-    begrunnelse: Nullable<string>;
 }
 
 export interface FastOppholdINorge {

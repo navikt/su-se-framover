@@ -106,7 +106,7 @@ export const mapToVilkårsinformasjon = (
         {
             status: getBehandlingsinformasjonStatus(lovligOpphold),
             vilkårtype: Vilkårtype.LovligOpphold,
-            begrunnelse: behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
+            begrunnelse: null,
             erStartet: lovligOpphold !== null,
         },
         {
