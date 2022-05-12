@@ -25,6 +25,7 @@ export const createVilkårUrl = (props: { sakId: string; behandlingId: string; v
 export interface Vilkårsinformasjon {
     status: VilkårVurderingStatus;
     vilkårtype: Vilkårtype;
+    //TODO - fjern begrunnelse etter alle vilkårene er gjort
     begrunnelse: Nullable<string>;
     erStartet: boolean;
 }
@@ -112,7 +113,7 @@ export const mapToVilkårsinformasjon = (
         {
             status: getBehandlingsinformasjonStatus(fastOppholdINorge),
             vilkårtype: Vilkårtype.FastOppholdINorge,
-            begrunnelse: behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
+            begrunnelse: null,
             erStartet: fastOppholdINorge !== null,
         },
         {

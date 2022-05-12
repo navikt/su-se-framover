@@ -26,7 +26,6 @@ export interface LovligOpphold {
 
 export interface FastOppholdINorge {
     status: Vilkårstatus;
-    begrunnelse: Nullable<string>;
 }
 
 export interface Institusjonsopphold {
