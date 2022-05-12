@@ -30,7 +30,6 @@ export interface FastOppholdINorge {
 
 export interface Institusjonsopphold {
     status: Vilkårstatus;
-    begrunnelse: Nullable<string>;
 }
 
 export interface Formue {

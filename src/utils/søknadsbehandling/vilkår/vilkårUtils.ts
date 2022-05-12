@@ -119,7 +119,7 @@ export const mapToVilkårsinformasjon = (
         {
             status: getBehandlingsinformasjonStatus(institusjonsopphold),
             vilkårtype: Vilkårtype.Institusjonsopphold,
-            begrunnelse: behandlingsinformasjon.institusjonsopphold?.begrunnelse ?? null,
+            begrunnelse: null,
             erStartet: institusjonsopphold !== null,
         },
         {
