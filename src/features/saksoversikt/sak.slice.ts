@@ -216,7 +216,6 @@ export const lagreBosituasjonGrunnlag = createAsyncThunk<
         sakId: string;
         behandlingId: string;
         bosituasjon: string;
-        begrunnelse: Nullable<string>;
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/bosituasjon/fullfør', async (arg, thunkApi) => {

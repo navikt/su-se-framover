@@ -220,7 +220,6 @@ export interface BosituasjonRequest {
         epsFnr: Nullable<string>;
         delerBolig: Nullable<boolean>;
         erEPSUførFlyktning: Nullable<boolean>;
-        begrunnelse: Nullable<string>;
     }>;
 }
 

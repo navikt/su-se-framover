@@ -68,10 +68,6 @@ export function getBosituasjongrunnlagsblokker(
                 label: formatMessage('bosituasjon.label.sats'),
                 verdi: formatMessage(b.sats === 'ORDINÆR' ? 'bosituasjon.sats.ordinær' : 'bosituasjon.sats.høy'),
             },
-            {
-                label: formatMessage('generell.label.begrunnelse'),
-                verdi: b.begrunnelse ?? '',
-            },
         ];
 
         switch (b.type) {

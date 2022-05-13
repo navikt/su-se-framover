@@ -125,18 +125,12 @@ export async function lagreGrunnlagEpsSkjermet(arg: { sakId: string; behandlingI
     });
 }
 
-export async function lagreGrunnlagBosituasjon(arg: {
-    sakId: string;
-    behandlingId: string;
-    bosituasjon: string;
-    begrunnelse: Nullable<string>;
-}) {
+export async function lagreGrunnlagBosituasjon(arg: { sakId: string; behandlingId: string; bosituasjon: string }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/fullfør`,
         method: 'POST',
         body: {
             bosituasjon: arg.bosituasjon,
-            begrunnelse: arg.begrunnelse,
         },
     });
 }

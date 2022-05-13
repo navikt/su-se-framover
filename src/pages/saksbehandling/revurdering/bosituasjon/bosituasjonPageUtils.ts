@@ -18,7 +18,6 @@ export interface BosituasjonFormItemData {
     epsAlder: Nullable<number>;
     delerBolig: Nullable<boolean>;
     erEPSUførFlyktning: Nullable<boolean>;
-    begrunnelse: Nullable<string>;
 }
 
 export const nyBosituasjon = (): BosituasjonFormItemData => ({
@@ -30,7 +29,6 @@ export const nyBosituasjon = (): BosituasjonFormItemData => ({
     epsAlder: null,
     delerBolig: null,
     erEPSUførFlyktning: null,
-    begrunnelse: null,
 });
 
 export const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): BosituasjonFormItemData => ({
@@ -42,7 +40,6 @@ export const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): Bosituasjo
     epsAlder: null,
     delerBolig: bosituasjon.delerBolig,
     erEPSUførFlyktning: bosituasjon.ektemakeEllerSamboerUførFlyktning,
-    begrunnelse: bosituasjon.begrunnelse,
 });
 
 export const bosituasjonFormSchema = yup
@@ -96,7 +93,6 @@ export const bosituasjonFormSchema = yup
                             then: yup.boolean().required(),
                             otherwise: yup.boolean().defined(),
                         }),
-                        begrunnelse: yup.string().nullable().defined(),
                     })
                     .required()
             )
