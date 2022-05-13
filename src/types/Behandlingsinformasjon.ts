@@ -57,7 +57,6 @@ export enum FormueStatus {
 
 export interface PersonligOppmøte {
     status: PersonligOppmøteStatus;
-    begrunnelse: Nullable<string>;
 }
 export enum PersonligOppmøteStatus {
     MøttPersonlig = 'MøttPersonlig',

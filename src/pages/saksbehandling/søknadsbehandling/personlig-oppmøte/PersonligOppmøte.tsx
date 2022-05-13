@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -14,7 +14,6 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -55,19 +54,15 @@ enum HarMøttPersonlig {
 interface FormData {
     møttPersonlig: Nullable<HarMøttPersonlig>;
     grunnForManglendePersonligOppmøte: Nullable<GrunnForManglendePersonligOppmøte>;
-    begrunnelse: Nullable<string>;
 }
 
 const eqFormData = struct<FormData>({
     møttPersonlig: eqNullable(S.Eq),
     grunnForManglendePersonligOppmøte: eqNullable(S.Eq),
-    begrunnelse: eqNullable(S.Eq),
 });
 
 const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøteType>> = {
-    equals: (personligOppmøte1, personligOppmøte2) =>
-        personligOppmøte1?.status === personligOppmøte2?.status &&
-        personligOppmøte1?.begrunnelse === personligOppmøte2?.begrunnelse,
+    equals: (personligOppmøte1, personligOppmøte2) => personligOppmøte1?.status === personligOppmøte2?.status,
 };
 
 const schema = yup
@@ -92,7 +87,6 @@ const schema = yup
                     .required(),
                 otherwise: yup.mixed().nullable().defined(),
             }),
-        begrunnelse: yup.string().nullable().defined(),
     })
     .required();
 
@@ -101,7 +95,6 @@ const getInitialFormValues = (personligOppmøteFraBehandlingsinformasjon: Nullab
         return {
             møttPersonlig: null,
             grunnForManglendePersonligOppmøte: null,
-            begrunnelse: null,
         };
     }
     switch (personligOppmøteFraBehandlingsinformasjon.status) {
@@ -109,49 +102,42 @@ const getInitialFormValues = (personligOppmøteFraBehandlingsinformasjon: Nullab
             return {
                 møttPersonlig: HarMøttPersonlig.Ja,
                 grunnForManglendePersonligOppmøte: null,
-                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
             };
 
         case PersonligOppmøteStatus.IkkeMøttMenVerge:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.OppnevntVergeSøktPerPost,
-                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
             };
 
         case PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.SykMedLegeerklæringOgFullmakt,
-                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
             };
 
         case PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.KortvarigSykMedLegeerklæring,
-                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
             };
 
         case PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.MidlertidigUnntakFraOppmøteplikt,
-                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
             };
 
         case PersonligOppmøteStatus.IkkeMøttPersonlig:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.BrukerIkkeMøttOppfyllerIkkeVilkår,
-                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
             };
 
         case PersonligOppmøteStatus.Uavklart:
             return {
                 møttPersonlig: HarMøttPersonlig.Uavklart,
                 grunnForManglendePersonligOppmøte: null,
-                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
             };
     }
 };
@@ -195,7 +181,6 @@ const tilOppdatertVilkårsinformasjon = (
             ...behandlingsinformasjon,
             personligOppmøte: {
                 status: s,
-                begrunnelse: values.begrunnelse,
             },
         },
         grunnlagsdataOgVilkårsvurderinger
@@ -221,13 +206,11 @@ const erFerdigbehandletMedAvslag = (vilkårsinformasjon: Vilkårsinformasjon[]):
 };
 
 const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
-    const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
-        sakSlice.lagreBehandlingsinformasjon
-    );
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
-    const advarselRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+    const advarselRef = useRef<HTMLDivElement>(null);
+    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
 
     const initialValues = getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte);
 
@@ -276,7 +259,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
 
         if (
             eqPersonligOppmøte.equals(
-                { status: personligOppmøteStatus, begrunnelse: values.begrunnelse },
+                { status: personligOppmøteStatus },
                 props.behandling.behandlingsinformasjon.personligOppmøte
             )
         ) {
@@ -292,7 +275,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 behandlingsinformasjon: {
                     personligOppmøte: {
                         status: personligOppmøteStatus,
-                        begrunnelse: values.begrunnelse,
                     },
                 },
             },
@@ -326,7 +308,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
 
         if (
             eqPersonligOppmøte.equals(
-                { status: personligOppmøteStatus, begrunnelse: values.begrunnelse },
+                { status: personligOppmøteStatus },
                 props.behandling.behandlingsinformasjon.personligOppmøte
             ) &&
             !erVilkårsvurderingerVurdertAvslag(props.behandling)
@@ -343,7 +325,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 behandlingsinformasjon: {
                     personligOppmøte: {
                         status: personligOppmøteStatus,
-                        begrunnelse: values.begrunnelse,
                     },
                 },
             },
@@ -457,31 +438,8 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 />
                             </div>
                         )}
-                        <div className={styles.formElement}>
-                            <Controller
-                                control={form.control}
-                                name="begrunnelse"
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        label={formatMessage('input.label.begrunnelse')}
-                                        {...field}
-                                        error={fieldState.error?.message}
-                                        value={field.value ?? ''}
-                                        description={formatMessage('input.begrunnelse.description')}
-                                    />
-                                )}
-                            />
-                        </div>
-                        {pipe(
-                            lagreBehandlingsinformasjonStatus,
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader title={formatMessage('display.lagre.lagrer')} />,
-                                (err) => <ApiErrorAlert error={err} />,
-                                () => null
-                            )
-                        )}
 
+                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                         <div
                             ref={advarselRef}
                             tabIndex={-1}
@@ -515,6 +473,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                     ? formatMessage('button.tilVedtak.label')
                                     : undefined
                             }
+                            loading={RemoteData.isPending(status)}
                         />
                     </form>
                 ),
