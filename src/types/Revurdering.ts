@@ -245,7 +245,6 @@ export type FormuegrunnlagFormue = Array<{
     periode: Periode<string>;
     søkersFormue: FormuegrunnlagVerdier;
     epsFormue: Nullable<FormuegrunnlagVerdier>;
-    begrunnelse: Nullable<string>;
 }>;
 
 export interface FormuegrunnlagRequest {

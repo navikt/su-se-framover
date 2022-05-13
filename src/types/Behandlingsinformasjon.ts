@@ -36,7 +36,6 @@ export interface Formue {
     status: FormueStatus;
     verdier: Nullable<FormueVerdier>;
     epsVerdier: Nullable<FormueVerdier>;
-    begrunnelse: Nullable<string>;
 }
 
 export interface FormueVerdier {

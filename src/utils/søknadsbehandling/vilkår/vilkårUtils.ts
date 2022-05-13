@@ -145,7 +145,7 @@ export const mapToVilkårsinformasjon = (
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Formue,
-            begrunnelse: behandlingsinformasjon.formue?.begrunnelse ?? null,
+            begrunnelse: null,
             erStartet: formue !== null,
         },
         {

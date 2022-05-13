@@ -7,7 +7,6 @@ import {
     BodyLong,
     Loader,
     Modal,
-    Textarea,
     TextField,
     Heading,
     Accordion,
@@ -102,7 +101,6 @@ const schema = yup
                 otherwise: yup.object().nullable().defined(),
             })
             .defined(),
-        begrunnelse: yup.string().defined(),
         borSøkerMedEPS: yup
             .boolean()
             .required('Du må velge om søker bor med en ektefelle eller samboer')
@@ -171,7 +169,6 @@ const Formue = (props: {
             //Validering fanger denne
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             epsVerdier: values.borSøkerMedEPS ? formDataVerdierTilFormueVerdier(values.epsVerdier!) : null,
-            begrunnelse: values.begrunnelse,
         };
 
         const ektefelle = { fnr: values.epsFnr };
@@ -424,20 +421,6 @@ const Formue = (props: {
                         </Accordion>
 
                         <Formuestatus bekreftetFormue={totalFormue} erVilkårOppfylt={erVilkårOppfylt} />
-
-                        <Controller
-                            control={form.control}
-                            name="begrunnelse"
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    label={formatMessage('input.label.begrunnelse')}
-                                    {...field}
-                                    value={field.value || ''}
-                                    error={fieldState.error?.message}
-                                    description={formatMessage('input.begrunnelse.description')}
-                                />
-                            )}
-                        />
 
                         <Controller
                             control={form.control}
