@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Button, Heading, Panel, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { Button, Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -70,7 +70,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         defaultValues: {
             utenlandsopphold: vurderinger.map((vurdering) => ({
                 status: vurdering.status,
-                begrunnelse: vurdering.begrunnelse ?? null,
                 periode: {
                     fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
                     tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
@@ -199,19 +198,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                                 {formatMessage('radiobutton.innenlands')}
                                             </Radio>
                                         </RadioGroup>
-                                    )}
-                                />
-                                <Controller
-                                    control={form.control}
-                                    name={`utenlandsopphold.${index}.begrunnelse`}
-                                    render={({ field: { value, ...field }, fieldState }) => (
-                                        <Textarea
-                                            label={formatMessage('input.begrunnelse.tittel')}
-                                            error={fieldState.error?.message}
-                                            value={value ?? ''}
-                                            {...field}
-                                            description={formatMessage('revurdering.begrunnelse.description')}
-                                        />
                                     )}
                                 />
                             </Panel>

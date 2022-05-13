@@ -146,7 +146,6 @@ export const lagreUtenlandsopphold = createAsyncThunk<
         sakId: string;
         behandlingId: string;
         status: Utenlandsoppholdstatus;
-        begrunnelse: Nullable<string>;
         periode: Periode<string>;
     },
     { rejectValue: ApiError }

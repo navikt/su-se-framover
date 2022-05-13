@@ -8,7 +8,5 @@ export default {
 
     'periode.slett': 'Slett',
 
-    'input.begrunnelse.tittel': 'Begrunnelse',
-
     'eksisterende.vedtakinfo.tittel': 'Eksisterende vedtaksinformasjon',
 };

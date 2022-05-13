@@ -190,7 +190,6 @@ export async function lagreUtenlandsopphold(arg: {
     sakId: string;
     behandlingId: string;
     status: Utenlandsoppholdstatus;
-    begrunnelse: Nullable<string>;
     periode: Periode<string>;
 }): Promise<ApiClientResult<Behandling>> {
     return apiClient({
@@ -198,7 +197,6 @@ export async function lagreUtenlandsopphold(arg: {
         method: 'POST',
         body: {
             status: arg.status,
-            begrunnelse: arg.begrunnelse,
             periode: arg.periode,
         },
     });

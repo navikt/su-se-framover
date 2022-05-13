@@ -17,7 +17,6 @@ export const Utenlandsoppsummering = ({ utenlandsopphold }: { utenlandsopphold: 
                 <li key={formatPeriode(opphold.periode)}>
                     <OppsummeringPar label={formatMessage('periode.label')} verdi={formatPeriode(opphold.periode)} />
                     <OppsummeringPar label={formatMessage('status.label')} verdi={formatMessage(opphold.status)} />
-                    <OppsummeringPar label={formatMessage('begrunnelse.label')} verdi={opphold.begrunnelse} />
                 </li>
             ))}
         </ul>

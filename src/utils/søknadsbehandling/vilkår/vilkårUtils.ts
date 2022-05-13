@@ -132,7 +132,7 @@ export const mapToVilkårsinformasjon = (
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.OppholdIUtlandet,
-            begrunnelse: utenlandsopphold?.vurderinger[0]?.begrunnelse ?? null,
+            begrunnelse: null,
             erStartet: utenlandsopphold !== null,
         },
         {
