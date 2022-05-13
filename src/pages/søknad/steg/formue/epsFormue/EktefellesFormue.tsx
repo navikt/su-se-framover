@@ -74,7 +74,6 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             boligBrukesTil: null,
                             harDepositumskonto: null,
                             depositumsBeløp: null,
-                            kontonummer: null,
                         })
                     }
                 />
@@ -129,33 +128,21 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 ...formik.values,
                                 harDepositumskonto: e,
                                 depositumsBeløp: null,
-                                kontonummer: null,
                             })
                         }
                     />
                 )}
 
                 {formik.values.harDepositumskonto && (
-                    <>
-                        <TextField
-                            id="depositumsBeløp"
-                            name="depositumsBeløp"
-                            className={sharedStyles.narrow}
-                            label={formatMessage('depositum.beløp')}
-                            value={formik.values.depositumsBeløp || ''}
-                            error={formik.errors.depositumsBeløp}
-                            onChange={formik.handleChange}
-                        />
-                        <TextField
-                            id="kontonummer"
-                            name="kontonummer"
-                            className={sharedStyles.narrow}
-                            label={formatMessage('depositum.kontonummer')}
-                            value={formik.values.kontonummer || ''}
-                            error={formik.errors.kontonummer}
-                            onChange={formik.handleChange}
-                        />
-                    </>
+                    <TextField
+                        id="depositumsBeløp"
+                        name="depositumsBeløp"
+                        className={sharedStyles.narrow}
+                        label={formatMessage('depositum.beløp')}
+                        value={formik.values.depositumsBeløp || ''}
+                        error={formik.errors.depositumsBeløp}
+                        onChange={formik.handleChange}
+                    />
                 )}
 
                 <BooleanRadioGroup

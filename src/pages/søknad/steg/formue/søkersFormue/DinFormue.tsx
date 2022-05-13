@@ -63,7 +63,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     'boligBrukesTil',
                                     'harDepositumskonto',
                                     'depositumsBeløp',
-                                    'kontonummer',
                                 ]);
                             }}
                         />
@@ -137,7 +136,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 {...field}
                                 onChange={(val) => {
                                     field.onChange(val);
-                                    setFieldsToNull(['depositumsBeløp', 'kontonummer']);
+                                    setFieldsToNull(['depositumsBeløp']);
                                 }}
                             />
                         )}
@@ -161,21 +160,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     // Dette elementet vises ikke ved sidelast
                                     // eslint-disable-next-line jsx-a11y/no-autofocus
                                     autoFocus
-                                />
-                            )}
-                        />
-                        <Controller
-                            control={form.control}
-                            name="kontonummer"
-                            render={({ field, fieldState }) => (
-                                <TextField
-                                    id="kontonummer"
-                                    className={sharedStyles.narrow}
-                                    label={formatMessage('depositum.kontonummer')}
-                                    {...field}
-                                    value={field.value ?? ''}
-                                    error={fieldState.error?.message}
-                                    autoComplete="off"
                                 />
                             )}
                         />

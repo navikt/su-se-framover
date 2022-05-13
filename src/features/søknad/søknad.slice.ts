@@ -73,7 +73,6 @@ export interface SøknadFellesState {
         eierMerEnnEnBolig: Nullable<boolean>;
         harDepositumskonto: Nullable<boolean>;
         depositumsBeløp: Nullable<string>;
-        kontonummer: Nullable<string>;
         verdiPåEiendom: Nullable<string>;
         eiendomBrukesTil: Nullable<string>;
         eierKjøretøy: Nullable<boolean>;
@@ -136,7 +135,6 @@ const initialFormue: SøknadState['formue'] = {
     eierMerEnnEnBolig: null,
     harDepositumskonto: null,
     depositumsBeløp: null,
-    kontonummer: null,
     verdiPåEiendom: null,
     eiendomBrukesTil: null,
     eierKjøretøy: null,

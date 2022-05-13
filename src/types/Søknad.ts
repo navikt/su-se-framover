@@ -106,7 +106,6 @@ interface Formue {
     verdiPåBolig: Nullable<number>;
     boligBrukesTil: Nullable<string>;
     depositumsBeløp: Nullable<number>;
-    kontonummer: Nullable<string>;
     verdiPåEiendom: Nullable<number>;
     eiendomBrukesTil: Nullable<string>;
     kjøretøy: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>;
