@@ -32,7 +32,6 @@ interface UtenlandsoppholdForm {
 
 interface UtenlandsoppholdFormData {
     status?: Utenlandsoppholdstatus;
-    begrunnelse: Nullable<string>;
     periode: {
         fraOgMed: Nullable<Date>;
         tilOgMed: Nullable<Date>;
@@ -45,7 +44,6 @@ const schemaValidation = yup.object<UtenlandsoppholdForm>({
             yup
                 .object<UtenlandsoppholdFormData>({
                     status: yup.mixed<Utenlandsoppholdstatus>().oneOf(Object.values(Utenlandsoppholdstatus)).required(),
-                    begrunnelse: yup.string().nullable().defined(),
                     periode: yup
                         .object({
                             fraOgMed: yup.date().required().typeError('Dato må fylles inn'),
@@ -87,7 +85,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                 utenlandsopphold: form.utenlandsopphold.map((vurdering) => ({
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     status: vurdering.status!,
-                    begrunnelse: vurdering.begrunnelse,
                     periode: {
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         fraOgMed: toIsoDateOnlyString(vurdering.periode.fraOgMed!),
@@ -209,7 +206,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                 append({
                                     status: undefined,
                                     periode: { tilOgMed: null, fraOgMed: null },
-                                    begrunnelse: null,
                                 })
                             }
                             type={'button'}

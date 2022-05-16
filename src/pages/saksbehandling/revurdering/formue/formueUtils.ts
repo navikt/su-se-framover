@@ -198,7 +198,6 @@ export const revurderFormueSchema = yup
                                     .required(),
                                 otherwise: yup.object().notRequired(),
                             }),
-                        begrunnelse: yup.string().nullable().defined(),
                     })
                     .required()
             )
