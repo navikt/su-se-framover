@@ -7,7 +7,6 @@ export default {
     'gjeldende.vilkårOppfylt': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
     'gjeldende.uføregrad': 'Uføregrad:',
     'gjeldende.inntektEtterUførhet': 'Inntekt etter uførhet:',
-    'gjeldende.begrunnelse': 'Begrunnelse',
 
     'heading.valgtPeriode': 'Valgt revurderingsperiode',
     'feil.overlappendePerioder': 'To eller flere av periodene overlapper. Du må rette opp i det før du kan gå videre.',

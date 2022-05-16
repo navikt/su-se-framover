@@ -9,8 +9,6 @@ export default {
 
     'input.uføregrad.label': 'Uføregrad',
     'input.forventetInntekt.label': 'Forventet inntekt etter uførhet per år',
-    'gjeldende.begrunnelse': 'Begrunnelse',
-    'input.begrunnelse.description': 'Unngå personsensitive opplysninger',
 
     'button.nyPeriode.label': 'Ny periode for opplysning',
 };
