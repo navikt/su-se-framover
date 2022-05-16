@@ -52,7 +52,7 @@ import {
 import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
 import sharedI18n from '../sharedI18n-nb';
-import { Vurderingknapper } from '../Vurderingknapper';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './formue-nb';
 import * as styles from './formue.module.less';
@@ -132,6 +132,8 @@ const Formue = (props: {
         sakSlice.lagreEpsGrunnlagSkjermet
     );
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
+
+    const combinedLagringsstatus = RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus);
 
     const senesteHalvG = getSenesteHalvGVerdi(
         props.behandling.stønadsperiode?.periode?.fraOgMed
@@ -445,16 +447,9 @@ const Formue = (props: {
                             )}
                         />
 
-                        {pipe(
-                            RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus),
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader title={formatMessage('display.lagre.lagrer')} />,
-                                (err) => <ApiErrorAlert error={err} />,
-                                () => null
-                            )
+                        {RemoteData.isFailure(combinedLagringsstatus) && (
+                            <ApiErrorAlert error={combinedLagringsstatus.error} />
                         )}
-
                         <Feiloppsummering
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
@@ -469,6 +464,7 @@ const Formue = (props: {
                                 handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
                                 focusAfterTimeout(feiloppsummeringRef)
                             )}
+                            loading={RemoteData.isPending(combinedLagringsstatus)}
                         />
                     </form>
                 ),

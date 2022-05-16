@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { useI18n } from '~src/lib/i18n';
 
-import sharedI18n from '../../søknadsbehandling/sharedI18n-nb';
 import NullstillRevurderingVarsel from '../advarselReset/NullstillRevurderingVarsel';
 
+import messages from './revurderingbunnknapper-nb';
 import * as styles from './revurderingBunnknapper.module.less';
 
 export const RevurderingBunnknapper = ({
@@ -20,7 +20,7 @@ export const RevurderingBunnknapper = ({
 }) => {
     const navigate = useNavigate();
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n } });
+    const { formatMessage } = useI18n({ messages });
     const [knappTrykket, setKnappTrykket] = useState<'neste' | 'avslutt' | undefined>(undefined);
 
     const Tilbake = () => {

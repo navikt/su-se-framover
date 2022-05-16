@@ -25,7 +25,7 @@ import { sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtil
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurderingknapper';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './oppholdIUtlandet-nb';
 

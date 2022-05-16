@@ -32,7 +32,7 @@ import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~src/utils/søkna
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurderingknapper';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './personligOppmøte-nb';
 import * as styles from './personligOppmøte.module.less';

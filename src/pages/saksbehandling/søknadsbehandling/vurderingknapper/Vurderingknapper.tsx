@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 
-import sharedI18n from './sharedI18n-nb';
+import messages from './vurderingknapper-nb';
 import * as styles from './vurderingknapper.module.less';
 
 export const Vurderingknapper = (props: {
@@ -13,7 +13,7 @@ export const Vurderingknapper = (props: {
     nesteKnappTekst?: string;
     loading?: boolean;
 }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n } });
+    const { formatMessage } = useI18n({ messages });
     const [knappTrykket, setKnappTrykket] = useState<'neste' | 'lagreOgFortsettSenere' | undefined>(undefined);
 
     return (

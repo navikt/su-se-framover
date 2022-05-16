@@ -29,7 +29,7 @@ import { er67EllerEldre } from '~src/utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurderingknapper';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './virkningstidspunkt-nb';
 import * as styles from './virkningstidspunkt.module.less';

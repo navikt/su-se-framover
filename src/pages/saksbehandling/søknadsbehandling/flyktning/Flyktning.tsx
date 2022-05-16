@@ -26,11 +26,11 @@ import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
 
 import sharedI18n from '../sharedI18n-nb';
-import * as sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurderingknapper';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './flyktning-nb';
+import * as styles from './flyktning.module.less';
 
 interface FormData {
     status: Nullable<Vilkårstatus>;
@@ -189,7 +189,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
 
                         {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                         {vilGiTidligAvslag && (
-                            <Alert className={sharedStyles.avslagAdvarsel} variant="info">
+                            <Alert className={styles.avslagAdvarsel} variant="info">
                                 {formatMessage('display.avslag.advarsel')}
                             </Alert>
                         )}
