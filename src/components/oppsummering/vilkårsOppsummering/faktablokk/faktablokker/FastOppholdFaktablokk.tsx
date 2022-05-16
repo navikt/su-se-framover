@@ -111,7 +111,6 @@ export const FastOppholdVilkårsblokk = (props: VilkårsblokkProps<'fastOppholdI
                 )
             }
             status={props.info.status}
-            begrunnelse={props.info.begrunnelse}
         />
     );
 };

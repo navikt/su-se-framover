@@ -114,7 +114,6 @@ export const UtenlandsoppholdVilkårsblokk = (props: UtenlandsoppholdVilkårsblo
                     />
                 )
             }
-            begrunnelse={props.info.begrunnelse}
         />
     );
 };

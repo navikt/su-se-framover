@@ -110,7 +110,6 @@ export const SatsVilkårsblokk = (props: { bosituasjon: Bosituasjon; søknadInnh
                     ]}
                 />
             }
-            begrunnelse={null}
         />
     );
 };

@@ -130,7 +130,6 @@ export const PersonligOppmøteVilkårsblokk = (props: VilkårsblokkProps<'person
                 )
             }
             status={props.info.status}
-            begrunnelse={props.info.begrunnelse}
         />
     );
 };
