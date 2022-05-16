@@ -56,10 +56,10 @@ export const soknadsutfylling: Route<{ step: Søknadssteg; soknadstema: Søknads
     createURL: (args) => `/soknad/${args.soknadstema}/utfylling/${args.step}`,
 };
 
-export const søknadskvittering: Route<never> = {
+export const søknadskvittering: Route<{ soknadstema: Søknadstema }> = {
     path: 'kvittering',
-    absPath: '/soknad/kvittering',
-    createURL: () => `/soknad/kvittering`,
+    absPath: '/soknad/:soknadstema/kvittering',
+    createURL: (args) => `/soknad/${args.soknadstema}/kvittering`,
 };
 
 //-------------Saksoversikt--------------------------------

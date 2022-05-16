@@ -28,12 +28,26 @@ export interface OpprettetSøknad {
     søknad: Søknad;
 }
 
-export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<OpprettetSøknad>> {
-    return apiClient({ url: '/soknad', method: 'POST', body: søknad });
+export async function sendUføresøknad(søknad: SøknadInnhold): Promise<ApiClientResult<OpprettetSøknad>> {
+    return apiClient({
+        url: '/soknad/ufore',
+        method: 'POST',
+        body: {
+            type: 'uføre',
+            ...søknad,
+        },
+    });
 }
 
 export async function sendAlderssøknad(søknad: SøknadInnholdAlder): Promise<ApiClientResult<OpprettetSøknad>> {
-    return apiClient({ url: '/soknad/alder', method: 'POST', body: søknad });
+    return apiClient({
+        url: '/soknad/alder',
+        method: 'POST',
+        body: {
+            type: 'alder',
+            ...søknad,
+        },
+    });
 }
 
 export async function lukkSøknad(arg: { søknadId: string; body: LukkSøknadBodyTypes }): Promise<ApiClientResult<Sak>> {
