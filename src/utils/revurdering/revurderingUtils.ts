@@ -97,6 +97,12 @@ export const erRevurderingAvsluttet = (r: Revurdering): boolean =>
     r.status === UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK ||
     r.status === UtbetalingsRevurderingStatus.AVSLUTTET_STANS;
 
+export const erRevurderingOpphør = (r: Revurdering) =>
+    r.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT ||
+    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT ||
+    r.status === InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT ||
+    r.status === InformasjonsRevurderingStatus.IVERKSATT_OPPHØRT;
+
 export const skalAttesteres = (r: Revurdering): boolean =>
     erGregulering(r.årsak) ||
     erBeregnetIngenEndring(r) ||
@@ -121,6 +127,7 @@ export const revurderingstegrekkefølge = [
     RevurderingSteg.Formue,
     RevurderingSteg.Utenlandsopphold,
     RevurderingSteg.EndringAvFradrag,
+    RevurderingSteg.Opplysningsplikt,
 ];
 
 export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) => {
@@ -135,6 +142,8 @@ export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) =
             return InformasjonSomRevurderes.Formue;
         case RevurderingSteg.Utenlandsopphold:
             return InformasjonSomRevurderes.Utenlandsopphold;
+        case RevurderingSteg.Opplysningsplikt:
+            return InformasjonSomRevurderes.Opplysningsplikt;
     }
     return null;
 };
@@ -172,3 +181,8 @@ export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simuler
                 periode.type === SimulertUtbetalingstype.INGEN_UTBETALING ||
                 periode.type === SimulertUtbetalingstype.UENDRET
         ));
+
+export const erRevurderingOpphørPgaManglendeDokumentasjon = (r: Revurdering) =>
+    erInformasjonsRevurdering(r) &&
+    erRevurderingOpphør(r) &&
+    r.informasjonSomRevurderes.Opplysningsplikt === Vurderingstatus.Vurdert;

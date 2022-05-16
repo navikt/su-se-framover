@@ -14,6 +14,7 @@ import yup from '~src/lib/validering';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';
+import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
 
@@ -46,6 +47,8 @@ export const ResultatEtterForhåndsvarselform = (props: {
             tekstTilVedtaksbrev:
                 props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV
                     ? formatMessage('tilbakekreving.forhåndstekst')
+                    : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                    ? formatMessage('opplysningsplikt.forhåndstekst')
                     : '',
             tekstTilAvsluttRevurderingBrev: '',
             begrunnelse: '',
@@ -62,7 +65,14 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         .defined()
                         .when('beslutningEtterForhåndsvarsel', {
                             is: BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger,
-                            then: yup.string().matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall'),
+                            then: yup
+                                .string()
+                                .matches(
+                                    UNDERSCORE_REGEX,
+                                    erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                                        ? 'Du må erstatte _____ med informasjon'
+                                        : 'Du må erstatte _____ med tall'
+                                ),
                         }),
                     tekstTilAvsluttRevurderingBrev: yup.string(),
                     begrunnelse: yup.string().required(),
@@ -225,13 +235,23 @@ export const SendTilAttesteringForm = (props: {
                 ? props.revurdering.fritekstTilBrev
                 : tilbakekreving
                 ? formatMessage('tilbakekreving.forhåndstekst')
+                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                ? formatMessage('opplysningsplikt.forhåndstekst')
                 : '',
             skalFøreTilBrevutsending: props.brevsending === 'alltidSende' || harFritekst,
         },
         resolver: yupResolver(
             yup.object<FormData>({
                 skalFøreTilBrevutsending: yup.boolean(),
-                vedtaksbrevtekst: yup.string().defined().matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall'),
+                vedtaksbrevtekst: yup
+                    .string()
+                    .defined()
+                    .matches(
+                        UNDERSCORE_REGEX,
+                        erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                            ? 'Du må erstatte _____ med informasjon'
+                            : 'Du må erstatte _____ med tall'
+                    ),
             })
         ),
     });

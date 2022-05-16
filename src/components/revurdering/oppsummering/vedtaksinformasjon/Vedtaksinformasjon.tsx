@@ -13,6 +13,7 @@ import {
     formueErlik,
     fradragErlik,
     GrunnlagsdataOgVilkårsvurderinger,
+    opplysningspliktErLik,
     uføreErlik,
     utenlandsoppholdErlik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -21,6 +22,7 @@ import { regnUtFormuegrunnlag } from '~src/utils/revurdering/formue/RevurderForm
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
+import OpplysningspliktOppsummering from '../opplysningspliktoppsummering/Opplysningspliktoppsummering';
 
 import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
@@ -117,6 +119,9 @@ const Vedtaksinformasjon = (props: {
     const skalViseutenlandsopphold =
         !utenlandsoppholdErlik(nyeData.utenlandsopphold, gamleData.utenlandsopphold) ||
         valgtRevurderingssteg.Utenlandsopphold === Vurderingstatus.Vurdert;
+    const skalViseOpplysningsplikt =
+        !opplysningspliktErLik(nyeData.opplysningsplikt, gamleData.opplysningsplikt) ||
+        valgtRevurderingssteg.Opplysningsplikt === Vurderingstatus.Vurdert;
 
     return (
         <div className={styles.container}>
@@ -183,6 +188,18 @@ const Vedtaksinformasjon = (props: {
                         ) : null,
                         høyre: gamleData.utenlandsopphold ? (
                             <Utenlandsoppsummering utenlandsopphold={gamleData.utenlandsopphold} />
+                        ) : null,
+                    }}
+                </Rad>
+            )}
+            {skalViseOpplysningsplikt && (
+                <Rad radTittel={formatMessage('radTittel.opplysningsplikt')}>
+                    {{
+                        venstre: nyeData.opplysningsplikt ? (
+                            <OpplysningspliktOppsummering opplysningsplikter={nyeData.opplysningsplikt} />
+                        ) : null,
+                        høyre: gamleData.opplysningsplikt ? (
+                            <OpplysningspliktOppsummering opplysningsplikter={gamleData.opplysningsplikt} />
                         ) : null,
                     }}
                 </Rad>

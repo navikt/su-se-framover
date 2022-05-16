@@ -1,0 +1,35 @@
+@import '~/src/styles/variables.less';
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+}
+
+.vurderingOgSøppelbøtteContainer {
+    display: flex;
+    justify-content: space-between;
+
+    .select {
+        max-width: 20rem;
+    }
+
+    .søppelbøtte {
+        height: fit-content;
+    }
+}
+
+.periode {
+    display: flex;
+    gap: @spacing-xs @spacing;
+    flex-wrap: wrap;
+
+    .dato {
+        max-width: 11.75rem;
+    }
+}
+
+.nyPeriodeKnapp {
+    width: fit-content;
+    margin-left: auto;
+}

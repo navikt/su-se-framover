@@ -18,6 +18,9 @@ import yup from '~src/lib/validering';
 import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { InformasjonsRevurdering } from '~src/types/Revurdering';
+import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
+
+import oppsummeringPageFormsMessages from '../oppsummeringPageForms/oppsummeringPageForms-nb';
 
 import messages from './forhåndsvarselForm-nb';
 import * as styles from './forhåndsvarselForm.module.less';
@@ -34,7 +37,7 @@ export const VelgForhåndsvarselForm = (props: {
     tilbake: { url: string; visModal: boolean } | { onTilbakeClick: () => void };
     defaultVedtakstekst?: string;
 }) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...oppsummeringPageFormsMessages } });
     const navigate = useNavigate();
 
     const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
@@ -81,7 +84,10 @@ export const VelgForhåndsvarselForm = (props: {
         defaultValues: {
             forhåndsvarselhandling: null,
             fritekstTilForhåndsvarsel: null,
-            fritekstTilVedtaksbrev: props.defaultVedtakstekst ?? null,
+            fritekstTilVedtaksbrev:
+                props.defaultVedtakstekst ?? erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                    ? formatMessage('opplysningsplikt.forhåndstekst')
+                    : null,
         },
         resolver: yupResolver(
             yup
@@ -103,7 +109,12 @@ export const VelgForhåndsvarselForm = (props: {
                             then: yup
                                 .string()
                                 .nullable()
-                                .matches(UNDERSCORE_REGEX, 'Du må erstatte _____ med tall')
+                                .matches(
+                                    UNDERSCORE_REGEX,
+                                    erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                                        ? 'Du må erstatte _____ med informasjon'
+                                        : 'Du må erstatte _____ med tall'
+                                )
                                 .required(),
                         }),
                 })
