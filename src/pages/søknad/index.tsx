@@ -26,16 +26,18 @@ const index = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.infostripe}>
-                {soknadstema && (
+            {soknadstema ? (
+                <div className={styles.infostripe}>
                     <Heading level="2" size="small">
                         {getSøknadstematekst(soknadstema, {
                             [Søknadstema.Uføre]: formatMessage('infolinjeUføre'),
                             [Søknadstema.Alder]: formatMessage('infolinjeAlder'),
                         })}
                     </Heading>
-                )}
-            </div>
+                </div>
+            ) : (
+                <div className={styles.topspacer} />
+            )}
             <div className={styles.contentContainer}>
                 <div className={styles.content}>
                     <div className={styles.infoContainer}>
