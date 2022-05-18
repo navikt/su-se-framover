@@ -1,4 +1,4 @@
-import { BodyLong, BodyShort, GuidePanel, Heading, Panel } from '@navikt/ds-react';
+import { BodyLong, GuidePanel, Heading, Ingress, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 import { useOutletContext, Navigate } from 'react-router-dom';
 
@@ -39,14 +39,14 @@ const Søknadsvelger = () => {
             <Heading className={styles.tittel} level="1" size="xlarge" spacing>
                 {formatMessage('velg-tittel')}
             </Heading>
-            <BodyShort spacing>{formatMessage('velg-undertittel')}</BodyShort>
+            <Ingress spacing>{formatMessage('velg-undertittel')}</Ingress>
 
             <div className={styles.linkgruppe}>
                 <Panel border>
                     <Heading level="2" size="medium">
                         {formatMessage('velg-alder-tittel')}
                     </Heading>
-                    <BodyShort>{formatMessage('alder-beskrivelse')}</BodyShort>
+                    <Ingress>{formatMessage('alder-beskrivelse')}</Ingress>
 
                     <LinkAsButton
                         variant="secondary"
@@ -62,7 +62,7 @@ const Søknadsvelger = () => {
                     <Heading level="2" size="medium">
                         {formatMessage('velg-ufør-tittel')}
                     </Heading>
-                    <BodyShort>{formatMessage('ufør-beskrivelse')}</BodyShort>
+                    <Ingress>{formatMessage('ufør-beskrivelse')}</Ingress>
                     <LinkAsButton
                         variant="secondary"
                         href={Routes.soknadtema.createURL({
