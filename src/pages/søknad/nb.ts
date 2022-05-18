@@ -1,4 +1,4 @@
-import { Alderssteg, Fellessteg, Søknadssteg, Uføresteg } from '~src/pages/søknad/types';
+import { Alderssteg, Fellessteg, Søknadssteg, Uføresteg, VelgSoknad } from '~src/pages/søknad/types';
 
 export const steg: { [key in Søknadssteg]: string } = {
     [Uføresteg.Uførevedtak]: 'Uførevedtak',
@@ -16,6 +16,17 @@ export const steg: { [key in Søknadssteg]: string } = {
     [Fellessteg.ForVeileder]: 'For veileder',
     [Fellessteg.InformasjonOmPapirsøknad]: 'Informasjon om søknaden',
     [Fellessteg.Oppsummering]: 'Oppsummering',
+
+    [VelgSoknad.Tittel]: 'Supplerende stønad til personer med kort botid i Norge',
+    [VelgSoknad.Grupper]:
+        'Supplerende stønad gis til to forskjellige grupper: <br></br><strong>Uføre flyktninger under 67 år</strong> og <strong>personer som har fylt 67 år</strong>',
+    [VelgSoknad.AlderBeskrivelse]: 'Har du kort botid i Norge når du fyller 67 år kan du få supplerende stønad',
+    [VelgSoknad.VelgAlderTittel]: 'For personer som har fylt 67 år',
+    [VelgSoknad.VelgUførTittel]: 'For personer som er ufør flyktning under 67 år',
+    [VelgSoknad.UførBeskrivelse]: 'Er du ufør og har flyktningsstatus kan du få supplerende stønad',
+    [VelgSoknad.AlderLenke]: 'Start søknad for person over 67 år',
+    [VelgSoknad.UførLenke]: 'Start søknad for uføre flyktninger',
+    [VelgSoknad.Undertittel]: 'Velg søknaden som passer for deg',
 };
 
 export default {
