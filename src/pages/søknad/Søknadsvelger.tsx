@@ -11,7 +11,6 @@ import { Søknadstema } from '~src/types/Søknad';
 
 import messages from './nb';
 import * as styles from './søknadsvelger.module.less';
-import { VelgSoknad } from './types';
 
 const Søknadsvelger = () => {
     const { isPapirsøknad } = useOutletContext<SøknadContext>();
@@ -30,7 +29,7 @@ const Søknadsvelger = () => {
         <div>
             <GuidePanel>
                 <BodyLong>
-                    {formatMessage(VelgSoknad.Grupper, {
+                    {formatMessage('velg-grupper', {
                         strong: (text) => <strong>{text}</strong>,
                         br: () => <br />,
                     })}
@@ -38,16 +37,16 @@ const Søknadsvelger = () => {
             </GuidePanel>
 
             <Heading className={styles.tittel} level="1" size="xlarge" spacing>
-                {formatMessage(VelgSoknad.Tittel)}
+                {formatMessage('velg-tittel')}
             </Heading>
-            <BodyShort spacing>{formatMessage(VelgSoknad.Undertittel)}</BodyShort>
+            <BodyShort spacing>{formatMessage('velg-undertittel')}</BodyShort>
 
             <div className={styles.linkgruppe}>
                 <Panel border>
                     <Heading level="2" size="medium">
-                        {formatMessage(VelgSoknad.VelgAlderTittel)}
+                        {formatMessage('velg-alder-tittel')}
                     </Heading>
-                    <BodyShort>{formatMessage(VelgSoknad.AlderBeskrivelse)}</BodyShort>
+                    <BodyShort>{formatMessage('alder-beskrivelse')}</BodyShort>
 
                     <LinkAsButton
                         variant="secondary"
@@ -56,14 +55,14 @@ const Søknadsvelger = () => {
                             soknadstema: Søknadstema.Alder,
                         })}
                     >
-                        {formatMessage(VelgSoknad.AlderLenke)}
+                        {formatMessage('alder-lenke')}
                     </LinkAsButton>
                 </Panel>
                 <Panel border>
                     <Heading level="2" size="medium">
-                        {formatMessage(VelgSoknad.VelgUførTittel)}
+                        {formatMessage('velg-ufør-tittel')}
                     </Heading>
-                    <BodyShort>{formatMessage(VelgSoknad.UførBeskrivelse)}</BodyShort>
+                    <BodyShort>{formatMessage('ufør-beskrivelse')}</BodyShort>
                     <LinkAsButton
                         variant="secondary"
                         href={Routes.soknadtema.createURL({
@@ -71,7 +70,7 @@ const Søknadsvelger = () => {
                             soknadstema: Søknadstema.Uføre,
                         })}
                     >
-                        {formatMessage(VelgSoknad.UførLenke)}
+                        {formatMessage('ufør-lenke')}
                     </LinkAsButton>
                 </Panel>
             </div>

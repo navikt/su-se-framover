@@ -20,16 +20,4 @@ export enum Fellessteg {
     InformasjonOmPapirsøknad = 'informasjon-om-papirsoknad',
 }
 
-export enum VelgSoknad {
-    Tittel = 'velg-tittel',
-    Undertittel = 'velg-undertittel',
-    Grupper = 'velg-grupper',
-    VelgAlderTittel = 'velg-alder-tittel',
-    VelgUførTittel = 'velg-ufør-tittel',
-    UførLenke = 'ufør-lenke',
-    AlderLenke = 'alder-lenke',
-    AlderBeskrivelse = 'alder-beskrivelse',
-    UførBeskrivelse = 'ufør-beskrivelse',
-}
-
-export type Søknadssteg = Uføresteg | Alderssteg | Fellessteg | VelgSoknad;
+export type Søknadssteg = Uføresteg | Alderssteg | Fellessteg;
