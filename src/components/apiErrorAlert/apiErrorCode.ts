@@ -69,6 +69,7 @@ export enum ApiErrorCode {
     INGEN_BOSITUASJON_FOR_FRADRAGSPERIODER = 'ingen_bosituasjon_for_fradragsperiode',
     INGEN_FORMUE_FOR_BOSITUASJONSPERIODE = 'ingen_formue_for_bosituasjonsperiode',
     INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE = 'ingen_formue_eps_for_bosituasjonsperiode',
+    INNSENDING_AV_SØKNAD_IKKE_TILLATT = 'innsending_av_søknad_ikke_tillatt',
     JOURNALPOST_ER_IKKE_FERDIGSTILT = 'journalpost_er_ikke_ferdigstilt',
     JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT = 'journalpost_er_ikke_et_innkommende_dokument',
     JOURNALPOST_IKKE_KNYTTET_TIL_SAK = 'journalpost_ikke_knyttet_til_sak',

@@ -1,5 +1,8 @@
 import { ApiErrorCode } from './apiErrorCode';
 
+/**
+ * Prøv å legg ting inn i alfabetisk rekkefølge
+ */
 const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ALLEREDE_FORHÅNDSVARSLET]: 'Revurderingen er allerede blitt forhåndsvarslet',
     [ApiErrorCode.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]: 'Kan ikke attestere egen saksbehandling',
@@ -93,6 +96,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Formue mangler for en eller flere perioder hvor det eksisterer bosituasjon.',
     [ApiErrorCode.INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE]: 'Formue for EPS mangler for en eller flere perioder',
     [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
+    [ApiErrorCode.INNSENDING_AV_SØKNAD_IKKE_TILLATT]: 'Innsending av søknad er ikke tillatt',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
         'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
