@@ -13,7 +13,6 @@ export interface Regulering {
     saksnummer: number;
     periode: Periode<string>;
     reguleringstype: Reguleringstype;
-    jobbType: JobbType;
     erFerdigstilt: boolean;
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
@@ -32,11 +31,6 @@ export enum ÅrsakForManuell {
     PågåendeAvkortingEllerBehovForFremtidigAvkorting = 'PågåendeAvkortingEllerBehovForFremtidigAvkorting',
     AvventerKravgrunnlag = 'AvventerKravgrunnlag',
     UtbetalingFeilet = 'UtbetalingFeilet',
-}
-
-interface JobbType {
-    type: 'G';
-    dato: string;
 }
 
 export enum Reguleringstype {

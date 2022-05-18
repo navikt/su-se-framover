@@ -76,7 +76,9 @@ const Sakintro = () => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    <NyBehandlingVelger sakId={props.sak.id} klageToggle={klageToggle} intl={intl} />
+                    {iverksatteInnvilgedeSøknader.length > 0 && (
+                        <NyBehandlingVelger sakId={props.sak.id} klageToggle={klageToggle} intl={intl} />
+                    )}
                     {harUtbetalinger && (
                         <LinkAsButton
                             variant="secondary"
