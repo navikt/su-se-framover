@@ -1,8 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
-import { struct } from 'fp-ts/Eq';
-import * as S from 'fp-ts/lib/string';
 import React, { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +15,7 @@ import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { eqNullable, Nullable } from '~src/lib/types';
+import { Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
@@ -35,10 +33,6 @@ import * as styles from './flyktning.module.less';
 interface FormData {
     status: Nullable<Vilkårstatus>;
 }
-
-const eqFormData = struct<FormData>({
-    status: eqNullable(S.Eq),
-});
 
 const schema = yup
     .object<FormData>({
@@ -62,67 +56,51 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Flyktning,
-        (values) => eqFormData.equals(values, initialValues)
+        (values) => values.status === initialValues.status
     );
 
-    const goToVedtak = () => {
-        navigate(
-            Routes.saksbehandlingSendTilAttestering.createURL({
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-            })
-        );
-    };
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+        sakId: props.sakId,
+        behandlingId: props.behandling.id,
+    });
 
-    const save = async (values: FormData, onSuccess: (behandling: Behandling) => void) => {
-        if (!values.status) return;
-        await lagreBehandlingsinformasjon(
+    const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({
+        sakId: props.sakId,
+    });
+
+    const save = (values: FormData, ingenEndringPath: string, onSuccess: (behandling: Behandling) => void) => {
+        if (values.status === initialValues.status) {
+            clearDraft();
+            navigate(ingenEndringPath);
+            return;
+        }
+
+        lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
                     flyktning: {
-                        status: values.status,
+                        status: values.status!,
                     },
                 },
             },
-            onSuccess
+            (behandling) => {
+                clearDraft();
+                onSuccess(behandling);
+            }
         );
     };
 
-    const handleLagreOgFortsettSenere = async (values: FormData) => {
-        if (eqFormData.equals(values, initialValues)) {
-            clearDraft();
-            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-            return;
-        }
-
-        save(values, () => {
-            clearDraft();
-            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-        });
-    };
-
-    const handleSubmit = async (values: FormData) => {
-        if (eqFormData.equals(values, initialValues)) {
-            clearDraft();
-            if (erVilkårsvurderingerVurdertAvslag(props.behandling) || erUnderkjent(props.behandling)) {
-                goToVedtak();
-                return;
-            }
-            navigate(props.nesteUrl);
-            return;
-        }
-
-        save(values, (behandling) => {
-            clearDraft();
-            if (behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
-                goToVedtak();
-                return;
-            }
-            navigate(props.nesteUrl);
-        });
-    };
+    const handleSubmit = (values: FormData) =>
+        save(
+            values,
+            erVilkårsvurderingerVurdertAvslag(props.behandling) || erUnderkjent(props.behandling)
+                ? vedtakUrl
+                : props.nesteUrl,
+            (behandling) =>
+                navigate(behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ? vedtakUrl : props.nesteUrl)
+        );
 
     const {
         formState: { errors, isSubmitted, isValid },
@@ -199,11 +177,9 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
-                            onTilbakeClick={() => {
-                                navigate(props.forrigeUrl);
-                            }}
+                            onTilbakeClick={() => navigate(props.forrigeUrl)}
                             onLagreOgFortsettSenereClick={form.handleSubmit(
-                                handleLagreOgFortsettSenere,
+                                (values) => save(values, saksoversiktUrl, () => navigate(saksoversiktUrl)),
                                 focusAfterTimeout(feiloppsummeringRef)
                             )}
                             nesteKnappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
