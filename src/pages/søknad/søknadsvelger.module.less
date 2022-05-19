@@ -1,9 +1,19 @@
 @import '~/src/styles/variables.less';
 
-.søknadsvelger {
-    .buttonGroup {
-        display: flex;
+.tittel {
+    margin-top: @spacing-s;
+}
+
+.linkgruppe {
+    --navds-panel-color-border: #c3c3c3;
+    --navds-panel-border-radius: 2px;
+
+    & > * {
         margin-top: @spacing;
-        gap: @spacing;
+        padding: @spacing;
+    }
+
+    button {
+        margin-top: @spacing-s;
     }
 }

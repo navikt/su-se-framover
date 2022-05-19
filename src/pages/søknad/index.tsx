@@ -1,4 +1,5 @@
 import { Heading } from '@navikt/ds-react';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
@@ -26,7 +27,12 @@ const index = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.infostripe}>
+            <div
+                className={classNames(styles.infostripe, {
+                    [styles.ufore]: soknadstema === Søknadstema.Uføre,
+                    [styles.alder]: soknadstema === Søknadstema.Alder,
+                })}
+            >
                 {soknadstema && (
                     <Heading level="2" size="small">
                         {getSøknadstematekst(soknadstema, {

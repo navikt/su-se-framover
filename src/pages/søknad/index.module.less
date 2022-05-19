@@ -4,11 +4,23 @@
     width: 100%;
 }
 
+.topspacer {
+    height: @spacing-l;
+}
+
 .infostripe {
     width: 100%;
-    background-color: var(--navds-tag-color-success-background);
     text-align: center;
     padding: var(--navds-spacing-3) 0;
+    min-height: @spacing-l;
+
+    &.alder {
+        background-color: #e0d8e9;
+    }
+
+    &.ufore {
+        background-color: var(--navds-tag-color-success-background);
+    }
 }
 
 .contentContainer {
