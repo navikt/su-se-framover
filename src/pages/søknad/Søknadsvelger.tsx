@@ -2,8 +2,9 @@ import { BodyLong, GuidePanel, Heading, Ingress, Panel } from '@navikt/ds-react'
 import * as React from 'react';
 import { useOutletContext, Navigate } from 'react-router-dom';
 
+import { FeatureToggle } from '~src/api/featureToggleApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
-import { ALDERSØKNAD_FEATURE_ENABLED } from '~src/lib/featureToggles';
+import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { SøknadContext } from '~src/pages/søknad/index';
@@ -16,7 +17,7 @@ const Søknadsvelger = () => {
     const { isPapirsøknad } = useOutletContext<SøknadContext>();
     const { formatMessage } = useI18n({ messages });
 
-    if (!ALDERSØKNAD_FEATURE_ENABLED) {
+    if (!useFeatureToggle(FeatureToggle.Alder)) {
         return (
             <Navigate
                 replace

@@ -88,5 +88,3 @@ export const FeatureToggleProvider: React.FC = ({ children }) => {
 
     return <FeatureToggleContext.Provider value={{ data }}>{children}</FeatureToggleContext.Provider>;
 };
-
-export const ALDERSØKNAD_FEATURE_ENABLED = false;
