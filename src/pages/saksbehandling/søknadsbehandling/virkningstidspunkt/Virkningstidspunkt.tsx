@@ -133,7 +133,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         );
     };
 
-    const handleSubmit: SubmitHandler<FormData> = (x) => {
+    const handleSubmit: SubmitHandler<FormData> = async (x) => {
         if (eqBehandlingsperiode.equals(form.getValues(), initialValues)) {
             clearDraft();
             return navigate(props.nesteUrl);

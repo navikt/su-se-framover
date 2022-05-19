@@ -37,7 +37,7 @@ export const Vurderingknapper = (props: {
                 type={props.onNesteClick ? 'button' : 'submit'}
                 loading={knappTrykket === 'neste' && props.loading}
             >
-                {props.nesteKnappTekst ? props.nesteKnappTekst : formatMessage('knapp.neste')}
+                {props.nesteKnappTekst ?? formatMessage('knapp.neste')}
             </Button>
             <Button variant="secondary" onClick={props.onTilbakeClick} type="button">
                 {formatMessage('knapp.tilbake')}

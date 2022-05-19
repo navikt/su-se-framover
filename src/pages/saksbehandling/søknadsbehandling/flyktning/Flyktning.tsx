@@ -86,9 +86,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                     },
                 },
             },
-            (behandling) => {
-                onSuccess(behandling);
-            }
+            onSuccess
         );
     };
 
