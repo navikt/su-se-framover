@@ -131,53 +131,47 @@ const index = () => {
         }
     };
 
-    const Informasjon = () => {
-        return (
-            <div>
-                <section>
-                    <BodyLong spacing>{formatMessage('sendeInnDokumentasjon.dokGjelder')}</BodyLong>
+    const Informasjon = () => (
+        <div>
+            <section>
+                <BodyLong spacing>{formatMessage('sendeInnDokumentasjon.dokGjelder')}</BodyLong>
 
-                    <BodyLong as="div" spacing>
-                        {formatMessage('sendeInnDokumentasjon.måLeggesVed')}
-                        <ul className={styles.list}>
-                            <li className={styles.listItem}>
-                                {formatMessage('sendeInnDokumentasjon.måLeggesVed.punkt1')}
-                            </li>
-                            <li className={styles.listItem}>
-                                {formatMessage('sendeInnDokumentasjon.måLeggesVed.punkt2')}
-                            </li>
-                        </ul>
-                    </BodyLong>
+                <BodyLong as="div" spacing>
+                    {formatMessage('sendeInnDokumentasjon.måLeggesVed')}
+                    <ul className={styles.list}>
+                        <li className={styles.listItem}>{formatMessage('sendeInnDokumentasjon.måLeggesVed.punkt1')}</li>
+                        <li className={styles.listItem}>{formatMessage('sendeInnDokumentasjon.måLeggesVed.punkt2')}</li>
+                    </ul>
+                </BodyLong>
 
-                    <BodyLong as="div" spacing>
-                        {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed')}
-                        <ul className={styles.list}>
-                            <li className={styles.listItem}>
-                                {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed.punkt1')}
-                            </li>
-                            <li className={styles.listItem}>
-                                {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed.punkt2')}
-                            </li>
-                        </ul>
-                    </BodyLong>
-                </section>
+                <BodyLong as="div" spacing>
+                    {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed')}
+                    <ul className={styles.list}>
+                        <li className={styles.listItem}>
+                            {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed.punkt1')}
+                        </li>
+                        <li className={styles.listItem}>
+                            {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed.punkt2')}
+                        </li>
+                    </ul>
+                </BodyLong>
+            </section>
 
-                <div className={styles.checkboksPanelContainer}>
-                    <ConfirmationPanel
-                        checked={erBekreftet}
-                        label={formatMessage('bekreftelsesboks.tekst.p2')}
-                        onChange={() => setErBekreftet(!erBekreftet)}
-                        error={hasSubmitted && !erBekreftet}
-                    >
-                        {formatMessage('bekreftelsesboks.tekst.p1')}
-                    </ConfirmationPanel>
-                    {hasSubmitted && !erBekreftet && (
-                        <SkjemaelementFeilmelding>{formatMessage('feil.påkrevdFelt')}</SkjemaelementFeilmelding>
-                    )}
-                </div>
+            <div className={styles.checkboksPanelContainer}>
+                <ConfirmationPanel
+                    checked={erBekreftet}
+                    label={formatMessage('bekreftelsesboks.tekst.p2')}
+                    onChange={() => setErBekreftet(!erBekreftet)}
+                    error={hasSubmitted && !erBekreftet}
+                >
+                    {formatMessage('bekreftelsesboks.tekst.p1')}
+                </ConfirmationPanel>
+                {hasSubmitted && !erBekreftet && (
+                    <SkjemaelementFeilmelding>{formatMessage('feil.påkrevdFelt')}</SkjemaelementFeilmelding>
+                )}
             </div>
-        );
-    };
+        </div>
+    );
 
     const handleSøk = async (fnr: string): Promise<void> => {
         hentPerson({ fnr });
