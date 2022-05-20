@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from '@navikt/ds-react';
 import * as React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -9,7 +9,7 @@ import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { useI18n } from '~src/lib/i18n';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
@@ -28,8 +28,6 @@ type FormData = SøknadState['inntekt'];
 const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const inntektFraStore = useAppSelector((s) => s.soknad.inntekt);
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const form = useForm<FormData>({
@@ -38,6 +36,31 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
     });
 
     const save = (values: FormData) => dispatch(søknadSlice.actions.inntektUpdated(values));
+
+    return (
+        <InntektForm
+            form={form}
+            save={save}
+            nesteUrl={props.nesteUrl}
+            avbrytUrl={props.avbrytUrl}
+            forrigeUrl={props.forrigeUrl}
+            formatMessage={formatMessage}
+        />
+    );
+};
+
+interface InntektFormInterface {
+    form: UseFormReturn<FormData>;
+    save: (values: FormData) => void;
+    avbrytUrl: string;
+    forrigeUrl: string;
+    nesteUrl: string;
+    formatMessage: MessageFormatter<typeof sharedI18n & typeof messages>;
+}
+
+export const InntektForm = ({ form, save, formatMessage, ...props }: InntektFormInterface) => {
+    const navigate = useNavigate();
+    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
 
     return (
