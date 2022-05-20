@@ -18,6 +18,11 @@ const Infoside = () => {
         soknadstema,
         papirsøknad: isPapirsøknad,
     });
+
+    const merOmSuAlderLink =
+        'https://www.nav.no/no/person/pensjon/andre-pensjonsordninger/supplerende-stonad-for-personer-med-kort-botid-i-norge';
+    const suAlderLink =
+        'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-personer-over-sekstisyv-ar';
     const suUførFlyktningLink = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-ufor-flyktning';
     const merOmSuForUføreLink =
         'https://www.nav.no/no/person/pensjon/andre-pensjonsordninger/supplerende-stonad-for-ufore-flyktninger';
@@ -29,9 +34,15 @@ const Infoside = () => {
         <div className={styles.pageContainer}>
             <GuidePanel className={styles.guide}>
                 <BodyLong>
-                    {formatMessage('suppstønadInfo.kanFåSupp', {
-                        b: (text) => <b>{text}</b>,
-                    })}
+                    {formatMessage(
+                        getSøknadstematekst(soknadstema, {
+                            [Søknadstema.Uføre]: 'suppstønadInfo.kanFåSupp.ufør',
+                            [Søknadstema.Alder]: 'suppstønadInfo.kanFåSupp.alder',
+                        }),
+                        {
+                            strong: (text) => <strong>{text}</strong>,
+                        }
+                    )}
                 </BodyLong>
             </GuidePanel>
 
@@ -43,10 +54,24 @@ const Infoside = () => {
             </Heading>
 
             <section className={styles.section}>
-                <Ingress spacing>{formatMessage('suppstønadInfo.ingress')}</Ingress>
+                <Ingress spacing>
+                    {getSøknadstematekst(soknadstema, {
+                        [Søknadstema.Uføre]: formatMessage('suppstønadInfo.ingress.ufør'),
+                        [Søknadstema.Alder]: formatMessage('suppstønadInfo.ingress.alder'),
+                    })}
+                </Ingress>
                 <BodyLong>
-                    <Link target="_blank" href={merOmSuForUføreLink}>
-                        {formatMessage('suppstønad.merOmSuForUføre')}
+                    <Link
+                        target="_blank"
+                        href={getSøknadstematekst(soknadstema, {
+                            [Søknadstema.Uføre]: merOmSuForUføreLink,
+                            [Søknadstema.Alder]: merOmSuAlderLink,
+                        })}
+                    >
+                        {getSøknadstematekst(soknadstema, {
+                            [Søknadstema.Uføre]: formatMessage('suppstønad.merOmSuForUføre'),
+                            [Søknadstema.Alder]: formatMessage('suppstønad.merOmSuAlder'),
+                        })}
                     </Link>
                 </BodyLong>
             </section>
@@ -59,7 +84,14 @@ const Infoside = () => {
                 <BodyLong spacing as="ul" className={styles.list}>
                     <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.personinfo')}</li>
                     <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.arbeidsforhold')}</li>
-                    <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.flyktningsstatus')}</li>
+                    <li className={styles.listItem}>
+                        {formatMessage(
+                            getSøknadstematekst(soknadstema, {
+                                [Søknadstema.Uføre]: 'henterInnInfo.viHenter.flyktningsstatus',
+                                [Søknadstema.Alder]: 'henterInnInfo.viHenter.oppholdstillatelse',
+                            })
+                        )}
+                    </li>
                 </BodyLong>
                 <BodyLong spacing>{formatMessage('henterInnInfo.brukerTidligereOpplysninger')}</BodyLong>
 
@@ -77,9 +109,14 @@ const Infoside = () => {
                 <BodyLong spacing>{formatMessage('viktigÅVite.blirIkkeLagret')}</BodyLong>
                 <BodyLong spacing>
                     {formatMessage('viktigÅVite.manglerDuDokumentasjon', {
-                        //eslint-disable-next-line react/display-name
                         navLink: (tekst) => (
-                            <Link target="_blank" href={suUførFlyktningLink}>
+                            <Link
+                                target="_blank"
+                                href={getSøknadstematekst(soknadstema, {
+                                    [Søknadstema.Uføre]: suUførFlyktningLink,
+                                    [Søknadstema.Alder]: suAlderLink,
+                                })}
+                            >
                                 {tekst}
                             </Link>
                         ),
