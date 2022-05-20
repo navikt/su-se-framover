@@ -10,7 +10,7 @@ export default {
     'suppstønad.merOmSuForUføre': 'Mer om supplerende stønad for uføre flyktninger',
     'suppstønad.merOmSuAlder': 'Mer om supplerende stønad for personer som har fylt 67 år',
 
-    'henterInnInfo.ingress': 'Vi vil hente informasjon om deg og ektefellen eller samboeren din',
+    'henterInnInfo.ingress': 'Vi vil hente informasjon om deg',
     'henterInnInfo.viHenterInfo':
         'I tillegg til det du selv opplyser i søknaden, vil vi hente inn denne informasjonen: ',
     'henterInnInfo.viHenter.personinfo': 'personinformasjon om deg og ektefellen eller samboeren din',
@@ -31,5 +31,5 @@ export default {
         'Mangler du dokumentasjon, kan du sende den inn på et senere tidspunkt. Du finner mer om dette på <navLink>nav.no.</navLink>',
 
     'page.tittel.uføre': 'Start en ny søknad om supplerende stønad for uføre flyktninger',
-    'page.tittel.alder': 'Start en ny søknad om supplerende stønad for alder',
+    'page.tittel.alder': 'Start en ny søknad om supplerende stønad for personer som har fylt 67 år',
 };
