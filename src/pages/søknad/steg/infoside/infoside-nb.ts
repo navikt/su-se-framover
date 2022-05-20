@@ -10,7 +10,7 @@ export default {
     'suppstønad.merOmSuForUføre': 'Mer om supplerende stønad for uføre flyktninger',
     'suppstønad.merOmSuAlder': 'Mer om supplerende stønad for personer som har fylt 67 år',
 
-    'henterInnInfo.ingress': 'Vi vil hente informasjon om deg',
+    'henterInnInfo.ingress': 'Vi vil hente informasjon om deg og ektefellen eller samboeren din',
     'henterInnInfo.viHenterInfo':
         'I tillegg til det du selv opplyser i søknaden, vil vi hente inn denne informasjonen: ',
     'henterInnInfo.viHenter.personinfo': 'personinformasjon om deg og ektefellen eller samboeren din',
