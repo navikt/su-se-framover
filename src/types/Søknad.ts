@@ -33,8 +33,8 @@ interface InnlagtPåInstitusjon {
 }
 
 interface OppholdstillatelseAlder {
-    eøsborger: boolean;
-    familieforening: boolean;
+    eøsborger: Nullable<boolean>;
+    familieforening: Nullable<boolean>;
 }
 
 export interface SøknadInnholdAlder extends SøknadFellesInnhold {
