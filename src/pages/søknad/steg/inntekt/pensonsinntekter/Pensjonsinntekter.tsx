@@ -1,6 +1,6 @@
 import { Fieldset, TextField } from '@navikt/ds-react';
-import { FormikErrors } from 'formik';
 import * as React from 'react';
+import { FieldError } from 'react-hook-form';
 
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
 import { useI18n } from '~src/lib/i18n';
@@ -17,7 +17,7 @@ export const pensjonsinntekterMessages = {
 
 const PensjonsInntekter = (props: {
     arr: Array<{ ordning: string; beløp: string }>;
-    errors: string | string[] | Array<FormikErrors<{ ordning: string; beløp: string }>> | undefined;
+    errors: FieldError | undefined;
     onChange: (element: { index: number; ordning: string; beløp: string }) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
@@ -34,7 +34,7 @@ const PensjonsInntekter = (props: {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
 
                 const feltError = (key: keyof typeof item) =>
-                    errorForLinje && typeof errorForLinje !== 'string' && errorForLinje[key];
+                    errorForLinje && typeof errorForLinje !== 'string' && errorForLinje[key]?.message;
                 return (
                     <SøknadInputliste.Item
                         key={idx}

@@ -1,6 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from '@navikt/ds-react';
-import { useFormik } from 'formik';
 import * as React from 'react';
+import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -8,9 +9,9 @@ import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { useI18n } from '~src/lib/i18n';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
-import { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../../bunnknapper/Bunnknapper';
@@ -27,290 +28,303 @@ type FormData = SøknadState['inntekt'];
 const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const inntektFraStore = useAppSelector((s) => s.soknad.inntekt);
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const [hasSubmitted, setHasSubmitted] = React.useState(false);
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const formik = useFormik<FormData>({
-        initialValues: {
-            harForventetInntekt: inntektFraStore.harForventetInntekt,
-            forventetInntekt: inntektFraStore.forventetInntekt,
-            mottarPensjon: inntektFraStore.mottarPensjon,
-            pensjonsInntekt: inntektFraStore.pensjonsInntekt,
-            andreYtelserINav: inntektFraStore.andreYtelserINav,
-            andreYtelserINavYtelse: inntektFraStore.andreYtelserINavYtelse,
-            andreYtelserINavBeløp: inntektFraStore.andreYtelserINavBeløp,
-            søktAndreYtelserIkkeBehandlet: inntektFraStore.søktAndreYtelserIkkeBehandlet,
-            søktAndreYtelserIkkeBehandletBegrunnelse: inntektFraStore.søktAndreYtelserIkkeBehandletBegrunnelse,
-            harTrygdeytelserIUtlandet: inntektFraStore.harTrygdeytelserIUtlandet,
-            trygdeytelserIUtlandet: inntektFraStore.trygdeytelserIUtlandet,
-        },
-        onSubmit: (values) => {
-            save(values);
-            navigate(props.nesteUrl);
-        },
-        validationSchema: inntektsValideringSchema('søker'),
-        validateOnChange: hasSubmitted,
+    const form = useForm<FormData>({
+        defaultValues: inntektFraStore,
+        resolver: yupResolver(inntektsValideringSchema('søker')),
     });
 
-    const save = (values: FormData) =>
-        dispatch(
-            søknadSlice.actions.inntektUpdated({
-                harForventetInntekt: values.harForventetInntekt,
-                forventetInntekt: values.forventetInntekt,
-                mottarPensjon: values.mottarPensjon,
-                pensjonsInntekt: values.pensjonsInntekt,
-                andreYtelserINav: values.andreYtelserINav,
-                andreYtelserINavYtelse: values.andreYtelserINavYtelse,
-                andreYtelserINavBeløp: values.andreYtelserINavBeløp,
-                søktAndreYtelserIkkeBehandlet: values.søktAndreYtelserIkkeBehandlet,
-                søktAndreYtelserIkkeBehandletBegrunnelse: values.søktAndreYtelserIkkeBehandletBegrunnelse,
-                harTrygdeytelserIUtlandet: values.harTrygdeytelserIUtlandet,
-                trygdeytelserIUtlandet: values.trygdeytelserIUtlandet,
-            })
-        );
+    const save = (values: FormData) => dispatch(søknadSlice.actions.inntektUpdated(values));
+
+    return (
+        <InntektForm
+            form={form}
+            save={save}
+            nesteUrl={props.nesteUrl}
+            avbrytUrl={props.avbrytUrl}
+            forrigeUrl={props.forrigeUrl}
+            formatMessage={formatMessage}
+        />
+    );
+};
+
+interface InntektFormInterface {
+    form: UseFormReturn<FormData>;
+    save: (values: FormData) => void;
+    avbrytUrl: string;
+    forrigeUrl: string;
+    nesteUrl: string;
+    formatMessage: MessageFormatter<typeof sharedI18n & typeof messages>;
+}
+
+export const InntektForm = ({ form, save, formatMessage, ...props }: InntektFormInterface) => {
+    const navigate = useNavigate();
+    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
 
     return (
         <form
-            onSubmit={(e) => {
-                setHasSubmitted(true);
-                formik.handleSubmit(e);
-                focusAfterTimeout(feiloppsummeringref)();
-            }}
+            onSubmit={form.handleSubmit((values) => {
+                save(values);
+                navigate(props.nesteUrl);
+            }, focusAfterTimeout(feiloppsummeringref))}
             className={sharedStyles.container}
         >
             <SøknadSpørsmålsgruppe legend={formatMessage('legend.fremtidigInntekt')}>
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('harForventetInntekt')}
-                    legend={formatMessage('forventerInntekt.label')}
-                    description={formatMessage('forventerInntekt.hjelpetekst')}
-                    error={formik.errors.harForventetInntekt}
-                    value={formik.values.harForventetInntekt}
-                    onChange={(val) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            harForventetInntekt: val,
-                            forventetInntekt: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="harForventetInntekt"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            error={fieldState.error?.message}
+                            legend={formatMessage('forventerInntekt.label')}
+                            description={formatMessage('forventerInntekt.hjelpetekst')}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['forventetInntekt']);
+                            }}
+                        />
+                    )}
                 />
 
-                {formik.values.harForventetInntekt && (
-                    <TextField
-                        id={keyOf<FormData>('forventetInntekt')}
-                        error={formik.errors.forventetInntekt}
-                        className={sharedStyles.narrow}
-                        value={formik.values.forventetInntekt || ''}
-                        label={formatMessage('forventerInntekt.beløp')}
-                        onChange={formik.handleChange}
-                        autoComplete="off"
-                        // Dette elementet vises ikke ved sidelast
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
-                        autoFocus
+                {form.watch('harForventetInntekt') && (
+                    <Controller
+                        control={form.control}
+                        name={'forventetInntekt'}
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                id={field.name}
+                                className={sharedStyles.narrow}
+                                error={fieldState.error?.message}
+                                value={field.value ?? ''}
+                                label={formatMessage('forventerInntekt.beløp')}
+                                autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                            />
+                        )}
                     />
                 )}
             </SøknadSpørsmålsgruppe>
 
             <SøknadSpørsmålsgruppe legend={formatMessage('legend.andreUtbetalingerFraNav')}>
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('andreYtelserINav')}
-                    legend={formatMessage('andreYtelserINAV.label')}
-                    error={formik.errors.andreYtelserINav}
-                    value={formik.values.andreYtelserINav}
-                    onChange={(val) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            andreYtelserINav: val,
-                            andreYtelserINavYtelse: null,
-                            andreYtelserINavBeløp: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="andreYtelserINav"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            name={keyOf<FormData>('andreYtelserINav')}
+                            legend={formatMessage('andreYtelserINAV.label')}
+                            error={fieldState.error?.message}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['andreYtelserINavYtelse', 'andreYtelserINavBeløp']);
+                            }}
+                        />
+                    )}
                 />
 
-                {formik.values.andreYtelserINav && (
+                {form.watch('andreYtelserINav') && (
                     <>
-                        <TextField
-                            id={keyOf<FormData>('andreYtelserINavYtelse')}
-                            name={keyOf<FormData>('andreYtelserINavYtelse')}
-                            className={sharedStyles.narrow}
-                            label={formatMessage('andreYtelserINAV.ytelse')}
-                            value={formik.values.andreYtelserINavYtelse || ''}
-                            onChange={formik.handleChange}
-                            error={formik.errors.andreYtelserINavYtelse}
-                            autoComplete="off"
-                            // Dette elementet vises ikke ved sidelast
-                            // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
+                        <Controller
+                            control={form.control}
+                            name="andreYtelserINavYtelse"
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    {...field}
+                                    id={field.name}
+                                    className={sharedStyles.narrow}
+                                    label={formatMessage('andreYtelserINAV.ytelse')}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    autoComplete="off"
+                                    // Dette elementet vises ikke ved sidelast
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                                    autoFocus
+                                />
+                            )}
                         />
-                        <TextField
-                            id={keyOf<FormData>('andreYtelserINavBeløp')}
-                            name={keyOf<FormData>('andreYtelserINavBeløp')}
-                            className={sharedStyles.narrow}
-                            label={formatMessage('andreYtelserINAV.beløp')}
-                            value={formik.values.andreYtelserINavBeløp || ''}
-                            onChange={formik.handleChange}
-                            error={formik.errors.andreYtelserINavBeløp}
-                            autoComplete="off"
+                        <Controller
+                            control={form.control}
+                            name="andreYtelserINavBeløp"
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    {...field}
+                                    id={field.name}
+                                    className={sharedStyles.narrow}
+                                    label={formatMessage('andreYtelserINAV.beløp')}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    autoComplete="off"
+                                />
+                            )}
                         />
                     </>
                 )}
 
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('søktAndreYtelserIkkeBehandlet')}
-                    legend={formatMessage('søktAndreYtelserIkkeBehandlet.label')}
-                    error={formik.errors.søktAndreYtelserIkkeBehandlet}
-                    description={formatMessage('søktAndreYtelserIkkeBehandlet.hjelpetekst')}
-                    value={formik.values.søktAndreYtelserIkkeBehandlet}
-                    onChange={(val) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            søktAndreYtelserIkkeBehandlet: val,
-                            søktAndreYtelserIkkeBehandletBegrunnelse: null,
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="søktAndreYtelserIkkeBehandlet"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('søktAndreYtelserIkkeBehandlet.label')}
+                            error={fieldState.error?.message}
+                            description={formatMessage('søktAndreYtelserIkkeBehandlet.hjelpetekst')}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['søktAndreYtelserIkkeBehandletBegrunnelse']);
+                            }}
+                        />
+                    )}
                 />
 
-                {formik.values.søktAndreYtelserIkkeBehandlet && (
-                    <TextField
-                        className={sharedStyles.narrow}
-                        id={keyOf<FormData>('søktAndreYtelserIkkeBehandletBegrunnelse')}
-                        name={keyOf<FormData>('søktAndreYtelserIkkeBehandletBegrunnelse')}
-                        label={formatMessage('søktAndreYtelserIkkeBehandlet.begrunnelse')}
-                        value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
-                        onChange={formik.handleChange}
-                        error={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
-                        autoComplete="off"
-                        // Dette elementet vises ikke ved sidelast
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
-                        autoFocus
+                {form.watch('søktAndreYtelserIkkeBehandlet') && (
+                    <Controller
+                        control={form.control}
+                        name="søktAndreYtelserIkkeBehandletBegrunnelse"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                id={field.name}
+                                className={sharedStyles.narrow}
+                                label={formatMessage('søktAndreYtelserIkkeBehandlet.begrunnelse')}
+                                value={field.value ?? ''}
+                                error={fieldState.error?.message}
+                                autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                            />
+                        )}
                     />
                 )}
             </SøknadSpørsmålsgruppe>
             <SøknadSpørsmålsgruppe legend={formatMessage('legend.andreUtbetalinger')}>
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('harTrygdeytelserIUtlandet')}
-                    legend={formatMessage('trygdeytelserIUtlandet.label')}
-                    error={formik.errors.harTrygdeytelserIUtlandet}
-                    value={formik.values.harTrygdeytelserIUtlandet}
-                    onChange={(val) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            harTrygdeytelserIUtlandet: val,
-                            trygdeytelserIUtlandet: val ? [{ beløp: '', type: '', valuta: '' }] : [],
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="harTrygdeytelserIUtlandet"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('trygdeytelserIUtlandet.label')}
+                            error={fieldState.error?.message}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                if (val) {
+                                    form.watch('trygdeytelserIUtlandet').length === 0 &&
+                                        form.setValue('trygdeytelserIUtlandet', [{ beløp: '', type: '', valuta: '' }]);
+                                } else {
+                                    form.setValue('trygdeytelserIUtlandet', []);
+                                }
+                            }}
+                        />
+                    )}
                 />
-                {formik.values.harTrygdeytelserIUtlandet && (
-                    <TrygdeytelserInputFelter
-                        arr={formik.values.trygdeytelserIUtlandet}
-                        errors={formik.errors.trygdeytelserIUtlandet}
-                        feltnavn={keyOf<FormData>('trygdeytelserIUtlandet')}
-                        onLeggTilClick={() => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                trygdeytelserIUtlandet: [
-                                    ...formik.values.trygdeytelserIUtlandet,
-                                    {
-                                        beløp: '',
-                                        type: '',
-                                        valuta: '',
-                                    },
-                                ],
-                            }));
-                        }}
-                        onFjernClick={(index) => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                trygdeytelserIUtlandet: formik.values.trygdeytelserIUtlandet.filter(
-                                    (_, i) => index !== i
-                                ),
-                            }));
-                        }}
-                        onChange={(val) => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                trygdeytelserIUtlandet: formik.values.trygdeytelserIUtlandet.map((input, i) =>
-                                    val.index === i
-                                        ? {
-                                              beløp: val.beløp,
-                                              type: val.type,
-                                              valuta: val.valuta,
-                                          }
-                                        : input
-                                ),
-                            }));
-                        }}
+                {form.watch('harTrygdeytelserIUtlandet') && (
+                    <Controller
+                        control={form.control}
+                        name="trygdeytelserIUtlandet"
+                        render={({ field, fieldState }) => (
+                            <TrygdeytelserInputFelter
+                                arr={field.value}
+                                errors={fieldState.error}
+                                feltnavn={keyOf<FormData>('trygdeytelserIUtlandet')}
+                                onLeggTilClick={() =>
+                                    field.onChange([
+                                        ...field.value,
+                                        {
+                                            beløp: '',
+                                            type: '',
+                                            valuta: '',
+                                        },
+                                    ])
+                                }
+                                onFjernClick={(index) => field.onChange(field.value.filter((_, i) => index !== i))}
+                                onChange={(val) =>
+                                    field.onChange(
+                                        field.value.map((el, i) =>
+                                            val.index === i
+                                                ? {
+                                                      beløp: val.beløp,
+                                                      type: val.type,
+                                                      valuta: val.valuta,
+                                                  }
+                                                : el
+                                        )
+                                    )
+                                }
+                            />
+                        )}
                     />
                 )}
-
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('mottarPensjon')}
-                    legend={formatMessage('mottarPensjon.label')}
-                    error={formik.errors.mottarPensjon}
-                    value={formik.values.mottarPensjon}
-                    onChange={(val) =>
-                        formik.setValues((v) => ({
-                            ...v,
-                            mottarPensjon: val,
-                            pensjonsInntekt: val
-                                ? formik.values.pensjonsInntekt.length === 0
-                                    ? [{ ordning: '', beløp: '' }]
-                                    : formik.values.pensjonsInntekt
-                                : [],
-                        }))
-                    }
+                <Controller
+                    control={form.control}
+                    name="mottarPensjon"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('mottarPensjon.label')}
+                            error={fieldState.error?.message}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                if (val) {
+                                    form.watch('pensjonsInntekt').length === 0 &&
+                                        form.setValue('pensjonsInntekt', [{ ordning: '', beløp: '' }]);
+                                } else {
+                                    form.setValue('pensjonsInntekt', []);
+                                }
+                            }}
+                        />
+                    )}
                 />
-                {formik.values.mottarPensjon && (
-                    <PensjonsInntekter
-                        arr={formik.values.pensjonsInntekt}
-                        errors={formik.errors.pensjonsInntekt}
-                        onLeggTilClick={() => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                pensjonsInntekt: [
-                                    ...formik.values.pensjonsInntekt,
-                                    {
-                                        beløp: '',
-                                        ordning: '',
-                                    },
-                                ],
-                            }));
-                        }}
-                        onFjernClick={(index) => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                pensjonsInntekt: formik.values.pensjonsInntekt.filter((_, i) => index !== i),
-                            }));
-                        }}
-                        onChange={(val) => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                pensjonsInntekt: formik.values.pensjonsInntekt.map((input, i) =>
-                                    val.index === i
-                                        ? {
-                                              beløp: val.beløp,
-                                              ordning: val.ordning,
-                                          }
-                                        : input
-                                ),
-                            }));
-                        }}
+                {form.watch('mottarPensjon') && (
+                    <Controller
+                        control={form.control}
+                        name="pensjonsInntekt"
+                        render={({ field, fieldState }) => (
+                            <PensjonsInntekter
+                                arr={field.value}
+                                errors={fieldState.error}
+                                onLeggTilClick={() =>
+                                    field.onChange([
+                                        ...field.value,
+                                        {
+                                            beløp: '',
+                                            ordning: '',
+                                        },
+                                    ])
+                                }
+                                onFjernClick={(index) => field.onChange(field.value.filter((_, i) => index !== i))}
+                                onChange={(val) =>
+                                    field.onChange(
+                                        field.value.map((el, i) =>
+                                            val.index === i ? { beløp: val.beløp, ordning: val.ordning } : el
+                                        )
+                                    )
+                                }
+                            />
+                        )}
                     />
                 )}
             </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
                 tittel={formatMessage('feiloppsummering.title')}
-                feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                hidden={!formikErrorsHarFeil(formik.errors)}
+                feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                 ref={feiloppsummeringref}
             />
 
             <Bunnknapper
                 previous={{
                     onClick: () => {
-                        save(formik.values);
+                        save(form.getValues());
                         navigate(props.forrigeUrl);
                     },
                 }}

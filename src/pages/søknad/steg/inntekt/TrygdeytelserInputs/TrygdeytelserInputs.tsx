@@ -1,6 +1,6 @@
 import { Fieldset, TextField } from '@navikt/ds-react';
-import { FormikErrors } from 'formik';
 import * as React from 'react';
+import { FieldError } from 'react-hook-form';
 
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
 import { useI18n } from '~src/lib/i18n';
@@ -19,7 +19,7 @@ export const trygdeytelserMessages = {
 
 const TrygdeytelserInputFelter = (props: {
     arr: Array<{ beløp: string; type: string; valuta: string }>;
-    errors: string | string[] | Array<FormikErrors<{ beløp: string; type: string; valuta: string }>> | undefined;
+    errors: FieldError | undefined;
     feltnavn: string;
     onChange: (element: { index: number; beløp: string; type: string; valuta: string }) => void;
     onLeggTilClick: () => void;
@@ -64,7 +64,9 @@ const TrygdeytelserInputFelter = (props: {
                                     });
                                 }}
                                 autoComplete="off"
-                                error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
+                                error={
+                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp?.message
+                                }
                                 // Dette elementet vises ikke ved sidelast
                                 // eslint-disable-next-line jsx-a11y/no-autofocus
                                 autoFocus
@@ -83,7 +85,9 @@ const TrygdeytelserInputFelter = (props: {
                                     });
                                 }}
                                 autoComplete="on"
-                                error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.valuta}
+                                error={
+                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.valuta?.message
+                                }
                             />
                             <TextField
                                 id={typeId}
@@ -99,7 +103,9 @@ const TrygdeytelserInputFelter = (props: {
                                     });
                                 }}
                                 autoComplete="off"
-                                error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.type}
+                                error={
+                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.type?.message
+                                }
                             />
                         </div>
                     </SøknadInputliste.Item>
