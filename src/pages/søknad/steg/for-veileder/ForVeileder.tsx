@@ -74,7 +74,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
         validateOnChange: hasSubmitted,
     });
 
-    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
             <form
@@ -87,36 +87,36 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
             >
                 <div className={sharedStyles.marginBottom}>
                     <div className={styles.infoboks}>
-                        <Label spacing>{intl.formatMessage({ id: 'info.kontaktinfo.tittel' })}</Label>
+                        <Label spacing>{formatMessage('info.kontaktinfo.tittel')}</Label>
                         {kontaktinfo ? (
                             <div>
                                 <BodyShort>{telefonnummerKrr}</BodyShort>
                                 <BodyShort>{epostKrr}</BodyShort>
                             </div>
                         ) : (
-                            <BodyShort>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</BodyShort>
+                            <BodyShort>{formatMessage('info.kontaktinfo.mangler')}</BodyShort>
                         )}
                     </div>
                     <div className={styles.infoboks}>
-                        <Label spacing>{intl.formatMessage({ id: 'info.telefon.tittel' })}</Label>
+                        <Label spacing>{formatMessage('info.telefon.tittel')}</Label>
                         <BodyShort>{telefonnummerPdl}</BodyShort>
                     </div>
                     <Alert variant="info" className={styles.marginTopXSS}>
-                        {intl.formatMessage({ id: 'info.telefon.body' })}
+                        {formatMessage('info.telefon.body')}
                     </Alert>
                 </div>
 
                 <div className={sharedStyles.marginBottom}>
                     <div className={styles.infoboks}>
-                        <Label spacing>{intl.formatMessage({ id: 'info.kontaktform.tittel' })}</Label>
+                        <Label spacing>{formatMessage('info.kontaktform.tittel')}</Label>
                         {kontaktinfo ? (
                             <BodyShort>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</BodyShort>
                         ) : (
-                            <BodyShort>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</BodyShort>
+                            <BodyShort>{formatMessage('info.kontaktinfo.mangler')}</BodyShort>
                         )}
                     </div>
                     <Alert variant="info" className={styles.marginTopXSS}>
-                        {intl.formatMessage({ id: 'info.kontaktform.body' })}
+                        {formatMessage('info.kontaktform.body')}
                     </Alert>
                 </div>
 
@@ -158,12 +158,12 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                     )}
 
                     {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
-                        <Alert variant="warning">Husk å legge ved legeattest/legeerklæring</Alert>
+                        <Alert variant="warning">{formatMessage('alert.leggVedDokumentForFritak')}</Alert>
                     )}
                 </SøknadSpørsmålsgruppe>
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
-                    tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                    tittel={formatMessage('feiloppsummering.title')}
                     feil={formikErrorsTilFeiloppsummering(formik.errors)}
                     hidden={!formikErrorsHarFeil(formik.errors)}
                     ref={feiloppsummeringref}

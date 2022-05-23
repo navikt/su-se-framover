@@ -11,5 +11,7 @@ export default {
     'input.fullmektigEllerVerge.label': 'Har søker fullmektig eller verge?',
     'input.fullmektigEllerVerge.fullmektig.label': 'Fullmektig',
     'input.fullmektigEllerVerge.verge.label': 'Verge',
+    'alert.leggVedDokumentForFritak':
+        'Husk å legge ved legeattest/legeerklæring som dokumenterer fritak fra oppmøte for søker. Det må også være registrert et fullmaktskjema.',
     'input.erPassSjekket.label': 'Er pass sjekket?',
 };

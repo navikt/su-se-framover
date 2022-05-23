@@ -96,6 +96,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             {...field}
+                            description={formatMessage('statsborger.description')}
                             legend={formatMessage('statsborger.label')}
                             error={fieldState.error?.message}
                             value={field.value}
@@ -149,7 +150,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                         {formatMessage('oppholdstillatelse.info')}
                     </Alert>
                 )}
-                {form.watch('erNorskStatsborger') === false && (
+                {form.watch('harOppholdstillatelse') && (
                     <Controller
                         control={form.control}
                         name="familieforening"
@@ -168,7 +169,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                         {formatMessage('familieforening.info')}
                     </Alert>
                 )}
-                {form.watch('erNorskStatsborger') === false && (
+                {form.watch('harOppholdstillatelse') && (
                     <Controller
                         control={form.control}
                         name="typeOppholdstillatelse"
