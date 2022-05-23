@@ -144,6 +144,10 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                                 legend={formatMessage('oppholdstillatelse.label')}
                                 error={fieldState.error?.message}
                                 value={field.value}
+                                onChange={(val) => {
+                                    field.onChange(val);
+                                    setFieldsToNull(['familieforening', 'typeOppholdstillatelse']);
+                                }}
                             />
                         )}
                     />
