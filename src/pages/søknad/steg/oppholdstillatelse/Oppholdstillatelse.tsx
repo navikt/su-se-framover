@@ -42,13 +42,16 @@ const schema = yup.object<FormData>({
         .boolean()
         .nullable()
         .defined()
-        .when('erNorskStatsborger', { is: false, then: yup.boolean().required('Fyll ut spørsmål om familieforening') }),
+        .when('harOppholdstillatelse', {
+            is: true,
+            then: yup.boolean().required('Fyll ut spørsmål om familieforening'),
+        }),
     typeOppholdstillatelse: yup
         .mixed<Nullable<TypeOppholdstillatelse>>()
         .nullable()
         .defined()
-        .when('erNorskStatsborger', {
-            is: false,
+        .when('harOppholdstillatelse', {
+            is: true,
             then: yup
                 .mixed()
                 .nullable()
