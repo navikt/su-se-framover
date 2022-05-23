@@ -42,7 +42,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                         fnr,
                     });
                 }}
-                feil={props.feil?.fnr}
+                feil={props.feil?.fnr?.message}
                 getHentetPerson={(person) => {
                     props.onChange({
                         ...epsFormData,
@@ -57,7 +57,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     <BooleanRadioGroup
                         name={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
                         legend={formatMessage('delerBoligMed.epsUførFlyktning')}
-                        error={props.feil?.erUførFlyktning}
+                        error={props.feil?.erUførFlyktning?.message}
                         value={epsFormData.erUførFlyktning}
                         onChange={(val) => {
                             props.onChange({ ...epsFormData, erUførFlyktning: val });

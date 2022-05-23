@@ -19,7 +19,7 @@ interface FnrInputProps {
     name?: string;
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
-    feil?: React.ReactNode;
+    feil?: string;
     getHentetPerson: (person: Nullable<Person>) => void;
 }
 export const FnrInput = ({ label, inputId, name, fnr, onFnrChange, feil, getHentetPerson }: FnrInputProps) => {
