@@ -62,6 +62,7 @@ export const CollapsableFormElementDescription = (props: { title: string; childr
 };
 
 export const PeriodeForm = (props: {
+    containerClassname?: string;
     fraOgMed: {
         id?: string;
         value?: Nullable<Date>;
@@ -69,6 +70,7 @@ export const PeriodeForm = (props: {
         maxDate?: Nullable<Date>;
         setFraOgMed: (date: Nullable<Date>) => void;
         error?: FieldError;
+        size?: 'S' | 'L';
     };
     tilOgMed: {
         id?: string;
@@ -77,14 +79,16 @@ export const PeriodeForm = (props: {
         maxDate?: Nullable<Date>;
         setTilOgMed: (date: Nullable<Date>) => void;
         error?: FieldError;
+        size?: 'S' | 'L';
     };
 }) => {
     const { formatMessage } = useI18n({ messages: nb });
 
     return (
-        <div className={styles.periodeFormContainer}>
+        <div className={props.containerClassname ?? styles.periodeFormContainer}>
             <DatePicker
                 id={props.fraOgMed.id}
+                className={props.fraOgMed.size === 'S' ? styles.dato : undefined}
                 label={formatMessage('periodeForm.label.fraOgMed')}
                 feil={getDateErrorMessage(props.fraOgMed.error)}
                 dateFormat="MM/yyyy"
@@ -100,6 +104,7 @@ export const PeriodeForm = (props: {
             />
             <DatePicker
                 id={props.tilOgMed.id}
+                className={props.fraOgMed.size === 'S' ? styles.dato : undefined}
                 label={formatMessage('periodeForm.label.tilOgMed')}
                 feil={getDateErrorMessage(props.tilOgMed.error)}
                 dateFormat="MM/yyyy"

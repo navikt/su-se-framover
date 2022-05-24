@@ -6,6 +6,7 @@ import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
 import React from 'react';
 
+import { PeriodeForm } from '~src/components/formElements/FormElements';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable, KeyDict } from '~src/lib/types';
@@ -13,7 +14,6 @@ import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
 import { Fradragskategori, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
-import DatePicker from '../../../datePicker/DatePicker';
 import { UtenlandskInntektFormData } from '../beregningstegTypes';
 
 import messages from './fradragInputs-nb';
@@ -323,74 +323,54 @@ export const FradragInputs = (props: {
                                     }
                                 />
                             )}
-                            {visDelerAvPeriode && (
-                                <div className={styles.periode}>
-                                    <div className={styles.fraOgMed}>
-                                        <DatePicker
-                                            id={`${periode}.fraOgMed`}
-                                            label={formatMessage('fradrag.delerAvPeriode.fom')}
-                                            value={
-                                                fradrag.periode?.fraOgMed ? new Date(fradrag.periode.fraOgMed) : null
-                                            }
-                                            onChange={(e: Date) => {
-                                                props.onFradragChange(index, {
-                                                    ...fradrag,
-                                                    periode: {
-                                                        fraOgMed: e,
-                                                        tilOgMed: fradrag.periode?.tilOgMed ?? null,
-                                                    },
-                                                });
-                                            }}
-                                            dateFormat="MM/yyyy"
-                                            showMonthYearPicker
-                                            minDate={props.beregningsDato?.fom}
-                                            maxDate={props.beregningsDato?.tom}
-                                            autoComplete="off"
-                                            feil={
-                                                typeof errorForLinje === 'object' && errorForLinje?.periode
-                                                    ? // formik sin typing er ikke god på nøstede feil
-                                                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                      (errorForLinje.periode as any)?.fraOgMed
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
 
-                                    {props.beregningsDato && (
-                                        <div>
-                                            <DatePicker
-                                                id={`${periode}.tilOgMed`}
-                                                label={formatMessage('fradrag.delerAvPeriode.tom')}
-                                                value={
-                                                    fradrag.periode?.tilOgMed
-                                                        ? new Date(fradrag.periode.tilOgMed)
-                                                        : null
-                                                }
-                                                onChange={(e: Date) => {
-                                                    props.onFradragChange(index, {
-                                                        ...fradrag,
-                                                        periode: {
-                                                            fraOgMed: fradrag.periode?.fraOgMed ?? null,
-                                                            tilOgMed: DateFns.endOfMonth(e) ?? null,
-                                                        },
-                                                    });
-                                                }}
-                                                dateFormat="MM/yyyy"
-                                                showMonthYearPicker
-                                                minDate={fradrag.periode?.fraOgMed}
-                                                maxDate={props.beregningsDato.tom}
-                                                autoComplete="off"
-                                                feil={
-                                                    typeof errorForLinje === 'object' && errorForLinje?.periode
-                                                        ? // formik sin typing er ikke god på nøstede feil
-                                                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                          (errorForLinje.periode as any)?.tilOgMed
-                                                        : undefined
-                                                }
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                            {visDelerAvPeriode && (
+                                <PeriodeForm
+                                    fraOgMed={{
+                                        id: `${periode}.fraOgMed`,
+                                        value: fradrag.periode?.fraOgMed ? new Date(fradrag.periode.fraOgMed) : null,
+                                        minDate: props.beregningsDato?.fom,
+                                        maxDate: props.beregningsDato?.tom,
+                                        setFraOgMed: (date: Nullable<Date>) => {
+                                            props.onFradragChange(index, {
+                                                ...fradrag,
+                                                periode: {
+                                                    fraOgMed: date,
+                                                    tilOgMed: fradrag.periode?.tilOgMed ?? null,
+                                                },
+                                            });
+                                        },
+                                        error:
+                                            typeof errorForLinje === 'object' && errorForLinje?.periode
+                                                ? // formik sin typing er ikke god på nøstede feil
+                                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                  (errorForLinje.periode as any)?.fraOgMed
+                                                : undefined,
+                                        size: 'S',
+                                    }}
+                                    tilOgMed={{
+                                        id: `${periode}.tilOgMed`,
+                                        value: fradrag.periode?.tilOgMed ? new Date(fradrag.periode.tilOgMed) : null,
+                                        minDate: fradrag.periode?.fraOgMed,
+                                        maxDate: props.beregningsDato?.tom,
+                                        setTilOgMed: (date: Nullable<Date>) => {
+                                            props.onFradragChange(index, {
+                                                ...fradrag,
+                                                periode: {
+                                                    fraOgMed: fradrag.periode?.fraOgMed ?? null,
+                                                    tilOgMed: date ? DateFns.endOfMonth(date) : null,
+                                                },
+                                            });
+                                        },
+                                        error:
+                                            typeof errorForLinje === 'object' && errorForLinje?.periode
+                                                ? // formik sin typing er ikke god på nøstede feil
+                                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                  (errorForLinje.periode as any)?.tilOgMed
+                                                : undefined,
+                                        size: 'S',
+                                    }}
+                                />
                             )}
                         </Fieldset>
                     </Panel>

@@ -94,7 +94,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                             }}
                             kanVelgeUføresakTilBehandling={props.erSaksbehandling}
                             setValue={form.setValue}
-                            formState={form.formState}
+                            errors={form.formState.errors}
                         />
                     </li>
                 ))}

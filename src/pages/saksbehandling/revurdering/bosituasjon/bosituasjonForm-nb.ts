@@ -7,8 +7,6 @@ export default {
     'form.beskrivelse': 'Unngå personsensitive opplysninger',
     'form.fjern.bosituasjon': 'Slett',
     'form.ny.bosituasjon': 'Ny periode for opplysning',
-    'form.fraOgMed': 'Fra og med',
-    'form.tilOgMed': 'Til og med',
 
     'eksisterende.vedtakinfo.tittel': 'Eksisterende vedtaksinformasjon',
     'eksisterende.vedtakinfo.søkerBorMed': 'Søker bor med',

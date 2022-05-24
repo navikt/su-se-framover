@@ -2,12 +2,12 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import { Panel, Accordion, Button, Textarea, TextField, Heading, Label, BodyShort, Loader } from '@navikt/ds-react';
-import * as DateFns from 'date-fns';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Control,
     Controller,
     FieldArrayWithId,
+    FieldErrors,
     useFieldArray,
     useForm,
     UseFormTrigger,
@@ -17,8 +17,8 @@ import { useNavigate } from 'react-router-dom';
 
 import * as personApi from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { Personkort } from '~src/components/personkort/Personkort';
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
 import FormuevilkårOppsummering from '~src/components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
@@ -27,7 +27,7 @@ import { lagreFormuegrunnlag } from '~src/features/revurdering/revurderingAction
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import {
     Bosituasjon,
@@ -48,6 +48,7 @@ import messages from './formue-nb';
 import * as styles from './formue.module.less';
 import {
     erFormueVilkårOppfylt,
+    FormueData,
     FormueFormData,
     formueFormDataTilFormuegrunnlagRequest,
     getDefaultValues,
@@ -66,6 +67,7 @@ const Formue = (props: RevurderingStegProps) => {
         trigger,
         handleSubmit,
         watch,
+        setValue,
         formState: { errors, isValid, isSubmitted },
     } = useForm<FormueFormData>({
         defaultValues: getDefaultValues(
@@ -119,10 +121,11 @@ const Formue = (props: RevurderingStegProps) => {
                                             triggerValidation={trigger}
                                             onSlettClick={() => formueArray.remove(index)}
                                             formuegrenser={formuegrenser}
-                                            resetFormueData={(periode) =>
-                                                formueArray.update(index, getTomFormueData(periode))
-                                            }
                                             watch={watch}
+                                            update={(idx: number, data: FormueData) => {
+                                                setValue(`formue.${idx}`, data);
+                                            }}
+                                            errors={errors}
                                         />
                                     </Panel>
                                 </li>
@@ -182,10 +185,11 @@ const FormueBlokk = (props: {
     formueArrayLengde: number;
     bosituasjonsgrunnlag: Bosituasjon[];
     formController: Control<FormueFormData>;
-    resetFormueData: (periode: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }) => void;
     triggerValidation: UseFormTrigger<FormueFormData>;
     onSlettClick: (index: number) => void;
     watch: UseFormWatch<FormueFormData>;
+    update: (idx: number, data: FormueData) => void;
+    errors: FieldErrors<FormueFormData>;
 }) => {
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
         regnUtFormDataVerdier(props.blokkField.søkersFormue)
@@ -227,62 +231,29 @@ const FormueBlokk = (props: {
     return (
         <div className={styles.formueBlokk}>
             <div className={styles.periodeOgSøppelbøtteContainer}>
-                <div className={styles.periodeContainer}>
-                    <Controller
-                        control={props.formController}
-                        name={`${blokkName}.periode.fraOgMed`}
-                        defaultValue={props.blokkField.periode.fraOgMed}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                id={field.name}
-                                label={formatMessage('periode.fraOgMed')}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                autoComplete="off"
-                                value={field.value}
-                                onChange={(date: Date | null) => {
-                                    props.resetFormueData({
-                                        fraOgMed: date ? DateFns.startOfMonth(date) : null,
-                                        tilOgMed: props.blokkField.periode.tilOgMed,
-                                    });
-                                }}
-                                feil={getDateErrorMessage(fieldState.error)}
-                                minDate={revurderingsperiode.fraOgMed}
-                                maxDate={revurderingsperiode.tilOgMed}
-                                startDate={field.value}
-                                endDate={watch.periode.tilOgMed}
-                            />
-                        )}
-                    />
-                    <Controller
-                        control={props.formController}
-                        name={`${blokkName}.periode.tilOgMed`}
-                        defaultValue={props.blokkField.periode.tilOgMed}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                id={field.name}
-                                label={formatMessage('periode.tilOgMed')}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                autoComplete="off"
-                                value={field.value}
-                                onChange={(date: Date | null) => {
-                                    props.resetFormueData({
-                                        fraOgMed: props.blokkField.periode.fraOgMed,
-                                        tilOgMed: date ? DateFns.endOfMonth(date) : null,
-                                    });
-                                }}
-                                feil={getDateErrorMessage(fieldState.error)}
-                                minDate={watch.periode.fraOgMed}
-                                maxDate={revurderingsperiode.tilOgMed}
-                                startDate={watch.periode.fraOgMed}
-                                endDate={field.value}
-                            />
-                        )}
-                    />
-                </div>
+                <PeriodeForm
+                    fraOgMed={{
+                        id: `${blokkName}.periode.fraOgMed`,
+                        value: watch.periode.fraOgMed,
+                        minDate: revurderingsperiode.fraOgMed,
+                        maxDate: revurderingsperiode.tilOgMed,
+                        setFraOgMed: (date: Nullable<Date>) => {
+                            props.update(props.blokkIndex, { ...watch, periode: { ...watch.periode, fraOgMed: date } });
+                        },
+                        error: props.errors?.formue?.[props.blokkIndex]?.periode?.fraOgMed,
+                    }}
+                    tilOgMed={{
+                        id: `${blokkName}.periode.tilOgMeg`,
+                        value: watch.periode.tilOgMed,
+                        minDate: revurderingsperiode.fraOgMed,
+                        maxDate: revurderingsperiode.tilOgMed,
+                        setTilOgMed: (date: Nullable<Date>) => {
+                            props.update(props.blokkIndex, { ...watch, periode: { ...watch.periode, tilOgMed: date } });
+                        },
+                        error: props.errors?.formue?.[props.blokkIndex]?.periode?.tilOgMed,
+                    }}
+                />
+
                 {props.formueArrayLengde > 1 && (
                     <Button
                         variant="secondary"
@@ -299,7 +270,7 @@ const FormueBlokk = (props: {
                 )}
             </div>
 
-            {props.blokkField.periode.fraOgMed && props.blokkField.periode.tilOgMed && (
+            {watch.periode.fraOgMed && watch.periode.tilOgMed && (
                 <>
                     {RemoteData.isPending(epsStatus) && <Loader />}
                     {RemoteData.isSuccess(epsStatus) && (

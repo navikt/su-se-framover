@@ -19,8 +19,5 @@ export default {
     'knapp.fjernPeriode': 'Fjern periode',
     'knapp.nyPeriode': 'Ny periode for opplysning',
 
-    'periode.fraOgMed': 'Fra og med',
-    'periode.tilOgMed': 'Til og med',
-
     'personkort.eps': 'Ektefelle/Samboer',
 };

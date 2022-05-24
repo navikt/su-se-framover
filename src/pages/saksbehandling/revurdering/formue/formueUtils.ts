@@ -18,7 +18,7 @@ export interface FormueFormData {
     formue: FormueData[];
 }
 
-interface FormueData {
+export interface FormueData {
     epsFnr: Nullable<string>;
     periode: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> };
     søkersFormue: VerdierFormData;
