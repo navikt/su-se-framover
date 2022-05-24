@@ -2,7 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading } from '@navikt/ds-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import classNames from 'classnames';
-import * as A from 'fp-ts/Array';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,12 +11,11 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
-import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { Regulering, Reguleringstype } from '~src/types/Regulering';
+import { Reguleringstype } from '~src/types/Regulering';
 
 import messages from './behandlingsoversikt-nb';
 import * as styles from './behandlingsoversikt.module.less';
@@ -25,17 +23,6 @@ import { FerdigeBehandlinger } from './ferdigeBehandlinger/FerdigeBehandlinger';
 import Nøkkeltall from './nøkkeltall/Nøkkeltall';
 import Reguleringsoversikt from './regulering/reguleringsoversikt';
 import { ÅpneBehandlinger } from './åpneBehandlinger/ÅpneBehandlinger';
-
-const splittAutomatiskeOgManuelleReguleringer = (reguleringer: Regulering[]) => {
-    return pipe(
-        reguleringer,
-        A.partition((regulering) => regulering.reguleringstype === Reguleringstype.AUTOMATISK),
-        ({ left, right }) => ({
-            automatiske: right,
-            manuelle: left,
-        })
-    );
-};
 
 enum Tab {
     ÅPNE_BEHANDLINGER = 'ÅPNE_BEHANDLINGER',
@@ -51,17 +38,15 @@ const Behandlingsoversikt = () => {
     const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
-    const [, hentReguleringer] = useApiCall(hentReguleringsstatus);
-    const [reguleringer, setReguleringer] = useState<{ automatiske: Regulering[]; manuelle: Regulering[] }>({
-        automatiske: [],
-        manuelle: [],
-    });
-    const gjenståendeReguleringer = reguleringer.manuelle.filter((m) => !m.erFerdigstilt);
+    const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
+    const gjenståendeManuelleReguleringer = RemoteData.isSuccess(reguleringerOgMerknader)
+        ? reguleringerOgMerknader.value.filter(
+              ({ regulering }) => !regulering.erFerdigstilt && regulering.reguleringstype === Reguleringstype.MANUELL
+          )
+        : [];
 
     useEffect(() => {
-        hentReguleringer({}, (r) => {
-            setReguleringer(splittAutomatiskeOgManuelleReguleringer(r));
-        });
+        hentReguleringerOgMerknader({});
     }, []);
 
     const tabsClassnames = (erAktiv: boolean) => {
@@ -131,7 +116,7 @@ const Behandlingsoversikt = () => {
                     <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.NØKKELTALL)} value={Tab.NØKKELTALL}>
                         {formatMessage('nøkkeltall')}
                     </Tabs.Trigger>
-                    {gjenståendeReguleringer.length > 0 && (
+                    {gjenståendeManuelleReguleringer.length > 0 && (
                         <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.REGULERING)} value={Tab.REGULERING}>
                             {formatMessage('regulering')}
                         </Tabs.Trigger>
@@ -142,7 +127,9 @@ const Behandlingsoversikt = () => {
                 {aktivTab === Tab.ÅPNE_BEHANDLINGER && <ÅpneBehandlinger />}
                 {aktivTab === Tab.FERDIGE_BEHANDLINGER && <FerdigeBehandlinger />}
                 {aktivTab === Tab.NØKKELTALL && <Nøkkeltall />}
-                {aktivTab === Tab.REGULERING && <Reguleringsoversikt manuelle={reguleringer.manuelle} />}
+                {aktivTab === Tab.REGULERING && (
+                    <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
+                )}
             </div>
         </div>
     );

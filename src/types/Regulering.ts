@@ -22,6 +22,16 @@ export interface Regulering {
     årsakForManuell: ÅrsakForManuell[];
 }
 
+export interface Reguleringsstatus {
+    regulering: Regulering;
+    merknad: ReguleringMerknad[];
+}
+
+export enum ReguleringMerknad {
+    VenterPåSvarFraForhåndsvarsel = 'VenterPåSvarFraForhåndsvarsel',
+    Fosterhjemsgodtgjørelse = 'Fosterhjemsgodtgjørelse',
+}
+
 export enum ÅrsakForManuell {
     FradragMåHåndteresManuelt = 'FradragMåHåndteresManuelt',
     YtelseErMidlertidigStanset = 'YtelseErMidlertidigStanset',
