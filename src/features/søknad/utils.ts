@@ -47,7 +47,7 @@ export const toFellessøknadsinnsending = (
                 ? {
                       datoForInnleggelse: søknad.boOgOpphold.datoForInnleggelse!,
                       datoForUtskrivelse: søknad.boOgOpphold.datoForUtskrivelse!,
-                      fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt!,
+                      fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt ?? false,
                   }
                 : null,
             borPåAdresse: toAdresseFraSøknad(søknad.boOgOpphold.borPåAdresse),
