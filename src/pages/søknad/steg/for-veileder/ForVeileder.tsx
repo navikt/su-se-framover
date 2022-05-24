@@ -1,20 +1,18 @@
-import { Alert, RadioGroup, Radio, Label, BodyShort } from '@navikt/ds-react';
-import { useFormik } from 'formik';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Alert, BodyShort, Label, Radio, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
-import TextProvider from '~src/components/TextProvider';
 import søknadSlice, { ForVeilederDigitalSøknad } from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { Vergemål } from '~src/features/søknad/types';
-import { focusAfterTimeout } from '~src/lib/formUtils';
-import { useI18n, Languages } from '~src/lib/i18n';
+import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Søknadstype } from '~src/types/Søknad';
 
@@ -44,7 +42,6 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
     const navigate = useNavigate();
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
-    const [hasSubmitted, setHasSubmitted] = React.useState(false);
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
     const søker: Person = props.søker;
     const telefonnummerPdl = søker.telefonnummer
@@ -58,128 +55,118 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
 
     const save = (values: FormData) => dispatch(søknadSlice.actions.ForVeileder(values));
 
-    const formik = useFormik<FormData>({
-        initialValues: {
+    const form = useForm<FormData>({
+        defaultValues: {
             type: Søknadstype.DigitalSøknad,
             harSøkerMøttPersonlig:
                 forVeileder.type === Søknadstype.DigitalSøknad ? forVeileder.harSøkerMøttPersonlig : null,
             harFullmektigEllerVerge:
                 forVeileder.type === Søknadstype.DigitalSøknad ? forVeileder.harFullmektigEllerVerge : null,
         },
-        onSubmit: (values) => {
-            save(values);
-            navigate(props.nesteUrl);
-        },
-        validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        resolver: yupResolver(schema),
     });
+
+    const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
 
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     return (
-        <TextProvider messages={{ [Languages.nb]: messages }}>
-            <form
-                className={sharedStyles.container}
-                onSubmit={(e) => {
-                    setHasSubmitted(true);
-                    formik.handleSubmit(e);
-                    focusAfterTimeout(feiloppsummeringref)();
-                }}
-            >
-                <div className={sharedStyles.marginBottom}>
-                    <div className={styles.infoboks}>
-                        <Label spacing>{formatMessage('info.kontaktinfo.tittel')}</Label>
-                        {kontaktinfo ? (
-                            <div>
-                                <BodyShort>{telefonnummerKrr}</BodyShort>
-                                <BodyShort>{epostKrr}</BodyShort>
-                            </div>
-                        ) : (
-                            <BodyShort>{formatMessage('info.kontaktinfo.mangler')}</BodyShort>
-                        )}
-                    </div>
-                    <div className={styles.infoboks}>
-                        <Label spacing>{formatMessage('info.telefon.tittel')}</Label>
-                        <BodyShort>{telefonnummerPdl}</BodyShort>
-                    </div>
-                    <Alert variant="info" className={styles.marginTopXSS}>
-                        {formatMessage('info.telefon.body')}
-                    </Alert>
+        <form
+            className={sharedStyles.container}
+            onSubmit={form.handleSubmit((values) => {
+                save(values);
+                navigate(props.nesteUrl);
+            })}
+        >
+            <div className={sharedStyles.marginBottom}>
+                <div className={styles.infoboks}>
+                    <Label spacing>{formatMessage('info.kontaktinfo.tittel')}</Label>
+                    {kontaktinfo ? (
+                        <div>
+                            <BodyShort>{telefonnummerKrr}</BodyShort>
+                            <BodyShort>{epostKrr}</BodyShort>
+                        </div>
+                    ) : (
+                        <BodyShort>{formatMessage('info.kontaktinfo.mangler')}</BodyShort>
+                    )}
                 </div>
-
-                <div className={sharedStyles.marginBottom}>
-                    <div className={styles.infoboks}>
-                        <Label spacing>{formatMessage('info.kontaktform.tittel')}</Label>
-                        {kontaktinfo ? (
-                            <BodyShort>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</BodyShort>
-                        ) : (
-                            <BodyShort>{formatMessage('info.kontaktinfo.mangler')}</BodyShort>
-                        )}
-                    </div>
-                    <Alert variant="info" className={styles.marginTopXSS}>
-                        {formatMessage('info.kontaktform.body')}
-                    </Alert>
+                <div className={styles.infoboks}>
+                    <Label spacing>{formatMessage('info.telefon.tittel')}</Label>
+                    <BodyShort>{telefonnummerPdl}</BodyShort>
                 </div>
+                <Alert variant="info" className={styles.marginTopXSS}>
+                    {formatMessage('info.telefon.body')}
+                </Alert>
+            </div>
 
-                <SøknadSpørsmålsgruppe withoutLegend>
-                    <BooleanRadioGroup
-                        name="harSøkerMøttPersonlig"
-                        legend={<FormattedMessage id="input.harSøkerMøttPersonlig.label" />}
-                        error={formik.errors.harSøkerMøttPersonlig}
-                        value={formik.values.harSøkerMøttPersonlig}
-                        onChange={(val) => {
-                            formik.setValues((values) => ({
-                                ...values,
-                                harSøkerMøttPersonlig: val,
-                                harFullmektigEllerVerge: null,
-                            }));
-                        }}
-                    />
+            <div className={sharedStyles.marginBottom}>
+                <div className={styles.infoboks}>
+                    <Label spacing>{formatMessage('info.kontaktform.tittel')}</Label>
+                    {kontaktinfo ? (
+                        <BodyShort>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</BodyShort>
+                    ) : (
+                        <BodyShort>{formatMessage('info.kontaktinfo.mangler')}</BodyShort>
+                    )}
+                </div>
+                <Alert variant="info" className={styles.marginTopXSS}>
+                    {formatMessage('info.kontaktform.body')}
+                </Alert>
+            </div>
 
-                    {formik.values.harSøkerMøttPersonlig === false && (
-                        <RadioGroup
-                            error={formik.errors.harFullmektigEllerVerge}
-                            legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
-                            name="harFullmektigEllerVerge"
-                            onChange={(value) => {
-                                formik.setValues((values) => ({
-                                    ...values,
-                                    harFullmektigEllerVerge: value as Vergemål,
-                                }));
+            <SøknadSpørsmålsgruppe withoutLegend>
+                <Controller
+                    control={form.control}
+                    name="harSøkerMøttPersonlig"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('input.harSøkerMøttPersonlig.label')}
+                            error={fieldState.error?.message}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['harFullmektigEllerVerge']);
                             }}
-                            value={formik.values.harFullmektigEllerVerge?.toString() ?? ''}
-                        >
-                            <Radio id="harFullmektigEllerVerge" value={Vergemål.Fullmektig}>
-                                <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />
-                            </Radio>
-                            <Radio value={Vergemål.Verge}>
-                                <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />
-                            </Radio>
-                        </RadioGroup>
+                        />
                     )}
+                />
 
-                    {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
-                        <Alert variant="warning">{formatMessage('alert.leggVedDokumentForFritak')}</Alert>
-                    )}
-                </SøknadSpørsmålsgruppe>
-                <Feiloppsummering
-                    className={sharedStyles.marginBottom}
-                    tittel={formatMessage('feiloppsummering.title')}
-                    feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                    hidden={!formikErrorsHarFeil(formik.errors)}
-                    ref={feiloppsummeringref}
-                />
-                <Bunnknapper
-                    previous={{
-                        onClick: () => {
-                            navigate(props.forrigeUrl);
-                        },
-                    }}
-                    avbryt={{
-                        toRoute: props.avbrytUrl,
-                    }}
-                />
-            </form>
-        </TextProvider>
+                {form.watch('harSøkerMøttPersonlig') === false && (
+                    <Controller
+                        control={form.control}
+                        name="harFullmektigEllerVerge"
+                        render={({ field, fieldState }) => (
+                            <RadioGroup
+                                {...field}
+                                error={fieldState.error?.message}
+                                legend={formatMessage('input.fullmektigEllerVerge.label')}
+                                value={field.value?.toString() ?? ''}
+                            >
+                                <Radio id={field.name} value={Vergemål.Fullmektig}>
+                                    {formatMessage('input.fullmektigEllerVerge.fullmektig.label')}
+                                </Radio>
+                                <Radio value={Vergemål.Verge}>
+                                    {formatMessage('input.fullmektigEllerVerge.verge.label')}
+                                </Radio>
+                            </RadioGroup>
+                        )}
+                    />
+                )}
+
+                {form.watch('harFullmektigEllerVerge') === Vergemål.Fullmektig && (
+                    <Alert variant="warning">{formatMessage('alert.leggVedDokumentForFritak')}</Alert>
+                )}
+            </SøknadSpørsmålsgruppe>
+            <Feiloppsummering
+                className={sharedStyles.marginBottom}
+                tittel={formatMessage('feiloppsummering.title')}
+                feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
+                ref={feiloppsummeringref}
+            />
+            <Bunnknapper
+                previous={{ onClick: () => navigate(props.forrigeUrl) }}
+                avbryt={{ toRoute: props.avbrytUrl }}
+            />
+        </form>
     );
 };
 
