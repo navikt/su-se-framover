@@ -42,13 +42,16 @@ const schema = yup.object<FormData>({
         .boolean()
         .nullable()
         .defined()
-        .when('erNorskStatsborger', { is: false, then: yup.boolean().required('Fyll ut spørsmål om familieforening') }),
+        .when('harOppholdstillatelse', {
+            is: true,
+            then: yup.boolean().required('Fyll ut spørsmål om familieforening'),
+        }),
     typeOppholdstillatelse: yup
         .mixed<Nullable<TypeOppholdstillatelse>>()
         .nullable()
         .defined()
-        .when('erNorskStatsborger', {
-            is: false,
+        .when('harOppholdstillatelse', {
+            is: true,
             then: yup
                 .mixed()
                 .nullable()
@@ -96,6 +99,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             {...field}
+                            description={formatMessage('statsborger.description')}
                             legend={formatMessage('statsborger.label')}
                             error={fieldState.error?.message}
                             value={field.value}
@@ -140,6 +144,10 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                                 legend={formatMessage('oppholdstillatelse.label')}
                                 error={fieldState.error?.message}
                                 value={field.value}
+                                onChange={(val) => {
+                                    field.onChange(val);
+                                    setFieldsToNull(['familieforening', 'typeOppholdstillatelse']);
+                                }}
                             />
                         )}
                     />
@@ -149,51 +157,55 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                         {formatMessage('oppholdstillatelse.info')}
                     </Alert>
                 )}
-                {form.watch('erNorskStatsborger') === false && (
-                    <Controller
-                        control={form.control}
-                        name="familieforening"
-                        render={({ field, fieldState }) => (
-                            <BooleanRadioGroup
-                                {...field}
-                                legend={formatMessage('familieforening.label')}
-                                error={fieldState.error?.message}
-                                value={field.value}
-                            />
+
+                {form.watch('harOppholdstillatelse') && (
+                    <>
+                        <Controller
+                            control={form.control}
+                            name="familieforening"
+                            render={({ field, fieldState }) => (
+                                <BooleanRadioGroup
+                                    {...field}
+                                    legend={formatMessage('familieforening.label')}
+                                    error={fieldState.error?.message}
+                                    value={field.value}
+                                />
+                            )}
+                        />
+                        {form.watch('familieforening') && (
+                            <Alert variant="warning" className={sharedStyles.marginBottom}>
+                                {formatMessage('familieforening.info')}
+                            </Alert>
                         )}
-                    />
-                )}
-                {form.watch('familieforening') && (
-                    <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('familieforening.info')}
-                    </Alert>
-                )}
-                {form.watch('erNorskStatsborger') === false && (
-                    <Controller
-                        control={form.control}
-                        name="typeOppholdstillatelse"
-                        render={({ field, fieldState }) => (
-                            <RadioGroup
-                                {...field}
-                                legend={formatMessage('typeOppholdstillatelse.label')}
-                                error={fieldState.error?.message}
-                                value={field.value}
-                            >
-                                <Radio value={TypeOppholdstillatelse.Midlertidig}>
-                                    {formatMessage(TypeOppholdstillatelse.Midlertidig)}
-                                </Radio>
-                                <Radio value={TypeOppholdstillatelse.Permanent}>
-                                    {formatMessage(TypeOppholdstillatelse.Permanent)}
-                                </Radio>
-                            </RadioGroup>
+
+                        <Controller
+                            control={form.control}
+                            name="typeOppholdstillatelse"
+                            render={({ field, fieldState }) => (
+                                <RadioGroup
+                                    {...field}
+                                    legend={formatMessage('typeOppholdstillatelse.label')}
+                                    error={fieldState.error?.message}
+                                    value={field.value}
+                                >
+                                    <Radio value={TypeOppholdstillatelse.Midlertidig}>
+                                        {formatMessage(TypeOppholdstillatelse.Midlertidig)}
+                                    </Radio>
+                                    <Radio value={TypeOppholdstillatelse.Permanent}>
+                                        {formatMessage(TypeOppholdstillatelse.Permanent)}
+                                    </Radio>
+                                </RadioGroup>
+                            )}
+                        />
+
+                        {form.watch('typeOppholdstillatelse') === TypeOppholdstillatelse.Midlertidig && (
+                            <Alert variant="warning" className={sharedStyles.marginBottom}>
+                                {formatMessage('typeOppholdstillatelse.info')}
+                            </Alert>
                         )}
-                    />
+                    </>
                 )}
-                {form.watch('typeOppholdstillatelse') === TypeOppholdstillatelse.Midlertidig && (
-                    <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('typeOppholdstillatelse.info')}
-                    </Alert>
-                )}
+
                 <Controller
                     control={form.control}
                     name="statsborgerskapAndreLand"

@@ -258,11 +258,11 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                           );
                                 }}
                             >
-                                {adresser.map((a, idx) => (
+                                {adresser.map((a) => (
                                     <Radio
                                         key={a.radioValue.adresselinje}
                                         value={a.radioValue.adresselinje}
-                                        id={idx === 0 ? field.name : ''}
+                                        id={a.radioValue.adresselinje}
                                     >
                                         {a.label}
                                     </Radio>
