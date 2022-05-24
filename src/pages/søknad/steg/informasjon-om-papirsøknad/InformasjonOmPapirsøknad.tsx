@@ -1,19 +1,20 @@
-import { Datepicker } from '@navikt/ds-datepicker';
-import { Label, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
-import { useFormik } from 'formik';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import * as DateFns from 'date-fns';
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { Controller } from '~node_modules/react-hook-form';
+import DatePicker from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
-import TextProvider from '~src/components/TextProvider';
 import søknadSlice, { ForVeilederPapirsøknad } from '~src/features/søknad/søknad.slice';
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
-import { useI18n, Languages } from '~src/lib/i18n';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { useI18n } from '~src/lib/i18n';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Søknadstype } from '~src/types/Søknad';
+import { toDateOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import * as sharedStyles from '../../steg-shared.module.less';
@@ -49,123 +50,102 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
     const navigate = useNavigate();
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
-    const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
     const save = (values: FormData) => dispatch(søknadSlice.actions.ForVeileder(values));
 
-    const formik = useFormik<FormData>({
-        initialValues:
-            forVeileder.type === Søknadstype.Papirsøknad
-                ? {
-                      type: Søknadstype.Papirsøknad,
-                      mottaksdatoForSøknad: forVeileder.mottaksdatoForSøknad,
-                      grunnForPapirinnsending: forVeileder.grunnForPapirinnsending,
-                      annenGrunn: forVeileder.annenGrunn,
-                  }
-                : {
-                      type: Søknadstype.Papirsøknad,
-                      mottaksdatoForSøknad: null,
-                      grunnForPapirinnsending: null,
-                      annenGrunn: null,
-                  },
-        onSubmit: (values) => {
-            save(values);
-            navigate(props.nesteUrl);
+    const fraStore = forVeileder.type === Søknadstype.Papirsøknad;
+
+    const form = useForm<FormData>({
+        defaultValues: {
+            type: Søknadstype.Papirsøknad,
+            mottaksdatoForSøknad: fraStore ? forVeileder.mottaksdatoForSøknad : null,
+            grunnForPapirinnsending: fraStore ? forVeileder.grunnForPapirinnsending : null,
+            annenGrunn: fraStore ? forVeileder.annenGrunn : null,
         },
-        validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        resolver: yupResolver(schema),
     });
 
-    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
+
     return (
-        <TextProvider messages={{ [Languages.nb]: messages }}>
-            <form
-                onSubmit={(e) => {
-                    setHasSubmitted(true);
-                    formik.handleSubmit(e);
-                }}
-            >
-                <div className={styles.inputContainer}>
-                    <Label as="label" htmlFor="mottaksdato">
-                        <FormattedMessage id="input.mottaksdato.label" />
-                    </Label>
-                    <Datepicker
-                        inputProps={{
-                            name: 'utreisedato',
-                            'aria-invalid': formik.errors.mottaksdatoForSøknad ? true : false,
-                        }}
-                        value={formik.values.mottaksdatoForSøknad ?? undefined}
-                        limitations={{
-                            maxDate: new Date().toISOString(),
-                        }}
-                        inputId="mottaksdato"
-                        onChange={(value) => {
-                            formik.setValues((v) => ({ ...v, mottaksdatoForSøknad: value ?? null }));
-                        }}
-                    />
-                    {formik.errors.mottaksdatoForSøknad && (
-                        <SkjemaelementFeilmelding>{formik.errors.mottaksdatoForSøknad}</SkjemaelementFeilmelding>
-                    )}
-                </div>
-                <div className={styles.inputContainer}>
-                    <RadioGroup
-                        name={intl.formatMessage({ id: 'input.grunn.label' })}
-                        legend={intl.formatMessage({ id: 'input.grunn.label' })}
-                        value={formik.values.grunnForPapirinnsending?.toString()}
-                        onChange={(value) => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                grunnForPapirinnsending: value as GrunnForPapirinnsending,
-                                annenGrunn: null,
-                            }));
-                        }}
-                        error={formik.errors.grunnForPapirinnsending}
-                    >
-                        <Radio value={GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker} id="grunnForPapirinnsending">
-                            {intl.formatMessage({ id: 'input.grunn.verge' })}
-                        </Radio>
-                        <Radio value={GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt}>
-                            {intl.formatMessage({ id: 'input.grunn.midlertidigUnntak' })}
-                        </Radio>
-                        <Radio value={GrunnForPapirinnsending.Annet}>
-                            {intl.formatMessage({ id: 'input.grunn.annet' })}
-                        </Radio>
-                    </RadioGroup>
-                </div>
-                {formik.values.grunnForPapirinnsending === GrunnForPapirinnsending.Annet && (
-                    <div className={styles.inputContainer}>
-                        <Textarea
-                            label={intl.formatMessage({ id: 'input.annengrunn.label' })}
-                            name="beskrivelse"
-                            error={formik.errors.annenGrunn}
-                            value={formik.values.annenGrunn ?? ''}
-                            onChange={(e) => {
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    annenGrunn: e.target.value ?? null,
-                                }));
-                            }}
+        <form
+            onSubmit={form.handleSubmit((values) => {
+                save(values);
+                navigate(props.nesteUrl);
+            })}
+        >
+            <div className={styles.inputContainer}>
+                <Controller
+                    control={form.control}
+                    name="mottaksdatoForSøknad"
+                    render={({ field, fieldState }) => (
+                        <DatePicker
+                            {...field}
+                            id={field.name}
+                            value={toDateOrNull(field.value)}
+                            dateFormat="dd/MM/yyyy"
+                            label={formatMessage('input.mottaksdato.label')}
+                            feil={fieldState.error?.message}
+                            maxDate={DateFns.endOfDay(new Date())}
+                            onChange={(value) => field.onChange(toStringDateOrNull(value))}
                         />
-                    </div>
-                )}
-                <Feiloppsummering
-                    className={sharedStyles.marginBottom}
-                    tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                    feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                    hidden={!formikErrorsHarFeil(formik.errors)}
+                    )}
                 />
-                <Bunnknapper
-                    previous={{
-                        onClick: () => {
-                            navigate(props.forrigeUrl);
-                        },
-                    }}
-                    avbryt={{
-                        toRoute: props.avbrytUrl,
-                    }}
+            </div>
+            <div className={styles.inputContainer}>
+                <Controller
+                    control={form.control}
+                    name="grunnForPapirinnsending"
+                    render={({ field, fieldState }) => (
+                        <RadioGroup
+                            {...field}
+                            legend={formatMessage('input.grunn.label')}
+                            error={fieldState.error?.message}
+                            onChange={(value) => {
+                                field.onChange(value);
+                                setFieldsToNull(['annenGrunn']);
+                            }}
+                        >
+                            <Radio id={field.name} value={GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker}>
+                                {formatMessage('input.grunn.verge')}
+                            </Radio>
+                            <Radio value={GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt}>
+                                {formatMessage('input.grunn.midlertidigUnntak')}
+                            </Radio>
+                            <Radio value={GrunnForPapirinnsending.Annet}>{formatMessage('input.grunn.annet')}</Radio>
+                        </RadioGroup>
+                    )}
                 />
-            </form>
-        </TextProvider>
+            </div>
+            {form.watch('grunnForPapirinnsending') === GrunnForPapirinnsending.Annet && (
+                <div className={styles.inputContainer}>
+                    <Controller
+                        control={form.control}
+                        name="annenGrunn"
+                        render={({ field, fieldState }) => (
+                            <Textarea
+                                {...field}
+                                id={field.name}
+                                value={field.value ?? ''}
+                                label={formatMessage('input.annengrunn.label')}
+                                error={fieldState.error?.message}
+                            />
+                        )}
+                    />
+                </div>
+            )}
+            <Feiloppsummering
+                className={sharedStyles.marginBottom}
+                tittel={formatMessage('feiloppsummering.title')}
+                feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
+            />
+            <Bunnknapper
+                previous={{ onClick: () => navigate(props.forrigeUrl) }}
+                avbryt={{ toRoute: props.avbrytUrl }}
+            />
+        </form>
     );
 };
 
