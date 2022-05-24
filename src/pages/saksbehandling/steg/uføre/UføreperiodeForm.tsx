@@ -1,15 +1,12 @@
 import { Delete } from '@navikt/ds-icons';
 import { Button, Panel, Radio, RadioGroup, TextField } from '@navikt/ds-react';
-import classNames from 'classnames';
-import { endOfMonth, startOfMonth } from 'date-fns';
 import * as React from 'react';
-import { Control, Controller, useWatch } from 'react-hook-form';
+import { Control, Controller, FormState, UseFormSetValue, useWatch } from 'react-hook-form';
 import { v4 as uuid } from 'uuid';
 
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { getDateErrorMessage } from '~src/lib/validering';
 import { FormData, UføreperiodeFormData } from '~src/pages/saksbehandling/steg/uføre/types';
 import { UføreResultat, VurderingsperiodeUføre } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -35,18 +32,22 @@ interface Props {
     maxDate: Nullable<Date>;
     onRemoveClick?: () => void;
     kanVelgeUføresakTilBehandling: boolean;
+    setValue: UseFormSetValue<FormData>;
+    formState: FormState<FormData>;
 }
 
 export const UføreperiodeForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
-    const value = useWatch({ control: props.control, name: `grunnlag.${props.index}` as `grunnlag.0` });
+
+    const uføreName = `grunnlag.${props.index}` as const;
+    const value = useWatch({ control: props.control, name: uføreName });
 
     return (
         <Panel className={styles.periodeContainer} border>
             <div className={styles.horizontal}>
                 <Controller
                     control={props.control}
-                    name={`grunnlag.${props.index}.oppfylt`}
+                    name={`${uføreName}.oppfylt`}
                     defaultValue={props.item.oppfylt}
                     render={({ field, fieldState }) => (
                         <RadioGroup
@@ -88,7 +89,7 @@ export const UføreperiodeForm = (props: Props) => {
                 <div className={styles.horizontal}>
                     <Controller
                         control={props.control}
-                        name={`grunnlag.${props.index}.uføregrad`}
+                        name={`${uføreName}.uføregrad`}
                         defaultValue={props.item.uføregrad ?? ''}
                         render={({ field, fieldState }) => (
                             <TextField
@@ -101,7 +102,7 @@ export const UføreperiodeForm = (props: Props) => {
                     />
                     <Controller
                         control={props.control}
-                        name={`grunnlag.${props.index}.forventetInntekt`}
+                        name={`${uføreName}.forventetInntekt`}
                         defaultValue={props.item.forventetInntekt ?? ''}
                         render={({ field, fieldState }) => (
                             <TextField
@@ -115,48 +116,28 @@ export const UføreperiodeForm = (props: Props) => {
                 </div>
             )}
 
-            <div className={classNames(styles.horizontal, styles.periodeInputContainer)}>
-                <Controller
-                    name={`grunnlag.${props.index}.fraOgMed`}
-                    control={props.control}
-                    defaultValue={props.item.fraOgMed}
-                    render={({ field, fieldState }) => (
-                        <DatePicker
-                            id={field.name}
-                            label={formatMessage('input.fom.label')}
-                            feil={getDateErrorMessage(fieldState.error)}
-                            {...field}
-                            dateFormat="MM/yyyy"
-                            showMonthYearPicker
-                            isClearable
-                            autoComplete="off"
-                            minDate={props.minDate}
-                            maxDate={props.maxDate}
-                            onChange={(date: Nullable<Date>) => field.onChange(date ? startOfMonth(date) : null)}
-                        />
-                    )}
-                />
-                <Controller
-                    name={`grunnlag.${props.index}.tilOgMed`}
-                    control={props.control}
-                    defaultValue={props.item.tilOgMed}
-                    render={({ field, fieldState }) => (
-                        <DatePicker
-                            label={formatMessage('input.tom.label')}
-                            id={field.name}
-                            feil={getDateErrorMessage(fieldState.error)}
-                            {...field}
-                            dateFormat="MM/yyyy"
-                            showMonthYearPicker
-                            isClearable
-                            autoComplete="off"
-                            minDate={props.minDate}
-                            maxDate={props.maxDate}
-                            onChange={(date: Date) => field.onChange(date ? endOfMonth(date) : date)}
-                        />
-                    )}
-                />
-            </div>
+            <PeriodeForm
+                fraOgMed={{
+                    id: `${uføreName}.periode.fraOgMed`,
+                    value: value.fraOgMed,
+                    minDate: props.minDate,
+                    maxDate: props.maxDate,
+                    setFraOgMed: (date: Nullable<Date>) => {
+                        props.setValue(`${uføreName}.fraOgMed`, date);
+                    },
+                    error: props.formState.errors?.grunnlag?.[props.index]?.fraOgMed,
+                }}
+                tilOgMed={{
+                    id: `${uføreName}.periode.tilOgMed`,
+                    value: value.tilOgMed,
+                    minDate: props.minDate,
+                    maxDate: props.maxDate,
+                    setTilOgMed: (date: Nullable<Date>) => {
+                        props.setValue(`${uføreName}.tilOgMed`, date);
+                    },
+                    error: props.formState.errors?.grunnlag?.[props.index]?.tilOgMed,
+                }}
+            />
         </Panel>
     );
 };
