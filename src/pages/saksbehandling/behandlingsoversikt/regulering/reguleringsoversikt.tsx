@@ -34,7 +34,7 @@ const Reguleringsoversikt = (props: Props) => {
                             <Table.HeaderCell>{formatMessage('tabell.saksnummer')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.fnr')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.lenke')}</Table.HeaderCell>
-                            <Table.HeaderCell>{'Ekstre informasjon'}</Table.HeaderCell>
+                            <Table.HeaderCell>{formatMessage('tabell.ekstraInformasjon')}</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
