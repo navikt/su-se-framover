@@ -1,7 +1,7 @@
 import { Delete } from '@navikt/ds-icons';
 import { Button, Panel, Radio, RadioGroup, TextField } from '@navikt/ds-react';
 import * as React from 'react';
-import { Control, Controller, FormState, UseFormSetValue, useWatch } from 'react-hook-form';
+import { Control, Controller, FieldErrors, UseFormSetValue, useWatch } from 'react-hook-form';
 import { v4 as uuid } from 'uuid';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
@@ -33,7 +33,7 @@ interface Props {
     onRemoveClick?: () => void;
     kanVelgeUføresakTilBehandling: boolean;
     setValue: UseFormSetValue<FormData>;
-    formState: FormState<FormData>;
+    errors: FieldErrors<FormData>;
 }
 
 export const UføreperiodeForm = (props: Props) => {
@@ -125,7 +125,7 @@ export const UføreperiodeForm = (props: Props) => {
                     setFraOgMed: (date: Nullable<Date>) => {
                         props.setValue(`${uføreName}.fraOgMed`, date);
                     },
-                    error: props.formState.errors?.grunnlag?.[props.index]?.fraOgMed,
+                    error: props.errors?.grunnlag?.[props.index]?.fraOgMed,
                 }}
                 tilOgMed={{
                     id: `${uføreName}.periode.tilOgMed`,
@@ -135,7 +135,7 @@ export const UføreperiodeForm = (props: Props) => {
                     setTilOgMed: (date: Nullable<Date>) => {
                         props.setValue(`${uføreName}.tilOgMed`, date);
                     },
-                    error: props.formState.errors?.grunnlag?.[props.index]?.tilOgMed,
+                    error: props.errors?.grunnlag?.[props.index]?.tilOgMed,
                 }}
             />
         </Panel>

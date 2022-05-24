@@ -7,14 +7,14 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreUtenlandsopphold } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import yup, { getDateErrorMessage } from '~src/lib/validering';
+import yup from '~src/lib/validering';
 import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
 import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
@@ -127,48 +127,31 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                             <Delete />
                                         </Button>
                                     )}
-                                    <div className={styles.periode}>
-                                        <Controller
-                                            control={form.control}
-                                            name={`utenlandsopphold.${index}.periode.fraOgMed`}
-                                            render={({ field, fieldState }) => (
-                                                <DatePicker
-                                                    className={styles.dato}
-                                                    id={field.name}
-                                                    label={formatMessage('datepicker.fom')}
-                                                    dateFormat="MM/yyyy"
-                                                    showMonthYearPicker
-                                                    isClearable
-                                                    autoComplete="off"
-                                                    value={field.value}
-                                                    onChange={(date: Date | null) => field.onChange(date)}
-                                                    minDate={revurderingsperiode.fraOgMed}
-                                                    maxDate={revurderingsperiode.tilOgMed}
-                                                    feil={getDateErrorMessage(fieldState.error)}
-                                                />
-                                            )}
-                                        />
-                                        <Controller
-                                            control={form.control}
-                                            name={`utenlandsopphold.${index}.periode.tilOgMed`}
-                                            render={({ field, fieldState }) => (
-                                                <DatePicker
-                                                    className={styles.dato}
-                                                    id={field.name}
-                                                    label={formatMessage('datepicker.tom')}
-                                                    dateFormat="MM/yyyy"
-                                                    showMonthYearPicker
-                                                    isClearable
-                                                    autoComplete="off"
-                                                    value={field.value}
-                                                    onChange={(date: Date | null) => field.onChange(date)}
-                                                    minDate={revurderingsperiode.fraOgMed}
-                                                    maxDate={revurderingsperiode.tilOgMed}
-                                                    feil={getDateErrorMessage(fieldState.error)}
-                                                />
-                                            )}
-                                        />
-                                    </div>
+
+                                    <PeriodeForm
+                                        fraOgMed={{
+                                            id: `utenlandsopphold.${index}.periode.fraOgMed`,
+                                            value: periode.periode.fraOgMed,
+                                            minDate: revurderingsperiode.fraOgMed,
+                                            maxDate: revurderingsperiode.tilOgMed,
+                                            setFraOgMed: (date: Nullable<Date>) => {
+                                                form.setValue(`utenlandsopphold.${index}.periode.fraOgMed`, date);
+                                            },
+                                            error: form.formState.errors.utenlandsopphold?.[index].periode?.fraOgMed,
+                                            size: 'S',
+                                        }}
+                                        tilOgMed={{
+                                            id: `utenlandsopphold.${index}.periode.tilOgMed`,
+                                            value: periode.periode.tilOgMed,
+                                            minDate: revurderingsperiode.fraOgMed,
+                                            maxDate: revurderingsperiode.tilOgMed,
+                                            setTilOgMed: (date: Nullable<Date>) => {
+                                                form.setValue(`utenlandsopphold.${index}.periode.tilOgMed`, date);
+                                            },
+                                            error: form.formState.errors.utenlandsopphold?.[index].periode?.tilOgMed,
+                                            size: 'S',
+                                        }}
+                                    />
                                 </div>
                                 <Controller
                                     control={form.control}
