@@ -5,7 +5,7 @@ import * as O from 'fp-ts/Option';
 import React from 'react';
 
 import { useOutletContext } from '~node_modules/react-router-dom';
-import { ApiError } from '~src/api/apiClient';
+import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, {
     Linje,
@@ -13,11 +13,10 @@ import Framdriftsindikator, {
     Seksjon,
 } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
-import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { pipe } from '~src/lib/fp';
+import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
-import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 import {
@@ -50,26 +49,16 @@ const RevurderingPage = () => {
         informasjonsRevurderinger: sak.revurderinger.filter(erInformasjonsRevurdering),
     };
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...stegmessages } });
-
     const urlParams = routes.useRouteParams<typeof routes.revurderValgtRevurdering>();
 
     const påbegyntRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
 
-    const dispatch = useAppDispatch();
-    const grunnlag = useAppSelector(
-        (s) => s.sak.revurderingGrunnlagSimulering[påbegyntRevurdering?.id ?? ''] ?? RemoteData.initial
-    );
-
+    const [gjeldendeData, hentGjeldendeData] = useApiCall(sakApi.hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
     React.useEffect(() => {
-        if (RemoteData.isInitial(grunnlag) && påbegyntRevurdering) {
-            dispatch(
-                revurderingActions.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger({
-                    sakId: props.sakId,
-                    revurderingId: påbegyntRevurdering.id,
-                })
-            );
+        if (RemoteData.isInitial(gjeldendeData) && påbegyntRevurdering) {
+            hentGjeldendeData({ sakId: props.sakId, fraOgMed: påbegyntRevurdering.periode.fraOgMed });
         }
-    }, [grunnlag._tag, påbegyntRevurdering?.id]);
+    }, [gjeldendeData._tag, påbegyntRevurdering?.id]);
 
     const createRevurderingsPath = (steg: RevurderingSteg) => {
         return routes.revurderValgtRevurdering.createURL({
@@ -163,7 +152,6 @@ const RevurderingPage = () => {
                     førsteRevurderingstegUrl={
                         aktiveSteg(påbegyntRevurdering)[0]?.url ?? createRevurderingsPath(RevurderingSteg.Periode)
                     }
-                    grunnlagsdataOgVilkårsvurderinger={grunnlag}
                 />
             )}
             {urlParams.steg !== RevurderingSteg.Periode && urlParams.steg !== RevurderingSteg.Oppsummering && (
@@ -172,12 +160,12 @@ const RevurderingPage = () => {
                     sakId={props.sakId}
                     aktiveSteg={aktiveSteg(påbegyntRevurdering)}
                     informasjonsRevurdering={påbegyntRevurdering}
-                    grunnlagsdataOgVilkårsvurderinger={grunnlag}
                     forrige={forrigeOgNesteUrl(urlParams.steg).forrige}
                     nesteUrl={forrigeOgNesteUrl(urlParams.steg).neste}
                     avsluttUrl={routes.saksoversiktValgtSak.createURL({
                         sakId: props.sakId,
                     })}
+                    grunnlagsdataOgVilkårsvurderinger={gjeldendeData}
                 />
             )}
         </div>
@@ -192,7 +180,9 @@ const RevurderingstegPage = (props: {
     avsluttUrl: string;
     sakId: string;
     informasjonsRevurdering: InformasjonsRevurdering;
-    grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
+    grunnlagsdataOgVilkårsvurderinger: ApiResult<{
+        grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    }>;
 }) => {
     return pipe(
         props.grunnlagsdataOgVilkårsvurderinger,
@@ -204,7 +194,7 @@ const RevurderingstegPage = (props: {
                     <ApiErrorAlert error={error} />
                 </div>
             ),
-            (value) => {
+            (gjeldendeData) => {
                 return (
                     <div className={styles.sideMedFramdriftsindikatorContainer}>
                         {props.steg && <Framdriftsindikator aktivId={props.steg} elementer={props.aktiveSteg} />}
@@ -212,7 +202,7 @@ const RevurderingstegPage = (props: {
                             <Uførhet
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                grunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                                 forrige={props.forrige}
                                 nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}
@@ -222,7 +212,7 @@ const RevurderingstegPage = (props: {
                             <BosituasjonPage
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                grunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                                 nesteUrl={props.nesteUrl}
                                 forrige={props.forrige}
                                 avsluttUrl={props.avsluttUrl}
@@ -232,7 +222,7 @@ const RevurderingstegPage = (props: {
                             <Formue
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                grunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                                 forrige={props.forrige}
                                 nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}
@@ -242,7 +232,7 @@ const RevurderingstegPage = (props: {
                             <EndringAvFradrag
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                grunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                                 forrige={props.forrige}
                                 nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}
@@ -252,7 +242,7 @@ const RevurderingstegPage = (props: {
                             <UtenlandsoppholdPage
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                grunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                                 forrige={props.forrige}
                                 nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}
@@ -262,7 +252,7 @@ const RevurderingstegPage = (props: {
                             <Opplysningsplikt
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
-                                grunnlagsdataOgVilkårsvurderinger={value}
+                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                                 forrige={props.forrige}
                                 nesteUrl={props.nesteUrl}
                                 avsluttUrl={props.avsluttUrl}

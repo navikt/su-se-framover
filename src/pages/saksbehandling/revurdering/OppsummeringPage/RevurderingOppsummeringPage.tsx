@@ -3,15 +3,16 @@ import { Alert, Button, Loader } from '@navikt/ds-react';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ApiError, ErrorMessage } from '~src/api/apiClient';
+import { ErrorMessage } from '~src/api/apiClient';
 import { BeregnOgSimuler } from '~src/api/revurderingApi';
+import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { pipe } from '~src/lib/fp';
-import { useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { VelgForhåndsvarselForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
@@ -21,8 +22,6 @@ import {
     OppsummeringState,
 } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { TilbakekrevingForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { useAppDispatch } from '~src/redux/Store';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     BeregnetIngenEndring,
     BeslutningEtterForhåndsvarsling,
@@ -173,24 +172,12 @@ const RevurderingOppsummeringPage = (props: {
     forrigeUrl: string;
     førsteRevurderingstegUrl: string;
     revurdering: InformasjonsRevurdering;
-    grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
-    React.useEffect(() => {
-        if (RemoteData.isInitial(props.grunnlagsdataOgVilkårsvurderinger)) {
-            dispatch(
-                RevurderingActions.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger({
-                    sakId: props.sakId,
-                    revurderingId: props.revurdering.id,
-                })
-            );
-        }
-    }, [props.grunnlagsdataOgVilkårsvurderinger._tag]);
-
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
+    const [gjeldendeData, hentGjeldendeData] = useApiCall(sakApi.hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
 
     const beregningStatus = harBeregninger(props.revurdering)
         ? RemoteData.success<never, BeregnOgSimuler>({
@@ -208,10 +195,17 @@ const RevurderingOppsummeringPage = (props: {
                 revurderingId: props.revurdering.id,
             });
         }
+
+        if (RemoteData.isInitial(gjeldendeData)) {
+            hentGjeldendeData({
+                sakId: props.sakId,
+                fraOgMed: props.revurdering.periode.fraOgMed,
+            });
+        }
     }, [props.revurdering.id]);
 
     return pipe(
-        RemoteData.combine(beregningStatus, props.grunnlagsdataOgVilkårsvurderinger),
+        RemoteData.combine(beregningStatus, gjeldendeData),
         RemoteData.fold(
             () => <Loader title={formatMessage('beregner.label')} />,
             () => <Loader title={formatMessage('beregner.label')} />,
@@ -223,11 +217,11 @@ const RevurderingOppsummeringPage = (props: {
                     </Button>
                 </div>
             ),
-            ([beregning, grunnlagsdataOgVilkårsvurderinger]) => (
+            ([beregning, data]) => (
                 <div className={styles.content}>
                     <Revurderingoppsummering
                         revurdering={props.revurdering}
-                        forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
+                        grunnlagsdataOgVilkårsvurderinger={data.grunnlagsdataOgVilkårsvurderinger}
                     />
                     {harSimulering(props.revurdering) &&
                         periodenInneholderTilbakekrevingOgAndreTyper(

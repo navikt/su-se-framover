@@ -353,16 +353,6 @@ export async function lagreFormuegrunnlag(
     });
 }
 
-export async function hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(
-    sakId: string,
-    revurderingId: string
-): Promise<ApiClientResult<GrunnlagsdataOgVilkårsvurderinger>> {
-    return apiClient<GrunnlagsdataOgVilkårsvurderinger>({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/grunnlagsdataOgVilkårsvurderinger`,
-        method: 'GET',
-    });
-}
-
 export async function hentTidligereGrunnlagsdataForVedtak(args: {
     sakId: string;
     vedtakId: string;
