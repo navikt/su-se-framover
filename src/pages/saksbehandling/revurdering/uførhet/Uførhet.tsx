@@ -44,7 +44,6 @@ const Uførhet = (props: RevurderingStegProps) => {
                     },
                     forventetInntekt: g.oppfylt ? Number.parseInt(g.forventetInntekt, 10) : null,
                     uføregrad: g.oppfylt ? Number.parseInt(g.uføregrad, 10) : null,
-                    begrunnelse: g.begrunnelse,
                     resultat: g.oppfylt ?? UføreResultat.HarUføresakTilBehandling,
                 })),
             },

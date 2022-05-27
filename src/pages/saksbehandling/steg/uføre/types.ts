@@ -7,7 +7,6 @@ export interface UføreperiodeFormData {
     tilOgMed: Nullable<Date>;
     uføregrad: string;
     forventetInntekt: string;
-    begrunnelse: Nullable<string>;
     oppfylt: Nullable<UføreResultat>;
 }
 

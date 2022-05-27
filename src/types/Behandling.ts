@@ -18,29 +18,17 @@ export interface Behandling {
     opprettet: string;
     attesteringer: Attestering[];
     saksbehandler: Nullable<string>;
-    hendelser: Nullable<Hendelse[]>;
-    satsBeløp: Nullable<number>;
-    stønadsperiode: Nullable<Behandlingsperiode>;
+    stønadsperiode: Nullable<Stønadsperiode>;
     fritekstTilBrev: string;
     simuleringForAvkortingsvarsel: Nullable<Simulering>;
+    erLukket: boolean;
 }
 
-export interface Behandlingsperiode {
-    periode: {
-        fraOgMed: Nullable<string>;
-        tilOgMed: Nullable<string>;
-    };
-    begrunnelse: Nullable<string>;
-}
-interface Stønadsperiode {
+export interface Stønadsperiode {
     periode: {
         fraOgMed: string;
         tilOgMed: string;
     };
-    begrunnelse: string;
-}
-export interface IverksattInnvilgetBehandling extends Behandling {
-    stønadsperiode: Stønadsperiode;
 }
 
 export enum Behandlingsstatus {
@@ -56,13 +44,6 @@ export enum Behandlingsstatus {
     UNDERKJENT_AVSLAG = 'UNDERKJENT_AVSLAG',
     IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
     IVERKSATT_AVSLAG = 'IVERKSATT_AVSLAG',
-}
-
-export interface Hendelse {
-    overskrift: string;
-    underoverskrift: string;
-    tidspunkt: string;
-    melding: string;
 }
 
 export interface Attestering {

@@ -28,7 +28,7 @@ import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
-import { Vurderingknapper } from '~src/pages/saksbehandling/søknadsbehandling/Vurdering';
+import { Vurderingknapper } from '~src/pages/saksbehandling/søknadsbehandling/vurderingknapper/Vurderingknapper';
 import { useAppDispatch } from '~src/redux/Store';
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Fradrag, FradragTilhører } from '~src/types/Fradrag';

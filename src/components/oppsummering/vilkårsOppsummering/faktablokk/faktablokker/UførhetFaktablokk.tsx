@@ -79,7 +79,6 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
                     />
                 )
             }
-            begrunnelse={props.info.begrunnelse}
         />
     );
 };

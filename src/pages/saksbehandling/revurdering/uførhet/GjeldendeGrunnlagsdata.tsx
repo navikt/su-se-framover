@@ -36,12 +36,6 @@ export const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: Grunnlagsda
                             <BodyShort>{formatMessage('gjeldende.inntektEtterUførhet')}</BodyShort>
                             <Label>{item.grunnlag ? formatCurrency(item.grunnlag.forventetInntekt) : '—'}</Label>
                         </div>
-                        {item.begrunnelse && (
-                            <div>
-                                <BodyShort>{formatMessage('gjeldende.begrunnelse')}</BodyShort>
-                                <Label>{item.begrunnelse}</Label>
-                            </div>
-                        )}
                     </li>
                 ))}
             </ul>

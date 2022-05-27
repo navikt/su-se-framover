@@ -18,29 +18,24 @@ export enum Vilkårstatus {
 
 export interface Flyktning {
     status: Vilkårstatus;
-    begrunnelse: Nullable<string>;
 }
 
 export interface LovligOpphold {
     status: Vilkårstatus;
-    begrunnelse: Nullable<string>;
 }
 
 export interface FastOppholdINorge {
     status: Vilkårstatus;
-    begrunnelse: Nullable<string>;
 }
 
 export interface Institusjonsopphold {
     status: Vilkårstatus;
-    begrunnelse: Nullable<string>;
 }
 
 export interface Formue {
     status: FormueStatus;
     verdier: Nullable<FormueVerdier>;
     epsVerdier: Nullable<FormueVerdier>;
-    begrunnelse: Nullable<string>;
 }
 
 export interface FormueVerdier {
@@ -62,7 +57,6 @@ export enum FormueStatus {
 
 export interface PersonligOppmøte {
     status: PersonligOppmøteStatus;
-    begrunnelse: Nullable<string>;
 }
 export enum PersonligOppmøteStatus {
     MøttPersonlig = 'MøttPersonlig',

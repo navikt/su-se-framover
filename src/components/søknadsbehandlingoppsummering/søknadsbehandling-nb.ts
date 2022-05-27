@@ -21,7 +21,6 @@ export default {
     'knapp.vis': 'Vis brev',
 
     'virkningstidspunkt.tittel': 'Virkningstidspunkt',
-    'virkningstidspunkt.begrunnelse': 'Begrunnelse',
     'virkningstidspunkt.periode.mangler': 'Ukjent',
 
     'oppsummering.vilkårsvurderinger.tittel': 'Vilkårsvurderinger',

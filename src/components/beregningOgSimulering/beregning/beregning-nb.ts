@@ -6,6 +6,9 @@ export default {
 
     'beregning.behandlingErIkkeFerdig': 'Behandlingen er ikke ferdig.',
 
+    'input.label.begrunnelse': 'Begrunnelse',
+    'input.begrunnelse.description': 'Unngå personsensitive opplysninger',
+
     'display.simulerer': 'Simulerer',
 
     'display.totaltBeløp': 'Totalt beløp',

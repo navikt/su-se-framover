@@ -51,7 +51,6 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
             then: validateStringAsNonNegativeNumber(),
             otherwise: yup.string().notRequired(),
         }),
-        begrunnelse: yup.string().nullable().defined(),
     });
 
 export const schema = (erGRegulering: boolean) =>

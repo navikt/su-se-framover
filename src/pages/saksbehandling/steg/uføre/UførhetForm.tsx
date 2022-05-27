@@ -46,7 +46,6 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
         tilOgMed: null,
         forventetInntekt: '',
         oppfylt: null,
-        begrunnelse: null,
         uføregrad: '',
     });
 

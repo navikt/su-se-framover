@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Loader, Textarea, Label } from '@navikt/ds-react';
+import { Button, Loader, Label } from '@navikt/ds-react';
 import * as B from 'fp-ts/boolean';
 import { Eq, struct } from 'fp-ts/lib/Eq';
-import * as S from 'fp-ts/string';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +32,7 @@ import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurder
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './sats-nb';
 import * as styles from './sats.module.less';
@@ -49,13 +48,11 @@ enum BosituasjonsValg {
 interface FormData {
     delerSøkerBolig: Nullable<boolean>;
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
-    begrunnelse: Nullable<string>;
 }
 
 const eqFormData = struct<FormData>({
     delerSøkerBolig: eqNullable(B.Eq),
     mottarEktemakeEllerSamboerSU: eqNullable(B.Eq),
-    begrunnelse: eqNullable(S.Eq),
 });
 
 interface SatsProps {
@@ -73,13 +70,11 @@ const eqBosituasjon: Eq<
     Nullable<{
         delerBolig: Nullable<boolean>;
         ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
-        begrunnelse: Nullable<string>;
     }>
 > = eqNullable({
     equals: (sats1, sats2) =>
         sats1.delerBolig === sats2.delerBolig &&
-        sats1.ektemakeEllerSamboerUførFlyktning === sats2.ektemakeEllerSamboerUførFlyktning &&
-        sats1.begrunnelse === sats2.begrunnelse,
+        sats1.ektemakeEllerSamboerUførFlyktning === sats2.ektemakeEllerSamboerUførFlyktning,
 });
 
 const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>) => {
@@ -87,7 +82,6 @@ const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>) => {
         fnr: eps?.fnr ?? null,
         delerBolig: values.delerSøkerBolig,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
-        begrunnelse: values.begrunnelse,
     };
 };
 
@@ -163,7 +157,6 @@ const getValidationSchema = (eps: Nullable<Person>) => {
                         return true;
                     }
                 ),
-            begrunnelse: yup.string().defined(),
         })
         .required();
 };
@@ -235,14 +228,13 @@ function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasj
     return {
         delerSøkerBolig: eps ? null : bosituasjon?.delerBolig ?? null,
         mottarEktemakeEllerSamboerSU: mottarEktemakeEllerSamboerSUInitialValue(eps, bosituasjon),
-        begrunnelse: bosituasjon?.begrunnelse ?? null,
     };
 }
 
 const SatsForm = (props: SatsProps) => {
     const navigate = useNavigate();
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
-    const [lagreBosituasjonStatus, lagreBosituasjon] = useAsyncActionCreator(lagreBosituasjonGrunnlag);
+    const [status, lagreBosituasjon] = useAsyncActionCreator(lagreBosituasjonGrunnlag);
 
     const eps = props.eps;
 
@@ -286,7 +278,6 @@ const SatsForm = (props: SatsProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandlingId,
                 bosituasjon: bosituasjonsvalg,
-                begrunnelse: values.begrunnelse,
             },
             () => {
                 clearDraft();
@@ -338,30 +329,7 @@ const SatsForm = (props: SatsProps) => {
                         {sats && (
                             <Label className={styles.sats}>{`${props.formatMessage('display.sats')} ${sats}`}</Label>
                         )}
-                        <div>
-                            <Controller
-                                control={form.control}
-                                name="begrunnelse"
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        label={props.formatMessage('input.label.begrunnelse')}
-                                        {...field}
-                                        value={field.value ?? ''}
-                                        error={fieldState.error?.message}
-                                        description={props.formatMessage('input.begrunnelse.description')}
-                                    />
-                                )}
-                            />
-                        </div>
-                        {pipe(
-                            lagreBosituasjonStatus,
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader title={props.formatMessage('display.lagre.lagrer')} />,
-                                (err) => <ApiErrorAlert error={err} />,
-                                () => null
-                            )
-                        )}
+                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                         <Feiloppsummering
                             tittel={props.formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
@@ -376,6 +344,7 @@ const SatsForm = (props: SatsProps) => {
                                 handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
                                 focusAfterTimeout(feiloppsummeringRef)
                             )}
+                            loading={RemoteData.isPending(status)}
                         />
                     </form>
                 ),

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Button, Panel, Textarea } from '@navikt/ds-react';
+import { Button, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { startOfMonth, endOfMonth } from 'date-fns';
 import React from 'react';
@@ -78,7 +78,6 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                     epsFnr: b.harEPS ? b.epsFnr : null,
                     delerBolig: b.harEPS ? null : b.delerBolig,
                     erEPSUførFlyktning: b.harEPS && b.epsAlder && b.epsAlder < 67 ? b.erEPSUførFlyktning : null,
-                    begrunnelse: b.begrunnelse,
                 })),
             },
             () => navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
@@ -276,20 +275,6 @@ export const BosituasjonFormItem = (props: {
                         )}
                     />
                 )}
-                <Controller
-                    control={props.controller}
-                    name={`bosituasjoner.${props.index}.begrunnelse`}
-                    render={({ field, fieldState }) => (
-                        <Textarea
-                            label={formatMessage('form.begrunnelse')}
-                            name={`bosituasjoner.${props.index}.begrunnelse`}
-                            value={field.value ?? ''}
-                            onChange={field.onChange}
-                            error={fieldState.error}
-                            description={formatMessage('form.beskrivelse')}
-                        />
-                    )}
-                />
             </div>
         </Panel>
     );

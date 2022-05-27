@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Button, Heading, Panel, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { Button, Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +32,6 @@ interface UtenlandsoppholdForm {
 
 interface UtenlandsoppholdFormData {
     status?: Utenlandsoppholdstatus;
-    begrunnelse: Nullable<string>;
     periode: {
         fraOgMed: Nullable<Date>;
         tilOgMed: Nullable<Date>;
@@ -45,7 +44,6 @@ const schemaValidation = yup.object<UtenlandsoppholdForm>({
             yup
                 .object<UtenlandsoppholdFormData>({
                     status: yup.mixed<Utenlandsoppholdstatus>().oneOf(Object.values(Utenlandsoppholdstatus)).required(),
-                    begrunnelse: yup.string().nullable().defined(),
                     periode: yup
                         .object({
                             fraOgMed: yup.date().required().typeError('Dato må fylles inn'),
@@ -70,7 +68,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         defaultValues: {
             utenlandsopphold: vurderinger.map((vurdering) => ({
                 status: vurdering.status,
-                begrunnelse: vurdering.begrunnelse ?? null,
                 periode: {
                     fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
                     tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
@@ -88,7 +85,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                 utenlandsopphold: form.utenlandsopphold.map((vurdering) => ({
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     status: vurdering.status!,
-                    begrunnelse: vurdering.begrunnelse,
                     periode: {
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         fraOgMed: toIsoDateOnlyString(vurdering.periode.fraOgMed!),
@@ -201,19 +197,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                         </RadioGroup>
                                     )}
                                 />
-                                <Controller
-                                    control={form.control}
-                                    name={`utenlandsopphold.${index}.begrunnelse`}
-                                    render={({ field: { value, ...field }, fieldState }) => (
-                                        <Textarea
-                                            label={formatMessage('input.begrunnelse.tittel')}
-                                            error={fieldState.error?.message}
-                                            value={value ?? ''}
-                                            {...field}
-                                            description={formatMessage('revurdering.begrunnelse.description')}
-                                        />
-                                    )}
-                                />
                             </Panel>
                         ))}
                         <Button
@@ -223,7 +206,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                 append({
                                     status: undefined,
                                     periode: { tilOgMed: null, fraOgMed: null },
-                                    begrunnelse: null,
                                 })
                             }
                             type={'button'}

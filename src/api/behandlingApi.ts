@@ -61,14 +61,12 @@ export async function lagreVirkningstidspunkt(arg: {
     behandlingId: string;
     fraOgMed: string;
     tilOgMed: string;
-    begrunnelse: string;
 }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/stønadsperiode`,
         method: 'POST',
         body: {
             periode: { fraOgMed: arg.fraOgMed, tilOgMed: arg.tilOgMed },
-            begrunnelse: arg.begrunnelse,
         },
     });
 }
@@ -127,18 +125,12 @@ export async function lagreGrunnlagEpsSkjermet(arg: { sakId: string; behandlingI
     });
 }
 
-export async function lagreGrunnlagBosituasjon(arg: {
-    sakId: string;
-    behandlingId: string;
-    bosituasjon: string;
-    begrunnelse: Nullable<string>;
-}) {
+export async function lagreGrunnlagBosituasjon(arg: { sakId: string; behandlingId: string; bosituasjon: string }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/fullfør`,
         method: 'POST',
         body: {
             bosituasjon: arg.bosituasjon,
-            begrunnelse: arg.begrunnelse,
         },
     });
 }
@@ -192,7 +184,6 @@ export async function lagreUtenlandsopphold(arg: {
     sakId: string;
     behandlingId: string;
     status: Utenlandsoppholdstatus;
-    begrunnelse: Nullable<string>;
     periode: Periode<string>;
 }): Promise<ApiClientResult<Behandling>> {
     return apiClient({
@@ -200,7 +191,6 @@ export async function lagreUtenlandsopphold(arg: {
         method: 'POST',
         body: {
             status: arg.status,
-            begrunnelse: arg.begrunnelse,
             periode: arg.periode,
         },
     });
@@ -214,7 +204,6 @@ export async function lagreUføregrunnlag(arg: {
         uføregrad: Nullable<number>;
         forventetInntekt: Nullable<number>;
         resultat: UføreResultat;
-        begrunnelse: Nullable<string>;
     }>;
 }) {
     return apiClient<Behandling>({

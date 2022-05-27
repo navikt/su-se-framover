@@ -221,7 +221,6 @@ export interface BosituasjonRequest {
         epsFnr: Nullable<string>;
         delerBolig: Nullable<boolean>;
         erEPSUførFlyktning: Nullable<boolean>;
-        begrunnelse: Nullable<string>;
     }>;
 }
 
@@ -258,7 +257,6 @@ export type FormuegrunnlagFormue = Array<{
     periode: Periode<string>;
     søkersFormue: FormuegrunnlagVerdier;
     epsFormue: Nullable<FormuegrunnlagVerdier>;
-    begrunnelse: Nullable<string>;
 }>;
 
 export interface FormuegrunnlagRequest {

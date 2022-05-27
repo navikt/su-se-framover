@@ -122,7 +122,6 @@ export const LovligOppholdVilkårsblokk = (props: VilkårsblokkProps<'lovligOpph
                 )
             }
             status={props.info.status}
-            begrunnelse={props.info.begrunnelse}
         />
     );
 };

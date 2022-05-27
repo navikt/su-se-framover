@@ -23,7 +23,6 @@ interface FormueData {
     periode: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> };
     søkersFormue: VerdierFormData;
     epsFormue: Nullable<VerdierFormData>;
-    begrunnelse: Nullable<string>;
 }
 
 const getTomFormueVerdier = (): VerdierFormData => {
@@ -45,7 +44,6 @@ export const getTomFormueData = (periode?: { fraOgMed: Nullable<Date>; tilOgMed:
         periode: periode ?? { fraOgMed: null, tilOgMed: null },
         søkersFormue: getTomFormueVerdier(),
         epsFormue: null,
-        begrunnelse: null,
     };
 };
 
@@ -73,7 +71,6 @@ export const getDefaultValues = (
                 epsFormue: epsFnr
                     ? formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag.epsFormue) ?? getTomFormueVerdier()
                     : null,
-                begrunnelse: formue.grunnlag.begrunnelse ?? '',
             };
         }),
     };
@@ -99,7 +96,6 @@ export const formueFormDataTilFormuegrunnlagRequest = (data: FormueData[]): Form
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             søkersFormue: formDataVerdierToNumber(formue.søkersFormue)!,
             epsFormue: formDataVerdierToNumber(formue.epsFormue),
-            begrunnelse: formue.begrunnelse,
         };
     });
 };
@@ -202,7 +198,6 @@ export const revurderFormueSchema = yup
                                     .required(),
                                 otherwise: yup.object().notRequired(),
                             }),
-                        begrunnelse: yup.string().nullable().defined(),
                     })
                     .required()
             )

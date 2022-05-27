@@ -90,7 +90,7 @@ export const startBehandling = createAsyncThunk<
 
 export const lagreVirkningstidspunkt = createApiCallAsyncThunk<
     Behandling,
-    { sakId: string; behandlingId: string; fraOgMed: string; tilOgMed: string; begrunnelse: string }
+    { sakId: string; behandlingId: string; fraOgMed: string; tilOgMed: string }
 >('behandling/lagreVirkningstidspunk', behandlingApi.lagreVirkningstidspunkt);
 
 export const fetchBehandling = createAsyncThunk<
@@ -146,7 +146,6 @@ export const lagreUtenlandsopphold = createAsyncThunk<
         sakId: string;
         behandlingId: string;
         status: Utenlandsoppholdstatus;
-        begrunnelse: Nullable<string>;
         periode: Periode<string>;
     },
     { rejectValue: ApiError }
@@ -168,7 +167,6 @@ export const lagreUføregrunnlag = createAsyncThunk<
             uføregrad: Nullable<number>;
             forventetInntekt: Nullable<number>;
             resultat: UføreResultat;
-            begrunnelse: Nullable<string>;
         }>;
     },
     { rejectValue: ApiError }
@@ -218,7 +216,6 @@ export const lagreBosituasjonGrunnlag = createAsyncThunk<
         sakId: string;
         behandlingId: string;
         bosituasjon: string;
-        begrunnelse: Nullable<string>;
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/bosituasjon/fullfør', async (arg, thunkApi) => {

@@ -304,7 +304,6 @@ export const FormueVilkårsblokk = (props: {
                     </div>
                 )
             }
-            begrunnelse={props.info.begrunnelse}
         />
     );
 };

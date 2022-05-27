@@ -25,7 +25,6 @@ export const createVilkårUrl = (props: { sakId: string; behandlingId: string; v
 export interface Vilkårsinformasjon {
     status: VilkårVurderingStatus;
     vilkårtype: Vilkårtype;
-    begrunnelse: Nullable<string>;
     erStartet: boolean;
 }
 
@@ -94,31 +93,26 @@ export const mapToVilkårsinformasjon = (
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,
-            begrunnelse: uføre?.vurderinger[0]?.begrunnelse ?? null,
             erStartet: uføre !== null,
         },
         {
             status: getBehandlingsinformasjonStatus(flyktning),
             vilkårtype: Vilkårtype.Flyktning,
-            begrunnelse: behandlingsinformasjon.flyktning?.begrunnelse ?? null,
             erStartet: flyktning !== null,
         },
         {
             status: getBehandlingsinformasjonStatus(lovligOpphold),
             vilkårtype: Vilkårtype.LovligOpphold,
-            begrunnelse: behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
             erStartet: lovligOpphold !== null,
         },
         {
             status: getBehandlingsinformasjonStatus(fastOppholdINorge),
             vilkårtype: Vilkårtype.FastOppholdINorge,
-            begrunnelse: behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
             erStartet: fastOppholdINorge !== null,
         },
         {
             status: getBehandlingsinformasjonStatus(institusjonsopphold),
             vilkårtype: Vilkårtype.Institusjonsopphold,
-            begrunnelse: behandlingsinformasjon.institusjonsopphold?.begrunnelse ?? null,
             erStartet: institusjonsopphold !== null,
         },
         {
@@ -131,7 +125,6 @@ export const mapToVilkårsinformasjon = (
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.OppholdIUtlandet,
-            begrunnelse: utenlandsopphold?.vurderinger[0]?.begrunnelse ?? null,
             erStartet: utenlandsopphold !== null,
         },
         {
@@ -144,13 +137,11 @@ export const mapToVilkårsinformasjon = (
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Formue,
-            begrunnelse: behandlingsinformasjon.formue?.begrunnelse ?? null,
             erStartet: formue !== null,
         },
         {
             status: statusForPersonligOppmøte(personligOppmøte),
             vilkårtype: Vilkårtype.PersonligOppmøte,
-            begrunnelse: behandlingsinformasjon.personligOppmøte?.begrunnelse ?? null,
             erStartet: personligOppmøte !== null,
         },
     ];
@@ -161,7 +152,6 @@ export const vilkårsinformasjonForBeregningssteg = (b: Behandling): Vilkårsinf
         {
             status: getSatsStatus(b),
             vilkårtype: Vilkårtype.Sats,
-            begrunnelse: null,
             erStartet: erSatsStartet(b),
         },
         {
@@ -172,7 +162,6 @@ export const vilkårsinformasjonForBeregningssteg = (b: Behandling): Vilkårsinf
                     ? VilkårVurderingStatus.IkkeOk
                     : VilkårVurderingStatus.Ok,
             vilkårtype: Vilkårtype.Beregning,
-            begrunnelse: null,
             erStartet: b.beregning !== null,
         },
     ];

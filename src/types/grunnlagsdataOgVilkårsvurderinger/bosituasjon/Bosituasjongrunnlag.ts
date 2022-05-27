@@ -1,4 +1,3 @@
-import { Nullable } from '../../../lib/types';
 import { Periode } from '../../Periode';
 
 export enum BosituasjonTyper {
@@ -19,12 +18,10 @@ interface BosituasjonBase<T extends BosituasjonTyper = BosituasjonTyper> {
 
 interface FullstendigBosituasjonBase<T extends BosituasjonTyper = BosituasjonTyper> extends BosituasjonBase<T> {
     sats: string;
-    begrunnelse: Nullable<string>;
 }
 
 interface UfullstendigBosituasjonBase<T extends BosituasjonTyper = BosituasjonTyper> extends BosituasjonBase<T> {
     sats: null;
-    begrunnelse: null;
 }
 
 interface DelerBoligMedVoksne extends FullstendigBosituasjonBase<BosituasjonTyper.DELER_BOLIG_MED_VOKSNE> {

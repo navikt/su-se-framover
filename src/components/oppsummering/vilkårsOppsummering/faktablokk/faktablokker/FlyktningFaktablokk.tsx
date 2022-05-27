@@ -72,7 +72,6 @@ export const FlyktningVilkårsblokk = (props: VilkårsblokkProps<'flyktning'>) =
                 )
             }
             status={props.info.status}
-            begrunnelse={props.info.begrunnelse}
         />
     );
 };

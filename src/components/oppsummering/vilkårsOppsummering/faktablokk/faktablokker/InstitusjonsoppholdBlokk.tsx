@@ -93,7 +93,6 @@ export const InstitusjonsoppholdVilkårsblokk = (props: VilkårsblokkProps<'inst
                     />
                 )
             }
-            begrunnelse={props.info.begrunnelse}
         />
     );
 };

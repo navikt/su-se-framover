@@ -1,8 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import { struct } from 'fp-ts/Eq';
-import * as S from 'fp-ts/lib/string';
+import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
 import React, { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -14,34 +12,27 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { eqNullable, Nullable } from '~src/lib/types';
+import { Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { Behandlingsstatus } from '~src/types/Behandling';
+import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
 
 import sharedI18n from '../sharedI18n-nb';
-import * as sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './flyktning-nb';
+import * as styles from './flyktning.module.less';
 
 interface FormData {
     status: Nullable<Vilkårstatus>;
-    begrunnelse: Nullable<string>;
 }
-
-const eqFormData = struct<FormData>({
-    status: eqNullable(S.Eq),
-    begrunnelse: eqNullable(S.Eq),
-});
 
 const schema = yup
     .object<FormData>({
@@ -52,99 +43,64 @@ const schema = yup
                 [Vilkårstatus.VilkårOppfylt, Vilkårstatus.VilkårIkkeOppfylt, Vilkårstatus.Uavklart],
                 'Du må velge om vilkåret er oppfylt'
             ),
-        begrunnelse: yup.string().defined(),
     })
     .required();
 
 const Flyktning = (props: VilkårsvurderingBaseProps) => {
-    const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
-        sakSlice.lagreBehandlingsinformasjon
-    );
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const navigate = useNavigate();
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
 
-    const initialValues: FormData = {
-        status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
-        begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
-    };
+    const initialValues: FormData = { status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Flyktning,
-        (values) => eqFormData.equals(values, initialValues)
+        (values) => values.status === initialValues.status
     );
 
-    const goToVedtak = () => {
-        navigate(
-            Routes.saksbehandlingSendTilAttestering.createURL({
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-            })
-        );
-    };
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+        sakId: props.sakId,
+        behandlingId: props.behandling.id,
+    });
 
-    const handleLagreOgFortsettSenere = async (values: FormData) => {
-        if (!values.status) return;
+    const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({
+        sakId: props.sakId,
+    });
 
-        if (eqFormData.equals(values, initialValues)) {
+    const save = (values: FormData, ingenEndringPath: string, onSuccess: (behandling: Behandling) => void) => {
+        if (values.status === initialValues.status) {
             clearDraft();
-            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            navigate(ingenEndringPath);
             return;
         }
 
-        await lagreBehandlingsinformasjon(
+        lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
                     flyktning: {
-                        status: values.status,
-                        begrunnelse: values.begrunnelse,
-                    },
-                },
-            },
-            () => {
-                clearDraft();
-                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-            }
-        );
-    };
-
-    const handleSave = async (values: FormData) => {
-        if (!values.status) return;
-
-        if (eqFormData.equals(values, initialValues)) {
-            clearDraft();
-            if (erVilkårsvurderingerVurdertAvslag(props.behandling) || erUnderkjent(props.behandling)) {
-                goToVedtak();
-                return;
-            }
-
-            navigate(props.nesteUrl);
-            return;
-        }
-
-        await lagreBehandlingsinformasjon(
-            {
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    flyktning: {
-                        status: values.status,
-                        begrunnelse: values.begrunnelse,
+                        status: values.status!,
                     },
                 },
             },
             (behandling) => {
                 clearDraft();
-                if (behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
-                    goToVedtak();
-                    return;
-                }
-                navigate(props.nesteUrl);
+                onSuccess(behandling);
             }
         );
     };
+
+    const handleSubmit = (values: FormData) =>
+        save(
+            values,
+            erVilkårsvurderingerVurdertAvslag(props.behandling) || erUnderkjent(props.behandling)
+                ? vedtakUrl
+                : props.nesteUrl,
+            (behandling) =>
+                navigate(behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ? vedtakUrl : props.nesteUrl)
+        );
 
     const {
         formState: { errors, isSubmitted, isValid },
@@ -169,7 +125,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <form onSubmit={form.handleSubmit(handleSave, focusAfterTimeout(feiloppsummeringRef))}>
+                    <form onSubmit={form.handleSubmit(handleSubmit, focusAfterTimeout(feiloppsummeringRef))}>
                         <Controller
                             control={form.control}
                             name="status"
@@ -206,34 +162,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 </RadioGroup>
                             )}
                         />
-                        <div className={sharedStyles.textareaContainer}>
-                            <Controller
-                                control={form.control}
-                                name="begrunnelse"
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        label={formatMessage('input.label.begrunnelse')}
-                                        error={fieldState.error?.message}
-                                        {...field}
-                                        value={field.value ?? ''}
-                                        description={formatMessage('input.begrunnelse.description')}
-                                    />
-                                )}
-                            />
-                        </div>
 
-                        {pipe(
-                            lagreBehandlingsinformasjonStatus,
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader title={formatMessage('display.lagre.lagrer')} />,
-                                (err) => <ApiErrorAlert error={err} />,
-                                () => null
-                            )
-                        )}
-
+                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                         {vilGiTidligAvslag && (
-                            <Alert className={sharedStyles.avslagAdvarsel} variant="info">
+                            <Alert className={styles.avslagAdvarsel} variant="info">
                                 {formatMessage('display.avslag.advarsel')}
                             </Alert>
                         )}
@@ -245,14 +177,13 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
-                            onTilbakeClick={() => {
-                                navigate(props.forrigeUrl);
-                            }}
+                            onTilbakeClick={() => navigate(props.forrigeUrl)}
                             onLagreOgFortsettSenereClick={form.handleSubmit(
-                                handleLagreOgFortsettSenere,
+                                (values) => save(values, saksoversiktUrl, () => navigate(saksoversiktUrl)),
                                 focusAfterTimeout(feiloppsummeringRef)
                             )}
                             nesteKnappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
+                            loading={RemoteData.isPending(status)}
                         />
                     </form>
                 ),

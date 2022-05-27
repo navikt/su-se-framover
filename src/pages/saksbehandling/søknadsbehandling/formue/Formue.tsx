@@ -7,7 +7,6 @@ import {
     BodyLong,
     Loader,
     Modal,
-    Textarea,
     TextField,
     Heading,
     Accordion,
@@ -53,7 +52,7 @@ import {
 import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
 import sharedI18n from '../sharedI18n-nb';
-import { Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './formue-nb';
 import * as styles from './formue.module.less';
@@ -102,7 +101,6 @@ const schema = yup
                 otherwise: yup.object().nullable().defined(),
             })
             .defined(),
-        begrunnelse: yup.string().defined(),
         borSøkerMedEPS: yup
             .boolean()
             .required('Du må velge om søker bor med en ektefelle eller samboer')
@@ -134,6 +132,8 @@ const Formue = (props: {
         sakSlice.lagreEpsGrunnlagSkjermet
     );
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
+
+    const combinedLagringsstatus = RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus);
 
     const senesteHalvG = getSenesteHalvGVerdi(
         props.behandling.stønadsperiode?.periode?.fraOgMed
@@ -171,7 +171,6 @@ const Formue = (props: {
             //Validering fanger denne
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             epsVerdier: values.borSøkerMedEPS ? formDataVerdierTilFormueVerdier(values.epsVerdier!) : null,
-            begrunnelse: values.begrunnelse,
         };
 
         const ektefelle = { fnr: values.epsFnr };
@@ -427,20 +426,6 @@ const Formue = (props: {
 
                         <Controller
                             control={form.control}
-                            name="begrunnelse"
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    label={formatMessage('input.label.begrunnelse')}
-                                    {...field}
-                                    value={field.value || ''}
-                                    error={fieldState.error?.message}
-                                    description={formatMessage('input.begrunnelse.description')}
-                                />
-                            )}
-                        />
-
-                        <Controller
-                            control={form.control}
                             name="status"
                             render={({ field }) => (
                                 <Checkbox
@@ -462,16 +447,9 @@ const Formue = (props: {
                             )}
                         />
 
-                        {pipe(
-                            RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus),
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader title={formatMessage('display.lagre.lagrer')} />,
-                                (err) => <ApiErrorAlert error={err} />,
-                                () => null
-                            )
+                        {RemoteData.isFailure(combinedLagringsstatus) && (
+                            <ApiErrorAlert error={combinedLagringsstatus.error} />
                         )}
-
                         <Feiloppsummering
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
@@ -486,6 +464,7 @@ const Formue = (props: {
                                 handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
                                 focusAfterTimeout(feiloppsummeringRef)
                             )}
+                            loading={RemoteData.isPending(combinedLagringsstatus)}
                         />
                     </form>
                 ),

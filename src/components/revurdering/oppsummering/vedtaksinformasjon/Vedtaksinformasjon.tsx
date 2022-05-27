@@ -77,7 +77,7 @@ const Bosituasjonblokk = (props: { nyeData: Bosituasjon[]; gamleData: Bosituasjo
     );
 };
 
-const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; begrunnelseLabel: string }) => (
+const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår }) => (
     <ul>
         {props.formuevilkår.vurderinger.map((vurdering) => {
             const søkersFormue = regnUtFormuegrunnlag(vurdering.grunnlag.søkersFormue);
@@ -91,7 +91,6 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; begrunnelse
                         bekreftetFormue={bekreftetFormue}
                         erVilkårOppfylt={vurdering.resultat === FormueResultat.VilkårOppfylt}
                     />
-                    <OppsummeringPar label={props.begrunnelseLabel} verdi={vurdering.grunnlag.begrunnelse} />
                 </li>
             );
         })}
@@ -161,12 +160,7 @@ const Vedtaksinformasjon = (props: {
             {skalViseformue && (
                 <Rad radTittel={formatMessage('radTittel.formue')}>
                     {{
-                        venstre: (
-                            <FormuevilkårVisning
-                                formuevilkår={nyeData.formue}
-                                begrunnelseLabel={formatMessage('formue.begrunnelse')}
-                            />
-                        ),
+                        venstre: <FormuevilkårVisning formuevilkår={nyeData.formue} />,
                         høyre: <FormuevilkårOppsummering gjeldendeFormue={gamleData.formue} />,
                     }}
                 </Rad>

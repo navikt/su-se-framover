@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Panel, Accordion, Button, Textarea, TextField, Heading, Label, BodyShort, Loader } from '@navikt/ds-react';
+import { Panel, Accordion, Button, TextField, Heading, Label, BodyShort, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
@@ -338,23 +338,6 @@ const FormueBlokk = (props: {
                         bekreftetFormue={søkersBekreftetFormue + epsBekreftetFormue}
                         erVilkårOppfylt={erVilkårOppfylt}
                     />
-
-                    <div>
-                        <Controller
-                            control={props.formController}
-                            name={`${blokkName}.begrunnelse`}
-                            defaultValue={props.blokkField.begrunnelse}
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    label={formatMessage('revurdering.begrunnelse')}
-                                    value={field.value ?? ''}
-                                    onChange={field.onChange}
-                                    error={fieldState.error?.message}
-                                    description={formatMessage('revurdering.begrunnelse.description')}
-                                />
-                            )}
-                        />
-                    </div>
                 </>
             )}
         </div>

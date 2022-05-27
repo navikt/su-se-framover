@@ -23,7 +23,6 @@ export interface FormueFormData {
     verdier: Nullable<VerdierFormData>;
     borSøkerMedEPS: boolean;
     epsVerdier: Nullable<VerdierFormData>;
-    begrunnelse: Nullable<string>;
 }
 
 export function getFormueInitialValues(
@@ -40,7 +39,6 @@ export function getFormueInitialValues(
             søknadsInnhold.ektefelle?.formue ?? null
         ),
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
-        begrunnelse: behandlingsFormue?.begrunnelse ?? null,
         borSøkerMedEPS: epsInformasjon?.borSøkerMedEPS,
         epsFnr: epsInformasjon?.epsFnr,
     };
@@ -117,8 +115,7 @@ export const eqFormue: Eq.Eq<Nullable<Formue>> = {
     equals: (formue1, formue2) =>
         formue1?.status === formue2?.status &&
         eqVerdier.equals(formue1?.verdier ?? null, formue2?.verdier ?? null) &&
-        eqVerdier.equals(formue1?.epsVerdier ?? null, formue2?.epsVerdier ?? null) &&
-        formue1?.begrunnelse === formue2?.begrunnelse,
+        eqVerdier.equals(formue1?.epsVerdier ?? null, formue2?.epsVerdier ?? null),
 };
 
 export const eqVerdier: Eq.Eq<Nullable<FormueVerdier>> = {
@@ -133,7 +130,6 @@ export const eqVerdier: Eq.Eq<Nullable<FormueVerdier>> = {
 };
 
 export const eqFormueFormData = Eq.struct<FormueFormData>({
-    begrunnelse: eqNullable(S.Eq),
     borSøkerMedEPS: eqNullable(B.Eq),
     epsFnr: eqNullable(S.Eq),
     epsVerdier: eqNullable(eqVerdierFormData),

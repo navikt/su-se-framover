@@ -1,15 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Loader, Textarea } from '@navikt/ds-react';
+import { Alert } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
-import * as S from 'fp-ts/lib/string';
 import * as React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { ApiError, ErrorCode } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -17,12 +15,13 @@ import Faktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktab
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as SakSlice from '~src/features/saksoversikt/sak.slice';
-import { nullableMap, pipe } from '~src/lib/fp';
+import { nullableMap } from '~src/lib/fp';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { useAppSelector } from '~src/redux/Store';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
@@ -30,7 +29,7 @@ import { er67EllerEldre } from '~src/utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './virkningstidspunkt-nb';
 import * as styles from './virkningstidspunkt.module.less';
@@ -38,14 +37,12 @@ import * as styles from './virkningstidspunkt.module.less';
 interface FormData {
     fraOgMed: Nullable<Date>;
     tilOgMed: Nullable<Date>;
-    begrunnelse: string;
 }
 
 const TIDLIGST_MULIG_START_DATO = new Date(2021, 0, 1);
 const eqBehandlingsperiode = struct<FormData>({
     fraOgMed: eqNullable(D.Eq),
     tilOgMed: eqNullable(D.Eq),
-    begrunnelse: S.Eq,
 });
 
 const schema = yup
@@ -81,7 +78,6 @@ const schema = yup
 
                 return fraOgMed <= tilOgMed;
             }),
-        begrunnelse: yup.string(),
     })
     .required();
 
@@ -89,13 +85,11 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     const navigate = useNavigate();
-    const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
-    const dispatch = useAppDispatch();
+    const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SakSlice.lagreVirkningstidspunkt);
     const søker = useAppSelector((state) => state.søker.søker);
     const initialValues = {
         fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
         tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
-        begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? '',
     };
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Virkningstidspunkt,
@@ -122,33 +116,21 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         return () => sub.unsubscribe();
     }, [form]);
 
-    const save = async (data: FormData) => {
-        const res = await dispatch(
-            SakSlice.lagreVirkningstidspunkt({
+    const save = async (data: FormData, onSuccessUrl: string) => {
+        lagreVirkningstidspunkt(
+            {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 fraOgMed: DateFns.formatISO(data.fraOgMed!, { representation: 'date' }),
                 tilOgMed: DateFns.formatISO(DateFns.endOfMonth(data.tilOgMed!), { representation: 'date' }),
                 /* eslint-enable @typescript-eslint/no-non-null-assertion */
-                begrunnelse: data.begrunnelse,
-            })
+            },
+            () => {
+                clearDraft();
+                navigate(onSuccessUrl);
+            }
         );
-
-        if (SakSlice.lagreVirkningstidspunkt.fulfilled.match(res)) {
-            clearDraft();
-            return RemoteData.success(null);
-        } else if (SakSlice.lagreVirkningstidspunkt.rejected.match(res)) {
-            return RemoteData.failure(
-                res.payload ?? {
-                    statusCode: ErrorCode.Unknown,
-                    correlationId: '',
-                    body: null,
-                }
-            );
-        } else {
-            return RemoteData.pending;
-        }
     };
 
     const handleSubmit: SubmitHandler<FormData> = async (x) => {
@@ -156,26 +138,11 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             clearDraft();
             return navigate(props.nesteUrl);
         }
-
-        setSavingState(RemoteData.pending);
-
-        const res = await save(x);
-        if (RemoteData.isSuccess(res)) {
-            navigate(props.nesteUrl);
-        } else {
-            setSavingState(res);
-        }
+        save(x, props.nesteUrl);
     };
-    const handleLagreOgFortsettSenereClick: SubmitHandler<FormData> = async (x) => {
-        setSavingState(RemoteData.pending);
 
-        const res = await save(x);
-        if (RemoteData.isSuccess(res)) {
-            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-        } else {
-            setSavingState(res);
-        }
-    };
+    const handleLagreOgFortsettSenereClick: SubmitHandler<FormData> = (x) =>
+        save(x, Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -225,27 +192,8 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     />
                                 )}
                             />
-                            <Controller
-                                name="begrunnelse"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        {...field}
-                                        label={formatMessage('begrunnelse.label')}
-                                        error={fieldState.error?.message}
-                                        description={formatMessage('input.begrunnelse.description')}
-                                    />
-                                )}
-                            />
-                            {pipe(
-                                savingState,
-                                RemoteData.fold(
-                                    () => null,
-                                    () => <Loader title={formatMessage('state.lagrer')} />,
-                                    (err) => <ApiErrorAlert error={err} />,
-                                    () => null
-                                )
-                            )}
+
+                            {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                             <Feiloppsummering
                                 tittel={formatMessage('feiloppsummering.title')}
                                 hidden={!isSubmitted || isValid}
@@ -256,6 +204,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     navigate(props.forrigeUrl);
                                 }}
                                 onLagreOgFortsettSenereClick={form.handleSubmit(handleLagreOgFortsettSenereClick)}
+                                loading={RemoteData.isPending(status)}
                             />
                         </form>
                     </>

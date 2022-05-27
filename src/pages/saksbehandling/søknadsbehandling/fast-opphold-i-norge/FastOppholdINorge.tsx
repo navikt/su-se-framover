@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { Radio, RadioGroup } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 import React, { useRef } from 'react';
@@ -14,7 +14,6 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -24,20 +23,17 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
-import * as sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './fastOppholdINorge-nb';
 
 interface FormData {
     status: Nullable<Vilkårstatus>;
-    begrunnelse: Nullable<string>;
 }
 
 const eqFormData = struct<FormData>({
     status: eqNullable(S.Eq),
-    begrunnelse: eqNullable(S.Eq),
 });
 
 const schema = yup
@@ -46,21 +42,17 @@ const schema = yup
             .mixed<Vilkårstatus>()
             .defined()
             .oneOf(Object.values(Vilkårstatus), 'Du må velge om søker oppholder seg fast i norge'),
-        begrunnelse: yup.string().defined(),
     })
     .required();
 
 const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
-    const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
-        sakSlice.lagreBehandlingsinformasjon
-    );
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
 
     const initialValues = {
         status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status ?? null,
-        begrunnelse: props.behandling.behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
@@ -84,7 +76,6 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 behandlingsinformasjon: {
                     fastOppholdINorge: {
                         status: values.status,
-                        begrunnelse: values.begrunnelse,
                     },
                 },
             },
@@ -134,30 +125,8 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 </RadioGroup>
                             )}
                         />
-                        <div className={sharedStyles.textareaContainer}>
-                            <Controller
-                                control={form.control}
-                                name="begrunnelse"
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        label={formatMessage('input.label.begrunnelse')}
-                                        {...field}
-                                        error={fieldState.error?.message}
-                                        value={field.value ?? ''}
-                                        description={formatMessage('input.begrunnelse.description')}
-                                    />
-                                )}
-                            />
-                        </div>
-                        {pipe(
-                            lagreBehandlingsinformasjonStatus,
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader title={formatMessage('display.lagre.lagrer')} />,
-                                (err) => <ApiErrorAlert error={err} />,
-                                () => null
-                            )
-                        )}
+
+                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                         <Feiloppsummering
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
@@ -172,6 +141,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
                                 focusAfterTimeout(feiloppsummeringRef)
                             )}
+                            loading={RemoteData.isPending(status)}
                         />
                     </form>
                 ),
