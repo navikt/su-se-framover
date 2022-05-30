@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as PdfApi from '~src/api/pdfApi';
+import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
@@ -47,8 +48,8 @@ const AttesterRevurdering = () => {
     const dispatch = useAppDispatch();
     const [iverksettStatus, iverksett] = useAsyncActionCreator(RevurderingActions.iverksettRevurdering);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(RevurderingActions.underkjennRevurdering);
-    const [grunnlagsdataOgVilkårsvurderinger, hentGrunnlagsdataOgVilkårsvurderinger] = useAsyncActionCreator(
-        RevurderingActions.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger
+    const [grunnlagsdataOgVilkårsvurderinger, hentGrunnlagsdataOgVilkårsvurderinger] = useApiCall(
+        sakApi.hentgjeldendeGrunnlagsdataOgVilkårsvurderinger
     );
 
     useEffect(() => {
@@ -56,8 +57,8 @@ const AttesterRevurdering = () => {
             return;
         }
         hentGrunnlagsdataOgVilkårsvurderinger({
-            revurderingId: revurdering.id,
             sakId: sakId,
+            fraOgMed: revurdering.periode.fraOgMed,
         });
     }, [revurdering?.id]);
 
@@ -106,7 +107,7 @@ const AttesterRevurdering = () => {
             () => <Loader />,
             () => <Loader />,
             (err) => <ApiErrorAlert error={err} />,
-            (grunnlag) => (
+            (gjeldendeData) => (
                 <div>
                     <Heading level="1" size="large" className={SharedStyles.tittel}>
                         {formatMessage('page.tittel')}
@@ -114,7 +115,7 @@ const AttesterRevurdering = () => {
                     <div className={styles.oppsummeringContainer}>
                         <Revurderingoppsummering
                             revurdering={revurdering}
-                            forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlag}
+                            grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     </div>
                     {warningId && (

@@ -7,7 +7,6 @@ import { Nullable } from '~src/lib/types';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Fradrag } from '~src/types/Fradrag';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
 import {
@@ -370,21 +369,6 @@ export const lagreFormuegrunnlag = createAsyncThunk<
         revurderingId: arg.revurderingId,
         formue: arg.formue,
     });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const hentGjeldendeGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
-    GrunnlagsdataOgVilkårsvurderinger,
-    {
-        sakId: string;
-        revurderingId: string;
-    },
-    { rejectValue: ApiError }
->('revurdering/hentGjeldendeGrunnlagsdataOgVilkårsvurderinger/hent', async ({ sakId, revurderingId }, thunkApi) => {
-    const res = await revurderingApi.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(sakId, revurderingId);
     if (res.status === 'ok') {
         return res.data;
     }

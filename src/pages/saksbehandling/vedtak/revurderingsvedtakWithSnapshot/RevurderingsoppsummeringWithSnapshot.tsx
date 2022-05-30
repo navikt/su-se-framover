@@ -37,7 +37,7 @@ const RevurderingsoppsummeringWithSnapshot = (props: {
                         <>
                             <Revurderingoppsummering
                                 revurdering={props.revurdering}
-                                forrigeGrunnlagsdataOgVilkårsvurderinger={snapshot}
+                                grunnlagsdataOgVilkårsvurderinger={snapshot}
                             />
                             {props.revurdering.tilbakekrevingsbehandling?.avgjørelse ===
                                 Tilbakekrevingsavgjørelse.TILBAKEKREV && (
