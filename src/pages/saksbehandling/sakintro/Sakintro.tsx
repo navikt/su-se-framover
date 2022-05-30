@@ -47,6 +47,15 @@ const Sakintro = () => {
     const { intl } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
 
+    const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
+        switch (nyBehandling) {
+            case NyBehandling.REVURDER:
+                return Routes.revurderValgtSak.createURL({ sakId: props.sak.id });
+            case NyBehandling.KLAGE:
+                return Routes.klageOpprett.createURL({ sakId: props.sak.id });
+        }
+    };
+
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
             const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
@@ -68,16 +77,35 @@ const Sakintro = () => {
 
     const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
 
-    const kanOppretteKlage = !isEmpty(props.sak.vedtak);
-    const klageToggle = useFeatureToggle(FeatureToggle.Klage) && kanOppretteKlage;
+    const harVedtak = !isEmpty(props.sak.vedtak);
+    const klageToggle = useFeatureToggle(FeatureToggle.Klage);
 
     return (
         <div className={styles.sakintroContainer}>
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    {iverksatteInnvilgedeSøknader.length > 0 && (
-                        <NyBehandlingVelger sakId={props.sak.id} klageToggle={klageToggle} intl={intl} />
+                    {harVedtak && (
+                        <NyBehandlingVelger intl={intl}>
+                            {iverksatteInnvilgedeSøknader.length > 0 && (
+                                <LinkAsButton
+                                    className={styles.popoverOption}
+                                    variant="tertiary"
+                                    href={nyBehandlingTilRoute(NyBehandling.REVURDER)}
+                                >
+                                    {intl.formatMessage({ id: 'popover.option.revurder' })}
+                                </LinkAsButton>
+                            )}
+                            {klageToggle && (
+                                <LinkAsButton
+                                    className={styles.popoverOption}
+                                    variant="tertiary"
+                                    href={nyBehandlingTilRoute(NyBehandling.KLAGE)}
+                                >
+                                    {intl.formatMessage({ id: 'popover.option.klage' })}
+                                </LinkAsButton>
+                            )}
+                        </NyBehandlingVelger>
                     )}
                     {harUtbetalinger && (
                         <LinkAsButton
@@ -143,17 +171,9 @@ const Sakintro = () => {
     );
 };
 
-const NyBehandlingVelger = (props: { sakId: string; klageToggle: boolean; intl: IntlShape }) => {
+const NyBehandlingVelger: React.FC<{ intl: IntlShape }> = (props) => {
     const [anchorEl, setAnchorEl] = useState<Nullable<HTMLElement>>(null);
 
-    const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
-        switch (nyBehandling) {
-            case NyBehandling.REVURDER:
-                return Routes.revurderValgtSak.createURL({ sakId: props.sakId });
-            case NyBehandling.KLAGE:
-                return Routes.klageOpprett.createURL({ sakId: props.sakId });
-        }
-    };
     return (
         <div className={styles.nyBehandlingVelgerContainer}>
             <Button
@@ -172,24 +192,7 @@ const NyBehandlingVelger = (props: { sakId: string; klageToggle: boolean; intl: 
                 onClose={() => setAnchorEl(null)}
                 open={anchorEl !== null}
             >
-                <div className={styles.popoverOptionsContainer}>
-                    <LinkAsButton
-                        className={styles.popoverOption}
-                        variant="tertiary"
-                        href={nyBehandlingTilRoute(NyBehandling.REVURDER)}
-                    >
-                        {props.intl.formatMessage({ id: 'popover.option.revurder' })}
-                    </LinkAsButton>
-                    {props.klageToggle && (
-                        <LinkAsButton
-                            className={styles.popoverOption}
-                            variant="tertiary"
-                            href={nyBehandlingTilRoute(NyBehandling.KLAGE)}
-                        >
-                            {props.intl.formatMessage({ id: 'popover.option.klage' })}
-                        </LinkAsButton>
-                    )}
-                </div>
+                <div className={styles.popoverOptionsContainer}>{props.children}</div>
             </Popover>
         </div>
     );
