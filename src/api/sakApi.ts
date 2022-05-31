@@ -1,15 +1,18 @@
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Restans } from '~src/types/Restans';
-import { BegrensetSakinfo, Sak } from '~src/types/Sak';
+import { AlleredeÅpenSak, Sak, Sakstype } from '~src/types/Sak';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function fetchSakByFnr(fnr: string): Promise<ApiClientResult<Sak>> {
+export async function fetchSakByFnr(fnr: string, type: Sakstype = Sakstype.UFØRE): Promise<ApiClientResult<Sak>> {
+    console.log(type);
+
     return apiClient({
         url: `/saker/søk`,
         method: 'POST',
         body: {
             fnr: fnr,
+            type: type.toString(),
         },
     });
 }
@@ -36,7 +39,7 @@ export async function hentFerdigeBehandlinger(): Promise<ApiClientResult<Restans
     return apiClient({ url: `/saker/behandlinger/ferdige`, method: 'GET' });
 }
 
-export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<BegrensetSakinfo>> {
+export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<AlleredeÅpenSak>> {
     return apiClient({ url: `/saker/info/${fnr}`, method: 'GET' });
 }
 

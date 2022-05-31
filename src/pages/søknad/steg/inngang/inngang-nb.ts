@@ -1,4 +1,14 @@
+import { Sakstype } from '~src/types/Sak';
+
 export default {
+    [Sakstype.ALDER]: 'Supplerende stønad for personer over 67 år med kort botid i Norge',
+    [Sakstype.UFØRE]: 'Supplerende stønad for uføre flyktninger',
+
+    'advarsel.alder.uføre':
+        'Du kan få supplerende stønad for uføre flyktninger hvis du er under 67 år. Er du over 67 år kan du søke <navLink>Supplerende stønad for personer med kort botid i Norge</navLink>. Har du akkurat fylt 67 år kan du ha rett på etterbetaling for supplerende stønad for uføre flyktninger. Da må du fylle ut to søknader, en som ufør flyktning under 67 år og en som person med kort botid i Norge.',
+    'advarsel.alder.alder':
+        'Du kan få supplerende stønad for personer med kort botid i Norge hvis du er over 67 år. Er du under 67 år og ufør flyktning kan du søke <navLink>Supplerende stønad for uføre flyktninger</navLink>.',
+
     'bekreftelsesboks.tekst.p1':
         'Veilederen har fortalt søkeren om hvilken informasjon vi henter og hvilken informasjon som søkeren selv må levere.',
     'bekreftelsesboks.tekst.p2':
@@ -8,16 +18,22 @@ export default {
     'feil.påkrevdFelt': 'Feltet er påkrevd',
     'feil.harÅpenSøknad':
         'Bruker har allerede en åpen søknad som er til behandling. Dersom bruker ønsker å komme med ytterligere dokumentasjon kan denne sendes til skanning. Skulle bruker ønske å endre på opplysningene i søknaden kan dette gjøres ved å sende en oppgave via MODIA personoversikt.',
-
-    'heading.åpenSøknad': 'Åpen søknad',
-    'heading.løpendeYtelse': 'Løpende ytelse',
-
-    'åpenSøknad.løpendeYtelse':
-        'Bruker har allerede en løpende ytelse, supplerende stønad er innvilget for perioden {løpendePeriode}. Bruker kan tidligst søke om ny periode {tidligestNyPeriode}.',
+    'feil.harÅpenSøknad.motsatt-alder':
+        'Bruker har allerede en åpen søknad for supplerende stønad for uføre flyktninger som er til behandling. Dersom bruker ønsker å oppdatere den søknaden <navLink>følg instruksjonene her</navLink>.',
+    'feil.harÅpenSøknad.motsatt-uføre':
+        'Bruker har allerede en åpen søknad for supplerende stønad forpersoner over 67 år med kort botid i Norge som er til behandling. Dersom bruker ønsker å oppdatere den søknaden <navLink>følg instruksjonene her</navLink>.',
 
     'heading.advarsel.alder': 'Alder',
-    'advarsel.alder':
-        'Du kan få supplerende stønad for uføre flyktninger hvis du er under 67 år. Er du over 67 år kan du søke <navLink>Supplerende stønad for personer med kort botid i Norge</navLink>. Har du akkurat fylt 67 år kan du ha rett på etterbetaling for supplerende stønad for uføre flyktninger. Da må du fylle ut to søknader, en som ufør flyktning under 67 år og en som person med kort botid i Norge.',
+    'heading.åpenSøknad': 'Åpen søknad',
+    'heading.åpenSøknad.alder': 'Åpen søknad for personer over 67 år med kort botid',
+    'heading.åpenSøknad.uføre': 'Åpen søknad for uføre flyktninger',
+    'heading.løpendeYtelse.uføre': 'Løpende ytelse uføre flyktninger',
+    'heading.løpendeYtelse.alder': 'Løpende ytelse personer over 67 år med kort botid',
+
+    'åpenSøknad.løpendeYtelse':
+        'Bruker har allerede en løpende ytelse, supplerende stønad {type} er innvilget for perioden {løpendePeriode}. Bruker kan tidligst søke om ny periode {tidligestNyPeriode}.',
+    'åpenSøknad.løpendeYtelse.kort':
+        'Bruker har allerede en løpende ytelse, supplerende stønad {type} er innvilget for perioden {løpendePeriode}.',
 
     'finnSøker.tittel': 'Finn søker',
     'finnSøker.tekst': 'For å starte søknaden, må du skrive inn fødselsnummeret til søkeren',
