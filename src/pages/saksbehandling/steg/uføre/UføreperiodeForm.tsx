@@ -9,6 +9,7 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { FormData, UføreperiodeFormData } from '~src/pages/saksbehandling/steg/uføre/types';
 import { UføreResultat, VurderingsperiodeUføre } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { NullablePeriode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import messages from './uførhet-nb';
@@ -16,8 +17,10 @@ import * as styles from './uførhet.module.less';
 
 export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføreperiodeFormData => ({
     id: uuid(),
-    fraOgMed: DateUtils.parseIsoDateOnly(u.periode.fraOgMed),
-    tilOgMed: DateUtils.parseIsoDateOnly(u.periode.tilOgMed),
+    periode: {
+        fraOgMed: DateUtils.parseIsoDateOnly(u.periode.fraOgMed),
+        tilOgMed: DateUtils.parseIsoDateOnly(u.periode.tilOgMed),
+    },
     uføregrad: u.grunnlag?.uføregrad.toString() ?? '',
     forventetInntekt: u.grunnlag?.forventetInntekt.toString() ?? '',
     begrunnelse: u.begrunnelse,
@@ -116,28 +119,23 @@ export const UføreperiodeForm = (props: Props) => {
                     />
                 </div>
             )}
-
-            <PeriodeForm
-                fraOgMed={{
-                    id: `${uføreName}.periode.fraOgMed`,
-                    value: value.fraOgMed,
-                    minDate: props.minDate,
-                    maxDate: props.maxDate,
-                    setFraOgMed: (date: Nullable<Date>) => {
-                        props.setValue(`${uføreName}.fraOgMed`, date);
-                    },
-                    error: props.errors?.grunnlag?.[props.index]?.fraOgMed,
-                }}
-                tilOgMed={{
-                    id: `${uføreName}.periode.tilOgMed`,
-                    value: value.tilOgMed,
-                    minDate: props.minDate,
-                    maxDate: props.maxDate,
-                    setTilOgMed: (date: Nullable<Date>) => {
-                        props.setValue(`${uføreName}.tilOgMed`, date);
-                    },
-                    error: props.errors?.grunnlag?.[props.index]?.tilOgMed,
-                }}
+            <Controller
+                control={props.control}
+                name={`${uføreName}.periode`}
+                render={({ field, fieldState }) => (
+                    <PeriodeForm
+                        {...field}
+                        error={fieldState.error as FieldErrors<NullablePeriode>}
+                        minDate={{
+                            fraOgMed: props.minDate,
+                            tilOgMed: props.minDate,
+                        }}
+                        maxDate={{
+                            fraOgMed: props.maxDate,
+                            tilOgMed: props.maxDate,
+                        }}
+                    />
+                )}
             />
 
             <Controller
