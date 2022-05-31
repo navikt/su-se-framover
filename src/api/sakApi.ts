@@ -5,8 +5,6 @@ import { AlleredeÅpenSak, Sak, Sakstype } from '~src/types/Sak';
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function fetchSakByFnr(fnr: string, type: Sakstype = Sakstype.UFØRE): Promise<ApiClientResult<Sak>> {
-    console.log(type);
-
     return apiClient({
         url: `/saker/søk`,
         method: 'POST',
