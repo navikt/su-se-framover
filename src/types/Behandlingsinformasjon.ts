@@ -6,7 +6,6 @@ export interface Behandlingsinformasjon {
     lovligOpphold: Nullable<LovligOpphold>;
     fastOppholdINorge: Nullable<FastOppholdINorge>;
     institusjonsopphold: Nullable<Institusjonsopphold>;
-    formue: Nullable<Formue>;
     personligOppmøte: Nullable<PersonligOppmøte>;
 }
 
@@ -30,12 +29,6 @@ export interface FastOppholdINorge {
 
 export interface Institusjonsopphold {
     status: Vilkårstatus;
-}
-
-export interface Formue {
-    status: FormueStatus;
-    verdier: Nullable<FormueVerdier>;
-    epsVerdier: Nullable<FormueVerdier>;
 }
 
 export interface FormueVerdier {

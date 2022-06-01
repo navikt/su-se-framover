@@ -78,9 +78,9 @@ export const mapToVilkårsinformasjon = (
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
-    const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, formue, personligOppmøte } =
+    const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, personligOppmøte } =
         behandlingsinformasjon;
-    const { uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
+    const { formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
 
     return [
         {
@@ -131,9 +131,9 @@ export const mapToVilkårsinformasjon = (
             status:
                 formue === null
                     ? VilkårVurderingStatus.IkkeVurdert
-                    : formue.status === FormueStatus.MåInnhenteMerInformasjon
+                    : formue.resultat === FormueStatus.MåInnhenteMerInformasjon
                     ? VilkårVurderingStatus.Uavklart
-                    : formue.status === FormueStatus.VilkårOppfylt
+                    : formue.resultat === FormueStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Formue,

@@ -1,6 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
+import { Behandlingsinformasjon, FormueVerdier } from '~src/types/Behandlingsinformasjon';
 import { Fradrag } from '~src/types/Fradrag';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -210,5 +210,22 @@ export async function lagreUføregrunnlag(arg: {
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/uføre`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
+    });
+}
+
+export async function lagreFormuegrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: Array<{
+        periode: Periode<string>;
+        epsFormue: Nullable<FormueVerdier>;
+        søkersFormue: FormueVerdier;
+        måInnhenteMerInformasjon: boolean;
+    }>;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/formuegrunnlag`,
+        method: 'POST',
+        body: arg.vurderinger,
     });
 }

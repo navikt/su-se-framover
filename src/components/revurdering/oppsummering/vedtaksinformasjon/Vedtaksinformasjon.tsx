@@ -6,8 +6,9 @@ import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus'
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import { useI18n } from '~src/lib/i18n';
+import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { FormueResultat, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import {
     bosituasjonErlik,
     formueErlik,
@@ -89,7 +90,7 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår }) => (
                     <Formuevurdering vurdering={vurdering} />
                     <Formuestatus
                         bekreftetFormue={bekreftetFormue}
-                        erVilkårOppfylt={vurdering.resultat === FormueResultat.VilkårOppfylt}
+                        erVilkårOppfylt={vurdering.resultat === FormueStatus.VilkårOppfylt}
                     />
                 </li>
             );
