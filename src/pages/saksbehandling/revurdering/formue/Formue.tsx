@@ -242,7 +242,7 @@ const FormueBlokk = (props: {
                         error: props.errors?.formue?.[props.blokkIndex]?.periode?.fraOgMed,
                     }}
                     tilOgMed={{
-                        id: `${blokkName}.periode.tilOgMeg`,
+                        id: `${blokkName}.periode.tilOgMed`,
                         value: watch.periode.tilOgMed,
                         minDate: revurderingsperiode.fraOgMed,
                         maxDate: revurderingsperiode.tilOgMed,
