@@ -1,13 +1,12 @@
 import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
-import { endOfMonth, startOfMonth } from 'date-fns';
 import React, { forwardRef, useState } from 'react';
 import { Collapse } from 'react-collapse';
-import { FieldError } from 'react-hook-form';
+import { FieldErrors } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { getDateErrorMessage } from '~src/lib/validering';
+import { NullablePeriode } from '~src/types/Periode';
 
 import DatePicker from '../datePicker/DatePicker';
 
@@ -63,23 +62,18 @@ export const CollapsableFormElementDescription = (props: { title: string; childr
 
 export const PeriodeForm = (props: {
     containerClassname?: string;
-    fraOgMed: {
-        id?: string;
-        value?: Nullable<Date>;
-        minDate?: Nullable<Date>;
-        maxDate?: Nullable<Date>;
-        setFraOgMed: (date: Nullable<Date>) => void;
-        error?: FieldError;
-        size?: 'S' | 'L';
+    value: NullablePeriode;
+    name: string;
+    onChange: (periode: NullablePeriode) => void;
+    error?: FieldErrors<NullablePeriode>;
+    size?: 'S' | 'L';
+    minDate: {
+        fraOgMed?: Nullable<Date>;
+        tilOgMed?: Nullable<Date>;
     };
-    tilOgMed: {
-        id?: string;
-        value?: Nullable<Date>;
-        minDate?: Nullable<Date>;
-        maxDate?: Nullable<Date>;
-        setTilOgMed: (date: Nullable<Date>) => void;
-        error?: FieldError;
-        size?: 'S' | 'L';
+    maxDate: {
+        fraOgMed?: Nullable<Date>;
+        tilOgMed?: Nullable<Date>;
     };
 }) => {
     const { formatMessage } = useI18n({ messages: nb });
@@ -87,36 +81,36 @@ export const PeriodeForm = (props: {
     return (
         <div className={props.containerClassname ?? styles.periodeFormContainer}>
             <DatePicker
-                id={props.fraOgMed.id}
-                className={props.fraOgMed.size === 'S' ? styles.dato : undefined}
+                id={`${props.name}.fraOgMed`}
+                className={props.size === 'S' ? styles.dato : undefined}
                 label={formatMessage('periodeForm.label.fraOgMed')}
-                feil={getDateErrorMessage(props.fraOgMed.error)}
+                feil={props.error?.fraOgMed?.message}
                 dateFormat="MM/yyyy"
                 showMonthYearPicker
                 isClearable
                 autoComplete="off"
-                value={props.fraOgMed.value}
-                minDate={props.fraOgMed.minDate}
-                maxDate={props.fraOgMed.maxDate}
-                onChange={(date: Nullable<Date>) => props.fraOgMed.setFraOgMed(date ? startOfMonth(date) : null)}
-                startDate={props.fraOgMed.value}
-                endDate={props.tilOgMed.value}
+                value={props.value.fraOgMed}
+                minDate={props.minDate.fraOgMed}
+                maxDate={props.maxDate.fraOgMed}
+                onChange={(date: Nullable<Date>) => props.onChange({ ...props.value, fraOgMed: date })}
+                startDate={props.value.fraOgMed}
+                endDate={props.value.tilOgMed}
             />
             <DatePicker
-                id={props.tilOgMed.id}
-                className={props.fraOgMed.size === 'S' ? styles.dato : undefined}
-                label={formatMessage('periodeForm.label.tilOgMed')}
-                feil={getDateErrorMessage(props.tilOgMed.error)}
+                id={`${props.name}.tilOgMed`}
+                className={props.size === 'S' ? styles.dato : undefined}
+                label={formatMessage('periodeForm.label.fraOgMed')}
+                feil={props.error?.tilOgMed?.message}
                 dateFormat="MM/yyyy"
                 showMonthYearPicker
                 isClearable
                 autoComplete="off"
-                value={props.tilOgMed.value}
-                minDate={props.tilOgMed.minDate}
-                maxDate={props.tilOgMed.maxDate}
-                onChange={(date: Date) => props.tilOgMed.setTilOgMed(date ? endOfMonth(date) : null)}
-                startDate={props.fraOgMed.value}
-                endDate={props.tilOgMed.value}
+                value={props.value.tilOgMed}
+                minDate={props.minDate.tilOgMed}
+                maxDate={props.maxDate.tilOgMed}
+                onChange={(date: Nullable<Date>) => props.onChange({ ...props.value, tilOgMed: date })}
+                startDate={props.value.fraOgMed}
+                endDate={props.value.tilOgMed}
             />
         </div>
     );
