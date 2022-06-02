@@ -17,7 +17,7 @@ export interface FormueFormData {
     epsFnr: Nullable<string>;
     søkersFormue: Nullable<VerdierFormData>;
     epsFormue: Nullable<VerdierFormData>;
-    resultat: boolean;
+    måInnhenteMerInformasjon: boolean;
 }
 
 export function getFormueInitialValues(
@@ -25,7 +25,6 @@ export function getFormueInitialValues(
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger
 ): FormueFormData {
     const epsInformasjon = hentOmSøkerBorMedEpsOgEpsFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
-    console.log({ res: grunnlagsdata.formue?.resultat });
     return {
         borSøkerMedEPS: epsInformasjon?.borSøkerMedEPS,
         epsFnr: epsInformasjon?.epsFnr,
@@ -37,7 +36,7 @@ export function getFormueInitialValues(
             grunnlagsdata.formue?.vurderinger[0]?.grunnlag.epsFormue ?? null,
             søknadsInnhold.ektefelle?.formue ?? null
         ),
-        resultat: grunnlagsdata.formue?.resultat === FormueStatus.MåInnhenteMerInformasjon,
+        måInnhenteMerInformasjon: grunnlagsdata.formue?.resultat === FormueStatus.MåInnhenteMerInformasjon,
     };
 }
 

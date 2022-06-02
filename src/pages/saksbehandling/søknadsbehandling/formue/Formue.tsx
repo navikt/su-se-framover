@@ -80,7 +80,7 @@ const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<
 
 const schema = yup
     .object<FormueFormData>({
-        resultat: yup.boolean(),
+        måInnhenteMerInformasjon: yup.boolean(),
         søkersFormue: VerdierSchema.required(),
         epsFormue: yup
             .object<VerdierFormData>()
@@ -143,7 +143,7 @@ const Formue = (props: {
 
         const formueValues: FormueSøknadsbehandlingForm = {
             periode: props.behandling.stønadsperiode!.periode,
-            måInnhenteMerInformasjon: values.resultat,
+            måInnhenteMerInformasjon: values.måInnhenteMerInformasjon,
             søkersFormue: formDataVerdierTilFormueVerdier(values.søkersFormue!),
             epsFormue: values.borSøkerMedEPS ? formDataVerdierTilFormueVerdier(values.epsFormue!) : null,
         };
@@ -249,8 +249,6 @@ const Formue = (props: {
         regnUtFormDataVerdier(watch.søkersFormue)
     );
     const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormDataVerdier(watch.epsFormue));
-
-    console.log(form.getValues());
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -394,7 +392,7 @@ const Formue = (props: {
 
                         <Controller
                             control={form.control}
-                            name="resultat"
+                            name="måInnhenteMerInformasjon"
                             render={({ field }) => (
                                 <Checkbox className={styles.henteMerInfoCheckbox} {...field} checked={field.value}>
                                     {formatMessage('checkbox.henteMerInfo')}

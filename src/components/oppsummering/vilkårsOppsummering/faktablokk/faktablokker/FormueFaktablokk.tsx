@@ -126,7 +126,7 @@ function søknadsfakta(innhold: SøknadInnhold, formatMessage: MessageFormatter<
 }
 
 function saksbehandlingfakta(
-    info: Formuegrunnlag,
+    info: Formuegrunnlag | undefined,
     harEktefelle: boolean,
     formatMessage: MessageFormatter<typeof messages>
 ): Fakta[] {
@@ -263,7 +263,7 @@ export const FormueVilkårsblokk = (props: {
                                     ),
                                 },
                                 ...saksbehandlingfakta(
-                                    props.formue.vurderinger[0].grunnlag,
+                                    props.formue.vurderinger[0]?.grunnlag,
                                     props.ektefelle.fnr !== null,
                                     formatMessage
                                 ),
