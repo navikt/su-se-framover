@@ -7,10 +7,11 @@ import { IntlShape } from 'react-intl';
 import { Link, useOutletContext } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
+import { hentSkattemelding } from '~src/api/sakApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useFeatureToggle } from '~src/lib/featureToggles';
-import { ApiResult, useNotificationFromLocation } from '~src/lib/hooks';
+import { ApiResult, useApiCall, useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -46,6 +47,7 @@ const Sakintro = () => {
     const props = useOutletContext<AttesteringContext>();
     const { intl } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
+    const [, hentSkatt] = useApiCall(hentSkattemelding);
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {
@@ -83,6 +85,7 @@ const Sakintro = () => {
     return (
         <div className={styles.sakintroContainer}>
             <SuksessStatuser locationState={locationState} />
+            <Button onClick={hentSkatt}>Hent skattemelding</Button>
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
                     {harVedtak && (

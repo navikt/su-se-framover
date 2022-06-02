@@ -69,3 +69,10 @@ export async function kallInnTilKontrollsamtale(sakId: string) {
         },
     });
 }
+
+export async function hentSkattemelding() {
+    return apiClient({
+        url: `/skatt/test`,
+        method: 'POST',
+    });
+}
