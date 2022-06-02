@@ -80,9 +80,7 @@ const ManuellRegulering = () => {
                     reguleringId: regulering.id,
                     fradrag: values.fradrag.map((f) =>
                         fradragFormdataTilFradrag(f, {
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed)!,
                         })
                     ),

@@ -197,8 +197,7 @@ const FormueBlokk = (props: {
     const watch = props.watch().formue[props.blokkIndex];
     const fraOgMed = watch.periode.fraOgMed;
     const bosituasjon = fraOgMed
-        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          bosituasjonPåDato(props.bosituasjonsgrunnlag, toStringDateOrNull(fraOgMed)!)
+        ? bosituasjonPåDato(props.bosituasjonsgrunnlag, toStringDateOrNull(fraOgMed)!)
         : undefined;
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [epsStatus, hentEPS, resetToInitial] = useApiCall(personApi.fetchPerson);

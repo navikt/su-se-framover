@@ -136,7 +136,6 @@ export const VelgForhåndsvarselForm = (props: {
                 lagreForhåndsvarsel({
                     fritekstTilForhåndsvarsel: values.fritekstTilForhåndsvarsel ?? '',
                     fritekstTilVedtaksbrev: values.fritekstTilVedtaksbrev ?? '',
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     forhåndsvarselhandling: values.forhåndsvarselhandling!,
                 })
             )}

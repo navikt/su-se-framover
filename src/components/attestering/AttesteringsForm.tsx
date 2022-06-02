@@ -72,7 +72,6 @@ export const AttesteringsForm = (props: Props) => {
                 props.iverksett.fn();
                 break;
             case Beslutning.UNDERKJENN:
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
         }
     };

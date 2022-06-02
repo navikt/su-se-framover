@@ -179,8 +179,6 @@ const VurderInfo = (props: { klage: Klage }) => {
             <div className={styles.informasjonsContentContainer}>
                 <OppsummeringPar
                     label={formatMessage('form.vurdering.label')}
-                    // Vurderingstypen skal finnes når man kommer til oppsummeringen
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     verdi={formatMessage(props.klage.vedtaksvurdering!.type)}
                     sorteres={OppsummeringsParSortering.Vertikalt}
                 />

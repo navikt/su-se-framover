@@ -79,12 +79,9 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     });
 
     const formToSubmit = (values: OpprettRevurderingFormData) => ({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         fraOgMed: values.fraOgMed!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         årsak: values.årsak!,
         informasjonSomRevurderes: values.informasjonSomRevurderes,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         begrunnelse: values.begrunnelse!,
     });
 

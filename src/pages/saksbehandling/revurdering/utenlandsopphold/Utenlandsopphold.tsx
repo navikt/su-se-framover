@@ -83,12 +83,9 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 utenlandsopphold: form.utenlandsopphold.map((vurdering) => ({
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     status: vurdering.status!,
                     periode: {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         fraOgMed: toIsoDateOnlyString(vurdering.periode.fraOgMed!),
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         tilOgMed: toIsoDateOnlyString(sluttenAvMåneden(vurdering.periode.tilOgMed!)),
                     },
                 })),

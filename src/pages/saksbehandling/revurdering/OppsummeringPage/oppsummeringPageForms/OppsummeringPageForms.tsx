@@ -87,7 +87,6 @@ export const ResultatEtterForhåndsvarselform = (props: {
             onSubmit={form.handleSubmit((values) =>
                 props.onSubmit({
                     begrunnelse: values.begrunnelse,
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     beslutningEtterForhåndsvarsel: values.beslutningEtterForhåndsvarsel!,
                     brevtekst:
                         values.beslutningEtterForhåndsvarsel ===

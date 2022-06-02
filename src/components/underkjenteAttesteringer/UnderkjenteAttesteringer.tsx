@@ -46,8 +46,6 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                             <td>
                                 <BodyShort className={styles.tidspunkt}>{formatDateTime(a.opprettet)}</BodyShort>
                             </td>
-                            {/* underkjente attesteringer har alltid grunn og kommentar */}
-                            {/* eslint-disable @typescript-eslint/no-non-null-assertion */}
                             <td>
                                 <BodyShort>{underkjentGrunnTilTekst(a.underkjennelse!.grunn, formatMessage)}</BodyShort>
                             </td>
@@ -57,7 +55,6 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                             <td>
                                 <BodyShort className={styles.kommentar}>{a.attestant}</BodyShort>
                             </td>
-                            {/* eslint-enable @typescript-eslint/no-non-null-assertion */}
                         </tr>
                     ))}
                 </tbody>

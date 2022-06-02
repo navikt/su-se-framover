@@ -48,8 +48,6 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
             avslåPgaManglendeDok(
                 {
                     søknadId: props.søknad.id,
-                    //validering fanger denne
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     body: { fritekst: values.manglendeDok.fritekst! },
                 },
                 () => {
@@ -188,8 +186,6 @@ function lagBody(values: LukkSøknadOgAvsluttSøknadsbehandlingFormData): LukkS�
         case LukkSøknadBegrunnelse.Trukket:
             return {
                 type: values.begrunnelse,
-                // Denne har validering i trukket komponenten
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 datoSøkerTrakkSøknad: values.trukket.datoSøkerTrakkSøknad!,
             };
 

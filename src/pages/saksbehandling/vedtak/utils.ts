@@ -78,7 +78,6 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
 export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string | undefined): Nullable<KlageOppsummering> {
     const klageMedKlageinstansvedtak = sak.klager.find((k) => k.id === klageId);
     if (klageMedKlageinstansvedtak && erKlageFerdigbehandlet(klageMedKlageinstansvedtak)) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const vedtakSomKlagesPå = sak.vedtak.find((v) => v.id === klageMedKlageinstansvedtak.vedtakId)!;
         return {
             klage: klageMedKlageinstansvedtak,

@@ -35,8 +35,6 @@ export const fradragTilFradragFormData = (fradrag: Fradrag): FradragFormData => 
 });
 
 export const fradragFormdataTilFradrag = (f: FradragFormData, defaultPeriode: Periode<Date>): Fradrag => ({
-    //valdiering sikrer at feltet ikke er null
-    /* eslint-disable @typescript-eslint/no-non-null-assertion */
     periode:
         f.periode?.fraOgMed && f.periode.tilOgMed
             ? {
@@ -59,5 +57,4 @@ export const fradragFormdataTilFradrag = (f: FradragFormData, defaultPeriode: Pe
         : null,
     tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
     beskrivelse: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
-    /* eslint-enable @typescript-eslint/no-non-null-assertion */
 });
