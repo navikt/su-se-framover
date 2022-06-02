@@ -70,9 +70,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                 revurderingId: props.revurdering.id,
                 bosituasjoner: data.bosituasjoner.map((b) => ({
                     periode: {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         fraOgMed: DateUtils.toIsoDateOnlyString(b.fraOgMed!),
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         tilOgMed: DateUtils.toIsoDateOnlyString(b.tilOgMed!),
                     },
                     epsFnr: b.harEPS ? b.epsFnr : null,

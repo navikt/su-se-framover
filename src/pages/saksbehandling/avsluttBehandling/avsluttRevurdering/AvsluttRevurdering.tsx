@@ -47,8 +47,6 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
             {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                //validering fanger denne
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 begrunnelse: data.begrunnelse!,
                 fritekst: data.fritekst,
             },

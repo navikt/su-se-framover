@@ -66,9 +66,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                 type: 'REVURDERING',
                 data: form.opplysningsplikt.map((v) => ({
                     periode: {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         fraOgMed: toIsoDateOnlyString(v.periode.fraOgMed!),
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         tilOgMed: toIsoDateOnlyString(sluttenAvMåneden(v.periode.tilOgMed!)),
                     },
                     beskrivelse: v.beskrivelse,

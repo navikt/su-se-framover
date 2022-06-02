@@ -38,6 +38,7 @@ module.exports = {
         '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
         '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
         'react/prop-types': 'off',
         'react/no-unused-prop-types': 'error',
         'import/order': [

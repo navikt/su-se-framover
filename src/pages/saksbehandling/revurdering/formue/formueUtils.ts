@@ -87,13 +87,9 @@ export const formueFormDataTilFormuegrunnlagRequest = (data: FormueData[]): Form
     return data.map((formue) => {
         return {
             periode: {
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 fraOgMed: DateUtils.toIsoDateOnlyString(formue.periode.fraOgMed!),
                 tilOgMed: DateUtils.toIsoDateOnlyString(formue.periode.tilOgMed!),
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
             },
-            //parseVerdier skal ikke kunne returnere null når input-parameteren ikke er null
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             søkersFormue: formDataVerdierToNumber(formue.søkersFormue)!,
             epsFormue: formDataVerdierToNumber(formue.epsFormue),
         };

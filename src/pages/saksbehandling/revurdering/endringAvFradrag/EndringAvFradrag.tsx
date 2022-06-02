@@ -81,7 +81,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                 revurderingId: props.revurdering.id,
                 fradrag: values.fradrag.map((f: FradragFormData) => ({
                     periode: {
-                        /* eslint-disable @typescript-eslint/no-non-null-assertion */
                         fraOgMed: DateUtils.toIsoDateOnlyString(
                             f.periode?.fraOgMed ?? DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed)!
                         ),
@@ -90,10 +89,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                 f.periode?.tilOgMed ?? DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed)!
                             )
                         ),
-                        /* eslint-enable @typescript-eslint/no-non-null-assertion */
                     },
-                    /* valideringa sjekker at f.beløp og f.type ikke er null */
-                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: Number.parseInt(f.beløp!, 10),
                     type: f.kategori!,
                     beskrivelse: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
@@ -115,7 +111,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                 onSuccess();
             }
         } else if (lagreFradragsgrunnlag.rejected.match(res)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             setSavingState(RemoteData.failure(res.payload!));
         }
     };

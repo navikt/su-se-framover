@@ -121,10 +121,8 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 fraOgMed: DateFns.formatISO(data.fraOgMed!, { representation: 'date' }),
                 tilOgMed: DateFns.formatISO(DateFns.endOfMonth(data.tilOgMed!), { representation: 'date' }),
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
             },
             () => {
                 clearDraft();

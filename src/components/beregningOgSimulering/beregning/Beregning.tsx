@@ -127,9 +127,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             behandlingId: props.behandling.id,
             fradrag: values.fradrag.map((f) =>
                 fradragFormdataTilFradrag(f, {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     fraOgMed: stønadsperiode.fom!,
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     tilOgMed: stønadsperiode.tom!,
                 })
             ),
