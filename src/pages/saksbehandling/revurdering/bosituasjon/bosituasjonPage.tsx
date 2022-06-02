@@ -18,7 +18,7 @@ import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { Periode } from '~src/types/Periode';
+import { NullablePeriode, Periode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
@@ -68,8 +68,10 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                 revurderingId: props.revurdering.id,
                 bosituasjoner: data.bosituasjoner.map((b) => ({
                     periode: {
-                        fraOgMed: DateUtils.toIsoDateOnlyString(b.fraOgMed!),
-                        tilOgMed: DateUtils.toIsoDateOnlyString(b.tilOgMed!),
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        fraOgMed: DateUtils.toIsoDateOnlyString(b.periode.fraOgMed!),
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        tilOgMed: DateUtils.toIsoDateOnlyString(b.periode.tilOgMed!),
                     },
                     epsFnr: b.harEPS ? b.epsFnr : null,
                     delerBolig: b.harEPS ? null : b.delerBolig,
@@ -176,25 +178,17 @@ export const BosituasjonFormItem = (props: {
         <Panel className={styles.formItemContainer} border>
             <div className={styles.periodeContainer}>
                 <PeriodeForm
-                    fraOgMed={{
-                        id: `bosituasjoner.${props.index}.fraOgMed`,
-                        value: watch.fraOgMed,
-                        minDate: revurderingsperiode.fraOgMed,
-                        maxDate: revurderingsperiode.tilOgMed,
-                        setFraOgMed: (date: Nullable<Date>) => {
-                            props.update(props.index, { ...watch, fraOgMed: date });
-                        },
-                        error: props.errors?.bosituasjoner?.[props.index]?.fraOgMed,
+                    name={`bosituasjoner.${props.index}.periode`}
+                    value={watch.periode}
+                    onChange={(periode: NullablePeriode) => props.update(props.index, { ...watch, periode: periode })}
+                    error={props.errors?.bosituasjoner?.[props.index].periode}
+                    minDate={{
+                        fraOgMed: revurderingsperiode.fraOgMed,
+                        tilOgMed: revurderingsperiode.tilOgMed,
                     }}
-                    tilOgMed={{
-                        id: `bosituasjoner.${props.index}.tilOgMed`,
-                        value: watch.tilOgMed,
-                        minDate: revurderingsperiode.fraOgMed,
-                        maxDate: revurderingsperiode.tilOgMed,
-                        setTilOgMed: (date: Nullable<Date>) => {
-                            props.update(props.index, { ...watch, tilOgMed: date });
-                        },
-                        error: props.errors?.bosituasjoner?.[props.index]?.tilOgMed,
+                    maxDate={{
+                        fraOgMed: revurderingsperiode.fraOgMed,
+                        tilOgMed: revurderingsperiode.tilOgMed,
                     }}
                 />
                 {props.onDelete && props.bosituasjonArrayLengde > 1 && (

@@ -1,5 +1,6 @@
 import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
+import { endOfMonth, startOfMonth } from 'date-fns';
 import React, { forwardRef, useState } from 'react';
 import { Collapse } from 'react-collapse';
 import { FieldErrors } from 'react-hook-form';
@@ -62,7 +63,7 @@ export const CollapsableFormElementDescription = (props: { title: string; childr
 
 export const PeriodeForm = (props: {
     containerClassname?: string;
-    value: NullablePeriode;
+    value: Nullable<NullablePeriode>;
     name: string;
     onChange: (periode: NullablePeriode) => void;
     error?: FieldErrors<NullablePeriode>;
@@ -78,6 +79,10 @@ export const PeriodeForm = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages: nb });
 
+    const lagNyPeriode = () => {
+        return { fraOgMed: null, tilOgMed: null };
+    };
+
     return (
         <div className={props.containerClassname ?? styles.periodeFormContainer}>
             <DatePicker
@@ -89,12 +94,17 @@ export const PeriodeForm = (props: {
                 showMonthYearPicker
                 isClearable
                 autoComplete="off"
-                value={props.value.fraOgMed}
+                value={props.value?.fraOgMed}
                 minDate={props.minDate.fraOgMed}
                 maxDate={props.maxDate.fraOgMed}
-                onChange={(date: Nullable<Date>) => props.onChange({ ...props.value, fraOgMed: date })}
-                startDate={props.value.fraOgMed}
-                endDate={props.value.tilOgMed}
+                onChange={(date: Nullable<Date>) =>
+                    props.onChange({
+                        ...(props.value ?? lagNyPeriode()),
+                        fraOgMed: date ? startOfMonth(date) : null,
+                    })
+                }
+                startDate={props.value?.fraOgMed}
+                endDate={props.value?.tilOgMed}
             />
             <DatePicker
                 id={`${props.name}.tilOgMed`}
@@ -105,12 +115,14 @@ export const PeriodeForm = (props: {
                 showMonthYearPicker
                 isClearable
                 autoComplete="off"
-                value={props.value.tilOgMed}
+                value={props.value?.tilOgMed}
                 minDate={props.minDate.tilOgMed}
                 maxDate={props.maxDate.tilOgMed}
-                onChange={(date: Nullable<Date>) => props.onChange({ ...props.value, tilOgMed: date })}
-                startDate={props.value.fraOgMed}
-                endDate={props.value.tilOgMed}
+                onChange={(date: Nullable<Date>) =>
+                    props.onChange({ ...(props.value ?? lagNyPeriode()), tilOgMed: date ? endOfMonth(date) : null })
+                }
+                startDate={props.value?.fraOgMed}
+                endDate={props.value?.tilOgMed}
             />
         </div>
     );

@@ -12,6 +12,7 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable, KeyDict } from '~src/lib/types';
 import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
 import { Fradragskategori, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
+import { NullablePeriode } from '~src/types/Periode';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import { UtenlandskInntektFormData } from '../beregningstegTypes';
@@ -326,49 +327,36 @@ export const FradragInputs = (props: {
 
                             {visDelerAvPeriode && (
                                 <PeriodeForm
-                                    fraOgMed={{
-                                        id: `${periode}.fraOgMed`,
-                                        value: fradrag.periode?.fraOgMed ? new Date(fradrag.periode.fraOgMed) : null,
-                                        minDate: props.beregningsDato?.fom,
-                                        maxDate: props.beregningsDato?.tom,
-                                        setFraOgMed: (date: Nullable<Date>) => {
-                                            props.onFradragChange(index, {
-                                                ...fradrag,
-                                                periode: {
-                                                    fraOgMed: date,
-                                                    tilOgMed: fradrag.periode?.tilOgMed ?? null,
-                                                },
-                                            });
-                                        },
-                                        error:
+                                    name={name}
+                                    value={fradrag.periode}
+                                    onChange={(periode: NullablePeriode) => {
+                                        props.onFradragChange(index, {
+                                            ...fradrag,
+                                            periode: periode,
+                                        });
+                                    }}
+                                    error={{
+                                        fraOgMed:
                                             typeof errorForLinje === 'object' && errorForLinje?.periode
                                                 ? // formik sin typing er ikke god på nøstede feil
                                                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                   (errorForLinje.periode as any)?.fraOgMed
                                                 : undefined,
-                                        size: 'S',
-                                    }}
-                                    tilOgMed={{
-                                        id: `${periode}.tilOgMed`,
-                                        value: fradrag.periode?.tilOgMed ? new Date(fradrag.periode.tilOgMed) : null,
-                                        minDate: fradrag.periode?.fraOgMed,
-                                        maxDate: props.beregningsDato?.tom,
-                                        setTilOgMed: (date: Nullable<Date>) => {
-                                            props.onFradragChange(index, {
-                                                ...fradrag,
-                                                periode: {
-                                                    fraOgMed: fradrag.periode?.fraOgMed ?? null,
-                                                    tilOgMed: date ? DateFns.endOfMonth(date) : null,
-                                                },
-                                            });
-                                        },
-                                        error:
+                                        tilOgMed:
                                             typeof errorForLinje === 'object' && errorForLinje?.periode
                                                 ? // formik sin typing er ikke god på nøstede feil
                                                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                   (errorForLinje.periode as any)?.tilOgMed
                                                 : undefined,
-                                        size: 'S',
+                                    }}
+                                    size="S"
+                                    minDate={{
+                                        fraOgMed: props.beregningsDato?.fom,
+                                        tilOgMed: fradrag.periode?.fraOgMed,
+                                    }}
+                                    maxDate={{
+                                        fraOgMed: props.beregningsDato?.tom,
+                                        tilOgMed: props.beregningsDato?.tom,
                                     }}
                                 />
                             )}

@@ -12,11 +12,11 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreOpplysningsplikt } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
 import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
+import { NullablePeriode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
@@ -126,28 +126,21 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                                 </div>
 
                                 <PeriodeForm
-                                    fraOgMed={{
-                                        id: `opplysningsplikt.${index}.periode.fraOgMed`,
-                                        value: opplysningsplikt.periode.fraOgMed,
-                                        minDate: revurderingsperiode.fraOgMed,
-                                        maxDate: revurderingsperiode.tilOgMed,
-                                        setFraOgMed: (date: Nullable<Date>) => {
-                                            form.setValue(`opplysningsplikt.${index}.periode.fraOgMed`, date);
-                                        },
-                                        error: form.formState.errors.opplysningsplikt?.[index].periode?.fraOgMed,
-                                        size: 'S',
+                                    name={`opplysningsplikt.${index}.periode`}
+                                    value={opplysningsplikt.periode}
+                                    onChange={(periode: NullablePeriode) =>
+                                        form.setValue(`opplysningsplikt.${index}.periode`, periode)
+                                    }
+                                    error={form.formState.errors.opplysningsplikt?.[index].periode}
+                                    minDate={{
+                                        fraOgMed: revurderingsperiode.fraOgMed,
+                                        tilOgMed: revurderingsperiode.tilOgMed,
                                     }}
-                                    tilOgMed={{
-                                        id: `opplysningsplikt.${index}.periode.tilOgMed`,
-                                        value: opplysningsplikt.periode.tilOgMed,
-                                        minDate: revurderingsperiode.fraOgMed,
-                                        maxDate: revurderingsperiode.tilOgMed,
-                                        setTilOgMed: (date: Nullable<Date>) => {
-                                            form.setValue(`opplysningsplikt.${index}.periode.tilOgMed`, date);
-                                        },
-                                        error: form.formState.errors.opplysningsplikt?.[index].periode?.tilOgMed,
-                                        size: 'S',
+                                    maxDate={{
+                                        fraOgMed: revurderingsperiode.fraOgMed,
+                                        tilOgMed: revurderingsperiode.tilOgMed,
                                     }}
+                                    size="S"
                                 />
                             </Panel>
                         ))}

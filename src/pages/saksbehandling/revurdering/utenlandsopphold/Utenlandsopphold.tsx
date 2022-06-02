@@ -20,6 +20,7 @@ import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/rev
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { NullablePeriode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
@@ -112,8 +113,8 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                         className={sharedStyles.revurderingContainer}
                         onSubmit={form.handleSubmit((values) => handleSubmit(values, 'neste'))}
                     >
-                        {fields.map((periode, index) => (
-                            <Panel border key={periode.id} className={styles.panel}>
+                        {fields.map((utenlandsopphold, index) => (
+                            <Panel border key={utenlandsopphold.id} className={styles.panel}>
                                 <div className={styles.periodeOgSlett}>
                                     {fields.length > 1 && (
                                         <Button
@@ -129,28 +130,21 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                     )}
 
                                     <PeriodeForm
-                                        fraOgMed={{
-                                            id: `utenlandsopphold.${index}.periode.fraOgMed`,
-                                            value: periode.periode.fraOgMed,
-                                            minDate: revurderingsperiode.fraOgMed,
-                                            maxDate: revurderingsperiode.tilOgMed,
-                                            setFraOgMed: (date: Nullable<Date>) => {
-                                                form.setValue(`utenlandsopphold.${index}.periode.fraOgMed`, date);
-                                            },
-                                            error: form.formState.errors.utenlandsopphold?.[index].periode?.fraOgMed,
-                                            size: 'S',
+                                        name={`utenlandsopphold.${index}.periode`}
+                                        value={utenlandsopphold.periode}
+                                        onChange={(periode: NullablePeriode) =>
+                                            form.setValue(`utenlandsopphold.${index}.periode`, periode)
+                                        }
+                                        error={form.formState.errors.utenlandsopphold?.[index].periode}
+                                        minDate={{
+                                            fraOgMed: revurderingsperiode.fraOgMed,
+                                            tilOgMed: revurderingsperiode.tilOgMed,
                                         }}
-                                        tilOgMed={{
-                                            id: `utenlandsopphold.${index}.periode.tilOgMed`,
-                                            value: periode.periode.tilOgMed,
-                                            minDate: revurderingsperiode.fraOgMed,
-                                            maxDate: revurderingsperiode.tilOgMed,
-                                            setTilOgMed: (date: Nullable<Date>) => {
-                                                form.setValue(`utenlandsopphold.${index}.periode.tilOgMed`, date);
-                                            },
-                                            error: form.formState.errors.utenlandsopphold?.[index].periode?.tilOgMed,
-                                            size: 'S',
+                                        maxDate={{
+                                            fraOgMed: revurderingsperiode.fraOgMed,
+                                            tilOgMed: revurderingsperiode.tilOgMed,
                                         }}
+                                        size="S"
                                     />
                                 </div>
                                 <Controller

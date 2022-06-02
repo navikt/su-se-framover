@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { NullablePeriode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 export interface BosituasjonFormData {
@@ -11,8 +12,10 @@ export interface BosituasjonFormData {
 
 export interface BosituasjonFormItemData {
     id: string;
-    fraOgMed: Nullable<Date>;
-    tilOgMed: Nullable<Date>;
+    periode: {
+        fraOgMed: Nullable<Date>;
+        tilOgMed: Nullable<Date>;
+    };
     harEPS: Nullable<boolean>;
     epsFnr: Nullable<string>;
     epsAlder: Nullable<number>;
@@ -22,8 +25,10 @@ export interface BosituasjonFormItemData {
 
 export const nyBosituasjon = (): BosituasjonFormItemData => ({
     id: uuid(),
-    fraOgMed: null,
-    tilOgMed: null,
+    periode: {
+        fraOgMed: null,
+        tilOgMed: null,
+    },
     harEPS: null,
     epsFnr: null,
     epsAlder: null,
@@ -33,8 +38,10 @@ export const nyBosituasjon = (): BosituasjonFormItemData => ({
 
 export const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): BosituasjonFormItemData => ({
     id: uuid(),
-    fraOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.fraOgMed),
-    tilOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.tilOgMed),
+    periode: {
+        fraOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.fraOgMed),
+        tilOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.tilOgMed),
+    },
     harEPS: bosituasjon.fnr !== null,
     epsFnr: bosituasjon.fnr,
     epsAlder: null,
@@ -49,8 +56,12 @@ export const bosituasjonFormSchema = yup
                 yup
                     .object<BosituasjonFormItemData>({
                         id: yup.string().required(),
-                        fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
-                        tilOgMed: yup.date().required().typeError('Feltet må fylles ut'),
+                        periode: yup
+                            .object<NullablePeriode>({
+                                fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
+                                tilOgMed: yup.date().required().typeError('Feltet må fylles ut'),
+                            })
+                            .required(),
                         harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
                         epsAlder: yup.number().defined().when('harEPS', {
                             is: true,

@@ -26,7 +26,6 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreFormuegrunnlag } from '~src/features/revurdering/revurderingActions';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import {
@@ -34,7 +33,7 @@ import {
     bosituasjonPåDato,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Formuegrenser } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { Periode } from '~src/types/Periode';
+import { NullablePeriode, Periode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 import { regnUtFormDataVerdier, verdierId } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
@@ -231,25 +230,19 @@ const FormueBlokk = (props: {
         <div className={styles.formueBlokk}>
             <div className={styles.periodeOgSøppelbøtteContainer}>
                 <PeriodeForm
-                    fraOgMed={{
-                        id: `${blokkName}.periode.fraOgMed`,
-                        value: watch.periode.fraOgMed,
-                        minDate: revurderingsperiode.fraOgMed,
-                        maxDate: revurderingsperiode.tilOgMed,
-                        setFraOgMed: (date: Nullable<Date>) => {
-                            props.update(props.blokkIndex, { ...watch, periode: { ...watch.periode, fraOgMed: date } });
-                        },
-                        error: props.errors?.formue?.[props.blokkIndex]?.periode?.fraOgMed,
+                    name={`${blokkName}.periode`}
+                    value={watch.periode}
+                    onChange={(periode: NullablePeriode) =>
+                        props.update(props.blokkIndex, { ...watch, periode: periode })
+                    }
+                    error={props.errors?.formue?.[props.blokkIndex]?.periode}
+                    minDate={{
+                        fraOgMed: revurderingsperiode.fraOgMed,
+                        tilOgMed: revurderingsperiode.tilOgMed,
                     }}
-                    tilOgMed={{
-                        id: `${blokkName}.periode.tilOgMed`,
-                        value: watch.periode.tilOgMed,
-                        minDate: revurderingsperiode.fraOgMed,
-                        maxDate: revurderingsperiode.tilOgMed,
-                        setTilOgMed: (date: Nullable<Date>) => {
-                            props.update(props.blokkIndex, { ...watch, periode: { ...watch.periode, tilOgMed: date } });
-                        },
-                        error: props.errors?.formue?.[props.blokkIndex]?.periode?.tilOgMed,
+                    maxDate={{
+                        fraOgMed: revurderingsperiode.fraOgMed,
+                        tilOgMed: revurderingsperiode.tilOgMed,
                     }}
                 />
 
