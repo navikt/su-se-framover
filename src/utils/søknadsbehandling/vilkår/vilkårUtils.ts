@@ -129,7 +129,7 @@ export const mapToVilkårsinformasjon = (
         },
         {
             status:
-                formue === null
+                formue.resultat === null
                     ? VilkårVurderingStatus.IkkeVurdert
                     : formue.resultat === FormueStatus.MåInnhenteMerInformasjon
                     ? VilkårVurderingStatus.Uavklart
@@ -137,7 +137,7 @@ export const mapToVilkårsinformasjon = (
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Formue,
-            erStartet: formue !== null,
+            erStartet: formue.resultat !== null,
         },
         {
             status: statusForPersonligOppmøte(personligOppmøte),

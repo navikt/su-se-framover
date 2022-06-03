@@ -1,3 +1,4 @@
+import { Nullable } from '~src/lib/types';
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
 
@@ -10,7 +11,7 @@ export interface Formuegrenser {
 
 export interface FormueVilkår {
     formuegrenser: Formuegrenser[];
-    resultat: FormueStatus;
+    resultat: Nullable<FormueStatus>;
     vurderinger: VurderingsperiodeFormue[];
     vilkår: 'Formue';
 }

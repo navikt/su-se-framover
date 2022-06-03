@@ -135,7 +135,7 @@ const Formue = (props: {
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormueFormData>(
         Vilkårtype.Formue,
-        () => false
+        () => props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.resultat === null
     );
 
     const handleSave = (nesteUrl: string) => async (values: FormueFormData) => {
