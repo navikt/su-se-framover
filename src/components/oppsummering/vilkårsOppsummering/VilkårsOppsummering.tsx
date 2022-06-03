@@ -111,7 +111,7 @@ const Vilkårsting = (props: {
                 <FormueVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
-                    formue={props.behandlingsinformasjon.formue}
+                    formue={props.grunnlagsdataOgVilkårsvurderinger.formue}
                     ektefelle={{ fnr: hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger)?.fnr }}
                 />
             );

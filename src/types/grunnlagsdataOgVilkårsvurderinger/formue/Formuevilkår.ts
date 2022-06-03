@@ -1,3 +1,5 @@
+import { Nullable } from '~src/lib/types';
+import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
 
 import { Formuegrunnlag } from './Formuegrunnlag';
@@ -9,7 +11,7 @@ export interface Formuegrenser {
 
 export interface FormueVilkår {
     formuegrenser: Formuegrenser[];
-    resultat: FormueResultat;
+    resultat: Nullable<FormueStatus>;
     vurderinger: VurderingsperiodeFormue[];
     vilkår: 'Formue';
 }
@@ -17,13 +19,7 @@ export interface FormueVilkår {
 export interface VurderingsperiodeFormue {
     id: string;
     opprettet: string;
-    resultat: FormueResultat;
+    resultat: FormueStatus;
     grunnlag: Formuegrunnlag;
     periode: Periode<string>;
-}
-
-export enum FormueResultat {
-    VilkårOppfylt = 'VilkårOppfylt',
-    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
-    HarUføresakTilBehandling = 'MåInnhenteMerInformasjon',
 }

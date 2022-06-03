@@ -1,20 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-    Checkbox,
+    Accordion,
     Alert,
-    Button,
     BodyLong,
+    BodyShort,
+    Button,
+    Checkbox,
+    Heading,
+    Label,
     Loader,
     Modal,
     TextField,
-    Heading,
-    Accordion,
-    BodyShort,
-    Label,
 } from '@navikt/ds-react';
 import { startOfMonth } from 'date-fns/esm';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Control, Controller, useForm, UseFormTrigger } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,13 +36,12 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~src/lib/validering';
+import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import { useAppDispatch } from '~src/redux/Store';
 import { Behandling } from '~src/types/Behandling';
-import { FormueStatus, Formue as FormueType } from '~src/types/Behandlingsinformasjon';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { removeSpaces } from '~src/utils/format/formatUtils';
 import { showName } from '~src/utils/person/personUtils';
-import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import {
     getSenesteHalvGVerdi,
     regnUtFormDataVerdier,
@@ -56,14 +55,7 @@ import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './formue-nb';
 import * as styles from './formue.module.less';
-import {
-    FormueFormData,
-    getFormueInitialValues,
-    formDataVerdierTilFormueVerdier,
-    eqFormue,
-    eqEktefelle,
-    eqFormueFormData,
-} from './utils';
+import { formDataVerdierTilFormueVerdier, FormueFormData, getFormueInitialValues } from './utils';
 
 const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<VerdierFormData>({
     verdiPåBolig: validateStringAsNonNegativeNumber('Verdi på boliger'),
@@ -88,12 +80,9 @@ const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<
 
 const schema = yup
     .object<FormueFormData>({
-        status: yup
-            .mixed()
-            .required()
-            .oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon, FormueStatus.VilkårIkkeOppfylt]),
-        verdier: VerdierSchema.required(),
-        epsVerdier: yup
+        måInnhenteMerInformasjon: yup.boolean(),
+        søkersFormue: VerdierSchema.required(),
+        epsFormue: yup
             .object<VerdierFormData>()
             .when('borSøkerMedEPS', {
                 is: true,
@@ -125,7 +114,7 @@ const Formue = (props: {
     const [eps, fetchEps, resetEpsToInitial] = useApiCall(personApi.fetchPerson);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
-        sakSlice.lagreBehandlingsinformasjon
+        sakSlice.lagreFormuegrunnlag
     );
     const [lagreEpsGrunnlagStatus, lagreEpsGrunnlag] = useAsyncActionCreator(sakSlice.lagreEpsGrunnlag);
     const [lagreEpsGrunnlagSkjermetStatus, lagreEpsGrunnlagSkjermet] = useAsyncActionCreator(
@@ -142,43 +131,22 @@ const Formue = (props: {
         props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser
     );
 
-    const initialValues = getFormueInitialValues(
-        props.behandling.behandlingsinformasjon,
-        søknadInnhold,
-        props.behandling.grunnlagsdataOgVilkårsvurderinger
-    );
+    const initialValues = getFormueInitialValues(søknadInnhold, props.behandling.grunnlagsdataOgVilkårsvurderinger);
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormueFormData>(
         Vilkårtype.Formue,
-        (values) => eqFormueFormData.equals(values, initialValues)
+        () => props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.resultat === null
     );
 
     const handleSave = (nesteUrl: string) => async (values: FormueFormData) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
 
-        const status =
-            values.status === FormueStatus.MåInnhenteMerInformasjon
-                ? FormueStatus.MåInnhenteMerInformasjon
-                : totalFormue <= senesteHalvG
-                ? FormueStatus.VilkårOppfylt
-                : FormueStatus.VilkårIkkeOppfylt;
-
-        const formueValues: FormueType = {
-            status,
-            verdier: formDataVerdierTilFormueVerdier(values.verdier!),
-            epsVerdier: values.borSøkerMedEPS ? formDataVerdierTilFormueVerdier(values.epsVerdier!) : null,
+        const formueValues: FormueSøknadsbehandlingForm = {
+            periode: props.behandling.stønadsperiode!.periode,
+            måInnhenteMerInformasjon: values.måInnhenteMerInformasjon,
+            søkersFormue: formDataVerdierTilFormueVerdier(values.søkersFormue!),
+            epsFormue: values.borSøkerMedEPS ? formDataVerdierTilFormueVerdier(values.epsFormue!) : null,
         };
-
-        const ektefelle = { fnr: values.epsFnr };
-        const erEktefelleUendret = eqEktefelle.equals(ektefelle, {
-            fnr: hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)?.fnr,
-        });
-
-        if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) && erEktefelleUendret) {
-            clearDraft();
-            navigate(nesteUrl);
-            return;
-        }
 
         await lagreEpsGrunnlag(
             {
@@ -191,7 +159,7 @@ const Formue = (props: {
                     {
                         sakId: props.sakId,
                         behandlingId: props.behandling.id,
-                        behandlingsinformasjon: { formue: formueValues },
+                        vurderinger: [formueValues],
                     },
                     () => {
                         clearDraft();
@@ -214,22 +182,22 @@ const Formue = (props: {
     useDraftFormSubscribe(form.watch);
 
     const søkersFormue = React.useMemo(() => {
-        return regnUtFormDataVerdier(watch.verdier);
+        return regnUtFormDataVerdier(watch.søkersFormue);
     }, [watch]);
 
     const ektefellesFormue = React.useMemo(() => {
-        return regnUtFormDataVerdier(watch.epsVerdier);
+        return regnUtFormDataVerdier(watch.epsFormue);
     }, [watch]);
 
     const totalFormue = søkersFormue + (watch.borSøkerMedEPS ? ektefellesFormue : 0);
 
     useEffect(() => {
-        form.trigger('verdier.depositumskonto');
-    }, [watch.verdier?.innskuddsbeløp]);
+        form.trigger('søkersFormue.depositumskonto');
+    }, [watch.søkersFormue?.innskuddsbeløp]);
 
     useEffect(() => {
-        form.trigger('epsVerdier.depositumskonto');
-    }, [watch.epsVerdier?.innskuddsbeløp]);
+        form.trigger('epsFormue.depositumskonto');
+    }, [watch.epsFormue?.innskuddsbeløp]);
 
     useEffect(() => {
         if (watch.epsFnr && watch.epsFnr.length === 11) {
@@ -245,9 +213,9 @@ const Formue = (props: {
         }
         form.setValue('epsFnr', null);
         if (!watch.borSøkerMedEPS) {
-            form.setValue('epsVerdier', null);
+            form.setValue('epsFormue', null);
         } else {
-            form.setValue('epsVerdier', {
+            form.setValue('epsFormue', {
                 verdiPåBolig: '0',
                 verdiPåEiendom: '0',
                 verdiPåKjøretøy: '0',
@@ -277,8 +245,10 @@ const Formue = (props: {
 
     const erVilkårOppfylt = totalFormue <= senesteHalvG;
 
-    const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(regnUtFormDataVerdier(watch.verdier));
-    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormDataVerdier(watch.epsVerdier));
+    const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
+        regnUtFormDataVerdier(watch.søkersFormue)
+    );
+    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormDataVerdier(watch.epsFormue));
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -422,22 +392,9 @@ const Formue = (props: {
 
                         <Controller
                             control={form.control}
-                            name="status"
+                            name="måInnhenteMerInformasjon"
                             render={({ field }) => (
-                                <Checkbox
-                                    className={styles.henteMerInfoCheckbox}
-                                    {...field}
-                                    checked={field.value === FormueStatus.MåInnhenteMerInformasjon}
-                                    onChange={() => {
-                                        field.onChange(
-                                            field.value === FormueStatus.MåInnhenteMerInformasjon
-                                                ? totalFormue <= senesteHalvG
-                                                    ? FormueStatus.VilkårOppfylt
-                                                    : FormueStatus.VilkårIkkeOppfylt
-                                                : FormueStatus.MåInnhenteMerInformasjon
-                                        );
-                                    }}
-                                >
+                                <Checkbox className={styles.henteMerInfoCheckbox} {...field} checked={field.value}>
                                     {formatMessage('checkbox.henteMerInfo')}
                                 </Checkbox>
                             )}
@@ -482,7 +439,7 @@ const FormuePanel = (props: {
 }) => {
     const { intl } = useI18n({ messages: { ...sharedFormueMessages } });
     const [åpen, setÅpen] = useState<boolean>(false);
-    const formueTilhører = props.tilhører === 'Søkers' ? 'verdier' : 'epsVerdier';
+    const formueTilhører = props.tilhører === 'Søkers' ? 'søkersFormue' : 'epsFormue';
     const formueVerdier = props.watch[formueTilhører];
 
     let utregnetFormue = regnUtFormDataVerdier(formueVerdier);

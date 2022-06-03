@@ -1,4 +1,5 @@
 import { Nullable } from '~src/lib/types';
+import { Periode } from '~src/types/Periode';
 import { Simulering } from '~src/types/Simulering';
 
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
@@ -25,10 +26,7 @@ export interface Behandling {
 }
 
 export interface Stønadsperiode {
-    periode: {
-        fraOgMed: string;
-        tilOgMed: string;
-    };
+    periode: Periode<string>;
 }
 
 export enum Behandlingsstatus {

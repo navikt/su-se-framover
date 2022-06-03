@@ -51,7 +51,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) =>
     behandling.behandlingsinformasjon.institusjonsopphold?.status === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
         Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet ||
-    behandling.behandlingsinformasjon.formue?.status === FormueStatus.VilkårIkkeOppfylt ||
+    behandling.grunnlagsdataOgVilkårsvurderinger.formue?.resultat === FormueStatus.VilkårIkkeOppfylt ||
     behandling.behandlingsinformasjon.personligOppmøte?.status === PersonligOppmøteStatus.IkkeMøttPersonlig;
 
 const hentSaksbehandlingssteg = (behandling: Behandling) => {

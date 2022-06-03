@@ -11,6 +11,7 @@ import * as klageActions from '~src/features/klage/klageActions';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { pipe } from '~src/lib/fp';
 import { Nullable } from '~src/lib/types';
+import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
@@ -171,6 +172,22 @@ export const lagreUføregrunnlag = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/grunnlag/uføre', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreUføregrunnlag(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreFormuegrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vurderinger: FormueSøknadsbehandlingForm[];
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/formue', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreFormuegrunnlag(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -662,6 +679,16 @@ export default createSlice({
         });
 
         builder.addCase(lagreUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
+        builder.addCase(lagreFormuegrunnlag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({

@@ -1,10 +1,8 @@
-import * as B from 'fp-ts/boolean';
 import * as Eq from 'fp-ts/Eq';
-import * as S from 'fp-ts/string';
 
 import { DelerBoligMed } from '~src/features/søknad/types';
-import { eqNullable, Nullable } from '~src/lib/types';
-import { Behandlingsinformasjon, Formue, FormueStatus, FormueVerdier } from '~src/types/Behandlingsinformasjon';
+import { Nullable } from '~src/lib/types';
+import { FormueStatus, FormueVerdier } from '~src/types/Behandlingsinformasjon';
 import {
     Bosituasjon,
     BosituasjonTyper,
@@ -12,35 +10,33 @@ import {
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~src/types/Søknad';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
-import {
-    eqVerdierFormData,
-    VerdierFormData,
-} from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import { VerdierFormData } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 export interface FormueFormData {
-    status: FormueStatus;
-    epsFnr: Nullable<string>;
-    verdier: Nullable<VerdierFormData>;
     borSøkerMedEPS: boolean;
-    epsVerdier: Nullable<VerdierFormData>;
+    epsFnr: Nullable<string>;
+    søkersFormue: Nullable<VerdierFormData>;
+    epsFormue: Nullable<VerdierFormData>;
+    måInnhenteMerInformasjon: boolean;
 }
 
 export function getFormueInitialValues(
-    behandlingsInfo: Behandlingsinformasjon,
     søknadsInnhold: SøknadInnhold,
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger
-) {
-    const behandlingsFormue = behandlingsInfo.formue;
+): FormueFormData {
     const epsInformasjon = hentOmSøkerBorMedEpsOgEpsFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
     return {
-        verdier: getInitialVerdier(behandlingsInfo.formue?.verdier ?? null, søknadsInnhold.formue),
-        epsVerdier: getInitialVerdier(
-            behandlingsInfo.formue?.epsVerdier ?? null,
-            søknadsInnhold.ektefelle?.formue ?? null
-        ),
-        status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         borSøkerMedEPS: epsInformasjon?.borSøkerMedEPS,
         epsFnr: epsInformasjon?.epsFnr,
+        søkersFormue: getInitialVerdier(
+            grunnlagsdata.formue?.vurderinger[0]?.grunnlag.søkersFormue ?? null,
+            søknadsInnhold.formue
+        ),
+        epsFormue: getInitialVerdier(
+            grunnlagsdata.formue?.vurderinger[0]?.grunnlag.epsFormue ?? null,
+            søknadsInnhold.ektefelle?.formue ?? null
+        ),
+        måInnhenteMerInformasjon: grunnlagsdata.formue?.resultat === FormueStatus.MåInnhenteMerInformasjon,
     };
 }
 
@@ -110,29 +106,3 @@ export const eqEktefelle: Eq.Eq<
 > = {
     equals: (ektefelle1, ektefelle2) => ektefelle1?.fnr === ektefelle2?.fnr,
 };
-
-export const eqFormue: Eq.Eq<Nullable<Formue>> = {
-    equals: (formue1, formue2) =>
-        formue1?.status === formue2?.status &&
-        eqVerdier.equals(formue1?.verdier ?? null, formue2?.verdier ?? null) &&
-        eqVerdier.equals(formue1?.epsVerdier ?? null, formue2?.epsVerdier ?? null),
-};
-
-export const eqVerdier: Eq.Eq<Nullable<FormueVerdier>> = {
-    equals: (verdier1, verdier2) =>
-        verdier1?.verdiIkkePrimærbolig === verdier2?.verdiIkkePrimærbolig &&
-        verdier1?.verdiKjøretøy === verdier2?.verdiKjøretøy &&
-        verdier1?.innskudd === verdier2?.innskudd &&
-        verdier1?.verdipapir === verdier2?.verdipapir &&
-        verdier1?.pengerSkyldt === verdier2?.pengerSkyldt &&
-        verdier1?.kontanter === verdier2?.kontanter &&
-        verdier1?.depositumskonto === verdier2?.depositumskonto,
-};
-
-export const eqFormueFormData = Eq.struct<FormueFormData>({
-    borSøkerMedEPS: eqNullable(B.Eq),
-    epsFnr: eqNullable(S.Eq),
-    epsVerdier: eqNullable(eqVerdierFormData),
-    verdier: eqNullable(eqVerdierFormData),
-    status: eqNullable(S.Eq),
-});

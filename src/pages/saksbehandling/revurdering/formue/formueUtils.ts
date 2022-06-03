@@ -2,11 +2,13 @@ import * as DateFns from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
+import { FormueVerdier } from '~src/types/Behandlingsinformasjon';
 import {
     Bosituasjon,
     bosituasjonPåDato,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Formuegrenser, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { Periode } from '~src/types/Periode';
 import { FormuegrunnlagFormue, FormuegrunnlagVerdier } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import {
@@ -23,6 +25,13 @@ export interface FormueData {
     periode: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> };
     søkersFormue: VerdierFormData;
     epsFormue: Nullable<VerdierFormData>;
+}
+
+export interface FormueSøknadsbehandlingForm {
+    periode: Periode<string>;
+    epsFormue: Nullable<FormueVerdier>;
+    søkersFormue: FormueVerdier;
+    måInnhenteMerInformasjon: boolean;
 }
 
 const getTomFormueVerdier = (): VerdierFormData => {
