@@ -42,8 +42,10 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
 
     const lagTomUføreperiode = (): UføreperiodeFormData => ({
         id: uuid(),
-        fraOgMed: null,
-        tilOgMed: null,
+        periode: {
+            fraOgMed: null,
+            tilOgMed: null,
+        },
         forventetInntekt: '',
         oppfylt: null,
         uføregrad: '',
@@ -62,8 +64,10 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
         if (grunnlagValues.fields.length === 0) {
             grunnlagValues.append({
                 ...lagTomUføreperiode(),
-                fraOgMed: props.minDate,
-                tilOgMed: props.maxDate,
+                periode: {
+                    fraOgMed: props.minDate,
+                    tilOgMed: props.maxDate,
+                },
             });
         }
     }, [grunnlagValues.fields]);
@@ -92,6 +96,8 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                                 form.setValue(`grunnlag.${idx}.forventetInntekt`, '');
                             }}
                             kanVelgeUføresakTilBehandling={props.erSaksbehandling}
+                            setValue={form.setValue}
+                            errors={form.formState.errors}
                         />
                     </li>
                 ))}

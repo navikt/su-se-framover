@@ -7,16 +7,16 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { PeriodeForm } from '~src/components/formElements/FormElements';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreOpplysningsplikt } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { getDateErrorMessage } from '~src/lib/validering';
 import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
+import { NullablePeriode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
@@ -125,48 +125,23 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                                     )}
                                 </div>
 
-                                <div className={styles.periode}>
-                                    <Controller
-                                        control={form.control}
-                                        name={`opplysningsplikt.${index}.periode.fraOgMed`}
-                                        render={({ field, fieldState }) => (
-                                            <DatePicker
-                                                className={styles.dato}
-                                                id={field.name}
-                                                label={formatMessage('datepicker.fom')}
-                                                dateFormat="MM/yyyy"
-                                                showMonthYearPicker
-                                                isClearable
-                                                autoComplete="off"
-                                                value={field.value}
-                                                onChange={(date: Date | null) => field.onChange(date)}
-                                                minDate={revurderingsperiode.fraOgMed}
-                                                maxDate={revurderingsperiode.tilOgMed}
-                                                feil={getDateErrorMessage(fieldState.error)}
-                                            />
-                                        )}
-                                    />
-                                    <Controller
-                                        control={form.control}
-                                        name={`opplysningsplikt.${index}.periode.tilOgMed`}
-                                        render={({ field, fieldState }) => (
-                                            <DatePicker
-                                                className={styles.dato}
-                                                id={field.name}
-                                                label={formatMessage('datepicker.tom')}
-                                                dateFormat="MM/yyyy"
-                                                showMonthYearPicker
-                                                isClearable
-                                                autoComplete="off"
-                                                value={field.value}
-                                                onChange={(date: Date | null) => field.onChange(date)}
-                                                minDate={revurderingsperiode.fraOgMed}
-                                                maxDate={revurderingsperiode.tilOgMed}
-                                                feil={getDateErrorMessage(fieldState.error)}
-                                            />
-                                        )}
-                                    />
-                                </div>
+                                <PeriodeForm
+                                    name={`opplysningsplikt.${index}.periode`}
+                                    value={opplysningsplikt.periode}
+                                    onChange={(periode: NullablePeriode) =>
+                                        form.setValue(`opplysningsplikt.${index}.periode`, periode)
+                                    }
+                                    error={form.formState.errors.opplysningsplikt?.[index].periode}
+                                    minDate={{
+                                        fraOgMed: revurderingsperiode.fraOgMed,
+                                        tilOgMed: revurderingsperiode.tilOgMed,
+                                    }}
+                                    maxDate={{
+                                        fraOgMed: revurderingsperiode.fraOgMed,
+                                        tilOgMed: revurderingsperiode.tilOgMed,
+                                    }}
+                                    size="S"
+                                />
                             </Panel>
                         ))}
                         <Button

@@ -5,8 +5,6 @@ export default {
     'form.harSøkerEPS': 'Har søker ektefelle eller samboer?',
     'form.fjern.bosituasjon': 'Slett',
     'form.ny.bosituasjon': 'Ny periode for opplysning',
-    'form.fraOgMed': 'Fra og med',
-    'form.tilOgMed': 'Til og med',
 
     'eksisterende.vedtakinfo.tittel': 'Eksisterende vedtaksinformasjon',
     'eksisterende.vedtakinfo.søkerBorMed': 'Søker bor med',

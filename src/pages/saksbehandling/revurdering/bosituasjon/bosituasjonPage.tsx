@@ -3,24 +3,22 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import { Button, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { startOfMonth, endOfMonth } from 'date-fns';
 import React from 'react';
-import { Control, Controller, useFieldArray, useForm, UseFormWatch } from 'react-hook-form';
+import { Control, Controller, FieldErrors, useFieldArray, useForm, UseFormWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
-import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import { BooleanRadioGroup, PeriodeForm } from '~src/components/formElements/FormElements';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreBosituasjonsgrunnlag } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { Periode } from '~src/types/Periode';
+import { NullablePeriode, Periode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
@@ -70,8 +68,10 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                 revurderingId: props.revurdering.id,
                 bosituasjoner: data.bosituasjoner.map((b) => ({
                     periode: {
-                        fraOgMed: DateUtils.toIsoDateOnlyString(b.fraOgMed!),
-                        tilOgMed: DateUtils.toIsoDateOnlyString(b.tilOgMed!),
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        fraOgMed: DateUtils.toIsoDateOnlyString(b.periode.fraOgMed!),
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        tilOgMed: DateUtils.toIsoDateOnlyString(b.periode.tilOgMed!),
                     },
                     epsFnr: b.harEPS ? b.epsFnr : null,
                     delerBolig: b.harEPS ? null : b.delerBolig,
@@ -111,6 +111,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                                             fraOgMed: props.revurdering.periode.fraOgMed,
                                             tilOgMed: props.revurdering.periode.tilOgMed,
                                         }}
+                                        errors={errors}
                                     />
                                 </li>
                             ))}
@@ -163,6 +164,7 @@ export const BosituasjonFormItem = (props: {
     bosituasjonArrayLengde: number;
     revurderingsperiode: Periode<string>;
     onDelete: () => void;
+    errors: FieldErrors<BosituasjonFormData>;
 }) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const watch = props.watch().bosituasjoner[props.index];
@@ -175,52 +177,20 @@ export const BosituasjonFormItem = (props: {
     return (
         <Panel className={styles.formItemContainer} border>
             <div className={styles.periodeContainer}>
-                <div className={styles.periodeContainer}>
-                    <Controller
-                        name={`bosituasjoner.${props.index}.fraOgMed`}
-                        control={props.controller}
-                        defaultValue={props.data.fraOgMed}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                id={field.name}
-                                label={formatMessage('form.fraOgMed')}
-                                feil={getDateErrorMessage(fieldState.error)}
-                                {...field}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                autoComplete="off"
-                                onChange={(date: Nullable<Date>) => field.onChange(date ? startOfMonth(date) : null)}
-                                minDate={revurderingsperiode.fraOgMed}
-                                maxDate={revurderingsperiode.tilOgMed}
-                                startDate={field.value}
-                                endDate={watch.tilOgMed}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name={`bosituasjoner.${props.index}.tilOgMed`}
-                        control={props.controller}
-                        defaultValue={props.data.tilOgMed}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                id={field.name}
-                                label={formatMessage('form.tilOgMed')}
-                                feil={getDateErrorMessage(fieldState.error)}
-                                {...field}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                autoComplete="off"
-                                onChange={(date: Date) => field.onChange(date ? endOfMonth(date) : date)}
-                                minDate={watch.fraOgMed}
-                                maxDate={revurderingsperiode.tilOgMed}
-                                startDate={watch.fraOgMed}
-                                endDate={field.value}
-                            />
-                        )}
-                    />
-                </div>
+                <PeriodeForm
+                    name={`bosituasjoner.${props.index}.periode`}
+                    value={watch.periode}
+                    onChange={(periode: NullablePeriode) => props.update(props.index, { ...watch, periode: periode })}
+                    error={props.errors?.bosituasjoner?.[props.index].periode}
+                    minDate={{
+                        fraOgMed: revurderingsperiode.fraOgMed,
+                        tilOgMed: revurderingsperiode.tilOgMed,
+                    }}
+                    maxDate={{
+                        fraOgMed: revurderingsperiode.fraOgMed,
+                        tilOgMed: revurderingsperiode.tilOgMed,
+                    }}
+                />
                 {props.onDelete && props.bosituasjonArrayLengde > 1 && (
                     <Button
                         variant="secondary"

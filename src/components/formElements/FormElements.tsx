@@ -1,10 +1,15 @@
 import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
+import { endOfMonth, startOfMonth } from 'date-fns';
 import React, { forwardRef, useState } from 'react';
 import { Collapse } from 'react-collapse';
+import { FieldErrors } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
+import { NullablePeriode } from '~src/types/Periode';
+
+import DatePicker from '../datePicker/DatePicker';
 
 import nb from './formElements-nb';
 import * as styles from './formElements.module.less';
@@ -52,6 +57,73 @@ export const CollapsableFormElementDescription = (props: { title: string; childr
                 {visMer ? <CollapseFilled /> : <ExpandFilled />}
             </button>
             <Collapse isOpened={visMer}>{props.children}</Collapse>
+        </div>
+    );
+};
+
+export const PeriodeForm = (props: {
+    containerClassname?: string;
+    value: Nullable<NullablePeriode>;
+    name: string;
+    onChange: (periode: NullablePeriode) => void;
+    error?: FieldErrors<NullablePeriode>;
+    size?: 'S' | 'L';
+    minDate: {
+        fraOgMed?: Nullable<Date>;
+        tilOgMed?: Nullable<Date>;
+    };
+    maxDate: {
+        fraOgMed?: Nullable<Date>;
+        tilOgMed?: Nullable<Date>;
+    };
+}) => {
+    const { formatMessage } = useI18n({ messages: nb });
+
+    const lagNyPeriode = () => {
+        return { fraOgMed: null, tilOgMed: null };
+    };
+
+    return (
+        <div className={props.containerClassname ?? styles.periodeFormContainer}>
+            <DatePicker
+                id={`${props.name}.fraOgMed`}
+                className={props.size === 'S' ? styles.dato : undefined}
+                label={formatMessage('periodeForm.label.fraOgMed')}
+                feil={props.error?.fraOgMed?.message}
+                dateFormat="MM/yyyy"
+                showMonthYearPicker
+                isClearable
+                autoComplete="off"
+                value={props.value?.fraOgMed}
+                minDate={props.minDate.fraOgMed}
+                maxDate={props.maxDate.fraOgMed}
+                onChange={(date: Nullable<Date>) =>
+                    props.onChange({
+                        ...(props.value ?? lagNyPeriode()),
+                        fraOgMed: date ? startOfMonth(date) : null,
+                    })
+                }
+                startDate={props.value?.fraOgMed}
+                endDate={props.value?.tilOgMed}
+            />
+            <DatePicker
+                id={`${props.name}.tilOgMed`}
+                className={props.size === 'S' ? styles.dato : undefined}
+                label={formatMessage('periodeForm.label.fraOgMed')}
+                feil={props.error?.tilOgMed?.message}
+                dateFormat="MM/yyyy"
+                showMonthYearPicker
+                isClearable
+                autoComplete="off"
+                value={props.value?.tilOgMed}
+                minDate={props.minDate.tilOgMed}
+                maxDate={props.maxDate.tilOgMed}
+                onChange={(date: Nullable<Date>) =>
+                    props.onChange({ ...(props.value ?? lagNyPeriode()), tilOgMed: date ? endOfMonth(date) : null })
+                }
+                startDate={props.value?.fraOgMed}
+                endDate={props.value?.tilOgMed}
+            />
         </div>
     );
 };

@@ -1,17 +1,15 @@
 import { Delete } from '@navikt/ds-icons';
 import { Button, Panel, Radio, RadioGroup, TextField } from '@navikt/ds-react';
-import classNames from 'classnames';
-import { endOfMonth, startOfMonth } from 'date-fns';
 import * as React from 'react';
-import { Control, Controller, useWatch } from 'react-hook-form';
+import { Control, Controller, FieldErrors, UseFormSetValue, useWatch } from 'react-hook-form';
 import { v4 as uuid } from 'uuid';
 
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { getDateErrorMessage } from '~src/lib/validering';
 import { FormData, UføreperiodeFormData } from '~src/pages/saksbehandling/steg/uføre/types';
 import { UføreResultat, VurderingsperiodeUføre } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { NullablePeriode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import messages from './uførhet-nb';
@@ -19,8 +17,10 @@ import * as styles from './uførhet.module.less';
 
 export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføreperiodeFormData => ({
     id: uuid(),
-    fraOgMed: DateUtils.parseIsoDateOnly(u.periode.fraOgMed),
-    tilOgMed: DateUtils.parseIsoDateOnly(u.periode.tilOgMed),
+    periode: {
+        fraOgMed: DateUtils.parseIsoDateOnly(u.periode.fraOgMed),
+        tilOgMed: DateUtils.parseIsoDateOnly(u.periode.tilOgMed),
+    },
     uføregrad: u.grunnlag?.uføregrad.toString() ?? '',
     forventetInntekt: u.grunnlag?.forventetInntekt.toString() ?? '',
     oppfylt: u.resultat,
@@ -35,18 +35,22 @@ interface Props {
     maxDate: Nullable<Date>;
     onRemoveClick?: () => void;
     kanVelgeUføresakTilBehandling: boolean;
+    setValue: UseFormSetValue<FormData>;
+    errors: FieldErrors<FormData>;
 }
 
 export const UføreperiodeForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
-    const value = useWatch({ control: props.control, name: `grunnlag.${props.index}` as `grunnlag.0` });
+
+    const uføreName = `grunnlag.${props.index}` as const;
+    const value = useWatch({ control: props.control, name: uføreName });
 
     return (
         <Panel className={styles.periodeContainer} border>
             <div className={styles.horizontal}>
                 <Controller
                     control={props.control}
-                    name={`grunnlag.${props.index}.oppfylt`}
+                    name={`${uføreName}.oppfylt`}
                     defaultValue={props.item.oppfylt}
                     render={({ field, fieldState }) => (
                         <RadioGroup
@@ -88,7 +92,7 @@ export const UføreperiodeForm = (props: Props) => {
                 <div className={styles.horizontal}>
                     <Controller
                         control={props.control}
-                        name={`grunnlag.${props.index}.uføregrad`}
+                        name={`${uføreName}.uføregrad`}
                         defaultValue={props.item.uføregrad ?? ''}
                         render={({ field, fieldState }) => (
                             <TextField
@@ -101,7 +105,7 @@ export const UføreperiodeForm = (props: Props) => {
                     />
                     <Controller
                         control={props.control}
-                        name={`grunnlag.${props.index}.forventetInntekt`}
+                        name={`${uføreName}.forventetInntekt`}
                         defaultValue={props.item.forventetInntekt ?? ''}
                         render={({ field, fieldState }) => (
                             <TextField
@@ -114,49 +118,24 @@ export const UføreperiodeForm = (props: Props) => {
                     />
                 </div>
             )}
-
-            <div className={classNames(styles.horizontal, styles.periodeInputContainer)}>
-                <Controller
-                    name={`grunnlag.${props.index}.fraOgMed`}
-                    control={props.control}
-                    defaultValue={props.item.fraOgMed}
-                    render={({ field, fieldState }) => (
-                        <DatePicker
-                            id={field.name}
-                            label={formatMessage('input.fom.label')}
-                            feil={getDateErrorMessage(fieldState.error)}
-                            {...field}
-                            dateFormat="MM/yyyy"
-                            showMonthYearPicker
-                            isClearable
-                            autoComplete="off"
-                            minDate={props.minDate}
-                            maxDate={props.maxDate}
-                            onChange={(date: Nullable<Date>) => field.onChange(date ? startOfMonth(date) : null)}
-                        />
-                    )}
-                />
-                <Controller
-                    name={`grunnlag.${props.index}.tilOgMed`}
-                    control={props.control}
-                    defaultValue={props.item.tilOgMed}
-                    render={({ field, fieldState }) => (
-                        <DatePicker
-                            label={formatMessage('input.tom.label')}
-                            id={field.name}
-                            feil={getDateErrorMessage(fieldState.error)}
-                            {...field}
-                            dateFormat="MM/yyyy"
-                            showMonthYearPicker
-                            isClearable
-                            autoComplete="off"
-                            minDate={props.minDate}
-                            maxDate={props.maxDate}
-                            onChange={(date: Date) => field.onChange(date ? endOfMonth(date) : date)}
-                        />
-                    )}
-                />
-            </div>
+            <Controller
+                control={props.control}
+                name={`${uføreName}.periode`}
+                render={({ field, fieldState }) => (
+                    <PeriodeForm
+                        {...field}
+                        error={fieldState.error as FieldErrors<NullablePeriode>}
+                        minDate={{
+                            fraOgMed: props.minDate,
+                            tilOgMed: props.minDate,
+                        }}
+                        maxDate={{
+                            fraOgMed: props.maxDate,
+                            tilOgMed: props.maxDate,
+                        }}
+                    />
+                )}
+            />
         </Panel>
     );
 };
