@@ -43,7 +43,7 @@
     "homepage": "https://github.com/navikt/su-se-framover#readme",
     "dependencies": {
         "@devexperts/remote-data-ts": "^2.1.1",
-        "@formatjs/intl-datetimeformat": "^6.0.1",
+        "@formatjs/intl-datetimeformat": "^6.0.2",
         "@formatjs/intl-numberformat": "^8.0.2",
         "@hookform/resolvers": "^2.8.10",
         "@navikt/ds-css": "^0.17.3",
