@@ -85,7 +85,7 @@ const Sakintro = () => {
     return (
         <div className={styles.sakintroContainer}>
             <SuksessStatuser locationState={locationState} />
-            <Button onClick={hentSkatt}>Hent skattemelding</Button>
+            <Button onClick={() => hentSkatt({ fnr: props.søker.fnr })}>Hent skattemelding</Button>
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
                     {harVedtak && (

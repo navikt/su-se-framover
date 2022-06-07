@@ -70,9 +70,9 @@ export async function kallInnTilKontrollsamtale(sakId: string) {
     });
 }
 
-export async function hentSkattemelding() {
+export async function hentSkattemelding({ fnr }: { fnr: string }) {
     return apiClient({
-        url: `/skatt/test`,
-        method: 'POST',
+        url: `/skatt/${fnr}`,
+        method: 'GET',
     });
 }
