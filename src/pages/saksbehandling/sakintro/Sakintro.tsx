@@ -47,7 +47,8 @@ const Sakintro = () => {
     const props = useOutletContext<AttesteringContext>();
     const { intl } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
-    const [, hentSkatt] = useApiCall(hentSkattemelding);
+    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
+    const [skattemelding, hentSkatt] = useApiCall(hentSkattemelding);
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {
@@ -85,7 +86,6 @@ const Sakintro = () => {
     return (
         <div className={styles.sakintroContainer}>
             <SuksessStatuser locationState={locationState} />
-            <Button onClick={() => hentSkatt({ fnr: props.søker.fnr })}>Hent skattemelding</Button>
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
                     {harVedtak && (
@@ -117,6 +117,15 @@ const Sakintro = () => {
                         >
                             {intl.formatMessage({ id: 'link.kontrollsamtale' })}
                         </LinkAsButton>
+                    )}
+                    {skattemeldingToggle && (
+                        <Button
+                            variant="secondary"
+                            onClick={() => hentSkatt({ fnr: props.søker.fnr })}
+                            loading={RemoteData.isPending(skattemelding)}
+                        >
+                            Hent skattemelding
+                        </Button>
                     )}
                 </div>
             </div>
