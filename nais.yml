@@ -49,6 +49,8 @@ spec:
         value: su-se-framover-redis
       - name: SU_SE_BAKOVER_URL
         value: http://su-se-bakover
+      - name: NPM_CONFIG_CACHE
+        value: /tmp 
   envFrom:
     - secret: redis-password
 ---
