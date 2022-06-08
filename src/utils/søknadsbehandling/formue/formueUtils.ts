@@ -1,12 +1,12 @@
 import { Nullable } from '~src/lib/types';
 import { FormueVerdier } from '~src/types/Behandlingsinformasjon';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 
 function totalVerdiKjøretøy(kjøretøyArray: Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>) {
     return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
 }
 
-export function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
+export function kalkulerFormueFraSøknad(f: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>['formue']) {
     return [
         f.verdiPåBolig ?? 0,
         f.verdiPåEiendom ?? 0,

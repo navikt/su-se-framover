@@ -8,7 +8,7 @@ import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
 import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
@@ -19,9 +19,8 @@ import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import * as styles from './faktablokker.module.less';
-import { FaktablokkProps } from './faktablokkUtils';
 
-export const FormueFaktablokk = (props: FaktablokkProps) => {
+export const FormueFaktablokk = (props: { søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder> }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -68,7 +67,10 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
 
 const IGNORER_VERDI = 'IGNORER_VERDI' as const;
 
-function søknadsfakta(innhold: SøknadInnhold, formatMessage: MessageFormatter<typeof messages>): Fakta[] {
+function søknadsfakta(
+    innhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>,
+    formatMessage: MessageFormatter<typeof messages>
+): Fakta[] {
     return [
         {
             tittel: formatMessage('formue.verdiPåBolig'),
@@ -206,7 +208,7 @@ function formuelinje(f: {
 
 export const FormueVilkårsblokk = (props: {
     info: Vilkårsinformasjon;
-    søknadInnhold: SøknadInnhold;
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
     formue: FormueVilkår;
     ektefelle: { fnr: Nullable<string> };
 }) => {

@@ -4,7 +4,7 @@ import React from 'react';
 import { useI18n } from '~src/lib/i18n';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { isUføresøknad, SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -21,7 +21,7 @@ import messages from './vilkårsOppsummering-nb';
 import * as styles from './vilkårsOppsummering.module.less';
 
 const VilkårsOppsummering = (props: {
-    søknadInnhold: SøknadInnhold;
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
     behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
@@ -53,27 +53,27 @@ const VilkårsOppsummering = (props: {
 
 const Vilkårsting = (props: {
     info: Vilkårsinformasjon;
-    søknadInnhold: SøknadInnhold;
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
     behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     switch (props.info.vilkårtype) {
         case Vilkårtype.Uførhet:
-            return (
+            return isUføresøknad(props.søknadInnhold) ? (
                 <UførhetVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
                     grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
                 />
-            );
+            ) : null;
         case Vilkårtype.Flyktning:
-            return (
+            return isUføresøknad(props.søknadInnhold) ? (
                 <FlyktningVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
                     behandlingsinformasjon={props.behandlingsinformasjon.flyktning}
                 />
-            );
+            ) : null;
         case Vilkårtype.LovligOpphold:
             return (
                 <LovligOppholdVilkårsblokk

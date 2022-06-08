@@ -5,19 +5,18 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Sats } from '~src/types/Sats';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/sats/sats-nb';
-import { delerBoligMedFormatted } from '../../../../../utils/søknadsbehandling/søknadsbehandlingUtils';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps } from './faktablokkUtils';
 
-export const SatsFaktablokk = (props: FaktablokkProps) => {
+export const SatsFaktablokk = (props: { søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder> }) => {
     const { intl } = useI18n({ messages });
 
     const fakta = [];
@@ -70,7 +69,10 @@ export const SatsFaktablokk = (props: FaktablokkProps) => {
     );
 };
 
-export const SatsVilkårsblokk = (props: { bosituasjon: Bosituasjon; søknadInnhold: SøknadInnhold }) => {
+export const SatsVilkårsblokk = (props: {
+    bosituasjon: Bosituasjon;
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
+}) => {
     const { intl } = useI18n({
         messages: {
             ...messages,

@@ -6,7 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~src/utils/date/dateUtils';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
@@ -16,15 +16,16 @@ import Faktablokk, { customFakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import * as styles from './faktablokker.module.less';
-import { FaktablokkProps } from './faktablokkUtils';
 
 export interface UtenlandsoppholdVilkårsblokkPros {
     info: Vilkårsinformasjon;
-    søknadInnhold: SøknadInnhold;
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }
 
-export const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
+export const UtenlandsOppholdFaktablokk = (props: {
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
+}) => {
     const { intl } = useI18n({
         messages: {
             ...messages,

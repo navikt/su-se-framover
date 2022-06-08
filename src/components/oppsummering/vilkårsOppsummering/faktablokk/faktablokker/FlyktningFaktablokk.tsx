@@ -5,6 +5,7 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { SøknadInnhold, SøknadInnholdUføre } from '~src/types/Søknad';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/flyktning/flyktning-nb';
@@ -12,9 +13,9 @@ import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
+import { VilkårsblokkProps } from './faktablokkUtils';
 
-export const FlyktningFaktablokk = (props: FaktablokkProps) => {
+export const FlyktningFaktablokk = (props: { søknadInnhold: SøknadInnhold<SøknadInnholdUføre> }) => {
     const { intl } = useI18n({
         messages: {
             ...messages,
@@ -37,7 +38,9 @@ export const FlyktningFaktablokk = (props: FaktablokkProps) => {
     );
 };
 
-export const FlyktningVilkårsblokk = (props: VilkårsblokkProps<'flyktning'>) => {
+export const FlyktningVilkårsblokk = (
+    props: VilkårsblokkProps<'flyktning'> & { søknadInnhold: SøknadInnhold<SøknadInnholdUføre> }
+) => {
     const { intl } = useI18n({
         messages: {
             ...messages,

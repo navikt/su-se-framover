@@ -8,7 +8,7 @@ import {
     BosituasjonTyper,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import { VerdierFormData } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
@@ -21,7 +21,7 @@ export interface FormueFormData {
 }
 
 export function getFormueInitialValues(
-    søknadsInnhold: SøknadInnhold,
+    søknadsInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>,
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger
 ): FormueFormData {
     const epsInformasjon = hentOmSøkerBorMedEpsOgEpsFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
@@ -42,7 +42,7 @@ export function getFormueInitialValues(
 
 const hentOmSøkerBorMedEpsOgEpsFnr = (
     b: Nullable<Bosituasjon>,
-    søknadsinnhold: SøknadInnhold
+    søknadsinnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>
 ): { borSøkerMedEPS: boolean; epsFnr: Nullable<string> } => {
     if (!b) {
         return {
@@ -83,7 +83,7 @@ export const formDataVerdierTilFormueVerdier = (verdier: VerdierFormData): Formu
 
 function getInitialVerdier(
     verdier: Nullable<FormueVerdier>,
-    søknadsFormue: Nullable<SøknadInnhold['formue']>
+    søknadsFormue: Nullable<SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>['formue']>
 ): VerdierFormData {
     return {
         verdiPåBolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),

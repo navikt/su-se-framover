@@ -20,6 +20,7 @@ import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { SøknadInnhold, SøknadInnholdUføre } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
 
@@ -46,7 +47,7 @@ const schema = yup
     })
     .required();
 
-const Flyktning = (props: VilkårsvurderingBaseProps) => {
+const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnhold<SøknadInnholdUføre> }) => {
     const navigate = useNavigate();
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -187,7 +188,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: <FlyktningFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: <FlyktningFaktablokk søknadInnhold={props.søknadInnhold} />,
             }}
         </ToKolonner>
     );

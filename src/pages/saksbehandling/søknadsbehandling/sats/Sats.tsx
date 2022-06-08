@@ -26,7 +26,7 @@ import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Sats as FaktiskSats } from '~src/types/Sats';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -59,7 +59,7 @@ interface SatsProps {
     behandlingId: string;
     eps: Nullable<Person>;
     bosituasjon: Nullable<Bosituasjon>;
-    søknadInnhold: SøknadInnhold;
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
     forrigeUrl: string;
     nesteUrl: string;
     sakId: string;

@@ -6,6 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf, Nullable } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/lovlig-opphold-i-norge/lovligOppholdINorge-nb';
@@ -13,9 +14,11 @@ import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
+import { VilkårsblokkProps } from './faktablokkUtils';
 
-export const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
+export const LovligOppholdFaktablokk = (props: {
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
+}) => {
     const { intl } = useI18n({
         messages: {
             ...messages,

@@ -4,7 +4,7 @@ import React from 'react';
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { PersonligOppmøteStatus } from '~src/types/Behandlingsinformasjon';
-import { Søknadstype } from '~src/types/Søknad';
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre, Søknadstype } from '~src/types/Søknad';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/personlig-oppmøte/personligOppmøte-nb';
@@ -12,9 +12,11 @@ import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
+import { VilkårsblokkProps } from './faktablokkUtils';
 
-export const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
+export const PersonligOppmøteFaktablokk = (props: {
+    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
+}) => {
     const { intl } = useI18n({ messages });
 
     return (
