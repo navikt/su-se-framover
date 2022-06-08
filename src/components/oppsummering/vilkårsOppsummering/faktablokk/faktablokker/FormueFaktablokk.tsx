@@ -220,9 +220,9 @@ export const FormueVilkårsblokk = (props: {
         if (!props.formue) {
             return 0;
         }
-        const søkersFormueFraSøknad = regnUtFormueVerdier(props.formue.vurderinger[0].grunnlag.søkersFormue);
+        const søkersFormueFraSøknad = regnUtFormueVerdier(props.formue.vurderinger[0]?.grunnlag.søkersFormue ?? null);
 
-        if (props.ektefelle.fnr && props.formue.vurderinger[0].grunnlag.epsFormue) {
+        if (props.ektefelle.fnr && props.formue.vurderinger[0]?.grunnlag.epsFormue) {
             return søkersFormueFraSøknad + regnUtFormueVerdier(props.formue.vurderinger[0].grunnlag.epsFormue);
         }
 
