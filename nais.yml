@@ -29,9 +29,11 @@ spec:
   liveness:
     path: isAlive
     port: 8080
+    initialDelay: 5
   readiness:
     path: isReady
     port: 8080
+    initialDelay: 5
   ingresses:
     - {{ingress}}
   vault:
