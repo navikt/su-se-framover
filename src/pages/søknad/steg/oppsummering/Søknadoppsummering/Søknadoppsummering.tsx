@@ -31,7 +31,7 @@ import * as styles from './søknadsoppsummering.module.less';
 const booleanSvar = (bool: Nullable<boolean>, formatMessage: MessageFormatter<typeof oppsummeringMessages>) =>
     bool ? formatMessage('ja') : bool === false ? formatMessage('nei') : formatMessage('ubesvart');
 
-const Søknadoppsummering = ({ søknad, søknadstema }: { søknad: SøknadState; søknadstema: Sakstype }) => {
+const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sakstype: Sakstype }) => {
     const { intl, formatMessage } = useI18n({
         messages: {
             ...stegMessages,
@@ -48,8 +48,8 @@ const Søknadoppsummering = ({ søknad, søknadstema }: { søknad: SøknadState;
     return (
         <RawIntlProvider value={intl}>
             <Accordion>
-                {søknadstema === Sakstype.Uføre && <UføreOppsummering søknad={søknad} formatMessage={formatMessage} />}
-                {søknadstema === Sakstype.Alder && (
+                {sakstype === Sakstype.Uføre && <UføreOppsummering søknad={søknad} formatMessage={formatMessage} />}
+                {sakstype === Sakstype.Alder && (
                     <AlderspensjonOppsummering søknad={søknad} formatMessage={formatMessage} />
                 )}
 

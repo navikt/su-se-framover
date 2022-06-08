@@ -59,7 +59,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                     handleSubmit();
                 }}
             >
-                <Søknadoppsummering søknad={søknadFraStore} søknadstema={soknadstema} />
+                <Søknadoppsummering søknad={søknadFraStore} sakstype={soknadstema} />
 
                 <Alert variant="info" className={styles.meldFraOmEndringerContainer}>
                     <Heading level="2" size="medium" spacing>
