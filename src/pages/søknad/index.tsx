@@ -8,37 +8,40 @@ import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
-import { Søknadstema } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Søknad';
 
 import * as styles from './index.module.less';
 import messages from './nb';
 
 export interface SøknadContext {
-    soknadstema: Søknadstema;
+    sakstype: Sakstype;
     isPapirsøknad: boolean;
+}
+
+function sakstypeFraTemaIUrl(temaIUrl?: Routes.TemaFraUrl): Sakstype {
+    return temaIUrl === Routes.URL_TEMA_ALDER ? Sakstype.Alder : Sakstype.Uføre;
 }
 
 const index = () => {
     const { formatMessage } = useI18n({ messages });
     const location = useLocation();
     const isPapirsøknad = location.search.includes('papirsoknad');
-    const soknadstema = useFeatureToggle(FeatureToggle.Alder)
-        ? Routes.useRouteParams<typeof Routes.soknadtema>().soknadstema
-        : Søknadstema.Uføre;
+    const temaIUrl = Routes.useRouteParams<typeof Routes.soknadtema>().soknadstema;
+    const sakstype = useFeatureToggle(FeatureToggle.Alder) ? sakstypeFraTemaIUrl(temaIUrl) : Sakstype.Uføre;
 
     return (
         <div className={styles.container}>
             <div
                 className={classNames(styles.infostripe, {
-                    [styles.ufore]: soknadstema === Søknadstema.Uføre,
-                    [styles.alder]: soknadstema === Søknadstema.Alder,
+                    [styles.ufore]: sakstype === Sakstype.Uføre,
+                    [styles.alder]: sakstype === Sakstype.Alder,
                 })}
             >
-                {soknadstema && (
+                {sakstype && (
                     <Heading level="2" size="small">
-                        {getSøknadstematekst(soknadstema, {
-                            [Søknadstema.Uføre]: formatMessage('infolinjeUføre'),
-                            [Søknadstema.Alder]: formatMessage('infolinjeAlder'),
+                        {getSøknadstematekst(sakstype, {
+                            [Sakstype.Uføre]: formatMessage('infolinjeUføre'),
+                            [Sakstype.Alder]: formatMessage('infolinjeAlder'),
                         })}
                     </Heading>
                 )}
@@ -46,7 +49,7 @@ const index = () => {
             <div className={styles.contentContainer}>
                 <div className={styles.content}>
                     <div className={styles.infoContainer}>
-                        <Outlet context={{ soknadstema, isPapirsøknad }} />
+                        <Outlet context={{ sakstype, isPapirsøknad }} />
                     </div>
                 </div>
             </div>

@@ -7,13 +7,13 @@ import { useI18n } from '~src/lib/i18n';
 import { soknadPersonSøk } from '~src/lib/routes';
 import { SøknadContext } from '~src/pages/søknad';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
-import { Søknadstema } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Søknad';
 
 import messages from './infoside-nb';
 import * as styles from './infoside.module.less';
 
 const Infoside = () => {
-    const { isPapirsøknad, soknadstema } = useOutletContext<SøknadContext>();
+    const { isPapirsøknad, sakstype: soknadstema } = useOutletContext<SøknadContext>();
     const nesteUrl = soknadPersonSøk.createURL({
         soknadstema,
         papirsøknad: isPapirsøknad,
@@ -36,8 +36,8 @@ const Infoside = () => {
                 <BodyLong>
                     {formatMessage(
                         getSøknadstematekst(soknadstema, {
-                            [Søknadstema.Uføre]: 'suppstønadInfo.kanFåSupp.ufør',
-                            [Søknadstema.Alder]: 'suppstønadInfo.kanFåSupp.alder',
+                            [Sakstype.Uføre]: 'suppstønadInfo.kanFåSupp.ufør',
+                            [Sakstype.Alder]: 'suppstønadInfo.kanFåSupp.alder',
                         }),
                         {
                             strong: (text) => <strong>{text}</strong>,
@@ -48,29 +48,29 @@ const Infoside = () => {
 
             <Heading level="1" size="xlarge" spacing>
                 {getSøknadstematekst(soknadstema, {
-                    [Søknadstema.Uføre]: formatMessage('page.tittel.uføre'),
-                    [Søknadstema.Alder]: formatMessage('page.tittel.alder'),
+                    [Sakstype.Uføre]: formatMessage('page.tittel.uføre'),
+                    [Sakstype.Alder]: formatMessage('page.tittel.alder'),
                 })}
             </Heading>
 
             <section className={styles.section}>
                 <Ingress spacing>
                     {getSøknadstematekst(soknadstema, {
-                        [Søknadstema.Uføre]: formatMessage('suppstønadInfo.ingress.ufør'),
-                        [Søknadstema.Alder]: formatMessage('suppstønadInfo.ingress.alder'),
+                        [Sakstype.Uføre]: formatMessage('suppstønadInfo.ingress.ufør'),
+                        [Sakstype.Alder]: formatMessage('suppstønadInfo.ingress.alder'),
                     })}
                 </Ingress>
                 <BodyLong>
                     <Link
                         target="_blank"
                         href={getSøknadstematekst(soknadstema, {
-                            [Søknadstema.Uføre]: merOmSuForUføreLink,
-                            [Søknadstema.Alder]: merOmSuAlderLink,
+                            [Sakstype.Uføre]: merOmSuForUføreLink,
+                            [Sakstype.Alder]: merOmSuAlderLink,
                         })}
                     >
                         {getSøknadstematekst(soknadstema, {
-                            [Søknadstema.Uføre]: formatMessage('suppstønad.merOmSuForUføre'),
-                            [Søknadstema.Alder]: formatMessage('suppstønad.merOmSuAlder'),
+                            [Sakstype.Uføre]: formatMessage('suppstønad.merOmSuForUføre'),
+                            [Sakstype.Alder]: formatMessage('suppstønad.merOmSuAlder'),
                         })}
                     </Link>
                 </BodyLong>
@@ -87,8 +87,8 @@ const Infoside = () => {
                     <li className={styles.listItem}>
                         {formatMessage(
                             getSøknadstematekst(soknadstema, {
-                                [Søknadstema.Uføre]: 'henterInnInfo.viHenter.flyktningsstatus',
-                                [Søknadstema.Alder]: 'henterInnInfo.viHenter.oppholdstillatelse',
+                                [Sakstype.Uføre]: 'henterInnInfo.viHenter.flyktningsstatus',
+                                [Sakstype.Alder]: 'henterInnInfo.viHenter.oppholdstillatelse',
                             })
                         )}
                     </li>
@@ -113,8 +113,8 @@ const Infoside = () => {
                             <Link
                                 target="_blank"
                                 href={getSøknadstematekst(soknadstema, {
-                                    [Søknadstema.Uføre]: suUførFlyktningLink,
-                                    [Søknadstema.Alder]: suAlderLink,
+                                    [Sakstype.Uføre]: suUførFlyktningLink,
+                                    [Sakstype.Alder]: suAlderLink,
                                 })}
                             >
                                 {tekst}

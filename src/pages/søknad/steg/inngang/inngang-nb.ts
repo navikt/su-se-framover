@@ -1,8 +1,8 @@
-import { Sakstype } from '~src/types/Sak';
+import { Sakstype } from '~src/types/Søknad';
 
 export default {
-    [Sakstype.ALDER]: 'Supplerende stønad for personer over 67 år med kort botid i Norge',
-    [Sakstype.UFØRE]: 'Supplerende stønad for uføre flyktninger',
+    [Sakstype.Alder]: 'Supplerende stønad for personer over 67 år med kort botid i Norge',
+    [Sakstype.Uføre]: 'Supplerende stønad for uføre flyktninger',
 
     'advarsel.alder.uføre':
         'Du kan få supplerende stønad for uføre flyktninger hvis du er under 67 år. Er du over 67 år kan du søke <navLink>Supplerende stønad for personer med kort botid i Norge</navLink>. Har du akkurat fylt 67 år kan du ha rett på etterbetaling for supplerende stønad for uføre flyktninger. Da må du fylle ut to søknader, en som ufør flyktning under 67 år og en som person med kort botid i Norge.',

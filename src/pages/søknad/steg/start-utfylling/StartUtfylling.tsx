@@ -20,7 +20,7 @@ import { Steg } from '~src/pages/søknad/steg/Steg';
 import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
 import { useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
-import { Søknadstema, Søknadstype } from '~src/types/Søknad';
+import { Sakstype, Søknadstype } from '~src/types/Søknad';
 
 const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
@@ -42,18 +42,18 @@ const StartUtfylling = () => {
     }, [step]);
 
     const steg = [
-        { step: Uføresteg.Uførevedtak, onlyIf: soknadstema === Søknadstema.Uføre },
+        { step: Uføresteg.Uførevedtak, onlyIf: soknadstema === Sakstype.Uføre },
         {
             step: Uføresteg.FlyktningstatusOppholdstillatelse,
-            onlyIf: soknadstema === Søknadstema.Uføre,
+            onlyIf: soknadstema === Sakstype.Uføre,
         },
         {
             step: Alderssteg.Alderspensjon,
-            onlyIf: soknadstema === Søknadstema.Alder,
+            onlyIf: soknadstema === Sakstype.Alder,
         },
         {
             step: Alderssteg.Oppholdstillatelse,
-            onlyIf: soknadstema === Søknadstema.Alder,
+            onlyIf: soknadstema === Sakstype.Alder,
         },
         { step: Fellessteg.BoOgOppholdINorge },
         { step: Fellessteg.DinFormue },
@@ -96,7 +96,7 @@ const StartUtfylling = () => {
             </Alert>
             <LinkAsButton
                 variant="secondary"
-                href={routes.soknadPersonSøk.createURL({ soknadstema: soknadstema ?? Søknadstema.Uføre })}
+                href={routes.soknadPersonSøk.createURL({ soknadstema: soknadstema ?? Sakstype.Uføre })}
             >
                 {formatMessage('feilmelding.knapp')}
             </LinkAsButton>
@@ -129,7 +129,7 @@ const StartUtfylling = () => {
                                                 navigate(
                                                     routes.soknadsutfylling.createURL({
                                                         step: nyttSteg.step,
-                                                        soknadstema: soknadstema ?? Søknadstema.Uføre,
+                                                        soknadstema: soknadstema ?? Sakstype.Uføre,
                                                     })
                                                 );
                                             }
@@ -153,7 +153,7 @@ const StartUtfylling = () => {
                                         step={step ?? Uføresteg.Uførevedtak}
                                         søknad={søknad}
                                         søker={søker}
-                                        soknadstema={soknadstema ?? Søknadstema.Uføre}
+                                        soknadstema={soknadstema ?? Sakstype.Uføre}
                                         erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
                                         hjelpetekst={aktivtSteg?.hjelpetekst}
                                     />

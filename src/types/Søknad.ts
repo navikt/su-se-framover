@@ -104,9 +104,9 @@ export enum Søknadstype {
     Papirsøknad = 'Papirsøknad',
 }
 
-export enum Søknadstema {
+export enum Sakstype {
     Alder = 'alder',
-    Uføre = 'ufore',
+    Uføre = 'uføre',
 }
 
 interface Formue {

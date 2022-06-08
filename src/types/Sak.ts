@@ -23,23 +23,18 @@ export interface Sak {
     reguleringer: Regulering[];
 }
 
-export enum Sakstype {
-    UFØRE = 'uføre',
-    ALDER = 'alder',
-}
-
 export enum KanStansesEllerGjenopptas {
     STANS = 'STANS',
     GJENOPPTA = 'GJENOPPTA',
     INGEN = 'INGEN',
 }
 
-export interface AlleredeÅpenSak {
-    uføre: ÅpenSakinfo;
-    alder: ÅpenSakinfo;
+export interface AlleredeGjeldendeSakForBruker {
+    uføre: BegrensetSakInfo;
+    alder: BegrensetSakInfo;
 }
 
-export interface ÅpenSakinfo {
+export interface BegrensetSakInfo {
     harÅpenSøknad: boolean;
     iverksattInnvilgetStønadsperiode: Nullable<Periode<string>>;
 }

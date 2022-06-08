@@ -1,10 +1,11 @@
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Restans } from '~src/types/Restans';
-import { AlleredeÅpenSak, Sak, Sakstype } from '~src/types/Sak';
+import { AlleredeGjeldendeSakForBruker, Sak } from '~src/types/Sak';
+import { Sakstype } from '~src/types/Søknad';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function fetchSakByFnr(fnr: string, type: Sakstype = Sakstype.UFØRE): Promise<ApiClientResult<Sak>> {
+export async function fetchSakByFnr(fnr: string, type: Sakstype = Sakstype.Uføre): Promise<ApiClientResult<Sak>> {
     return apiClient({
         url: `/saker/søk`,
         method: 'POST',
@@ -37,7 +38,7 @@ export async function hentFerdigeBehandlinger(): Promise<ApiClientResult<Restans
     return apiClient({ url: `/saker/behandlinger/ferdige`, method: 'GET' });
 }
 
-export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<AlleredeÅpenSak>> {
+export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<AlleredeGjeldendeSakForBruker>> {
     return apiClient({ url: `/saker/info/${fnr}`, method: 'GET' });
 }
 

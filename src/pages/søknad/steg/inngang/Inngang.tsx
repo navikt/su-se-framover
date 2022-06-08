@@ -23,8 +23,8 @@ import { Alderssteg, Uføresteg } from '~src/pages/søknad/types';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Periode } from '~src/types/Periode';
-import { AlleredeÅpenSak, Sakstype } from '~src/types/Sak';
-import { Søknadstema, Søknadstype } from '~src/types/Søknad';
+import { AlleredeGjeldendeSakForBruker } from '~src/types/Sak';
+import { Sakstype, Søknadstype } from '~src/types/Søknad';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 
@@ -33,13 +33,13 @@ import * as styles from './inngang.module.less';
 
 const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
     const { formatMessage } = useI18n({ messages: nb });
-    const { soknadstema } = useOutletContext<SøknadContext>();
+    const { sakstype } = useOutletContext<SøknadContext>();
 
-    if (!skalViseAldersvarsel(søkerAlder, soknadstema)) {
+    if (!skalViseAldersvarsel(søkerAlder, sakstype)) {
         return null;
     }
 
-    const suAndreSkjemaLenke = lenkeTilMotsattSkjema(soknadstema);
+    const suAndreSkjemaLenke = lenkeTilMotsattSkjema(sakstype);
     return (
         <div>
             <Heading level="2" size="small" spacing>
@@ -47,9 +47,9 @@ const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
             </Heading>
             <BodyLong>
                 {formatMessage(
-                    getSøknadstematekst(soknadstema, {
-                        [Søknadstema.Uføre]: 'advarsel.alder.uføre',
-                        [Søknadstema.Alder]: 'advarsel.alder.alder',
+                    getSøknadstematekst(sakstype, {
+                        [Sakstype.Uføre]: 'advarsel.alder.uføre',
+                        [Sakstype.Alder]: 'advarsel.alder.alder',
                     }),
                     {
                         navLink: (tekst) => (
@@ -72,15 +72,12 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
     type: Sakstype;
 }) => {
     const { formatMessage } = useI18n({ messages: nb });
-    const { soknadstema } = useOutletContext<SøknadContext>();
+    const { sakstype } = useOutletContext<SøknadContext>();
     if (iverksattInnvilgetStønadsperiode == null) {
         return null;
     }
 
-    const typeErSammeSomTema =
-        (soknadstema === Søknadstema.Alder && type === Sakstype.ALDER) ||
-        (soknadstema === Søknadstema.Uføre && type === Sakstype.ALDER);
-
+    const typeErSammeSomTema = sakstype === type;
     return (
         <div>
             <Heading level="2" size="small" spacing>
@@ -101,12 +98,12 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
     );
 };
 
-const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: AlleredeÅpenSak }) => {
+const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: AlleredeGjeldendeSakForBruker }) => {
     const { alder, uføre } = alleredeÅpenSakInfo;
     const { formatMessage } = useI18n({ messages: nb });
-    const { soknadstema } = useOutletContext<SøknadContext>();
+    const { sakstype } = useOutletContext<SøknadContext>();
 
-    const suAndreSkjemaLenke = lenkeTilMotsattSkjema(soknadstema);
+    const suAndreSkjemaLenke = lenkeTilMotsattSkjema(sakstype);
 
     if (!alder.harÅpenSøknad && !uføre.harÅpenSøknad) {
         return null;
@@ -118,17 +115,17 @@ const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: Al
                 <div>
                     <Heading level="2" size="small" spacing>
                         {formatMessage(
-                            getSøknadstematekst(soknadstema, {
-                                [Søknadstema.Alder]: 'heading.åpenSøknad',
-                                [Søknadstema.Uføre]: 'heading.åpenSøknad.uføre',
+                            getSøknadstematekst(sakstype, {
+                                [Sakstype.Alder]: 'heading.åpenSøknad',
+                                [Sakstype.Uføre]: 'heading.åpenSøknad.uføre',
                             })
                         )}
                     </Heading>
                     <BodyLong>
                         {formatMessage(
-                            getSøknadstematekst(soknadstema, {
-                                [Søknadstema.Uføre]: 'feil.harÅpenSøknad.motsatt-uføre',
-                                [Søknadstema.Alder]: 'feil.harÅpenSøknad',
+                            getSøknadstematekst(sakstype, {
+                                [Sakstype.Uføre]: 'feil.harÅpenSøknad.motsatt-uføre',
+                                [Sakstype.Alder]: 'feil.harÅpenSøknad',
                             }),
                             {
                                 navLink: (tekst) => (
@@ -145,17 +142,17 @@ const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: Al
                 <div>
                     <Heading level="2" size="small" spacing>
                         {formatMessage(
-                            getSøknadstematekst(soknadstema, {
-                                [Søknadstema.Alder]: 'heading.åpenSøknad.alder',
-                                [Søknadstema.Uføre]: 'heading.åpenSøknad',
+                            getSøknadstematekst(sakstype, {
+                                [Sakstype.Alder]: 'heading.åpenSøknad.alder',
+                                [Sakstype.Uføre]: 'heading.åpenSøknad',
                             })
                         )}
                     </Heading>
                     <BodyLong>
                         {formatMessage(
-                            getSøknadstematekst(soknadstema, {
-                                [Søknadstema.Uføre]: 'feil.harÅpenSøknad',
-                                [Søknadstema.Alder]: 'feil.harÅpenSøknad.motsatt-alder',
+                            getSøknadstematekst(sakstype, {
+                                [Sakstype.Uføre]: 'feil.harÅpenSøknad',
+                                [Sakstype.Alder]: 'feil.harÅpenSøknad.motsatt-alder',
                             }),
                             {
                                 navLink: (tekst) => (
@@ -169,11 +166,11 @@ const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: Al
                 </div>
             )}
             <IverksattInnvilgetStønadsperiodeAlert
-                type={Sakstype.UFØRE}
+                type={Sakstype.Uføre}
                 iverksattInnvilgetStønadsperiode={uføre.iverksattInnvilgetStønadsperiode}
             />
             <IverksattInnvilgetStønadsperiodeAlert
-                type={Sakstype.ALDER}
+                type={Sakstype.Alder}
                 iverksattInnvilgetStønadsperiode={alder.iverksattInnvilgetStønadsperiode}
             />
         </>
@@ -184,11 +181,11 @@ const SakinfoAlertContainer = ({
     alleredeÅpenSakInfo,
     søkerAlder,
 }: {
-    alleredeÅpenSakInfo: AlleredeÅpenSak;
+    alleredeÅpenSakInfo: AlleredeGjeldendeSakForBruker;
     søkerAlder: Nullable<number>;
 }) => {
-    const { soknadstema } = useOutletContext<SøknadContext>();
-    const visAldersvarsel = skalViseAldersvarsel(søkerAlder, soknadstema);
+    const { sakstype } = useOutletContext<SøknadContext>();
+    const visAldersvarsel = skalViseAldersvarsel(søkerAlder, sakstype);
 
     if (
         !visAldersvarsel &&
@@ -208,10 +205,10 @@ const SakinfoAlertContainer = ({
 };
 
 const Inngang = () => {
-    const { isPapirsøknad, soknadstema } = useOutletContext<SøknadContext>();
+    const { isPapirsøknad, sakstype } = useOutletContext<SøknadContext>();
     const startstegUrl = soknadsutfylling.createURL({
-        step: soknadstema === Søknadstema.Uføre ? Uføresteg.Uførevedtak : Alderssteg.Alderspensjon,
-        soknadstema: soknadstema,
+        step: sakstype === Sakstype.Uføre ? Uføresteg.Uførevedtak : Alderssteg.Alderspensjon,
+        soknadstema: sakstype,
         papirsøknad: isPapirsøknad,
     });
     const { søker } = useAppSelector((s) => s.søker);
@@ -352,12 +349,12 @@ const Inngang = () => {
     );
 };
 
-function skalViseAldersvarsel(alder: Nullable<number>, soknadstema: Søknadstema): boolean {
+function skalViseAldersvarsel(alder: Nullable<number>, sakstype: Sakstype): boolean {
     if (alder == null) {
         return false;
     }
     const erOver67år = er67EllerEldre(alder);
-    if (soknadstema === Søknadstema.Uføre) {
+    if (sakstype === Sakstype.Uføre) {
         return erOver67år;
     } else {
         return !erOver67år;
@@ -366,11 +363,11 @@ function skalViseAldersvarsel(alder: Nullable<number>, soknadstema: Søknadstema
 const SU_ALDER_URL = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-personer-over-sekstisyv-ar';
 const SU_UFØRE_URL = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-ufor-flyktning';
 
-function lenkeTilMotsattSkjema(skjema: Søknadstema): string {
+function lenkeTilMotsattSkjema(skjema: Sakstype): string {
     switch (skjema) {
-        case Søknadstema.Alder:
+        case Sakstype.Alder:
             return SU_UFØRE_URL;
-        case Søknadstema.Uføre:
+        case Sakstype.Uføre:
             return SU_ALDER_URL;
     }
 }

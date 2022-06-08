@@ -21,12 +21,12 @@ import Oppsummering from '~src/pages/søknad/steg/oppsummering/Oppsummering';
 import Uførevedtak from '~src/pages/søknad/steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from '~src/pages/søknad/steg/utenlandsopphold/Utenlandsopphold';
 import { Alderssteg, Fellessteg, Søknadssteg, Uføresteg } from '~src/pages/søknad/types';
-import { Søknadstema, Søknadstype } from '~src/types/Søknad';
+import { Sakstype, Søknadstype } from '~src/types/Søknad';
 
 export const Steg = (props: {
     title: string;
     step: Søknadssteg;
-    soknadstema: Søknadstema;
+    soknadstema: Sakstype;
     søknad: SøknadState;
     søker: Person;
     erSaksbehandler: boolean;
@@ -61,7 +61,7 @@ export const Steg = (props: {
 
 const ShowSteg = (props: {
     step: Søknadssteg;
-    soknadstema: Søknadstema;
+    soknadstema: Sakstype;
     søknad: SøknadState;
     søker: Person;
     erSaksbehandler: boolean;
@@ -113,7 +113,7 @@ const ShowSteg = (props: {
             return (
                 <BoOgOppholdINorge
                     forrigeUrl={stegUrl(
-                        props.soknadstema === Søknadstema.Uføre
+                        props.soknadstema === Sakstype.Uføre
                             ? Uføresteg.FlyktningstatusOppholdstillatelse
                             : Alderssteg.Oppholdstillatelse
                     )}

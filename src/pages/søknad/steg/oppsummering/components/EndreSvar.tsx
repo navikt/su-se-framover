@@ -11,7 +11,7 @@ import messages from '../Søknadoppsummering/søknadsoppsummering-nb';
 import * as styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 
 export const EndreSvar = (props: { path: Søknadssteg }) => {
-    const { soknadstema } = useOutletContext<SøknadContext>();
+    const { sakstype: soknadstema } = useOutletContext<SøknadContext>();
     const { intl } = useI18n({ messages });
     return (
         <Link

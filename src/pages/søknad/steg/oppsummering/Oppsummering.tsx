@@ -9,7 +9,7 @@ import * as innsendingSlice from '~src/features/søknad/innsending.slice';
 import { useI18n } from '~src/lib/i18n';
 import { SøknadContext } from '~src/pages/søknad';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { Søknadstema } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Søknad';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import * as sharedStyles from '../../steg-shared.module.less';
@@ -20,13 +20,13 @@ import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
     const navigate = useNavigate();
-    const { soknadstema } = useOutletContext<SøknadContext>();
+    const { sakstype: soknadstema } = useOutletContext<SøknadContext>();
     const [søknadFraStore, innsending] = useAppSelector((s) => [s.soknad, s.innsending.søknad]);
     const { formatMessage } = useI18n({ messages });
     const dispatch = useAppDispatch();
 
     const handleSubmit = async () => {
-        if (soknadstema === Søknadstema.Uføre) {
+        if (soknadstema === Sakstype.Uføre) {
             const res = await dispatch(
                 innsendingSlice.sendUføresøknad({
                     søknad: søknadFraStore,
@@ -38,7 +38,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
             }
         }
 
-        if (soknadstema === Søknadstema.Alder) {
+        if (soknadstema === Sakstype.Alder) {
             const res = await dispatch(
                 innsendingSlice.sendAldersøknad({
                     søknad: søknadFraStore,
