@@ -42,6 +42,19 @@ export const URL_TEMA_ALDER = 'alder' as const;
 
 export type TemaFraUrl = typeof URL_TEMA_UFØRE | typeof URL_TEMA_ALDER;
 
+export function urlForSakstype(sakstype: Sakstype): TemaFraUrl {
+    switch (sakstype) {
+        case Sakstype.Alder:
+            return URL_TEMA_ALDER;
+        case Sakstype.Uføre:
+            return URL_TEMA_UFØRE;
+    }
+}
+
+export function sakstypeFraTemaIUrl(temaIUrl?: TemaFraUrl): Sakstype {
+    return temaIUrl === Routes.URL_TEMA_ALDER ? Sakstype.Alder : Sakstype.Uføre;
+}
+
 export const soknadtema: Route<{ soknadstema?: TemaFraUrl; papirsøknad?: boolean }> = {
     path: ':soknadstema/*',
     absPath: '/soknad/:soknadstema/',
@@ -49,19 +62,20 @@ export const soknadtema: Route<{ soknadstema?: TemaFraUrl; papirsøknad?: boolea
         `/soknad${args?.soknadstema ? '/' + args.soknadstema : ''}${args.papirsøknad ? '?papirsoknad=true' : ''}`,
 };
 
-export const soknadPersonSøk: Route<{ papirsøknad?: boolean; soknadstema: Sakstype }> = {
+export const soknadPersonSøk: Route<{ papirsøknad?: boolean; soknadstema: TemaFraUrl }> = {
     path: 'personsok',
     absPath: '/soknad/:soknadstema/personsok',
-    createURL: (args) => `/soknad/${args.soknadstema}/personsok${args.papirsøknad ? '?papirsoknad=true' : ''}`,
+    createURL: ({ soknadstema, papirsøknad }) =>
+        `/soknad/${soknadstema}/personsok${papirsøknad ? '?papirsoknad=true' : ''}`,
 };
 
-export const soknadsutfylling: Route<{ step: Søknadssteg; soknadstema: Sakstype; papirsøknad?: boolean }> = {
+export const soknadsutfylling: Route<{ step: Søknadssteg; soknadstema: TemaFraUrl; papirsøknad?: boolean }> = {
     path: 'utfylling/:step',
     absPath: '/soknad/:soknadstema/utfylling/:step',
     createURL: (args) => `/soknad/${args.soknadstema}/utfylling/${args.step}`,
 };
 
-export const søknadskvittering: Route<{ soknadstema: Sakstype }> = {
+export const søknadskvittering: Route<{ soknadstema: TemaFraUrl }> = {
     path: 'kvittering',
     absPath: '/soknad/:soknadstema/kvittering',
     createURL: (args) => `/soknad/${args.soknadstema}/kvittering`,

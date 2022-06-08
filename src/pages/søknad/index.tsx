@@ -18,16 +18,12 @@ export interface SøknadContext {
     isPapirsøknad: boolean;
 }
 
-function sakstypeFraTemaIUrl(temaIUrl?: Routes.TemaFraUrl): Sakstype {
-    return temaIUrl === Routes.URL_TEMA_ALDER ? Sakstype.Alder : Sakstype.Uføre;
-}
-
 const index = () => {
     const { formatMessage } = useI18n({ messages });
     const location = useLocation();
     const isPapirsøknad = location.search.includes('papirsoknad');
     const temaIUrl = Routes.useRouteParams<typeof Routes.soknadtema>().soknadstema;
-    const sakstype = useFeatureToggle(FeatureToggle.Alder) ? sakstypeFraTemaIUrl(temaIUrl) : Sakstype.Uføre;
+    const sakstype = useFeatureToggle(FeatureToggle.Alder) ? Routes.sakstypeFraTemaIUrl(temaIUrl) : Sakstype.Uføre;
 
     return (
         <div className={styles.container}>

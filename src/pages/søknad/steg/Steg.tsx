@@ -26,7 +26,7 @@ import { Sakstype, Søknadstype } from '~src/types/Søknad';
 export const Steg = (props: {
     title: string;
     step: Søknadssteg;
-    soknadstema: Sakstype;
+    sakstype: Sakstype;
     søknad: SøknadState;
     søker: Person;
     erSaksbehandler: boolean;
@@ -50,7 +50,7 @@ export const Steg = (props: {
             </div>
             <ShowSteg
                 step={props.step}
-                soknadstema={props.soknadstema}
+                sakstype={props.sakstype}
                 søknad={props.søknad}
                 søker={props.søker}
                 erSaksbehandler={props.erSaksbehandler}
@@ -61,19 +61,19 @@ export const Steg = (props: {
 
 const ShowSteg = (props: {
     step: Søknadssteg;
-    soknadstema: Sakstype;
+    sakstype: Sakstype;
     søknad: SøknadState;
     søker: Person;
     erSaksbehandler: boolean;
 }) => {
     const avbrytUrl = routes.soknadPersonSøk.createURL({
         papirsøknad: props.erSaksbehandler && props.søknad.forVeileder.type === Søknadstype.Papirsøknad,
-        soknadstema: props.soknadstema,
+        soknadstema: routes.urlForSakstype(props.sakstype),
     });
     const stegUrl = (steg: Søknadssteg) =>
         routes.soknadsutfylling.createURL({
             step: steg,
-            soknadstema: props.soknadstema,
+            soknadstema: routes.urlForSakstype(props.sakstype),
         });
 
     switch (props.step) {
@@ -113,7 +113,7 @@ const ShowSteg = (props: {
             return (
                 <BoOgOppholdINorge
                     forrigeUrl={stegUrl(
-                        props.soknadstema === Sakstype.Uføre
+                        props.sakstype === Sakstype.Uføre
                             ? Uføresteg.FlyktningstatusOppholdstillatelse
                             : Alderssteg.Oppholdstillatelse
                     )}
@@ -166,7 +166,7 @@ const ShowSteg = (props: {
                             : stegUrl(Fellessteg.DinInntekt)
                     }
                     nesteUrl={routes.soknadsutfylling.createURL({
-                        soknadstema: props.soknadstema,
+                        soknadstema: routes.urlForSakstype(props.sakstype),
                         step:
                             props.søknad.forVeileder.type === Søknadstype.DigitalSøknad
                                 ? Fellessteg.ForVeileder
@@ -200,7 +200,9 @@ const ShowSteg = (props: {
                             ? Fellessteg.ForVeileder
                             : Fellessteg.InformasjonOmPapirsøknad
                     )}
-                    nesteUrl={routes.søknadskvittering.createURL({ soknadstema: props.soknadstema })}
+                    nesteUrl={routes.søknadskvittering.createURL({
+                        soknadstema: routes.urlForSakstype(props.sakstype),
+                    })}
                     avbrytUrl={avbrytUrl}
                     søker={props.søker}
                 />

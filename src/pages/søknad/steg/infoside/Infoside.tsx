@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';
-import { soknadPersonSøk } from '~src/lib/routes';
+import { soknadPersonSøk, urlForSakstype } from '~src/lib/routes';
 import { SøknadContext } from '~src/pages/søknad';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
 import { Sakstype } from '~src/types/Søknad';
@@ -13,9 +13,9 @@ import messages from './infoside-nb';
 import * as styles from './infoside.module.less';
 
 const Infoside = () => {
-    const { isPapirsøknad, sakstype: soknadstema } = useOutletContext<SøknadContext>();
+    const { isPapirsøknad, sakstype } = useOutletContext<SøknadContext>();
     const nesteUrl = soknadPersonSøk.createURL({
-        soknadstema,
+        soknadstema: urlForSakstype(sakstype),
         papirsøknad: isPapirsøknad,
     });
 
@@ -35,7 +35,7 @@ const Infoside = () => {
             <GuidePanel className={styles.guide}>
                 <BodyLong>
                     {formatMessage(
-                        getSøknadstematekst(soknadstema, {
+                        getSøknadstematekst(sakstype, {
                             [Sakstype.Uføre]: 'suppstønadInfo.kanFåSupp.ufør',
                             [Sakstype.Alder]: 'suppstønadInfo.kanFåSupp.alder',
                         }),
@@ -47,7 +47,7 @@ const Infoside = () => {
             </GuidePanel>
 
             <Heading level="1" size="xlarge" spacing>
-                {getSøknadstematekst(soknadstema, {
+                {getSøknadstematekst(sakstype, {
                     [Sakstype.Uføre]: formatMessage('page.tittel.uføre'),
                     [Sakstype.Alder]: formatMessage('page.tittel.alder'),
                 })}
@@ -55,7 +55,7 @@ const Infoside = () => {
 
             <section className={styles.section}>
                 <Ingress spacing>
-                    {getSøknadstematekst(soknadstema, {
+                    {getSøknadstematekst(sakstype, {
                         [Sakstype.Uføre]: formatMessage('suppstønadInfo.ingress.ufør'),
                         [Sakstype.Alder]: formatMessage('suppstønadInfo.ingress.alder'),
                     })}
@@ -63,12 +63,12 @@ const Infoside = () => {
                 <BodyLong>
                     <Link
                         target="_blank"
-                        href={getSøknadstematekst(soknadstema, {
+                        href={getSøknadstematekst(sakstype, {
                             [Sakstype.Uføre]: merOmSuForUføreLink,
                             [Sakstype.Alder]: merOmSuAlderLink,
                         })}
                     >
-                        {getSøknadstematekst(soknadstema, {
+                        {getSøknadstematekst(sakstype, {
                             [Sakstype.Uføre]: formatMessage('suppstønad.merOmSuForUføre'),
                             [Sakstype.Alder]: formatMessage('suppstønad.merOmSuAlder'),
                         })}
@@ -86,7 +86,7 @@ const Infoside = () => {
                     <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.arbeidsforhold')}</li>
                     <li className={styles.listItem}>
                         {formatMessage(
-                            getSøknadstematekst(soknadstema, {
+                            getSøknadstematekst(sakstype, {
                                 [Sakstype.Uføre]: 'henterInnInfo.viHenter.flyktningsstatus',
                                 [Sakstype.Alder]: 'henterInnInfo.viHenter.oppholdstillatelse',
                             })
@@ -112,7 +112,7 @@ const Infoside = () => {
                         navLink: (tekst) => (
                             <Link
                                 target="_blank"
-                                href={getSøknadstematekst(soknadstema, {
+                                href={getSøknadstematekst(sakstype, {
                                     [Sakstype.Uføre]: suUførFlyktningLink,
                                     [Sakstype.Alder]: suAlderLink,
                                 })}

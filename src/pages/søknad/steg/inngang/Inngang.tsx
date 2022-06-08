@@ -16,7 +16,7 @@ import søknadSlice from '~src/features/søknad/søknad.slice';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { soknadsutfylling } from '~src/lib/routes';
+import { soknadsutfylling, urlForSakstype } from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { SøknadContext } from '~src/pages/søknad';
 import { Alderssteg, Uføresteg } from '~src/pages/søknad/types';
@@ -208,7 +208,7 @@ const Inngang = () => {
     const { isPapirsøknad, sakstype } = useOutletContext<SøknadContext>();
     const startstegUrl = soknadsutfylling.createURL({
         step: sakstype === Sakstype.Uføre ? Uføresteg.Uførevedtak : Alderssteg.Alderspensjon,
-        soknadstema: sakstype,
+        soknadstema: urlForSakstype(sakstype),
         papirsøknad: isPapirsøknad,
     });
     const { søker } = useAppSelector((s) => s.søker);
