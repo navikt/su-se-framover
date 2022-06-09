@@ -29,7 +29,17 @@ export enum KanStansesEllerGjenopptas {
     INGEN = 'INGEN',
 }
 
-export interface BegrensetSakinfo {
+export interface AlleredeGjeldendeSakForBruker {
+    uføre: BegrensetSakInfo;
+    alder: BegrensetSakInfo;
+}
+
+export interface BegrensetSakInfo {
     harÅpenSøknad: boolean;
     iverksattInnvilgetStønadsperiode: Nullable<Periode<string>>;
+}
+
+export enum Sakstype {
+    Alder = 'alder',
+    Uføre = 'uføre',
 }

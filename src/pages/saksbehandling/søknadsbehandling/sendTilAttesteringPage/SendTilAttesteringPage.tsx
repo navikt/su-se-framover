@@ -13,7 +13,7 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Søknadstema } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import {
     erAvslått,
@@ -58,7 +58,7 @@ const SendTilAttesteringPage = () => {
 
     const sisteVurderteVilkår = behandling
         ? mapToVilkårsinformasjon(
-              Søknadstema.Uføre,
+              Sakstype.Uføre,
               behandling.behandlingsinformasjon,
               behandling.grunnlagsdataOgVilkårsvurderinger
           )

@@ -15,94 +15,200 @@ import * as personSlice from '~src/features/person/person.slice';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
-import { MessageFormatter, useI18n } from '~src/lib/i18n';
-import { soknadsutfylling } from '~src/lib/routes';
+import { useI18n } from '~src/lib/i18n';
+import { soknadsutfylling, urlForSakstype } from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { SøknadContext } from '~src/pages/søknad';
 import { Alderssteg, Uføresteg } from '~src/pages/søknad/types';
+import { getSøknadstematekst } from '~src/pages/søknad/utils';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Periode } from '~src/types/Periode';
-import { Søknadstema, Søknadstype } from '~src/types/Søknad';
+import { AlleredeGjeldendeSakForBruker, Sakstype } from '~src/types/Sak';
+import { Søknadstype } from '~src/types/Søknad';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 
 import nb from './inngang-nb';
 import * as styles from './inngang.module.less';
 
-const SakinfoAlert = ({
-    harÅpenSøknad,
+const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
+    const { formatMessage } = useI18n({ messages: nb });
+    const { sakstype } = useOutletContext<SøknadContext>();
+
+    if (!skalViseAldersvarsel(søkerAlder, sakstype)) {
+        return null;
+    }
+
+    const suAndreSkjemaLenke = lenkeTilMotsattSkjema(sakstype);
+    return (
+        <div>
+            <Heading level="2" size="small" spacing>
+                {formatMessage('heading.advarsel.alder')}
+            </Heading>
+            <BodyLong>
+                {formatMessage(
+                    getSøknadstematekst(sakstype, {
+                        [Sakstype.Uføre]: 'advarsel.alder.uføre',
+                        [Sakstype.Alder]: 'advarsel.alder.alder',
+                    }),
+                    {
+                        navLink: (tekst) => (
+                            <Link target="_blank" href={suAndreSkjemaLenke}>
+                                {tekst}
+                            </Link>
+                        ),
+                    }
+                )}
+            </BodyLong>
+        </div>
+    );
+};
+
+const IverksattInnvilgetStønadsperiodeAlert = ({
     iverksattInnvilgetStønadsperiode,
-    aldervarsel,
-    formatMessage,
+    type,
 }: {
-    harÅpenSøknad: boolean;
     iverksattInnvilgetStønadsperiode: Nullable<Periode<string>>;
-    aldervarsel: boolean;
-    formatMessage: MessageFormatter<typeof nb>;
+    type: Sakstype;
 }) => {
-    const visTittel = [harÅpenSøknad, iverksattInnvilgetStønadsperiode, aldervarsel].filter(Boolean).length > 1;
-    const suAlderUrl =
-        'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-personer-over-sekstisyv-ar';
+    const { formatMessage } = useI18n({ messages: nb });
+    const { sakstype } = useOutletContext<SøknadContext>();
+    if (iverksattInnvilgetStønadsperiode == null) {
+        return null;
+    }
+
+    const typeErSammeSomTema = sakstype === type;
+    return (
+        <div>
+            <Heading level="2" size="small" spacing>
+                {formatMessage(`heading.løpendeYtelse.${type}`)}
+            </Heading>
+            <BodyLong>
+                {formatMessage(`åpenSøknad.løpendeYtelse${typeErSammeSomTema ? '' : '.kort'}`, {
+                    løpendePeriode: `${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
+                        iverksattInnvilgetStønadsperiode.tilOgMed
+                    )}`,
+                    tidligestNyPeriode: formatDate(
+                        DateFns.startOfMonth(new Date(iverksattInnvilgetStønadsperiode.tilOgMed)).toString()
+                    ),
+                    type: formatMessage(type),
+                })}
+            </BodyLong>
+        </div>
+    );
+};
+
+const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: AlleredeGjeldendeSakForBruker }) => {
+    const { alder, uføre } = alleredeÅpenSakInfo;
+    const { formatMessage } = useI18n({ messages: nb });
+    const { sakstype } = useOutletContext<SøknadContext>();
+
+    const suAndreSkjemaLenke = lenkeTilMotsattSkjema(sakstype);
+
+    if (!alder.harÅpenSøknad && !uføre.harÅpenSøknad) {
+        return null;
+    }
+
+    return (
+        <>
+            {alder.harÅpenSøknad && (
+                <div>
+                    <Heading level="2" size="small" spacing>
+                        {formatMessage(
+                            getSøknadstematekst(sakstype, {
+                                [Sakstype.Alder]: 'heading.åpenSøknad',
+                                [Sakstype.Uføre]: 'heading.åpenSøknad.uføre',
+                            })
+                        )}
+                    </Heading>
+                    <BodyLong>
+                        {formatMessage(
+                            getSøknadstematekst(sakstype, {
+                                [Sakstype.Uføre]: 'feil.harÅpenSøknad.motsatt-uføre',
+                                [Sakstype.Alder]: 'feil.harÅpenSøknad',
+                            }),
+                            {
+                                navLink: (tekst) => (
+                                    <Link target="_blank" href={suAndreSkjemaLenke}>
+                                        {tekst}
+                                    </Link>
+                                ),
+                            }
+                        )}
+                    </BodyLong>
+                </div>
+            )}
+            {uføre.harÅpenSøknad && (
+                <div>
+                    <Heading level="2" size="small" spacing>
+                        {formatMessage(
+                            getSøknadstematekst(sakstype, {
+                                [Sakstype.Alder]: 'heading.åpenSøknad.alder',
+                                [Sakstype.Uføre]: 'heading.åpenSøknad',
+                            })
+                        )}
+                    </Heading>
+                    <BodyLong>
+                        {formatMessage(
+                            getSøknadstematekst(sakstype, {
+                                [Sakstype.Uføre]: 'feil.harÅpenSøknad',
+                                [Sakstype.Alder]: 'feil.harÅpenSøknad.motsatt-alder',
+                            }),
+                            {
+                                navLink: (tekst) => (
+                                    <Link target="_blank" href={suAndreSkjemaLenke}>
+                                        {tekst}
+                                    </Link>
+                                ),
+                            }
+                        )}
+                    </BodyLong>
+                </div>
+            )}
+            <IverksattInnvilgetStønadsperiodeAlert
+                type={Sakstype.Uføre}
+                iverksattInnvilgetStønadsperiode={uføre.iverksattInnvilgetStønadsperiode}
+            />
+            <IverksattInnvilgetStønadsperiodeAlert
+                type={Sakstype.Alder}
+                iverksattInnvilgetStønadsperiode={alder.iverksattInnvilgetStønadsperiode}
+            />
+        </>
+    );
+};
+
+const SakinfoAlertContainer = ({
+    alleredeÅpenSakInfo,
+    søkerAlder,
+}: {
+    alleredeÅpenSakInfo: AlleredeGjeldendeSakForBruker;
+    søkerAlder: Nullable<number>;
+}) => {
+    const { sakstype } = useOutletContext<SøknadContext>();
+    const visAldersvarsel = skalViseAldersvarsel(søkerAlder, sakstype);
+
+    if (
+        !visAldersvarsel &&
+        !alleredeÅpenSakInfo.alder.harÅpenSøknad &&
+        !alleredeÅpenSakInfo.uføre.harÅpenSøknad &&
+        alleredeÅpenSakInfo.alder.iverksattInnvilgetStønadsperiode === null &&
+        alleredeÅpenSakInfo.uføre.iverksattInnvilgetStønadsperiode === null
+    ) {
+        return null;
+    }
     return (
         <Alert className={styles.åpenSøknadContainer} variant="warning">
-            {harÅpenSøknad && (
-                <div>
-                    {visTittel && (
-                        <Heading level="2" size="small" spacing>
-                            {formatMessage('heading.åpenSøknad')}
-                        </Heading>
-                    )}
-                    <BodyLong spacing={iverksattInnvilgetStønadsperiode !== null}>
-                        {formatMessage('feil.harÅpenSøknad')}
-                    </BodyLong>
-                </div>
-            )}
-            {iverksattInnvilgetStønadsperiode && (
-                <div>
-                    {visTittel && (
-                        <Heading level="2" size="small" spacing>
-                            {formatMessage('heading.løpendeYtelse')}
-                        </Heading>
-                    )}
-                    <BodyLong>
-                        {formatMessage('åpenSøknad.løpendeYtelse', {
-                            løpendePeriode: `${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
-                                iverksattInnvilgetStønadsperiode.tilOgMed
-                            )}`,
-                            tidligestNyPeriode: formatDate(
-                                DateFns.startOfMonth(new Date(iverksattInnvilgetStønadsperiode.tilOgMed)).toString()
-                            ),
-                        })}
-                    </BodyLong>
-                </div>
-            )}
-            {aldervarsel && (
-                <div>
-                    {visTittel && (
-                        <Heading level="2" size="small" spacing>
-                            {formatMessage('heading.advarsel.alder')}
-                        </Heading>
-                    )}
-                    <BodyLong>
-                        {formatMessage('advarsel.alder', {
-                            navLink: (tekst) => (
-                                <Link target="_blank" href={suAlderUrl}>
-                                    {tekst}
-                                </Link>
-                            ),
-                        })}
-                    </BodyLong>
-                </div>
-            )}
+            <ÅpenSøknadVarsel alleredeÅpenSakInfo={alleredeÅpenSakInfo} />
+            <Aldersvarsel søkerAlder={søkerAlder} />
         </Alert>
     );
 };
 
-const index = () => {
-    const { isPapirsøknad, soknadstema } = useOutletContext<SøknadContext>();
+const Inngang = () => {
+    const { isPapirsøknad, sakstype } = useOutletContext<SøknadContext>();
     const startstegUrl = soknadsutfylling.createURL({
-        step: soknadstema === Søknadstema.Uføre ? Uføresteg.Uførevedtak : Alderssteg.Alderspensjon,
-        soknadstema: soknadstema,
+        step: sakstype === Sakstype.Uføre ? Uføresteg.Uførevedtak : Alderssteg.Alderspensjon,
+        soknadstema: urlForSakstype(sakstype),
         papirsøknad: isPapirsøknad,
     });
     const { søker } = useAppSelector((s) => s.søker);
@@ -207,17 +313,13 @@ const index = () => {
                     />
                     {pipe(
                         RemoteData.combine(sakinfo, hentPersonStatus),
-                        RemoteData.map(
-                            ([{ harÅpenSøknad, iverksattInnvilgetStønadsperiode }, { alder }]) =>
-                                (harÅpenSøknad || iverksattInnvilgetStønadsperiode || er67EllerEldre(alder)) && (
-                                    <SakinfoAlert
-                                        harÅpenSøknad={harÅpenSøknad}
-                                        iverksattInnvilgetStønadsperiode={iverksattInnvilgetStønadsperiode}
-                                        aldervarsel={er67EllerEldre(alder)}
-                                        formatMessage={formatMessage}
-                                    />
-                                )
-                        ),
+                        RemoteData.map(([begrensetSakInfo, { alder }]) => (
+                            <SakinfoAlertContainer
+                                key={alder}
+                                alleredeÅpenSakInfo={begrensetSakInfo}
+                                søkerAlder={alder}
+                            />
+                        )),
                         RemoteData.getOrElse(() => null as React.ReactNode)
                     )}
                     {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
@@ -247,4 +349,27 @@ const index = () => {
     );
 };
 
-export default index;
+function skalViseAldersvarsel(alder: Nullable<number>, sakstype: Sakstype): boolean {
+    if (alder == null) {
+        return false;
+    }
+    const erOver67år = er67EllerEldre(alder);
+    if (sakstype === Sakstype.Uføre) {
+        return erOver67år;
+    } else {
+        return !erOver67år;
+    }
+}
+const SU_ALDER_URL = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-personer-over-sekstisyv-ar';
+const SU_UFØRE_URL = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-ufor-flyktning';
+
+function lenkeTilMotsattSkjema(skjema: Sakstype): string {
+    switch (skjema) {
+        case Sakstype.Alder:
+            return SU_UFØRE_URL;
+        case Sakstype.Uføre:
+            return SU_ALDER_URL;
+    }
+}
+
+export default Inngang;

@@ -29,9 +29,11 @@ spec:
   liveness:
     path: isAlive
     port: 8080
+    initialDelay: 5
   readiness:
     path: isReady
     port: 8080
+    initialDelay: 5
   ingresses:
     - {{ingress}}
   vault:
@@ -47,6 +49,8 @@ spec:
         value: su-se-framover-redis
       - name: SU_SE_BAKOVER_URL
         value: http://su-se-bakover
+      - name: NPM_CONFIG_CACHE
+        value: /tmp 
   envFrom:
     - secret: redis-password
 ---

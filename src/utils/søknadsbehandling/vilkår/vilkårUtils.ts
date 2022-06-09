@@ -13,7 +13,7 @@ import { erBosituasjonFullstendig } from '~src/types/grunnlagsdataOgVilkårsvurd
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { Søknadstema } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -112,7 +112,7 @@ const mapToVilkårsinformasjonAlder = (alder: GrunnlagsdataOgVilkårsvurderinger
 ];
 
 export const mapToVilkårsinformasjon = (
-    sakstype: Søknadstema,
+    sakstype: Sakstype,
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
@@ -120,8 +120,8 @@ export const mapToVilkårsinformasjon = (
         behandlingsinformasjon;
     const { alder, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
 
-    const uførevilkår = sakstype === Søknadstema.Uføre ? mapToVilkårsinformasjonUføre(uføre) : [];
-    const aldersvilkår = sakstype === Søknadstema.Alder ? mapToVilkårsinformasjonAlder(alder) : [];
+    const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre) : [];
+    const aldersvilkår = sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(alder) : [];
 
     return [
         ...uførevilkår,

@@ -1,11 +1,11 @@
 import { Adresse } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
+import { Sakstype } from '~src/types/Sak';
 import {
     EktefellePartnerSamboer,
     SøknadInnholdAlder,
     SøknadInnholdFelles,
     SøknadInnholdUføre,
-    Søknadstema,
     Søknadstype,
 } from '~src/types/Søknad';
 
@@ -42,7 +42,7 @@ export const toFellessøknadsinnsending = (
     const oppholdstillatelse = erAlderssøknad(søknad) ? søknad.oppholdstillatelse : søknad.flyktningstatus;
 
     return {
-        type: erAlderssøknad(søknad) ? Søknadstema.Alder : Søknadstema.Uføre,
+        type: erAlderssøknad(søknad) ? Sakstype.Alder : Sakstype.Uføre,
         personopplysninger: {
             fnr: fnr,
         },

@@ -1,13 +1,13 @@
-import { Søknadstema } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 
 export function getSøknadstematekst<AlderTekst extends string, UføreTekst extends string>(
-    søknadstema: Søknadstema,
-    text: { [Søknadstema.Uføre]: UføreTekst; [Søknadstema.Alder]: AlderTekst }
+    sakstype: Sakstype,
+    text: { [Sakstype.Uføre]: UføreTekst; [Sakstype.Alder]: AlderTekst }
 ): AlderTekst | UføreTekst {
-    switch (søknadstema) {
-        case Søknadstema.Alder:
-            return text[Søknadstema.Alder];
-        case Søknadstema.Uføre:
-            return text[Søknadstema.Uføre];
+    switch (sakstype) {
+        case Sakstype.Alder:
+            return text[Sakstype.Alder];
+        case Sakstype.Uføre:
+            return text[Sakstype.Uføre];
     }
 }

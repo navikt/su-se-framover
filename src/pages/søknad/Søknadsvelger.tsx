@@ -8,7 +8,6 @@ import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { SøknadContext } from '~src/pages/søknad/index';
-import { Søknadstema } from '~src/types/Søknad';
 
 import messages from './nb';
 import * as styles from './søknadsvelger.module.less';
@@ -21,7 +20,7 @@ const Søknadsvelger = () => {
         return (
             <Navigate
                 replace
-                to={Routes.soknadtema.createURL({ papirsøknad: isPapirsøknad, soknadstema: Søknadstema.Uføre })}
+                to={Routes.soknadtema.createURL({ papirsøknad: isPapirsøknad, soknadstema: Routes.URL_TEMA_UFØRE })}
             />
         );
     }
@@ -53,7 +52,7 @@ const Søknadsvelger = () => {
                         variant="secondary"
                         href={Routes.soknadtema.createURL({
                             papirsøknad: isPapirsøknad,
-                            soknadstema: Søknadstema.Alder,
+                            soknadstema: Routes.URL_TEMA_ALDER,
                         })}
                     >
                         {formatMessage('alder-lenke')}
@@ -68,7 +67,7 @@ const Søknadsvelger = () => {
                         variant="secondary"
                         href={Routes.soknadtema.createURL({
                             papirsøknad: isPapirsøknad,
-                            soknadstema: Søknadstema.Uføre,
+                            soknadstema: Routes.URL_TEMA_UFØRE,
                         })}
                     >
                         {formatMessage('ufør-lenke')}

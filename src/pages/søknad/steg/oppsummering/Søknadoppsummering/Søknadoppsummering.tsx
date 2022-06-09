@@ -15,7 +15,7 @@ import oppholdstillatelseMessages from '~src/pages/søknad/steg/oppholdstillatel
 import uførevedtakMessages from '~src/pages/søknad/steg/uførevedtak/uførevedtak-nb';
 import utenlandsoppholdMessages from '~src/pages/søknad/steg/utenlandsopphold/utenlandsopphold-nb';
 import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
-import { Søknadstema } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 
 import * as sharedStyles from '../../../steg-shared.module.less';
@@ -31,7 +31,7 @@ import * as styles from './søknadsoppsummering.module.less';
 const booleanSvar = (bool: Nullable<boolean>, formatMessage: MessageFormatter<typeof oppsummeringMessages>) =>
     bool ? formatMessage('ja') : bool === false ? formatMessage('nei') : formatMessage('ubesvart');
 
-const Søknadoppsummering = ({ søknad, søknadstema }: { søknad: SøknadState; søknadstema: Søknadstema }) => {
+const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sakstype: Sakstype }) => {
     const { intl, formatMessage } = useI18n({
         messages: {
             ...stegMessages,
@@ -48,10 +48,8 @@ const Søknadoppsummering = ({ søknad, søknadstema }: { søknad: SøknadState;
     return (
         <RawIntlProvider value={intl}>
             <Accordion>
-                {søknadstema === Søknadstema.Uføre && (
-                    <UføreOppsummering søknad={søknad} formatMessage={formatMessage} />
-                )}
-                {søknadstema === Søknadstema.Alder && (
+                {sakstype === Sakstype.Uføre && <UføreOppsummering søknad={søknad} formatMessage={formatMessage} />}
+                {sakstype === Sakstype.Alder && (
                     <AlderspensjonOppsummering søknad={søknad} formatMessage={formatMessage} />
                 )}
 

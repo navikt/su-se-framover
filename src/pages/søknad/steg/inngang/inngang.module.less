@@ -43,6 +43,13 @@
 .åpenSøknadContainer {
     margin-top: @spacing-l;
 
+    > div div:only-child {
+        // Hvis det kun er 1 advarsel
+        h2 {
+            display: none;
+        }
+    }
+
     > div {
         display: flex;
         flex-direction: column;
