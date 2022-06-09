@@ -90,6 +90,7 @@ export interface SøknadInnholdFelles {
         inntektOgPensjon: InntektOgPensjon;
     }>;
     forNav: ForNav;
+    type: Søknadstema;
 }
 
 export type SøknadInnhold = SøknadInnholdAlder | SøknadInnholdUføre;

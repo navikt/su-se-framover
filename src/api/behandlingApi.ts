@@ -2,6 +2,7 @@ import { Nullable } from '~src/lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Behandlingsinformasjon, FormueVerdier } from '~src/types/Behandlingsinformasjon';
 import { Fradrag } from '~src/types/Fradrag';
+import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from '~src/types/Periode';
@@ -208,6 +209,20 @@ export async function lagreUføregrunnlag(arg: {
 }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/uføre`,
+        method: 'POST',
+        body: { vurderinger: arg.vurderinger },
+    });
+}
+
+export async function lagreAldersgrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: {
+        harSøktAlderspensjon: Aldersresultat;
+    };
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/alderspensjon`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
     });

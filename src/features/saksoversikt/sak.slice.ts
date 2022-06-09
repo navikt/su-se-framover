@@ -17,6 +17,7 @@ import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
+import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Klage } from '~src/types/Klage';
@@ -172,6 +173,24 @@ export const lagreUføregrunnlag = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/grunnlag/uføre', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreUføregrunnlag(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreAlderspensjongrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vurderinger: {
+            harSøktAlderspensjon: Aldersresultat;
+        };
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/alderspensjon', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreAldersgrunnlag(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -689,6 +708,16 @@ export default createSlice({
         });
 
         builder.addCase(lagreFormuegrunnlag.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
+        builder.addCase(lagreAlderspensjongrunnlag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({

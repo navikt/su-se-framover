@@ -5,6 +5,7 @@ import {
     SøknadInnholdAlder,
     SøknadInnholdFelles,
     SøknadInnholdUføre,
+    Søknadstema,
     Søknadstype,
 } from '~src/types/Søknad';
 
@@ -41,6 +42,7 @@ export const toFellessøknadsinnsending = (
     const oppholdstillatelse = erAlderssøknad(søknad) ? søknad.oppholdstillatelse : søknad.flyktningstatus;
 
     return {
+        type: erAlderssøknad(søknad) ? Søknadstema.Alder : Søknadstema.Uføre,
         personopplysninger: {
             fnr: fnr,
         },

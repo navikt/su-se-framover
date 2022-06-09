@@ -4,8 +4,9 @@ import { useOutletContext } from 'react-router-dom';
 import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import * as Routes from '~src/lib/routes';
-import { isUføresøknad } from '~src/types/Søknad';
-import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspensjon/Alderspensjon';
+import { isAldersøknad, isUføresøknad, Søknadstema } from '~src/types/Søknad';
+import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { createVilkårUrl } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -53,16 +54,36 @@ const Vilkår = () => {
         sakId: sakId,
     });
 
+    const sakstype = behandling.søknad.søknadInnhold.type;
+
     return (
         <SøknadsbehandlingDraftProvider>
             <div className={styles.container}>
-                <SaksbehandlingFramdriftsindikator sakId={props.sak.id} behandling={behandling} vilkår={vilkar} />
+                <SaksbehandlingFramdriftsindikator
+                    sakId={props.sak.id}
+                    behandling={behandling}
+                    vilkår={vilkar}
+                    sakstype={sakstype}
+                />
                 <div className={styles.content}>
                     {vilkar === Vilkårtype.Virkningstidspunkt && (
                         <Virkningstidspunkt
                             behandling={behandling}
                             forrigeUrl={saksoversiktUrl}
-                            nesteUrl={vilkårUrl(Vilkårtype.Uførhet)}
+                            nesteUrl={
+                                sakstype === Søknadstema.Uføre
+                                    ? vilkårUrl(Vilkårtype.Uførhet)
+                                    : vilkårUrl(Vilkårtype.Alderspensjon)
+                            }
+                            sakId={sakId}
+                        />
+                    )}
+                    {vilkar === VilkårtypeAlder.Alderspensjon && isAldersøknad(behandling.søknad.søknadInnhold) && (
+                        <Alderspensjon
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
                     )}

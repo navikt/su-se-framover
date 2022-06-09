@@ -5,9 +5,17 @@ export enum VilkårVurderingStatus {
     Uavklart = 'UAVKLART',
 }
 
-export enum Vilkårtype {
-    Virkningstidspunkt = 'VIRKNINGSTIDSPUNKT',
+export enum VilkårtypeAlder {
+    Alderspensjon = 'ALDERSPENSJON',
+    OppholdstillatelseAlder = 'OPPHOLDSTILLATELSE_ALDER',
+}
+
+export enum VilkårtypeUføre {
     Uførhet = 'UFØRHET',
+}
+
+export enum VilkårtypeFelles {
+    Virkningstidspunkt = 'VIRKNINGSTIDSPUNKT',
     Flyktning = 'FLYKTNING',
     Oppholdstillatelse = 'OPPHOLDSTILLATELSE',
     PersonligOppmøte = 'PERSONLIG_OPPMØTE',
@@ -20,3 +28,6 @@ export enum Vilkårtype {
     Sats = 'SATS',
     Beregning = 'BEREGNING',
 }
+
+export type Vilkårtype = VilkårtypeFelles | VilkårtypeUføre | VilkårtypeAlder;
+export const Vilkårtype = { ...VilkårtypeFelles, ...VilkårtypeUføre, ...VilkårtypeAlder };

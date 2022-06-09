@@ -4,14 +4,16 @@ import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import {
     Behandlingsinformasjon,
     FormueStatus,
-    PersonligOppmøteStatus,
     PersonligOppmøte,
+    PersonligOppmøteStatus,
     Vilkårstatus,
 } from '~src/types/Behandlingsinformasjon';
+import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { erBosituasjonFullstendig } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Søknadstema } from '~src/types/Søknad';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -29,9 +31,14 @@ export interface Vilkårsinformasjon {
 }
 
 export const vilkårTittelFormatted = (type: Vilkårtype) => {
+    // TODO: bruke i18n
     switch (type) {
         case Vilkårtype.Virkningstidspunkt:
             return 'Virkningstidspunkt';
+        case Vilkårtype.Alderspensjon:
+            return 'Alderspensjon';
+        case Vilkårtype.OppholdstillatelseAlder:
+            return 'Oppholdstillatelse Alder';
         case Vilkårtype.BorOgOppholderSegINorge:
             return 'Bo og opphold i Norge';
         case Vilkårtype.Flyktning:
@@ -74,27 +81,51 @@ const getBehandlingsinformasjonStatus = <VilkårKey extends keyof Behandlingsinf
     }
 };
 
+const mapToVilkårsinformasjonUføre = (uføre: GrunnlagsdataOgVilkårsvurderinger['uføre']): Vilkårsinformasjon[] => [
+    {
+        status:
+            uføre === null
+                ? VilkårVurderingStatus.IkkeVurdert
+                : uføre?.resultat === UføreResultat.HarUføresakTilBehandling
+                ? VilkårVurderingStatus.Uavklart
+                : uføre?.resultat === UføreResultat.VilkårOppfylt
+                ? VilkårVurderingStatus.Ok
+                : VilkårVurderingStatus.IkkeOk,
+        vilkårtype: Vilkårtype.Uførhet,
+        erStartet: uføre !== null,
+    },
+];
+
+const mapToVilkårsinformasjonAlder = (alder: GrunnlagsdataOgVilkårsvurderinger['alder']): Vilkårsinformasjon[] => [
+    {
+        status:
+            alder === null
+                ? VilkårVurderingStatus.IkkeVurdert
+                : alder?.resultat === Aldersresultat.HarAlderssakTilBehandling
+                ? VilkårVurderingStatus.Uavklart
+                : alder?.resultat === Aldersresultat.VilkårOppfylt
+                ? VilkårVurderingStatus.Ok
+                : VilkårVurderingStatus.IkkeOk,
+        vilkårtype: Vilkårtype.Alderspensjon,
+        erStartet: alder !== null,
+    },
+];
+
 export const mapToVilkårsinformasjon = (
+    sakstype: Søknadstema,
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
     const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, personligOppmøte } =
         behandlingsinformasjon;
-    const { formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
+    const { alder, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
+
+    const uførevilkår = sakstype === Søknadstema.Uføre ? mapToVilkårsinformasjonUføre(uføre) : [];
+    const aldersvilkår = sakstype === Søknadstema.Alder ? mapToVilkårsinformasjonAlder(alder) : [];
 
     return [
-        {
-            status:
-                uføre === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : uføre?.resultat === UføreResultat.HarUføresakTilBehandling
-                    ? VilkårVurderingStatus.Uavklart
-                    : uføre?.resultat === UføreResultat.VilkårOppfylt
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
-            vilkårtype: Vilkårtype.Uførhet,
-            erStartet: uføre !== null,
-        },
+        ...uførevilkår,
+        ...aldersvilkår,
         {
             status: getBehandlingsinformasjonStatus(flyktning),
             vilkårtype: Vilkårtype.Flyktning,

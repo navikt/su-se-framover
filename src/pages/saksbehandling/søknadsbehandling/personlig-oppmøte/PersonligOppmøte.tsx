@@ -21,14 +21,15 @@ import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Behandlingsstatus } from '~src/types/Behandling';
 import {
-    PersonligOppmøteStatus,
-    PersonligOppmøte as PersonligOppmøteType,
     Behandlingsinformasjon,
+    PersonligOppmøte as PersonligOppmøteType,
+    PersonligOppmøteStatus,
 } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Søknadstema } from '~src/types/Søknad';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
-import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -168,6 +169,7 @@ const toPersonligOppmøteStatus = (formData: FormData): Nullable<PersonligOppmø
 };
 
 const tilOppdatertVilkårsinformasjon = (
+    søknadstema: Søknadstema,
     values: FormData,
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
@@ -177,6 +179,7 @@ const tilOppdatertVilkårsinformasjon = (
         return 'personligOppmøteIkkeVurdert';
     }
     return mapToVilkårsinformasjon(
+        søknadstema,
         {
             ...behandlingsinformasjon,
             personligOppmøte: {
@@ -234,6 +237,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const oppdatertVilkårsinformasjon = useMemo(
         () =>
             tilOppdatertVilkårsinformasjon(
+                props.behandling.søknad.søknadInnhold.type,
                 watch,
                 props.behandling.behandlingsinformasjon,
                 props.behandling.grunnlagsdataOgVilkårsvurderinger
@@ -292,6 +296,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         }
 
         const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(
+            props.behandling.søknad.søknadInnhold.type,
             values,
             props.behandling.behandlingsinformasjon,
             props.behandling.grunnlagsdataOgVilkårsvurderinger

@@ -56,6 +56,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) =>
 
 const hentSaksbehandlingssteg = (behandling: Behandling) => {
     const vilkårsinformasjon = mapToVilkårsinformasjon(
+        behandling.søknad.søknadInnhold.type,
         behandling.behandlingsinformasjon,
         behandling.grunnlagsdataOgVilkårsvurderinger
     );

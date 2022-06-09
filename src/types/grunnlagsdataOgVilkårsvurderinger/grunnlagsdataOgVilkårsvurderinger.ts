@@ -2,6 +2,7 @@ import isEqual from 'lodash.isequal';
 
 import { Nullable } from '~src/lib/types';
 import { Fradrag } from '~src/types/Fradrag';
+import { Aldersvilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';
@@ -10,6 +11,7 @@ import { UføreVilkår } from './uføre/Uførevilkår';
 import { Utenlandsopphold } from './utenlandsopphold/Utenlandsopphold';
 
 export interface GrunnlagsdataOgVilkårsvurderinger {
+    alder: Nullable<Aldersvilkår>;
     uføre: Nullable<UføreVilkår>;
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];
