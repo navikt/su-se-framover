@@ -6,7 +6,7 @@ import { Nullable } from '~src/lib/types';
 export interface Søknad {
     id: string;
     sakId: string;
-    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
+    søknadInnhold: SøknadInnhold;
     opprettet: string;
     lukket: Nullable<Lukket>;
 }
@@ -37,14 +37,14 @@ interface OppholdstillatelseAlder {
     familieforening: Nullable<boolean>;
 }
 
-export interface SøknadInnholdAlder {
+export interface SøknadInnholdAlder extends SøknadInnholdFelles {
     harSøktAlderspensjon: {
         harSøktAlderspensjon: boolean;
     };
     oppholdstillatelseAlder: OppholdstillatelseAlder;
 }
 
-export interface SøknadInnholdUføre {
+export interface SøknadInnholdUføre extends SøknadInnholdFelles {
     uførevedtak: {
         harUførevedtak: boolean;
     };
@@ -53,13 +53,11 @@ export interface SøknadInnholdUføre {
     };
 }
 
-export const isUføresøknad = (
-    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>
-): søknadInnhold is SøknadInnhold<SøknadInnholdUføre> => 'uførevedtak' in søknadInnhold;
+export const isUføresøknad = (søknadInnhold: SøknadInnhold): søknadInnhold is SøknadInnholdUføre =>
+    'uførevedtak' in søknadInnhold;
 
-export const isAldersøknad = (
-    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>
-): søknadInnhold is SøknadInnhold<SøknadInnholdAlder> => 'harSøktAlderspensjon' in søknadInnhold;
+export const isAldersøknad = (søknadInnhold: SøknadInnhold): søknadInnhold is SøknadInnholdAlder =>
+    'harSøktAlderspensjon' in søknadInnhold;
 
 export interface SøknadInnholdFelles {
     personopplysninger: {
@@ -94,7 +92,7 @@ export interface SøknadInnholdFelles {
     forNav: ForNav;
 }
 
-export type SøknadInnhold<T extends SøknadInnholdAlder | SøknadInnholdUføre> = T & SøknadInnholdFelles;
+export type SøknadInnhold = SøknadInnholdAlder | SøknadInnholdUføre;
 
 interface ForNavDigitalSøknad {
     type: Søknadstype.DigitalSøknad;

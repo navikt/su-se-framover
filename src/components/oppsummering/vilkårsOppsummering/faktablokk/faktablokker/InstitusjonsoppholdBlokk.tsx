@@ -5,7 +5,6 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
-import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/institusjonsopphold/institusjonsopphold-nb';
@@ -13,11 +12,9 @@ import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { VilkårsblokkProps } from './faktablokkUtils';
+import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
-export const InstitusjonsoppholdBlokk = (props: {
-    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
-}) => {
+export const InstitusjonsoppholdBlokk = (props: FaktablokkProps) => {
     const { intl } = useI18n({
         messages: {
             ...messages,

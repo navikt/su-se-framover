@@ -4,7 +4,7 @@ import React from 'react';
 import { useI18n } from '~src/lib/i18n';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { isUføresøknad, SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
+import { isUføresøknad, SøknadInnhold } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -21,7 +21,7 @@ import messages from './vilkårsOppsummering-nb';
 import * as styles from './vilkårsOppsummering.module.less';
 
 const VilkårsOppsummering = (props: {
-    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
+    søknadInnhold: SøknadInnhold;
     behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
@@ -53,7 +53,7 @@ const VilkårsOppsummering = (props: {
 
 const Vilkårsting = (props: {
     info: Vilkårsinformasjon;
-    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
+    søknadInnhold: SøknadInnhold;
     behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {

@@ -8,7 +8,7 @@ import { keyOf } from '~src/lib/types';
 import boOgOppholdSøknadMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import flyktningstatusSøknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
-import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknad';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
@@ -17,11 +17,9 @@ import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { VilkårsblokkProps } from './faktablokkUtils';
+import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
-export const FastOppholdFaktablokk = (props: {
-    søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>;
-}) => {
+export const FastOppholdFaktablokk = (props: FaktablokkProps) => {
     const { intl } = useI18n({
         messages: {
             ...messages,
@@ -37,10 +35,7 @@ export const FastOppholdFaktablokk = (props: {
     );
 };
 
-const createFaktaBlokkArray = (
-    søknadsInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder>,
-    intl: IntlShape
-) => {
+const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape) => {
     const søknadMessage = (s: keyof typeof flyktningstatusSøknadMessages) => s;
 
     const arr = [];

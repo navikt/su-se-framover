@@ -2,7 +2,6 @@ import { Adresse } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
 import {
     EktefellePartnerSamboer,
-    SøknadInnhold,
     SøknadInnholdAlder,
     SøknadInnholdFelles,
     SøknadInnholdUføre,
@@ -12,7 +11,7 @@ import {
 import { AdresseFraSøknad, AlderssøknadState, SøknadState, UføresøknadState } from './søknad.slice';
 import { DelerBoligMed, EPSFormData } from './types';
 
-export const toUføreinnsending = (søknad: UføresøknadState, fnr: string): SøknadInnhold<SøknadInnholdUføre> => ({
+export const toUføreinnsending = (søknad: UføresøknadState, fnr: string): SøknadInnholdUføre => ({
     uførevedtak: {
         harUførevedtak: søknad.harUførevedtak!,
     },
@@ -22,7 +21,7 @@ export const toUføreinnsending = (søknad: UføresøknadState, fnr: string): S�
     ...toFellessøknadsinnsending(søknad, fnr),
 });
 
-export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): SøknadInnhold<SøknadInnholdAlder> => ({
+export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): SøknadInnholdAlder => ({
     harSøktAlderspensjon: {
         harSøktAlderspensjon: søknad.harSøktAlderspensjon!,
     },

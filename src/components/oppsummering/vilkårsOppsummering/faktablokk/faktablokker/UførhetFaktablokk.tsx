@@ -4,7 +4,7 @@ import React from 'react';
 import { useI18n } from '~src/lib/i18n';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { SøknadInnhold, SøknadInnholdUføre } from '~src/types/Søknad';
+import { SøknadInnholdUføre } from '~src/types/Søknad';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
@@ -14,11 +14,11 @@ import messages from './faktablokker-nb';
 
 export interface UføreVilkårsblokkProps {
     info: Vilkårsinformasjon;
-    søknadInnhold: SøknadInnhold<SøknadInnholdUføre>;
+    søknadInnhold: SøknadInnholdUføre;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }
 
-export const UførhetFaktablokk = ({ søknadInnhold }: { søknadInnhold: SøknadInnhold<SøknadInnholdUføre> }) => {
+export const UførhetFaktablokk = ({ søknadInnhold }: { søknadInnhold: SøknadInnholdUføre }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (

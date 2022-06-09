@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
-import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknad';
 
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
+import { FaktablokkProps } from './faktablokkUtils';
 
-const BeregningFaktablokk = (props: { søknadInnhold: SøknadInnhold<SøknadInnholdUføre | SøknadInnholdAlder> }) => {
+const BeregningFaktablokk = (props: FaktablokkProps) => {
     const { intl } = useI18n({ messages });
 
     return (
