@@ -19,6 +19,7 @@ import { Control, Controller, useForm, UseFormTrigger } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
+import { FeatureToggle } from '~src/api/featureToggleApi';
 import * as personApi from '~src/api/personApi';
 import { hentSkattemelding } from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -31,6 +32,7 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import personSlice from '~src/features/person/person.slice';
 import sakSliceActions, * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useFeatureToggle } from '~src/lib/featureToggles';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
@@ -123,6 +125,7 @@ const Formue = (props: {
     );
     const [skattemeldingBruker, hentSkattemeldingBruker] = useApiCall(hentSkattemelding);
     const [skattemeldingEPS, hentSkattemeldingEPS, resetSkattemeldingEPS] = useApiCall(hentSkattemelding);
+    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
 
@@ -210,10 +213,14 @@ const Formue = (props: {
     useEffect(() => {
         if (watch.epsFnr && watch.epsFnr.length === 11) {
             fetchEps(watch.epsFnr, (res) => {
-                hentSkattemeldingEPS({ fnr: res.fnr });
+                if (skattemeldingToggle) {
+                    hentSkattemeldingEPS({ fnr: res.fnr });
+                }
             });
         } else {
-            resetEpsToInitial();
+            if (skattemeldingToggle) {
+                resetEpsToInitial();
+            }
             resetSkattemeldingEPS();
         }
     }, [watch.epsFnr]);
