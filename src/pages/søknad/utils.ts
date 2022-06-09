@@ -1,10 +1,10 @@
 import { Sakstype } from '~src/types/Søknad';
 
 export function getSøknadstematekst<AlderTekst extends string, UføreTekst extends string>(
-    søknadstema: Sakstype,
+    sakstype: Sakstype,
     text: { [Sakstype.Uføre]: UføreTekst; [Sakstype.Alder]: AlderTekst }
 ): AlderTekst | UføreTekst {
-    switch (søknadstema) {
+    switch (sakstype) {
         case Sakstype.Alder:
             return text[Sakstype.Alder];
         case Sakstype.Uføre:
