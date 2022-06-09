@@ -51,7 +51,7 @@
         "@navikt/ds-datepicker": "^1.0.4",
         "@navikt/ds-icons": "^0.8.12",
         "@navikt/ds-react": "^0.18.5",
-        "@navikt/ds-react-internal": "^0.13.7",
+        "@navikt/ds-react-internal": "^0.14.6",
         "@radix-ui/react-tabs": "^0.1.5",
         "@reduxjs/toolkit": "^1.8.2",
         "@sentry/browser": "^6.19.7",
