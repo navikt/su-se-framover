@@ -1,11 +1,17 @@
 import { Adresse } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
-import { EktefellePartnerSamboer, SøknadFellesInnhold, SøknadInnholdAlder, Søknadstype } from '~src/types/Søknad';
+import {
+    EktefellePartnerSamboer,
+    SøknadInnholdAlder,
+    SøknadInnholdFelles,
+    SøknadInnholdUføre,
+    Søknadstype,
+} from '~src/types/Søknad';
 
 import { AdresseFraSøknad, AlderssøknadState, SøknadState, UføresøknadState } from './søknad.slice';
 import { DelerBoligMed, EPSFormData } from './types';
 
-export const toUføreinnsending = (søknad: UføresøknadState, fnr: string) => ({
+export const toUføreinnsending = (søknad: UføresøknadState, fnr: string): SøknadInnholdUføre => ({
     uførevedtak: {
         harUførevedtak: søknad.harUførevedtak!,
     },
@@ -29,7 +35,7 @@ export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): S�
 export const toFellessøknadsinnsending = (
     søknad: AlderssøknadState | UføresøknadState,
     fnr: string
-): SøknadFellesInnhold => {
+): SøknadInnholdFelles => {
     const erAlderssøknad = (s: AlderssøknadState | UføresøknadState): s is AlderssøknadState =>
         'oppholdstillatelse' in s && s.oppholdstillatelse.harOppholdstillatelse !== null;
     const oppholdstillatelse = erAlderssøknad(søknad) ? søknad.oppholdstillatelse : søknad.flyktningstatus;

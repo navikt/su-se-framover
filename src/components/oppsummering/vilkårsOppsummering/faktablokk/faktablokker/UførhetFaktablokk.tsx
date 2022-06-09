@@ -4,22 +4,21 @@ import React from 'react';
 import { useI18n } from '~src/lib/i18n';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnholdUføre } from '~src/types/Søknad';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps } from './faktablokkUtils';
 
 export interface UføreVilkårsblokkProps {
     info: Vilkårsinformasjon;
-    søknadInnhold: SøknadInnhold;
+    søknadInnhold: SøknadInnholdUføre;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }
 
-export const UførhetFaktablokk = (props: FaktablokkProps) => {
+export const UførhetFaktablokk = ({ søknadInnhold }: { søknadInnhold: SøknadInnholdUføre }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -28,7 +27,7 @@ export const UførhetFaktablokk = (props: FaktablokkProps) => {
             fakta={[
                 {
                     tittel: formatMessage('uførhet.vedtakOmUføretrygd'),
-                    verdi: props.søknadInnhold.uførevedtak.harUførevedtak
+                    verdi: søknadInnhold.uførevedtak.harUførevedtak
                         ? formatMessage('fraSøknad.ja')
                         : formatMessage('fraSøknad.nei'),
                 },

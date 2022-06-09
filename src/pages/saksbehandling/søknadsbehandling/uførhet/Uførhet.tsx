@@ -13,13 +13,14 @@ import { vurderingsperiodeTilFormData } from '~src/pages/saksbehandling/steg/uf�
 import { UførhetForm } from '~src/pages/saksbehandling/steg/uføre/UførhetForm';
 import { schema } from '~src/pages/saksbehandling/steg/uføre/validation';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { SøknadInnholdUføre } from '~src/types/Søknad';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './uførhet-nb';
 
-const Uførhet = (props: VilkårsvurderingBaseProps) => {
+const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
     const { formatMessage } = useI18n({ messages });
 
     const [lagreBehandlingsinformasjonStatus, lagreUføregrunnlag] = useAsyncActionCreator(sakSlice.lagreUføregrunnlag);
@@ -69,7 +70,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                         {...props}
                     />
                 ),
-                right: <UførhetFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: <UførhetFaktablokk søknadInnhold={props.søknadInnhold} />,
             }}
         </ToKolonner>
     );

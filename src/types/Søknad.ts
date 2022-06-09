@@ -37,15 +37,14 @@ interface OppholdstillatelseAlder {
     familieforening: Nullable<boolean>;
 }
 
-export interface SøknadInnholdAlder extends SøknadFellesInnhold {
+export interface SøknadInnholdAlder extends SøknadInnholdFelles {
     harSøktAlderspensjon: {
         harSøktAlderspensjon: boolean;
     };
     oppholdstillatelseAlder: OppholdstillatelseAlder;
 }
 
-export interface SøknadInnhold extends SøknadFellesInnhold {
-    // TODO: Skal endre navn til SøknadUføreInnhold, men brukes så mange steder (saksbehandling m.m.) så må avvente
+export interface SøknadInnholdUføre extends SøknadInnholdFelles {
     uførevedtak: {
         harUførevedtak: boolean;
     };
@@ -54,7 +53,13 @@ export interface SøknadInnhold extends SøknadFellesInnhold {
     };
 }
 
-export interface SøknadFellesInnhold {
+export const isUføresøknad = (søknadInnhold: SøknadInnhold): søknadInnhold is SøknadInnholdUføre =>
+    'uførevedtak' in søknadInnhold;
+
+export const isAldersøknad = (søknadInnhold: SøknadInnhold): søknadInnhold is SøknadInnholdAlder =>
+    'harSøktAlderspensjon' in søknadInnhold;
+
+export interface SøknadInnholdFelles {
     personopplysninger: {
         fnr: string;
     };
@@ -86,6 +91,8 @@ export interface SøknadFellesInnhold {
     }>;
     forNav: ForNav;
 }
+
+export type SøknadInnhold = SøknadInnholdAlder | SøknadInnholdUføre;
 
 interface ForNavDigitalSøknad {
     type: Søknadstype.DigitalSøknad;

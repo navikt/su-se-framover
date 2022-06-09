@@ -4,6 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import * as Routes from '~src/lib/routes';
+import { isUføresøknad } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
@@ -65,19 +66,21 @@ const Vilkår = () => {
                             sakId={sakId}
                         />
                     )}
-                    {vilkar === Vilkårtype.Uførhet && (
+                    {vilkar === Vilkårtype.Uførhet && isUføresøknad(behandling.søknad.søknadInnhold) && (
                         <Uførhet
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
                             nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
                     )}
-                    {vilkar === Vilkårtype.Flyktning && (
+                    {vilkar === Vilkårtype.Flyktning && isUføresøknad(behandling.søknad.søknadInnhold) && (
                         <Flyktning
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Uførhet)}
                             nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                            søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
                     )}
