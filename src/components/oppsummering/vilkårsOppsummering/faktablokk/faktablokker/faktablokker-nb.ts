@@ -82,4 +82,9 @@ export default {
     'bosituasjon.vurderingAvSats': 'Vurdering av sats',
     'bosituasjon.sats.høy': 'Høy',
     'bosituasjon.sats.ordinær': 'Ordinær',
+
+    'skattegrunnlag.tittel': 'Skattegrunnlag',
+    'skattegrunnlag.bruker': 'Bruker',
+    'skattegrunnlag.eps': 'EPS',
+    'skattegrunnlag.empty': 'Fant ingen formue eller inntekt for gitt person',
 };

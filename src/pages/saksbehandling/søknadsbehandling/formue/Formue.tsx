@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import * as personApi from '~src/api/personApi';
+import { hentSkattemelding } from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -120,6 +121,9 @@ const Formue = (props: {
     const [lagreEpsGrunnlagSkjermetStatus, lagreEpsGrunnlagSkjermet] = useAsyncActionCreator(
         sakSlice.lagreEpsGrunnlagSkjermet
     );
+    const [skattemeldingBruker, hentSkattemeldingBruker] = useApiCall(hentSkattemelding);
+    const [skattemeldingEPS, hentSkattemeldingEPS, resetSkattemeldingEPS] = useApiCall(hentSkattemelding);
+
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
 
     const combinedLagringsstatus = RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus);
@@ -200,10 +204,17 @@ const Formue = (props: {
     }, [watch.epsFormue?.innskuddsbeløp]);
 
     useEffect(() => {
+        hentSkattemeldingBruker({ fnr: props.søker.fnr });
+    }, []);
+
+    useEffect(() => {
         if (watch.epsFnr && watch.epsFnr.length === 11) {
-            fetchEps(watch.epsFnr);
+            fetchEps(watch.epsFnr, (res) => {
+                hentSkattemeldingEPS({ fnr: res.fnr });
+            });
         } else {
             resetEpsToInitial();
+            resetSkattemeldingEPS();
         }
     }, [watch.epsFnr]);
 
@@ -421,7 +432,12 @@ const Formue = (props: {
                         />
                     </form>
                 ),
-                right: <FormueFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: (
+                    <FormueFaktablokk
+                        søknadInnhold={props.behandling.søknad.søknadInnhold}
+                        skattegrunnlag={{ bruker: skattemeldingBruker, eps: skattemeldingEPS }}
+                    />
+                ),
             }}
         </ToKolonner>
     );
