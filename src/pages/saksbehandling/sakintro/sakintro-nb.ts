@@ -69,4 +69,6 @@ export default {
     'regulering.modal.tittel': 'Er du sikker på at du ønsker å lukke reguleringen?',
     'regulering.modal.avbryt': 'Avbryt',
     'regulering.modal.lukk': 'Lukk regulering',
+
+    'skattemelding.hent': 'Hent skattemelding',
 };

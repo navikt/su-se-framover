@@ -28,7 +28,6 @@ import { FaktablokkProps } from './faktablokkUtils';
 
 export const FormueFaktablokk = (props: FaktablokkProps) => {
     const { formatMessage } = useI18n({ messages });
-    console.log(props.skattegrunnlag);
 
     return (
         <div>

@@ -124,7 +124,7 @@ const Sakintro = () => {
                             onClick={() => hentSkatt({ fnr: props.søker.fnr })}
                             loading={RemoteData.isPending(skattemelding)}
                         >
-                            Hent skattemelding
+                            {intl.formatMessage({ id: 'skattemelding.hent' })}
                         </Button>
                     )}
                 </div>
