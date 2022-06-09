@@ -38,7 +38,7 @@ export const toFellessøknadsinnsending = (
     fnr: string
 ): SøknadInnholdFelles => {
     const erAlderssøknad = (s: AlderssøknadState | UføresøknadState): s is AlderssøknadState =>
-        'oppholdstillatelse' in s && s.oppholdstillatelse.harOppholdstillatelse !== null;
+        'harSøktAlderspensjon' in s;
     const oppholdstillatelse = erAlderssøknad(søknad) ? søknad.oppholdstillatelse : søknad.flyktningstatus;
 
     return {
