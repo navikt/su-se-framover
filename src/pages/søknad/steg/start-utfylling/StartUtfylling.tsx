@@ -20,12 +20,14 @@ import { Steg } from '~src/pages/søknad/steg/Steg';
 import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
 import { useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
-import { Søknadstema, Søknadstype } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
+import { Søknadstype } from '~src/types/Søknad';
 
 const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
     const søknad = useAppSelector((s) => s.soknad);
     const { step, soknadstema } = useRouteParams<typeof soknadsutfylling>();
+    const sakstype = routes.sakstypeFraTemaIUrl(soknadstema);
     const { formatMessage } = useI18n({ messages });
     const user = useUserContext();
     const navigate = useNavigate();
@@ -42,18 +44,18 @@ const StartUtfylling = () => {
     }, [step]);
 
     const steg = [
-        { step: Uføresteg.Uførevedtak, onlyIf: soknadstema === Søknadstema.Uføre },
+        { step: Uføresteg.Uførevedtak, onlyIf: sakstype === Sakstype.Uføre },
         {
             step: Uføresteg.FlyktningstatusOppholdstillatelse,
-            onlyIf: soknadstema === Søknadstema.Uføre,
+            onlyIf: sakstype === Sakstype.Uføre,
         },
         {
             step: Alderssteg.Alderspensjon,
-            onlyIf: soknadstema === Søknadstema.Alder,
+            onlyIf: sakstype === Sakstype.Alder,
         },
         {
             step: Alderssteg.Oppholdstillatelse,
-            onlyIf: soknadstema === Søknadstema.Alder,
+            onlyIf: sakstype === Sakstype.Alder,
         },
         { step: Fellessteg.BoOgOppholdINorge },
         { step: Fellessteg.DinFormue },
@@ -96,7 +98,9 @@ const StartUtfylling = () => {
             </Alert>
             <LinkAsButton
                 variant="secondary"
-                href={routes.soknadPersonSøk.createURL({ soknadstema: soknadstema ?? Søknadstema.Uføre })}
+                href={routes.soknadPersonSøk.createURL({
+                    soknadstema: routes.urlForSakstype(sakstype ?? Sakstype.Uføre),
+                })}
             >
                 {formatMessage('feilmelding.knapp')}
             </LinkAsButton>
@@ -129,7 +133,7 @@ const StartUtfylling = () => {
                                                 navigate(
                                                     routes.soknadsutfylling.createURL({
                                                         step: nyttSteg.step,
-                                                        soknadstema: soknadstema ?? Søknadstema.Uføre,
+                                                        soknadstema: routes.urlForSakstype(sakstype ?? Sakstype.Uføre),
                                                     })
                                                 );
                                             }
@@ -153,7 +157,7 @@ const StartUtfylling = () => {
                                         step={step ?? Uføresteg.Uførevedtak}
                                         søknad={søknad}
                                         søker={søker}
-                                        soknadstema={soknadstema ?? Søknadstema.Uføre}
+                                        sakstype={sakstype ?? Sakstype.Uføre}
                                         erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
                                         hjelpetekst={aktivtSteg?.hjelpetekst}
                                     />

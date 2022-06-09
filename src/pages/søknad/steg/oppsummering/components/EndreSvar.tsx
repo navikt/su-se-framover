@@ -11,12 +11,12 @@ import messages from '../Søknadoppsummering/søknadsoppsummering-nb';
 import * as styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 
 export const EndreSvar = (props: { path: Søknadssteg }) => {
-    const { soknadstema } = useOutletContext<SøknadContext>();
+    const { sakstype } = useOutletContext<SøknadContext>();
     const { intl } = useI18n({ messages });
     return (
         <Link
             className={styles.endreSvarContainer}
-            to={routes.soknadsutfylling.createURL({ step: props.path, soknadstema })}
+            to={routes.soknadsutfylling.createURL({ step: props.path, soknadstema: routes.urlForSakstype(sakstype) })}
         >
             <span className={styles.marginRight}>
                 <Edit />
