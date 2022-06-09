@@ -1,7 +1,6 @@
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Restans } from '~src/types/Restans';
-import { AlleredeGjeldendeSakForBruker, Sak } from '~src/types/Sak';
-import { Sakstype } from '~src/types/Søknad';
+import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
 
 import apiClient, { ApiClientResult } from './apiClient';
 

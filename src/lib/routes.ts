@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import * as Routes from '~src/lib/routes';
 import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '~src/pages/saksbehandling/types';
 import { Søknadssteg } from '~src/pages/søknad/types';
-import { Sakstype } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 interface Route<T> {

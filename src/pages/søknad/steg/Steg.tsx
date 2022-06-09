@@ -21,7 +21,8 @@ import Oppsummering from '~src/pages/søknad/steg/oppsummering/Oppsummering';
 import Uførevedtak from '~src/pages/søknad/steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from '~src/pages/søknad/steg/utenlandsopphold/Utenlandsopphold';
 import { Alderssteg, Fellessteg, Søknadssteg, Uføresteg } from '~src/pages/søknad/types';
-import { Sakstype, Søknadstype } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
+import { Søknadstype } from '~src/types/Søknad';
 
 export const Steg = (props: {
     title: string;

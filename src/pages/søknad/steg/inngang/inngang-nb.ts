@@ -1,4 +1,4 @@
-import { Sakstype } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 
 export default {
     [Sakstype.Alder]: 'Supplerende stønad for personer over 67 år med kort botid i Norge',

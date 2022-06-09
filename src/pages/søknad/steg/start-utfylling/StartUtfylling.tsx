@@ -20,7 +20,8 @@ import { Steg } from '~src/pages/søknad/steg/Steg';
 import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
 import { useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
-import { Sakstype, Søknadstype } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
+import { Søknadstype } from '~src/types/Søknad';
 
 const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);

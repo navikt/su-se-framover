@@ -15,7 +15,7 @@ import oppholdstillatelseMessages from '~src/pages/søknad/steg/oppholdstillatel
 import uførevedtakMessages from '~src/pages/søknad/steg/uførevedtak/uførevedtak-nb';
 import utenlandsoppholdMessages from '~src/pages/søknad/steg/utenlandsopphold/utenlandsopphold-nb';
 import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
-import { Sakstype } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 
 import * as sharedStyles from '../../../steg-shared.module.less';

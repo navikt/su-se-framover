@@ -8,7 +8,7 @@ import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
-import { Sakstype } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 
 import * as styles from './index.module.less';
 import messages from './nb';

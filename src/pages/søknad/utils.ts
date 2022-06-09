@@ -1,4 +1,4 @@
-import { Sakstype } from '~src/types/Søknad';
+import { Sakstype } from '~src/types/Sak';
 
 export function getSøknadstematekst<AlderTekst extends string, UføreTekst extends string>(
     sakstype: Sakstype,

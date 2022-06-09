@@ -23,8 +23,8 @@ import { Alderssteg, Uføresteg } from '~src/pages/søknad/types';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Periode } from '~src/types/Periode';
-import { AlleredeGjeldendeSakForBruker } from '~src/types/Sak';
-import { Sakstype, Søknadstype } from '~src/types/Søknad';
+import { AlleredeGjeldendeSakForBruker, Sakstype } from '~src/types/Sak';
+import { Søknadstype } from '~src/types/Søknad';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 

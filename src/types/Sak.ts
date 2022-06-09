@@ -38,3 +38,8 @@ export interface BegrensetSakInfo {
     harÅpenSøknad: boolean;
     iverksattInnvilgetStønadsperiode: Nullable<Periode<string>>;
 }
+
+export enum Sakstype {
+    Alder = 'alder',
+    Uføre = 'uføre',
+}

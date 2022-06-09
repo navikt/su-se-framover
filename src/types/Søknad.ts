@@ -104,11 +104,6 @@ export enum Søknadstype {
     Papirsøknad = 'Papirsøknad',
 }
 
-export enum Sakstype {
-    Alder = 'alder',
-    Uføre = 'uføre',
-}
-
 interface Formue {
     borIBolig: Nullable<boolean>;
     verdiPåBolig: Nullable<number>;
