@@ -235,7 +235,7 @@ export const FormueVilkårsblokk = (props: {
             status={props.info.status}
             søknadfaktablokk={<FormueFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.formue === null ? (
+                props.formue.vurderinger.length === 0 ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <div>
