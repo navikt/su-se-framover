@@ -7,11 +7,10 @@ import { IntlShape } from 'react-intl';
 import { Link, useOutletContext } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
-import { hentSkattemelding } from '~src/api/sakApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useFeatureToggle } from '~src/lib/featureToggles';
-import { ApiResult, useApiCall, useNotificationFromLocation } from '~src/lib/hooks';
+import { ApiResult, useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -47,8 +46,6 @@ const Sakintro = () => {
     const props = useOutletContext<AttesteringContext>();
     const { intl } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
-    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
-    const [skattemelding, hentSkatt] = useApiCall(hentSkattemelding);
 
     const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
         switch (nyBehandling) {
@@ -117,15 +114,6 @@ const Sakintro = () => {
                         >
                             {intl.formatMessage({ id: 'link.kontrollsamtale' })}
                         </LinkAsButton>
-                    )}
-                    {skattemeldingToggle && (
-                        <Button
-                            variant="secondary"
-                            onClick={() => hentSkatt({ fnr: props.søker.fnr })}
-                            loading={RemoteData.isPending(skattemelding)}
-                        >
-                            {intl.formatMessage({ id: 'skattemelding.hent' })}
-                        </Button>
                     )}
                 </div>
             </div>

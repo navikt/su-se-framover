@@ -211,6 +211,7 @@ const Formue = (props: {
     }, []);
 
     useEffect(() => {
+        resetSkattemeldingEPS();
         if (watch.epsFnr && watch.epsFnr.length === 11) {
             fetchEps(watch.epsFnr, (res) => {
                 if (skattemeldingToggle) {
@@ -218,10 +219,7 @@ const Formue = (props: {
                 }
             });
         } else {
-            if (skattemeldingToggle) {
-                resetEpsToInitial();
-            }
-            resetSkattemeldingEPS();
+            resetEpsToInitial();
         }
     }, [watch.epsFnr]);
 
