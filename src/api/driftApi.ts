@@ -48,9 +48,24 @@ export async function patchSøknader(): Promise<ApiClientResult<SøknadResponse>
     });
 }
 
-export async function konsistensavstemming(fraOgMed: string): Promise<ApiClientResult<string>> {
+export async function grensesnittsavstemming(args: {
+    fraOgMed: string;
+    tilOgMed: string;
+    fagområde: string;
+}): Promise<ApiClientResult<string>> {
     return apiClient({
-        url: `/avstemming/konsistens?fraOgMed=${fraOgMed}`,
+        url: `/avstemming/grensesnitt?fraOgMed=${args.fraOgMed}&tilOgMed=${args.tilOgMed}&fagomrade=${args.fagområde}`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
+export async function konsistensavstemming(args: {
+    fraOgMed: string;
+    fagområde: string;
+}): Promise<ApiClientResult<string>> {
+    return apiClient({
+        url: `/avstemming/konsistens?fraOgMed=${args.fraOgMed}&fagomrade=${args.fagområde}`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });

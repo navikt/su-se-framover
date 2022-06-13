@@ -1,11 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Modal } from '@navikt/ds-react';
+import { Alert, Button, Loader, Modal, Select } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~src/api/apiClient';
-import { fetchBakoverStatus, patchSøknader, SøknadResponse, konsistensavstemming } from '~src/api/driftApi';
+import {
+    fetchBakoverStatus,
+    patchSøknader,
+    SøknadResponse,
+    konsistensavstemming,
+    grensesnittsavstemming,
+} from '~src/api/driftApi';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
@@ -18,6 +24,7 @@ import * as styles from './index.module.less';
 enum Knapp {
     FIX_SØKNADER,
     KAST_EN_FEIL,
+    GRENSESNITTSAVSTEMMING,
     KONSISTENSAVSTEMMING,
     G_REGULERING,
     NØKKELTALL,
@@ -55,9 +62,16 @@ const Drift = () => {
         }
     };
 
+    const [grensesnittsavstemmingModalOpen, setGrensesnittsavstemmingModalOpen] = React.useState(false);
+    const [grensesnittsavtemmingFraOgMed, setGrensesnittsavtemmingFraOgMed] = React.useState<Date>(new Date());
+    const [grensesnittsavtemmingTilOgMed, setGrensesnittsavtemmingTilOgMed] = React.useState<Date>(new Date());
+    const [grensesnittsavstemmingStatus, fetchGrensesnittsavstemming] = useApiCall(grensesnittsavstemming);
+    const [grensesnittsavstemmingFagområde, setGrensesnittsavstemmingFagområde] = React.useState<string>('SUUFORE');
+
     const [konsistensavtemmingModalOpen, setKonsistensavtemmingModalOpen] = React.useState(false);
     const [konsistensavstemmingFraOgMed, setKonsistensavstemmingFraOgMed] = React.useState<Date>(new Date());
     const [konsistensavstemmingStatus, fetchKonsistensavstemming] = useApiCall(konsistensavstemming);
+    const [konsistensavstemmingFagområde, setKonsistensavstemmingFagområde] = React.useState<string>('SUUFORE');
 
     return (
         <div className={styles.container}>
@@ -101,6 +115,64 @@ const Drift = () => {
                         variant="secondary"
                         className={styles.knapp}
                         type="button"
+                        onClick={() => setGrensesnittsavstemmingModalOpen(true)}
+                    >
+                        Grensesnittsavstemming
+                        {RemoteData.isPending(grensesnittsavstemmingStatus) && <Loader />}
+                    </Button>
+                    <Modal
+                        open={grensesnittsavstemmingModalOpen}
+                        onClose={() => {
+                            setGrensesnittsavstemmingModalOpen(false);
+                        }}
+                    >
+                        <Modal.Content>
+                            <div className={styles.modalContainer}>
+                                <DatePicker
+                                    dateFormat="dd/MM/yyyy"
+                                    selected={grensesnittsavtemmingFraOgMed}
+                                    onChange={(date: Date) => {
+                                        setGrensesnittsavtemmingFraOgMed(date);
+                                    }}
+                                ></DatePicker>
+                                <DatePicker
+                                    dateFormat="dd/MM/yyyy"
+                                    selected={grensesnittsavtemmingTilOgMed}
+                                    onChange={(date: Date) => {
+                                        setGrensesnittsavtemmingTilOgMed(date);
+                                    }}
+                                ></DatePicker>
+                                <Select
+                                    label={'Fagområde'}
+                                    value={grensesnittsavstemmingFagområde}
+                                    onChange={(e) => setGrensesnittsavstemmingFagområde(e.target.value)}
+                                >
+                                    <option value="SUUFORE">{'UFØRE'}</option>
+                                    <option value="SUALDER">{'ALDER'}</option>
+                                </Select>
+                                <Button
+                                    variant="secondary"
+                                    className={styles.knapp}
+                                    type="button"
+                                    onClick={() => {
+                                        settKnappTrykket(Knapp.GRENSESNITTSAVSTEMMING);
+                                        fetchGrensesnittsavstemming({
+                                            fraOgMed: toIsoDateOnlyString(grensesnittsavtemmingFraOgMed),
+                                            tilOgMed: toIsoDateOnlyString(grensesnittsavtemmingTilOgMed),
+                                            fagområde: grensesnittsavstemmingFagområde,
+                                        });
+                                    }}
+                                >
+                                    Grensesnittsavstemming
+                                    {RemoteData.isPending(grensesnittsavstemmingStatus) && <Loader />}
+                                </Button>
+                            </div>
+                        </Modal.Content>
+                    </Modal>
+                    <Button
+                        variant="secondary"
+                        className={styles.knapp}
+                        type="button"
                         onClick={() => setKonsistensavtemmingModalOpen(true)}
                     >
                         Konsistensavstemming
@@ -121,13 +193,24 @@ const Drift = () => {
                                         setKonsistensavstemmingFraOgMed(date);
                                     }}
                                 ></DatePicker>
+                                <Select
+                                    label={'Fagområde'}
+                                    value={konsistensavstemmingFagområde}
+                                    onChange={(e) => setKonsistensavstemmingFagområde(e.target.value)}
+                                >
+                                    <option value="SUUFORE">{'UFØRE'}</option>
+                                    <option value="SUALDER">{'ALDER'}</option>
+                                </Select>
                                 <Button
                                     variant="secondary"
                                     className={styles.knapp}
                                     type="button"
                                     onClick={() => {
                                         settKnappTrykket(Knapp.KONSISTENSAVSTEMMING);
-                                        fetchKonsistensavstemming(toIsoDateOnlyString(konsistensavstemmingFraOgMed));
+                                        fetchKonsistensavstemming({
+                                            fraOgMed: toIsoDateOnlyString(konsistensavstemmingFraOgMed),
+                                            fagområde: konsistensavstemmingFagområde,
+                                        });
                                     }}
                                 >
                                     Konsistensavstemming
