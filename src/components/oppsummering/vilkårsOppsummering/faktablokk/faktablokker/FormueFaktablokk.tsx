@@ -8,6 +8,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { ApiResult } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
+import skattegrunnlagMessages from '~src/pages/saksbehandling/skattegrunnlag-nb';
 import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
@@ -27,7 +28,7 @@ import * as styles from './faktablokker.module.less';
 import { FaktablokkProps } from './faktablokkUtils';
 
 export const FormueFaktablokk = (props: FaktablokkProps) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...skattegrunnlagMessages } });
 
     return (
         <div>
@@ -87,6 +88,7 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
         </div>
     );
 };
+
 const SkattemeldingFaktablokk = ({
     tittel,
     samletSkattegrunnlag,
@@ -94,7 +96,7 @@ const SkattemeldingFaktablokk = ({
 }: {
     tittel: string;
     samletSkattegrunnlag: ApiResult<SamletSkattegrunnlag>;
-    formatMessage: (id: keyof typeof messages) => string;
+    formatMessage: (id: keyof typeof messages | keyof typeof skattegrunnlagMessages) => string;
 }) => {
     return pipe(
         samletSkattegrunnlag,
@@ -113,7 +115,7 @@ const SkattemeldingFaktablokk = ({
                 const filtrertSkattefakta = grunnlag
                     .filter((skattegrunnlag) => skattegrunnlag.beloep !== 0)
                     .map((skattegrunnlag) => ({
-                        tittel: skattegrunnlag.tekniskNavn,
+                        tittel: formatMessage(skattegrunnlag.tekniskNavn as keyof typeof skattegrunnlagMessages),
                         verdi: skattegrunnlag.beloep.toString(),
                     }));
 
