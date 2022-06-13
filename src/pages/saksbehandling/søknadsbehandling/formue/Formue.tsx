@@ -19,7 +19,9 @@ import { Control, Controller, useForm, UseFormTrigger } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
+import { FeatureToggle } from '~src/api/featureToggleApi';
 import * as personApi from '~src/api/personApi';
+import { hentSkattemelding } from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -30,6 +32,7 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import personSlice from '~src/features/person/person.slice';
 import sakSliceActions, * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useFeatureToggle } from '~src/lib/featureToggles';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
@@ -120,6 +123,10 @@ const Formue = (props: {
     const [lagreEpsGrunnlagSkjermetStatus, lagreEpsGrunnlagSkjermet] = useAsyncActionCreator(
         sakSlice.lagreEpsGrunnlagSkjermet
     );
+    const [skattemeldingBruker, hentSkattemeldingBruker] = useApiCall(hentSkattemelding);
+    const [skattemeldingEPS, hentSkattemeldingEPS, resetSkattemeldingEPS] = useApiCall(hentSkattemelding);
+    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
+
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
 
     const combinedLagringsstatus = RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus);
@@ -200,8 +207,17 @@ const Formue = (props: {
     }, [watch.epsFormue?.innskuddsbeløp]);
 
     useEffect(() => {
+        hentSkattemeldingBruker({ fnr: props.søker.fnr });
+    }, []);
+
+    useEffect(() => {
+        resetSkattemeldingEPS();
         if (watch.epsFnr && watch.epsFnr.length === 11) {
-            fetchEps(watch.epsFnr);
+            fetchEps(watch.epsFnr, (res) => {
+                if (skattemeldingToggle) {
+                    hentSkattemeldingEPS({ fnr: res.fnr });
+                }
+            });
         } else {
             resetEpsToInitial();
         }
@@ -421,7 +437,12 @@ const Formue = (props: {
                         />
                     </form>
                 ),
-                right: <FormueFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: (
+                    <FormueFaktablokk
+                        søknadInnhold={props.behandling.søknad.søknadInnhold}
+                        skattegrunnlag={{ bruker: skattemeldingBruker, eps: skattemeldingEPS }}
+                    />
+                ),
             }}
         </ToKolonner>
     );

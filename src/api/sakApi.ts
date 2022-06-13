@@ -1,6 +1,7 @@
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Restans } from '~src/types/Restans';
 import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
+import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -67,5 +68,12 @@ export async function kallInnTilKontrollsamtale(sakId: string) {
         body: {
             sakId: sakId,
         },
+    });
+}
+
+export async function hentSkattemelding({ fnr }: { fnr: string }): Promise<ApiClientResult<SamletSkattegrunnlag>> {
+    return apiClient({
+        url: `/skatt/${fnr}`,
+        method: 'GET',
     });
 }

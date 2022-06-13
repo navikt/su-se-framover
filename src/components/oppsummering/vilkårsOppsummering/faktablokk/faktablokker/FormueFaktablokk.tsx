@@ -1,13 +1,18 @@
-import { Alert, Heading } from '@navikt/ds-react';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert, Heading, Label, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
+import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
 
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { ApiResult } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
 import { SøknadInnhold } from '~src/types/Søknad';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
@@ -62,7 +67,69 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
                           ]),
                 ]}
             />
+            {props.skattegrunnlag && (
+                <div className={styles.skattegrunnlag}>
+                    <Heading level="2" size="medium">
+                        {formatMessage('skattegrunnlag.tittel')}
+                    </Heading>
+                    <SkattemeldingFaktablokk
+                        tittel={formatMessage('skattegrunnlag.bruker')}
+                        samletSkattegrunnlag={props.skattegrunnlag.bruker}
+                        formatMessage={formatMessage}
+                    />
+                    <SkattemeldingFaktablokk
+                        tittel={formatMessage('skattegrunnlag.eps')}
+                        samletSkattegrunnlag={props.skattegrunnlag.eps}
+                        formatMessage={formatMessage}
+                    />
+                </div>
+            )}
         </div>
+    );
+};
+const SkattemeldingFaktablokk = ({
+    tittel,
+    samletSkattegrunnlag,
+    formatMessage,
+}: {
+    tittel: string;
+    samletSkattegrunnlag: ApiResult<SamletSkattegrunnlag>;
+    formatMessage: (id: keyof typeof messages) => string;
+}) => {
+    return pipe(
+        samletSkattegrunnlag,
+        RemoteData.fold(
+            () => null,
+            () => <Loader />,
+            (err) => (
+                <div>
+                    <Label className={styles.overskrift} spacing>
+                        {tittel}
+                    </Label>
+                    <ApiErrorAlert error={err} />
+                </div>
+            ),
+            ({ grunnlag }) => {
+                const filtrertSkattefakta = grunnlag
+                    .filter((skattegrunnlag) => skattegrunnlag.beloep !== 0)
+                    .map((skattegrunnlag) => ({
+                        tittel: skattegrunnlag.tekniskNavn,
+                        verdi: skattegrunnlag.beloep.toString(),
+                    }));
+
+                if (filtrertSkattefakta.length === 0)
+                    return (
+                        <div>
+                            <Label className={styles.overskrift} spacing>
+                                {tittel}
+                            </Label>
+                            <p>{formatMessage('skattegrunnlag.empty')}</p>
+                        </div>
+                    );
+
+                return <Faktablokk tittel={tittel} fakta={filtrertSkattefakta} />;
+            }
+        )
     );
 };
 
