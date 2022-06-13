@@ -207,7 +207,9 @@ const Formue = (props: {
     }, [watch.epsFormue?.innskuddsbeløp]);
 
     useEffect(() => {
-        hentSkattemeldingBruker({ fnr: props.søker.fnr });
+        if (skattemeldingToggle) {
+            hentSkattemeldingBruker({ fnr: props.søker.fnr });
+        }
     }, []);
 
     useEffect(() => {
