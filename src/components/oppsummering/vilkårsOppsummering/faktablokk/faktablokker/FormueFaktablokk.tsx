@@ -115,7 +115,7 @@ const SkattemeldingFaktablokk = ({
                 const filtrertSkattefakta = grunnlag
                     .filter((skattegrunnlag) => skattegrunnlag.beloep !== 0)
                     .map((skattegrunnlag) => ({
-                        tittel: formatMessage(skattegrunnlag.tekniskNavn as keyof typeof skattegrunnlagMessages),
+                        tittel: formatSkattTekniskMessage(skattegrunnlag.tekniskNavn, formatMessage),
                         verdi: skattegrunnlag.beloep.toString(),
                     }));
 
@@ -381,4 +381,13 @@ export const FormueVilkårsblokk = (props: {
             }
         />
     );
+};
+
+/* Hjelpefunksjon for å håndtere att vi får ukjente tekniske navn på formue / inntekt fra skatteetaten */
+const formatSkattTekniskMessage = (id: string, formatMessage: (id: keyof typeof skattegrunnlagMessages) => string) => {
+    try {
+        return formatMessage(id as keyof typeof skattegrunnlagMessages);
+    } catch (e) {
+        return id;
+    }
 };
