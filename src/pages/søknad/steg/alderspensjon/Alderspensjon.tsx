@@ -27,7 +27,7 @@ const schema = yup.object<FormData>({
     harSøktAlderspensjon: yup
         .boolean()
         .nullable()
-        .required('Fyll ut om du har fått har søkt og fått svar på alderspensjon-søknaden'),
+        .required('Fyll ut om du har søkt og fått svar på alderspensjon-søknaden'),
 });
 
 const Alderspensjon = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: string }) => {
