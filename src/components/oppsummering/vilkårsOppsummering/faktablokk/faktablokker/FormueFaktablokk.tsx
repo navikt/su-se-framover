@@ -113,10 +113,10 @@ const SkattemeldingFaktablokk = ({
             ),
             ({ grunnlag }) => {
                 const filtrertSkattefakta = grunnlag
-                    .filter((skattegrunnlag) => skattegrunnlag.beloep !== 0)
+                    .filter((skattegrunnlag) => skattegrunnlag.beløp !== 0)
                     .map((skattegrunnlag) => ({
-                        tittel: formatSkattTekniskMessage(skattegrunnlag.tekniskNavn, formatMessage),
-                        verdi: skattegrunnlag.beloep.toString(),
+                        tittel: formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage),
+                        verdi: skattegrunnlag.beløp.toString(),
                     }));
 
                 if (filtrertSkattefakta.length === 0)
