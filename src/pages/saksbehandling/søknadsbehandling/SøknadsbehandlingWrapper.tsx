@@ -25,6 +25,7 @@ interface Props<T, U> {
     nesteUrl: string;
     visModal?: boolean;
     children: ReactElement;
+    nesteKnappTekst?: string;
 }
 
 export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behandling>({
@@ -58,6 +59,7 @@ export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behan
                     props.save(values, () => navigate(props.avsluttUrl))
                 )}
                 loading={RemoteData.isPending(props.savingState)}
+                nesteKnappTekst={props.nesteKnappTekst}
             />
         </form>
     );
