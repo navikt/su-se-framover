@@ -23,6 +23,7 @@ import {
     PersonligOppmøteStatus,
 } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -164,6 +165,7 @@ const toPersonligOppmøteStatus = (formData: FormData): Nullable<PersonligOppmø
 };
 
 const tilOppdatertVilkårsinformasjon = (
+    søknadstema: Sakstype,
     values: FormData,
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
@@ -173,6 +175,7 @@ const tilOppdatertVilkårsinformasjon = (
         return 'personligOppmøteIkkeVurdert';
     }
     return mapToVilkårsinformasjon(
+        søknadstema,
         {
             ...behandlingsinformasjon,
             personligOppmøte: {
@@ -226,6 +229,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const oppdatertVilkårsinformasjon = useMemo(
         () =>
             tilOppdatertVilkårsinformasjon(
+                props.behandling.søknad.søknadInnhold.type,
                 watch,
                 props.behandling.behandlingsinformasjon,
                 props.behandling.grunnlagsdataOgVilkårsvurderinger
@@ -240,6 +244,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         }
 
         const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(
+            props.behandling.søknad.søknadInnhold.type,
             values,
             props.behandling.behandlingsinformasjon,
             props.behandling.grunnlagsdataOgVilkårsvurderinger

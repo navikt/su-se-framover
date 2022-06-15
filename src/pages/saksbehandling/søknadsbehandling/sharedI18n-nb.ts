@@ -5,4 +5,5 @@ export default {
     'radio.label.nei': 'Nei',
     'radio.label.uavklart': 'Uavklart',
     'radio.label.uføresakTilBehandling': 'Har uføresak til behandling',
+    'radio.label.alderssakTilBehandling': 'Har alderssak til behandling',
 };

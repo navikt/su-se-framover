@@ -13,12 +13,13 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import {
     erAvslått,
-    erUnderkjent,
-    erSimulert,
     erBeregnetAvslag,
+    erSimulert,
+    erUnderkjent,
     erVilkårsvurderingerVurdertAvslag,
 } from '~src/utils/behandling/behandlingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
@@ -56,7 +57,11 @@ const SendTilAttesteringPage = () => {
     };
 
     const sisteVurderteVilkår = behandling
-        ? mapToVilkårsinformasjon(behandling.behandlingsinformasjon, behandling.grunnlagsdataOgVilkårsvurderinger)
+        ? mapToVilkårsinformasjon(
+              Sakstype.Uføre,
+              behandling.behandlingsinformasjon,
+              behandling.grunnlagsdataOgVilkårsvurderinger
+          )
               .reverse()
               .find((vilkår) => vilkår.status !== VilkårVurderingStatus.IkkeVurdert)
         : undefined;

@@ -32,10 +32,7 @@ export async function sendUføresøknad(søknad: SøknadInnholdUføre): Promise<
     return apiClient({
         url: '/soknad/ufore',
         method: 'POST',
-        body: {
-            type: 'uføre',
-            ...søknad,
-        },
+        body: søknad,
     });
 }
 
@@ -43,10 +40,7 @@ export async function sendAlderssøknad(søknad: SøknadInnholdAlder): Promise<A
     return apiClient({
         url: '/soknad/alder',
         method: 'POST',
-        body: {
-            type: 'alder',
-            ...søknad,
-        },
+        body: søknad,
     });
 }
 

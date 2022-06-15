@@ -2,6 +2,7 @@ import { IngenAdresseGrunn } from '~src/api/personApi';
 import { AdresseFraSøknad } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed, GrunnForPapirinnsending, Vergemål } from '~src/features/søknad/types';
 import { Nullable } from '~src/lib/types';
+import { Sakstype } from '~src/types/Sak';
 
 export interface Søknad {
     id: string;
@@ -90,6 +91,7 @@ export interface SøknadInnholdFelles {
         inntektOgPensjon: InntektOgPensjon;
     }>;
     forNav: ForNav;
+    type: Sakstype;
 }
 
 export type SøknadInnhold = SøknadInnholdAlder | SøknadInnholdUføre;
