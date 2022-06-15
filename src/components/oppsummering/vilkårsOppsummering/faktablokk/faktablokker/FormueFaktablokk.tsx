@@ -13,7 +13,7 @@ import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
+import { SamletSkattegrunnlag, SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadInnhold } from '~src/types/Søknad';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
@@ -114,6 +114,7 @@ const SkattemeldingFaktablokk = ({
             ({ grunnlag }) => {
                 const filtrertSkattefakta = grunnlag
                     .filter((skattegrunnlag) => skattegrunnlag.beløp !== 0)
+                    .filter((skattegrunnlag) => skattegrunnlag.kategori.includes(SkattegrunnlagKategori.FORMUE))
                     .map((skattegrunnlag) => ({
                         tittel: formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage),
                         verdi: skattegrunnlag.beløp.toString(),
