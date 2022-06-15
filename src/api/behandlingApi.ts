@@ -217,14 +217,15 @@ export async function lagreUføregrunnlag(arg: {
 export async function lagreAldersgrunnlag(arg: {
     sakId: string;
     behandlingId: string;
-    vurderinger: {
-        harSøktAlderspensjon: Aldersresultat;
-    };
+    vurderinger: Array<{
+        periode: Periode<string>;
+        resultat: Aldersresultat;
+    }>;
 }) {
     return apiClient<Behandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/alderspensjon`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/pensjon`,
         method: 'POST',
-        body: { vurderinger: arg.vurderinger },
+        body: arg.vurderinger,
     });
 }
 

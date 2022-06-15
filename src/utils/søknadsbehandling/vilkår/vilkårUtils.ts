@@ -96,7 +96,7 @@ const mapToVilkårsinformasjonUføre = (uføre: GrunnlagsdataOgVilkårsvurdering
     },
 ];
 
-const mapToVilkårsinformasjonAlder = (alder: GrunnlagsdataOgVilkårsvurderinger['alder']): Vilkårsinformasjon[] => [
+const mapToVilkårsinformasjonAlder = (alder: GrunnlagsdataOgVilkårsvurderinger['pensjon']): Vilkårsinformasjon[] => [
     {
         status:
             alder === null
@@ -118,10 +118,10 @@ export const mapToVilkårsinformasjon = (
 ): Vilkårsinformasjon[] => {
     const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, personligOppmøte } =
         behandlingsinformasjon;
-    const { alder, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
+    const { pensjon, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
 
     const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre) : [];
-    const aldersvilkår = sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(alder) : [];
+    const aldersvilkår = sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(pensjon) : [];
 
     return [
         ...uførevilkår,

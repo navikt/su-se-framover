@@ -11,7 +11,7 @@ import { UføreVilkår } from './uføre/Uførevilkår';
 import { Utenlandsopphold } from './utenlandsopphold/Utenlandsopphold';
 
 export interface GrunnlagsdataOgVilkårsvurderinger {
-    alder: Nullable<Aldersvilkår>;
+    pensjon: Nullable<Aldersvilkår>;
     uføre: Nullable<UføreVilkår>;
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];

@@ -23,7 +23,7 @@ export const AlderspensjonForm = (props: Props) => {
     const form = useForm<FormData>({
         defaultValues: {
             harSøktAlderspensjon:
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.alder?.vurderinger.harSøktAlderspensjon ?? null,
+                props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.resultat ?? null,
         },
         resolver: yupResolver(schema),
     });

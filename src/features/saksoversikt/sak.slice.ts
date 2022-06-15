@@ -184,12 +184,13 @@ export const lagreAlderspensjongrunnlag = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        vurderinger: {
-            harSøktAlderspensjon: Aldersresultat;
-        };
+        vurderinger: Array<{
+            periode: Periode<string>;
+            resultat: Aldersresultat;
+        }>;
     },
     { rejectValue: ApiError }
->('behandling/grunnlag/alderspensjon', async (arg, thunkApi) => {
+>('behandling/grunnlag/pensjon', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreAldersgrunnlag(arg);
     if (res.status === 'ok') {
         return res.data;

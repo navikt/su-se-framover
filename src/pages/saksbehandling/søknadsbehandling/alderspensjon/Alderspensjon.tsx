@@ -26,9 +26,12 @@ const Alderspensjon = (props: VilkårsvurderingBaseProps & { søknadInnhold: Sø
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                vurderinger: {
-                    harSøktAlderspensjon: values.harSøktAlderspensjon!,
-                },
+                vurderinger: [
+                    {
+                        resultat: values.harSøktAlderspensjon!,
+                        periode: props.behandling.stønadsperiode!.periode,
+                    },
+                ],
             },
             onSuccess
         );

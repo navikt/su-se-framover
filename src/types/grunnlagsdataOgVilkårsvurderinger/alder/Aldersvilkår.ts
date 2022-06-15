@@ -1,8 +1,10 @@
+import { Periode } from '~src/types/Periode';
+
 export interface Aldersvilkår {
-    vilkår: 'Alder';
-    vurderinger: {
-        harSøktAlderspensjon: Aldersresultat;
-    };
+    vurderinger: Array<{
+        periode: Periode<string>;
+        resultat: Aldersresultat;
+    }>;
     resultat: Aldersresultat;
 }
 
