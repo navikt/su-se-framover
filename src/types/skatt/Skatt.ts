@@ -5,6 +5,7 @@ export interface SamletSkattegrunnlag {
     inntektsår: string;
     grunnlag: Skattegrunnlag[];
     skatteoppgjoersdato: Nullable<string>;
+    hentetDato: string;
 }
 
 export interface Skattegrunnlag {
