@@ -53,6 +53,12 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     );
 
     const handleSave = async (values: FormData, onSuccess: () => void) => {
+        if (eqFormData.equals(values, initialValues)) {
+            clearDraft();
+            onSuccess();
+            return;
+        }
+
         await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
