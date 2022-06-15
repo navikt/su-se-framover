@@ -12,3 +12,8 @@ export interface Skattegrunnlag {
     beløp: number;
     kategori: string[];
 }
+
+export enum SkattegrunnlagKategori {
+    FORMUE = 'formue',
+    INNTEKT = 'inntekt',
+}
