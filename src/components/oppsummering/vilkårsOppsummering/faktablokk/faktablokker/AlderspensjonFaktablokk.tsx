@@ -2,13 +2,13 @@ import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
+import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/institusjonsopphold/institusjonsopphold-nb';
 import søknadMessages from '~src/pages/søknad/steg/alderspensjon/alderspensjon-nb';
 import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { SøknadInnholdAlder } from '~src/types/Søknad';
 import { VilkårtypeAlder, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/institusjonsopphold/institusjonsopphold-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

@@ -5,7 +5,7 @@ import { AlderspensjonVilkårsblokk } from '~src/components/oppsummering/vilkår
 import { useI18n } from '~src/lib/i18n';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { isUføresøknad, SøknadInnhold, SøknadInnholdAlder } from '~src/types/Søknad';
+import { isAldersøknad, isUføresøknad, SøknadInnhold } from '~src/types/Søknad';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -61,13 +61,13 @@ const Vilkårsting = (props: {
 }) => {
     switch (props.info.vilkårtype) {
         case VilkårtypeAlder.Alderspensjon:
-            return (
+            return isAldersøknad(props.søknadInnhold) ? (
                 <AlderspensjonVilkårsblokk
                     status={props.info.status}
-                    søknadInnhold={props.søknadInnhold as unknown as SøknadInnholdAlder}
+                    søknadInnhold={props.søknadInnhold}
                     behandlingsinformasjon={props.behandlingsinformasjon.alderspensjon}
                 />
-            );
+            ) : null;
         case Vilkårtype.Uførhet:
             return isUføresøknad(props.søknadInnhold) ? (
                 <UførhetVilkårsblokk
