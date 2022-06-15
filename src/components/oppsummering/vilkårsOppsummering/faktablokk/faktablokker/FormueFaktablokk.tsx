@@ -15,6 +15,7 @@ import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fo
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { SamletSkattegrunnlag, SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadInnhold } from '~src/types/Søknad';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
 import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
@@ -70,9 +71,18 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
             />
             {props.skattegrunnlag && (
                 <div className={styles.skattegrunnlag}>
-                    <Heading level="2" size="medium">
+                    <Heading level="2" size="xsmall">
                         {formatMessage('skattegrunnlag.tittel')}
                     </Heading>
+                    <Label spacing size="small" className={styles.light}>
+                        {formatMessage('skattegrunnlag.lagresIkke')}
+                    </Label>
+                    <Label spacing size="small" className={classNames([styles.light, styles.italic])}>
+                        {RemoteData.isSuccess(props.skattegrunnlag.bruker) &&
+                            formatMessage('skattegrunnlag.hentet', {
+                                dato: formatDateTime(props.skattegrunnlag.bruker.value.hentetDato),
+                            })}
+                    </Label>
                     <SkattemeldingFaktablokk
                         tittel={formatMessage('skattegrunnlag.bruker')}
                         samletSkattegrunnlag={props.skattegrunnlag.bruker}
