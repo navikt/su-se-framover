@@ -425,9 +425,8 @@ const Formue = (props: {
                 right: (
                     <FormueFaktablokk
                         søknadInnhold={props.behandling.søknad.søknadInnhold}
-                        skattegrunnlag={
-                            skattemeldingToggle ? { bruker: skattemeldingBruker, eps: skattemeldingEPS } : undefined
-                        }
+                        skattegrunnlagBruker={skattemeldingBruker}
+                        skattegrunnlagEPS={skattemeldingEPS}
                     />
                 ),
             }}

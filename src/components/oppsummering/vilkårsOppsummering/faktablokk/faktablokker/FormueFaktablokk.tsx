@@ -4,8 +4,10 @@ import classNames from 'classnames';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
 
+import { ApiError } from '~src/api/apiClient';
+import { FeatureToggle } from '~src/api/featureToggleApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { ApiResult } from '~src/lib/hooks';
+import { useFeatureToggle } from '~src/lib/featureToggles';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import skattegrunnlagMessages from '~src/pages/saksbehandling/skattegrunnlag-nb';
@@ -29,7 +31,17 @@ import * as styles from './faktablokker.module.less';
 import { FaktablokkProps } from './faktablokkUtils';
 
 export const FormueFaktablokk = (props: FaktablokkProps) => {
+    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
     const { formatMessage } = useI18n({ messages: { ...messages, ...skattegrunnlagMessages } });
+
+    const SkatteApiFeilmelding = ({ tittel, error }: { tittel: string; error: ApiError | undefined }) => (
+        <div>
+            <Label className={styles.overskrift} spacing>
+                {tittel}
+            </Label>
+            <ApiErrorAlert error={error} />
+        </div>
+    );
 
     return (
         <div>
@@ -69,30 +81,62 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
                           ]),
                 ]}
             />
-            {props.skattegrunnlag && (
+            {skattemeldingToggle && props.skattegrunnlagBruker && (
                 <div className={styles.skattegrunnlag}>
                     <Heading level="2" size="xsmall">
                         {formatMessage('skattegrunnlag.tittel')}
                     </Heading>
-                    <Label spacing size="small" className={styles.light}>
-                        {formatMessage('skattegrunnlag.lagresIkke')}
-                    </Label>
-                    <Label spacing size="small" className={classNames([styles.light, styles.italic])}>
-                        {RemoteData.isSuccess(props.skattegrunnlag.bruker) &&
-                            formatMessage('skattegrunnlag.hentet', {
-                                dato: formatDateTime(props.skattegrunnlag.bruker.value.hentetDato),
-                            })}
-                    </Label>
-                    <SkattemeldingFaktablokk
-                        tittel={formatMessage('skattegrunnlag.bruker')}
-                        samletSkattegrunnlag={props.skattegrunnlag.bruker}
-                        formatMessage={formatMessage}
-                    />
-                    <SkattemeldingFaktablokk
-                        tittel={formatMessage('skattegrunnlag.eps')}
-                        samletSkattegrunnlag={props.skattegrunnlag.eps}
-                        formatMessage={formatMessage}
-                    />
+
+                    {pipe(
+                        props.skattegrunnlagBruker,
+                        RemoteData.fold(
+                            () => null,
+                            () => <Loader />,
+                            (error) => (
+                                <SkatteApiFeilmelding tittel={formatMessage('skattegrunnlag.bruker')} error={error} />
+                            ),
+                            (skattegrunnlag) => (
+                                <>
+                                    <Label spacing size="small" className={styles.light}>
+                                        {formatMessage('skattegrunnlag.lagresIkke')}
+                                    </Label>
+                                    <Label spacing size="small" className={classNames([styles.light, styles.italic])}>
+                                        {formatMessage('skattegrunnlag.hentet', {
+                                            dato: formatDateTime(skattegrunnlag.hentetDato),
+                                        })}
+                                    </Label>
+                                    <SkattemeldingFaktablokk
+                                        tittel={formatMessage('skattegrunnlag.bruker')}
+                                        samletSkattegrunnlag={skattegrunnlag}
+                                        formatMessage={formatMessage}
+                                    />
+                                </>
+                            )
+                        )
+                    )}
+                    {props.skattegrunnlagEPS &&
+                        pipe(
+                            props.skattegrunnlagEPS,
+                            RemoteData.fold(
+                                () => null,
+                                () => <Loader />,
+                                (error) => (
+                                    <div>
+                                        <Label className={styles.overskrift} spacing>
+                                            {formatMessage('skattegrunnlag.eps')}
+                                        </Label>
+                                        <ApiErrorAlert error={error} />
+                                    </div>
+                                ),
+                                (skattegrunnlag) => (
+                                    <SkattemeldingFaktablokk
+                                        tittel={formatMessage('skattegrunnlag.eps')}
+                                        samletSkattegrunnlag={skattegrunnlag}
+                                        formatMessage={formatMessage}
+                                    />
+                                )
+                            )
+                        )}
                 </div>
             )}
         </div>
@@ -105,45 +149,28 @@ const SkattemeldingFaktablokk = ({
     formatMessage,
 }: {
     tittel: string;
-    samletSkattegrunnlag: ApiResult<SamletSkattegrunnlag>;
+    samletSkattegrunnlag: SamletSkattegrunnlag;
     formatMessage: (id: keyof typeof messages | keyof typeof skattegrunnlagMessages) => string;
 }) => {
-    return pipe(
-        samletSkattegrunnlag,
-        RemoteData.fold(
-            () => null,
-            () => <Loader />,
-            (err) => (
-                <div>
-                    <Label className={styles.overskrift} spacing>
-                        {tittel}
-                    </Label>
-                    <ApiErrorAlert error={err} />
-                </div>
-            ),
-            ({ grunnlag }) => {
-                const filtrertSkattefakta = grunnlag
-                    .filter((skattegrunnlag) => skattegrunnlag.beløp !== 0)
-                    .filter((skattegrunnlag) => skattegrunnlag.kategori.includes(SkattegrunnlagKategori.FORMUE))
-                    .map((skattegrunnlag) => ({
-                        tittel: formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage),
-                        verdi: skattegrunnlag.beløp.toString(),
-                    }));
+    const filtrertSkattefakta = samletSkattegrunnlag.grunnlag
+        .filter((skattegrunnlag) => skattegrunnlag.beløp !== 0)
+        .filter((skattegrunnlag) => skattegrunnlag.kategori.includes(SkattegrunnlagKategori.FORMUE))
+        .map((skattegrunnlag) => ({
+            tittel: formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage),
+            verdi: skattegrunnlag.beløp.toString(),
+        }));
 
-                if (filtrertSkattefakta.length === 0)
-                    return (
-                        <div>
-                            <Label className={styles.overskrift} spacing>
-                                {tittel}
-                            </Label>
-                            <p>{formatMessage('skattegrunnlag.empty')}</p>
-                        </div>
-                    );
+    if (filtrertSkattefakta.length === 0)
+        return (
+            <div>
+                <Label className={styles.overskrift} spacing>
+                    {tittel}
+                </Label>
+                <p>{formatMessage('skattegrunnlag.empty')}</p>
+            </div>
+        );
 
-                return <Faktablokk tittel={tittel} fakta={filtrertSkattefakta} />;
-            }
-        )
-    );
+    return <Faktablokk tittel={tittel} fakta={filtrertSkattefakta} />;
 };
 
 const IGNORER_VERDI = 'IGNORER_VERDI' as const;

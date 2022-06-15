@@ -6,10 +6,8 @@ import { Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilk�
 
 export interface FaktablokkProps {
     søknadInnhold: SøknadInnhold;
-    skattegrunnlag?: {
-        bruker: ApiResult<SamletSkattegrunnlag>;
-        eps: ApiResult<SamletSkattegrunnlag>;
-    };
+    skattegrunnlagBruker?: ApiResult<SamletSkattegrunnlag>;
+    skattegrunnlagEPS?: ApiResult<SamletSkattegrunnlag>;
 }
 
 export interface VilkårsblokkProps<T extends keyof Behandlingsinformasjon> {
