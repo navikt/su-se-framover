@@ -1,15 +1,14 @@
 import { Nullable } from '~src/lib/types';
 
 export interface SamletSkattegrunnlag {
-    personidentifikator: string;
-    inntektsaar: string;
-    skjermet: boolean;
+    fnr: string;
+    inntektsår: string;
     grunnlag: Skattegrunnlag[];
     skatteoppgjoersdato: Nullable<string>;
 }
 
 export interface Skattegrunnlag {
-    tekniskNavn: string;
-    beloep: number;
+    navn: string;
+    beløp: number;
     kategori: string[];
 }

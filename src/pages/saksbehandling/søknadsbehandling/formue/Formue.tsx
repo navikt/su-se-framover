@@ -200,7 +200,9 @@ const Formue = (props: {
     }, [watch.epsFormue?.innskuddsbeløp]);
 
     useEffect(() => {
-        hentSkattemeldingBruker({ fnr: props.søker.fnr });
+        if (skattemeldingToggle) {
+            hentSkattemeldingBruker({ fnr: props.søker.fnr });
+        }
     }, []);
 
     useEffect(() => {
@@ -423,7 +425,9 @@ const Formue = (props: {
                 right: (
                     <FormueFaktablokk
                         søknadInnhold={props.behandling.søknad.søknadInnhold}
-                        skattegrunnlag={{ bruker: skattemeldingBruker, eps: skattemeldingEPS }}
+                        skattegrunnlag={
+                            skattemeldingToggle ? { bruker: skattemeldingBruker, eps: skattemeldingEPS } : undefined
+                        }
                     />
                 ),
             }}
