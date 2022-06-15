@@ -1,11 +1,12 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
+import { AlderspensjonVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/AlderspensjonFaktablokk';
 import { useI18n } from '~src/lib/i18n';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { isUføresøknad, SøknadInnhold } from '~src/types/Søknad';
-import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { isAldersøknad, isUføresøknad, SøknadInnhold } from '~src/types/Søknad';
+import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -27,6 +28,7 @@ const VilkårsOppsummering = (props: {
 }) => {
     const { intl } = useI18n({ messages });
     const vilkårsinformasjon = mapToVilkårsinformasjon(
+        props.søknadInnhold.type,
         props.behandlingsinformasjon,
         props.grunnlagsdataOgVilkårsvurderinger
     );
@@ -58,6 +60,14 @@ const Vilkårsting = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     switch (props.info.vilkårtype) {
+        case VilkårtypeAlder.Alderspensjon:
+            return isAldersøknad(props.søknadInnhold) ? (
+                <AlderspensjonVilkårsblokk
+                    status={props.info.status}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.alderspensjon}
+                />
+            ) : null;
         case Vilkårtype.Uførhet:
             return isUføresøknad(props.søknadInnhold) ? (
                 <UførhetVilkårsblokk

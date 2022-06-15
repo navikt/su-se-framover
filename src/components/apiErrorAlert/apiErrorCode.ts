@@ -203,4 +203,6 @@ export enum ApiErrorCode {
     VURDERINGSPERIODER_MANGLER = 'vurderingsperioder_mangler',
     ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER = 'åpen_revurdering_gjenopptak_eksisterer',
     ÅPEN_REVURDERING_STANS_EKSISTERER = 'åpen_revurdering_stans_eksisterer',
+    INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'inget_skattegrunnlag_for_gitt_fnr_og_år',
+    SKATTEGRUNNLAGET_FINNES_IKKE_LENGER = 'skattegrunnlaget_finnes_ikke_lenger',
 }

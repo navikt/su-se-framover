@@ -5,6 +5,7 @@ import { useSøknadsbehandlingDraftContext } from '~src/context/søknadsbehandli
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Behandling } from '~src/types/Behandling';
+import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import {
     mapToVilkårsinformasjon,
@@ -28,8 +29,14 @@ const vilkårstatusTilLinjestatus = (s: VilkårVurderingStatus): Linjestatus => 
     }
 };
 
-const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: Behandling; vilkår: Vilkårtype }) => {
+const SaksbehandlingFramdriftsindikator = (props: {
+    sakId: string;
+    behandling: Behandling;
+    vilkår: Vilkårtype;
+    sakstype: Sakstype;
+}) => {
     const vilkårrekkefølge = mapToVilkårsinformasjon(
+        props.sakstype,
         props.behandling.behandlingsinformasjon,
         props.behandling.grunnlagsdataOgVilkårsvurderinger
     );

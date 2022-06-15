@@ -1,14 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Datepicker } from '@navikt/ds-datepicker';
-import { Button, Label, Loader } from '@navikt/ds-react';
+import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
 
 import * as søknadApi from '~src/api/søknadApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import DatePicker from '~src/components/datePicker/DatePicker';
 import { useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { LukkSøknadBegrunnelse } from '~src/types/Søknad';
+import { toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import nb from './lukkSøknad-nb';
 import * as styles from './lukkSøknad.module.less';
@@ -30,29 +30,16 @@ const Trukket = (props: TrukketProps) => {
     return (
         <div className={styles.trukketContainer}>
             <div className={styles.datoContainer}>
-                <Label as="label" htmlFor={'datoSøkerTrakkSøknad'}>
-                    {formatMessage('trekking.datoSøkerTrakkSøknad')}
-                </Label>
-                <Datepicker
-                    inputProps={{
-                        name: 'datoSøkerTrakkSøknad',
-                        'aria-invalid': props.feilmelding ? true : false,
-                    }}
-                    inputId={'datoSøkerTrakkSøknad'}
-                    value={props.datoSøkerTrakkSøknad?.toString()}
-                    limitations={{ minDate: props.søknadOpprettet, maxDate: new Date().toISOString() }}
-                    onChange={(value) => {
-                        if (!value) {
-                            return;
-                        }
-                        props.onDatoSøkerTrakkSøknadChange(value);
-                    }}
+                <DatePicker
+                    id={'datoSøkerTrakkSøknad'}
+                    name={'datoSøkerTrakkSøknad'}
+                    feil={props.feilmelding}
+                    value={toDateOrNull(props.datoSøkerTrakkSøknad)}
+                    minDate={toDateOrNull(props.søknadOpprettet)}
+                    maxDate={new Date()}
+                    onChange={(value) => value && props.onDatoSøkerTrakkSøknadChange(toIsoDateOnlyString(value))}
+                    label={formatMessage('trekking.datoSøkerTrakkSøknad')}
                 />
-                {props.feilmelding && (
-                    <SkjemaelementFeilmelding>
-                        {props.feilmelding ?? formatMessage('feil.feltMåFyllesUt')}
-                    </SkjemaelementFeilmelding>
-                )}
             </div>
             <Button
                 variant="secondary"

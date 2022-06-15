@@ -264,6 +264,9 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER]:
         'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
     [ApiErrorCode.ÅPEN_REVURDERING_STANS_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
+    [ApiErrorCode.INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
+        '	Ingen summert skattegrunnlag funnet på oppgitt personidentifikator og inntektsår',
+    [ApiErrorCode.SKATTEGRUNNLAGET_FINNES_IKKE_LENGER]: 'Skattegrunnlag finnes ikke lenger',
 };
 export default messages;
 

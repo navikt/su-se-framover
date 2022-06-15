@@ -2,6 +2,7 @@ import { Person } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
 
 export interface Behandlingsinformasjon {
+    alderspensjon: Nullable<Alderspensjon>;
     flyktning: Nullable<Flyktning>;
     lovligOpphold: Nullable<LovligOpphold>;
     fastOppholdINorge: Nullable<FastOppholdINorge>;
@@ -13,6 +14,10 @@ export enum Vilkårstatus {
     VilkårOppfylt = 'VilkårOppfylt',
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
     Uavklart = 'Uavklart',
+}
+
+export interface Alderspensjon {
+    status: Vilkårstatus;
 }
 
 export interface Flyktning {

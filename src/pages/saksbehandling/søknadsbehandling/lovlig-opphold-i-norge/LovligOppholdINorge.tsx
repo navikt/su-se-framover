@@ -1,30 +1,25 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { RadioGroup, Radio } from '@navikt/ds-react';
+import { Radio, RadioGroup } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
-import React, { useRef } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { LovligOppholdFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/LovligOppholdFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
-import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import yup from '~src/lib/validering';
+import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './lovligOppholdINorge-nb';
 
@@ -46,8 +41,6 @@ const schema = yup
     .required();
 
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
-    const navigate = useNavigate();
-    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
     const initialValues = {
@@ -59,12 +52,10 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         (values) => eqFormData.equals(values, initialValues)
     );
 
-    const handleSave = (nesteUrl: string) => async (values: FormData) => {
-        if (!values.status) return;
-
+    const handleSave = async (values: FormData, onSuccess: () => void) => {
         if (eqFormData.equals(values, initialValues)) {
             clearDraft();
-            navigate(nesteUrl);
+            onSuccess();
             return;
         }
 
@@ -74,21 +65,18 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
                     lovligOpphold: {
-                        status: values.status,
+                        status: values.status!,
                     },
                 },
             },
             () => {
                 clearDraft();
-                navigate(nesteUrl);
+                onSuccess();
             }
         );
     };
 
-    const {
-        formState: { isValid, isSubmitted, errors },
-        ...form
-    } = useForm({
+    const form = useForm({
         defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
@@ -99,8 +87,13 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <form
-                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
+                    <SøknadsbehandlingWrapper
+                        form={form}
+                        save={handleSave}
+                        savingState={status}
+                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+                        forrigeUrl={props.forrigeUrl}
+                        nesteUrl={props.nesteUrl}
                     >
                         <Controller
                             control={form.control}
@@ -123,25 +116,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 </RadioGroup>
                             )}
                         />
-
-                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-                        <Feiloppsummering
-                            tittel={formatMessage('feiloppsummering.title')}
-                            hidden={!isSubmitted || isValid}
-                            feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            ref={feiloppsummeringRef}
-                        />
-                        <Vurderingknapper
-                            onTilbakeClick={() => {
-                                navigate(props.forrigeUrl);
-                            }}
-                            onLagreOgFortsettSenereClick={form.handleSubmit(
-                                handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
-                                focusAfterTimeout(feiloppsummeringRef)
-                            )}
-                            loading={RemoteData.isPending(status)}
-                        />
-                    </form>
+                    </SøknadsbehandlingWrapper>
                 ),
                 right: <LovligOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
