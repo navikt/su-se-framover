@@ -60,6 +60,12 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
     useDraftFormSubscribe(form.watch);
 
     const handleSave = async (values: InstitusjonsoppholdFormData, onSuccess: () => void) => {
+        if (eqFormData.equals(values, initialValues)) {
+            clearDraft();
+            onSuccess();
+            return;
+        }
+
         await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
