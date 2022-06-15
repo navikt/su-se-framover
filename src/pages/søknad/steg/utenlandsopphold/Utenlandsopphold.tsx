@@ -1,22 +1,22 @@
-import { Datepicker, DatepickerLimitations } from '@navikt/ds-datepicker';
-import { Alert, Label, Fieldset, BodyLong } from '@navikt/ds-react';
+import { Alert, BodyLong, Fieldset } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { useFormik, FormikErrors } from 'formik';
+import { FormikErrors, useFormik } from 'formik';
 import * as React from 'react';
+import { ReactDatePickerProps } from 'react-datepicker';
 import { useNavigate } from 'react-router-dom';
 
+import DatePicker from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
-import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~src/features/søknad/types';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~src/lib/validering';
-import { useAppSelector, useAppDispatch } from '~src/redux/Store';
-import { kalkulerTotaltAntallDagerIUtlandet } from '~src/utils/date/dateUtils';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { kalkulerTotaltAntallDagerIUtlandet, toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import * as sharedStyles from '../../steg-shared.module.less';
@@ -130,7 +130,10 @@ const MultiTidsperiodevelger = (props: {
     perioder: Array<{ utreisedato: string; innreisedato: string }>;
     errors: string | string[] | Array<FormikErrors<{ utreisedato: string; innreisedato: string }>> | undefined;
     feltnavn: string;
-    limitations?: { innreise?: DatepickerLimitations; utreise?: DatepickerLimitations };
+    limitations?: {
+        innreise?: Pick<ReactDatePickerProps, 'maxDate' | 'minDate'>;
+        utreise?: Pick<ReactDatePickerProps, 'maxDate' | 'minDate'>;
+    };
     legendForNumber(num: number): string;
     onChange: (element: { index: number; utreisedato: string; innreisedato: string }) => void;
     onLeggTilClick: () => void;
@@ -143,8 +146,6 @@ const MultiTidsperiodevelger = (props: {
             {props.perioder.map((periode, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
                 const baseId = `${props.feltnavn}[${index}]`;
-                const utreisedatoId = `${baseId}.utreisedato`;
-                const innreisedatoId = `${baseId}.innreisedato`;
                 return (
                     <SøknadInputliste.Item
                         key={index}
@@ -155,78 +156,55 @@ const MultiTidsperiodevelger = (props: {
                         legend={props.legendForNumber(index + 1)}
                         error={errorForLinje && typeof errorForLinje === 'object'}
                     >
-                        {/*TODO: Fiks nummer på legend: */}
                         <div className={styles.reiseItemContainer}>
                             <div>
-                                <Label as="label" htmlFor={utreisedatoId}>
-                                    {formatMessage('utreisedato.label')}
-                                    <span className="sr-only">
-                                        {formatMessage('forUtenlandsoppholdX.label', { x: index + 1 })}
-                                    </span>
-                                </Label>
-                                <Datepicker
-                                    inputProps={{
-                                        name: 'utreisedato',
-                                        'aria-invalid':
-                                            errorForLinje &&
-                                            typeof errorForLinje === 'object' &&
-                                            errorForLinje.utreisedato
-                                                ? true
-                                                : false,
-                                    }}
-                                    value={periode.utreisedato}
-                                    limitations={props.limitations?.utreise}
-                                    inputId={utreisedatoId}
-                                    onChange={(value) => {
-                                        if (!value) {
-                                            return;
-                                        }
+                                <DatePicker
+                                    id={`${baseId}.utreisedato`}
+                                    name={'utreisedato'}
+                                    dateFormat="dd.MM.yyyy"
+                                    label={formatMessage('utreisedato.label')}
+                                    value={toDateOrNull(periode.utreisedato)}
+                                    minDate={props.limitations?.utreise?.minDate}
+                                    maxDate={props.limitations?.utreise?.maxDate}
+                                    feil={
+                                        errorForLinje && typeof errorForLinje === 'object'
+                                            ? errorForLinje?.utreisedato
+                                            : undefined
+                                    }
+                                    onChange={(value: Date) =>
+                                        value &&
                                         props.onChange({
                                             index,
-                                            utreisedato: value,
+                                            utreisedato: toIsoDateOnlyString(value),
                                             innreisedato: periode.innreisedato,
-                                        });
-                                    }}
+                                        })
+                                    }
                                 />
-                                {errorForLinje && typeof errorForLinje === 'object' && (
-                                    <SkjemaelementFeilmelding>{errorForLinje.utreisedato}</SkjemaelementFeilmelding>
-                                )}
                             </div>
 
                             <div>
-                                <Label as="label" htmlFor={innreisedatoId}>
-                                    {formatMessage('innreisedato.label')}
-                                    <span className="sr-only">
-                                        {formatMessage('forUtenlandsoppholdX.label', { x: index + 1 })}
-                                    </span>
-                                </Label>
-                                <Datepicker
-                                    inputId={innreisedatoId}
-                                    inputProps={{
-                                        name: 'innreisedato',
-                                        'aria-invalid':
-                                            errorForLinje &&
-                                            typeof errorForLinje === 'object' &&
-                                            errorForLinje.innreisedato
-                                                ? true
-                                                : false,
-                                    }}
-                                    value={periode.innreisedato}
-                                    limitations={{ ...props.limitations?.innreise, minDate: periode.utreisedato }}
-                                    onChange={(value) => {
-                                        if (!value) {
-                                            return;
-                                        }
+                                <DatePicker
+                                    id={`${baseId}.innreisedato`}
+                                    name={'innreisedato'}
+                                    feil={
+                                        errorForLinje && typeof errorForLinje === 'object'
+                                            ? errorForLinje?.innreisedato
+                                            : undefined
+                                    }
+                                    dateFormat="dd.MM.yyyy"
+                                    label={formatMessage('innreisedato.label')}
+                                    value={toDateOrNull(periode.innreisedato)}
+                                    minDate={props.limitations?.innreise?.minDate}
+                                    maxDate={props.limitations?.innreise?.maxDate}
+                                    onChange={(value: Date) =>
+                                        value &&
                                         props.onChange({
                                             index,
                                             utreisedato: periode.utreisedato,
-                                            innreisedato: value,
-                                        });
-                                    }}
+                                            innreisedato: toIsoDateOnlyString(value),
+                                        })
+                                    }
                                 />
-                                {errorForLinje && typeof errorForLinje === 'object' && (
-                                    <SkjemaelementFeilmelding>{errorForLinje.innreisedato}</SkjemaelementFeilmelding>
-                                )}
                             </div>
                         </div>
                     </SøknadInputliste.Item>
@@ -312,8 +290,8 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             feltnavn="harReistDatoer"
                             perioder={formik.values.harReistDatoer}
                             limitations={{
-                                utreise: { maxDate: new Date().toISOString() },
-                                innreise: { maxDate: new Date().toISOString() },
+                                utreise: { maxDate: new Date() },
+                                innreise: { maxDate: new Date() },
                             }}
                             errors={formik.errors.harReistDatoer}
                             onLeggTilClick={() => {
@@ -374,8 +352,8 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             feltnavn="skalReiseDatoer"
                             perioder={formik.values.skalReiseDatoer}
                             limitations={{
-                                utreise: { minDate: new Date().toISOString() },
-                                innreise: { minDate: new Date().toISOString() },
+                                utreise: { minDate: new Date() },
+                                innreise: { minDate: new Date() },
                             }}
                             errors={formik.errors.skalReiseDatoer}
                             onLeggTilClick={() => {
