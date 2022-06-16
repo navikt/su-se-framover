@@ -93,7 +93,7 @@ const Vilkår = () => {
                         <Familieforening
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
@@ -119,7 +119,11 @@ const Vilkår = () => {
                     {vilkar === Vilkårtype.LovligOpphold && (
                         <LovligOppholdINorge
                             behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            forrigeUrl={
+                                isAldersøknad(behandling.søknad.søknadInnhold)
+                                    ? vilkårUrl(Vilkårtype.Familieforening)
+                                    : vilkårUrl(Vilkårtype.Flyktning)
+                            }
                             nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
                             sakId={sakId}
                         />
