@@ -1,4 +1,12 @@
 export default {
+    'skattegrunnlag.tittel': 'Skattegrunnlag',
+    'skattegrunnlag.lagresIkke': 'Denne informasjonen er hentet fra skatteetaten og lagres ikke.',
+    'skattegrunnlag.tom': 'Fant ingen relevant skattedata for gitt person',
+    'skattegrunnlag.hentet': 'Informasjon hentet: {dato}',
+    'skattegrunnlag.bruker': 'Bruker',
+    'skattegrunnlag.eps': 'EPS',
+
+    // Oversettelser for tekniskNavn
     aarsavgiftForKontoIVerdipapirregister: 'Årsavgift VPS konto',
     alderspensjonFraIPAOgIPS: 'Alderspensjon fra individuell pensjonsordning (IPS/IPA)',
     alminneligInntektFoerSaerfradrag: 'Alminnelig inntekt før særfradrag',

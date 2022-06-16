@@ -1,23 +1,17 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Heading, Label, Loader } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
 
-import { ApiError } from '~src/api/apiClient';
 import { FeatureToggle } from '~src/api/featureToggleApi';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useFeatureToggle } from '~src/lib/featureToggles';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import skattegrunnlagMessages from '~src/pages/saksbehandling/skattegrunnlag-nb';
 import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { SamletSkattegrunnlag, SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
+import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadInnhold } from '~src/types/Søknad';
-import { formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
 import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
@@ -28,20 +22,13 @@ import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import * as styles from './faktablokker.module.less';
-import { FaktablokkProps } from './faktablokkUtils';
+import { FaktablokkProps, SkattegrunnlagApiProps } from './faktablokkUtils';
+import { SkattemeldingFaktablokk } from './skatt/SkattegrunnlagFaktablokk';
 
-export const FormueFaktablokk = (props: FaktablokkProps) => {
+type Props = FaktablokkProps & Partial<SkattegrunnlagApiProps>;
+export const FormueFaktablokk = (props: Props) => {
     const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
-    const { formatMessage } = useI18n({ messages: { ...messages, ...skattegrunnlagMessages } });
-
-    const SkatteApiFeilmelding = ({ tittel, error }: { tittel: string; error: ApiError | undefined }) => (
-        <div>
-            <Label className={styles.overskrift} spacing>
-                {tittel}
-            </Label>
-            <ApiErrorAlert error={error} />
-        </div>
-    );
+    const { formatMessage } = useI18n({ messages });
 
     return (
         <div>
@@ -82,95 +69,14 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
                 ]}
             />
             {skattemeldingToggle && props.skattegrunnlagBruker && (
-                <div className={styles.skattegrunnlag}>
-                    <Heading level="2" size="xsmall">
-                        {formatMessage('skattegrunnlag.tittel')}
-                    </Heading>
-
-                    {pipe(
-                        props.skattegrunnlagBruker,
-                        RemoteData.fold(
-                            () => null,
-                            () => <Loader />,
-                            (error) => (
-                                <SkatteApiFeilmelding tittel={formatMessage('skattegrunnlag.bruker')} error={error} />
-                            ),
-                            (skattegrunnlag) => (
-                                <>
-                                    <Label spacing size="small" className={styles.light}>
-                                        {formatMessage('skattegrunnlag.lagresIkke')}
-                                    </Label>
-                                    <Label spacing size="small" className={classNames([styles.light, styles.italic])}>
-                                        {formatMessage('skattegrunnlag.hentet', {
-                                            dato: formatDateTime(skattegrunnlag.hentetDato),
-                                        })}
-                                    </Label>
-                                    <SkattemeldingFaktablokk
-                                        tittel={formatMessage('skattegrunnlag.bruker')}
-                                        samletSkattegrunnlag={skattegrunnlag}
-                                        formatMessage={formatMessage}
-                                    />
-                                </>
-                            )
-                        )
-                    )}
-                    {props.skattegrunnlagEPS &&
-                        pipe(
-                            props.skattegrunnlagEPS,
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader />,
-                                (error) => (
-                                    <div>
-                                        <Label className={styles.overskrift} spacing>
-                                            {formatMessage('skattegrunnlag.eps')}
-                                        </Label>
-                                        <ApiErrorAlert error={error} />
-                                    </div>
-                                ),
-                                (skattegrunnlag) => (
-                                    <SkattemeldingFaktablokk
-                                        tittel={formatMessage('skattegrunnlag.eps')}
-                                        samletSkattegrunnlag={skattegrunnlag}
-                                        formatMessage={formatMessage}
-                                    />
-                                )
-                            )
-                        )}
-                </div>
+                <SkattemeldingFaktablokk
+                    skattegrunnlagBruker={props.skattegrunnlagBruker}
+                    skattegrunnlagEPS={props.skattegrunnlagEPS}
+                    kategori={SkattegrunnlagKategori.FORMUE}
+                />
             )}
         </div>
     );
-};
-
-const SkattemeldingFaktablokk = ({
-    tittel,
-    samletSkattegrunnlag,
-    formatMessage,
-}: {
-    tittel: string;
-    samletSkattegrunnlag: SamletSkattegrunnlag;
-    formatMessage: (id: keyof typeof messages | keyof typeof skattegrunnlagMessages) => string;
-}) => {
-    const filtrertSkattefakta = samletSkattegrunnlag.grunnlag
-        .filter((skattegrunnlag) => skattegrunnlag.beløp !== 0)
-        .filter((skattegrunnlag) => skattegrunnlag.kategori.includes(SkattegrunnlagKategori.FORMUE))
-        .map((skattegrunnlag) => ({
-            tittel: formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage),
-            verdi: skattegrunnlag.beløp.toString(),
-        }));
-
-    if (filtrertSkattefakta.length === 0)
-        return (
-            <div>
-                <Label className={styles.overskrift} spacing>
-                    {tittel}
-                </Label>
-                <p>{formatMessage('skattegrunnlag.empty')}</p>
-            </div>
-        );
-
-    return <Faktablokk tittel={tittel} fakta={filtrertSkattefakta} />;
 };
 
 const IGNORER_VERDI = 'IGNORER_VERDI' as const;
@@ -419,13 +325,4 @@ export const FormueVilkårsblokk = (props: {
             }
         />
     );
-};
-
-/* Hjelpefunksjon for å håndtere att vi får ukjente tekniske navn på formue / inntekt fra skatteetaten */
-const formatSkattTekniskMessage = (id: string, formatMessage: (id: keyof typeof skattegrunnlagMessages) => string) => {
-    try {
-        return formatMessage(id as keyof typeof skattegrunnlagMessages);
-    } catch (e) {
-        return id;
-    }
 };
