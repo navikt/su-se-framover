@@ -20,6 +20,7 @@ export const toUføreinnsending = (søknad: UføresøknadState, fnr: string): S�
         registrertFlyktning: søknad.flyktningstatus.erFlyktning!,
     },
     ...toFellessøknadsinnsending(søknad, fnr),
+    type: Sakstype.Uføre,
 });
 
 export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): SøknadInnholdAlder => ({
@@ -31,6 +32,7 @@ export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): S�
         familieforening: søknad.oppholdstillatelse.familieforening!,
     },
     ...toFellessøknadsinnsending(søknad, fnr),
+    type: Sakstype.Alder,
 });
 
 export const toFellessøknadsinnsending = (
@@ -38,7 +40,7 @@ export const toFellessøknadsinnsending = (
     fnr: string
 ): SøknadInnholdFelles => {
     const erAlderssøknad = (s: AlderssøknadState | UføresøknadState): s is AlderssøknadState =>
-        'harSøktAlderspensjon' in s;
+        'harSøktAlderspensjon' in s && s.harSøktAlderspensjon !== null;
     const oppholdstillatelse = erAlderssøknad(søknad) ? søknad.oppholdstillatelse : søknad.flyktningstatus;
 
     return {
