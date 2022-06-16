@@ -1,4 +1,7 @@
 export default {
+    'skattegrunnlag.empty': 'Fant ingen formue eller inntekt for gitt person',
+
+    // Oversettelser for tekniskNavn
     aarsavgiftForKontoIVerdipapirregister: 'Årsavgift VPS konto',
     alderspensjonFraIPAOgIPS: 'Alderspensjon fra individuell pensjonsordning (IPS/IPA)',
     alminneligInntektFoerSaerfradrag: 'Alminnelig inntekt før særfradrag',

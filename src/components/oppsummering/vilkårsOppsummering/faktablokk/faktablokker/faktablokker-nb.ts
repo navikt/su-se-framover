@@ -88,5 +88,4 @@ export default {
     'skattegrunnlag.hentet': 'Informasjon hentet: {dato}',
     'skattegrunnlag.bruker': 'Bruker',
     'skattegrunnlag.eps': 'EPS',
-    'skattegrunnlag.empty': 'Fant ingen formue eller inntekt for gitt person',
 };

@@ -9,6 +9,8 @@ import * as S from 'fp-ts/lib/string';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import * as personApi from '~src/api/personApi';
+import { hentSkattemelding } from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import {
     FradragFormData,
@@ -22,7 +24,7 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
@@ -77,7 +79,8 @@ function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): F
     };
 }
 
-const Beregning = (props: VilkårsvurderingBaseProps) => {
+type Søker = { søker: personApi.Person };
+const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
@@ -86,6 +89,9 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const [lagreFradragstatus, lagreFradrag] = useAsyncActionCreator(sakSlice.lagreFradrag);
     const [beregningStatus, beregn] = useAsyncActionCreator(sakSlice.startBeregning);
     const [simuleringStatus, simuler] = useAsyncActionCreator(sakSlice.startSimulering);
+
+    const [skattemeldingBruker, hentSkattemeldingBruker] = useApiCall(hentSkattemelding);
+    const [skattemeldingEPS, hentSkattemeldingEPS] = useApiCall(hentSkattemelding);
 
     const initialFormData = useMemo<FormData>(
         () =>
@@ -110,6 +116,15 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
     useEffect(() => {
         dispatch(sakSlice.default.actions.resetBeregningstatus());
+    }, []);
+
+    useEffect(() => {
+        hentSkattemeldingBruker({ fnr: props.søker.fnr });
+        const bosituasjon = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger); // TODO ai: Støtte for kun 1 bosituasjon. Støtte fler i framtiden.
+
+        if (bosituasjon?.fnr) {
+            hentSkattemeldingEPS({ fnr: bosituasjon.fnr });
+        }
     }, []);
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling) || stønadsperiode === null) {
@@ -346,7 +361,13 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: <BeregningFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: (
+                    <BeregningFaktablokk
+                        søknadInnhold={props.behandling.søknad.søknadInnhold}
+                        skattegrunnlagBruker={skattemeldingBruker}
+                        skattegrunnlagEPS={skattemeldingEPS}
+                    />
+                ),
             }}
         </ToKolonner>
     );

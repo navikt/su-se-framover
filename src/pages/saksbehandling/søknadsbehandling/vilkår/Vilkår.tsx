@@ -173,6 +173,7 @@ const Vilkår = () => {
                             forrigeUrl={vilkårUrl(Vilkårtype.Sats)}
                             nesteUrl={vedtakUrl}
                             sakId={sakId}
+                            søker={props.søker}
                         />
                     )}
                 </div>
