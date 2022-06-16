@@ -37,6 +37,8 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Virkningstidspunkt';
         case Vilkårtype.Alderspensjon:
             return 'Alderspensjon';
+        case Vilkårtype.Familieforening:
+            return 'Familieforening';
         case Vilkårtype.OppholdstillatelseAlder:
             return 'Oppholdstillatelse Alder';
         case Vilkårtype.BorOgOppholderSegINorge:
@@ -96,7 +98,10 @@ const mapToVilkårsinformasjonUføre = (uføre: GrunnlagsdataOgVilkårsvurdering
     },
 ];
 
-const mapToVilkårsinformasjonAlder = (alder: GrunnlagsdataOgVilkårsvurderinger['pensjon']): Vilkårsinformasjon[] => [
+const mapToVilkårsinformasjonAlder = (
+    alder: GrunnlagsdataOgVilkårsvurderinger['pensjon'],
+    familieforening: GrunnlagsdataOgVilkårsvurderinger['familieforening']
+): Vilkårsinformasjon[] => [
     {
         status:
             alder === null
@@ -109,6 +114,16 @@ const mapToVilkårsinformasjonAlder = (alder: GrunnlagsdataOgVilkårsvurderinger
         vilkårtype: Vilkårtype.Alderspensjon,
         erStartet: alder !== null,
     },
+    {
+        status:
+            familieforening === null
+                ? VilkårVurderingStatus.IkkeVurdert
+                : familieforening?.resultat === Vilkårstatus.VilkårOppfylt
+                ? VilkårVurderingStatus.Ok
+                : VilkårVurderingStatus.IkkeOk,
+        vilkårtype: Vilkårtype.Familieforening,
+        erStartet: familieforening !== null,
+    },
 ];
 
 export const mapToVilkårsinformasjon = (
@@ -118,10 +133,10 @@ export const mapToVilkårsinformasjon = (
 ): Vilkårsinformasjon[] => {
     const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, personligOppmøte } =
         behandlingsinformasjon;
-    const { pensjon, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
+    const { pensjon, familieforening, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
 
     const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre) : [];
-    const aldersvilkår = sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(pensjon) : [];
+    const aldersvilkår = sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(pensjon, familieforening) : [];
 
     return [
         ...uførevilkår,

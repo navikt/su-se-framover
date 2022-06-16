@@ -7,6 +7,7 @@ export enum VilkårVurderingStatus {
 
 export enum VilkårtypeAlder {
     Alderspensjon = 'ALDERSPENSJON',
+    Familieforening = 'FAMILIEFORENING',
     OppholdstillatelseAlder = 'OPPHOLDSTILLATELSE_ALDER',
 }
 

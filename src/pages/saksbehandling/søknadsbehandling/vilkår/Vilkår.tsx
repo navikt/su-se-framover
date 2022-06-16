@@ -5,6 +5,7 @@ import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import * as Routes from '~src/lib/routes';
 import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspensjon/Alderspensjon';
+import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/familieforening/Familieforening';
 import { Sakstype } from '~src/types/Sak';
 import { isAldersøknad, isUføresøknad } from '~src/types/Søknad';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
@@ -83,6 +84,15 @@ const Vilkår = () => {
                         <Alderspensjon
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Familieforening)}
+                            søknadInnhold={behandling.søknad.søknadInnhold}
+                            sakId={sakId}
+                        />
+                    )}
+                    {vilkar === VilkårtypeAlder.Familieforening && isAldersøknad(behandling.søknad.søknadInnhold) && (
+                        <Familieforening
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
                             nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}

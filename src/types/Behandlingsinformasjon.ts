@@ -2,11 +2,12 @@ import { Person } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
 
 export interface Behandlingsinformasjon {
-    alderspensjon: Nullable<Alderspensjon>;
-    flyktning: Nullable<Flyktning>;
-    lovligOpphold: Nullable<LovligOpphold>;
-    fastOppholdINorge: Nullable<FastOppholdINorge>;
-    institusjonsopphold: Nullable<Institusjonsopphold>;
+    alderspensjon: Nullable<Behandlingsstatus>;
+    familieforening: Nullable<Behandlingsstatus>;
+    flyktning: Nullable<Behandlingsstatus>;
+    lovligOpphold: Nullable<Behandlingsstatus>;
+    fastOppholdINorge: Nullable<Behandlingsstatus>;
+    institusjonsopphold: Nullable<Behandlingsstatus>;
     personligOppmøte: Nullable<PersonligOppmøte>;
 }
 
@@ -16,23 +17,7 @@ export enum Vilkårstatus {
     Uavklart = 'Uavklart',
 }
 
-export interface Alderspensjon {
-    status: Vilkårstatus;
-}
-
-export interface Flyktning {
-    status: Vilkårstatus;
-}
-
-export interface LovligOpphold {
-    status: Vilkårstatus;
-}
-
-export interface FastOppholdINorge {
-    status: Vilkårstatus;
-}
-
-export interface Institusjonsopphold {
+export interface Behandlingsstatus {
     status: Vilkårstatus;
 }
 

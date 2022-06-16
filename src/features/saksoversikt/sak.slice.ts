@@ -14,7 +14,7 @@ import { Nullable } from '~src/lib/types';
 import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
+import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
@@ -192,6 +192,24 @@ export const lagreAlderspensjongrunnlag = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/grunnlag/pensjon', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreAldersgrunnlag(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreFamilieforeninggrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vurderinger: {
+            familieforening: Vilkårstatus;
+        };
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/familieforening', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreFamilieforeningsgrunnlag(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -719,6 +737,16 @@ export default createSlice({
         });
 
         builder.addCase(lagreAlderspensjongrunnlag.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
+        builder.addCase(lagreFamilieforeninggrunnlag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
