@@ -144,7 +144,8 @@ export const mapToVilkårsinformasjon = (
     const { pensjon, familieforening, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
 
     const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre, flyktning) : [];
-    const aldersvilkår = sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(pensjon, familieforening) : [];
+    const aldersvilkår =
+        sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(pensjon, familieforening ?? null) : [];
 
     return [
         ...uførevilkår,
