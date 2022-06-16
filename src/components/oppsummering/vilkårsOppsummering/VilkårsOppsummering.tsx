@@ -2,6 +2,7 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
 import { AlderspensjonVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/AlderspensjonFaktablokk';
+import { FamilieforeningVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FamilieforeningFaktablokk';
 import { useI18n } from '~src/lib/i18n';
 import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -63,6 +64,14 @@ const Vilkårsting = (props: {
         case VilkårtypeAlder.Alderspensjon:
             return isAldersøknad(props.søknadInnhold) ? (
                 <AlderspensjonVilkårsblokk
+                    status={props.info.status}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.alderspensjon}
+                />
+            ) : null;
+        case VilkårtypeAlder.Familieforening:
+            return isAldersøknad(props.søknadInnhold) ? (
+                <FamilieforeningVilkårsblokk
                     status={props.info.status}
                     søknadInnhold={props.søknadInnhold}
                     behandlingsinformasjon={props.behandlingsinformasjon.alderspensjon}

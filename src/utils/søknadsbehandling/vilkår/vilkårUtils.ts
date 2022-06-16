@@ -37,6 +37,8 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Virkningstidspunkt';
         case Vilkårtype.Alderspensjon:
             return 'Alderspensjon';
+        case Vilkårtype.Familieforening:
+            return 'Familieforening';
         case Vilkårtype.OppholdstillatelseAlder:
             return 'Oppholdstillatelse Alder';
         case Vilkårtype.BorOgOppholderSegINorge:
@@ -81,7 +83,10 @@ const getBehandlingsinformasjonStatus = <VilkårKey extends keyof Behandlingsinf
     }
 };
 
-const mapToVilkårsinformasjonUføre = (uføre: GrunnlagsdataOgVilkårsvurderinger['uføre']): Vilkårsinformasjon[] => [
+const mapToVilkårsinformasjonUføre = (
+    uføre: GrunnlagsdataOgVilkårsvurderinger['uføre'],
+    flyktning: Behandlingsinformasjon['flyktning']
+): Vilkårsinformasjon[] => [
     {
         status:
             uføre === null
@@ -94,9 +99,17 @@ const mapToVilkårsinformasjonUføre = (uføre: GrunnlagsdataOgVilkårsvurdering
         vilkårtype: Vilkårtype.Uførhet,
         erStartet: uføre !== null,
     },
+    {
+        status: getBehandlingsinformasjonStatus(flyktning),
+        vilkårtype: Vilkårtype.Flyktning,
+        erStartet: flyktning !== null,
+    },
 ];
 
-const mapToVilkårsinformasjonAlder = (alder: GrunnlagsdataOgVilkårsvurderinger['pensjon']): Vilkårsinformasjon[] => [
+const mapToVilkårsinformasjonAlder = (
+    alder: GrunnlagsdataOgVilkårsvurderinger['pensjon'],
+    familieforening: GrunnlagsdataOgVilkårsvurderinger['familieforening']
+): Vilkårsinformasjon[] => [
     {
         status:
             alder === null
@@ -109,6 +122,16 @@ const mapToVilkårsinformasjonAlder = (alder: GrunnlagsdataOgVilkårsvurderinger
         vilkårtype: Vilkårtype.Alderspensjon,
         erStartet: alder !== null,
     },
+    {
+        status:
+            familieforening === null
+                ? VilkårVurderingStatus.IkkeVurdert
+                : familieforening?.resultat === Vilkårstatus.VilkårOppfylt
+                ? VilkårVurderingStatus.Ok
+                : VilkårVurderingStatus.IkkeOk,
+        vilkårtype: Vilkårtype.Familieforening,
+        erStartet: familieforening !== null,
+    },
 ];
 
 export const mapToVilkårsinformasjon = (
@@ -118,19 +141,14 @@ export const mapToVilkårsinformasjon = (
 ): Vilkårsinformasjon[] => {
     const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, personligOppmøte } =
         behandlingsinformasjon;
-    const { pensjon, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
+    const { pensjon, familieforening, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
 
-    const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre) : [];
-    const aldersvilkår = sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(pensjon) : [];
+    const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre, flyktning) : [];
+    const aldersvilkår = sakstype === Sakstype.Alder ? mapToVilkårsinformasjonAlder(pensjon, familieforening) : [];
 
     return [
         ...uførevilkår,
         ...aldersvilkår,
-        {
-            status: getBehandlingsinformasjonStatus(flyktning),
-            vilkårtype: Vilkårtype.Flyktning,
-            erStartet: flyktning !== null,
-        },
         {
             status: getBehandlingsinformasjonStatus(lovligOpphold),
             vilkårtype: Vilkårtype.LovligOpphold,

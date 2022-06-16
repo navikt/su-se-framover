@@ -41,7 +41,7 @@ const SaksbehandlingFramdriftsindikator = (props: {
         props.behandling.grunnlagsdataOgVilkårsvurderinger
     );
     const beregningsrekkefølge = vilkårsinformasjonForBeregningssteg(props.behandling);
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const { isDraftDirty } = useSøknadsbehandlingDraftContext();
 
     const vilkårUrl = (vt: Vilkårtype) =>
@@ -78,12 +78,12 @@ const SaksbehandlingFramdriftsindikator = (props: {
                 },
                 {
                     id: 'vilkår',
-                    tittel: intl.formatMessage({ id: 'vilkår' }),
+                    tittel: formatMessage('vilkår'),
                     linjer: hentLinjerFraVilkårsinformasjon(vilkårrekkefølge),
                 },
                 {
                     id: 'beregning',
-                    tittel: intl.formatMessage({ id: 'beregning' }),
+                    tittel: formatMessage('beregning'),
                     linjer: hentLinjerFraVilkårsinformasjon(beregningsrekkefølge),
                 },
             ]}

@@ -198,6 +198,7 @@ export enum ApiErrorCode {
     UTENLANDSOPPHOLD_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'utenlandsopphold_som_fører_til_opphør_må_revurderes',
     UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE = 'utestående_avkorting_må_revurderes_eller_avkortes_i_ny_periode',
     VERDIER_KAN_IKKE_VÆRE_NEGATIV = 'verdier_kan_ikke_være_negativ',
+    VILKÅR_KUN_RELEVANT_FOR_ALDER = 'vilkår_kun_relevant_for_alder',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
     VURDERINGSPERIODER_MANGLER = 'vurderingsperioder_mangler',

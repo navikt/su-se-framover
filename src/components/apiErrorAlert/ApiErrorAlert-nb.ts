@@ -256,6 +256,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE]:
         'Saken inneholder en utestående avkorting som enten må håndteres i ny stønadsperiode eller revurderes i sin helhet. Håndter i ny periode eller utvid revurderingsperioden til å inkludere perioden for avkortingen.',
     [ApiErrorCode.VERDIER_KAN_IKKE_VÆRE_NEGATIV]: 'Kan ikke sende inn negative verdier',
+    [ApiErrorCode.VILKÅR_KUN_RELEVANT_FOR_ALDER]: 'Dette vilkåret er kun tilgjengelig for alderssøknader',
     [ApiErrorCode.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]:
         'Vurdering av vilkår må ha samme resultat for hele behandlingsperioden',
     [ApiErrorCode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:

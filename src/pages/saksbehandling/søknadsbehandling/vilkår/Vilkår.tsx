@@ -5,6 +5,7 @@ import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import * as Routes from '~src/lib/routes';
 import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspensjon/Alderspensjon';
+import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/familieforening/Familieforening';
 import { Sakstype } from '~src/types/Sak';
 import { isAldersøknad, isUføresøknad } from '~src/types/Søknad';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
@@ -83,7 +84,16 @@ const Vilkår = () => {
                         <Alderspensjon
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Familieforening)}
+                            søknadInnhold={behandling.søknad.søknadInnhold}
+                            sakId={sakId}
+                        />
+                    )}
+                    {vilkar === VilkårtypeAlder.Familieforening && isAldersøknad(behandling.søknad.søknadInnhold) && (
+                        <Familieforening
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
+                            nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
@@ -109,7 +119,11 @@ const Vilkår = () => {
                     {vilkar === Vilkårtype.LovligOpphold && (
                         <LovligOppholdINorge
                             behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            forrigeUrl={
+                                isAldersøknad(behandling.søknad.søknadInnhold)
+                                    ? vilkårUrl(Vilkårtype.Familieforening)
+                                    : vilkårUrl(Vilkårtype.Flyktning)
+                            }
                             nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
                             sakId={sakId}
                         />
