@@ -1,5 +1,10 @@
 export default {
-    'skattegrunnlag.empty': 'Fant ingen formue eller inntekt for gitt person',
+    'skattegrunnlag.tittel': 'Skattegrunnlag',
+    'skattegrunnlag.lagresIkke': 'Denne informasjonen er hentet fra skatteetaten og lagres ikke.',
+    'skattegrunnlag.tom': 'Fant ingen relevant skattedata for gitt person',
+    'skattegrunnlag.hentet': 'Informasjon hentet: {dato}',
+    'skattegrunnlag.bruker': 'Bruker',
+    'skattegrunnlag.eps': 'EPS',
 
     // Oversettelser for tekniskNavn
     aarsavgiftForKontoIVerdipapirregister: 'Årsavgift VPS konto',

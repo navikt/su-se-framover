@@ -82,10 +82,4 @@ export default {
     'bosituasjon.vurderingAvSats': 'Vurdering av sats',
     'bosituasjon.sats.høy': 'Høy',
     'bosituasjon.sats.ordinær': 'Ordinær',
-
-    'skattegrunnlag.tittel': 'Skattegrunnlag',
-    'skattegrunnlag.lagresIkke': 'Denne informasjonen er hentet fra skatteetaten og lagres ikke.',
-    'skattegrunnlag.hentet': 'Informasjon hentet: {dato}',
-    'skattegrunnlag.bruker': 'Bruker',
-    'skattegrunnlag.eps': 'EPS',
 };

@@ -1,7 +1,5 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Heading, Label, Loader } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
@@ -14,7 +12,6 @@ import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fo
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadInnhold } from '~src/types/Søknad';
-import { formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
 import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
@@ -26,7 +23,7 @@ import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';
 import messages from './faktablokker-nb';
 import * as styles from './faktablokker.module.less';
 import { FaktablokkProps, SkattegrunnlagApiProps } from './faktablokkUtils';
-import { SkatteApiFeilmelding, SkattemeldingFaktablokk } from './skatt/SkattegrunnlagFaktablokk';
+import { SkattemeldingFaktablokk } from './skatt/SkattegrunnlagFaktablokk';
 
 type Props = FaktablokkProps & Partial<SkattegrunnlagApiProps>;
 export const FormueFaktablokk = (props: Props) => {
@@ -72,57 +69,11 @@ export const FormueFaktablokk = (props: Props) => {
                 ]}
             />
             {skattemeldingToggle && props.skattegrunnlagBruker && (
-                <div className={styles.skattegrunnlag}>
-                    <Heading level="2" size="xsmall">
-                        {formatMessage('skattegrunnlag.tittel')}
-                    </Heading>
-
-                    {pipe(
-                        props.skattegrunnlagBruker,
-                        RemoteData.fold(
-                            () => null,
-                            () => <Loader />,
-                            (error) => (
-                                <SkatteApiFeilmelding tittel={formatMessage('skattegrunnlag.bruker')} error={error} />
-                            ),
-                            (skattegrunnlag) => (
-                                <>
-                                    <Label spacing size="small" className={styles.light}>
-                                        {formatMessage('skattegrunnlag.lagresIkke')}
-                                    </Label>
-                                    <Label spacing size="small" className={classNames([styles.light, styles.italic])}>
-                                        {formatMessage('skattegrunnlag.hentet', {
-                                            dato: formatDateTime(skattegrunnlag.hentetDato),
-                                        })}
-                                    </Label>
-                                    <SkattemeldingFaktablokk
-                                        tittel={formatMessage('skattegrunnlag.bruker')}
-                                        samletSkattegrunnlag={skattegrunnlag}
-                                        kategori={SkattegrunnlagKategori.FORMUE}
-                                    />
-                                </>
-                            )
-                        )
-                    )}
-                    {props.skattegrunnlagEPS &&
-                        pipe(
-                            props.skattegrunnlagEPS,
-                            RemoteData.fold(
-                                () => null,
-                                () => <Loader />,
-                                (error) => (
-                                    <SkatteApiFeilmelding tittel={formatMessage('skattegrunnlag.eps')} error={error} />
-                                ),
-                                (skattegrunnlag) => (
-                                    <SkattemeldingFaktablokk
-                                        tittel={formatMessage('skattegrunnlag.eps')}
-                                        samletSkattegrunnlag={skattegrunnlag}
-                                        kategori={SkattegrunnlagKategori.FORMUE}
-                                    />
-                                )
-                            )
-                        )}
-                </div>
+                <SkattemeldingFaktablokk
+                    skattegrunnlagBruker={props.skattegrunnlagBruker}
+                    skattegrunnlagEPS={props.skattegrunnlagEPS}
+                    kategori={SkattegrunnlagKategori.FORMUE}
+                />
             )}
         </div>
     );

@@ -9,7 +9,7 @@ import * as S from 'fp-ts/lib/string';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import * as personApi from '~src/api/personApi';
+import { Person } from '~src/api/personApi';
 import { hentSkattemelding } from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import {
@@ -79,7 +79,7 @@ function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): F
     };
 }
 
-type Søker = { søker: personApi.Person };
+type Søker = { søker: Person };
 const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();

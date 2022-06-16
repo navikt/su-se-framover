@@ -1,17 +1,82 @@
-import { Label } from '@navikt/ds-react';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Heading, Label, Loader } from '@navikt/ds-react';
+import classNames from 'classnames';
+import { pipe } from 'fp-ts/lib/function';
 import React from 'react';
 
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { SamletSkattegrunnlag, SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import Faktablokk from '../../Faktablokk';
 import styles from '../faktablokker.module.less';
 
 import skattegrunnlagMessages from './skattegrunnlag-nb';
 
-export const SkattemeldingFaktablokk = ({
+export const SkattemeldingFaktablokk = (props: {
+    kategori: SkattegrunnlagKategori;
+    skattegrunnlagBruker: ApiResult<SamletSkattegrunnlag>;
+    skattegrunnlagEPS?: ApiResult<SamletSkattegrunnlag>;
+}) => {
+    const { formatMessage } = useI18n({ messages: skattegrunnlagMessages });
+
+    return (
+        <div className={styles.skattegrunnlag}>
+            <Heading level="2" size="xsmall">
+                {formatMessage('skattegrunnlag.tittel')}
+            </Heading>
+
+            {pipe(
+                props.skattegrunnlagBruker,
+                RemoteData.fold(
+                    () => null,
+                    () => <Loader />,
+                    (error) => <SkatteApiFeilmelding tittel={formatMessage('skattegrunnlag.bruker')} error={error} />,
+                    (skattegrunnlag) => (
+                        <>
+                            <Label spacing size="small" className={styles.light}>
+                                {formatMessage('skattegrunnlag.lagresIkke')}
+                            </Label>
+                            <Label spacing size="small" className={classNames([styles.light, styles.italic])}>
+                                {formatMessage('skattegrunnlag.hentet', {
+                                    dato: formatDateTime(skattegrunnlag.hentetDato),
+                                })}
+                            </Label>
+                            <SkattemeldingFaktablokkComponent
+                                tittel={formatMessage('skattegrunnlag.bruker')}
+                                samletSkattegrunnlag={skattegrunnlag}
+                                kategori={props.kategori}
+                            />
+                        </>
+                    )
+                )
+            )}
+            {props.skattegrunnlagEPS &&
+                pipe(
+                    props.skattegrunnlagEPS,
+                    RemoteData.fold(
+                        () => null,
+                        () => <Loader />,
+                        (error) => <SkatteApiFeilmelding tittel={formatMessage('skattegrunnlag.eps')} error={error} />,
+                        (skattegrunnlag) => (
+                            <div className={styles.eps}>
+                                <SkattemeldingFaktablokkComponent
+                                    tittel={formatMessage('skattegrunnlag.eps')}
+                                    samletSkattegrunnlag={skattegrunnlag}
+                                    kategori={props.kategori}
+                                />
+                            </div>
+                        )
+                    )
+                )}
+        </div>
+    );
+};
+
+const SkattemeldingFaktablokkComponent = ({
     tittel,
     samletSkattegrunnlag,
     kategori,
@@ -35,7 +100,7 @@ export const SkattemeldingFaktablokk = ({
                 <Label className={styles.overskrift} spacing>
                     {tittel}
                 </Label>
-                <p>{formatMessage('skattegrunnlag.empty')}</p>
+                <p>{formatMessage('skattegrunnlag.tom')}</p>
             </div>
         );
 
@@ -51,7 +116,7 @@ const formatSkattTekniskMessage = (id: string, formatMessage: (id: keyof typeof 
     }
 };
 
-export const SkatteApiFeilmelding = ({ tittel, error }: { tittel: string; error: ApiError | undefined }) => (
+const SkatteApiFeilmelding = ({ tittel, error }: { tittel: string; error: ApiError | undefined }) => (
     <div>
         <Label className={styles.overskrift} spacing>
             {tittel}
