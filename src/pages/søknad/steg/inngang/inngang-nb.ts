@@ -31,9 +31,9 @@ export default {
     'heading.løpendeYtelse.alder': 'Løpende ytelse personer over 67 år med kort botid',
 
     'åpenSøknad.løpendeYtelse':
-        'Bruker har allerede en løpende ytelse, supplerende stønad {type} er innvilget for perioden {løpendePeriode}. Bruker kan tidligst søke om ny periode {tidligestNyPeriode}.',
+        'Bruker har allerede en løpende ytelse, {type} er innvilget for perioden {løpendePeriode}. Bruker kan tidligst søke om ny periode {tidligestNyPeriode}.',
     'åpenSøknad.løpendeYtelse.kort':
-        'Bruker har allerede en løpende ytelse, supplerende stønad {type} er innvilget for perioden {løpendePeriode}.',
+        'Bruker har allerede en løpende ytelse, {type} er innvilget for perioden {løpendePeriode}.',
 
     'finnSøker.tittel': 'Finn søker',
     'finnSøker.tekst': 'For å starte søknaden, må du skrive inn fødselsnummeret til søkeren',

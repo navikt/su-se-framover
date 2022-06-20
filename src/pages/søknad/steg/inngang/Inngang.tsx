@@ -165,14 +165,6 @@ const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: Al
                     </BodyLong>
                 </div>
             )}
-            <IverksattInnvilgetStønadsperiodeAlert
-                type={Sakstype.Uføre}
-                iverksattInnvilgetStønadsperiode={uføre.iverksattInnvilgetStønadsperiode}
-            />
-            <IverksattInnvilgetStønadsperiodeAlert
-                type={Sakstype.Alder}
-                iverksattInnvilgetStønadsperiode={alder.iverksattInnvilgetStønadsperiode}
-            />
         </>
     );
 };
@@ -199,6 +191,14 @@ const SakinfoAlertContainer = ({
     return (
         <Alert className={styles.åpenSøknadContainer} variant="warning">
             <ÅpenSøknadVarsel alleredeÅpenSakInfo={alleredeÅpenSakInfo} />
+            <IverksattInnvilgetStønadsperiodeAlert
+                type={Sakstype.Uføre}
+                iverksattInnvilgetStønadsperiode={alleredeÅpenSakInfo.uføre.iverksattInnvilgetStønadsperiode}
+            />
+            <IverksattInnvilgetStønadsperiodeAlert
+                type={Sakstype.Alder}
+                iverksattInnvilgetStønadsperiode={alleredeÅpenSakInfo.alder.iverksattInnvilgetStønadsperiode}
+            />
             <Aldersvarsel søkerAlder={søkerAlder} />
         </Alert>
     );
