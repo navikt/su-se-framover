@@ -109,7 +109,7 @@ export const PeriodeForm = (props: {
             <DatePicker
                 id={`${props.name}.tilOgMed`}
                 className={props.size === 'S' ? styles.dato : undefined}
-                label={formatMessage('periodeForm.label.fraOgMed')}
+                label={formatMessage('periodeForm.label.tilOgMed')}
                 feil={props.error?.tilOgMed?.message}
                 dateFormat="MM/yyyy"
                 showMonthYearPicker
