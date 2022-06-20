@@ -4,6 +4,7 @@ export default {
     'radio.label.ja': 'Ja',
     'radio.label.nei': 'Nei',
     'radio.label.uavklart': 'Uavklart',
+    'radio.label.ikkeAktuelt': 'Ikke aktuelt',
     'radio.label.uføresakTilBehandling': 'Har uføresak til behandling',
     'radio.label.alderssakTilBehandling': 'Har alderssak til behandling',
 };

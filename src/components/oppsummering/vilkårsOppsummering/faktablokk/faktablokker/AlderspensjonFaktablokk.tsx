@@ -2,9 +2,13 @@ import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
-import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/institusjonsopphold/institusjonsopphold-nb';
+import saksbehandlingMessages from '~src/pages/saksbehandling/steg/alderspensjon/alderspensjon-nb';
 import søknadMessages from '~src/pages/søknad/steg/alderspensjon/alderspensjon-nb';
-import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import {
+    PensjonsOpplysningerSvar,
+    PensjonsOpplysningerUtvidetSvar,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnholdAlder } from '~src/types/Søknad';
 import { VilkårtypeAlder, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -39,7 +43,7 @@ export const AlderspensjonBlokk = (props: { harSøktAlderspensjon: SøknadInnhol
 
 interface Props {
     søknadInnhold: SøknadInnholdAlder;
-    behandlingsinformasjon: Behandlingsinformasjon['alderspensjon'];
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger['pensjon'];
     status: VilkårVurderingStatus;
 }
 
@@ -50,25 +54,48 @@ export const AlderspensjonVilkårsblokk = (props: Props) => {
             ...saksbehandlingMessages,
         },
     });
+    const vurdering = props.grunnlagsdataOgVilkårsvurderinger?.vurderinger[0]?.pensjonsopplysninger;
     return (
         <Vilkårsblokk
             tittel={vilkårTittelFormatted(VilkårtypeAlder.Alderspensjon)}
             status={props.status}
             søknadfaktablokk={<AlderspensjonBlokk harSøktAlderspensjon={props.søknadInnhold.harSøktAlderspensjon} />}
             saksbehandlingfaktablokk={
-                props.behandlingsinformasjon === null ? (
+                props.grunnlagsdataOgVilkårsvurderinger === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <Faktablokk
                         tittel={formatMessage('display.fraSaksbehandling')}
                         fakta={[
                             {
-                                tittel: formatMessage('radio.institusjonsoppholdFørerTilAvslag.legend'),
+                                tittel: formatMessage('label.folketrygd'),
                                 verdi:
-                                    props.behandlingsinformasjon.status === Vilkårstatus.VilkårOppfylt
+                                    vurdering?.folketrygd === PensjonsOpplysningerSvar.JA
                                         ? formatMessage('fraSøknad.nei')
-                                        : props.behandlingsinformasjon.status === Vilkårstatus.VilkårIkkeOppfylt
+                                        : vurdering?.folketrygd === PensjonsOpplysningerSvar.NEI
                                         ? formatMessage('fraSøknad.ja')
+                                        : formatMessage('fraSøknad.uavklart'),
+                            },
+                            {
+                                tittel: formatMessage('label.andreNorske'),
+                                verdi:
+                                    vurdering?.andreNorske === PensjonsOpplysningerUtvidetSvar.JA
+                                        ? formatMessage('fraSøknad.nei')
+                                        : vurdering?.andreNorske === PensjonsOpplysningerUtvidetSvar.NEI
+                                        ? formatMessage('fraSøknad.ja')
+                                        : vurdering?.andreNorske === PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT
+                                        ? formatMessage('radio.label.ikkeAktuelt')
+                                        : formatMessage('fraSøknad.uavklart'),
+                            },
+                            {
+                                tittel: formatMessage('label.utenlandske'),
+                                verdi:
+                                    vurdering?.utenlandske === PensjonsOpplysningerUtvidetSvar.JA
+                                        ? formatMessage('fraSøknad.nei')
+                                        : vurdering?.utenlandske === PensjonsOpplysningerUtvidetSvar.NEI
+                                        ? formatMessage('fraSøknad.ja')
+                                        : vurdering?.utenlandske === PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT
+                                        ? formatMessage('radio.label.ikkeAktuelt')
                                         : formatMessage('fraSøknad.uavklart'),
                             },
                         ]}
