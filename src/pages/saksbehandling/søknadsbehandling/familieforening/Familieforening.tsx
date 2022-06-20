@@ -26,9 +26,7 @@ const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: S
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                vurderinger: {
-                    familieforening: values.familieforening!,
-                },
+                vurderinger: [{ status: values.familieforening! }],
             },
             onSuccess
         );

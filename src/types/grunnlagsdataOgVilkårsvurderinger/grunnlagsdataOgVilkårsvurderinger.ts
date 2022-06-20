@@ -3,7 +3,7 @@ import isEqual from 'lodash.isequal';
 import { Nullable } from '~src/lib/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
-import { Familieforening } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
+import { Familiegjenforening } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';
@@ -13,7 +13,7 @@ import { Utenlandsopphold } from './utenlandsopphold/Utenlandsopphold';
 
 export interface GrunnlagsdataOgVilkårsvurderinger {
     pensjon: Nullable<Aldersvilkår>;
-    familieforening: Nullable<Familieforening>;
+    familiegjenforening: Nullable<Familiegjenforening>;
     uføre: Nullable<UføreVilkår>;
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];

@@ -203,9 +203,7 @@ export const lagreFamilieforeninggrunnlag = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        vurderinger: {
-            familieforening: Vilkårstatus;
-        };
+        vurderinger: Array<{ status: Vilkårstatus }>;
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/familieforening', async (arg, thunkApi) => {
