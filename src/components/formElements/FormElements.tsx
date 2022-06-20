@@ -96,7 +96,7 @@ export const PeriodeForm = (props: {
                 autoComplete="off"
                 value={props.value?.fraOgMed}
                 minDate={props.minDate.fraOgMed}
-                maxDate={props.maxDate.fraOgMed}
+                maxDate={props.maxDate.tilOgMed}
                 onChange={(date: Nullable<Date>) =>
                     props.onChange({
                         ...(props.value ?? lagNyPeriode()),
@@ -116,7 +116,7 @@ export const PeriodeForm = (props: {
                 isClearable
                 autoComplete="off"
                 value={props.value?.tilOgMed}
-                minDate={props.minDate.tilOgMed}
+                minDate={props.minDate.fraOgMed}
                 maxDate={props.maxDate.tilOgMed}
                 onChange={(date: Nullable<Date>) =>
                     props.onChange({ ...(props.value ?? lagNyPeriode()), tilOgMed: date ? endOfMonth(date) : null })
