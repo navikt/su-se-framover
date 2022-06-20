@@ -23,7 +23,8 @@ export const FamilieforeningForm = (props: Props) => {
     const form = useForm<FormData>({
         defaultValues: {
             familieforening:
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.familieforening?.vurderinger.familieforening ?? null,
+                props.behandling.grunnlagsdataOgVilkårsvurderinger.familiegjenforening?.vurderinger[0]?.resultat ??
+                null,
         },
         resolver: yupResolver(schema),
     });

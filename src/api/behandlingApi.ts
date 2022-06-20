@@ -232,12 +232,10 @@ export async function lagreAldersgrunnlag(arg: {
 export async function lagreFamilieforeningsgrunnlag(arg: {
     sakId: string;
     behandlingId: string;
-    vurderinger: {
-        familieforening: Vilkårstatus;
-    };
+    vurderinger: Array<{ status: Vilkårstatus }>;
 }) {
     return apiClient<Behandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/familieforening`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/familiegjenforening`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
     });
