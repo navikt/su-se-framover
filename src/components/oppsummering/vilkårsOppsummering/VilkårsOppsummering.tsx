@@ -74,7 +74,7 @@ const Vilkårsting = (props: {
                 <FamilieforeningVilkårsblokk
                     status={props.info.status}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.alderspensjon}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.familiegjenforening}
                 />
             ) : null;
         case Vilkårtype.Uførhet:
