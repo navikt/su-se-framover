@@ -28,8 +28,12 @@ const Alderspensjon = (props: VilkårsvurderingBaseProps & { søknadInnhold: Sø
                 behandlingId: props.behandling.id,
                 vurderinger: [
                     {
-                        resultat: values.harSøktAlderspensjon!,
                         periode: props.behandling.stønadsperiode!.periode,
+                        pensjonsopplysninger: {
+                            folketrygd: values.folketrygd!,
+                            andreNorske: values.andreNorske!,
+                            utenlandske: values.utenlandske!,
+                        },
                     },
                 ],
             },

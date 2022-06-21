@@ -17,7 +17,7 @@ import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
-import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Klage } from '~src/types/Klage';
@@ -184,10 +184,7 @@ export const lagreAlderspensjongrunnlag = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        vurderinger: Array<{
-            periode: Periode<string>;
-            resultat: Aldersresultat;
-        }>;
+        vurderinger: Aldersvurdering[];
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/pensjon', async (arg, thunkApi) => {

@@ -1,11 +1,28 @@
 import { Periode } from '~src/types/Periode';
 
 export interface Aldersvilkår {
-    vurderinger: Array<{
-        periode: Periode<string>;
-        resultat: Aldersresultat;
-    }>;
+    vurderinger: Aldersvurdering[];
     resultat: Aldersresultat;
+}
+
+export interface Aldersvurdering {
+    periode: Periode<string>;
+    pensjonsopplysninger: {
+        folketrygd: PensjonsOpplysningerSvar;
+        andreNorske: PensjonsOpplysningerUtvidetSvar;
+        utenlandske: PensjonsOpplysningerUtvidetSvar;
+    };
+}
+
+export type PensjonsOpplysningerSvar = Exclude<
+    PensjonsOpplysningerUtvidetSvar,
+    PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT
+>;
+
+export enum PensjonsOpplysningerUtvidetSvar {
+    JA = 'JA',
+    NEI = 'NEI',
+    IKKE_AKTUELT = 'IKKE_AKTUELT',
 }
 
 export enum Aldersresultat {

@@ -10,7 +10,7 @@ import { FormData, schema } from '~src/pages/saksbehandling/steg/alderspensjon/t
 import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Behandling } from '~src/types/Behandling';
-import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 
 interface Props extends VilkårsvurderingBaseProps {
     save: (values: FormData, onSuccess: () => void) => void;
@@ -22,8 +22,15 @@ export const AlderspensjonForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     const form = useForm<FormData>({
         defaultValues: {
-            harSøktAlderspensjon:
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.resultat ?? null,
+            folketrygd:
+                props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                    .folketrygd ?? null,
+            andreNorske:
+                props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                    .andreNorske ?? null,
+            utenlandske:
+                props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                    .utenlandske ?? null,
         },
         resolver: yupResolver(schema),
     });
@@ -37,26 +44,71 @@ export const AlderspensjonForm = (props: Props) => {
             forrigeUrl={props.forrigeUrl}
             nesteUrl={props.nesteUrl}
         >
-            <Controller
-                control={form.control}
-                name={'harSøktAlderspensjon'}
-                render={({ field, fieldState }) => (
-                    <RadioGroup
-                        {...field}
-                        legend={formatMessage('label.harSøktAlderspensjon')}
-                        error={fieldState.error?.message}
-                        value={field.value ?? ''}
-                    >
-                        <Radio id={field.name} value={Aldersresultat.VilkårOppfylt} ref={field.ref}>
-                            {formatMessage('radio.label.ja')}
-                        </Radio>
-                        <Radio value={Aldersresultat.VilkårIkkeOppfylt}>{formatMessage('radio.label.nei')}</Radio>
-                        <Radio value={Aldersresultat.HarAlderssakTilBehandling}>
-                            {formatMessage('radio.label.alderssakTilBehandling')}
-                        </Radio>
-                    </RadioGroup>
-                )}
-            />
+            <>
+                <Controller
+                    control={form.control}
+                    name={'folketrygd'}
+                    render={({ field, fieldState }) => (
+                        <RadioGroup
+                            {...field}
+                            legend={formatMessage('label.folketrygd')}
+                            error={fieldState.error?.message}
+                            value={field.value ?? ''}
+                        >
+                            <Radio id={field.name} value={PensjonsOpplysningerUtvidetSvar.JA} ref={field.ref}>
+                                {formatMessage('radio.label.ja')}
+                            </Radio>
+                            <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
+                                {formatMessage('radio.label.nei')}
+                            </Radio>
+                        </RadioGroup>
+                    )}
+                />
+                <Controller
+                    control={form.control}
+                    name={'andreNorske'}
+                    render={({ field, fieldState }) => (
+                        <RadioGroup
+                            {...field}
+                            legend={formatMessage('label.andreNorske')}
+                            error={fieldState.error?.message}
+                            value={field.value ?? ''}
+                        >
+                            <Radio id={field.name} value={PensjonsOpplysningerUtvidetSvar.JA} ref={field.ref}>
+                                {formatMessage('radio.label.ja')}
+                            </Radio>
+                            <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
+                                {formatMessage('radio.label.nei')}
+                            </Radio>
+                            <Radio value={PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT}>
+                                {formatMessage('radio.label.ikkeAktuelt')}
+                            </Radio>
+                        </RadioGroup>
+                    )}
+                />
+                <Controller
+                    control={form.control}
+                    name={'utenlandske'}
+                    render={({ field, fieldState }) => (
+                        <RadioGroup
+                            {...field}
+                            legend={formatMessage('label.utenlandske')}
+                            error={fieldState.error?.message}
+                            value={field.value ?? ''}
+                        >
+                            <Radio id={field.name} value={PensjonsOpplysningerUtvidetSvar.JA} ref={field.ref}>
+                                {formatMessage('radio.label.ja')}
+                            </Radio>
+                            <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
+                                {formatMessage('radio.label.nei')}
+                            </Radio>
+                            <Radio value={PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT}>
+                                {formatMessage('radio.label.ikkeAktuelt')}
+                            </Radio>
+                        </RadioGroup>
+                    )}
+                />
+            </>
         </SøknadsbehandlingWrapper>
     );
 };

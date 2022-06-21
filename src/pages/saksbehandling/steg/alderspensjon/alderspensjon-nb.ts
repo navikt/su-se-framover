@@ -3,5 +3,7 @@ import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/sharedI
 export default {
     ...sharedMessages,
     'page.tittel': 'Alder',
-    'label.harSøktAlderspensjon': 'Er vilkåret om alderspensjon oppfylt?',
+    'label.folketrygd': 'Har søker søkt om alderspensjon og fått svar på søknaden?',
+    'label.andreNorske': 'Har søker søkt om andre norske pensjonsordninger og fått svar på søknaden?',
+    'label.utenlandske': 'Har søker søkt om pensjon i utlandet og fått svar på søknaden?',
 };
