@@ -5,7 +5,8 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import saksbehandlingMessages from '~src/pages/saksbehandling/steg/familieforening/familieforening-nb';
 import søknadMessages from '~src/pages/søknad/steg/oppholdstillatelse/oppholdstillatelse-nb';
-import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnholdAlder } from '~src/types/Søknad';
 import { VilkårtypeAlder, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -38,7 +39,7 @@ export const FamilieforeningBlokk = (props: { familieforening: Nullable<boolean>
 
 interface Props {
     søknadInnhold: SøknadInnholdAlder;
-    behandlingsinformasjon: Behandlingsinformasjon['familieforening'];
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger['familiegjenforening'];
     status: VilkårVurderingStatus;
 }
 
@@ -49,6 +50,9 @@ export const FamilieforeningVilkårsblokk = (props: Props) => {
             ...saksbehandlingMessages,
         },
     });
+
+    const vurdering = props.grunnlagsdataOgVilkårsvurderinger?.vurderinger[0] ?? null;
+
     return (
         <Vilkårsblokk
             tittel={vilkårTittelFormatted(VilkårtypeAlder.Familieforening)}
@@ -57,7 +61,7 @@ export const FamilieforeningVilkårsblokk = (props: Props) => {
                 <FamilieforeningBlokk familieforening={props.søknadInnhold.oppholdstillatelseAlder.familieforening} />
             }
             saksbehandlingfaktablokk={
-                props.behandlingsinformasjon === null ? (
+                vurdering === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <Faktablokk
@@ -66,9 +70,9 @@ export const FamilieforeningVilkårsblokk = (props: Props) => {
                             {
                                 tittel: formatMessage('label.familieforening'),
                                 verdi:
-                                    props.behandlingsinformasjon.status === Vilkårstatus.VilkårOppfylt
+                                    vurdering.resultat === Vilkårstatus.VilkårOppfylt
                                         ? formatMessage('fraSøknad.nei')
-                                        : props.behandlingsinformasjon.status === Vilkårstatus.VilkårIkkeOppfylt
+                                        : vurdering.resultat === Vilkårstatus.VilkårIkkeOppfylt
                                         ? formatMessage('fraSøknad.ja')
                                         : formatMessage('fraSøknad.uavklart'),
                             },
