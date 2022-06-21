@@ -17,7 +17,7 @@
     },
     "dependencies": {
         "@tsconfig/node12": "^1.0.9",
-        "@parcel/core": "^2.4.1",
+        "@parcel/core": "^2.6.1",
         "@types/compression": "^1.7.2",
         "@types/connect-redis": "0.0.17",
         "@types/cors": "^2.8.12",
