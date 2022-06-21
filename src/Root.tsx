@@ -1,4 +1,3 @@
-// eslint-disable-next-line
 import { Loader } from '@navikt/ds-react';
 import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
@@ -136,5 +135,4 @@ const AppRoutes = () => (
     </Routes>
 );
 
-/* eslint-disable-next-line no-undef */
 export default Root;
