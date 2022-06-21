@@ -4,10 +4,6 @@ import React from 'react';
 import { useI18n } from '~src/lib/i18n';
 import saksbehandlingMessages from '~src/pages/saksbehandling/steg/alderspensjon/alderspensjon-nb';
 import søknadMessages from '~src/pages/søknad/steg/alderspensjon/alderspensjon-nb';
-import {
-    PensjonsOpplysningerSvar,
-    PensjonsOpplysningerUtvidetSvar,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnholdAlder } from '~src/types/Søknad';
 import { VilkårtypeAlder, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
@@ -69,34 +65,15 @@ export const AlderspensjonVilkårsblokk = (props: Props) => {
                         fakta={[
                             {
                                 tittel: formatMessage('label.folketrygd'),
-                                verdi:
-                                    vurdering?.folketrygd === PensjonsOpplysningerSvar.JA
-                                        ? formatMessage('fraSøknad.nei')
-                                        : vurdering?.folketrygd === PensjonsOpplysningerSvar.NEI
-                                        ? formatMessage('fraSøknad.ja')
-                                        : formatMessage('fraSøknad.uavklart'),
+                                verdi: formatMessage(vurdering?.folketrygd ?? 'fraSøknad.uavklart'),
                             },
                             {
                                 tittel: formatMessage('label.andreNorske'),
-                                verdi:
-                                    vurdering?.andreNorske === PensjonsOpplysningerUtvidetSvar.JA
-                                        ? formatMessage('fraSøknad.nei')
-                                        : vurdering?.andreNorske === PensjonsOpplysningerUtvidetSvar.NEI
-                                        ? formatMessage('fraSøknad.ja')
-                                        : vurdering?.andreNorske === PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT
-                                        ? formatMessage('radio.label.ikkeAktuelt')
-                                        : formatMessage('fraSøknad.uavklart'),
+                                verdi: formatMessage(vurdering?.andreNorske ?? 'fraSøknad.uavklart'),
                             },
                             {
                                 tittel: formatMessage('label.utenlandske'),
-                                verdi:
-                                    vurdering?.utenlandske === PensjonsOpplysningerUtvidetSvar.JA
-                                        ? formatMessage('fraSøknad.nei')
-                                        : vurdering?.utenlandske === PensjonsOpplysningerUtvidetSvar.NEI
-                                        ? formatMessage('fraSøknad.ja')
-                                        : vurdering?.utenlandske === PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT
-                                        ? formatMessage('radio.label.ikkeAktuelt')
-                                        : formatMessage('fraSøknad.uavklart'),
+                                verdi: formatMessage(vurdering?.utenlandske ?? 'fraSøknad.uavklart'),
                             },
                         ]}
                     />

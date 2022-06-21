@@ -10,10 +10,7 @@ import { FormData, schema } from '~src/pages/saksbehandling/steg/alderspensjon/t
 import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Behandling } from '~src/types/Behandling';
-import {
-    PensjonsOpplysningerSvar,
-    PensjonsOpplysningerUtvidetSvar,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 
 interface Props extends VilkårsvurderingBaseProps {
     save: (values: FormData, onSuccess: () => void) => void;
@@ -58,10 +55,12 @@ export const AlderspensjonForm = (props: Props) => {
                             error={fieldState.error?.message}
                             value={field.value ?? ''}
                         >
-                            <Radio id={field.name} value={PensjonsOpplysningerSvar.JA} ref={field.ref}>
+                            <Radio id={field.name} value={PensjonsOpplysningerUtvidetSvar.JA} ref={field.ref}>
                                 {formatMessage('radio.label.ja')}
                             </Radio>
-                            <Radio value={PensjonsOpplysningerSvar.NEI}>{formatMessage('radio.label.nei')}</Radio>
+                            <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
+                                {formatMessage('radio.label.nei')}
+                            </Radio>
                         </RadioGroup>
                     )}
                 />

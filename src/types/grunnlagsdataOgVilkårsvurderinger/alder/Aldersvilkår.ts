@@ -14,10 +14,11 @@ export interface Aldersvurdering {
     };
 }
 
-export enum PensjonsOpplysningerSvar {
-    JA = 'JA',
-    NEI = 'NEI',
-}
+export type PensjonsOpplysningerSvar = Exclude<
+    PensjonsOpplysningerUtvidetSvar,
+    PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT
+>;
+
 export enum PensjonsOpplysningerUtvidetSvar {
     JA = 'JA',
     NEI = 'NEI',

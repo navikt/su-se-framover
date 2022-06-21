@@ -16,7 +16,7 @@ export const schema = yup.object<FormData>({
         .mixed()
         .defined()
         .oneOf(
-            [PensjonsOpplysningerSvar.JA, PensjonsOpplysningerSvar.NEI],
+            [PensjonsOpplysningerUtvidetSvar.JA, PensjonsOpplysningerUtvidetSvar.NEI],
             'Du må velge om bruker har vedtak om alderspensjon'
         ),
 

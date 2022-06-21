@@ -1,4 +1,13 @@
+import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+
+const pensjonsOpplysningerUtvidetSvarMessages = {
+    [PensjonsOpplysningerUtvidetSvar.JA]: 'Ja',
+    [PensjonsOpplysningerUtvidetSvar.NEI]: 'Nei',
+    [PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT]: 'Ikke aktuelt',
+};
+
 export default {
+    ...pensjonsOpplysningerUtvidetSvarMessages,
     'beregning.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'beregning.andreYtelserINav': 'Har du andre ytelser i NAV?',
     'beregning.sømtOmAndreTrygdeytelser': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
