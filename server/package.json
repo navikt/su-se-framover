@@ -35,7 +35,7 @@
         "express": "^4.17.1",
         "express-http-proxy": "^1.6.3",
         "express-session": "^1.17.2",
-        "helmet": "^4.6.0",
+        "helmet": "^5.1.0",
         "https-proxy-agent": "^5.0.0",
         "openid-client": "^5.0.2",
         "passport": "^0.6.0",
