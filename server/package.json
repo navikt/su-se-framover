@@ -40,7 +40,7 @@
         "openid-client": "^5.0.2",
         "passport": "^0.5.0",
         "passport-jwt": "^4.0.0",
-        "pino": "^7.9.2",
+        "pino": "^8.0.0",
         "pino-colada": "^2.2.0",
         "pino-http": "^5.8.0",
         "redis": "^3.1.2",
