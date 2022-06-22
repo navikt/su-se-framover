@@ -98,7 +98,7 @@ const Vilkårsting = (props: {
                 <LovligOppholdVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.lovligOpphold}
+                    grunnlagsdataOgvilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             );
         case Vilkårtype.FastOppholdINorge:

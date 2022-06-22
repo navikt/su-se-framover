@@ -139,9 +139,9 @@ export const mapToVilkårsinformasjon = (
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
-    const { flyktning, lovligOpphold, fastOppholdINorge, institusjonsopphold, personligOppmøte } =
-        behandlingsinformasjon;
-    const { pensjon, familiegjenforening, formue, uføre, utenlandsopphold } = grunnlagsdataOgVilkårsvurderinger;
+    const { flyktning, fastOppholdINorge, institusjonsopphold, personligOppmøte } = behandlingsinformasjon;
+    const { pensjon, familiegjenforening, lovligOpphold, formue, uføre, utenlandsopphold } =
+        grunnlagsdataOgVilkårsvurderinger;
 
     const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre, flyktning) : [];
     const aldersvilkår =
@@ -151,7 +151,14 @@ export const mapToVilkårsinformasjon = (
         ...uførevilkår,
         ...aldersvilkår,
         {
-            status: getBehandlingsinformasjonStatus(lovligOpphold),
+            status:
+                lovligOpphold === null
+                    ? VilkårVurderingStatus.IkkeVurdert
+                    : lovligOpphold?.resultat === Vilkårstatus.Uavklart
+                    ? VilkårVurderingStatus.Uavklart
+                    : lovligOpphold?.resultat === Vilkårstatus.VilkårOppfylt
+                    ? VilkårVurderingStatus.Ok
+                    : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.LovligOpphold,
             erStartet: lovligOpphold !== null,
         },

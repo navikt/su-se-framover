@@ -214,6 +214,20 @@ export async function lagreUføregrunnlag(arg: {
     });
 }
 
+export async function lagreLovligOppholdVilkår(arg: {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: Array<{
+        status: Vilkårstatus;
+    }>;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/lovligOpphold`,
+        method: 'POST',
+        body: { vurderinger: arg.vurderinger },
+    });
+}
+
 export async function lagreAldersgrunnlag(arg: {
     sakId: string;
     behandlingId: string;

@@ -6,14 +6,16 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf, Nullable } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
-import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { SøknadInnhold } from '~src/types/Søknad';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/lovlig-opphold-i-norge/lovligOppholdINorge-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
+import { FaktablokkProps } from './faktablokkUtils';
 
 export const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
     const { intl } = useI18n({
@@ -87,7 +89,11 @@ const createFakta = (verdi: Nullable<string>, tittel: string) => {
     };
 };
 
-export const LovligOppholdVilkårsblokk = (props: VilkårsblokkProps<'lovligOpphold'>) => {
+export const LovligOppholdVilkårsblokk = (props: {
+    info: Vilkårsinformasjon;
+    søknadInnhold: SøknadInnhold;
+    grunnlagsdataOgvilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
     const { intl } = useI18n({
         messages: {
             ...messages,
@@ -100,7 +106,7 @@ export const LovligOppholdVilkårsblokk = (props: VilkårsblokkProps<'lovligOpph
             tittel={vilkårTittelFormatted(props.info.vilkårtype)}
             søknadfaktablokk={<LovligOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.behandlingsinformasjon === null ? (
+                props.grunnlagsdataOgvilkårsvurderinger.lovligOpphold?.resultat === null ? (
                     <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
                 ) : (
                     <Faktablokk
@@ -111,9 +117,11 @@ export const LovligOppholdVilkårsblokk = (props: VilkårsblokkProps<'lovligOpph
                                     id: keyOf<typeof saksbehandlingMessages>('radio.lovligOpphold.legend'),
                                 }),
                                 verdi:
-                                    props.behandlingsinformasjon.status === Vilkårstatus.VilkårOppfylt
+                                    props.grunnlagsdataOgvilkårsvurderinger.lovligOpphold?.resultat ===
+                                    Vilkårstatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.behandlingsinformasjon.status === Vilkårstatus.VilkårIkkeOppfylt
+                                        : props.grunnlagsdataOgvilkårsvurderinger.lovligOpphold?.resultat ===
+                                          Vilkårstatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({ id: 'fraSøknad.uavklart' }),
                             },

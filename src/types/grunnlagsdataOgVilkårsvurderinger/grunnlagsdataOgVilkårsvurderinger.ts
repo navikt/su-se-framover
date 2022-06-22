@@ -7,6 +7,7 @@ import { Familiegjenforening } from '~src/types/grunnlagsdataOgVilkårsvurdering
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';
+import { LovligOppholdVilkår } from './lovligOpphold/LovligOppholdVilkår';
 import { OpplysningspliktVilkår } from './opplysningsplikt/Opplysningsplikt';
 import { UføreVilkår } from './uføre/Uførevilkår';
 import { Utenlandsopphold } from './utenlandsopphold/Utenlandsopphold';
@@ -15,6 +16,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     pensjon: Nullable<Aldersvilkår>;
     familiegjenforening: Nullable<Familiegjenforening>;
     uføre: Nullable<UføreVilkår>;
+    lovligOpphold: Nullable<LovligOppholdVilkår>;
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];
     formue: FormueVilkår;
