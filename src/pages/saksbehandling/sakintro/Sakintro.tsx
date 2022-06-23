@@ -16,6 +16,7 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
 import { Behandling } from '~src/types/Behandling';
+import { Sakstype } from '~src/types/Sak';
 import { Søknad } from '~src/types/Søknad';
 import { erIverksatt } from '~src/utils/behandling/behandlingUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~src/utils/revurdering/revurderingUtils';
@@ -85,7 +86,7 @@ const Sakintro = () => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    {harVedtak && (
+                    {harVedtak && props.sak.sakstype !== Sakstype.Alder && (
                         <NyBehandlingVelger intl={intl}>
                             {iverksatteInnvilgedeSøknader.length > 0 && (
                                 <LinkAsButton
