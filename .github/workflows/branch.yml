@@ -10,7 +10,7 @@ on:
             - '!main' # excludes main (will probably replace master)
 
 env:
-    IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
+    IMAGE: ghcr.io/${{ github.repository }}/su-se-framover:${{ github.sha }}
 
 jobs:
     build:

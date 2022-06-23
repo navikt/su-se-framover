@@ -8,7 +8,7 @@ on:
             - master
 
 env:
-    IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
+    IMAGE: ghcr.io/${{ github.repository }}/su-se-framover:${{ github.sha }}
 
 jobs:
     build:
@@ -34,7 +34,7 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   docker build --tag ${IMAGE} .
-                  echo ${GITHUB_TOKEN} | docker login --username ${GITHUB_REPOSITORY} --password-stdin https://docker.pkg.github.com
+                  echo ${GITHUB_TOKEN} | docker login --username ${GITHUB_REPOSITORY} --password-stdin https://ghcr.io
                   docker push ${IMAGE}
 
     deploy-to-dev:
