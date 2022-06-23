@@ -1,11 +1,11 @@
 import http from 'http';
 
-import connectRedis from 'connect-redis';
+import connectRedis, { Client } from 'connect-redis';
 import { Express } from 'express';
 import session from 'express-session';
 import * as OpenIdClient from 'openid-client';
 import passport from 'passport';
-import * as redis from 'redis';
+import { createClient } from 'redis';
 
 import * as Config from '../config';
 
@@ -29,26 +29,31 @@ declare global {
 
 const SESSION_MAX_AGE_MILLIS = 60 * 60 * 1000 * 2;
 
-function getRedisStore() {
+async function getRedisStore() {
     const RedisStore = connectRedis(session);
 
-    const redisClient = redis.createClient({
-        host: Config.redis.host,
-        port: Config.redis.port,
+    const redisClient = createClient({
+        socket: {
+            host: Config.redis.host,
+            port: Config.redis.port,
+        },
         password: Config.redis.password,
+        legacyMode: true,
     });
-    redisClient.unref();
+    await redisClient.connect();
 
     return new RedisStore({
-        client: redisClient,
+        client: redisClient as unknown as Client,
         disableTouch: true,
     });
 }
 
 const authEnabledPath = /^(?!\/api\/toggles)/;
 
-function setupSession(app: Express) {
+async function setupSession(app: Express) {
     app.set('trust proxy', 1);
+
+    const redisStore = await getRedisStore();
 
     app.use(
         authEnabledPath,
@@ -64,7 +69,7 @@ function setupSession(app: Express) {
             resave: true,
             saveUninitialized: false,
             unset: 'destroy',
-            store: getRedisStore(),
+            store: redisStore,
             rolling: true,
         })
     );
@@ -106,7 +111,7 @@ async function getStrategy(authClient: OpenIdClient.Client) {
 }
 
 export default async function setupAuth(app: Express, authClient: OpenIdClient.Client) {
-    setupSession(app);
+    await setupSession(app);
 
     app.use(authEnabledPath, passport.initialize());
     app.use(authEnabledPath, passport.session());
