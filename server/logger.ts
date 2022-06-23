@@ -3,7 +3,7 @@ import pinoHttp from 'pino-http';
 
 import * as Config from './config';
 
-const fnrReplacePattern = [/^(\/api\/person\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/];
+const fnrReplacePattern = [/^(\/api\/(?:person|skatt)\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/];
 export const logger: pino.Logger = pino({
     ...(Config.isDev
         ? {
@@ -39,7 +39,6 @@ export const httpLogger = pinoHttp({
         return req.headers['X-Correlation-ID'] || req.id;
     },
     autoLogging: {
-        getPath: (req) => (/^\/api\/(?!toggles)/.test(req.url ?? '') ? req.url : 'ignore'),
-        ignorePaths: ['ignore'],
+        ignore: (req) => /^\/api\/(?!toggles)/.test(req.url ?? ''),
     },
 });
