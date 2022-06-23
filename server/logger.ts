@@ -1,5 +1,4 @@
 import pino from 'pino';
-import pinoColada from 'pino-colada';
 import pinoHttp from 'pino-http';
 
 import * as Config from './config';
@@ -8,8 +7,12 @@ const fnrReplacePattern = [/^(\/api\/person\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/
 export const logger: pino.Logger = pino({
     ...(Config.isDev
         ? {
-              prettyPrint: true,
-              prettifier: pinoColada,
+              transport: {
+                  target: 'pino-pretty',
+                  options: {
+                      colorize: true,
+                  },
+              },
               level: Config.server.logLevel,
           }
         : {}),
