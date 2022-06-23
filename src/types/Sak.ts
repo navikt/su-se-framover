@@ -21,6 +21,7 @@ export interface Sak {
     vedtak: Vedtak[];
     klager: Klage[];
     reguleringer: Regulering[];
+    sakstype: Sakstype;
 }
 
 export enum KanStansesEllerGjenopptas {
