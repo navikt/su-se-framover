@@ -133,7 +133,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         passport.authenticate(authName, { failureRedirect: '/login-failed' })
     );
     app.get('/logout', (req, res) => {
-        req.logout();
+        req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
         req.session.destroy(() => {
             res.clearCookie(Config.server.sessionCookieName);
             const endSessionUrl = authClient.endSessionUrl({ post_logout_redirect_uri: Config.auth.logoutRedirectUri });
