@@ -22,7 +22,7 @@ import { NullablePeriode, Periode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
-import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '../bunnknapper/Navigasjonsknapper';
 import sharedMessages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
@@ -135,7 +135,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                         {RemoteData.isSuccess(status) && (
                             <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
                         )}
-                        <RevurderingBunnknapper
+                        <Navigasjonsknapper
                             tilbake={props.forrige}
                             loading={RemoteData.isPending(status)}
                             onLagreOgFortsettSenereClick={handleSubmit((values: BosituasjonFormData) =>

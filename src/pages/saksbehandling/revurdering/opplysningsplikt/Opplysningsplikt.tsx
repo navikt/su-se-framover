@@ -12,7 +12,7 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreOpplysningsplikt } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/Navigasjonsknapper';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
@@ -161,7 +161,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                         {RemoteData.isSuccess(status) && (
                             <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
                         )}
-                        <RevurderingBunnknapper
+                        <Navigasjonsknapper
                             tilbake={props.forrige}
                             loading={RemoteData.isPending(status)}
                             onLagreOgFortsettSenereClick={form.handleSubmit((values) =>

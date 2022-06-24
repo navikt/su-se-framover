@@ -16,7 +16,7 @@ import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurderin
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';
 import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
 
-import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 
 import messages from './oppsummeringPageForms-nb';
 import * as styles from './oppsummeringPageForms.module.less';
@@ -184,7 +184,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                 />
             )}
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
-            <RevurderingBunnknapper
+            <Navigasjonsknapper
                 tilbake={{ url: props.forrigeUrl, visModal: false }}
                 nesteKnappTekst={
                     resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger
@@ -305,7 +305,7 @@ export const SendTilAttesteringForm = (props: {
 
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
 
-            <RevurderingBunnknapper
+            <Navigasjonsknapper
                 nesteKnappTekst={formatMessage('sendTilAttestering.button.label')}
                 tilbake={{ url: props.forrigeUrl, visModal: false }}
                 loading={RemoteData.isPending(props.submitStatus)}

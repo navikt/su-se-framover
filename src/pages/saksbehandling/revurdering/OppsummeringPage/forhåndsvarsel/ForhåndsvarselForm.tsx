@@ -15,7 +15,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/Navigasjonsknapper';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { InformasjonsRevurdering } from '~src/types/Revurdering';
 import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
@@ -205,7 +205,7 @@ export const VelgForhåndsvarselForm = (props: {
                 />
             )}
             {RemoteData.isFailure(submitStatus) && <ApiErrorAlert error={submitStatus.error} />}
-            <RevurderingBunnknapper
+            <Navigasjonsknapper
                 nesteKnappTekst={
                     forhåndsvarselhandling === Forhåndsvarselhandling.Forhåndsvarsle
                         ? formatMessage('sendForhåndsvarsel.button.label')

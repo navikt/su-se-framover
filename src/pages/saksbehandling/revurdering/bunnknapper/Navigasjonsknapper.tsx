@@ -6,10 +6,10 @@ import { useI18n } from '~src/lib/i18n';
 
 import NullstillRevurderingVarsel from '../advarselReset/NullstillRevurderingVarsel';
 
-import messages from './revurderingbunnknapper-nb';
-import * as styles from './revurderingBunnknapper.module.less';
+import messages from './navigasjonsknapper-nb';
+import * as styles from './navigasjonsknapper.module.less';
 
-export const RevurderingBunnknapper = ({
+export const Navigasjonsknapper = ({
     onLagreOgFortsettSenereClick,
     ...props
 }: {

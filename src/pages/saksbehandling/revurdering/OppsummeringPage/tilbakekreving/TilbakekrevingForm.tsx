@@ -11,7 +11,7 @@ import * as RevurderingActions from '~src/features/revurdering/revurderingAction
 import { useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import yup from '~src/lib/validering';
-import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/Navigasjonsknapper';
 import { VelgForhåndsvarselForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
 import { InformasjonsRevurdering } from '~src/types/Revurdering';
 
@@ -110,7 +110,7 @@ export const TilbakekrevingForm = (props: {
                         <ApiErrorAlert error={lagreTilbakekrevingsbehandlingState.error} />
                     )}
 
-                    <RevurderingBunnknapper
+                    <Navigasjonsknapper
                         nesteKnappTekst={formatMessage('neste')}
                         tilbake={props.forrige}
                         loading={RemoteData.isPending(lagreTilbakekrevingsbehandlingState)}
