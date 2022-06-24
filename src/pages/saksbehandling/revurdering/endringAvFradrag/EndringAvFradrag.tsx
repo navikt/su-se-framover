@@ -33,8 +33,8 @@ import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
+import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
-import { Navigasjonsknapper } from '../bunnknapper/Navigasjonsknapper';
 import * as sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';

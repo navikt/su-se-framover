@@ -23,7 +23,7 @@ import {
     OpprettetRevurderingGrunn,
 } from '~src/types/Revurdering';
 
-import { Navigasjonsknapper } from '../bunnknapper/Navigasjonsknapper';
+import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import * as sharedStyles from '../revurdering.module.less';
 
 import messages, { informasjonSomRevurderes } from './revurderingIntro-nb';

@@ -16,7 +16,7 @@ import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurderin
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';
 import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
 
-import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
+import { Navigasjonsknapper } from '../../../bunnknapper/Navigasjonsknapper';
 
 import messages from './oppsummeringPageForms-nb';
 import * as styles from './oppsummeringPageForms.module.less';

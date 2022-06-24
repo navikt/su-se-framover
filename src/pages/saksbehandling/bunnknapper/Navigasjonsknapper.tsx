@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useI18n } from '~src/lib/i18n';
 
-import NullstillRevurderingVarsel from '../advarselReset/NullstillRevurderingVarsel';
+import NullstillRevurderingVarsel from '../revurdering/advarselReset/NullstillRevurderingVarsel';
 
 import messages from './navigasjonsknapper-nb';
 import * as styles from './navigasjonsknapper.module.less';
