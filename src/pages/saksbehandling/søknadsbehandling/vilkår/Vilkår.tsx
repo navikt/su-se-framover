@@ -56,7 +56,7 @@ const Vilkår = () => {
         sakId: sakId,
     });
 
-    const sakstype = behandling.søknad.søknadInnhold.type;
+    const sakstype = props.sak.sakstype;
 
     return (
         <SøknadsbehandlingDraftProvider>
@@ -166,6 +166,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
                             nesteUrl={vilkårUrl(Vilkårtype.Sats)}
+                            sakstype={sakstype}
                             sakId={sakId}
                         />
                     )}
