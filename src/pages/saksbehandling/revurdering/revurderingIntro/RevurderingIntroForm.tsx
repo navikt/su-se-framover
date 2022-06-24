@@ -23,7 +23,7 @@ import {
     OpprettetRevurderingGrunn,
 } from '~src/types/Revurdering';
 
-import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '../bunnknapper/Navigasjonsknapper';
 import * as sharedStyles from '../revurdering.module.less';
 
 import messages, { informasjonSomRevurderes } from './revurderingIntro-nb';
@@ -221,7 +221,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                 {RemoteData.isFailure(props.oppdaterRevurderingStatus) && (
                     <ApiErrorAlert error={props.oppdaterRevurderingStatus.error} />
                 )}
-                <RevurderingBunnknapper
+                <Navigasjonsknapper
                     tilbake={{ url: props.tilbakeUrl, visModal: false }}
                     onLagreOgFortsettSenereClick={form.handleSubmit((values) =>
                         props.save(formToSubmit(values), 'avbryt')

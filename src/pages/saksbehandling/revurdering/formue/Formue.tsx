@@ -39,7 +39,7 @@ import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 import { regnUtFormDataVerdier, verdierId } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
-import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '../bunnknapper/Navigasjonsknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
@@ -152,7 +152,7 @@ const Formue = (props: RevurderingStegProps) => {
                         {RemoteData.isSuccess(lagreFormuegrunnlagStatus) && (
                             <UtfallSomIkkeStøttes feilmeldinger={lagreFormuegrunnlagStatus.value.feilmeldinger} />
                         )}
-                        <RevurderingBunnknapper
+                        <Navigasjonsknapper
                             tilbake={props.forrige}
                             loading={RemoteData.isPending(lagreFormuegrunnlagStatus)}
                             onLagreOgFortsettSenereClick={handleSubmit((values) =>

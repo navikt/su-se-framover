@@ -34,7 +34,7 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
-import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '../bunnknapper/Navigasjonsknapper';
 import * as sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -205,7 +205,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                             {RemoteData.isSuccess(savingState) && (
                                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
                             )}
-                            <RevurderingBunnknapper
+                            <Navigasjonsknapper
                                 tilbake={props.forrige}
                                 onLagreOgFortsettSenereClick={() => {
                                     setHasSubmitted(true);

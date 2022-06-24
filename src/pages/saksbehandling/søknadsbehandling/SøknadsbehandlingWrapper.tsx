@@ -10,7 +10,7 @@ import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering'
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/Navigasjonsknapper';
 import * as styles from '~src/pages/saksbehandling/steg/uføre/uførhet.module.less';
 import stegSharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
 import { Behandling } from '~src/types/Behandling';
@@ -53,7 +53,7 @@ export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behan
                 ref={feiloppsummeringRef}
             />
             {RemoteData.isFailure(props.savingState) && <ApiErrorAlert error={props.savingState.error} />}
-            <RevurderingBunnknapper
+            <Navigasjonsknapper
                 tilbake={{ url: props.forrigeUrl, visModal: props.visModal ?? false }}
                 onLagreOgFortsettSenereClick={form.handleSubmit<T>((values) =>
                     props.save(values, () => navigate(props.avsluttUrl))

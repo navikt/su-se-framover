@@ -15,7 +15,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { RevurderingBunnknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/Navigasjonsknapper';
 import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
@@ -187,7 +187,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                             Ny periode for utenlandsopphold
                         </Button>
                         {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-                        <RevurderingBunnknapper
+                        <Navigasjonsknapper
                             tilbake={props.forrige}
                             loading={RemoteData.isPending(status)}
                             onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'avbryt'))}
