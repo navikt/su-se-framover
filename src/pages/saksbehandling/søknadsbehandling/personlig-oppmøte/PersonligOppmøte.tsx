@@ -204,7 +204,7 @@ const erFerdigbehandletMedAvslag = (vilkårsinformasjon: Vilkårsinformasjon[]):
     );
 };
 
-const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
+const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakstype }) => {
     const navigate = useNavigate();
     const advarselRef = useRef<HTMLDivElement>(null);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -229,7 +229,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const oppdatertVilkårsinformasjon = useMemo(
         () =>
             tilOppdatertVilkårsinformasjon(
-                props.behandling.søknad.søknadInnhold.type,
+                props.sakstype,
                 watch,
                 props.behandling.behandlingsinformasjon,
                 props.behandling.grunnlagsdataOgVilkårsvurderinger
@@ -244,7 +244,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         }
 
         const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(
-            props.behandling.søknad.søknadInnhold.type,
+            props.sakstype,
             values,
             props.behandling.behandlingsinformasjon,
             props.behandling.grunnlagsdataOgVilkårsvurderinger
