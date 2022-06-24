@@ -39,7 +39,7 @@ import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 import { regnUtFormDataVerdier, verdierId } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
-import { Navigasjonsknapper } from '../bunnknapper/Navigasjonsknapper';
+import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 

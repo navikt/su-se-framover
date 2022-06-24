@@ -11,7 +11,7 @@ import * as RevurderingActions from '~src/features/revurdering/revurderingAction
 import { useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import yup from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/Navigasjonsknapper';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { VelgForhåndsvarselForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
 import { InformasjonsRevurdering } from '~src/types/Revurdering';
 

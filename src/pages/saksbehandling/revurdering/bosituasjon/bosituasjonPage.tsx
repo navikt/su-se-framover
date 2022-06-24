@@ -22,7 +22,7 @@ import { NullablePeriode, Periode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
-import { Navigasjonsknapper } from '../bunnknapper/Navigasjonsknapper';
+import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import sharedMessages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';

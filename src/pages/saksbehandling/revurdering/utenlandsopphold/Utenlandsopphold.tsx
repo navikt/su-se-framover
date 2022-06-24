@@ -15,7 +15,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/Navigasjonsknapper';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';

@@ -10,7 +10,7 @@ import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering'
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/revurdering/bunnknapper/Navigasjonsknapper';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import * as styles from '~src/pages/saksbehandling/steg/uføre/uførhet.module.less';
 import stegSharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
 import { Behandling } from '~src/types/Behandling';
