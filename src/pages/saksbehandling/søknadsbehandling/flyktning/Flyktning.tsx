@@ -14,7 +14,7 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
-import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
+import { Behandling } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { SøknadInnholdUføre } from '~src/types/Søknad';
@@ -88,6 +88,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
 
     useDraftFormSubscribe(form.watch);
 
+    const kortBehandlingAvslag = (behandling: Behandling) =>
+        behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.flyktning?.status === Vilkårstatus.VilkårIkkeOppfylt;
+
     const vilGiTidligAvslag =
         props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
         form.watch('status') === Vilkårstatus.VilkårIkkeOppfylt;
@@ -102,11 +106,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                         savingState={status}
                         avsluttUrl={saksoversiktUrl}
                         onSuccess={(behandling) =>
-                            navigate(
-                                behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
-                                    ? vedtakUrl
-                                    : props.nesteUrl
-                            )
+                            navigate(kortBehandlingAvslag(behandling) ? vedtakUrl : props.nesteUrl)
                         }
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
