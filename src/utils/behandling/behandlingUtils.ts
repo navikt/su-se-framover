@@ -46,7 +46,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) =>
     behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
     behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
     behandling.behandlingsinformasjon.flyktning?.status === Vilkårstatus.VilkårIkkeOppfylt ||
-    behandling.behandlingsinformasjon.lovligOpphold?.status === Vilkårstatus.VilkårIkkeOppfylt ||
+    behandling.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.behandlingsinformasjon.fastOppholdINorge?.status === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.behandlingsinformasjon.institusjonsopphold?.status === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===

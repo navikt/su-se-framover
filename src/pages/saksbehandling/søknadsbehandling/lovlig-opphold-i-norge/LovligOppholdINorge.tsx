@@ -42,9 +42,9 @@ const schema = yup
 
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
+    const [status, lagreLovligopphold] = useAsyncActionCreator(sakSlice.lagreLovligOppholdVilkår);
     const initialValues = {
-        status: props.behandling.behandlingsinformasjon.lovligOpphold?.status ?? null,
+        status: props.behandling.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat ?? null,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
@@ -59,15 +59,11 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        await lagreBehandlingsinformasjon(
+        await lagreLovligopphold(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    lovligOpphold: {
-                        status: values.status!,
-                    },
-                },
+                vurderinger: [{ periode: props.behandling.stønadsperiode!.periode, status: values.status! }],
             },
             () => {
                 clearDraft();

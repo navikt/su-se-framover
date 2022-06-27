@@ -2,10 +2,11 @@ import { Person } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
 
 export interface Behandlingsinformasjon {
+    //TODO: fjern disse 2 - dem eksisterer ikke på behandlingsinformasjon med på grunnlagsdataOgVilkårsvurderinger
     alderspensjon: Nullable<Behandlingsstatus>;
     familieforening: Nullable<Behandlingsstatus>;
+
     flyktning: Nullable<Behandlingsstatus>;
-    lovligOpphold: Nullable<Behandlingsstatus>;
     fastOppholdINorge: Nullable<Behandlingsstatus>;
     institusjonsopphold: Nullable<Behandlingsstatus>;
     personligOppmøte: Nullable<PersonligOppmøte>;

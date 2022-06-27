@@ -179,6 +179,25 @@ export const lagreUføregrunnlag = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreLovligOppholdVilkår = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vurderinger: Array<{
+            periode: Periode<string>;
+            status: Vilkårstatus;
+        }>;
+    },
+    { rejectValue: ApiError }
+>('behandling/lovligopphold', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreLovligOppholdVilkår(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const lagreAlderspensjongrunnlag = createAsyncThunk<
     Behandling,
     {
@@ -702,6 +721,16 @@ export default createSlice({
         });
 
         builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
+        builder.addCase(lagreLovligOppholdVilkår.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
