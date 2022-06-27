@@ -218,6 +218,7 @@ export async function lagreLovligOppholdVilkår(arg: {
     sakId: string;
     behandlingId: string;
     vurderinger: Array<{
+        periode: Periode<string>;
         status: Vilkårstatus;
     }>;
 }) {

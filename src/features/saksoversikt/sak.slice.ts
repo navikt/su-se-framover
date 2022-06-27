@@ -185,6 +185,7 @@ export const lagreLovligOppholdVilkår = createAsyncThunk<
         sakId: string;
         behandlingId: string;
         vurderinger: Array<{
+            periode: Periode<string>;
             status: Vilkårstatus;
         }>;
     },

@@ -63,7 +63,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                vurderinger: [{ status: values.status! }],
+                vurderinger: [{ periode: props.behandling.stønadsperiode!.periode, status: values.status! }],
             },
             () => {
                 clearDraft();

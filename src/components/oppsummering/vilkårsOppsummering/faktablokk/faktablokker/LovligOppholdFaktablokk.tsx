@@ -6,7 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf, Nullable } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { LovligOppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { SøknadInnhold } from '~src/types/Søknad';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
@@ -92,7 +92,7 @@ const createFakta = (verdi: Nullable<string>, tittel: string) => {
 export const LovligOppholdVilkårsblokk = (props: {
     info: Vilkårsinformasjon;
     søknadInnhold: SøknadInnhold;
-    grunnlagsdataOgvilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    lovligOpphold: Nullable<LovligOppholdVilkår>;
 }) => {
     const { intl } = useI18n({
         messages: {
@@ -106,7 +106,7 @@ export const LovligOppholdVilkårsblokk = (props: {
             tittel={vilkårTittelFormatted(props.info.vilkårtype)}
             søknadfaktablokk={<LovligOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.grunnlagsdataOgvilkårsvurderinger.lovligOpphold?.resultat === null ? (
+                props.lovligOpphold?.resultat === null ? (
                     <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
                 ) : (
                     <Faktablokk
@@ -117,11 +117,9 @@ export const LovligOppholdVilkårsblokk = (props: {
                                     id: keyOf<typeof saksbehandlingMessages>('radio.lovligOpphold.legend'),
                                 }),
                                 verdi:
-                                    props.grunnlagsdataOgvilkårsvurderinger.lovligOpphold?.resultat ===
-                                    Vilkårstatus.VilkårOppfylt
+                                    props.lovligOpphold?.resultat === Vilkårstatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.grunnlagsdataOgvilkårsvurderinger.lovligOpphold?.resultat ===
-                                          Vilkårstatus.VilkårIkkeOppfylt
+                                        : props.lovligOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({ id: 'fraSøknad.uavklart' }),
                             },
