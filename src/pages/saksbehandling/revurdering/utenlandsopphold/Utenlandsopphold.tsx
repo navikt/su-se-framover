@@ -135,7 +135,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                         onChange={(periode: NullablePeriode) =>
                                             form.setValue(`utenlandsopphold.${index}.periode`, periode)
                                         }
-                                        error={form.formState.errors.utenlandsopphold?.[index].periode}
+                                        error={form.formState.errors.utenlandsopphold?.[index]?.periode}
                                         minDate={{
                                             fraOgMed: revurderingsperiode.fraOgMed,
                                             tilOgMed: revurderingsperiode.tilOgMed,
