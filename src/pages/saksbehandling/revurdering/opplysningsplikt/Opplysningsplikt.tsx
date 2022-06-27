@@ -131,7 +131,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                                     onChange={(periode: NullablePeriode) =>
                                         form.setValue(`opplysningsplikt.${index}.periode`, periode)
                                     }
-                                    error={form.formState.errors.opplysningsplikt?.[index].periode}
+                                    error={form.formState.errors.opplysningsplikt?.[index]?.periode}
                                     minDate={{
                                         fraOgMed: revurderingsperiode.fraOgMed,
                                         tilOgMed: revurderingsperiode.tilOgMed,
