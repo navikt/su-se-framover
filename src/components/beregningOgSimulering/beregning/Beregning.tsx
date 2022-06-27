@@ -26,7 +26,6 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
@@ -353,7 +352,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
                                         lagreFradragOgBeregn(formik.values, () => {
-                                            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+                                            navigate(props.avsluttUrl);
                                         });
                                     }
                                 });

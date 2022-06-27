@@ -11,7 +11,6 @@ import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehan
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
@@ -97,7 +96,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                         form={form}
                         save={handleSave}
                         savingState={status}
-                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+                        avsluttUrl={props.avsluttUrl}
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
                     >

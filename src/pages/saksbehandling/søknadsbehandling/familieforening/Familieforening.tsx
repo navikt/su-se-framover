@@ -5,7 +5,6 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
 import { FamilieforeningForm } from '~src/pages/saksbehandling/steg/familieforening/FamilieforeningForm';
 import { FormData } from '~src/pages/saksbehandling/steg/familieforening/types';
 import { SøknadInnholdAlder } from '~src/types/Søknad';
@@ -38,7 +37,6 @@ const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: S
                     <FamilieforeningForm
                         save={handleSave}
                         savingState={lagreFamilieforeninggrunnlagStatus}
-                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                         {...props}
                     />
                 ),

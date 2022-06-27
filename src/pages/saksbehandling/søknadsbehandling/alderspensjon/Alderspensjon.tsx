@@ -5,7 +5,6 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
 import { AlderspensjonForm } from '~src/pages/saksbehandling/steg/alderspensjon/AlderspensjonForm';
 import { FormData } from '~src/pages/saksbehandling/steg/alderspensjon/types';
 import { SøknadInnholdAlder } from '~src/types/Søknad';
@@ -43,14 +42,7 @@ const Alderspensjon = (props: VilkårsvurderingBaseProps & { søknadInnhold: Sø
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
-                left: (
-                    <AlderspensjonForm
-                        save={handleSave}
-                        savingState={lagreAlderspensjongrunnlagStatus}
-                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
-                        {...props}
-                    />
-                ),
+                left: <AlderspensjonForm save={handleSave} savingState={lagreAlderspensjongrunnlagStatus} {...props} />,
                 right: <AlderspensjonBlokk harSøktAlderspensjon={props.søknadInnhold.harSøktAlderspensjon} />,
             }}
         </ToKolonner>

@@ -7,7 +7,6 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
 import { FormData } from '~src/pages/saksbehandling/steg/uføre/types';
 import { vurderingsperiodeTilFormData } from '~src/pages/saksbehandling/steg/uføre/UføreperiodeForm';
 import { UførhetForm } from '~src/pages/saksbehandling/steg/uføre/UførhetForm';
@@ -64,7 +63,6 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                         maxDate={DateUtils.parseIsoDateOnly(props.behandling.stønadsperiode?.periode.tilOgMed ?? null)}
                         form={form}
                         savingState={lagreBehandlingsinformasjonStatus}
-                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                         erSaksbehandling={true}
                         forrige={{ url: props.forrigeUrl, visModal: false }}
                         {...props}
