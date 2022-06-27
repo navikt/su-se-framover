@@ -110,6 +110,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                         }
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
+                        nesteKnappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
                     >
                         <>
                             <Controller

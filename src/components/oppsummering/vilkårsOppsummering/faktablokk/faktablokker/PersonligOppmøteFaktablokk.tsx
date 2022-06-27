@@ -3,6 +3,7 @@ import React from 'react';
 
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
+import { ManglendeOppmøteGrunn } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/types';
 import { PersonligOppmøteStatus } from '~src/types/Behandlingsinformasjon';
 import { Søknadstype } from '~src/types/Søknad';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -15,38 +16,32 @@ import messages from './faktablokker-nb';
 import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
 export const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
 
     return (
         <Faktablokk
-            tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+            tittel={formatMessage('display.fraSøknad')}
             fakta={
                 props.søknadInnhold.forNav.type === Søknadstype.DigitalSøknad
                     ? [
                           {
-                              tittel: intl.formatMessage({ id: 'personligOppmøte.hvemHarMøtt' }),
+                              tittel: formatMessage('personligOppmøte.hvemHarMøtt'),
                               verdi:
                                   props.søknadInnhold.forNav.harFullmektigEllerVerge === null
-                                      ? intl.formatMessage({ id: 'personligOppmøte.personligOppmøte' })
+                                      ? formatMessage('personligOppmøte.personligOppmøte')
                                       : props.søknadInnhold.forNav.harFullmektigEllerVerge,
                           },
                       ]
                     : [
                           {
-                              tittel: intl.formatMessage({
-                                  id: 'personligOppmøte.papirsøknad.grunnForPapirinnsending',
-                              }),
+                              tittel: formatMessage('personligOppmøte.papirsøknad.grunnForPapirinnsending'),
                               verdi:
                                   props.søknadInnhold.forNav.grunnForPapirinnsending ===
                                   GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker
-                                      ? intl.formatMessage({
-                                            id: 'personligOppmøte.papirsøknad.vergeSøktPåVegneAvBruker',
-                                        })
+                                      ? formatMessage('personligOppmøte.papirsøknad.vergeSøktPåVegneAvBruker')
                                       : props.søknadInnhold.forNav.grunnForPapirinnsending ===
                                         GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt
-                                      ? intl.formatMessage({
-                                            id: 'personligOppmøte.papirsøknad.midlertidigUnntakForOppmøteplikt',
-                                        })
+                                      ? formatMessage('personligOppmøte.papirsøknad.midlertidigUnntakForOppmøteplikt')
                                       : props.søknadInnhold.forNav.annenGrunn ?? '-',
                           },
                       ]
@@ -56,35 +51,25 @@ export const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
 };
 
 export const PersonligOppmøteVilkårsblokk = (props: VilkårsblokkProps<'personligOppmøte'>) => {
-    const { intl } = useI18n({
+    const { formatMessage } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,
         },
     });
 
-    const saksbehandlingMessage = (s: keyof typeof saksbehandlingMessages) => s;
-
     const getStatusText = (status: PersonligOppmøteStatus) => {
         switch (status) {
             case PersonligOppmøteStatus.MøttPersonlig:
                 return '';
             case PersonligOppmøteStatus.IkkeMøttMenVerge:
-                return intl.formatMessage({
-                    id: saksbehandlingMessage('radio.personligOppmøte.grunn.oppnevntVergeSøktPerPost'),
-                });
+                return formatMessage(ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost);
             case PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
-                return intl.formatMessage({
-                    id: saksbehandlingMessage('radio.personligOppmøte.grunn.sykMedLegeerklæringOgFullmakt'),
-                });
+                return formatMessage(ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt);
             case PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring:
-                return intl.formatMessage({
-                    id: saksbehandlingMessage('radio.personligOppmøte.grunn.kortvarigSykMedLegeerklæring'),
-                });
+                return formatMessage(ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring);
             case PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
-                return intl.formatMessage({
-                    id: saksbehandlingMessage('radio.personligOppmøte.grunn.midlertidigUnntakFraOppmøteplikt'),
-                });
+                return formatMessage(ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt);
             case PersonligOppmøteStatus.IkkeMøttPersonlig:
                 return '';
             case PersonligOppmøteStatus.Uavklart:
@@ -98,29 +83,25 @@ export const PersonligOppmøteVilkårsblokk = (props: VilkårsblokkProps<'person
             søknadfaktablokk={<PersonligOppmøteFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
                 props.behandlingsinformasjon === null ? (
-                    <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
+                    <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}
+                        tittel={formatMessage('display.fraSaksbehandling')}
                         fakta={[
                             {
-                                tittel: intl.formatMessage({
-                                    id: saksbehandlingMessage('radio.personligOppmøte.legend'),
-                                }),
+                                tittel: formatMessage('radio.personligOppmøte.legend'),
                                 verdi:
                                     props.behandlingsinformasjon.status === PersonligOppmøteStatus.MøttPersonlig
-                                        ? intl.formatMessage({ id: 'fraSøknad.ja' })
+                                        ? formatMessage('fraSøknad.ja')
                                         : props.behandlingsinformasjon.status === PersonligOppmøteStatus.Uavklart
-                                        ? intl.formatMessage({ id: 'fraSøknad.uavklart' })
-                                        : intl.formatMessage({ id: 'fraSøknad.nei' }),
+                                        ? formatMessage('fraSøknad.uavklart')
+                                        : formatMessage('fraSøknad.nei'),
                             },
                             ...(props.behandlingsinformasjon.status !== PersonligOppmøteStatus.MøttPersonlig &&
                             props.behandlingsinformasjon.status !== PersonligOppmøteStatus.Uavklart
                                 ? [
                                       {
-                                          tittel: intl.formatMessage({
-                                              id: saksbehandlingMessage('radio.personligOppmøte.grunn.legend'),
-                                          }),
+                                          tittel: formatMessage('radio.personligOppmøte.grunn.legend'),
                                           verdi: getStatusText(props.behandlingsinformasjon.status),
                                       },
                                   ]
