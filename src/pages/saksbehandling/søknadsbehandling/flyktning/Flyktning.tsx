@@ -59,10 +59,6 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
         behandlingId: props.behandling.id,
     });
 
-    const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({
-        sakId: props.sakId,
-    });
-
     const save = (values: FormData, onSuccess: (behandling: Behandling) => void) => {
         lagreBehandlingsinformasjon(
             {
@@ -104,7 +100,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                         form={form}
                         save={(values, onSuccess) => save(values, onSuccess)}
                         savingState={status}
-                        avsluttUrl={saksoversiktUrl}
+                        avsluttUrl={props.avsluttUrl}
                         onSuccess={(behandling) =>
                             navigate(kortBehandlingAvslag(behandling) ? vedtakUrl : props.nesteUrl)
                         }

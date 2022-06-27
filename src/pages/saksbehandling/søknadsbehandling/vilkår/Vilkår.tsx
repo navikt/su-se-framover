@@ -56,6 +56,8 @@ const Vilkår = () => {
         sakId: sakId,
     });
 
+    const avsluttUrl = Routes.saksoversiktValgtSak.createURL({ sakId: sakId });
+
     const sakstype = props.sak.sakstype;
 
     return (
@@ -72,6 +74,7 @@ const Vilkår = () => {
                         <Virkningstidspunkt
                             behandling={behandling}
                             forrigeUrl={saksoversiktUrl}
+                            avsluttUrl={avsluttUrl}
                             nesteUrl={
                                 sakstype === Sakstype.Uføre
                                     ? vilkårUrl(Vilkårtype.Uførhet)
@@ -85,6 +88,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
                             nesteUrl={vilkårUrl(Vilkårtype.Familieforening)}
+                            avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
@@ -94,6 +98,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
                             nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                            avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
@@ -103,6 +108,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
                             nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                            avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
@@ -112,6 +118,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Uførhet)}
                             nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                            avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
                         />
@@ -125,6 +132,7 @@ const Vilkår = () => {
                                     : vilkårUrl(Vilkårtype.Flyktning)
                             }
                             nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
+                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                         />
                     )}
@@ -133,6 +141,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
                             nesteUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
+                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                         />
                     )}
@@ -141,6 +150,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
                             nesteUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
+                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                         />
                     )}
@@ -149,6 +159,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
                             nesteUrl={vilkårUrl(Vilkårtype.Formue)}
+                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                         />
                     )}
@@ -158,6 +169,7 @@ const Vilkår = () => {
                             forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
                             søker={props.søker}
                             nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                         />
                     )}
@@ -166,6 +178,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
                             nesteUrl={vilkårUrl(Vilkårtype.Sats)}
+                            avsluttUrl={avsluttUrl}
                             sakstype={sakstype}
                             sakId={sakId}
                         />
@@ -179,6 +192,7 @@ const Vilkår = () => {
                                     ? vedtakUrl
                                     : vilkårUrl(Vilkårtype.Beregning)
                             }
+                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                         />
                     )}
@@ -187,6 +201,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Sats)}
                             nesteUrl={vedtakUrl}
+                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             søker={props.søker}
                         />

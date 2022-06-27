@@ -18,7 +18,6 @@ import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { nullableMap } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppSelector } from '~src/redux/Store';
@@ -139,8 +138,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         save(x, props.nesteUrl);
     };
 
-    const handleLagreOgFortsettSenereClick: SubmitHandler<FormData> = (x) =>
-        save(x, Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+    const handleLagreOgFortsettSenereClick: SubmitHandler<FormData> = (x) => save(x, props.avsluttUrl);
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>

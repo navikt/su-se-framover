@@ -39,8 +39,8 @@ import * as Routes from '~src/lib/routes';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
 import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { useAppDispatch } from '~src/redux/Store';
-import { Behandling } from '~src/types/Behandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { removeSpaces } from '~src/utils/format/formatUtils';
 import { showName } from '~src/utils/person/personUtils';
@@ -102,13 +102,11 @@ const schema = yup
     })
     .required();
 
-const Formue = (props: {
-    behandling: Behandling;
-    forrigeUrl: string;
-    nesteUrl: string;
-    sakId: string;
-    søker: personApi.Person;
-}) => {
+const Formue = (
+    props: VilkårsvurderingBaseProps & {
+        søker: personApi.Person;
+    }
+) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -269,7 +267,7 @@ const Formue = (props: {
                         form={form}
                         save={handleSave}
                         savingState={combinedLagringsstatus}
-                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+                        avsluttUrl={props.avsluttUrl}
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
                     >

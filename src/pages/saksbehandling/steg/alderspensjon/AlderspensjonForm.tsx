@@ -15,7 +15,6 @@ import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkÃ
 interface Props extends VilkÃ¥rsvurderingBaseProps {
     save: (values: FormData, onSuccess: () => void) => void;
     savingState: ApiResult<Behandling>;
-    avsluttUrl: string;
 }
 
 export const AlderspensjonForm = (props: Props) => {
