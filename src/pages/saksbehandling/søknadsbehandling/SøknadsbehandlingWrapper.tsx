@@ -38,7 +38,7 @@ export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behan
 
     return (
         <form
-            onSubmit={form.handleSubmit<T>((values) =>
+            onSubmit={form.handleSubmit((values) =>
                 props.save(values, (res) => {
                     props.onSuccess && res ? props.onSuccess(res) : navigate(props.nesteUrl);
                 })
@@ -55,7 +55,7 @@ export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behan
             {RemoteData.isFailure(props.savingState) && <ApiErrorAlert error={props.savingState.error} />}
             <Navigasjonsknapper
                 tilbake={{ url: props.forrigeUrl, visModal: props.visModal ?? false }}
-                onLagreOgFortsettSenereClick={form.handleSubmit<T>((values) =>
+                onLagreOgFortsettSenereClick={form.handleSubmit((values) =>
                     props.save(values, () => navigate(props.avsluttUrl))
                 )}
                 loading={RemoteData.isPending(props.savingState)}

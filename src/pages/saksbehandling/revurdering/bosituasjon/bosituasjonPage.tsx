@@ -181,7 +181,7 @@ export const BosituasjonFormItem = (props: {
                     name={`bosituasjoner.${props.index}.periode`}
                     value={watch.periode}
                     onChange={(periode: NullablePeriode) => props.update(props.index, { ...watch, periode: periode })}
-                    error={props.errors?.bosituasjoner?.[props.index].periode}
+                    error={props.errors?.bosituasjoner?.[props.index]?.periode}
                     minDate={{
                         fraOgMed: revurderingsperiode.fraOgMed,
                         tilOgMed: revurderingsperiode.tilOgMed,
