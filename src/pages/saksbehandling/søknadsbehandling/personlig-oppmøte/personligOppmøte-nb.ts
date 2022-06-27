@@ -1,18 +1,19 @@
+import { ManglendeOppmøteGrunn } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/types';
+
+const GrunnForManglendePersonligOppmøteMessaages: Record<ManglendeOppmøteGrunn, string> = {
+    SykMedLegeerklæringOgFullmakt: 'Brukeren er for syk til å møte, og det foreligger legeerklæring og fullmakt',
+    OppnevntVergeSøktPerPost: 'Oppnevnt verge, og søkt per post i tråd med reglene for vergemål',
+    KortvarigSykdomMedLegeerklæring: 'Kortvarig sykdom som er dokumentert med legeerklæring',
+    MidlertidigUnntakFraOppmøteplikt: 'Midlertidig unntak fra oppmøteplikten',
+    BrukerIkkeMøttOppfyllerIkkeVilkår: 'Bruker har ikke møtt, og oppfyller ikke vilkåret',
+};
+
 export default {
+    ...GrunnForManglendePersonligOppmøteMessaages,
     'page.tittel': 'Personlig oppmøte',
 
     'radio.personligOppmøte.legend': 'Har bruker møtt personlig?',
     'radio.personligOppmøte.grunn.legend': 'Hvorfor har ikke bruker møtt personlig?',
-
-    'radio.personligOppmøte.grunn.sykMedLegeerklæringOgFullmakt':
-        'Brukeren er for syk til å møte, og det foreligger legeerklæring og fullmakt',
-    'radio.personligOppmøte.grunn.oppnevntVergeSøktPerPost':
-        'Oppnevnt verge, og søkt per post i tråd med reglene for vergemål',
-    'radio.personligOppmøte.grunn.kortvarigSykMedLegeerklæring':
-        'Kortvarig sykdom som er dokumentert med legeerklæring',
-    'radio.personligOppmøte.grunn.midlertidigUnntakFraOppmøteplikt': 'Midlertidig unntak fra oppmøteplikten',
-    'radio.personligOppmøte.grunn.brukerIkkeMøttOppfyllerIkkeVilkår':
-        'Bruker har ikke møtt, og oppfyller ikke vilkåret',
 
     'button.tilVedtak.label': 'Gå til vedtaket',
 

@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
-import { Eq, struct } from 'fp-ts/lib/Eq';
+import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
 import React, { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -13,196 +13,30 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { eqNullable, Nullable } from '~src/lib/types';
-import yup from '~src/lib/validering';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
-import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
+import { eqNullable } from '~src/lib/types';
 import {
-    Behandlingsinformasjon,
-    PersonligOppmøte as PersonligOppmøteType,
-    PersonligOppmøteStatus,
-} from '~src/types/Behandlingsinformasjon';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+    getInitialFormValues,
+    tilOppdatertVilkårsinformasjon,
+    toPersonligOppmøteStatus,
+} from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/utils';
+import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { erFerdigbehandletMedAvslag, erVurdertUtenAvslagMenIkkeFerdigbehandlet } from '~src/pages/saksbehandling/utils';
+import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Sakstype } from '~src/types/Sak';
-import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './personligOppmøte-nb';
 import * as styles from './personligOppmøte.module.less';
-
-enum GrunnForManglendePersonligOppmøte {
-    SykMedLegeerklæringOgFullmakt = 'SykMedLegeerklæringOgFullmakt',
-    OppnevntVergeSøktPerPost = 'OppnevntVergeSøktPerPost',
-    KortvarigSykMedLegeerklæring = 'KortvarigSykdomMedLegeerklæring',
-    MidlertidigUnntakFraOppmøteplikt = 'MidlertidigUnntakFraOppmøteplikt',
-    BrukerIkkeMøttOppfyllerIkkeVilkår = 'BrukerIkkeMøttOppfyllerIkkeVilkår',
-}
-
-enum HarMøttPersonlig {
-    Ja = 'Ja',
-    Nei = 'Nei',
-    Uavklart = 'Uavklart',
-}
-
-interface FormData {
-    møttPersonlig: Nullable<HarMøttPersonlig>;
-    grunnForManglendePersonligOppmøte: Nullable<GrunnForManglendePersonligOppmøte>;
-}
+import { FormData, HarMøttPersonlig, ManglendeOppmøteGrunn, schema } from './types';
 
 const eqFormData = struct<FormData>({
     møttPersonlig: eqNullable(S.Eq),
     grunnForManglendePersonligOppmøte: eqNullable(S.Eq),
 });
-
-const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøteType>> = {
-    equals: (personligOppmøte1, personligOppmøte2) => personligOppmøte1?.status === personligOppmøte2?.status,
-};
-
-const schema = yup
-    .object<FormData>({
-        møttPersonlig: yup
-            .mixed<HarMøttPersonlig>()
-            .oneOf(Object.values(HarMøttPersonlig), 'Du må velge om bruker har møtt personlig')
-            .required()
-            .typeError('Du må svare for å gå videre til neste steg.'),
-        grunnForManglendePersonligOppmøte: yup
-            .mixed<Nullable<GrunnForManglendePersonligOppmøte>>()
-            .nullable()
-            .defined()
-            .when('møttPersonlig', {
-                is: HarMøttPersonlig.Nei,
-                then: yup
-                    .mixed()
-                    .oneOf(
-                        Object.values(GrunnForManglendePersonligOppmøte),
-                        'Du må velge hvorfor bruker ikke har møtt personlig'
-                    )
-                    .required(),
-                otherwise: yup.mixed().nullable().defined(),
-            }),
-    })
-    .required();
-
-const getInitialFormValues = (personligOppmøteFraBehandlingsinformasjon: Nullable<PersonligOppmøteType>): FormData => {
-    if (!personligOppmøteFraBehandlingsinformasjon) {
-        return {
-            møttPersonlig: null,
-            grunnForManglendePersonligOppmøte: null,
-        };
-    }
-    switch (personligOppmøteFraBehandlingsinformasjon.status) {
-        case PersonligOppmøteStatus.MøttPersonlig:
-            return {
-                møttPersonlig: HarMøttPersonlig.Ja,
-                grunnForManglendePersonligOppmøte: null,
-            };
-
-        case PersonligOppmøteStatus.IkkeMøttMenVerge:
-            return {
-                møttPersonlig: HarMøttPersonlig.Nei,
-                grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.OppnevntVergeSøktPerPost,
-            };
-
-        case PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
-            return {
-                møttPersonlig: HarMøttPersonlig.Nei,
-                grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.SykMedLegeerklæringOgFullmakt,
-            };
-
-        case PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring:
-            return {
-                møttPersonlig: HarMøttPersonlig.Nei,
-                grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.KortvarigSykMedLegeerklæring,
-            };
-
-        case PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
-            return {
-                møttPersonlig: HarMøttPersonlig.Nei,
-                grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.MidlertidigUnntakFraOppmøteplikt,
-            };
-
-        case PersonligOppmøteStatus.IkkeMøttPersonlig:
-            return {
-                møttPersonlig: HarMøttPersonlig.Nei,
-                grunnForManglendePersonligOppmøte: GrunnForManglendePersonligOppmøte.BrukerIkkeMøttOppfyllerIkkeVilkår,
-            };
-
-        case PersonligOppmøteStatus.Uavklart:
-            return {
-                møttPersonlig: HarMøttPersonlig.Uavklart,
-                grunnForManglendePersonligOppmøte: null,
-            };
-    }
-};
-
-const toPersonligOppmøteStatus = (formData: FormData): Nullable<PersonligOppmøteStatus> => {
-    if (formData.møttPersonlig === HarMøttPersonlig.Ja) {
-        return PersonligOppmøteStatus.MøttPersonlig;
-    }
-
-    if (formData.møttPersonlig === HarMøttPersonlig.Uavklart) {
-        return PersonligOppmøteStatus.Uavklart;
-    }
-
-    switch (formData.grunnForManglendePersonligOppmøte) {
-        case GrunnForManglendePersonligOppmøte.OppnevntVergeSøktPerPost:
-            return PersonligOppmøteStatus.IkkeMøttMenVerge;
-        case GrunnForManglendePersonligOppmøte.SykMedLegeerklæringOgFullmakt:
-            return PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt;
-        case GrunnForManglendePersonligOppmøte.KortvarigSykMedLegeerklæring:
-            return PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring;
-        case GrunnForManglendePersonligOppmøte.MidlertidigUnntakFraOppmøteplikt:
-            return PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt;
-        case GrunnForManglendePersonligOppmøte.BrukerIkkeMøttOppfyllerIkkeVilkår:
-            return PersonligOppmøteStatus.IkkeMøttPersonlig;
-        case null:
-            return null;
-    }
-};
-
-const tilOppdatertVilkårsinformasjon = (
-    søknadstema: Sakstype,
-    values: FormData,
-    behandlingsinformasjon: Behandlingsinformasjon,
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
-): Vilkårsinformasjon[] | 'personligOppmøteIkkeVurdert' => {
-    const s = toPersonligOppmøteStatus(values);
-    if (!s) {
-        return 'personligOppmøteIkkeVurdert';
-    }
-    return mapToVilkårsinformasjon(
-        søknadstema,
-        {
-            ...behandlingsinformasjon,
-            personligOppmøte: {
-                status: s,
-            },
-        },
-        grunnlagsdataOgVilkårsvurderinger
-    );
-};
-
-const erAlleVilkårVurdert = (vilkårsinformasjon: Vilkårsinformasjon[]): boolean =>
-    vilkårsinformasjon.every((x) => x.status !== VilkårVurderingStatus.IkkeVurdert);
-
-const erVurdertUtenAvslagMenIkkeFerdigbehandlet = (vilkårsinformasjon: Vilkårsinformasjon[]): boolean => {
-    return (
-        erAlleVilkårVurdert(vilkårsinformasjon) &&
-        vilkårsinformasjon.every((x) => x.status !== VilkårVurderingStatus.IkkeOk) &&
-        vilkårsinformasjon.some((x) => x.status === VilkårVurderingStatus.Uavklart)
-    );
-};
-
-const erFerdigbehandletMedAvslag = (vilkårsinformasjon: Vilkårsinformasjon[]): boolean => {
-    return (
-        erAlleVilkårVurdert(vilkårsinformasjon) &&
-        vilkårsinformasjon.some((x) => x.status === VilkårVurderingStatus.IkkeOk)
-    );
-};
 
 const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakstype }) => {
     const navigate = useNavigate();
@@ -237,37 +71,16 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
         [watch, props.behandling.behandlingsinformasjon, props.behandling.grunnlagsdataOgVilkårsvurderinger]
     );
 
-    const handleSave = async (values: FormData, onSuccess: (res: Behandling) => void) => {
+    const save = async (values: FormData, onSuccess: (res: Behandling) => void) => {
         const personligOppmøteStatus = toPersonligOppmøteStatus(values);
         if (!personligOppmøteStatus) {
             return;
         }
-
-        const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(
-            props.sakstype,
-            values,
-            props.behandling.behandlingsinformasjon,
-            props.behandling.grunnlagsdataOgVilkårsvurderinger
-        );
-
         if (
-            vilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
-            erVurdertUtenAvslagMenIkkeFerdigbehandlet(vilkårsinformasjon) &&
-            advarselRef.current
-        ) {
-            advarselRef.current.focus();
-            return;
-        }
-
-        if (
-            eqPersonligOppmøte.equals(
-                { status: personligOppmøteStatus },
-                props.behandling.behandlingsinformasjon.personligOppmøte
-            ) &&
+            personligOppmøteStatus === props.behandling.behandlingsinformasjon.personligOppmøte?.status &&
             !erVilkårsvurderingerVurdertAvslag(props.behandling)
         ) {
             clearDraft();
-            navigate(props.nesteUrl);
             return;
         }
 
@@ -286,6 +99,28 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                 onSuccess(res);
             }
         );
+    };
+
+    const handleSave = async (values: FormData, onSuccess: (res: Behandling) => void) => {
+        const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(
+            props.sakstype,
+            values,
+            props.behandling.behandlingsinformasjon,
+            props.behandling.grunnlagsdataOgVilkårsvurderinger
+        );
+
+        if (
+            vilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
+            erVurdertUtenAvslagMenIkkeFerdigbehandlet(vilkårsinformasjon)
+        ) {
+            advarselRef.current?.focus();
+            return;
+        }
+
+        await save(values, (res) => {
+            clearDraft();
+            onSuccess(res);
+        });
     };
 
     const onSuccess = (res: Behandling) =>
@@ -362,52 +197,29 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                                                 value={field.value ?? ''}
                                                 onChange={field.onChange}
                                             >
-                                                {[
-                                                    {
-                                                        label: formatMessage(
-                                                            'radio.personligOppmøte.grunn.sykMedLegeerklæringOgFullmakt'
-                                                        ),
-                                                        radioValue:
-                                                            GrunnForManglendePersonligOppmøte.SykMedLegeerklæringOgFullmakt,
-                                                    },
-                                                    {
-                                                        label: formatMessage(
-                                                            'radio.personligOppmøte.grunn.oppnevntVergeSøktPerPost'
-                                                        ),
-                                                        radioValue:
-                                                            GrunnForManglendePersonligOppmøte.OppnevntVergeSøktPerPost,
-                                                    },
-                                                    {
-                                                        label: formatMessage(
-                                                            'radio.personligOppmøte.grunn.kortvarigSykMedLegeerklæring'
-                                                        ),
-                                                        radioValue:
-                                                            GrunnForManglendePersonligOppmøte.KortvarigSykMedLegeerklæring,
-                                                    },
-                                                    {
-                                                        label: formatMessage(
-                                                            'radio.personligOppmøte.grunn.midlertidigUnntakFraOppmøteplikt'
-                                                        ),
-                                                        radioValue:
-                                                            GrunnForManglendePersonligOppmøte.MidlertidigUnntakFraOppmøteplikt,
-                                                    },
-                                                    {
-                                                        label: formatMessage(
-                                                            'radio.personligOppmøte.grunn.brukerIkkeMøttOppfyllerIkkeVilkår'
-                                                        ),
-                                                        radioValue:
-                                                            GrunnForManglendePersonligOppmøte.BrukerIkkeMøttOppfyllerIkkeVilkår,
-                                                    },
-                                                ].map(({ label, radioValue }, idx) => (
-                                                    <Radio
-                                                        id={idx === 0 ? field.name : undefined}
-                                                        ref={idx === 0 ? field.ref : undefined}
-                                                        key={radioValue}
-                                                        value={radioValue}
-                                                    >
-                                                        {label}
-                                                    </Radio>
-                                                ))}
+                                                <Radio
+                                                    id={field.name}
+                                                    ref={field.ref}
+                                                    value={ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt}
+                                                >
+                                                    {formatMessage(ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt)}
+                                                </Radio>
+                                                <Radio value={ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost}>
+                                                    {formatMessage(ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost)}
+                                                </Radio>
+                                                <Radio value={ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring}>
+                                                    {formatMessage(ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring)}
+                                                </Radio>
+                                                <Radio value={ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt}>
+                                                    {formatMessage(
+                                                        ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt
+                                                    )}
+                                                </Radio>
+                                                <Radio value={ManglendeOppmøteGrunn.BrukerIkkeMøttOppfyllerIkkeVilkår}>
+                                                    {formatMessage(
+                                                        ManglendeOppmøteGrunn.BrukerIkkeMøttOppfyllerIkkeVilkår
+                                                    )}
+                                                </Radio>
                                             </RadioGroup>
                                         )}
                                     />
