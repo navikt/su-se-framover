@@ -28,8 +28,8 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
-import { Vurderingknapper } from '~src/pages/saksbehandling/søknadsbehandling/vurderingknapper/Vurderingknapper';
 import { useAppDispatch } from '~src/redux/Store';
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
@@ -341,22 +341,23 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 () => null
                             )
                         )}
-                        <Vurderingknapper
-                            onTilbakeClick={() => {
-                                navigate(props.forrigeUrl);
-                            }}
-                            onNesteClick={() => {
-                                handleNesteClick();
-                            }}
-                            onLagreOgFortsettSenereClick={() => {
+                        <Navigasjonsknapper
+                            tilbake={{ url: props.forrigeUrl, visModal: false }}
+                            onNesteClick={() => handleNesteClick()}
+                            loading={
+                                RemoteData.isPending(lagreFradragstatus) ||
+                                RemoteData.isPending(beregningStatus) ||
+                                RemoteData.isPending(simuleringStatus)
+                            }
+                            onLagreOgFortsettSenereClick={() =>
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
                                         lagreFradragOgBeregn(formik.values, () => {
                                             navigate(props.avsluttUrl);
                                         });
                                     }
-                                });
-                            }}
+                                })
+                            }
                         />
                     </form>
                 ),

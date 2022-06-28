@@ -17,6 +17,7 @@ export const Navigasjonsknapper = ({
     loading?: boolean;
     onLagreOgFortsettSenereClick?: () => void;
     nesteKnappTekst?: string;
+    onNesteClick?: () => void;
 }) => {
     const navigate = useNavigate();
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
@@ -66,7 +67,14 @@ export const Navigasjonsknapper = ({
                 ) : (
                     <Tilbake />
                 )}
-                <Button onClick={() => setKnappTrykket('neste')} loading={knappTrykket === 'neste' && props.loading}>
+                <Button
+                    onClick={() => {
+                        setKnappTrykket('neste');
+                        props.onNesteClick?.();
+                    }}
+                    type={props.onNesteClick ? 'button' : 'submit'}
+                    loading={knappTrykket === 'neste' && props.loading}
+                >
                     {props.nesteKnappTekst ? props.nesteKnappTekst : formatMessage('knapp.neste')}
                 </Button>
             </div>
