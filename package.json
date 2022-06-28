@@ -49,7 +49,7 @@
         "@navikt/ds-css": "^0.18.18",
         "@navikt/ds-css-internal": "^0.7.7",
         "@navikt/ds-icons": "^0.8.17",
-        "@navikt/ds-react": "^0.19.14",
+        "@navikt/ds-react": "^0.19.15",
         "@navikt/ds-react-internal": "^0.14.15",
         "@radix-ui/react-tabs": "^0.1.5",
         "@reduxjs/toolkit": "^1.8.2",
