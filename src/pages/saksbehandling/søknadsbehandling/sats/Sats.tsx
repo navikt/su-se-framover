@@ -1,15 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Loader, Label } from '@navikt/ds-react';
+import { Button, Label, Loader } from '@navikt/ds-react';
 import * as B from 'fp-ts/boolean';
-import { Eq, struct } from 'fp-ts/lib/Eq';
-import React, { useEffect, useMemo, useRef } from 'react';
+import { struct } from 'fp-ts/lib/Eq';
+import React, { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { Person, fetchPerson } from '~src/api/personApi';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { fetchPerson, Person } from '~src/api/personApi';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import { SatsFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
@@ -17,22 +15,19 @@ import { Personkort } from '~src/components/personkort/Personkort';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreBosituasjonGrunnlag } from '~src/features/saksoversikt/sak.slice';
-import { focusAfterTimeout } from '~src/lib/formUtils';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
-import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import yup from '~src/lib/validering';
+import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Sats as FaktiskSats } from '~src/types/Sats';
-import { SøknadInnhold } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurderingknapper } from '../vurderingknapper/Vurderingknapper';
 
 import messages from './sats-nb';
 import * as styles from './sats.module.less';
@@ -55,35 +50,12 @@ const eqFormData = struct<FormData>({
     mottarEktemakeEllerSamboerSU: eqNullable(B.Eq),
 });
 
-interface SatsProps {
+interface SatsProps extends VilkårsvurderingBaseProps {
     behandlingId: string;
     eps: Nullable<Person>;
     bosituasjon: Nullable<Bosituasjon>;
-    søknadInnhold: SøknadInnhold;
-    forrigeUrl: string;
-    nesteUrl: string;
-    sakId: string;
     formatMessage: MessageFormatter<typeof sharedI18n & typeof messages>;
 }
-
-const eqBosituasjon: Eq<
-    Nullable<{
-        delerBolig: Nullable<boolean>;
-        ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
-    }>
-> = eqNullable({
-    equals: (sats1, sats2) =>
-        sats1.delerBolig === sats2.delerBolig &&
-        sats1.ektemakeEllerSamboerUførFlyktning === sats2.ektemakeEllerSamboerUførFlyktning,
-});
-
-const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>) => {
-    return {
-        fnr: eps?.fnr ?? null,
-        delerBolig: values.delerSøkerBolig,
-        ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
-    };
-};
 
 const tilBosituasjonsValg = (values: FormData, eps: Nullable<Person>): Nullable<BosituasjonsValg> => {
     if (eps && eps.alder) {
@@ -179,11 +151,8 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 behandlingId={props.behandling.id}
                 eps={null}
                 bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger) ?? null}
-                søknadInnhold={props.behandling.søknad.søknadInnhold}
-                forrigeUrl={props.forrigeUrl}
-                nesteUrl={props.nesteUrl}
-                sakId={props.sakId}
                 formatMessage={formatMessage}
+                {...props}
             />
         );
     }
@@ -209,11 +178,8 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                     behandlingId={props.behandling.id}
                     eps={eps}
                     bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger) ?? null}
-                    søknadInnhold={props.behandling.søknad.søknadInnhold}
-                    forrigeUrl={props.forrigeUrl}
-                    nesteUrl={props.nesteUrl}
-                    sakId={props.sakId}
                     formatMessage={formatMessage}
+                    {...props}
                 />
             )
         )
@@ -232,8 +198,6 @@ function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasj
 }
 
 const SatsForm = (props: SatsProps) => {
-    const navigate = useNavigate();
-    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const [status, lagreBosituasjon] = useAsyncActionCreator(lagreBosituasjonGrunnlag);
 
     const eps = props.eps;
@@ -245,10 +209,7 @@ const SatsForm = (props: SatsProps) => {
         (values) => eqFormData.equals(values, initialValues)
     );
 
-    const {
-        formState: { isSubmitted, isValid, errors },
-        ...form
-    } = useForm({
+    const form = useForm({
         defaultValues: draft ?? initialValues,
         resolver: yupResolver(getValidationSchema(eps)),
     });
@@ -259,17 +220,9 @@ const SatsForm = (props: SatsProps) => {
 
     const sats = useMemo(() => utledSats(watch, Boolean(eps), eps?.alder), [eps, watch]);
 
-    const handleSave = (nesteUrl: string) => async (values: FormData) => {
+    const handleSave = async (values: FormData, onSuccess: () => void) => {
         const bosituasjonsvalg = tilBosituasjonsValg(values, eps);
         if (!bosituasjonsvalg) {
-            return;
-        }
-
-        const bosituasjonsgrunnlag = tilBosituasjonsgrunnlag(values, eps);
-
-        if (eqBosituasjon.equals(bosituasjonsgrunnlag, props.bosituasjon)) {
-            clearDraft();
-            navigate(nesteUrl);
             return;
         }
 
@@ -281,7 +234,7 @@ const SatsForm = (props: SatsProps) => {
             },
             () => {
                 clearDraft();
-                navigate(nesteUrl);
+                onSuccess();
             }
         );
     };
@@ -290,65 +243,58 @@ const SatsForm = (props: SatsProps) => {
         <ToKolonner tittel={props.formatMessage('page.tittel')}>
             {{
                 left: (
-                    <form
-                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
-                        className={styles.formContainer}
+                    <SøknadsbehandlingWrapper
+                        form={form}
+                        save={handleSave}
+                        savingState={status}
+                        avsluttUrl={props.avsluttUrl}
+                        forrigeUrl={props.forrigeUrl}
+                        nesteUrl={props.nesteUrl}
                     >
-                        {eps && (
-                            <div>
-                                <Label spacing>{props.formatMessage('display.eps.label')}</Label>
-                                <Personkort person={eps} />
-                            </div>
-                        )}
-                        {!eps && (
-                            <Controller
-                                control={form.control}
-                                name="delerSøkerBolig"
-                                render={({ field, fieldState }) => (
-                                    <BooleanRadioGroup
-                                        legend={props.formatMessage('radio.delerSøkerBoligOver18.legend')}
-                                        error={fieldState.error?.message}
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        )}
-                        {eps?.alder && eps.alder < 67 && (
-                            <Controller
-                                control={form.control}
-                                name="mottarEktemakeEllerSamboerSU"
-                                render={({ field, fieldState }) => (
-                                    <BooleanRadioGroup
-                                        legend={props.formatMessage('radio.ektemakeEllerSamboerUførFlyktning.legend')}
-                                        error={fieldState.error?.message}
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        )}
-                        {sats && (
-                            <Label className={styles.sats}>{`${props.formatMessage('display.sats')} ${sats}`}</Label>
-                        )}
-                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-                        <Feiloppsummering
-                            tittel={props.formatMessage('feiloppsummering.title')}
-                            hidden={!isSubmitted || isValid}
-                            feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            ref={feiloppsummeringRef}
-                        />
-                        <Vurderingknapper
-                            onTilbakeClick={() => {
-                                navigate(props.forrigeUrl);
-                            }}
-                            onLagreOgFortsettSenereClick={form.handleSubmit(
-                                handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
-                                focusAfterTimeout(feiloppsummeringRef)
+                        <>
+                            {eps && (
+                                <div>
+                                    <Label spacing>{props.formatMessage('display.eps.label')}</Label>
+                                    <Personkort person={eps} />
+                                </div>
                             )}
-                            loading={RemoteData.isPending(status)}
-                        />
-                    </form>
+                            {!eps && (
+                                <Controller
+                                    control={form.control}
+                                    name="delerSøkerBolig"
+                                    render={({ field, fieldState }) => (
+                                        <BooleanRadioGroup
+                                            legend={props.formatMessage('radio.delerSøkerBoligOver18.legend')}
+                                            error={fieldState.error?.message}
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            )}
+                            {eps?.alder && eps.alder < 67 && (
+                                <Controller
+                                    control={form.control}
+                                    name="mottarEktemakeEllerSamboerSU"
+                                    render={({ field, fieldState }) => (
+                                        <BooleanRadioGroup
+                                            legend={props.formatMessage(
+                                                'radio.ektemakeEllerSamboerUførFlyktning.legend'
+                                            )}
+                                            error={fieldState.error?.message}
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            )}
+                            {sats && (
+                                <Label className={styles.sats}>{`${props.formatMessage(
+                                    'display.sats'
+                                )} ${sats}`}</Label>
+                            )}
+                        </>
+                    </SøknadsbehandlingWrapper>
                 ),
-                right: <SatsFaktablokk søknadInnhold={props.søknadInnhold} />,
+                right: <SatsFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </ToKolonner>
     );
