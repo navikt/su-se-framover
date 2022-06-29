@@ -128,6 +128,7 @@ export const revurderingstegrekkefølge = [
     RevurderingSteg.Utenlandsopphold,
     RevurderingSteg.EndringAvFradrag,
     RevurderingSteg.Opplysningsplikt,
+    RevurderingSteg.Oppholdstillatelse,
 ];
 
 export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) => {
@@ -144,8 +145,10 @@ export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) =
             return InformasjonSomRevurderes.Utenlandsopphold;
         case RevurderingSteg.Opplysningsplikt:
             return InformasjonSomRevurderes.Opplysningsplikt;
+        case RevurderingSteg.Oppholdstillatelse:
+            return InformasjonSomRevurderes.Oppholdstillatelse;
     }
-    return null;
+    throw new Error('ukjent revurderingssteg som skal mappes');
 };
 
 export const finnNesteRevurderingsteg = (

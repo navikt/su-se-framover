@@ -37,6 +37,7 @@ const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFr
 const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 const Opplysningsplikt = React.lazy(() => import('./opplysningsplikt/Opplysningsplikt'));
+const Oppholdstillatelse = React.lazy(() => import('./oppholdstillatelse/LovligOpphold'));
 
 const RevurderingPage = () => {
     const { sak } = useOutletContext<AttesteringContext>();
@@ -244,6 +245,17 @@ const RevurderingstegPage = (props: {
                             <Opplysningsplikt
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                                 {...stegProps}
+                            />
+                        )}
+
+                        {props.steg === RevurderingSteg.Oppholdstillatelse && (
+                            <Oppholdstillatelse
+                                sakId={props.sakId}
+                                revurdering={props.informasjonsRevurdering}
+                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
+                                forrige={props.forrige}
+                                nesteUrl={props.nesteUrl}
+                                avsluttUrl={props.avsluttUrl}
                             />
                         )}
                     </div>
