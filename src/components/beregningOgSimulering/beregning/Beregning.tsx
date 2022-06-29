@@ -342,7 +342,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                             )
                         )}
                         <Navigasjonsknapper
-                            tilbake={{ url: props.forrigeUrl, visModal: false }}
+                            tilbake={{ url: props.forrigeUrl }}
                             onNesteClick={() => handleNesteClick()}
                             loading={
                                 RemoteData.isPending(lagreFradragstatus) ||

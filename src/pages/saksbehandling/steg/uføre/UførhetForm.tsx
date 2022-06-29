@@ -20,12 +20,13 @@ interface Props {
     form: UseFormReturn<FormData>;
     minDate: Nullable<Date>;
     maxDate: Nullable<Date>;
-    forrige: { url: string; visModal: boolean };
+    forrigeUrl: string;
     nesteUrl: string;
     avsluttUrl: string;
     onFormSubmit: (values: FormData, onSuccess: () => void) => void;
     savingState: ApiResult<Uføregrunnlag | Behandling>;
     erSaksbehandling: boolean;
+    onTilbakeClickOverride?: () => void;
 }
 
 export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Props) => {
@@ -65,9 +66,9 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
             save={onFormSubmit}
             savingState={savingState}
             avsluttUrl={props.avsluttUrl}
-            forrigeUrl={props.forrige.url}
-            visModal={props.forrige.visModal}
+            forrigeUrl={props.forrigeUrl}
             nesteUrl={props.nesteUrl}
+            onTilbakeClickOverride={props.onTilbakeClickOverride}
         >
             <>
                 <ul className={styles.periodeliste}>

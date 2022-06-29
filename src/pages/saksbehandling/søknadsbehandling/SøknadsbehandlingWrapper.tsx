@@ -23,10 +23,11 @@ interface Props<T, U> {
     onSuccess?: (res: U) => void;
     avsluttUrl: string;
     forrigeUrl: string;
+    onTilbakeClickOverride?: () => void;
     nesteUrl: string;
-    visModal?: boolean;
     children: ReactElement;
     nesteKnappTekst?: string;
+    className?: string;
 }
 
 export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behandling>({
@@ -36,9 +37,13 @@ export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behan
     const { formatMessage } = useI18n({ messages: stegSharedI18n });
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+    const tilbake = props.onTilbakeClickOverride
+        ? { onTilbakeClick: props.onTilbakeClickOverride }
+        : { url: props.forrigeUrl };
 
     return (
         <form
+            className={props.className ?? ''}
             onSubmit={form.handleSubmit((values) =>
                 props.save(values, (res) => {
                     props.onSuccess && res ? props.onSuccess(res) : navigate(props.nesteUrl);
@@ -55,7 +60,7 @@ export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behan
             />
             {RemoteData.isFailure(props.savingState) && <ApiErrorAlert error={props.savingState.error} />}
             <Navigasjonsknapper
-                tilbake={{ url: props.forrigeUrl, visModal: props.visModal ?? false }}
+                tilbake={tilbake}
                 onLagreOgFortsettSenereClick={form.handleSubmit((values) =>
                     props.save(values, () => navigate(props.avsluttUrl))
                 )}

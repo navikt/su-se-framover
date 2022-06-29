@@ -7,16 +7,13 @@ import { useOutletContext } from 'react-router-dom';
 
 import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import Framdriftsindikator, {
-    Linje,
-    Linjestatus,
-    Seksjon,
-} from '~src/components/framdriftsindikator/Framdriftsindikator';
+import Framdriftsindikator, { Linje, Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
 import { pipe } from '~src/lib/fp';
 import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
+import NullstillRevurderingVarsel from '~src/pages/saksbehandling/revurdering/advarselReset/NullstillRevurderingVarsel';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 import {
@@ -121,20 +118,6 @@ const RevurderingPage = () => {
         return <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>;
     }
 
-    const forrigeOgNesteUrl = (
-        aktivtSteg: RevurderingSteg | undefined
-    ): { forrige: { url: string; visModal: boolean }; neste: string } => {
-        const steg = aktiveSteg(påbegyntRevurdering);
-        const idx = steg.findIndex((s) => s.id === aktivtSteg);
-        const forrigeUrl = steg[idx - 1]?.url;
-
-        const forrige = forrigeUrl
-            ? { url: forrigeUrl, visModal: false }
-            : { url: createRevurderingsPath(RevurderingSteg.Periode), visModal: true };
-        const neste = steg[idx + 1]?.url ?? createRevurderingsPath(RevurderingSteg.Oppsummering);
-        return { forrige, neste };
-    };
-
     return (
         <div className={styles.pageContainer}>
             <Heading level="1" size="large" className={styles.tittel}>
@@ -157,14 +140,10 @@ const RevurderingPage = () => {
             {urlParams.steg !== RevurderingSteg.Periode && urlParams.steg !== RevurderingSteg.Oppsummering && (
                 <RevurderingstegPage
                     steg={urlParams.steg}
+                    revurderingId={påbegyntRevurdering.id}
                     sakId={props.sakId}
                     aktiveSteg={aktiveSteg(påbegyntRevurdering)}
                     informasjonsRevurdering={påbegyntRevurdering}
-                    forrige={forrigeOgNesteUrl(urlParams.steg).forrige}
-                    nesteUrl={forrigeOgNesteUrl(urlParams.steg).neste}
-                    avsluttUrl={routes.saksoversiktValgtSak.createURL({
-                        sakId: props.sakId,
-                    })}
                     grunnlagsdataOgVilkårsvurderinger={gjeldendeData}
                 />
             )}
@@ -174,16 +153,42 @@ const RevurderingPage = () => {
 
 const RevurderingstegPage = (props: {
     steg: RevurderingSteg | undefined;
-    forrige: { url: string; visModal: boolean };
-    aktiveSteg: Array<Linje | Seksjon>;
-    nesteUrl: string;
-    avsluttUrl: string;
+    revurderingId: string;
+    aktiveSteg: Linje[];
     sakId: string;
     informasjonsRevurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: ApiResult<{
         grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     }>;
 }) => {
+    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+
+    const createRevurderingsPath = (steg: RevurderingSteg) => {
+        return routes.revurderValgtRevurdering.createURL({
+            sakId: props.sakId,
+            steg: steg,
+            revurderingId: props.revurderingId,
+        });
+    };
+
+    const idx = props.aktiveSteg.findIndex((s) => s.id === props.steg);
+    const erFørstesteg = idx === 0;
+    const forrigeUrl = props.aktiveSteg[idx - 1]?.url ?? createRevurderingsPath(RevurderingSteg.Periode);
+    const nesteUrl = props.aktiveSteg[idx + 1]?.url ?? createRevurderingsPath(RevurderingSteg.Oppsummering);
+
+    const avsluttUrl = routes.saksoversiktValgtSak.createURL({
+        sakId: props.sakId,
+    });
+
+    const stegProps = {
+        sakId: props.sakId,
+        revurdering: props.informasjonsRevurdering,
+        forrigeUrl: forrigeUrl,
+        nesteUrl: nesteUrl,
+        onTilbakeClickOverride: erFørstesteg ? () => setModalOpen(true) : undefined,
+        avsluttUrl: avsluttUrl,
+    };
+
     return pipe(
         props.grunnlagsdataOgVilkårsvurderinger,
         RemoteData.fold(
@@ -198,64 +203,47 @@ const RevurderingstegPage = (props: {
                 return (
                     <div className={styles.sideMedFramdriftsindikatorContainer}>
                         {props.steg && <Framdriftsindikator aktivId={props.steg} elementer={props.aktiveSteg} />}
+                        {erFørstesteg && (
+                            <NullstillRevurderingVarsel
+                                isOpen={modalOpen}
+                                onClose={() => setModalOpen(false)}
+                                tilbakeUrl={forrigeUrl}
+                            />
+                        )}
                         {props.steg === RevurderingSteg.Uførhet && (
                             <Uførhet
-                                sakId={props.sakId}
-                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                forrige={props.forrige}
-                                nesteUrl={props.nesteUrl}
-                                avsluttUrl={props.avsluttUrl}
+                                {...stegProps}
                             />
                         )}
                         {props.steg === RevurderingSteg.Bosituasjon && (
                             <BosituasjonPage
-                                sakId={props.sakId}
-                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                nesteUrl={props.nesteUrl}
-                                forrige={props.forrige}
-                                avsluttUrl={props.avsluttUrl}
+                                {...stegProps}
                             />
                         )}
                         {props.steg === RevurderingSteg.Formue && (
                             <Formue
-                                sakId={props.sakId}
-                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                forrige={props.forrige}
-                                nesteUrl={props.nesteUrl}
-                                avsluttUrl={props.avsluttUrl}
+                                {...stegProps}
                             />
                         )}
                         {props.steg === RevurderingSteg.EndringAvFradrag && (
                             <EndringAvFradrag
-                                sakId={props.sakId}
-                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                forrige={props.forrige}
-                                nesteUrl={props.nesteUrl}
-                                avsluttUrl={props.avsluttUrl}
+                                {...stegProps}
                             />
                         )}
                         {props.steg === RevurderingSteg.Utenlandsopphold && (
                             <UtenlandsoppholdPage
-                                sakId={props.sakId}
-                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                forrige={props.forrige}
-                                nesteUrl={props.nesteUrl}
-                                avsluttUrl={props.avsluttUrl}
+                                {...stegProps}
                             />
                         )}
                         {props.steg === RevurderingSteg.Opplysningsplikt && (
                             <Opplysningsplikt
-                                sakId={props.sakId}
-                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                forrige={props.forrige}
-                                nesteUrl={props.nesteUrl}
-                                avsluttUrl={props.avsluttUrl}
+                                {...stegProps}
                             />
                         )}
                     </div>

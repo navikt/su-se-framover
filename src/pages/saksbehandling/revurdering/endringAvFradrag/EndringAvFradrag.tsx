@@ -204,7 +204,11 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
                             )}
                             <Navigasjonsknapper
-                                tilbake={props.forrige}
+                                tilbake={
+                                    props.onTilbakeClickOverride
+                                        ? { onTilbakeClick: props.onTilbakeClickOverride }
+                                        : { url: props.forrigeUrl }
+                                }
                                 onLagreOgFortsettSenereClick={() => {
                                     setHasSubmitted(true);
                                     customFormikSubmit(formik, () =>

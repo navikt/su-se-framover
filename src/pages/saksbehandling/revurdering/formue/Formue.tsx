@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Panel, Accordion, Button, TextField, Heading, Label, BodyShort, Loader } from '@navikt/ds-react';
+import { Accordion, BodyShort, Button, Heading, Label, Loader, Panel, TextField } from '@navikt/ds-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Control,
@@ -13,11 +13,8 @@ import {
     UseFormTrigger,
     UseFormWatch,
 } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import * as personApi from '~src/api/personApi';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { Personkort } from '~src/components/personkort/Personkort';
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
@@ -26,8 +23,8 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreFormuegrunnlag } from '~src/features/revurdering/revurderingActions';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
 import {
     Bosituasjon,
     bosituasjonPåDato,
@@ -39,7 +36,6 @@ import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 import { regnUtFormDataVerdier, verdierId } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 import sharedFormueMessages from '~src/utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
-import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
@@ -57,18 +53,10 @@ import {
 
 const Formue = (props: RevurderingStegProps) => {
     const formuegrenser = props.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
-    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
 
-    const {
-        control,
-        trigger,
-        handleSubmit,
-        watch,
-        setValue,
-        formState: { errors, isValid, isSubmitted },
-    } = useForm<FormueFormData>({
+    const form = useForm<FormueFormData>({
         defaultValues: getDefaultValues(
             props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue,
             props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon
@@ -78,21 +66,17 @@ const Formue = (props: RevurderingStegProps) => {
 
     const formueArray = useFieldArray({
         name: 'formue',
-        control: control,
+        control: form.control,
     });
 
-    const lagreFormuegrunnlaget = (data: FormueFormData, gåtil: 'neste' | 'avbryt') => {
+    const lagreFormuegrunnlaget = (data: FormueFormData, onSuccess: () => void) => {
         lagreFormuegrunnlagAction(
             {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 formue: formueFormDataTilFormuegrunnlagRequest(data.formue),
             },
-            (res) => {
-                if (res.feilmeldinger.length === 0) {
-                    navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl);
-                }
-            }
+            onSuccess
         );
     };
 
@@ -100,67 +84,60 @@ const Formue = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form
-                        onSubmit={handleSubmit((values) => lagreFormuegrunnlaget(values, 'neste'))}
+                    <SøknadsbehandlingWrapper
+                        form={form}
+                        save={lagreFormuegrunnlaget}
+                        savingState={lagreFormuegrunnlagStatus}
+                        avsluttUrl={props.avsluttUrl}
+                        forrigeUrl={props.forrigeUrl}
+                        nesteUrl={props.nesteUrl}
+                        onTilbakeClickOverride={props.onTilbakeClickOverride}
                         className={styles.container}
                     >
-                        <ul className={styles.formueBlokkContainer}>
-                            {formueArray.fields.map((field, index) => (
-                                <li key={field.id}>
-                                    <Panel border>
-                                        <FormueBlokk
-                                            revurderingsperiode={props.revurdering.periode}
-                                            blokkIndex={index}
-                                            blokkField={field}
-                                            bosituasjonsgrunnlag={
-                                                props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon
-                                            }
-                                            formueArrayLengde={formueArray.fields.length}
-                                            formController={control}
-                                            triggerValidation={trigger}
-                                            onSlettClick={() => formueArray.remove(index)}
-                                            formuegrenser={formuegrenser}
-                                            watch={watch}
-                                            update={(idx: number, data: FormueData) => {
-                                                setValue(`formue.${idx}`, data);
-                                            }}
-                                            errors={errors}
-                                        />
-                                    </Panel>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className={styles.nyPeriodeKnappContainer}>
-                            <Button
-                                variant="secondary"
-                                type="button"
-                                size="small"
-                                onClick={() => {
-                                    formueArray.append(getTomFormueData());
-                                }}
-                            >
-                                {formatMessage('knapp.nyPeriode')}
-                            </Button>
-                        </div>
-                        <Feiloppsummering
-                            tittel={formatMessage('feiloppsummering.tittel')}
-                            feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            hidden={isValid || !isSubmitted}
-                        />
-                        {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
-                            <ApiErrorAlert error={lagreFormuegrunnlagStatus.error} />
-                        )}
-                        {RemoteData.isSuccess(lagreFormuegrunnlagStatus) && (
-                            <UtfallSomIkkeStøttes feilmeldinger={lagreFormuegrunnlagStatus.value.feilmeldinger} />
-                        )}
-                        <Navigasjonsknapper
-                            tilbake={props.forrige}
-                            loading={RemoteData.isPending(lagreFormuegrunnlagStatus)}
-                            onLagreOgFortsettSenereClick={handleSubmit((values) =>
-                                lagreFormuegrunnlaget(values, 'avbryt')
+                        <>
+                            <ul className={styles.formueBlokkContainer}>
+                                {formueArray.fields.map((field, index) => (
+                                    <li key={field.id}>
+                                        <Panel border>
+                                            <FormueBlokk
+                                                revurderingsperiode={props.revurdering.periode}
+                                                blokkIndex={index}
+                                                blokkField={field}
+                                                bosituasjonsgrunnlag={
+                                                    props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon
+                                                }
+                                                formueArrayLengde={formueArray.fields.length}
+                                                formController={form.control}
+                                                triggerValidation={form.trigger}
+                                                onSlettClick={() => formueArray.remove(index)}
+                                                formuegrenser={formuegrenser}
+                                                watch={form.watch}
+                                                update={(idx: number, data: FormueData) => {
+                                                    form.setValue(`formue.${idx}`, data);
+                                                }}
+                                                errors={form.formState.errors}
+                                            />
+                                        </Panel>
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className={styles.nyPeriodeKnappContainer}>
+                                <Button
+                                    variant="secondary"
+                                    type="button"
+                                    size="small"
+                                    onClick={() => {
+                                        formueArray.append(getTomFormueData());
+                                    }}
+                                >
+                                    {formatMessage('knapp.nyPeriode')}
+                                </Button>
+                            </div>
+                            {RemoteData.isSuccess(lagreFormuegrunnlagStatus) && (
+                                <UtfallSomIkkeStøttes feilmeldinger={lagreFormuegrunnlagStatus.value.feilmeldinger} />
                             )}
-                        />
-                    </form>
+                        </>
+                    </SøknadsbehandlingWrapper>
                 ),
                 right: (
                     <div>

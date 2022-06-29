@@ -64,7 +64,6 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                         form={form}
                         savingState={lagreBehandlingsinformasjonStatus}
                         erSaksbehandling={true}
-                        forrige={{ url: props.forrigeUrl, visModal: false }}
                         {...props}
                     />
                 ),
