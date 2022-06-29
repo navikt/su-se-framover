@@ -11,9 +11,10 @@ import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
-import * as styles from '~src/pages/saksbehandling/steg/uføre/uførhet.module.less';
 import stegSharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
 import { Behandling } from '~src/types/Behandling';
+
+import * as styles from './søknadsbehandlingWrapper.module.less';
 
 interface Props<T, U> {
     form: UseFormReturn<T>;
@@ -44,7 +45,7 @@ export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behan
                 })
             )}
         >
-            {props.children}
+            <div className={styles.containerElement}>{props.children}</div>
             <Feiloppsummering
                 tittel={formatMessage('feiloppsummering.title')}
                 className={styles.feiloppsummering}

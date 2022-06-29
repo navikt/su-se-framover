@@ -9,7 +9,7 @@ import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
-import HenterInnhold from '~src/components/henterInnhold/HenterInnhold';
+import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { pipe } from '~src/lib/fp';
@@ -205,17 +205,11 @@ const RevurderingOppsummeringPage = (props: {
         }
     }, [props.revurdering.id]);
 
-    const HenterInnholdLocal = () => (
-        <div className={styles.henterInnholdContainer}>
-            <HenterInnhold />
-        </div>
-    );
-
     return pipe(
         RemoteData.combine(beregningStatus, gjeldendeData),
         RemoteData.fold(
-            () => <HenterInnholdLocal />,
-            () => <HenterInnholdLocal />,
+            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
+            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
             (err) => (
                 <div className={styles.content}>
                     <ApiErrorAlert error={err} />

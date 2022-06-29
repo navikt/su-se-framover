@@ -21,7 +21,6 @@ import { SøknadInnholdUføre } from '~src/types/Søknad';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
-import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './flyktning-nb';
@@ -112,7 +111,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
                     >
-                        <div className={sharedStyles.containerElement}>
+                        <>
                             <Controller
                                 control={form.control}
                                 name="status"
@@ -155,7 +154,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                                     {formatMessage('display.avslag.advarsel')}
                                 </Alert>
                             )}
-                        </div>
+                        </>
                     </SøknadsbehandlingWrapper>
                 ),
                 right: <FlyktningFaktablokk søknadInnhold={props.søknadInnhold} />,

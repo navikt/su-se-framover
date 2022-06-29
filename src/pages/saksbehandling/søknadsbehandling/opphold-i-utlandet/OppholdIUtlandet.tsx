@@ -20,7 +20,6 @@ import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import sharedI18n from '../sharedI18n-nb';
-import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './oppholdIUtlandet-nb';
@@ -102,36 +101,34 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
                     >
-                        <div className={sharedStyles.containerElement}>
-                            <Controller
-                                control={form.control}
-                                name="status"
-                                render={({ field, fieldState }) => (
-                                    <RadioGroup
-                                        legend={formatMessage('radio.oppholdIUtland.legend')}
-                                        error={fieldState.error?.message}
-                                        onBlur={field.onBlur}
-                                        onChange={field.onChange}
-                                        name={field.name}
-                                        value={field.value ?? ''}
+                        <Controller
+                            control={form.control}
+                            name="status"
+                            render={({ field, fieldState }) => (
+                                <RadioGroup
+                                    legend={formatMessage('radio.oppholdIUtland.legend')}
+                                    error={fieldState.error?.message}
+                                    onBlur={field.onBlur}
+                                    onChange={field.onChange}
+                                    name={field.name}
+                                    value={field.value ?? ''}
+                                >
+                                    <Radio
+                                        id={field.name}
+                                        ref={field.ref}
+                                        value={Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet}
                                     >
-                                        <Radio
-                                            id={field.name}
-                                            ref={field.ref}
-                                            value={Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet}
-                                        >
-                                            {formatMessage('radio.label.ja')}
-                                        </Radio>
-                                        <Radio value={Utenlandsoppholdstatus.SkalHoldeSegINorge}>
-                                            {formatMessage('radio.label.nei')}
-                                        </Radio>
-                                        <Radio value={Utenlandsoppholdstatus.Uavklart}>
-                                            {formatMessage('radio.label.uavklart')}
-                                        </Radio>
-                                    </RadioGroup>
-                                )}
-                            />
-                        </div>
+                                        {formatMessage('radio.label.ja')}
+                                    </Radio>
+                                    <Radio value={Utenlandsoppholdstatus.SkalHoldeSegINorge}>
+                                        {formatMessage('radio.label.nei')}
+                                    </Radio>
+                                    <Radio value={Utenlandsoppholdstatus.Uavklart}>
+                                        {formatMessage('radio.label.uavklart')}
+                                    </Radio>
+                                </RadioGroup>
+                            )}
+                        />
                     </SøknadsbehandlingWrapper>
                 ),
                 right: <UtenlandsOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,

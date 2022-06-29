@@ -19,7 +19,6 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
-import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './lovligOppholdINorge-nb';
@@ -92,31 +91,27 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
                     >
-                        <div className={sharedStyles.containerElement}>
-                            <Controller
-                                control={form.control}
-                                name="status"
-                                render={({ field, fieldState }) => (
-                                    <RadioGroup
-                                        legend={formatMessage('radio.lovligOpphold.legend')}
-                                        error={fieldState.error?.message}
-                                        onBlur={field.onBlur}
-                                        onChange={field.onChange}
-                                        value={field.value ?? ''}
-                                    >
-                                        <Radio id={field.name} value={Vilkårstatus.VilkårOppfylt} ref={field.ref}>
-                                            {formatMessage('radio.label.ja')}
-                                        </Radio>
-                                        <Radio value={Vilkårstatus.VilkårIkkeOppfylt}>
-                                            {formatMessage('radio.label.nei')}
-                                        </Radio>
-                                        <Radio value={Vilkårstatus.Uavklart}>
-                                            {formatMessage('radio.label.uavklart')}
-                                        </Radio>
-                                    </RadioGroup>
-                                )}
-                            />
-                        </div>
+                        <Controller
+                            control={form.control}
+                            name="status"
+                            render={({ field, fieldState }) => (
+                                <RadioGroup
+                                    legend={formatMessage('radio.lovligOpphold.legend')}
+                                    error={fieldState.error?.message}
+                                    onBlur={field.onBlur}
+                                    onChange={field.onChange}
+                                    value={field.value ?? ''}
+                                >
+                                    <Radio id={field.name} value={Vilkårstatus.VilkårOppfylt} ref={field.ref}>
+                                        {formatMessage('radio.label.ja')}
+                                    </Radio>
+                                    <Radio value={Vilkårstatus.VilkårIkkeOppfylt}>
+                                        {formatMessage('radio.label.nei')}
+                                    </Radio>
+                                    <Radio value={Vilkårstatus.Uavklart}>{formatMessage('radio.label.uavklart')}</Radio>
+                                </RadioGroup>
+                            )}
+                        />
                     </SøknadsbehandlingWrapper>
                 ),
                 right: <LovligOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
