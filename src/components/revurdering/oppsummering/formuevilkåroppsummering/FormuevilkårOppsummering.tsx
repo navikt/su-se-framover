@@ -1,4 +1,3 @@
-import { BodyShort } from '@navikt/ds-react';
 import React from 'react';
 
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
@@ -23,66 +22,68 @@ const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår }) =>
 );
 
 export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFormue }) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const søker = vurdering.grunnlag.søkersFormue;
     const eps = vurdering.grunnlag.epsFormue;
 
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <OppsummeringPar
                 className={styles.gjeldendePeriode}
-                label={intl.formatMessage({ id: 'gjeldendeformue.gjeldendePeriode' })}
+                label={formatMessage('gjeldendeformue.gjeldendePeriode')}
                 verdi={DateUtils.formatPeriode(vurdering.periode)}
             />
-            <div className={styles.titler}>
-                <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.søker' })}</BodyShort>
-                {eps && <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.eps' })}</BodyShort>}
-            </div>
             <OppsummeringPar
                 className={styles.oppsummeringstriple}
-                label={intl.formatMessage({ id: 'gjeldendeformue.verdiBolig' })}
+                label={''}
+                verdi={formatMessage('gjeldendeformue.søker')}
+                triple={eps ? formatMessage('gjeldendeformue.eps') : undefined}
+            />
+            <OppsummeringPar
+                className={styles.oppsummeringstriple}
+                label={formatMessage('gjeldendeformue.verdiBolig')}
                 verdi={søker.verdiIkkePrimærbolig}
                 triple={eps?.verdiIkkePrimærbolig}
             />
             <OppsummeringPar
                 className={styles.oppsummeringstriple}
-                label={intl.formatMessage({ id: 'gjeldendeformue.verdiEiendom' })}
+                label={formatMessage('gjeldendeformue.verdiEiendom')}
                 verdi={søker.verdiEiendommer}
                 triple={eps?.verdiEiendommer}
             />
             <OppsummeringPar
                 className={styles.oppsummeringstriple}
-                label={intl.formatMessage({ id: 'gjeldendeformue.verdiKjøretøy' })}
+                label={formatMessage('gjeldendeformue.verdiKjøretøy')}
                 verdi={søker.verdiKjøretøy}
                 triple={eps?.verdiKjøretøy}
             />
             <OppsummeringPar
                 className={styles.oppsummeringstriple}
-                label={intl.formatMessage({ id: 'gjeldendeformue.innskudd' })}
+                label={formatMessage('gjeldendeformue.innskudd')}
                 verdi={søker.innskudd}
                 triple={eps?.innskudd}
             />
             <OppsummeringPar
                 className={styles.oppsummeringstriple}
-                label={intl.formatMessage({ id: 'gjeldendeformue.verdiPapir' })}
+                label={formatMessage('gjeldendeformue.verdiPapir')}
                 verdi={søker.verdipapir}
                 triple={eps?.verdipapir}
             />
             <OppsummeringPar
                 className={styles.oppsummeringstriple}
-                label={intl.formatMessage({ id: 'gjeldendeformue.stårNoenIGjeldTilDeg' })}
+                label={formatMessage('gjeldendeformue.stårNoenIGjeldTilDeg')}
                 verdi={søker.pengerSkyldt}
                 triple={eps?.pengerSkyldt}
             />
             <OppsummeringPar
                 className={styles.oppsummeringstriple}
-                label={intl.formatMessage({ id: 'gjeldendeformue.kontanter' })}
+                label={formatMessage('gjeldendeformue.kontanter')}
                 verdi={søker.kontanter}
                 triple={eps?.kontanter}
             />
             <OppsummeringPar
                 className={styles.oppsummeringstriple}
-                label={intl.formatMessage({ id: 'gjeldendeformue.depositum' })}
+                label={formatMessage('gjeldendeformue.depositum')}
                 verdi={søker.depositumskonto}
                 triple={eps?.depositumskonto}
             />

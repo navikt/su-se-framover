@@ -134,6 +134,7 @@ const Formue = (props: RevurderingStegProps) => {
                             <Button
                                 variant="secondary"
                                 type="button"
+                                size="small"
                                 onClick={() => {
                                     formueArray.append(getTomFormueData());
                                 }}

@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button } from '@navikt/ds-react';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
+import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { pipe } from '~src/lib/fp';
@@ -207,8 +208,8 @@ const RevurderingOppsummeringPage = (props: {
     return pipe(
         RemoteData.combine(beregningStatus, gjeldendeData),
         RemoteData.fold(
-            () => <Loader title={formatMessage('beregner.label')} />,
-            () => <Loader title={formatMessage('beregner.label')} />,
+            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
+            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
             (err) => (
                 <div className={styles.content}>
                     <ApiErrorAlert error={err} />

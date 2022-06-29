@@ -35,7 +35,6 @@ import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from 
 
 import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
-import * as sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
@@ -136,7 +135,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
             {{
                 left: (
                     <form
-                        className={sharedStyles.revurderingContainer}
                         onSubmit={(e) => {
                             setHasSubmitted(true);
                             formik.handleSubmit(e);

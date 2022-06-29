@@ -4,60 +4,7 @@
     margin-bottom: @spacing-xs;
 }
 
-.oppsummeringsContainer {
-    > div {
-        margin-bottom: @spacing-xxs;
-    }
-}
-
 .oppsummeringstriple {
-    p {
-        flex: 0.5;
-        text-align: end;
-    }
-
-    > p:first-child {
-        flex: 1;
-        text-align: left;
-    }
-}
-
-.titler {
-    display: flex;
-    margin-bottom: @spacing-xxs;
-
-    :last-child {
-        margin-left: @spacing-xxs;
-        width: 5rem;
-        border-left: 1px solid @navBorder;
-        padding-left: @spacing-xxs;
-    }
-
-    :first-child {
-        margin-left: auto;
-        width: fit-content;
-        border-left: none;
-    }
-}
-
-.formueInfo {
-    > :not(:last-child) {
-        margin-bottom: @spacing-xxs;
-    }
-}
-
-.formueVerdier {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-.epsContainer {
-    display: flex;
-
-    > :not(:last-child) {
-        margin-right: @spacing-xs;
-        padding-right: @spacing;
-        border-right: @navBorder 2px solid;
-    }
+    display: grid;
+    grid-template-columns: 15rem 5rem 5rem;
 }

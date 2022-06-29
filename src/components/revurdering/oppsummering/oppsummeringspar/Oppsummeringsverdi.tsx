@@ -35,7 +35,7 @@ export const OppsummeringPar = ({
     return (
         <div className={classNames(styles.oppsummeringspar, className)}>
             <BodyShort>{label}</BodyShort>
-            <Label>{verdi ?? ''}</Label>
+            <Label className={classNames({ [styles.verdi]: triple !== undefined })}>{verdi ?? ''}</Label>
             {triple !== null && triple !== undefined && <Label>{triple}</Label>}
         </div>
     );
