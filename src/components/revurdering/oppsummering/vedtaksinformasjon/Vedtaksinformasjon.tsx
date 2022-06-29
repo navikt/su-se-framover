@@ -86,11 +86,12 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår }) => (
             const bekreftetFormue = søkersFormue + epsFormue;
 
             return (
-                <li key={vurdering.id}>
+                <li key={vurdering.id} className={styles.formueVilkårResultatContainer}>
                     <Formuevurdering vurdering={vurdering} />
                     <Formuestatus
                         bekreftetFormue={bekreftetFormue}
                         erVilkårOppfylt={vurdering.resultat === FormueStatus.VilkårOppfylt}
+                        skalVisesSomOppsummering
                     />
                 </li>
             );

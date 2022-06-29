@@ -1,4 +1,4 @@
-import { Heading, Ingress } from '@navikt/ds-react';
+import { BodyShort, Label } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -9,13 +9,11 @@ import messages from './revurderingsperiodeheader-nb';
 import * as styles from './revurderingsperiodeheader.module.less';
 
 const RevurderingsperiodeHeader = (props: { periode: Periode<string> }) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     return (
         <div className={styles.container}>
-            <Heading level="2" size="large" spacing>
-                {intl.formatMessage({ id: 'heading' })}
-            </Heading>
-            <Ingress>{DateUtils.formatPeriode(props.periode)}</Ingress>
+            <BodyShort>{formatMessage('heading')}:</BodyShort>
+            <Label>{DateUtils.formatPeriode(props.periode)}</Label>
         </div>
     );
 };

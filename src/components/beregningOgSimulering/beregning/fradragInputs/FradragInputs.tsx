@@ -1,13 +1,12 @@
 import { Delete } from '@navikt/ds-icons';
-import { BodyShort, Button, Checkbox, Fieldset, Label, Panel, Select, TextField } from '@navikt/ds-react';
-import classNames from 'classnames';
+import { Button, Checkbox, Label, Panel, Select, TextField } from '@navikt/ds-react';
 import { lastDayOfMonth } from 'date-fns';
 import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
 import React from 'react';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
-import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { InputWithFollowText } from '~src/components/inputWithFollowText/InputWithFollowText';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable, KeyDict } from '~src/lib/types';
 import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
@@ -43,37 +42,6 @@ const FradragObjectKeys: KeyDict<FradragFormData> = {
     tilhørerEPS: 'tilhørerEPS',
     periode: 'periode',
 };
-
-const InputWithFollowText = (props: {
-    tittel: string;
-    inputName: string;
-    inputTekst: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    feil: string | undefined;
-    disabled?: boolean;
-}) => (
-    <div className={classNames('navds-form-field')}>
-        <Label as="label" htmlFor={props.inputName} spacing>
-            {props.tittel}
-        </Label>
-        <span className={styles.inputOgtekstContainer}>
-            <TextField
-                className={styles.inputWithFollowTextInputfelt}
-                id={props.inputName}
-                label={props.tittel}
-                name={props.inputName}
-                value={props.value}
-                onChange={props.onChange}
-                disabled={props.disabled}
-                error={!!props.feil}
-                hideLabel
-            />
-            <BodyShort>{props.inputTekst}</BodyShort>
-        </span>
-        {props.feil && <SkjemaelementFeilmelding>{props.feil}</SkjemaelementFeilmelding>}
-    </div>
-);
 
 const FradragsSelection = (props: {
     label: string;
@@ -200,7 +168,15 @@ export const FradragInputs = (props: {
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
-                        <Fieldset legend="Fradrag" hideLegend={false}>
+                        <div>
+                            <div className={styles.tittelOgSøppelbøtteContainer}>
+                                <Label>{formatMessage('fradrag.heading')}</Label>
+                                <div className={styles.søppelbøtteContainer}>
+                                    <Button variant="secondary" type="button" onClick={() => props.onFjernClick(index)}>
+                                        <Delete />
+                                    </Button>
+                                </div>
+                            </div>
                             <div className={styles.fradragTypeOgBelopContainer}>
                                 <div className={styles.fradragTypeOgBelopInputs}>
                                     <FradragsSelection
@@ -228,11 +204,6 @@ export const FradragInputs = (props: {
                                         }
                                         disabled={fradrag.fraUtland}
                                     />
-                                </div>
-                                <div className={styles.søppelbøtteContainer}>
-                                    <Button variant="secondary" type="button" onClick={() => props.onFjernClick(index)}>
-                                        <Delete />
-                                    </Button>
                                 </div>
                             </div>
                             {fradrag.kategori === VelgbareFradragskategorier.Annet && (
@@ -360,7 +331,7 @@ export const FradragInputs = (props: {
                                     }}
                                 />
                             )}
-                        </Fieldset>
+                        </div>
                     </Panel>
                 );
             })}

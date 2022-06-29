@@ -19,6 +19,7 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './institusjonsopphold-nb';
@@ -95,26 +96,32 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
                     >
-                        <Controller
-                            control={form.control}
-                            name="status"
-                            render={({ field, fieldState }) => (
-                                <RadioGroup
-                                    legend={formatMessage('radio.institusjonsoppholdFørerTilAvslag.legend')}
-                                    error={fieldState.error?.message}
-                                    onBlur={field.onBlur}
-                                    name={field.name}
-                                    value={field.value ?? ''}
-                                    onChange={field.onChange}
-                                >
-                                    <Radio id={field.name} value={Vilkårstatus.VilkårIkkeOppfylt} ref={field.ref}>
-                                        {formatMessage('radio.label.ja')}
-                                    </Radio>
-                                    <Radio value={Vilkårstatus.VilkårOppfylt}>{formatMessage('radio.label.nei')}</Radio>
-                                    <Radio value={Vilkårstatus.Uavklart}>{formatMessage('radio.label.uavklart')}</Radio>
-                                </RadioGroup>
-                            )}
-                        />
+                        <div className={sharedStyles.containerElement}>
+                            <Controller
+                                control={form.control}
+                                name="status"
+                                render={({ field, fieldState }) => (
+                                    <RadioGroup
+                                        legend={formatMessage('radio.institusjonsoppholdFørerTilAvslag.legend')}
+                                        error={fieldState.error?.message}
+                                        onBlur={field.onBlur}
+                                        name={field.name}
+                                        value={field.value ?? ''}
+                                        onChange={field.onChange}
+                                    >
+                                        <Radio id={field.name} value={Vilkårstatus.VilkårIkkeOppfylt} ref={field.ref}>
+                                            {formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={Vilkårstatus.VilkårOppfylt}>
+                                            {formatMessage('radio.label.nei')}
+                                        </Radio>
+                                        <Radio value={Vilkårstatus.Uavklart}>
+                                            {formatMessage('radio.label.uavklart')}
+                                        </Radio>
+                                    </RadioGroup>
+                                )}
+                            />
+                        </div>
                     </SøknadsbehandlingWrapper>
                 ),
                 right: <InstitusjonsoppholdBlokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
