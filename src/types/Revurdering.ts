@@ -269,7 +269,8 @@ export interface RevurderingStegProps {
     sakId: string;
     revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-    forrige: { url: string; visModal: boolean };
+    onTilbakeClickOverride?: () => void;
+    forrigeUrl: string;
     nesteUrl: string;
     avsluttUrl: string;
 }

@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useI18n } from '~src/lib/i18n';
 
-import NullstillRevurderingVarsel from '../revurdering/advarselReset/NullstillRevurderingVarsel';
-
 import messages from './navigasjonsknapper-nb';
 import * as styles from './navigasjonsknapper.module.less';
 
@@ -13,40 +11,24 @@ export const Navigasjonsknapper = ({
     onLagreOgFortsettSenereClick,
     ...props
 }: {
-    tilbake: { url: string; visModal: boolean } | { onTilbakeClick: () => void };
+    tilbake: { url: string } | { onTilbakeClick: () => void };
     loading?: boolean;
     onLagreOgFortsettSenereClick?: () => void;
     nesteKnappTekst?: string;
     onNesteClick?: () => void;
 }) => {
     const navigate = useNavigate();
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const { formatMessage } = useI18n({ messages });
     const [knappTrykket, setKnappTrykket] = useState<'neste' | 'avslutt' | undefined>(undefined);
 
     const Tilbake = () => {
         const { tilbake } = props;
-        if (tilbake === undefined) return <></>;
         const tilbakeknapp = (onClick: () => void) => (
             <Button onClick={onClick} variant="secondary" type="button">
                 {formatMessage('knapp.tilbake')}
             </Button>
         );
-        if ('url' in tilbake) {
-            return tilbake.visModal ? (
-                <>
-                    {tilbakeknapp(() => setModalOpen(true))}
-                    <NullstillRevurderingVarsel
-                        isOpen={modalOpen}
-                        onClose={() => setModalOpen(false)}
-                        tilbakeUrl={tilbake.url}
-                    />
-                </>
-            ) : (
-                tilbakeknapp(() => navigate(tilbake.url))
-            );
-        }
-        return tilbakeknapp(tilbake.onTilbakeClick);
+        return tilbakeknapp(() => ('url' in tilbake ? navigate(tilbake.url) : tilbake.onTilbakeClick()));
     };
 
     return (

@@ -1,12 +1,9 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import { Button, Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -15,10 +12,10 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
+import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
@@ -59,7 +56,6 @@ const schemaValidation = yup.object<UtenlandsoppholdForm>({
 
 const Utenlandsopphold = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...stegmessages, ...revurderingmessages } });
-    const navigate = useNavigate();
     const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger ?? [
         { status: undefined, begrunnelse: null, periode: props.revurdering.periode },
     ];
@@ -77,7 +73,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
     });
     const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
 
-    const handleSubmit = async (form: UtenlandsoppholdForm, gåtil: 'neste' | 'avbryt') => {
+    const handleSubmit = async (form: UtenlandsoppholdForm, onSuccess: () => void) => {
         lagre(
             {
                 sakId: props.sakId,
@@ -90,7 +86,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                     },
                 })),
             },
-            () => navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
+            onSuccess
         );
     };
 
@@ -108,92 +104,94 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form
+                    <SøknadsbehandlingWrapper
+                        form={form}
+                        save={handleSubmit}
+                        savingState={status}
+                        avsluttUrl={props.avsluttUrl}
+                        forrigeUrl={props.forrigeUrl}
+                        nesteUrl={props.nesteUrl}
+                        onTilbakeClickOverride={props.onTilbakeClickOverride}
                         className={sharedStyles.revurderingContainer}
-                        onSubmit={form.handleSubmit((values) => handleSubmit(values, 'neste'))}
                     >
-                        {fields.map((utenlandsopphold, index) => (
-                            <Panel border key={utenlandsopphold.id} className={styles.panel}>
-                                <div className={styles.periodeOgSlett}>
-                                    {fields.length > 1 && (
-                                        <Button
-                                            variant="secondary"
-                                            className={styles.søppelbøtte}
-                                            type="button"
-                                            onClick={() => remove(index)}
-                                            size="small"
-                                            aria-label={formatMessage('periode.slett')}
-                                        >
-                                            <Delete />
-                                        </Button>
-                                    )}
+                        <>
+                            {fields.map((utenlandsopphold, index) => (
+                                <Panel border key={utenlandsopphold.id} className={styles.panel}>
+                                    <div className={styles.periodeOgSlett}>
+                                        {fields.length > 1 && (
+                                            <Button
+                                                variant="secondary"
+                                                className={styles.søppelbøtte}
+                                                type="button"
+                                                onClick={() => remove(index)}
+                                                size="small"
+                                                aria-label={formatMessage('periode.slett')}
+                                            >
+                                                <Delete />
+                                            </Button>
+                                        )}
 
+                                        <Controller
+                                            name={`utenlandsopphold.${index}.periode`}
+                                            control={form.control}
+                                            render={({ field }) => (
+                                                <PeriodeForm
+                                                    {...field}
+                                                    error={form.formState.errors.utenlandsopphold?.[index]?.periode}
+                                                    minDate={{
+                                                        fraOgMed: revurderingsperiode.fraOgMed,
+                                                        tilOgMed: revurderingsperiode.tilOgMed,
+                                                    }}
+                                                    maxDate={{
+                                                        fraOgMed: revurderingsperiode.fraOgMed,
+                                                        tilOgMed: revurderingsperiode.tilOgMed,
+                                                    }}
+                                                    size="S"
+                                                />
+                                            )}
+                                        />
+                                    </div>
                                     <Controller
-                                        name={`utenlandsopphold.${index}.periode`}
                                         control={form.control}
-                                        render={({ field }) => (
-                                            <PeriodeForm
-                                                {...field}
-                                                error={form.formState.errors.utenlandsopphold?.[index]?.periode}
-                                                minDate={{
-                                                    fraOgMed: revurderingsperiode.fraOgMed,
-                                                    tilOgMed: revurderingsperiode.tilOgMed,
-                                                }}
-                                                maxDate={{
-                                                    fraOgMed: revurderingsperiode.fraOgMed,
-                                                    tilOgMed: revurderingsperiode.tilOgMed,
-                                                }}
-                                                size="S"
-                                            />
+                                        name={`utenlandsopphold.${index}.status`}
+                                        render={({ field, fieldState }) => (
+                                            <RadioGroup
+                                                legend={formatMessage('radiobutton.tittel')}
+                                                error={fieldState.error?.message}
+                                                className={styles.radioGroup}
+                                                value={field.value ?? ''}
+                                                onChange={field.onChange}
+                                                name={field.name}
+                                            >
+                                                <Radio
+                                                    value={Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet}
+                                                    ref={field.ref}
+                                                >
+                                                    {formatMessage('radiobutton.utenlands')}
+                                                </Radio>
+                                                <Radio value={Utenlandsoppholdstatus.SkalHoldeSegINorge}>
+                                                    {formatMessage('radiobutton.innenlands')}
+                                                </Radio>
+                                            </RadioGroup>
                                         )}
                                     />
-                                </div>
-                                <Controller
-                                    control={form.control}
-                                    name={`utenlandsopphold.${index}.status`}
-                                    render={({ field, fieldState }) => (
-                                        <RadioGroup
-                                            legend={formatMessage('radiobutton.tittel')}
-                                            error={fieldState.error?.message}
-                                            className={styles.radioGroup}
-                                            value={field.value ?? ''}
-                                            onChange={field.onChange}
-                                            name={field.name}
-                                        >
-                                            <Radio
-                                                value={Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet}
-                                                ref={field.ref}
-                                            >
-                                                {formatMessage('radiobutton.utenlands')}
-                                            </Radio>
-                                            <Radio value={Utenlandsoppholdstatus.SkalHoldeSegINorge}>
-                                                {formatMessage('radiobutton.innenlands')}
-                                            </Radio>
-                                        </RadioGroup>
-                                    )}
-                                />
-                            </Panel>
-                        ))}
-                        <Button
-                            className={styles.nyPeriodeKnapp}
-                            variant="secondary"
-                            onClick={() =>
-                                append({
-                                    status: undefined,
-                                    periode: { tilOgMed: null, fraOgMed: null },
-                                })
-                            }
-                            type={'button'}
-                        >
-                            Ny periode for utenlandsopphold
-                        </Button>
-                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-                        <Navigasjonsknapper
-                            tilbake={props.forrige}
-                            loading={RemoteData.isPending(status)}
-                            onLagreOgFortsettSenereClick={form.handleSubmit((values) => handleSubmit(values, 'avbryt'))}
-                        />
-                    </form>
+                                </Panel>
+                            ))}
+                            <Button
+                                className={styles.nyPeriodeKnapp}
+                                variant="secondary"
+                                onClick={() =>
+                                    append({
+                                        status: undefined,
+                                        periode: { tilOgMed: null, fraOgMed: null },
+                                    })
+                                }
+                                type={'button'}
+                            >
+                                Ny periode for utenlandsopphold
+                            </Button>
+                        </>
+                    </SøknadsbehandlingWrapper>
                 ),
                 right: (
                     <div>

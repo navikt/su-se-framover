@@ -5,10 +5,7 @@ import { Button, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 import { Control, Controller, FieldErrors, useFieldArray, useForm, UseFormWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup, PeriodeForm } from '~src/components/formElements/FormElements';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -16,13 +13,11 @@ import { lagreBosituasjonsgrunnlag } from '~src/features/revurdering/revurdering
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
 import { NullablePeriode, Periode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
-import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import sharedMessages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
@@ -40,37 +35,27 @@ import {
 import GjeldendeBosituasjon from './GjeldendeBosituasjon';
 
 const BosituasjonPage = (props: RevurderingStegProps) => {
-    const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
-    const defaultVerdier = (bosituasjoner: Bosituasjon[]): BosituasjonFormItemData[] => {
-        return bosituasjoner.map((b) => bosituasjonTilFormItemData(b)) ?? [];
-    };
-
-    const {
-        control,
-        watch,
-        setValue,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<BosituasjonFormData>({
+    const form = useForm<BosituasjonFormData>({
         defaultValues: {
-            bosituasjoner: defaultVerdier(props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon),
+            bosituasjoner:
+                props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.map((b) =>
+                    bosituasjonTilFormItemData(b)
+                ) ?? [],
         },
         resolver: yupResolver(bosituasjonFormSchema),
     });
 
-    const lagreBosituasjon = (data: BosituasjonFormData, gåtil: 'neste' | 'avbryt') =>
+    const lagreBosituasjon = (data: BosituasjonFormData, onSuccess: () => void) =>
         lagre(
             {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 bosituasjoner: data.bosituasjoner.map((b) => ({
                     periode: {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         fraOgMed: DateUtils.toIsoDateOnlyString(b.periode.fraOgMed!),
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         tilOgMed: DateUtils.toIsoDateOnlyString(b.periode.tilOgMed!),
                     },
                     epsFnr: b.harEPS ? b.epsFnr : null,
@@ -78,11 +63,11 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                     erEPSUførFlyktning: b.harEPS && b.epsAlder && b.epsAlder < 67 ? b.erEPSUførFlyktning : null,
                 })),
             },
-            () => navigate(gåtil === 'neste' ? props.nesteUrl : props.avsluttUrl)
+            onSuccess
         );
 
     const items = useFieldArray({
-        control: control,
+        control: form.control,
         name: 'bosituasjoner',
     });
 
@@ -90,59 +75,54 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form
+                    <SøknadsbehandlingWrapper
+                        form={form}
+                        save={lagreBosituasjon}
+                        savingState={status}
+                        avsluttUrl={props.avsluttUrl}
+                        forrigeUrl={props.forrigeUrl}
+                        nesteUrl={props.nesteUrl}
+                        onTilbakeClickOverride={props.onTilbakeClickOverride}
                         className={classNames(sharedStyles.revurderingContainer, styles.container)}
-                        onSubmit={handleSubmit((values) => lagreBosituasjon(values, 'neste'))}
                     >
-                        <ul className={styles.periodeliste}>
-                            {items.fields.map((item, idx) => (
-                                <li key={item.id}>
-                                    <BosituasjonFormItem
-                                        controller={control}
-                                        watch={watch}
-                                        update={(idx: number, data: BosituasjonFormItemData) => {
-                                            setValue(`bosituasjoner.${idx}`, data);
-                                        }}
-                                        data={item}
-                                        index={idx}
-                                        onDelete={() => items.remove(idx)}
-                                        bosituasjonArrayLengde={items.fields.length}
-                                        revurderingsperiode={{
-                                            fraOgMed: props.revurdering.periode.fraOgMed,
-                                            tilOgMed: props.revurdering.periode.tilOgMed,
-                                        }}
-                                        errors={errors}
-                                    />
-                                </li>
-                            ))}
-                        </ul>
-                        <div className={styles.nyPeriodeKnappContainer}>
-                            <Button
-                                variant="secondary"
-                                type="button"
-                                onClick={() => items.append(nyBosituasjon(), { shouldFocus: true })}
-                            >
-                                {formatMessage('form.ny.bosituasjon')}
-                            </Button>
-                        </div>
-                        <Feiloppsummering
-                            tittel={formatMessage('feiloppsummering.title')}
-                            className={styles.feiloppsummering}
-                            feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            hidden={Object.values(errors).length <= 0}
-                        />
-                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-                        {RemoteData.isSuccess(status) && (
-                            <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
-                        )}
-                        <Navigasjonsknapper
-                            tilbake={props.forrige}
-                            loading={RemoteData.isPending(status)}
-                            onLagreOgFortsettSenereClick={handleSubmit((values: BosituasjonFormData) =>
-                                lagreBosituasjon(values, 'avbryt')
+                        <>
+                            <ul className={styles.periodeliste}>
+                                {items.fields.map((item, idx) => (
+                                    <li key={item.id}>
+                                        <BosituasjonFormItem
+                                            controller={form.control}
+                                            watch={form.watch}
+                                            update={(idx: number, data: BosituasjonFormItemData) => {
+                                                form.setValue(`bosituasjoner.${idx}`, data);
+                                            }}
+                                            data={item}
+                                            index={idx}
+                                            onDelete={() => items.remove(idx)}
+                                            bosituasjonArrayLengde={items.fields.length}
+                                            revurderingsperiode={{
+                                                fraOgMed: props.revurdering.periode.fraOgMed,
+                                                tilOgMed: props.revurdering.periode.tilOgMed,
+                                            }}
+                                            errors={form.formState.errors}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className={styles.nyPeriodeKnappContainer}>
+                                <Button
+                                    variant="secondary"
+                                    type="button"
+                                    onClick={() => items.append(nyBosituasjon(), { shouldFocus: true })}
+                                >
+                                    {formatMessage('form.ny.bosituasjon')}
+                                </Button>
+                            </div>
+
+                            {RemoteData.isSuccess(status) && (
+                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
                             )}
-                        />
-                    </form>
+                        </>
+                    </SøknadsbehandlingWrapper>
                 ),
                 right: (
                     <GjeldendeBosituasjon

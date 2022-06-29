@@ -222,7 +222,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                     <ApiErrorAlert error={props.oppdaterRevurderingStatus.error} />
                 )}
                 <Navigasjonsknapper
-                    tilbake={{ url: props.tilbakeUrl, visModal: false }}
+                    tilbake={{ url: props.tilbakeUrl }}
                     onLagreOgFortsettSenereClick={form.handleSubmit((values) =>
                         props.save(formToSubmit(values), 'avbryt')
                     )}
