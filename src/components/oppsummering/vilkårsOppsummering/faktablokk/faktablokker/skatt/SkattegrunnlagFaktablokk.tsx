@@ -10,6 +10,7 @@ import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { SamletSkattegrunnlag, SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { formatDateTime } from '~src/utils/date/dateUtils';
+import { formatCurrency } from '~src/utils/format/formatUtils';
 
 import Faktablokk from '../../Faktablokk';
 import styles from '../faktablokker.module.less';
@@ -91,7 +92,7 @@ const SkattemeldingFaktablokkComponent = ({
         .filter((skattegrunnlag) => skattegrunnlag.kategori.includes(kategori))
         .map((skattegrunnlag) => ({
             tittel: formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage),
-            verdi: skattegrunnlag.beløp.toString(),
+            verdi: formatCurrency(skattegrunnlag.beløp, { numDecimals: 0 }),
         }));
 
     if (filtrertSkattefakta.length === 0)
