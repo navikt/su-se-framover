@@ -7,6 +7,7 @@ export const informasjonSomRevurderes: { [key in InformasjonSomRevurderes]: stri
     [InformasjonSomRevurderes.Formue]: 'Formue',
     [InformasjonSomRevurderes.Utenlandsopphold]: 'Utenlandsopphold',
     [InformasjonSomRevurderes.Opplysningsplikt]: 'Opplysningsplikt',
+    [InformasjonSomRevurderes.LovligOpphold]: 'Lovlig opphold',
 };
 
 export default {
