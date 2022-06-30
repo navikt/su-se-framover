@@ -2,15 +2,14 @@ import { Delete } from '@navikt/ds-icons';
 import { Button, Panel } from '@navikt/ds-react';
 import React from 'react';
 import {
+    ArrayPath,
     Control,
     Controller,
     FieldArray,
-    FieldArrayWithId,
     FieldErrors,
     FieldValues,
     Path,
-    UseFieldArrayAppend,
-    UseFieldArrayRemove,
+    useFieldArray,
     useWatch,
 } from 'react-hook-form';
 
@@ -22,80 +21,84 @@ import messages from './multiPeriodeVelger-nb';
 import styles from './multiPeriodeVelger.module.less';
 
 interface Props<T, U> {
+    className?: string;
     name: string;
     controller: Control<T>;
-    fields: Array<FieldArrayWithId<T>>;
-    append: UseFieldArrayAppend<T>;
-    remove: UseFieldArrayRemove;
-    index: number;
-    update: (idx: number, data: U) => void;
     appendNyPeriode: () => U;
     periodeStuffs: {
         minFraOgMed: Date;
         maxTilOgMed: Date;
-        error?: FieldErrors<NullablePeriode>;
         size?: 'S' | 'L';
     };
-    children: React.ReactNode;
+    barn: (idx: number) => React.ReactNode;
     childrenOverDato?: boolean;
 }
 
 const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(props: Props<T, U>) => {
     const { formatMessage } = useI18n({ messages });
 
+    const { fields, append, remove, update } = useFieldArray({
+        name: props.name as ArrayPath<T>,
+        control: props.controller,
+    });
+
     const watch = useWatch({ name: props.name as Path<T>, control: props.controller });
 
-    const periodeInput = (
-        <Controller
-            control={props.controller}
-            name={`${name}.periode` as Path<T>}
-            render={({ field, fieldState }) => (
-                <PeriodeForm
-                    {...field}
-                    onChange={(periode: NullablePeriode) =>
-                        props.update(props.index, { ...watch[props.index], periode: periode })
-                    }
-                    minDate={{
-                        fraOgMed: props.periodeStuffs.minFraOgMed,
-                        tilOgMed: props.periodeStuffs.maxTilOgMed,
-                    }}
-                    maxDate={{
-                        fraOgMed: props.periodeStuffs.minFraOgMed,
-                        tilOgMed: props.periodeStuffs.maxTilOgMed,
-                    }}
-                    error={fieldState.error as FieldErrors<NullablePeriode>}
-                    size={props.periodeStuffs.size}
-                />
-            )}
-        />
-    );
-
     return (
-        <div>
-            <Panel className={styles.periodePanel}>
-                <div className={styles.periodeOgSøppelbøtteContainer}>
-                    {props.childrenOverDato ? props.children : periodeInput}
+        <div className={props.className}>
+            <ul>
+                {fields.map((el, idx) => {
+                    const watchedItem = watch[idx];
+                    const periodeInput = (
+                        <Controller
+                            control={props.controller}
+                            name={`${props.name}.${idx}.periode` as Path<T>}
+                            render={({ field, fieldState }) => (
+                                <PeriodeForm
+                                    name={`${props.name}.${idx}.periode`}
+                                    value={field.value}
+                                    onChange={(periode: NullablePeriode) => {
+                                        update(idx, { ...watchedItem, periode: periode });
+                                    }}
+                                    minDate={{
+                                        fraOgMed: props.periodeStuffs.minFraOgMed,
+                                        tilOgMed: props.periodeStuffs.maxTilOgMed,
+                                    }}
+                                    maxDate={{
+                                        fraOgMed: props.periodeStuffs.minFraOgMed,
+                                        tilOgMed: props.periodeStuffs.maxTilOgMed,
+                                    }}
+                                    error={fieldState.error as FieldErrors<NullablePeriode>}
+                                    size={props.periodeStuffs.size}
+                                />
+                            )}
+                        />
+                    );
 
-                    <Button
-                        variant="secondary"
-                        type="button"
-                        onClick={() => props.remove(props.index)}
-                        size="small"
-                        aria-label={formatMessage('knapp.fjernPeriode')}
-                    >
-                        <Delete />
-                    </Button>
-                </div>
-                {!props.childrenOverDato ? props.children : periodeInput}
-            </Panel>
+                    return (
+                        <li key={el.id}>
+                            <Panel className={styles.periodePanel}>
+                                <div className={styles.periodeOgSøppelbøtteContainer}>
+                                    {props.childrenOverDato ? props.barn(idx) : periodeInput}
 
+                                    <Button
+                                        variant="secondary"
+                                        type="button"
+                                        onClick={() => remove(idx)}
+                                        size="small"
+                                        aria-label={formatMessage('knapp.fjernPeriode')}
+                                    >
+                                        <Delete />
+                                    </Button>
+                                </div>
+                                {!props.childrenOverDato ? props.barn(idx) : periodeInput}
+                            </Panel>
+                        </li>
+                    );
+                })}
+            </ul>
             <div className={styles.nyPeriodeKnappContainer}>
-                <Button
-                    variant="secondary"
-                    type="button"
-                    size="small"
-                    onClick={() => props.append(props.appendNyPeriode())}
-                >
+                <Button variant="secondary" type="button" size="small" onClick={() => append(props.appendNyPeriode())}>
                     {formatMessage('knapp.nyPeriode')}
                 </Button>
             </div>

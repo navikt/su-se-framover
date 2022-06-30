@@ -1,18 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Delete } from '@navikt/ds-icons';
-import { Button, Panel } from '@navikt/ds-react';
 import React from 'react';
-import { useForm, useFieldArray, Controller, FieldErrors } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { PeriodeForm } from '~src/components/formElements/FormElements';
+import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
 import { lagreLovligOppholdVilkår } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { NullablePeriode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
@@ -42,7 +39,7 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
         tilOgMed: new Date(props.revurdering.periode.tilOgMed),
     };
 
-    const { control, handleSubmit, watch } = useForm<LovligOppholdVilkårForm>({
+    const { control, handleSubmit } = useForm<LovligOppholdVilkårForm>({
         resolver: yupResolver(lovligOppholdSchemaValidation),
         defaultValues: {
             lovligOpphold: vurderinger.map((vurdering) => ({
@@ -78,79 +75,29 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
         );
     };
 
-    const { fields, append, remove, update } = useFieldArray({
-        name: 'lovligOpphold',
-        control: control,
-    });
-
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
                     <form onSubmit={handleSubmit((values) => lagreLovligOpphold(values, 'neste'))}>
-                        <ul>
-                            {fields.map((el, idx) => {
-                                return (
-                                    <li key={el.id}>
-                                        <Panel className={styles.periodePanel}>
-                                            <div className={styles.periodeOgSøppelbøtteContainer}>
-                                                <Controller
-                                                    control={control}
-                                                    name={`lovligOpphold.${idx}.periode`}
-                                                    render={({ field, fieldState }) => (
-                                                        <PeriodeForm
-                                                            {...field}
-                                                            onChange={(periode: NullablePeriode) =>
-                                                                update(idx, {
-                                                                    ...watch().lovligOpphold[idx],
-                                                                    periode: periode,
-                                                                })
-                                                            }
-                                                            minDate={{
-                                                                fraOgMed: revurderingsperiode.fraOgMed,
-                                                                tilOgMed: revurderingsperiode.tilOgMed,
-                                                            }}
-                                                            maxDate={{
-                                                                fraOgMed: revurderingsperiode.fraOgMed,
-                                                                tilOgMed: revurderingsperiode.tilOgMed,
-                                                            }}
-                                                            error={fieldState.error as FieldErrors<NullablePeriode>}
-                                                            size="S"
-                                                        />
-                                                    )}
-                                                />
-
-                                                <Button
-                                                    variant="secondary"
-                                                    type="button"
-                                                    onClick={() => remove(idx)}
-                                                    size="small"
-                                                    aria-label={formatMessage('knapp.fjernPeriode')}
-                                                >
-                                                    <Delete />
-                                                </Button>
-                                            </div>
-
-                                            <VilkårsResultatRadioGroup
-                                                navnOgIdx={`lovligOpphold.${idx}.resultat`}
-                                                controller={control}
-                                                legend={formatMessage('lovligOpphold.harSøkerLovligOpphold')}
-                                            />
-                                        </Panel>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                        <div className={styles.nyPeriodeKnappContainer}>
-                            <Button
-                                variant="secondary"
-                                type="button"
-                                size="small"
-                                onClick={() => append(getTomVurderingsperiodeLovligOpphold())}
-                            >
-                                {formatMessage('knapp.nyPeriode')}
-                            </Button>
-                        </div>
+                        <MultiPeriodeVelger
+                            className={styles.multiPeriodeVelger}
+                            name={'lovligOpphold'}
+                            controller={control}
+                            appendNyPeriode={getTomVurderingsperiodeLovligOpphold}
+                            periodeStuffs={{
+                                minFraOgMed: revurderingsperiode.fraOgMed,
+                                maxTilOgMed: revurderingsperiode.tilOgMed,
+                                size: 'S',
+                            }}
+                            barn={(idx: number) => (
+                                <VilkårsResultatRadioGroup
+                                    navnOgIdx={`lovligOpphold.${idx}`}
+                                    controller={control}
+                                    legend={formatMessage('lovligOpphold.harSøkerLovligOpphold')}
+                                />
+                            )}
+                        />
                         <Navigasjonsknapper
                             tilbake={props.forrige}
                             loading={RemoteData.isPending(lagreLovligOppholdStatus)}

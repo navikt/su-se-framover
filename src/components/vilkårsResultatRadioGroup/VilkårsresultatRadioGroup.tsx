@@ -8,7 +8,7 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import messages from './vilkårsResultatRadioGroup-nb';
 
 interface Props<T> {
-    navnOgIdx: Path<T>;
+    navnOgIdx: string;
     controller: Control<T>;
     legend: string;
 }
