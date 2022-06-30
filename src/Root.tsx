@@ -1,7 +1,7 @@
 import { Loader } from '@navikt/ds-react';
 import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
 import { FeatureToggleProvider } from '~src/lib/featureToggles';
 import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
@@ -84,9 +84,9 @@ const Root = () => (
 const AppRoutes = () => (
     <Routes>
         <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
-        <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Soknad} />}>
+        <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Outlet} />}>
             <Route index element={<Søknadsvelger />} />
-            <Route path={routes.soknadtema.path}>
+            <Route path={routes.soknadtema.path} element={<Soknad />}>
                 <Route index element={<Infoside />} />
                 <Route path={routes.soknadPersonSøk.path} element={<Inngang />} />
                 <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
