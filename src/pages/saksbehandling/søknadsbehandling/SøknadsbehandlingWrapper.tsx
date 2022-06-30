@@ -1,10 +1,10 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import * as React from 'react';
 import { ReactElement } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { useNavigate } from 'react-router-dom';
 
-import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
-import { FieldValues } from '~node_modules/react-hook-form/dist/types/fields';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { ApiResult } from '~src/lib/hooks';

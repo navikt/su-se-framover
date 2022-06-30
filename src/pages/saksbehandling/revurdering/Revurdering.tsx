@@ -3,8 +3,8 @@ import { Alert, Heading, Loader } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
 import React from 'react';
+import { useOutletContext } from 'react-router-dom';
 
-import { useOutletContext } from '~node_modules/react-router-dom';
 import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, {

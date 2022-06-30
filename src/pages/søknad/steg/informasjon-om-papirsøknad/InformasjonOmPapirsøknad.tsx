@@ -2,10 +2,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { Controller } from '~node_modules/react-hook-form';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import søknadSlice, { ForVeilederPapirsøknad } from '~src/features/søknad/søknad.slice';

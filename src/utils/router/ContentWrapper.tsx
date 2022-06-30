@@ -1,7 +1,7 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Heading, Link, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 
-import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
-import { Heading, Link, Loader } from '~node_modules/@navikt/ds-react';
 import { ErrorCode } from '~src/api/apiClient';
 import { LOGIN_URL } from '~src/api/authUrl';
 import { FeatureToggle } from '~src/api/featureToggleApi';

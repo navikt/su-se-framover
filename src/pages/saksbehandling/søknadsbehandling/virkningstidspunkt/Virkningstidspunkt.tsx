@@ -1,13 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Loader } from '~node_modules/@navikt/ds-react';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import Faktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/Faktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';

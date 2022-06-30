@@ -1,7 +1,7 @@
 import { Alert, Heading, Panel } from '@navikt/ds-react';
 import React from 'react';
+import { useOutletContext } from 'react-router-dom';
 
-import { useOutletContext } from '~node_modules/react-router-dom';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
