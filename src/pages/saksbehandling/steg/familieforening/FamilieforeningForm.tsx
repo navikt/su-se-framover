@@ -1,8 +1,8 @@
+import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { Radio, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
-import { yupResolver } from '~node_modules/@hookform/resolvers/yup/dist/yup';
-import { Radio, RadioGroup } from '~node_modules/@navikt/ds-react';
-import { Controller, useForm } from '~node_modules/react-hook-form';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import messages from '~src/pages/saksbehandling/steg/familieforening/familieforening-nb';

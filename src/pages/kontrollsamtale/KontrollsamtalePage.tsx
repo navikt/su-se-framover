@@ -2,11 +2,11 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Back } from '@navikt/ds-icons';
 import { Alert, BodyLong, Button, Heading, Loader } from '@navikt/ds-react';
 import startOfTomorrow from 'date-fns/startOfTomorrow';
+import { isEmpty } from 'fp-ts/lib/Array';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { isEmpty } from '~node_modules/fp-ts/lib/Array';
 import { ApiError } from '~src/api/apiClient';
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
