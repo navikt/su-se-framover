@@ -8,34 +8,28 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import messages from './vilkårsResultatRadioGroup-nb';
 
 interface Props<T> {
-    name: Path<T>;
-    legend: string;
+    navnOgIdx: Path<T>;
     controller: Control<T>;
+    legend: string;
 }
 
 const VilkårsResultatRadioGroup = <T extends FieldValues>(props: Props<T>) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <Controller
-            control={props.controller}
-            name={props.name}
-            render={({ field, fieldState }) => (
-                <RadioGroup
-                    legend={props.legend}
-                    error={fieldState.error?.message}
-                    onBlur={field.onBlur}
-                    onChange={field.onChange}
-                    value={field.value ?? ''}
-                >
-                    <Radio id={field.name} value={Vilkårstatus.VilkårOppfylt} ref={field.ref}>
-                        {formatMessage('radio.label.ja')}
-                    </Radio>
-                    <Radio value={Vilkårstatus.VilkårIkkeOppfylt}>{formatMessage('radio.label.nei')}</Radio>
-                    <Radio value={Vilkårstatus.Uavklart}>{formatMessage('radio.label.uavklart')}</Radio>
-                </RadioGroup>
-            )}
-        />
+        <div>
+            <Controller
+                control={props.controller}
+                name={`${props.navnOgIdx}.resultat` as Path<T>}
+                render={({ field, fieldState }) => (
+                    <RadioGroup {...field} legend={props.legend} error={fieldState.error?.message}>
+                        <Radio value={Vilkårstatus.VilkårOppfylt}>{formatMessage('radio.label.ja')}</Radio>
+                        <Radio value={Vilkårstatus.VilkårIkkeOppfylt}>{formatMessage('radio.label.nei')}</Radio>
+                        <Radio value={Vilkårstatus.Uavklart}>{formatMessage('radio.label.uavklart')}</Radio>
+                    </RadioGroup>
+                )}
+            />
+        </div>
     );
 };
 

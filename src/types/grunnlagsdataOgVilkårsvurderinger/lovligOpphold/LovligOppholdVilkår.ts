@@ -7,3 +7,9 @@ export interface LovligOppholdVilkår {
     resultat: Vilkårstatus;
     vurderinger: LovligOppholdGrunnlag[];
 }
+
+export interface LovligOppholdRequest {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: LovligOppholdGrunnlag[];
+}
