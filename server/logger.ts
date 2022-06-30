@@ -3,7 +3,7 @@ import pinoHttp from 'pino-http';
 
 import * as Config from './config';
 
-const fnrReplacePattern = [/^(\/api\/(?:person|skatt)\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/];
+const fnrReplacePattern = [/^(\/api\/(?:person|skatt|saker\/info)\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/];
 export const logger: pino.Logger = pino({
     ...(Config.isDev
         ? {
