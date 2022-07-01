@@ -30,10 +30,7 @@ interface Props<T, U> {
     className?: string;
 }
 
-export const SøknadsbehandlingWrapper = <T extends FieldValues, U extends Behandling>({
-    form,
-    ...props
-}: Props<T, U>) => {
+export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form, ...props }: Props<T, U>) => {
     const { formatMessage } = useI18n({ messages: stegSharedI18n });
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
     const navigate = useNavigate();

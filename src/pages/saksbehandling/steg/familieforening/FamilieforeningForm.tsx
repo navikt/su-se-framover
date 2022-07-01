@@ -7,7 +7,7 @@ import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import messages from '~src/pages/saksbehandling/steg/familieforening/familieforening-nb';
 import { FormData, schema } from '~src/pages/saksbehandling/steg/familieforening/types';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Behandling } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
@@ -30,7 +30,7 @@ export const FamilieforeningForm = (props: Props) => {
     });
 
     return (
-        <SøknadsbehandlingWrapper
+        <FormWrapper
             form={form}
             save={props.save}
             savingState={props.savingState}
@@ -55,6 +55,6 @@ export const FamilieforeningForm = (props: Props) => {
                     </RadioGroup>
                 )}
             />
-        </SøknadsbehandlingWrapper>
+        </FormWrapper>
     );
 };

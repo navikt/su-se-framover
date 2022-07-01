@@ -12,7 +12,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
@@ -76,7 +76,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={handleSubmit}
                         savingState={status}
@@ -161,7 +161,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                                 <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
                             )}
                         </>
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: (
                     <GjeldendeOpplysningsplikt

@@ -11,7 +11,7 @@ import { Nullable } from '~src/lib/types';
 import { FormData, UføreperiodeFormData } from '~src/pages/saksbehandling/steg/uføre/types';
 import { UføreperiodeForm } from '~src/pages/saksbehandling/steg/uføre/UføreperiodeForm';
 import * as styles from '~src/pages/saksbehandling/steg/uføre/uførhet.module.less';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { Behandling } from '~src/types/Behandling';
 
 import messages from './uførhet-nb';
@@ -61,7 +61,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
     }, [grunnlagValues.fields]);
 
     return (
-        <SøknadsbehandlingWrapper
+        <FormWrapper
             form={form}
             save={onFormSubmit}
             savingState={savingState}
@@ -104,6 +104,6 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                     </Button>
                 </div>
             </>
-        </SøknadsbehandlingWrapper>
+        </FormWrapper>
     );
 };

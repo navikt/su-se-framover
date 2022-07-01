@@ -13,7 +13,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { Behandling } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -96,7 +96,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={(values, onSuccess) => save(values, onSuccess)}
                         savingState={status}
@@ -152,7 +152,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                                 </Alert>
                             )}
                         </>
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: <FlyktningFaktablokk søknadInnhold={props.søknadInnhold} />,
             }}

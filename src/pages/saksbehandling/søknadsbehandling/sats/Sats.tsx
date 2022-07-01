@@ -20,7 +20,7 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Sats as FaktiskSats } from '~src/types/Sats';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
@@ -243,7 +243,7 @@ const SatsForm = (props: SatsProps) => {
         <ToKolonner tittel={props.formatMessage('page.tittel')}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={handleSave}
                         savingState={status}
@@ -292,7 +292,7 @@ const SatsForm = (props: SatsProps) => {
                                 )} ${sats}`}</Label>
                             )}
                         </>
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: <SatsFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}

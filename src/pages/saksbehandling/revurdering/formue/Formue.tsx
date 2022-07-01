@@ -24,7 +24,7 @@ import { lagreFormuegrunnlag } from '~src/features/revurdering/revurderingAction
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import {
     Bosituasjon,
     bosituasjonPåDato,
@@ -84,7 +84,7 @@ const Formue = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={lagreFormuegrunnlaget}
                         savingState={lagreFormuegrunnlagStatus}
@@ -137,7 +137,7 @@ const Formue = (props: RevurderingStegProps) => {
                                 <UtfallSomIkkeStøttes feilmeldinger={lagreFormuegrunnlagStatus.value.feilmeldinger} />
                             )}
                         </>
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: (
                     <div>
