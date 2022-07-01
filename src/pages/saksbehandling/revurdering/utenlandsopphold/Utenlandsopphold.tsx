@@ -15,7 +15,7 @@ import yup from '~src/lib/validering';
 import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
@@ -104,7 +104,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={handleSubmit}
                         savingState={status}
@@ -191,7 +191,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                 Ny periode for utenlandsopphold
                             </Button>
                         </>
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: (
                     <div>

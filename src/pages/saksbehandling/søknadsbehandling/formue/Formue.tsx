@@ -38,7 +38,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
 import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { useAppDispatch } from '~src/redux/Store';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
@@ -263,7 +263,7 @@ const Formue = (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={handleSave}
                         savingState={combinedLagringsstatus}
@@ -418,7 +418,7 @@ const Formue = (
                                 )}
                             />
                         </>
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: (
                     <FormueFaktablokk

@@ -14,12 +14,12 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable } from '~src/lib/types';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import {
     getInitialFormValues,
     tilOppdatertVilkårsinformasjon,
     toPersonligOppmøteStatus,
 } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/utils';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
 import { erFerdigbehandletMedAvslag, erVurdertUtenAvslagMenIkkeFerdigbehandlet } from '~src/pages/saksbehandling/utils';
 import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Sakstype } from '~src/types/Sak';
@@ -137,7 +137,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={handleSave}
                         savingState={status}
@@ -239,7 +239,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                                     )}
                             </div>
                         </>
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: <PersonligOppmøteFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}

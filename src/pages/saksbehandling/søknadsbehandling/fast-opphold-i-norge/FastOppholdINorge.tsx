@@ -13,7 +13,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
@@ -86,7 +86,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={handleSave}
                         savingState={status}
@@ -116,7 +116,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 </RadioGroup>
                             )}
                         />
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: <FastOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}

@@ -13,7 +13,7 @@ import { lagreBosituasjonsgrunnlag } from '~src/features/revurdering/revurdering
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { NullablePeriode, Periode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -75,7 +75,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <SøknadsbehandlingWrapper
+                    <FormWrapper
                         form={form}
                         save={lagreBosituasjon}
                         savingState={status}
@@ -122,7 +122,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                                 <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
                             )}
                         </>
-                    </SøknadsbehandlingWrapper>
+                    </FormWrapper>
                 ),
                 right: (
                     <GjeldendeBosituasjon

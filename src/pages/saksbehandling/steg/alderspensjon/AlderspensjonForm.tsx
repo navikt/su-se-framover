@@ -7,7 +7,7 @@ import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import messages from '~src/pages/saksbehandling/steg/alderspensjon/alderspensjon-nb';
 import { FormData, schema } from '~src/pages/saksbehandling/steg/alderspensjon/types';
-import { SøknadsbehandlingWrapper } from '~src/pages/saksbehandling/søknadsbehandling/SøknadsbehandlingWrapper';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Behandling } from '~src/types/Behandling';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
@@ -35,7 +35,7 @@ export const AlderspensjonForm = (props: Props) => {
     });
 
     return (
-        <SøknadsbehandlingWrapper
+        <FormWrapper
             form={form}
             save={props.save}
             savingState={props.savingState}
@@ -108,6 +108,6 @@ export const AlderspensjonForm = (props: Props) => {
                     )}
                 />
             </>
-        </SøknadsbehandlingWrapper>
+        </FormWrapper>
     );
 };
