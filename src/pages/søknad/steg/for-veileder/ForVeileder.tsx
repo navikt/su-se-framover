@@ -51,9 +51,6 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
         resolver: yupResolver(schema),
     });
 
-    console.log({ form: form.getValues() });
-    console.log({ schema });
-
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
 
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
