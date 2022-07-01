@@ -16,7 +16,6 @@ import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Naviga
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
-import { NullablePeriode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
@@ -125,22 +124,24 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                                     )}
                                 </div>
 
-                                <PeriodeForm
+                                <Controller
                                     name={`opplysningsplikt.${index}.periode`}
-                                    value={opplysningsplikt.periode}
-                                    onChange={(periode: NullablePeriode) =>
-                                        form.setValue(`opplysningsplikt.${index}.periode`, periode)
-                                    }
-                                    error={form.formState.errors.opplysningsplikt?.[index]?.periode}
-                                    minDate={{
-                                        fraOgMed: revurderingsperiode.fraOgMed,
-                                        tilOgMed: revurderingsperiode.tilOgMed,
-                                    }}
-                                    maxDate={{
-                                        fraOgMed: revurderingsperiode.fraOgMed,
-                                        tilOgMed: revurderingsperiode.tilOgMed,
-                                    }}
-                                    size="S"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <PeriodeForm
+                                            {...field}
+                                            error={form.formState.errors.opplysningsplikt?.[index]?.periode}
+                                            minDate={{
+                                                fraOgMed: revurderingsperiode.fraOgMed,
+                                                tilOgMed: revurderingsperiode.tilOgMed,
+                                            }}
+                                            maxDate={{
+                                                fraOgMed: revurderingsperiode.fraOgMed,
+                                                tilOgMed: revurderingsperiode.tilOgMed,
+                                            }}
+                                            size="S"
+                                        />
+                                    )}
                                 />
                             </Panel>
                         ))}
