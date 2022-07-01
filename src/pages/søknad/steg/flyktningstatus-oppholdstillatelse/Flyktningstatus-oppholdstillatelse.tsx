@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup, CollapsableFormElementDescription } from '~src/components/formElements/FormElements';
-import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
+import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { TypeOppholdstillatelse } from '~src/features/søknad/types';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { FormData, schema } from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -20,42 +20,6 @@ import * as sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './flyktningstatus-oppholdstillatelse-nb';
-
-type FormData = SøknadState['flyktningstatus'];
-
-const schema = yup.object<FormData>({
-    erFlyktning: yup.boolean().nullable().required('Fyll ut om du er registrert flyktning'),
-    erNorskStatsborger: yup.boolean().nullable().required('Fyll ut om du er norsk statsborger'),
-    harOppholdstillatelse: yup
-        .boolean()
-        .nullable(true)
-        .defined()
-        .when('erNorskStatsborger', {
-            is: false,
-            then: yup.boolean().nullable().required('Fyll ut om du har oppholdstillatelse'),
-        }),
-    typeOppholdstillatelse: yup
-        .mixed<Nullable<TypeOppholdstillatelse>>()
-        .nullable(true)
-        .defined()
-        .when('harOppholdstillatelse', {
-            is: true,
-            then: yup
-                .mixed()
-                .nullable()
-                .oneOf(Object.values(TypeOppholdstillatelse), 'Du må velge type oppholdstillatelse')
-                .required(),
-        }),
-    statsborgerskapAndreLand: yup.boolean().nullable().required('Fyll ut om du har statsborgerskap i andre land'),
-    statsborgerskapAndreLandFritekst: yup
-        .string()
-        .nullable(true)
-        .defined()
-        .when('statsborgerskapAndreLand', {
-            is: true,
-            then: yup.string().nullable().min(1).required('Fyll ut land du har statsborgerskap i'),
-        }),
-});
 
 const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const flyktningstatusFraStore = useAppSelector((s) => s.soknad.flyktningstatus);

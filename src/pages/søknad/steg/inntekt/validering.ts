@@ -2,7 +2,7 @@ import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
-type InntektFormData = SøknadState['inntekt'];
+export type FormData = SøknadState['inntekt'];
 
 const trygdeytelserIUtlandetSchema = yup.object({
     beløp: yup
@@ -17,7 +17,7 @@ const trygdeytelserIUtlandetSchema = yup.object({
 export const inntektsValideringSchema = (formueTilhører: 'søker' | 'eps') => {
     const tilhører = formueTilhører === 'søker' ? 'du' : 'ektefelle/samboer';
 
-    return yup.object<InntektFormData>({
+    return yup.object<FormData>({
         harForventetInntekt: yup.boolean().nullable().required(`Fyll ut om ${tilhører} forventer arbeidsinntekt`),
         forventetInntekt: yup
             .number()

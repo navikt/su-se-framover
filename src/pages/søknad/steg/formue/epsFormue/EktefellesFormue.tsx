@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
-import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
+import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
@@ -15,12 +15,10 @@ import { useAppSelector, useAppDispatch } from '~src/redux/Store';
 import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import * as sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
-import { formueValideringSchema } from '../formueSøknadUtils';
 import KjøretøyInputFelter from '../kjøretøyInputfelter/KjøretøyInputFelter';
+import { FormData, formueValideringSchema } from '../validering';
 
 import messages from './ektefellesformue-nb';
-
-type FormData = SøknadState['formue'];
 
 const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const ektefelle = useAppSelector((s) => s.soknad.ektefelle);

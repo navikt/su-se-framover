@@ -2,7 +2,7 @@ import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { keyOf, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
-type FormueFormData = SøknadState['formue'];
+export type FormData = SøknadState['formue'];
 
 const kjøretøySchema = yup.object({
     verdiPåKjøretøy: yup
@@ -17,7 +17,7 @@ const kjøretøySchema = yup.object({
 export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
     const tilhører = formueTilhører === 'søker' ? 'du' : 'ektefelle/samboer';
 
-    return yup.object<FormueFormData>({
+    return yup.object<FormData>({
         eierBolig: yup.boolean().nullable().required(`Fyll ut om ${tilhører} eier bolig`),
         borIBolig: yup
             .boolean()
@@ -31,7 +31,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .number()
             .nullable()
             .defined()
-            .when(keyOf<FormueFormData>('borIBolig'), {
+            .when(keyOf<FormData>('borIBolig'), {
                 is: false,
                 then: yup
                     .number()
@@ -45,7 +45,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .string()
             .nullable()
             .defined()
-            .when(keyOf<FormueFormData>('borIBolig'), {
+            .when(keyOf<FormData>('borIBolig'), {
                 is: false,
                 then: yup.string().nullable().min(1).required('Fyll ut hva boligen brukes til'),
             }),
@@ -53,7 +53,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .boolean()
             .nullable()
             .defined()
-            .when(keyOf<FormueFormData>('eierBolig'), {
+            .when(keyOf<FormData>('eierBolig'), {
                 is: true,
                 then: yup.boolean().nullable().required(`Fyll ut om ${tilhører} eier mer enn én bolig`),
             }),
@@ -61,7 +61,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .boolean()
             .nullable()
             .defined()
-            .when(keyOf<FormueFormData>('eierBolig'), {
+            .when(keyOf<FormData>('eierBolig'), {
                 is: false,
                 then: yup.boolean().nullable().required(`Fyll ut om ${tilhører} har depositumskonto`),
             }),
@@ -69,7 +69,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .number()
             .nullable()
             .defined()
-            .when(keyOf<FormueFormData>('harDepositumskonto'), {
+            .when(keyOf<FormData>('harDepositumskonto'), {
                 is: true,
                 then: yup
                     .number()
@@ -83,7 +83,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .number()
             .nullable()
             .defined()
-            .when(keyOf<FormueFormData>('eierMerEnnEnBolig'), {
+            .when(keyOf<FormData>('eierMerEnnEnBolig'), {
                 is: true,
                 then: yup
                     .number()
@@ -97,7 +97,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .string()
             .nullable()
             .defined()
-            .when(keyOf<FormueFormData>('eierMerEnnEnBolig'), {
+            .when(keyOf<FormData>('eierMerEnnEnBolig'), {
                 is: true,
                 then: yup.string().nullable().min(1).required('Fyll ut hva eiendommen brukes til'),
             }),
@@ -105,7 +105,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
         kjøretøy: yup
             .array(kjøretøySchema.required())
             .defined()
-            .when(keyOf<FormueFormData>('eierKjøretøy'), {
+            .when(keyOf<FormData>('eierKjøretøy'), {
                 is: true,
                 then: yup.array().min(1).required(),
                 otherwise: yup.array().max(0),
@@ -116,7 +116,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .nullable()
             .label('Beløp på innskuddet')
             .defined()
-            .when(keyOf<FormueFormData>('harInnskuddPåKonto'), {
+            .when(keyOf<FormData>('harInnskuddPåKonto'), {
                 is: true,
                 then: yup
                     .number()
@@ -132,7 +132,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .nullable()
             .defined()
             .label('Beløp på verdipapirer')
-            .when(keyOf<FormueFormData>('harVerdipapir'), {
+            .when(keyOf<FormData>('harVerdipapir'), {
                 is: true,
                 then: yup.number().typeError('Beløp på verdipapirer må være et tall').nullable(false).positive(),
             }) as yup.Schema<Nullable<string>>,
@@ -145,7 +145,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .nullable()
             .label(`Hvor mye penger skylder de ${tilhører === 'du' ? 'deg' : tilhører} beløpet`)
             .defined()
-            .when(keyOf<FormueFormData>('skylderNoenMegPenger'), {
+            .when(keyOf<FormData>('skylderNoenMegPenger'), {
                 is: true,
                 then: yup
                     .number()
@@ -158,7 +158,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .number()
             .nullable()
             .defined()
-            .when(keyOf<FormueFormData>('harKontanter'), {
+            .when(keyOf<FormData>('harKontanter'), {
                 is: true,
                 then: yup
                     .number()

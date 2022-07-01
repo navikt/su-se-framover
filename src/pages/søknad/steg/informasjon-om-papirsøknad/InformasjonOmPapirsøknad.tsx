@@ -7,10 +7,11 @@ import { useNavigate } from 'react-router-dom';
 
 import DatePicker from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import søknadSlice, { ForVeilederPapirsøknad } from '~src/features/søknad/søknad.slice';
+import søknadSlice from '~src/features/søknad/søknad.slice';
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { FormData, schema } from '~src/pages/søknad/steg/informasjon-om-papirsøknad/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Søknadstype } from '~src/types/Søknad';
 import { toDateOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';
@@ -21,29 +22,6 @@ import sharedI18n from '../steg-shared-i18n';
 
 import messages from './informasjonOmPapirsøknad-nb';
 import * as styles from './informasjonOmPapirsøknad.module.less';
-
-type FormData = ForVeilederPapirsøknad;
-
-const schema = yup.object<FormData>({
-    type: yup.string().required() as yup.Schema<Søknadstype.Papirsøknad>,
-    mottaksdatoForSøknad: yup
-        .date()
-        .max(new Date(), 'Mottaksdato kan ikke være i fremtiden')
-        .nullable()
-        .required('Fyll ut mottaksdatoen for søknaden') as unknown as yup.Schema<string>,
-    grunnForPapirinnsending: yup
-        .mixed<GrunnForPapirinnsending>()
-        .oneOf(Object.values(GrunnForPapirinnsending), 'Velg hvorfor søknaden var sendt inn uten personlig oppmøte'),
-    annenGrunn: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('grunnForPapirinnsending', {
-            is: GrunnForPapirinnsending.Annet,
-            then: yup.string().required('Fyll ut begrunnelse for hvorfor søker ikke møtte opp personlig'),
-            otherwise: yup.string().nullable().defined(),
-        }),
-});
 
 const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const navigate = useNavigate();

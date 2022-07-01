@@ -15,7 +15,7 @@ import { DelerBoligMed, EPSFormData } from '~src/features/søknad/types';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { FormData, schema } from '~src/pages/søknad/steg/bo-og-opphold-i-norge/scheme';
+import { FormData, schema } from '~src/pages/søknad/steg/bo-og-opphold-i-norge/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import { formatAdresse } from '~src/utils/format/formatUtils';
