@@ -2,17 +2,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
-import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
+import søknadSlice from '~src/features/søknad/søknad.slice';
 import { useI18n } from '~src/lib/i18n';
 import { InntektForm } from '~src/pages/søknad/steg/inntekt/søkersInntekt/Inntekt';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import sharedI18n from '../../steg-shared-i18n';
-import { inntektsValideringSchema } from '../inntektSøknadUtils';
+import { inntektsValideringSchema, FormData } from '../validering';
 
 import messages from './inntekt-nb';
-
-type FormData = SøknadState['inntekt'];
 
 const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const ektefelle = useAppSelector((s) => s.soknad.ektefelle);

@@ -1,13 +1,30 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
+import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
+import { SøknadState } from '~src/features/søknad/søknad.slice';
+import { DelerBoligMed } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { SøknadContext } from '~src/pages/søknad';
+import { schema as alderspensjonSchema } from '~src/pages/søknad/steg/alderspensjon/validering';
+import { schema as boOgOppholdSchema } from '~src/pages/søknad/steg/bo-og-opphold-i-norge/validering';
+import { schema as flyktningSchema } from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/validering';
+import { schema as forVeilederSchema } from '~src/pages/søknad/steg/for-veileder/validering';
+import { formueValideringSchema } from '~src/pages/søknad/steg/formue/validering';
+import { schema as papirsøknadSchema } from '~src/pages/søknad/steg/informasjon-om-papirsøknad/validering';
+import { inntektsValideringSchema } from '~src/pages/søknad/steg/inntekt/validering';
+import { schema as oppholdstillatelseSchema } from '~src/pages/søknad/steg/oppholdstillatelse/validering';
+import sharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
+import { schema as uføreSchema } from '~src/pages/søknad/steg/uførevedtak/validering';
+import { schema as utenlandsoppholdSchema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Sakstype } from '~src/types/Sak';
 
@@ -20,16 +37,50 @@ import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
     const navigate = useNavigate();
-    const { sakstype } = useOutletContext<SøknadContext>();
+    const { sakstype, isPapirsøknad } = useOutletContext<SøknadContext>();
     const [søknadFraStore, innsending] = useAppSelector((s) => [s.soknad, s.innsending.søknad]);
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
     const dispatch = useAppDispatch();
+    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
-    const handleSubmit = async () => {
+    const alderssøknadsschema = yup.object({
+        ...alderspensjonSchema.fields,
+        oppholdstillatelse: oppholdstillatelseSchema,
+    });
+    const uføresøknadsschema = yup.object({
+        ...uføreSchema.fields,
+        flyktningstatus: flyktningSchema,
+    });
+
+    const søknadschema = yup.object({
+        ...(sakstype === Sakstype.Alder ? alderssøknadsschema.fields : {}),
+        ...(sakstype === Sakstype.Uføre ? uføresøknadsschema.fields : {}),
+        boOgOpphold: boOgOppholdSchema,
+        formue: formueValideringSchema('søker'),
+        inntekt: inntektsValideringSchema('søker'),
+        ...(søknadFraStore.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
+            ? {
+                  ektefelle: yup.object({
+                      formue: formueValideringSchema('eps'),
+                      inntekt: inntektsValideringSchema('eps'),
+                  }),
+              }
+            : {}),
+        ...(isPapirsøknad ? { papirsøknad: papirsøknadSchema } : {}),
+        utenlandsopphold: utenlandsoppholdSchema,
+        forVeileder: forVeilederSchema,
+    });
+
+    const form = useForm({
+        defaultValues: søknadFraStore,
+        resolver: yupResolver(søknadschema),
+    });
+
+    const handleSubmit = async (values: SøknadState) => {
         if (sakstype === Sakstype.Uføre) {
             const res = await dispatch(
                 innsendingSlice.sendUføresøknad({
-                    søknad: søknadFraStore,
+                    søknad: values,
                     søker: props.søker,
                 })
             );
@@ -41,7 +92,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
         if (sakstype === Sakstype.Alder) {
             const res = await dispatch(
                 innsendingSlice.sendAldersøknad({
-                    søknad: søknadFraStore,
+                    søknad: values,
                     søker: props.søker,
                 })
             );
@@ -53,12 +104,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
 
     return (
         <div className={sharedStyles.container}>
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit();
-                }}
-            >
+            <form onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
                 <Søknadoppsummering søknad={søknadFraStore} sakstype={sakstype} />
 
                 <Alert variant="info" className={styles.meldFraOmEndringerContainer}>
@@ -73,6 +119,14 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                         {formatMessage('feilmelding.innsendingFeilet')}
                     </Alert>
                 )}
+
+                <Feiloppsummering
+                    className={sharedStyles.marginBottom}
+                    tittel={formatMessage('feiloppsummering.title')}
+                    hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
+                    feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                    ref={feiloppsummeringref}
+                />
 
                 <Bunnknapper
                     previous={{

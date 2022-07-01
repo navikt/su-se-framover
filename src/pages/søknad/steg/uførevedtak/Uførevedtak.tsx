@@ -6,11 +6,12 @@ import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
-import søknadSlice, { SøknadState } from '~src/features/søknad/søknad.slice';
+import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { FormData, schema } from '~src/pages/søknad/steg/uførevedtak/validering';
 import { useAppSelector, useAppDispatch } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -18,14 +19,6 @@ import * as sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './uførevedtak-nb';
-
-type FormData = {
-    harUførevedtak: SøknadState['harUførevedtak'];
-};
-
-const schema = yup.object<FormData>({
-    harUførevedtak: yup.boolean().nullable().required('Fyll ut om du har fått svar på din søknad om uføretrygd'),
-});
 
 const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: string }) => {
     const harVedtakFraStore = useAppSelector((s) => s.soknad.harUførevedtak);

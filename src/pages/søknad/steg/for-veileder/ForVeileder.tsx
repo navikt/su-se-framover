@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { Person } from '~src/api/personApi';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
-import søknadSlice, { ForVeilederDigitalSøknad } from '~src/features/søknad/søknad.slice';
+import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { Vergemål } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { FormData, schema } from '~src/pages/søknad/steg/for-veileder/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Søknadstype } from '~src/types/Søknad';
 
@@ -22,21 +22,6 @@ import sharedI18n from '../steg-shared-i18n';
 
 import messages from './forVeileder-nb';
 import * as styles from './forVeileder.module.less';
-
-type FormData = ForVeilederDigitalSøknad;
-
-const schema = yup.object<FormData>({
-    type: yup.string().required() as yup.Schema<Søknadstype.DigitalSøknad>,
-    harSøkerMøttPersonlig: yup.boolean().nullable().required('Velg om søker har møtt personlig'),
-    harFullmektigEllerVerge: yup
-        .mixed<Nullable<Vergemål>>()
-        .nullable()
-        .defined()
-        .when('harSøkerMøttPersonlig', {
-            is: false,
-            then: yup.string().nullable().required('Velg om søker har fullmektig eller verge'),
-        }),
-});
 
 const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
     const navigate = useNavigate();
@@ -65,6 +50,9 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
         },
         resolver: yupResolver(schema),
     });
+
+    console.log({ form: form.getValues() });
+    console.log({ schema });
 
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
 
