@@ -30,7 +30,7 @@ interface Props<T, U> {
         maxTilOgMed: Date;
         size?: 'S' | 'L';
     };
-    barn: (idx: number) => React.ReactNode;
+    childrenz: (idx: number) => React.ReactNode;
     childrenOverDato?: boolean;
 }
 
@@ -79,7 +79,7 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                         <li key={el.id}>
                             <Panel className={styles.periodePanel}>
                                 <div className={styles.periodeOgSøppelbøtteContainer}>
-                                    {props.childrenOverDato ? props.barn(idx) : periodeInput}
+                                    {props.childrenOverDato ? props.childrenz(idx) : periodeInput}
 
                                     <Button
                                         variant="secondary"
@@ -91,7 +91,7 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                                         <Delete />
                                     </Button>
                                 </div>
-                                {!props.childrenOverDato ? props.barn(idx) : periodeInput}
+                                {!props.childrenOverDato ? props.childrenz(idx) : periodeInput}
                             </Panel>
                         </li>
                     );

@@ -359,7 +359,9 @@ export async function lagreLovligOppholdVilkår(
     return apiClient({
         url: `/saker/${data.sakId}/revurderinger/${data.behandlingId}/lovligopphold`,
         method: 'POST',
-        body: data.vurderinger,
+        body: {
+            vurderinger: data.vurderinger,
+        },
     });
 }
 

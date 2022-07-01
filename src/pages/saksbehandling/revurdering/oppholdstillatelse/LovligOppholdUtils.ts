@@ -29,7 +29,12 @@ export const lovligOppholdSchemaValidation = yup.object<LovligOppholdVilkårForm
         .array<VurderingsperioderLovligoppholdFormData>(
             yup
                 .object<VurderingsperioderLovligoppholdFormData>({
-                    resultat: yup.string().nullable().defined().oneOf(Object.values(Vilkårstatus)).required(),
+                    resultat: yup
+                        .string()
+                        .nullable()
+                        .defined()
+                        .oneOf([Vilkårstatus.VilkårOppfylt, Vilkårstatus.VilkårIkkeOppfylt])
+                        .required(),
                     periode: yup
                         .object({
                             fraOgMed: yup.date().required().typeError('Dato må fylles inn'),

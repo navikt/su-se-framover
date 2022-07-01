@@ -4,6 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
@@ -16,6 +17,7 @@ import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 
 import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import GjeldendeOppholdstillatelse from './GjeldendeLovligOpphold';
 import messages from './LovligOpphold-nb';
@@ -29,7 +31,7 @@ import {
 const Oppholdstillatelse = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
-    const [lagreLovligOppholdStatus, lagreLovligOppholdAction] = useAsyncActionCreator(lagreLovligOppholdVilkår);
+    const [status, lagre] = useAsyncActionCreator(lagreLovligOppholdVilkår);
 
     const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.vurderinger ?? [
         { periode: props.revurdering.periode, resultat: null },
@@ -47,13 +49,13 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
                     fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
                     tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
                 },
-                status: vurdering.resultat ?? null,
+                resultat: vurdering.resultat,
             })),
         },
     });
 
     const lagreLovligOpphold = (data: LovligOppholdVilkårForm, gåtil: 'neste' | 'avbryt') => {
-        lagreLovligOppholdAction(
+        lagre(
             {
                 sakId: props.sakId,
                 behandlingId: props.revurdering.id,
@@ -63,7 +65,7 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
                             fraOgMed: DateUtils.toIsoDateOnlyString(opphold.periode.fraOgMed!),
                             tilOgMed: DateUtils.toIsoDateOnlyString(opphold.periode.tilOgMed!),
                         },
-                        resultat: opphold.resultat!,
+                        status: opphold.resultat!,
                     };
                 }),
             },
@@ -90,17 +92,21 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
                                 maxTilOgMed: revurderingsperiode.tilOgMed,
                                 size: 'S',
                             }}
-                            barn={(idx: number) => (
+                            childrenz={(idx: number) => (
                                 <VilkårsResultatRadioGroup
                                     navnOgIdx={`lovligOpphold.${idx}`}
-                                    controller={control}
                                     legend={formatMessage('lovligOpphold.harSøkerLovligOpphold')}
+                                    controller={control}
                                 />
                             )}
                         />
+                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
+                        {RemoteData.isSuccess(status) && (
+                            <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                        )}
                         <Navigasjonsknapper
                             tilbake={props.forrige}
-                            loading={RemoteData.isPending(lagreLovligOppholdStatus)}
+                            loading={RemoteData.isPending(status)}
                             onLagreOgFortsettSenereClick={handleSubmit((values) =>
                                 lagreLovligOpphold(values, 'avbryt')
                             )}
