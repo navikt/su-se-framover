@@ -20,7 +20,6 @@ import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/rev
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { NullablePeriode } from '~src/types/Periode';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
@@ -129,22 +128,24 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                         </Button>
                                     )}
 
-                                    <PeriodeForm
+                                    <Controller
                                         name={`utenlandsopphold.${index}.periode`}
-                                        value={utenlandsopphold.periode}
-                                        onChange={(periode: NullablePeriode) =>
-                                            form.setValue(`utenlandsopphold.${index}.periode`, periode)
-                                        }
-                                        error={form.formState.errors.utenlandsopphold?.[index]?.periode}
-                                        minDate={{
-                                            fraOgMed: revurderingsperiode.fraOgMed,
-                                            tilOgMed: revurderingsperiode.tilOgMed,
-                                        }}
-                                        maxDate={{
-                                            fraOgMed: revurderingsperiode.fraOgMed,
-                                            tilOgMed: revurderingsperiode.tilOgMed,
-                                        }}
-                                        size="S"
+                                        control={form.control}
+                                        render={({ field }) => (
+                                            <PeriodeForm
+                                                {...field}
+                                                error={form.formState.errors.utenlandsopphold?.[index]?.periode}
+                                                minDate={{
+                                                    fraOgMed: revurderingsperiode.fraOgMed,
+                                                    tilOgMed: revurderingsperiode.tilOgMed,
+                                                }}
+                                                maxDate={{
+                                                    fraOgMed: revurderingsperiode.fraOgMed,
+                                                    tilOgMed: revurderingsperiode.tilOgMed,
+                                                }}
+                                                size="S"
+                                            />
+                                        )}
                                     />
                                 </div>
                                 <Controller
