@@ -8,6 +8,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { useUserContext } from '~src/context/userContext';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
@@ -26,7 +27,9 @@ import sharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
 import { schema as uføreSchema } from '~src/pages/søknad/steg/uførevedtak/validering';
 import { schema as utenlandsoppholdSchema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Rolle } from '~src/types/LoggedInUser';
 import { Sakstype } from '~src/types/Sak';
+import { Søknadstype } from '~src/types/Søknad';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import * as sharedStyles from '../../steg-shared.module.less';
@@ -37,7 +40,8 @@ import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
     const navigate = useNavigate();
-    const { sakstype, isPapirsøknad } = useOutletContext<SøknadContext>();
+    const { sakstype } = useOutletContext<SøknadContext>();
+    const user = useUserContext();
     const [søknadFraStore, innsending] = useAppSelector((s) => [s.soknad, s.innsending.søknad]);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
     const dispatch = useAppDispatch();
@@ -50,6 +54,13 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const uføresøknadsschema = yup.object({
         ...uføreSchema.fields,
         flyktningstatus: flyktningSchema,
+    });
+
+    const veileder = yup.object({
+        forVeileder:
+            søknadFraStore.forVeileder.type === Søknadstype.Papirsøknad && user.roller.includes(Rolle.Saksbehandler)
+                ? papirsøknadSchema
+                : forVeilederSchema,
     });
 
     const søknadschema = yup.object({
@@ -66,9 +77,8 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                   }),
               }
             : {}),
-        ...(isPapirsøknad ? { papirsøknad: papirsøknadSchema } : {}),
         utenlandsopphold: utenlandsoppholdSchema,
-        forVeileder: forVeilederSchema,
+        ...veileder.fields,
     });
 
     const form = useForm({
@@ -104,7 +114,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
 
     return (
         <div className={sharedStyles.container}>
-            <form onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
                 <Søknadoppsummering søknad={søknadFraStore} sakstype={sakstype} />
 
                 <Alert variant="info" className={styles.meldFraOmEndringerContainer}>
