@@ -14,6 +14,7 @@ import {
     formueErlik,
     fradragErlik,
     GrunnlagsdataOgVilkårsvurderinger,
+    lovligOppholdErLik,
     opplysningspliktErLik,
     uføreErlik,
     utenlandsoppholdErlik,
@@ -23,6 +24,7 @@ import { regnUtFormuegrunnlag } from '~src/utils/revurdering/formue/RevurderForm
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
+import LovligOppholdOppsummering from '../lovligOpphold/LovligOppholdOppsummering';
 import OpplysningspliktOppsummering from '../opplysningspliktoppsummering/Opplysningspliktoppsummering';
 
 import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
@@ -123,6 +125,9 @@ const Vedtaksinformasjon = (props: {
     const skalViseOpplysningsplikt =
         !opplysningspliktErLik(nyeData.opplysningsplikt, gamleData.opplysningsplikt) ||
         valgtRevurderingssteg.Opplysningsplikt === Vurderingstatus.Vurdert;
+    const skalViseLovligOpphold =
+        !lovligOppholdErLik(nyeData.lovligOpphold, gamleData.lovligOpphold) ||
+        valgtRevurderingssteg.Oppholdstillatelse === Vurderingstatus.Vurdert;
 
     return (
         <div className={styles.container}>
@@ -196,6 +201,18 @@ const Vedtaksinformasjon = (props: {
                         ) : null,
                         høyre: gamleData.opplysningsplikt ? (
                             <OpplysningspliktOppsummering opplysningsplikter={gamleData.opplysningsplikt} />
+                        ) : null,
+                    }}
+                </Rad>
+            )}
+            {skalViseLovligOpphold && (
+                <Rad radTittel={formatMessage('radTittel.lovligOpphold')}>
+                    {{
+                        venstre: nyeData.lovligOpphold ? (
+                            <LovligOppholdOppsummering lovligOppholdVilkår={nyeData.lovligOpphold} />
+                        ) : null,
+                        høyre: gamleData.lovligOpphold ? (
+                            <LovligOppholdOppsummering lovligOppholdVilkår={gamleData.lovligOpphold} />
                         ) : null,
                     }}
                 </Rad>
