@@ -250,12 +250,8 @@ const RevurderingstegPage = (props: {
 
                         {props.steg === RevurderingSteg.Oppholdstillatelse && (
                             <Oppholdstillatelse
-                                sakId={props.sakId}
-                                revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                forrige={props.forrige}
-                                nesteUrl={props.nesteUrl}
-                                avsluttUrl={props.avsluttUrl}
+                                {...stegProps}
                             />
                         )}
                     </div>
