@@ -1,7 +1,7 @@
-import { Behandling } from '~src/types/Behandling';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export interface VilkårsvurderingBaseProps {
-    behandling: Behandling;
+    behandling: Søknadsbehandling;
     forrigeUrl: string;
     nesteUrl: string;
     avsluttUrl: string;

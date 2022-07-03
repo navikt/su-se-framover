@@ -13,7 +13,6 @@ import { pipe } from '~src/lib/fp';
 import { Nullable } from '~src/lib/types';
 import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
-import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
@@ -25,6 +24,7 @@ import { Periode } from '~src/types/Periode';
 import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
+import { Søknadsbehandling, UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
@@ -78,7 +78,7 @@ export const hentDokumenter = createAsyncThunk<
 });
 
 export const startBehandling = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; søknadId: string },
     { rejectValue: ApiError }
 >('behandling/start', async ({ sakId, søknadId }, thunkApi) => {
@@ -90,12 +90,12 @@ export const startBehandling = createAsyncThunk<
 });
 
 export const lagreVirkningstidspunkt = createApiCallAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string; fraOgMed: string; tilOgMed: string }
 >('behandling/lagreVirkningstidspunk', behandlingApi.lagreVirkningstidspunkt);
 
 export const fetchBehandling = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('behandling/fetch', async ({ sakId, behandlingId }, thunkApi) => {
@@ -107,7 +107,7 @@ export const fetchBehandling = createAsyncThunk<
 });
 
 export const lagreVilkårsvurdering = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -126,7 +126,7 @@ export const lagreVilkårsvurdering = createAsyncThunk<
 });
 
 export const lagreBehandlingsinformasjon = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -142,7 +142,7 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
 });
 
 export const lagreUtenlandsopphold = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -159,7 +159,7 @@ export const lagreUtenlandsopphold = createAsyncThunk<
 });
 
 export const lagreUføregrunnlag = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -180,7 +180,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
 });
 
 export const lagreLovligOppholdVilkår = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -199,7 +199,7 @@ export const lagreLovligOppholdVilkår = createAsyncThunk<
 });
 
 export const lagreAlderspensjongrunnlag = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -215,7 +215,7 @@ export const lagreAlderspensjongrunnlag = createAsyncThunk<
 });
 
 export const lagreFamilieforeninggrunnlag = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -231,7 +231,7 @@ export const lagreFamilieforeninggrunnlag = createAsyncThunk<
 });
 
 export const lagreFormuegrunnlag = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -247,7 +247,7 @@ export const lagreFormuegrunnlag = createAsyncThunk<
 });
 
 export const lagreEpsGrunnlag = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -279,7 +279,7 @@ export const lagreEpsGrunnlagSkjermet = createAsyncThunk<
 });
 
 export const lagreBosituasjonGrunnlag = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     {
         sakId: string;
         behandlingId: string;
@@ -295,7 +295,7 @@ export const lagreBosituasjonGrunnlag = createAsyncThunk<
 });
 
 export const startBeregning = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string; begrunnelse: Nullable<string> },
     { rejectValue: ApiError }
 >('beregning/start', async ({ sakId, behandlingId, begrunnelse }, thunkApi) => {
@@ -307,7 +307,7 @@ export const startBeregning = createAsyncThunk<
 });
 
 export const lagreFradrag = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string; fradrag: Fradrag[] },
     { rejectValue: ApiError }
 >('beregning/grunnlag/fradrag', async ({ sakId, behandlingId, fradrag }, thunkApi) => {
@@ -319,7 +319,7 @@ export const lagreFradrag = createAsyncThunk<
 });
 
 export const startSimulering = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('simulering/start', async ({ sakId, behandlingId }, thunkApi) => {
@@ -331,7 +331,7 @@ export const startSimulering = createAsyncThunk<
 });
 
 export const sendTilAttestering = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string; fritekstTilBrev: string },
     { rejectValue: ApiError }
 >('behandling/tilAttestering', async ({ sakId, behandlingId, fritekstTilBrev }, thunkApi) => {
@@ -343,7 +343,7 @@ export const sendTilAttestering = createAsyncThunk<
 });
 
 export const attesteringIverksett = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('behandling/iverksett', async ({ sakId, behandlingId }, thunkApi) => {
@@ -355,7 +355,7 @@ export const attesteringIverksett = createAsyncThunk<
 });
 
 export const attesteringUnderkjenn = createAsyncThunk<
-    Behandling,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string; grunn: UnderkjennelseGrunn; kommentar: string },
     { rejectValue: ApiError }
 >('behandling/underkjenn', async ({ sakId, behandlingId, grunn, kommentar }, thunkApi) => {

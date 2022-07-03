@@ -9,12 +9,12 @@ import messages from '~src/pages/saksbehandling/steg/alderspensjon/alderspensjon
 import { FormData, schema } from '~src/pages/saksbehandling/steg/alderspensjon/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
-import { Behandling } from '~src/types/Behandling';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 interface Props extends VilkårsvurderingBaseProps {
     save: (values: FormData, onSuccess: () => void) => void;
-    savingState: ApiResult<Behandling>;
+    savingState: ApiResult<Søknadsbehandling>;
 }
 
 export const AlderspensjonForm = (props: Props) => {

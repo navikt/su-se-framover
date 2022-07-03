@@ -2,7 +2,6 @@ import { formatISO } from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Fradrag } from '~src/types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -25,6 +24,7 @@ import {
     UnderkjentRevurdering,
     UtenlandsoppholdRequest,
 } from '~src/types/Revurdering';
+import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 

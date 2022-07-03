@@ -2,15 +2,15 @@ import { Label } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
-import { Behandling } from '~src/types/Behandling';
-import { erBeregnetAvslag } from '~src/utils/behandling/behandlingUtils';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { erBeregnetAvslag } from '~src/utils/behandling/SøknadsbehandlingUtils';
 
 import messages from './beregning/beregning-nb';
 import VisBeregning from './beregning/VisBeregning';
 import * as styles from './beregningOgSimulering.module.less';
 import { VisSimulering } from './simulering/simulering';
 
-const VisBeregningOgSimulering = (props: { behandling: Behandling }) => {
+const VisBeregningOgSimulering = (props: { behandling: Søknadsbehandling }) => {
     const { intl } = useI18n({ messages });
     return props.behandling.beregning ? (
         <div className={styles.beregningOgSimuleringContainer}>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
-import { UnderkjennelseGrunn, underkjennelsesGrunnTextMapper } from '~src/types/Behandling';
+import { UnderkjennelseGrunn, underkjennelsesGrunnTextMapper } from '~src/types/Søknadsbehandling';
 
 import { AttesteringFormData } from './AttesteringsForm';
 import messages from './attesteringsForm-nb';

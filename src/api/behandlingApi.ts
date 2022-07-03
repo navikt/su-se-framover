@@ -1,16 +1,19 @@
 import { Nullable } from '~src/lib/types';
-import { Behandling, UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Behandlingsinformasjon, FormueVerdier, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from '~src/types/Periode';
+import { Søknadsbehandling, UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {
+export async function startBehandling(arg: {
+    sakId: string;
+    søknadId: string;
+}): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${arg.sakId}/behandlinger`,
         method: 'POST',
@@ -20,7 +23,7 @@ export async function startBehandling(arg: { sakId: string; søknadId: string })
     });
 }
 
-export async function hentBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Behandling>> {
+export async function hentBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}`,
         method: 'GET',
@@ -33,7 +36,7 @@ export async function startBeregning(
     arg: {
         begrunnelse: Nullable<string>;
     }
-): Promise<ApiClientResult<Behandling>> {
+): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
@@ -47,7 +50,7 @@ export async function lagreFradragsgrunnlag(
     sakId: string,
     behandlingId: string,
     fradrag: Fradrag[]
-): Promise<ApiClientResult<Behandling>> {
+): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/grunnlag/fradrag`,
         method: 'POST',
@@ -63,7 +66,7 @@ export async function lagreVirkningstidspunkt(arg: {
     fraOgMed: string;
     tilOgMed: string;
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/stønadsperiode`,
         method: 'POST',
         body: {
@@ -80,7 +83,7 @@ export async function lagreVilkårsvurdering(arg: {
     status: VilkårVurderingStatus;
     begrunnelse: string;
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/vilkarsvurderinger`,
         method: 'PATCH',
         body: {
@@ -98,7 +101,7 @@ export async function lagreBehandlingsinformasjon(arg: {
     behandlingId: string;
     behandlingsinformasjon: Partial<Behandlingsinformasjon>;
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/informasjon`,
         method: 'PATCH',
         body: arg.behandlingsinformasjon,
@@ -106,7 +109,7 @@ export async function lagreBehandlingsinformasjon(arg: {
 }
 
 export async function lagreGrunnlagEps(arg: { sakId: string; behandlingId: string; epsFnr: Nullable<string> }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps`,
         method: 'POST',
         body: {
@@ -127,7 +130,7 @@ export async function lagreGrunnlagEpsSkjermet(arg: { sakId: string; behandlingI
 }
 
 export async function lagreGrunnlagBosituasjon(arg: { sakId: string; behandlingId: string; bosituasjon: string }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/fullfør`,
         method: 'POST',
         body: {
@@ -137,7 +140,10 @@ export async function lagreGrunnlagBosituasjon(arg: { sakId: string; behandlingI
 }
 
 // Denne vil kanskje på sikt låse behandlingen også.
-export async function simulerBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Behandling>> {
+export async function simulerBehandling(
+    sakId: string,
+    behandlingId: string
+): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/simuler`,
         method: 'POST',
@@ -148,8 +154,8 @@ export async function sendTilAttestering(arg: {
     sakId: string;
     behandlingId: string;
     fritekstTilBrev: string;
-}): Promise<ApiClientResult<Behandling>> {
-    return apiClient<Behandling>({
+}): Promise<ApiClientResult<Søknadsbehandling>> {
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/tilAttestering`,
         method: 'POST',
         body: {
@@ -159,7 +165,7 @@ export async function sendTilAttestering(arg: {
 }
 
 export async function iverksett(arg: { sakId: string; behandlingId: string }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/iverksett`,
         method: 'PATCH',
     });
@@ -171,7 +177,7 @@ export async function underkjenn(arg: {
     grunn: UnderkjennelseGrunn;
     kommentar: string;
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/underkjenn`,
         method: 'PATCH',
         body: {
@@ -186,7 +192,7 @@ export async function lagreUtenlandsopphold(arg: {
     behandlingId: string;
     status: Utenlandsoppholdstatus;
     periode: Periode<string>;
-}): Promise<ApiClientResult<Behandling>> {
+}): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/utenlandsopphold`,
         method: 'POST',
@@ -207,7 +213,7 @@ export async function lagreUføregrunnlag(arg: {
         resultat: UføreResultat;
     }>;
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/uføre`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
@@ -222,7 +228,7 @@ export async function lagreLovligOppholdVilkår(arg: {
         status: Vilkårstatus;
     }>;
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/lovligOpphold`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
@@ -234,7 +240,7 @@ export async function lagreAldersgrunnlag(arg: {
     behandlingId: string;
     vurderinger: Aldersvurdering[];
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/pensjon`,
         method: 'POST',
         body: arg.vurderinger,
@@ -246,7 +252,7 @@ export async function lagreFamilieforeningsgrunnlag(arg: {
     behandlingId: string;
     vurderinger: Array<{ status: Vilkårstatus }>;
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/familiegjenforening`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
@@ -263,7 +269,7 @@ export async function lagreFormuegrunnlag(arg: {
         måInnhenteMerInformasjon: boolean;
     }>;
 }) {
-    return apiClient<Behandling>({
+    return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/formuegrunnlag`,
         method: 'POST',
         body: arg.vurderinger,

@@ -14,10 +14,10 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import { Behandling } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { SøknadInnholdUføre } from '~src/types/Søknad';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -59,7 +59,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
         behandlingId: props.behandling.id,
     });
 
-    const save = (values: FormData, onSuccess: (behandling: Behandling) => void) => {
+    const save = (values: FormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
         lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
@@ -84,7 +84,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
 
     useDraftFormSubscribe(form.watch);
 
-    const kortBehandlingAvslag = (behandling: Behandling) =>
+    const kortBehandlingAvslag = (behandling: Søknadsbehandling) =>
         behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.flyktning?.status === Vilkårstatus.VilkårIkkeOppfylt;
 

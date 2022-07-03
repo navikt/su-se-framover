@@ -15,10 +15,10 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
-import { Behandling } from '~src/types/Behandling';
 import { Sakstype } from '~src/types/Sak';
 import { Søknad } from '~src/types/Søknad';
-import { erIverksatt } from '~src/utils/behandling/behandlingUtils';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { erIverksatt } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { splittAvsluttedeOgÅpneRevurderinger } from '~src/utils/revurdering/revurderingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { getIverksatteInnvilgedeSøknader, getIverksatteAvslåtteSøknader } from '~src/utils/søknad/søknadUtils';
@@ -208,7 +208,7 @@ export const AvsluttOgStartFortsettButtons = (props: {
     };
     usePrimaryAsButton?: {
         onClick: () => Promise<void>;
-        status: ApiResult<Behandling>;
+        status: ApiResult<Søknadsbehandling>;
     };
     hideSecondaryButton?: boolean;
 }) => {

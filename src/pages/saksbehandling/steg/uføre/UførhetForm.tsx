@@ -12,7 +12,7 @@ import { FormData, UføreperiodeFormData } from '~src/pages/saksbehandling/steg/
 import { UføreperiodeForm } from '~src/pages/saksbehandling/steg/uføre/UføreperiodeForm';
 import * as styles from '~src/pages/saksbehandling/steg/uføre/uførhet.module.less';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import { Behandling } from '~src/types/Behandling';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import messages from './uførhet-nb';
 
@@ -24,7 +24,7 @@ interface Props {
     nesteUrl: string;
     avsluttUrl: string;
     onFormSubmit: (values: FormData, onSuccess: () => void) => void;
-    savingState: ApiResult<Uføregrunnlag | Behandling>;
+    savingState: ApiResult<Uføregrunnlag | Søknadsbehandling>;
     erSaksbehandling: boolean;
     onTilbakeClickOverride?: () => void;
 }

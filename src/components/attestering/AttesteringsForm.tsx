@@ -11,7 +11,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 
 import messages from './attesteringsForm-nb';
 import * as styles from './attesteringsForm.module.less';

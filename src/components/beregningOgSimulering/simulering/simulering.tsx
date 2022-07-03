@@ -10,8 +10,8 @@ import sharedMessages from '~src/components/beregningOgSimulering/beregning/bere
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { useAppSelector } from '~src/redux/Store';
-import { Behandling } from '~src/types/Behandling';
 import { Simulering, SimulertUtbetalingstype } from '~src/types/Simulering';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { groupWhile } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
@@ -21,7 +21,7 @@ import * as styles from '../beregning/visBeregning.module.less';
 import messages from './simulering-nb';
 
 interface Props {
-    behandling: Behandling;
+    behandling: Søknadsbehandling;
 }
 
 export const Utbetalingssimulering = (props: { simulering: Simulering; utenTittel?: boolean }) => {

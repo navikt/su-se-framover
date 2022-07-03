@@ -12,7 +12,7 @@ import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import stegSharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
-import { Behandling } from '~src/types/Behandling';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import * as styles from './søknadsbehandlingWrapper.module.less';
 
@@ -30,7 +30,7 @@ interface Props<T, U> {
     className?: string;
 }
 
-export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form, ...props }: Props<T, U>) => {
+export const FormWrapper = <T extends FieldValues, U extends Søknadsbehandling>({ form, ...props }: Props<T, U>) => {
     const { formatMessage } = useI18n({ messages: stegSharedI18n });
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
     const navigate = useNavigate();

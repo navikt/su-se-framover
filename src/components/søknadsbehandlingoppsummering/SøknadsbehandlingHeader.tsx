@@ -11,10 +11,10 @@ import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/U
 import { useUserContext } from '~src/context/userContext';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
+import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
-import { erIverksatt } from '~src/utils/behandling/behandlingUtils';
+import { erIverksatt } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
@@ -23,7 +23,7 @@ import * as styles from './søknadsbehandlingHeader.module.less';
 
 const SøknadsbehandlingHeader = (props: {
     sakId: string;
-    behandling: Behandling;
+    behandling: Søknadsbehandling;
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;
 }) => {
@@ -58,7 +58,7 @@ const SøknadsbehandlingHeader = (props: {
 
 const Tilleggsinfo = (props: {
     sakId: string;
-    behandling: Behandling;
+    behandling: Søknadsbehandling;
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;
     intl: IntlShape;

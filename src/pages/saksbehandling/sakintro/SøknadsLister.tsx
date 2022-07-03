@@ -15,15 +15,15 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
-import { Behandling } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import {
     erIverksatt,
     erTilAttestering,
     hentSisteVurdertSaksbehandlingssteg,
-} from '~src/utils/behandling/behandlingUtils';
+} from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
@@ -45,7 +45,7 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
 
 export const ÅpneSøknader = (props: {
     åpneSøknader: Søknad[];
-    behandlinger: Behandling[];
+    behandlinger: Søknadsbehandling[];
     sakId: string;
     intl: IntlShape;
 }) => {
@@ -216,7 +216,7 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
 };
 
 const SøknadsbehandlingStartetKnapper = (props: {
-    behandling: Behandling;
+    behandling: Søknadsbehandling;
     sakId: string;
     søknadId: string;
     intl: IntlShape;

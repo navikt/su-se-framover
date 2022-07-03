@@ -2,7 +2,7 @@ import { Alert, BodyShort, Label } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
-import { Attestering, UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Attestering, UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from './underkjenteAttestering-nb';

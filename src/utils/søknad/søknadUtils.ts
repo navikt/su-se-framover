@@ -1,8 +1,8 @@
 import { formatDate } from '~src/utils/date/dateUtils';
 
-import { Behandlingsstatus } from '../../types/Behandling';
 import { Sak } from '../../types/Sak';
 import { Søknad, Søknadstype } from '../../types/Søknad';
+import { Behandlingsstatus } from '../../types/Søknadsbehandling';
 
 export function søknadMottatt(søknad: Søknad): string {
     if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {

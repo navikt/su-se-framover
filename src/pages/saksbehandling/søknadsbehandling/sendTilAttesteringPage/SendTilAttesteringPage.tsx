@@ -21,7 +21,7 @@ import {
     erSimulert,
     erUnderkjent,
     erVilkårsvurderingerVurdertAvslag,
-} from '~src/utils/behandling/behandlingUtils';
+} from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 

@@ -1,6 +1,6 @@
 import { Nullable } from '~src/lib/types';
 
-import { Attestering } from './Behandling';
+import { Attestering } from './Søknadsbehandling';
 
 export interface Klage {
     id: string;

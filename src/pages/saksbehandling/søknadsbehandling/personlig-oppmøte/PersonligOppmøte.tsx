@@ -21,10 +21,10 @@ import {
     toPersonligOppmøteStatus,
 } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/utils';
 import { erFerdigbehandletMedAvslag, erVurdertUtenAvslagMenIkkeFerdigbehandlet } from '~src/pages/saksbehandling/utils';
-import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Sakstype } from '~src/types/Sak';
+import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
-import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
+import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/SøknadsbehandlingUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -71,7 +71,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
         [watch, props.behandling.behandlingsinformasjon, props.behandling.grunnlagsdataOgVilkårsvurderinger]
     );
 
-    const save = async (values: FormData, onSuccess: (res: Behandling) => void) => {
+    const save = async (values: FormData, onSuccess: (res: Søknadsbehandling) => void) => {
         const personligOppmøteStatus = toPersonligOppmøteStatus(values);
         if (!personligOppmøteStatus) {
             return;
@@ -101,7 +101,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
         );
     };
 
-    const handleSave = async (values: FormData, onSuccess: (res: Behandling) => void) => {
+    const handleSave = async (values: FormData, onSuccess: (res: Søknadsbehandling) => void) => {
         const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(
             props.sakstype,
             values,
@@ -123,7 +123,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
         });
     };
 
-    const onSuccess = (res: Behandling) =>
+    const onSuccess = (res: Søknadsbehandling) =>
         res.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
             ? navigate(
                   Routes.saksbehandlingSendTilAttestering.createURL({

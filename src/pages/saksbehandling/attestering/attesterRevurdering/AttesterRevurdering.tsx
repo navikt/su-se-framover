@@ -18,8 +18,8 @@ import { Nullable } from '~src/lib/types';
 import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
+import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 import {
     erGregulering,
     erInformasjonsRevurdering,

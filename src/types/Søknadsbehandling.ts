@@ -7,7 +7,7 @@ import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Søknad } from './Søknad';
 
-export interface Behandling {
+export interface Søknadsbehandling {
     id: string;
     sakId: string;
     søknad: Søknad;

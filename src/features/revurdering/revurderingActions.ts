@@ -5,7 +5,6 @@ import * as revurderingApi from '~src/api/revurderingApi';
 import { Uføregrunnlag } from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Fradrag } from '~src/types/Fradrag';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
@@ -27,6 +26,7 @@ import {
     UnderkjentRevurdering,
     UtenlandsoppholdRequest,
 } from '~src/types/Revurdering';
+import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,

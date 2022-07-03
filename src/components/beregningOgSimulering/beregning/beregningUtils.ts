@@ -1,13 +1,13 @@
 import { formatISO } from 'date-fns';
 
-import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Periode } from '~src/types/Periode';
+import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
 import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import { FradragFormData } from './fradragInputs/FradragInputs';
 
-export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
+export const erIGyldigStatusForÅKunneBeregne = (behandling: Søknadsbehandling) =>
     [
         Behandlingsstatus.BEREGNET_AVSLAG,
         Behandlingsstatus.BEREGNET_INNVILGET,

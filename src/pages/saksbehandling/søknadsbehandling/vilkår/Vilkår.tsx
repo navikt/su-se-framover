@@ -9,7 +9,7 @@ import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/famili
 import { Sakstype } from '~src/types/Sak';
 import { isAldersøknad, isUføresøknad } from '~src/types/Søknad';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
-import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/behandlingUtils';
+import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { createVilkårUrl } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 

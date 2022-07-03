@@ -5,8 +5,8 @@ import VisBeregningOgSimulering from '~src/components/beregningOgSimulering/Bere
 import { SatsVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import VilkårsOppsummering from '~src/components/oppsummering/vilkårsOppsummering/VilkårsOppsummering';
 import { useI18n } from '~src/lib/i18n';
-import { Behandling } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -17,7 +17,7 @@ import * as styles from './søknadsbehandlingoppsummering.module.less';
 
 interface Props {
     sak: Sak;
-    behandling: Behandling;
+    behandling: Søknadsbehandling;
     tittel?: React.ReactNode;
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;

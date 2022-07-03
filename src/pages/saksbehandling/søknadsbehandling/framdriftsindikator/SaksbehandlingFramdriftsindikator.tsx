@@ -4,8 +4,8 @@ import Framdriftsindikator, { Linjestatus } from '~src/components/framdriftsindi
 import { useSøknadsbehandlingDraftContext } from '~src/context/søknadsbehandlingDraftContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Behandling } from '~src/types/Behandling';
 import { Sakstype } from '~src/types/Sak';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import {
     mapToVilkårsinformasjon,
@@ -31,7 +31,7 @@ const vilkårstatusTilLinjestatus = (s: VilkårVurderingStatus): Linjestatus => 
 
 const SaksbehandlingFramdriftsindikator = (props: {
     sakId: string;
-    behandling: Behandling;
+    behandling: Søknadsbehandling;
     vilkår: Vilkårtype;
     sakstype: Sakstype;
 }) => {

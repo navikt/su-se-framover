@@ -1,8 +1,8 @@
-import { Behandling, Behandlingsstatus } from '~src/types/Behandling';
 import { FormueStatus, PersonligOppmøteStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sak } from '~src/types/Sak';
+import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import {
     mapToVilkårsinformasjon,
@@ -11,13 +11,13 @@ import {
 
 export const findBehandling = (sak: Sak, behandlingId: string) => sak.behandlinger.find((b) => b.id === behandlingId);
 
-export const erTilAttestering = ({ status }: Behandling) =>
+export const erTilAttestering = ({ status }: Søknadsbehandling) =>
     [Behandlingsstatus.TIL_ATTESTERING_AVSLAG, Behandlingsstatus.TIL_ATTESTERING_INNVILGET].includes(status);
 
-export const erIverksatt = ({ status }: Behandling) =>
+export const erIverksatt = ({ status }: Søknadsbehandling) =>
     [Behandlingsstatus.IVERKSATT_AVSLAG, Behandlingsstatus.IVERKSATT_INNVILGET].includes(status);
 
-export const erAvslått = ({ status }: Behandling) =>
+export const erAvslått = ({ status }: Søknadsbehandling) =>
     [
         Behandlingsstatus.TIL_ATTESTERING_AVSLAG,
         Behandlingsstatus.VILKÅRSVURDERT_AVSLAG,
@@ -26,23 +26,23 @@ export const erAvslått = ({ status }: Behandling) =>
         Behandlingsstatus.IVERKSATT_AVSLAG,
     ].includes(status);
 
-export const erBeregnetAvslag = (behandling: Behandling) =>
+export const erBeregnetAvslag = (behandling: Søknadsbehandling) =>
     behandling.beregning != null &&
     [Behandlingsstatus.BEREGNET_AVSLAG, Behandlingsstatus.UNDERKJENT_AVSLAG].includes(behandling.status);
 
-export const kanSimuleres = (behandling: Behandling) =>
+export const kanSimuleres = (behandling: Søknadsbehandling) =>
     behandling.beregning != null &&
     [Behandlingsstatus.BEREGNET_INNVILGET, Behandlingsstatus.SIMULERT, Behandlingsstatus.UNDERKJENT_INNVILGET].includes(
         behandling.status
     );
 
-export const erSimulert = (behandling: Behandling) =>
+export const erSimulert = (behandling: Søknadsbehandling) =>
     behandling.simulering != null && behandling.status === Behandlingsstatus.SIMULERT;
 
-export const erUnderkjent = ({ status }: Behandling) =>
+export const erUnderkjent = ({ status }: Søknadsbehandling) =>
     [Behandlingsstatus.UNDERKJENT_INNVILGET, Behandlingsstatus.UNDERKJENT_AVSLAG].includes(status);
 
-export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) =>
+export const erVilkårsvurderingerVurdertAvslag = (behandling: Søknadsbehandling) =>
     behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
     behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
     behandling.behandlingsinformasjon.flyktning?.status === Vilkårstatus.VilkårIkkeOppfylt ||
@@ -54,7 +54,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) =>
     behandling.grunnlagsdataOgVilkårsvurderinger.formue?.resultat === FormueStatus.VilkårIkkeOppfylt ||
     behandling.behandlingsinformasjon.personligOppmøte?.status === PersonligOppmøteStatus.IkkeMøttPersonlig;
 
-const hentSaksbehandlingssteg = (behandling: Behandling) => {
+const hentSaksbehandlingssteg = (behandling: Søknadsbehandling) => {
     const vilkårsinformasjon = mapToVilkårsinformasjon(
         behandling.søknad.søknadInnhold.type,
         behandling.behandlingsinformasjon,
@@ -64,7 +64,7 @@ const hentSaksbehandlingssteg = (behandling: Behandling) => {
     return [...vilkårsinformasjon, ...satsOgBeregningssteg];
 };
 
-export const hentSisteVurdertSaksbehandlingssteg = (behandling: Behandling) => {
+export const hentSisteVurdertSaksbehandlingssteg = (behandling: Søknadsbehandling) => {
     const påbegynteSteg = hentSaksbehandlingssteg(behandling).filter((steg) => steg.erStartet);
     return [...påbegynteSteg].pop()?.vilkårtype ?? Vilkårtype.Virkningstidspunkt;
 };
