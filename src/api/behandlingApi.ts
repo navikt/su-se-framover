@@ -96,6 +96,21 @@ export async function lagreVilkårsvurdering(arg: {
     });
 }
 
+export async function lagreFlyktningVilkår(arg: {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: Array<{
+        vurdering: Vilkårstatus;
+        periode: Periode<string>;
+    }>;
+}) {
+    return apiClient<Søknadsbehandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/flyktning`,
+        method: 'POST',
+        body: arg.vurderinger,
+    });
+}
+
 export async function lagreBehandlingsinformasjon(arg: {
     sakId: string;
     behandlingId: string;

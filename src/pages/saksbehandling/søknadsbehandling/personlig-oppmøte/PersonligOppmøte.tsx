@@ -83,7 +83,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
             clearDraft();
             return;
         }
-
         await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
@@ -123,7 +122,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
         });
     };
 
-    const onSuccess = (res: Søknadsbehandling) =>
+    const onSuccess = (res: Søknadsbehandling) => {
         res.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
             ? navigate(
                   Routes.saksbehandlingSendTilAttestering.createURL({
@@ -132,6 +131,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                   })
               )
             : navigate(props.nesteUrl);
+    };
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>

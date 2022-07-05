@@ -102,6 +102,7 @@ export const tilOppdatertVilkårsinformasjon = (
     if (!s) {
         return 'personligOppmøteIkkeVurdert';
     }
+    console.log('Vi mapper til oppdatert vilkårsinformasjon');
     return mapToVilkårsinformasjon(
         søknadstema,
         {

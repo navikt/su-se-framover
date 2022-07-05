@@ -4,6 +4,7 @@ import { Nullable } from '~src/lib/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { Familiegjenforening } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
+import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';
@@ -16,6 +17,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     pensjon: Nullable<Aldersvilkår>;
     familiegjenforening: Nullable<Familiegjenforening>;
     uføre: Nullable<UføreVilkår>;
+    flyktning: Nullable<FlyktningVilkår>;
     lovligOpphold: Nullable<LovligOppholdVilkår>;
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];

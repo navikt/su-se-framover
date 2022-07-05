@@ -125,6 +125,25 @@ export const lagreVilkårsvurdering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreFlyktningVilkår = createAsyncThunk<
+    Søknadsbehandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vurderinger: Array<{
+            vurdering: Vilkårstatus;
+            periode: Periode<string>;
+        }>;
+    },
+    { rejectValue: ApiError }
+>('behandling/flyktning', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreFlyktningVilkår(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const lagreBehandlingsinformasjon = createAsyncThunk<
     Søknadsbehandling,
     {
