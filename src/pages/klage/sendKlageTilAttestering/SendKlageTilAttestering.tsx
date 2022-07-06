@@ -32,7 +32,11 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
                 klageId: props.klage.id,
             },
             () => {
-                navigate(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId));
+                Routes.navigateToSakIntroWithMessage(
+                    navigate,
+                    formatMessage('notification.sendtTilAttestering'),
+                    props.sakId
+                );
             }
         );
     };
