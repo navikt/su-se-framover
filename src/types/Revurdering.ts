@@ -203,6 +203,7 @@ export enum InformasjonSomRevurderes {
     Formue = 'Formue',
     Utenlandsopphold = 'Utenlandsopphold',
     Opplysningsplikt = 'Opplysningsplikt',
+    Oppholdstillatelse = 'Oppholdstillatelse',
 }
 
 export enum Vurderingstatus {

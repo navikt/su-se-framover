@@ -78,6 +78,9 @@ export const opplysningspliktErLik = (
     return isEqual(ny, gammel);
 };
 
+export const lovligOppholdErLik = (ny: Nullable<LovligOppholdVilkår>, gammel: Nullable<LovligOppholdVilkår>) =>
+    isEqual(ny, gammel);
+
 const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
 
 const trimIdFromObject = <T>(obj: T) => {

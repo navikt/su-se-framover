@@ -6,6 +6,7 @@ import { Uføregrunnlag } from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { Fradrag } from '~src/types/Fradrag';
+import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
 import {
@@ -368,6 +369,22 @@ export const lagreFormuegrunnlag = createAsyncThunk<
         sakId: arg.sakId,
         revurderingId: arg.revurderingId,
         formue: arg.formue,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreLovligOppholdVilkår = createAsyncThunk<
+    { revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] },
+    LovligOppholdRequest,
+    { rejectValue: ApiError }
+>('revurdering/vilkår/lovligOpphold/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreLovligOppholdVilkår({
+        sakId: arg.sakId,
+        behandlingId: arg.behandlingId,
+        vurderinger: arg.vurderinger,
     });
     if (res.status === 'ok') {
         return res.data;

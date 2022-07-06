@@ -17,6 +17,7 @@ export enum RevurderingSteg {
     Utenlandsopphold = 'utenlandsopphold',
     Opplysningsplikt = 'opplysningsplikt',
     Oppsummering = 'oppsummering',
+    Oppholdstillatelse = 'Oppholdstillatelse',
 }
 
 export enum KlageSteg {

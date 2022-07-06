@@ -7,10 +7,10 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { keyOf, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
@@ -20,6 +20,7 @@ import {
     gyldigeÅrsaker,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
+    OpprettetRevurdering,
     OpprettetRevurderingGrunn,
 } from '~src/types/Revurdering';
 
@@ -53,8 +54,8 @@ interface RevurderingIntroFormProps {
     revurdering?: InformasjonsRevurdering;
     minFraOgMed: Date;
     maxFraOgMed: Date;
-    opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
-    oppdaterRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
+    opprettRevurderingStatus: ApiResult<OpprettetRevurdering>;
+    oppdaterRevurderingStatus: ApiResult<OpprettetRevurdering>;
 }
 
 const getInitialÅrsak = (årsak: OpprettetRevurderingGrunn | null | undefined) =>
@@ -169,19 +170,21 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                         error={fieldState.error?.message}
                                         {...field}
                                     >
-                                        {Object.values(InformasjonSomRevurderes).map((i, idx) => (
-                                            <Checkbox
-                                                key={i}
-                                                id={
-                                                    idx === 0
-                                                        ? keyOf<FormValues>('informasjonSomRevurderes')
-                                                        : undefined
-                                                }
-                                                value={i}
-                                            >
-                                                {formatMessage(i)}
-                                            </Checkbox>
-                                        ))}
+                                        <div className={styles.informasjonSomRevurderesCheckboxContainer}>
+                                            {Object.values(InformasjonSomRevurderes).map((i, idx) => (
+                                                <Checkbox
+                                                    key={i}
+                                                    id={
+                                                        idx === 0
+                                                            ? keyOf<FormValues>('informasjonSomRevurderes')
+                                                            : undefined
+                                                    }
+                                                    value={i}
+                                                >
+                                                    {formatMessage(i)}
+                                                </Checkbox>
+                                            ))}
+                                        </div>
                                     </CheckboxGroup>
                                     <div className={styles.informasjonsContainer}>
                                         {field.value.includes(InformasjonSomRevurderes.Bosituasjon) && (

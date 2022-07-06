@@ -2,13 +2,15 @@ import * as DateFns from 'date-fns';
 import React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import {
-    oppdaterRevurderingsPeriode as oppdaterRevurdering,
-    opprettRevurdering,
-} from '~src/features/revurdering/revurderingActions';
+import { opprettRevurdering, oppdaterRevurderingsPeriode } from '~src/features/revurdering/revurderingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
-import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { InformasjonSomRevurderes, OpprettetRevurderingGrunn } from '~src/types/Revurdering';
+import {
+    InformasjonSomRevurderes,
+    InformasjonsRevurdering,
+    OpprettetRevurderingGrunn,
+    Revurdering,
+} from '~src/types/Revurdering';
 import { compareUtbetalingsperiode } from '~src/types/Utbetalingsperiode';
 import { erInformasjonsRevurdering, finnNesteRevurderingsteg } from '~src/utils/revurdering/revurderingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
@@ -23,6 +25,7 @@ export interface FormValues {
 }
 
 const RevurderingIntroPage = () => {
+    const navigate = useNavigate();
     const { sak } = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
@@ -32,39 +35,42 @@ const RevurderingIntroPage = () => {
         informasjonsRevurderinger: sak.revurderinger.filter(erInformasjonsRevurdering),
     };
     const informasjonsRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
-    const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
-    const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
 
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+    const [opprettStatus, opprett] = useAsyncActionCreator(opprettRevurdering);
+    const [oppdaterStatus, oppdater] = useAsyncActionCreator(oppdaterRevurderingsPeriode);
 
     const forrigeUrl = Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId });
-    const thunk = (arg: FormValues) =>
+    const thunk = (arg: FormValues, goTo: 'neste' | 'avbryt') =>
         informasjonsRevurdering
-            ? oppdaterRevurdering({
-                  sakId: props.sakId,
-                  revurderingId: informasjonsRevurdering.id,
-                  ...arg,
-              })
-            : opprettRevurdering({
-                  sakId: props.sakId,
-                  ...arg,
-              });
+            ? oppdater(
+                  {
+                      sakId: props.sakId,
+                      revurderingId: informasjonsRevurdering.id,
+                      ...arg,
+                  },
+                  (revurdering) => navigateLocal(revurdering, goTo)
+              )
+            : opprett(
+                  {
+                      sakId: props.sakId,
+                      ...arg,
+                  },
+                  (revurdering) => navigateLocal(revurdering, goTo)
+              );
 
-    const endre = async (arg: FormValues, goTo: 'neste' | 'avbryt') => {
-        const response = await dispatch(thunk(arg));
-        if ((informasjonsRevurdering ? oppdaterRevurdering : opprettRevurdering).fulfilled.match(response)) {
-            navigate(
-                goTo === 'avbryt'
-                    ? forrigeUrl
-                    : Routes.revurderValgtRevurdering.createURL({
-                          sakId: props.sakId,
-                          revurderingId: response.payload.id,
-                          steg: finnNesteRevurderingsteg(response.payload.informasjonSomRevurderes),
-                      })
-            );
-        }
+    const navigateLocal = (revurdering: Revurdering, goTo: 'neste' | 'avbryt') => {
+        navigate(
+            goTo === 'avbryt'
+                ? forrigeUrl
+                : Routes.revurderValgtRevurdering.createURL({
+                      sakId: props.sakId,
+                      revurderingId: revurdering.id,
+                      steg: finnNesteRevurderingsteg((revurdering as InformasjonsRevurdering).informasjonSomRevurderes),
+                  })
+        );
     };
+
+    const endre = async (arg: FormValues, goTo: 'neste' | 'avbryt') => await thunk(arg, goTo);
 
     const sorterteUtbetalinger = [...props.utbetalinger].sort(compareUtbetalingsperiode);
     const [førsteUtbetaling, sisteUtbetaling] = [
@@ -79,8 +85,8 @@ const RevurderingIntroPage = () => {
             revurdering={informasjonsRevurdering}
             maxFraOgMed={DateFns.parseISO(sisteUtbetaling.tilOgMed)}
             minFraOgMed={DateFns.parseISO(førsteUtbetaling.fraOgMed)}
-            opprettRevurderingStatus={opprettRevurderingStatus}
-            oppdaterRevurderingStatus={oppdaterRevurderingStatus}
+            opprettRevurderingStatus={opprettStatus}
+            oppdaterRevurderingStatus={oppdaterStatus}
         />
     );
 };

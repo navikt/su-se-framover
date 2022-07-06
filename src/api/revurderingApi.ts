@@ -4,6 +4,7 @@ import { Nullable } from '~src/lib/types';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { Fradrag } from '~src/types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
 import {
@@ -349,6 +350,18 @@ export async function lagreFormuegrunnlag(
         url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/formuegrunnlag`,
         method: 'POST',
         body: data.formue,
+    });
+}
+
+export async function lagreLovligOppholdVilkår(
+    data: LovligOppholdRequest
+): Promise<ApiClientResult<{ revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] }>> {
+    return apiClient({
+        url: `/saker/${data.sakId}/revurderinger/${data.behandlingId}/lovligopphold`,
+        method: 'POST',
+        body: {
+            vurderinger: data.vurderinger,
+        },
     });
 }
 
