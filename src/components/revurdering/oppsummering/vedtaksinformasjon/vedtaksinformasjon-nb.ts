@@ -38,4 +38,5 @@ export default {
     'radTittel.fradrag': 'Inntekt',
     'radTittel.utenlandsopphold': 'Utenlandsopphold',
     'radTittel.opplysningsplikt': 'Opplysningsplikt',
+    'radTittel.lovligOpphold': 'Oppholdstillatelse',
 };

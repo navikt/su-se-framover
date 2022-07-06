@@ -442,8 +442,6 @@ interface SakState {
     simuleringStatus: RemoteData.RemoteData<ApiError, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
-    opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
-    oppdaterRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
@@ -455,8 +453,6 @@ const initialState: SakState = {
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
-    opprettRevurderingStatus: RemoteData.initial,
-    oppdaterRevurderingStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -697,40 +693,6 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, revurderingActions.opprettRevurdering, {
-            pending: (state) => {
-                state.opprettRevurderingStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.opprettRevurderingStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        revurderinger: [...sak.revurderinger, action.payload],
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.opprettRevurderingStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, revurderingActions.oppdaterRevurderingsPeriode, {
-            pending: (state) => {
-                state.oppdaterRevurderingStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.oppdaterRevurderingStatus = RemoteData.success(null);
-
-                state.sak = oppdaterRevurderingISak(state.sak, action.payload);
-            },
-            rejected: (state, action) => {
-                state.oppdaterRevurderingStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
         builder.addCase(lukkSøknad.fulfilled, (state, action) => {
             state.sak = RemoteData.success(action.payload);
         });
@@ -809,24 +771,20 @@ export default createSlice({
             );
         });
 
+        builder.addCase(revurderingActions.opprettRevurdering.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(revurderingActions.oppdaterRevurderingsPeriode.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
         builder.addCase(revurderingActions.opprettStans.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: [...sak.revurderinger, action.payload],
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(revurderingActions.gjenoppta.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: [...sak.revurderinger, action.payload],
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(revurderingActions.lagreUføregrunnlag.fulfilled, (state, action) => {
@@ -850,6 +808,10 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.lagreOpplysningsplikt.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
+        builder.addCase(revurderingActions.lagreLovligOppholdVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 

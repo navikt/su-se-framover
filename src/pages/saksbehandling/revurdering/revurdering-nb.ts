@@ -9,6 +9,7 @@ export const stegmessages: { [key in RevurderingSteg]: string } = {
     [RevurderingSteg.Formue]: 'Formue',
     [RevurderingSteg.Utenlandsopphold]: 'Utenlandsopphold',
     [RevurderingSteg.Opplysningsplikt]: 'Opplysningsplikt',
+    [RevurderingSteg.Oppholdstillatelse]: 'Oppholdstillatelse',
     [RevurderingSteg.Oppsummering]: 'Oppsummering',
 };
 
