@@ -1,6 +1,6 @@
 export default {
     'avslutt.manglendeDokumentasjon': 'Avslå pga manglende dokumentasjon',
-    'avslutt.behandlingHarBlittAvsluttet': 'Behandling av søknad av blitt avsluttet',
+    'avslutt.behandlingHarBlittAvsluttet': 'Behandling av søknad har blitt avsluttet',
 
     'avvist.skalSendesBrevTilSøker': 'Skal det sendes brev til søker?',
     'avvist.typeBrev': 'Type brev',
