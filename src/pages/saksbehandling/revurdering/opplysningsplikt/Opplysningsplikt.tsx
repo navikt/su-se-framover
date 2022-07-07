@@ -68,7 +68,11 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                     beskrivelse: v.beskrivelse,
                 })),
             },
-            onSuccess
+            (res) => {
+                if (res.feilmeldinger.length === 0) {
+                    onSuccess();
+                }
+            }
         );
     };
 

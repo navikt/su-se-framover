@@ -76,7 +76,11 @@ const Formue = (props: RevurderingStegProps) => {
                 revurderingId: props.revurdering.id,
                 formue: formueFormDataTilFormuegrunnlagRequest(data.formue),
             },
-            onSuccess
+            (res) => {
+                if (res.feilmeldinger.length === 0) {
+                    onSuccess();
+                }
+            }
         );
     };
 

@@ -63,7 +63,11 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                     erEPSUførFlyktning: b.harEPS && b.epsAlder && b.epsAlder < 67 ? b.erEPSUførFlyktning : null,
                 })),
             },
-            onSuccess
+            (res) => {
+                if (res.feilmeldinger.length === 0) {
+                    onSuccess();
+                }
+            }
         );
 
     const items = useFieldArray({
