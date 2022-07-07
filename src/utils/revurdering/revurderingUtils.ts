@@ -123,15 +123,18 @@ export function harSimulering(r: Revurdering): r is Revurdering & { simulering: 
  */
 export const revurderingstegrekkefølge = [
     RevurderingSteg.Uførhet,
+    RevurderingSteg.Flyktning,
     RevurderingSteg.Bosituasjon,
     RevurderingSteg.Formue,
     RevurderingSteg.Utenlandsopphold,
     RevurderingSteg.EndringAvFradrag,
     RevurderingSteg.Opplysningsplikt,
     RevurderingSteg.Oppholdstillatelse,
-];
+] as const;
 
-export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) => {
+export const revurderingstegTilInformasjonSomRevurderes = (
+    i: typeof revurderingstegrekkefølge[number]
+): InformasjonSomRevurderes => {
     switch (i) {
         case RevurderingSteg.Uførhet:
             return InformasjonSomRevurderes.Uførhet;
@@ -147,8 +150,9 @@ export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) =
             return InformasjonSomRevurderes.Opplysningsplikt;
         case RevurderingSteg.Oppholdstillatelse:
             return InformasjonSomRevurderes.Oppholdstillatelse;
+        case RevurderingSteg.Flyktning:
+            return InformasjonSomRevurderes.Flyktning;
     }
-    throw new Error('ukjent revurderingssteg som skal mappes');
 };
 
 export const finnNesteRevurderingsteg = (

@@ -2,12 +2,17 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
 
 export interface FlyktningVilkår {
-    vilkår: 'Familiegjenforening';
-    vurderinger: FlyktningVurdering[];
+    vilkår: 'FLYKTNING';
+    vurderinger: VurderingsperiodeFlyktning[];
     resultat: Vilkårstatus;
 }
 
-export interface FlyktningVurdering {
-    periode: Periode;
+export interface FlyktningRequest {
+    periode: Periode<string>;
+    vurdering: Vilkårstatus;
+}
+
+export interface VurderingsperiodeFlyktning {
+    periode: Periode<string>;
     resultat: Vilkårstatus;
 }

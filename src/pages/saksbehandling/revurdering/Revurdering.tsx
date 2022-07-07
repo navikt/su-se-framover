@@ -14,6 +14,7 @@ import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import NullstillRevurderingVarsel from '~src/pages/saksbehandling/revurdering/advarselReset/NullstillRevurderingVarsel';
+import { FlyktningPage } from '~src/pages/saksbehandling/revurdering/flyktning/FlyktningPage';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 import {
@@ -219,6 +220,12 @@ const RevurderingstegPage = (props: {
                         )}
                         {props.steg === RevurderingSteg.Bosituasjon && (
                             <BosituasjonPage
+                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
+                                {...stegProps}
+                            />
+                        )}
+                        {props.steg === RevurderingSteg.Flyktning && (
+                            <FlyktningPage
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                                 {...stegProps}
                             />

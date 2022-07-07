@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
+import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import { useI18n } from '~src/lib/i18n';
@@ -11,6 +12,7 @@ import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosit
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import {
     bosituasjonErlik,
+    flyktningErLik,
     formueErlik,
     fradragErlik,
     GrunnlagsdataOgVilkårsvurderinger,
@@ -128,6 +130,9 @@ const Vedtaksinformasjon = (props: {
     const skalViseLovligOpphold =
         !lovligOppholdErLik(nyeData.lovligOpphold, gamleData.lovligOpphold) ||
         valgtRevurderingssteg.Oppholdstillatelse === Vurderingstatus.Vurdert;
+    const skalViseFlyktning =
+        !flyktningErLik(nyeData.flyktning, gamleData.flyktning) ||
+        valgtRevurderingssteg.Flyktning === Vurderingstatus.Vurdert;
 
     return (
         <div className={styles.container}>
@@ -213,6 +218,18 @@ const Vedtaksinformasjon = (props: {
                         ) : null,
                         høyre: gamleData.lovligOpphold ? (
                             <LovligOppholdOppsummering lovligOppholdVilkår={gamleData.lovligOpphold} />
+                        ) : null,
+                    }}
+                </Rad>
+            )}
+            {skalViseFlyktning && (
+                <Rad radTittel={formatMessage('radTittel.flyktning' as any)}>
+                    {{
+                        venstre: nyeData.flyktning ? (
+                            <FlyktningOppsummering flyktningVilkår={nyeData.flyktning} />
+                        ) : null,
+                        høyre: gamleData.flyktning ? (
+                            <FlyktningOppsummering flyktningVilkår={gamleData.flyktning} />
                         ) : null,
                     }}
                 </Rad>

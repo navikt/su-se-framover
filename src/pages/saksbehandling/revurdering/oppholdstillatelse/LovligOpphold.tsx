@@ -85,17 +85,17 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
                         <>
                             <MultiPeriodeVelger
                                 className={styles.multiPeriodeVelger}
-                                name={'lovligOpphold'}
+                                name="lovligOpphold"
                                 controller={form.control}
                                 appendNyPeriode={getTomVurderingsperiodeLovligOpphold}
-                                periodeStuffs={{
+                                periodeConfig={{
                                     minFraOgMed: revurderingsperiode.fraOgMed,
                                     maxTilOgMed: revurderingsperiode.tilOgMed,
                                     size: 'S',
                                 }}
-                                childrenz={(idx: number) => (
+                                getChild={(nameOgIdx) => (
                                     <VilkårsResultatRadioGroup
-                                        navnOgIdx={`lovligOpphold.${idx}`}
+                                        name={`${nameOgIdx}.resultat`}
                                         legend={formatMessage('lovligOpphold.harSøkerLovligOpphold')}
                                         controller={form.control}
                                     />

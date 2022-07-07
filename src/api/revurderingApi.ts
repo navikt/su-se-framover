@@ -3,6 +3,7 @@ import { formatISO } from 'date-fns';
 import { Nullable } from '~src/lib/types';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { Fradrag } from '~src/types/Fradrag';
+import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -290,6 +291,18 @@ export async function lagreUføregrunnlag(arg: {
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
+    });
+}
+
+export async function lagreFlyktningvilkår(arg: {
+    vurderinger: FlyktningRequest[];
+    sakId: string;
+    revurderingId: string;
+}): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/flyktning`,
+        method: 'POST',
+        body: arg.vurderinger,
     });
 }
 

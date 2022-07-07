@@ -12,6 +12,7 @@ import { Periode } from '~src/types/Periode';
 import {
     BeslutningEtterForhåndsvarsling,
     BosituasjonRequest,
+    FlyktningVilkårRequest,
     FormuegrunnlagRequest,
     Gjenopptak,
     InformasjonSomRevurderes,
@@ -384,6 +385,22 @@ export const lagreLovligOppholdVilkår = createAsyncThunk<
     const res = await revurderingApi.lagreLovligOppholdVilkår({
         sakId: arg.sakId,
         behandlingId: arg.behandlingId,
+        vurderinger: arg.vurderinger,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreFlyktningVilkår = createAsyncThunk<
+    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    FlyktningVilkårRequest,
+    { rejectValue: ApiError }
+>('revurdering/vilkår/flyktning/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreFlyktningvilkår({
+        sakId: arg.sakId,
+        revurderingId: arg.revurderingId,
         vurderinger: arg.vurderinger,
     });
     if (res.status === 'ok') {

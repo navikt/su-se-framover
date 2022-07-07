@@ -761,6 +761,16 @@ export default createSlice({
             );
         });
 
+        builder.addCase(lagreFlyktningVilkår.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
         builder.addCase(lagreFradrag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
@@ -787,6 +797,10 @@ export default createSlice({
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
+        builder.addCase(revurderingActions.lagreFlyktningVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
         builder.addCase(revurderingActions.lagreUføregrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
@@ -808,6 +822,7 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.lagreOpplysningsplikt.fulfilled, (state, action) => {
+            //state action.payload.feilmeldinger
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
