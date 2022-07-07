@@ -52,7 +52,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 },
                 () => {
                     const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    return navigate(Routes.createSakIntroLocation(message, props.sakId));
+                    return Routes.navigateToSakIntroWithMessage(navigate, message, props.sakId);
                 }
             );
         } else {
@@ -63,7 +63,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 },
                 () => {
                     const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    navigate(Routes.createSakIntroLocation(message, props.sakId));
+                    Routes.navigateToSakIntroWithMessage(navigate, message, props.sakId);
                 }
             );
         }

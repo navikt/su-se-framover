@@ -83,7 +83,7 @@ const SendTilAttesteringPage = () => {
             () => {
                 clearDraft();
                 const message = formatMessage('vedtak.sendtTilAttestering');
-                navigate(Routes.createSakIntroLocation(message, props.sak.id));
+                Routes.navigateToSakIntroWithMessage(navigate, message, props.sak.id);
             }
         );
     };

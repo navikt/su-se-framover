@@ -87,7 +87,7 @@ const ManuellRegulering = () => {
                 },
                 () => {
                     hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
-                        navigate(Routes.createSakIntroLocation(formatMessage('notification'), props.sak.id));
+                        Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification'), props.sak.id);
                     });
                 }
             ),

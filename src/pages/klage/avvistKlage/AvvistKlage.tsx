@@ -65,7 +65,11 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     const handleBekreftOgFortsettSubmit = (data: AvvistKlageFormData) => {
         lagreFritekst({ sakId: props.sakId, klageId: props.klage.id, fritekstTilBrev: data.fritekstTilBrev }, () => {
             sendTilAttestering({ sakId: props.sakId, klageId: props.klage.id }, () => {
-                navigate(Routes.createSakIntroLocation(formatMessage('avvistKlage.sendtTilAttestering'), props.sakId));
+                Routes.navigateToSakIntroWithMessage(
+                    navigate,
+                    formatMessage('avvistKlage.sendtTilAttestering'),
+                    props.sakId
+                );
             });
         });
     };

@@ -32,7 +32,7 @@ const Attesteringsinnhold = ({
     const [underkjennStatus, attesteringUnderkjent] = useAsyncActionCreator(sakSlice.attesteringUnderkjenn);
     const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const redirectTilSaksoversikt = (message: string) => {
-        navigate(Routes.createSakIntroLocation(message, props.sak.id));
+        Routes.navigateToSakIntroWithMessage(navigate, message, props.sak.id);
     };
 
     const iverksettCallback = () =>

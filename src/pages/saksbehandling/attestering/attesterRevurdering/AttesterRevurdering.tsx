@@ -88,14 +88,14 @@ const AttesterRevurdering = () => {
         iverksett({ sakId: sakId, revurderingId: revurdering.id }, () => {
             dispatch(sakSlice.fetchSak({ saksnummer: saksnummer.toString() }));
             const message = formatMessage('attester.iverksatt');
-            navigate(Routes.createSakIntroLocation(message, sakId));
+            Routes.navigateToSakIntroWithMessage(navigate, message, sakId);
         });
     };
 
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) => {
         underkjenn({ sakId: sakId, revurderingId: revurdering.id, grunn, kommentar }, () => {
             const message = formatMessage('attester.sendtTilbake');
-            navigate(Routes.createSakIntroLocation(message, sakId));
+            Routes.navigateToSakIntroWithMessage(navigate, message, sakId);
         });
     };
 
