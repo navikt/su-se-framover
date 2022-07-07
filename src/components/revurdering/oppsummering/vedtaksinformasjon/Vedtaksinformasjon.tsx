@@ -223,7 +223,7 @@ const Vedtaksinformasjon = (props: {
                 </Rad>
             )}
             {skalViseFlyktning && (
-                <Rad radTittel={formatMessage('radTittel.flyktning' as any)}>
+                <Rad radTittel={formatMessage('radTittel.flyktning')}>
                     {{
                         venstre: nyeData.flyktning ? (
                             <FlyktningOppsummering flyktningVilkår={nyeData.flyktning} />

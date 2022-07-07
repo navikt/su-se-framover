@@ -79,7 +79,11 @@ const AttesterKlage = () => {
                         klageId: klage.id,
                     },
                     () => {
-                        navigate(Routes.createSakIntroLocation(formatMessage('notification.avvist'), props.sakId));
+                        Routes.navigateToSakIntroWithMessage(
+                            navigate,
+                            formatMessage('notification.avvist'),
+                            props.sakId
+                        );
                     }
                 ),
             status: avvisStatus,
@@ -95,7 +99,11 @@ const AttesterKlage = () => {
                         klageId: klage.id,
                     },
                     () => {
-                        navigate(Routes.createSakIntroLocation(formatMessage('notification.oversendt'), props.sakId));
+                        Routes.navigateToSakIntroWithMessage(
+                            navigate,
+                            formatMessage('notification.oversendt'),
+                            props.sakId
+                        );
                     }
                 ),
             status: oversendStatus,
@@ -111,7 +119,7 @@ const AttesterKlage = () => {
                 kommentar: kommentar,
             },
             () => {
-                navigate(Routes.createSakIntroLocation(formatMessage('notification.underkjent'), props.sakId));
+                Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification.underkjent'), props.sakId);
             }
         );
 

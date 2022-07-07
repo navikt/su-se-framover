@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { NavigateFunction, useParams } from 'react-router-dom';
 
 import * as Routes from '~src/lib/routes';
 import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '~src/pages/saksbehandling/types';
@@ -257,11 +257,16 @@ export interface SuccessNotificationState {
 export const createSakIntroLocation = (
     message: string,
     sakid: string
-): { pathname: string; state: SuccessNotificationState } => {
+): { path: string; state: SuccessNotificationState } => {
     return {
-        pathname: Routes.saksoversiktValgtSak.createURL({ sakId: sakid }),
+        path: Routes.saksoversiktValgtSak.createURL({ sakId: sakid }),
         state: { notification: message },
     };
+};
+
+export const navigateToSakIntroWithMessage = (navigate: NavigateFunction, message: string, sakid: string): void => {
+    const { path, state } = createSakIntroLocation(message, sakid);
+    navigate(path, { replace: false, state });
 };
 
 //---------------Kontrollsamtale------------------------------

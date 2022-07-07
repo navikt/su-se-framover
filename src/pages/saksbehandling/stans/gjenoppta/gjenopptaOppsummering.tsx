@@ -44,7 +44,7 @@ const GjenopptaOppsummering = () => {
     const iverksettOgGåVidere = () => {
         iverksettGjenopptak({ sakId: sak.id, revurderingId: revurdering.id }, async () => {
             await dispatch(fetchSak({ fnr: sak.fnr }));
-            navigate(Routes.createSakIntroLocation(formatMessage('gjenoppta.notification'), sak.id));
+            Routes.navigateToSakIntroWithMessage(navigate, formatMessage('gjenoppta.notification'), sak.id);
         });
     };
     const erIverksatt = revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK;

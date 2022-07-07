@@ -81,7 +81,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
             !erVilkårsvurderingerVurdertAvslag(props.behandling)
         ) {
             clearDraft();
-            return;
         }
         await lagreBehandlingsinformasjon(
             {

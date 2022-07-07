@@ -8,6 +8,7 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
 import { lagreFlyktningVilkår } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
 import {
     FlyktningVilkårFormData,
     flyktningFormSchema,
@@ -21,8 +22,11 @@ import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 
+import messages from './flyktning-nb';
+
 export function FlyktningPage(props: RevurderingStegProps) {
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
+    const { formatMessage } = useI18n({ messages });
 
     const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning?.vurderinger ?? [
         { periode: props.revurdering.periode, resultat: null },
@@ -54,7 +58,11 @@ export function FlyktningPage(props: RevurderingStegProps) {
                     vurdering: v.resultat!,
                 })),
             },
-            onSuccess
+            (res) => {
+                if (res.feilmeldinger.length === 0) {
+                    onSuccess();
+                }
+            }
         );
     const revurderingsperiode = {
         fraOgMed: new Date(props.revurdering.periode.fraOgMed),
@@ -85,7 +93,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
                                 getChild={(nameAndIdx: string) => (
                                     <VilkårsResultatRadioGroup
                                         name={`${nameAndIdx}.resultat`}
-                                        legend={'er flyktning?'}
+                                        legend={formatMessage('flyktning.vilkår')}
                                         controller={form.control}
                                     />
                                 )}

@@ -48,7 +48,12 @@ export const VelgForhåndsvarselForm = (props: {
             fritekstTilBrev: args.vedtaksbrevtekst,
             skalFøreTilBrevutsending: args.skalFøreTilBrevutsending,
         }),
-        () => navigate(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId))
+        () =>
+            Routes.navigateToSakIntroWithMessage(
+                navigate,
+                formatMessage('notification.sendtTilAttestering'),
+                props.sakId
+            )
     );
 
     const [lagreForhåndsvarselState, lagreForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
@@ -66,8 +71,10 @@ export const VelgForhåndsvarselForm = (props: {
         (args) => {
             switch (args.forhåndsvarselhandling) {
                 case Forhåndsvarselhandling.Forhåndsvarsle:
-                    navigate(
-                        Routes.createSakIntroLocation(formatMessage('notification.sendtForhåndsvarsel'), props.sakId)
+                    Routes.navigateToSakIntroWithMessage(
+                        navigate,
+                        formatMessage('notification.sendtForhåndsvarsel'),
+                        props.sakId
                     );
                     return;
                 case Forhåndsvarselhandling.IngenForhåndsvarsel:

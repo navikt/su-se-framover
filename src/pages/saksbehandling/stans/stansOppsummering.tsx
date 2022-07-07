@@ -43,7 +43,7 @@ const StansOppsummering = () => {
     const iverksettOgGåVidere = () => {
         iverksettStans({ sakId: props.sak.id, revurderingId: revurdering.id }, async () => {
             await dispatch(fetchSak({ fnr: props.sak.fnr }));
-            navigate(Routes.createSakIntroLocation(formatMessage('stans.notification'), props.sak.id));
+            Routes.navigateToSakIntroWithMessage(navigate, formatMessage('stans.notification'), props.sak.id);
         });
     };
 

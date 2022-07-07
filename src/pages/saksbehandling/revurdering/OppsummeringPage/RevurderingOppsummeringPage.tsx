@@ -73,7 +73,11 @@ const OppsummeringshandlingForm = (props: {
             };
         },
         () => {
-            navigate(Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId));
+            Routes.navigateToSakIntroWithMessage(
+                navigate,
+                formatMessage('notification.sendtTilAttestering'),
+                props.sakId
+            );
         }
     );
 
@@ -102,13 +106,17 @@ const OppsummeringshandlingForm = (props: {
                     navigate(props.førsteRevurderingstegUrl);
                     break;
                 case BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger:
-                    navigate(
-                        Routes.createSakIntroLocation(formatMessage('notification.sendtTilAttestering'), props.sakId)
+                    Routes.navigateToSakIntroWithMessage(
+                        navigate,
+                        formatMessage('notification.sendtTilAttestering'),
+                        props.sakId
                     );
                     break;
                 case BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer:
-                    navigate(
-                        Routes.createSakIntroLocation(formatMessage('notification.avsluttetRevurdering'), props.sakId)
+                    Routes.navigateToSakIntroWithMessage(
+                        navigate,
+                        formatMessage('notification.avsluttetRevurdering'),
+                        props.sakId
                     );
             }
         }

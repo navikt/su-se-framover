@@ -782,7 +782,7 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.opprettRevurdering.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+            state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(revurderingActions.oppdaterRevurderingsPeriode.fulfilled, (state, action) => {
@@ -912,6 +912,24 @@ export default createSlice({
         });
     },
 });
+
+function opprettEllerOppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revurdering: Revurdering) {
+    return pipe(
+        sak,
+        RemoteData.map((s) => {
+            if (s.revurderinger.some((r) => r.id === revurdering.id)) {
+                return {
+                    ...s,
+                    revurderinger: s.revurderinger.map((r) => (r.id === revurdering.id ? revurdering : r)),
+                };
+            }
+            return {
+                ...s,
+                revurderinger: [...s.revurderinger, revurdering],
+            };
+        })
+    );
+}
 
 function oppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revurdering: Revurdering) {
     return pipe(
