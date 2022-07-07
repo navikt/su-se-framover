@@ -47,7 +47,11 @@ const Uførhet = (props: RevurderingStegProps) => {
                     resultat: g.oppfylt ?? UføreResultat.HarUføresakTilBehandling,
                 })),
             },
-            onSuccess
+            (res) => {
+                if (res.feilmeldinger.length === 0) {
+                    onSuccess();
+                }
+            }
         );
 
     return (

@@ -86,7 +86,11 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                     },
                 })),
             },
-            onSuccess
+            (res) => {
+                if (res.feilmeldinger.length === 0) {
+                    onSuccess();
+                }
+            }
         );
     };
 
