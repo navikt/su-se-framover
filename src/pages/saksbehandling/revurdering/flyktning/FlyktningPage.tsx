@@ -1,70 +1,63 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
-import { lagreLovligOppholdVilkår } from '~src/features/revurdering/revurderingActions';
+import { lagreFlyktningVilkår } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import {
+    FlyktningVilkårFormData,
+    flyktningFormSchema,
+    nyVurderingsperiodeFlyktning,
+} from '~src/pages/saksbehandling/revurdering/flyktning/flyktningUtils';
+import GjeldendeFlyktningVilkår from '~src/pages/saksbehandling/revurdering/flyktning/GjeldendeFlyktningVilkår';
+import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
+import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 
-import { FormWrapper } from '../../søknadsbehandling/FormWrapper';
-import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
-import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
+import messages from './flyktning-nb';
+import styles from './flyktningPage.module.less';
 
-import GjeldendeOppholdstillatelse from './GjeldendeLovligOpphold';
-import messages from './LovligOpphold-nb';
-import styles from './lovligOpphold.module.less';
-import {
-    LovligOppholdVilkårForm,
-    lovligOppholdSchemaValidation,
-    getTomVurderingsperiodeLovligOpphold,
-} from './LovligOppholdUtils';
-
-const Oppholdstillatelse = (props: RevurderingStegProps) => {
+export function FlyktningPage(props: RevurderingStegProps) {
+    const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
     const { formatMessage } = useI18n({ messages });
-    const [status, lagre] = useAsyncActionCreator(lagreLovligOppholdVilkår);
 
-    const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.vurderinger ?? [
+    const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning?.vurderinger ?? [
         { periode: props.revurdering.periode, resultat: null },
     ];
-    const revurderingsperiode = {
-        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
-        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
-    };
 
-    const form = useForm<LovligOppholdVilkårForm>({
-        resolver: yupResolver(lovligOppholdSchemaValidation),
+    const form = useForm<FlyktningVilkårFormData>({
+        resolver: yupResolver(flyktningFormSchema),
         defaultValues: {
-            lovligOpphold: vurderinger.map((vurdering) => ({
+            flyktning: vurderinger.map((vurdering) => ({
+                resultat: vurdering.resultat,
                 periode: {
                     fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
                     tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
                 },
-                resultat: vurdering.resultat,
             })),
         },
     });
 
-    const lagreLovligOpphold = (data: LovligOppholdVilkårForm, onSuccess: () => void) => {
+    const lagreFlyktning = (values: FlyktningVilkårFormData, onSuccess: () => void) =>
         lagre(
             {
                 sakId: props.sakId,
-                behandlingId: props.revurdering.id,
-                vurderinger: data.lovligOpphold.map((opphold) => {
-                    return {
-                        periode: {
-                            fraOgMed: DateUtils.toIsoDateOnlyString(opphold.periode.fraOgMed!),
-                            tilOgMed: DateUtils.toIsoDateOnlyString(opphold.periode.tilOgMed!),
-                        },
-                        status: opphold.resultat!,
-                    };
-                }),
+                revurderingId: props.revurdering.id,
+                vurderinger: values.flyktning.map((v) => ({
+                    periode: {
+                        fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
+                        tilOgMed: DateUtils.toIsoDateOnlyString(v.periode.tilOgMed!),
+                    },
+                    vurdering: v.resultat!,
+                })),
             },
             (res) => {
                 if (res.feilmeldinger.length === 0) {
@@ -72,6 +65,9 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
                 }
             }
         );
+    const revurderingsperiode = {
+        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
     };
 
     return (
@@ -80,7 +76,7 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
                 left: (
                     <FormWrapper
                         form={form}
-                        save={lagreLovligOpphold}
+                        save={lagreFlyktning}
                         savingState={status}
                         avsluttUrl={props.avsluttUrl}
                         forrigeUrl={props.forrigeUrl}
@@ -88,19 +84,18 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
                     >
                         <>
                             <MultiPeriodeVelger
+                                name="flyktning"
                                 className={styles.multiPeriodeVelger}
-                                name="lovligOpphold"
                                 controller={form.control}
-                                appendNyPeriode={getTomVurderingsperiodeLovligOpphold}
+                                appendNyPeriode={nyVurderingsperiodeFlyktning}
                                 periodeConfig={{
                                     minFraOgMed: revurderingsperiode.fraOgMed,
                                     maxTilOgMed: revurderingsperiode.tilOgMed,
-                                    size: 'S',
                                 }}
-                                getChild={(nameOgIdx) => (
+                                getChild={(nameAndIdx: string) => (
                                     <VilkårsResultatRadioGroup
-                                        name={`${nameOgIdx}.resultat`}
-                                        legend={formatMessage('lovligOpphold.harSøkerLovligOpphold')}
+                                        name={`${nameAndIdx}.resultat`}
+                                        legend={formatMessage('flyktning.vilkår')}
                                         controller={form.control}
                                     />
                                 )}
@@ -112,13 +107,11 @@ const Oppholdstillatelse = (props: RevurderingStegProps) => {
                     </FormWrapper>
                 ),
                 right: (
-                    <GjeldendeOppholdstillatelse
-                        gjeldendeOppholdstillatelse={props.grunnlagsdataOgVilkårsvurderinger.lovligOpphold}
+                    <GjeldendeFlyktningVilkår
+                        gjeldendeFlyktingVilkår={props.grunnlagsdataOgVilkårsvurderinger.flyktning}
                     />
                 ),
             }}
         </ToKolonner>
     );
-};
-
-export default Oppholdstillatelse;
+}

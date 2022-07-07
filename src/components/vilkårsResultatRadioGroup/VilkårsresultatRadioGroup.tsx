@@ -8,7 +8,7 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import messages from './vilkårsResultatRadioGroup-nb';
 
 interface Props<T> {
-    navnOgIdx: string;
+    name: string;
     controller: Control<T>;
     legend: string;
     skalKunneVelgeUavklart?: boolean;
@@ -21,7 +21,7 @@ const VilkårsResultatRadioGroup = <T extends FieldValues>(props: Props<T>) => {
         <div>
             <Controller
                 control={props.controller}
-                name={`${props.navnOgIdx}.resultat` as Path<T>}
+                name={props.name as Path<T>}
                 render={({ field, fieldState }) => (
                     <RadioGroup {...field} legend={props.legend} error={fieldState.error?.message}>
                         <Radio value={Vilkårstatus.VilkårOppfylt}>{formatMessage('radio.label.ja')}</Radio>

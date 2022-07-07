@@ -1,5 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -202,6 +203,7 @@ export enum InformasjonSomRevurderes {
     Bosituasjon = 'Bosituasjon',
     Formue = 'Formue',
     Utenlandsopphold = 'Utenlandsopphold',
+    Flyktning = 'Flyktning',
     Opplysningsplikt = 'Opplysningsplikt',
     Oppholdstillatelse = 'Oppholdstillatelse',
 }
@@ -264,6 +266,12 @@ export interface FormuegrunnlagRequest {
     sakId: string;
     revurderingId: string;
     formue: FormuegrunnlagFormue;
+}
+
+export interface FlyktningVilkårRequest {
+    sakId: string;
+    revurderingId: string;
+    vurderinger: FlyktningRequest[];
 }
 
 export interface RevurderingStegProps {

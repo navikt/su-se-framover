@@ -171,21 +171,19 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                         {...field}
                                     >
                                         <div className={styles.informasjonSomRevurderesCheckboxContainer}>
-                                            {Object.values(InformasjonSomRevurderes)
-                                                .filter((i) => i !== InformasjonSomRevurderes.Oppholdstillatelse) // TODO: Tillat revurdering av Oppholdstillatelse
-                                                .map((i, idx) => (
-                                                    <Checkbox
-                                                        key={i}
-                                                        id={
-                                                            idx === 0
-                                                                ? keyOf<FormValues>('informasjonSomRevurderes')
-                                                                : undefined
-                                                        }
-                                                        value={i}
-                                                    >
-                                                        {formatMessage(i)}
-                                                    </Checkbox>
-                                                ))}
+                                            {Object.values(InformasjonSomRevurderes).map((i, idx) => (
+                                                <Checkbox
+                                                    key={i}
+                                                    id={
+                                                        idx === 0
+                                                            ? keyOf<FormValues>('informasjonSomRevurderes')
+                                                            : undefined
+                                                    }
+                                                    value={i}
+                                                >
+                                                    {formatMessage(i)}
+                                                </Checkbox>
+                                            ))}
                                         </div>
                                     </CheckboxGroup>
                                     <div className={styles.informasjonsContainer}>

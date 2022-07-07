@@ -13,7 +13,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVi
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sakstype } from '~src/types/Sak';
-import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
+import { Behandlingsstatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
@@ -85,7 +85,7 @@ const getBehandlingsinformasjonStatus = <VilkårKey extends keyof Behandlingsinf
 
 const mapToVilkårsinformasjonUføre = (
     uføre: GrunnlagsdataOgVilkårsvurderinger['uføre'],
-    flyktning: Behandlingsinformasjon['flyktning']
+    flyktning: GrunnlagsdataOgVilkårsvurderinger['flyktning']
 ): Vilkårsinformasjon[] => [
     {
         status:
@@ -100,7 +100,12 @@ const mapToVilkårsinformasjonUføre = (
         erStartet: uføre !== null,
     },
     {
-        status: getBehandlingsinformasjonStatus(flyktning),
+        status:
+            flyktning === null
+                ? VilkårVurderingStatus.IkkeVurdert
+                : flyktning?.resultat === Vilkårstatus.VilkårOppfylt
+                ? VilkårVurderingStatus.Ok
+                : VilkårVurderingStatus.IkkeOk,
         vilkårtype: Vilkårtype.Flyktning,
         erStartet: flyktning !== null,
     },
@@ -139,8 +144,8 @@ export const mapToVilkårsinformasjon = (
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
-    const { flyktning, fastOppholdINorge, institusjonsopphold, personligOppmøte } = behandlingsinformasjon;
-    const { pensjon, familiegjenforening, lovligOpphold, formue, uføre, utenlandsopphold } =
+    const { fastOppholdINorge, institusjonsopphold, personligOppmøte } = behandlingsinformasjon;
+    const { flyktning, pensjon, familiegjenforening, lovligOpphold, formue, uføre, utenlandsopphold } =
         grunnlagsdataOgVilkårsvurderinger;
 
     const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre, flyktning) : [];

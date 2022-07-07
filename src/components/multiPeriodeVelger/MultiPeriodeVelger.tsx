@@ -22,15 +22,15 @@ import styles from './multiPeriodeVelger.module.less';
 
 interface Props<T, U> {
     className?: string;
-    name: string;
+    name: keyof T & string;
     controller: Control<T>;
     appendNyPeriode: () => U;
-    periodeStuffs: {
+    periodeConfig: {
         minFraOgMed: Date;
         maxTilOgMed: Date;
         size?: 'S' | 'L';
     };
-    childrenz: (idx: number) => React.ReactNode;
+    getChild: (nameAndIdx: string) => React.ReactNode;
     childrenOverDato?: boolean;
 }
 
@@ -61,15 +61,15 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                                         update(idx, { ...watchedItem, periode: periode });
                                     }}
                                     minDate={{
-                                        fraOgMed: props.periodeStuffs.minFraOgMed,
-                                        tilOgMed: props.periodeStuffs.maxTilOgMed,
+                                        fraOgMed: props.periodeConfig.minFraOgMed,
+                                        tilOgMed: props.periodeConfig.maxTilOgMed,
                                     }}
                                     maxDate={{
-                                        fraOgMed: props.periodeStuffs.minFraOgMed,
-                                        tilOgMed: props.periodeStuffs.maxTilOgMed,
+                                        fraOgMed: props.periodeConfig.minFraOgMed,
+                                        tilOgMed: props.periodeConfig.maxTilOgMed,
                                     }}
                                     error={fieldState.error as FieldErrors<NullablePeriode>}
-                                    size={props.periodeStuffs.size}
+                                    size={props.periodeConfig.size}
                                 />
                             )}
                         />
@@ -79,7 +79,7 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                         <li key={el.id}>
                             <Panel className={styles.periodePanel}>
                                 <div className={styles.periodeOgSøppelbøtteContainer}>
-                                    {props.childrenOverDato ? props.childrenz(idx) : periodeInput}
+                                    {props.childrenOverDato ? props.getChild(`${props.name}.${idx}`) : periodeInput}
 
                                     <Button
                                         variant="secondary"
@@ -91,7 +91,7 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                                         <Delete />
                                     </Button>
                                 </div>
-                                {!props.childrenOverDato ? props.childrenz(idx) : periodeInput}
+                                {!props.childrenOverDato ? props.getChild(`${props.name}.${idx}`) : periodeInput}
                             </Panel>
                         </li>
                     );

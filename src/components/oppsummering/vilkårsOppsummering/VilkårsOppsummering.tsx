@@ -88,9 +88,9 @@ const Vilkårsting = (props: {
         case Vilkårtype.Flyktning:
             return isUføresøknad(props.søknadInnhold) ? (
                 <FlyktningVilkårsblokk
-                    info={props.info}
+                    status={props.info.status}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.flyktning}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.flyktning}
                 />
             ) : null;
         case Vilkårtype.LovligOpphold:

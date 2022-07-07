@@ -39,4 +39,5 @@ export default {
     'radTittel.utenlandsopphold': 'Utenlandsopphold',
     'radTittel.opplysningsplikt': 'Opplysningsplikt',
     'radTittel.lovligOpphold': 'Oppholdstillatelse',
+    'radTittel.flyktning': 'Flyktningstatus',
 };

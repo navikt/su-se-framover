@@ -27,12 +27,12 @@ import messages from './flyktning-nb';
 import * as styles from './flyktning.module.less';
 
 interface FormData {
-    status: Nullable<Vilkårstatus>;
+    vurdering: Nullable<Vilkårstatus>;
 }
 
 const schema = yup
     .object<FormData>({
-        status: yup
+        vurdering: yup
             .mixed()
             .defined()
             .oneOf(
@@ -45,13 +45,15 @@ const schema = yup
 const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
+    const [status, lagreFlyktningVilkår] = useAsyncActionCreator(sakSlice.lagreFlyktningVilkår);
 
-    const initialValues: FormData = { status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null };
+    const initialValues: FormData = {
+        vurdering: props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat ?? null,
+    };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Flyktning,
-        (values) => values.status === initialValues.status
+        (values) => values.vurdering === initialValues.vurdering
     );
 
     const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
@@ -60,15 +62,16 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
     });
 
     const save = (values: FormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
-        lagreBehandlingsinformasjon(
+        lagreFlyktningVilkår(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    flyktning: {
-                        status: values.status!,
+                vurderinger: [
+                    {
+                        periode: props.behandling.stønadsperiode!.periode,
+                        vurdering: values.vurdering!,
                     },
-                },
+                ],
             },
             (behandling) => {
                 clearDraft();
@@ -86,11 +89,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
 
     const kortBehandlingAvslag = (behandling: Søknadsbehandling) =>
         behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
-        behandling.behandlingsinformasjon.flyktning?.status === Vilkårstatus.VilkårIkkeOppfylt;
+        behandling.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat === Vilkårstatus.VilkårIkkeOppfylt;
 
     const vilGiTidligAvslag =
         props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
-        form.watch('status') === Vilkårstatus.VilkårIkkeOppfylt;
+        form.watch('vurdering') === Vilkårstatus.VilkårIkkeOppfylt;
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -111,7 +114,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                         <>
                             <Controller
                                 control={form.control}
-                                name="status"
+                                name="vurdering"
                                 render={({ field, fieldState }) => (
                                     <RadioGroup
                                         legend={formatMessage('radio.flyktning.legend')}

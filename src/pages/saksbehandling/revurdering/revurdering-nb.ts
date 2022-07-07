@@ -11,6 +11,7 @@ export const stegmessages: { [key in RevurderingSteg]: string } = {
     [RevurderingSteg.Opplysningsplikt]: 'Opplysningsplikt',
     [RevurderingSteg.Oppholdstillatelse]: 'Oppholdstillatelse',
     [RevurderingSteg.Oppsummering]: 'Oppsummering',
+    [RevurderingSteg.Flyktning]: 'Flyktningsstatus',
 };
 
 export const opprettetRevurderingGrunn: { [key in OpprettetRevurderingGrunn]: string } = {
