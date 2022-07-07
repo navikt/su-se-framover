@@ -7,6 +7,7 @@ import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/
 import { formatPeriode } from '~src/utils/date/dateUtils';
 
 import messages from './flyktningOppsummering-nb';
+import styles from './flyktningOppsummering.module.less';
 
 const FlyktningOppsummering = (props: { flyktningVilkår: FlyktningVilkår }) => {
     const { formatMessage } = useI18n({
@@ -14,7 +15,7 @@ const FlyktningOppsummering = (props: { flyktningVilkår: FlyktningVilkår }) =>
     });
 
     return (
-        <ul>
+        <ul className={styles.grunnlagsliste}>
             {props.flyktningVilkår.vurderinger.map((flyktning) => (
                 <li key={formatPeriode(flyktning.periode)}>
                     <OppsummeringPar label={formatMessage('periode.label')} verdi={formatPeriode(flyktning.periode)} />

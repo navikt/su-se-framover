@@ -3,10 +3,12 @@ import React from 'react';
 import { Heading } from '~node_modules/@navikt/ds-react';
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~src/lib/i18n';
-import messages from '~src/pages/saksbehandling/revurdering/flyktning/flyktning-nb';
 import { vilkårstatusMessages } from '~src/typeMappinger/Vilkårsstatus';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { formatDate } from '~src/utils/date/dateUtils';
+
+import messages from './flyktning-nb';
+import styles from './gjeldendeFlyktningVilkår.module.less';
 
 const GjeldendeFlyktningVilkår = (props: {
     gjeldendeFlyktingVilkår: GrunnlagsdataOgVilkårsvurderinger['flyktning'];
@@ -18,7 +20,7 @@ const GjeldendeFlyktningVilkår = (props: {
                 {formatMessage('gjeldende.overskrift')}
             </Heading>
 
-            <ul>
+            <ul className={styles.grunnlagsliste}>
                 {props.gjeldendeFlyktingVilkår?.vurderinger?.map((flyktning) => (
                     <li key={`${flyktning.periode.fraOgMed} - ${flyktning.periode.tilOgMed}`}>
                         <OppsummeringPar

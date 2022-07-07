@@ -23,6 +23,7 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 
 import messages from './flyktning-nb';
+import styles from './flyktningPage.module.less';
 
 export function FlyktningPage(props: RevurderingStegProps) {
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
@@ -84,6 +85,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
                         <>
                             <MultiPeriodeVelger
                                 name="flyktning"
+                                className={styles.multiPeriodeVelger}
                                 controller={form.control}
                                 appendNyPeriode={nyVurderingsperiodeFlyktning}
                                 periodeConfig={{
