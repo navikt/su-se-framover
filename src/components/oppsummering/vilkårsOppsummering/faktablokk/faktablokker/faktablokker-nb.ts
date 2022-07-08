@@ -1,3 +1,4 @@
+import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 
 const pensjonsOpplysningerUtvidetSvarMessages = {
@@ -6,7 +7,14 @@ const pensjonsOpplysningerUtvidetSvarMessages = {
     [PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT]: 'Ikke aktuelt',
 };
 
+const vilkårVurderingerFakta = {
+    [Vilkårstatus.VilkårOppfylt]: 'Ja',
+    [Vilkårstatus.VilkårIkkeOppfylt]: 'Nei',
+    [Vilkårstatus.Uavklart]: 'Uavklart',
+};
+
 export default {
+    ...vilkårVurderingerFakta,
     ...pensjonsOpplysningerUtvidetSvarMessages,
     'beregning.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'beregning.andreYtelserINav': 'Har du andre ytelser i NAV?',
