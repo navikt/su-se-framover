@@ -49,7 +49,7 @@ export default {
     'revurdering.iverksattDato': 'Iverksatt dato:',
     'revurdering.seOppsummering': 'Se oppsummering',
     'revurdering.type': 'Type: ',
-    'revurdering.type.stansGjenoppta.label': 'Stans/Gjenoppta av utbetaling',
+    'revurdering.type.stansGjenoppta.label': 'Stans/Gjenopptak av utbetaling',
 
     'revurdering.label.forhåndsvarselSendt': 'Forhåndsvarsel sendt',
 
