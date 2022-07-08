@@ -87,6 +87,9 @@ export const lovligOppholdErLik = (ny: Nullable<LovligOppholdVilkår>, gammel: N
 
 export const flyktningErLik = (ny: Nullable<FlyktningVilkår>, gammel: Nullable<FlyktningVilkår>) => isEqual(ny, gammel);
 
+export const fastOppholdErLik = (ny: Nullable<FastOppholdVilkår>, gammel: Nullable<FastOppholdVilkår>) =>
+    isEqual(ny, gammel);
+
 const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
 
 const trimIdFromObject = <T>(obj: T) => {

@@ -12,13 +12,7 @@ export interface VurderingsperiodeFastOpphold {
     resultat: Vilkårstatus;
 }
 
-export interface FastOppholdRequest {
-    sakId: string;
-    behandlingId: string;
-    vurderinger: FastOppholdVurderingRequest[];
-}
-
 export interface FastOppholdVurderingRequest {
     periode: Periode<string>;
-    status: Vilkårstatus;
+    vurdering: Vilkårstatus;
 }

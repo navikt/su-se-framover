@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
+import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fastOpphold/FastOppholdOppsummering';
 import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
@@ -12,6 +13,7 @@ import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosit
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import {
     bosituasjonErlik,
+    fastOppholdErLik,
     flyktningErLik,
     formueErlik,
     fradragErlik,
@@ -133,6 +135,9 @@ const Vedtaksinformasjon = (props: {
     const skalViseFlyktning =
         !flyktningErLik(nyeData.flyktning, gamleData.flyktning) ||
         valgtRevurderingssteg.Flyktning === Vurderingstatus.Vurdert;
+    const skalViseFastOpphold =
+        !fastOppholdErLik(nyeData.fastOpphold, gamleData.fastOpphold) ||
+        valgtRevurderingssteg.FastOpphold === Vurderingstatus.Vurdert;
 
     return (
         <div className={styles.container}>
@@ -230,6 +235,18 @@ const Vedtaksinformasjon = (props: {
                         ) : null,
                         høyre: gamleData.flyktning ? (
                             <FlyktningOppsummering flyktningVilkår={gamleData.flyktning} />
+                        ) : null,
+                    }}
+                </Rad>
+            )}
+            {skalViseFastOpphold && (
+                <Rad radTittel={formatMessage('radTittel.fastOpphold')}>
+                    {{
+                        venstre: nyeData.fastOpphold ? (
+                            <FastOppholdOppsummering fastOppholdVilkår={nyeData.fastOpphold} />
+                        ) : null,
+                        høyre: gamleData.fastOpphold ? (
+                            <FastOppholdOppsummering fastOppholdVilkår={gamleData.fastOpphold} />
                         ) : null,
                     }}
                 </Rad>

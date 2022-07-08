@@ -830,6 +830,10 @@ export default createSlice({
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
+        builder.addCase(revurderingActions.lagreFastOppholdVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
         builder.addCase(revurderingActions.lagreUføregrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
