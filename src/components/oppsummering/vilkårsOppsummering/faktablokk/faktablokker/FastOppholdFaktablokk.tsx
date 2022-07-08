@@ -8,7 +8,9 @@ import { keyOf } from '~src/lib/types';
 import boOgOppholdSøknadMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import flyktningstatusSøknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~src/types/Søknad';
+import { VilkårtypeFelles, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
@@ -17,7 +19,7 @@ import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
+import { FaktablokkProps } from './faktablokkUtils';
 
 export const FastOppholdFaktablokk = (props: FaktablokkProps) => {
     const { intl } = useI18n({
@@ -34,7 +36,6 @@ export const FastOppholdFaktablokk = (props: FaktablokkProps) => {
         />
     );
 };
-
 const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape) => {
     const søknadMessage = (s: keyof typeof flyktningstatusSøknadMessages) => s;
 
@@ -76,41 +77,41 @@ const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape)
     return arr;
 };
 
-export const FastOppholdVilkårsblokk = (props: VilkårsblokkProps<'fastOppholdINorge'>) => {
-    const { intl } = useI18n({
+interface Props {
+    søknadInnhold: SøknadInnhold;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger['fastOpphold'];
+    status: VilkårVurderingStatus;
+}
+
+export const FastOppholdVilkårsblokk = (props: Props) => {
+    const { formatMessage } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,
         },
     });
-
     return (
         <Vilkårsblokk
-            tittel={vilkårTittelFormatted(props.info.vilkårtype)}
+            tittel={vilkårTittelFormatted(VilkårtypeFelles.FastOppholdINorge)}
             søknadfaktablokk={<FastOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.behandlingsinformasjon === null ? (
-                    <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
+                props.grunnlagsdataOgVilkårsvurderinger === null ? (
+                    <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}
+                        tittel={formatMessage('display.fraSaksbehandling')}
                         fakta={[
                             {
-                                tittel: intl.formatMessage({
-                                    id: keyOf<typeof saksbehandlingMessages>('radio.fastOpphold.legend'),
-                                }),
-                                verdi:
-                                    props.behandlingsinformasjon.status === Vilkårstatus.VilkårOppfylt
-                                        ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.behandlingsinformasjon.status === Vilkårstatus.VilkårIkkeOppfylt
-                                        ? intl.formatMessage({ id: 'fraSøknad.nei' })
-                                        : intl.formatMessage({ id: 'fraSøknad.uavklart' }),
+                                tittel: formatMessage('radio.fastOpphold.legend'),
+                                verdi: formatMessage(
+                                    props.grunnlagsdataOgVilkårsvurderinger.resultat ?? Vilkårstatus.VilkårOppfylt
+                                ),
                             },
                         ]}
                     />
                 )
             }
-            status={props.info.status}
+            status={props.status}
         />
     );
 };

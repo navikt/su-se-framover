@@ -6,7 +6,6 @@ export interface Behandlingsinformasjon {
     alderspensjon: Nullable<Behandlingsstatus>;
     familieforening: Nullable<Behandlingsstatus>;
 
-    fastOppholdINorge: Nullable<Behandlingsstatus>;
     institusjonsopphold: Nullable<Behandlingsstatus>;
     personligOppmøte: Nullable<PersonligOppmøte>;
 }
