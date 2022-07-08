@@ -40,7 +40,7 @@ function hentDefaultVerdier(r: Nullable<Revurdering>): FormData {
 
 const Gjenoppta = () => {
     const props = useOutletContext<AttesteringContext>();
-    const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansOppsummeringRoute>();
+    const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansRoute>();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const navigate = useNavigate();
 
@@ -77,10 +77,11 @@ const Gjenoppta = () => {
             årsak: values.årsak,
             begrunnelse: values.begrunnelse,
         };
-        const onSuccess = () => {
+        const onSuccess = (arg: Revurdering) => {
             navigate(
-                Routes.saksoversiktValgtSak.createURL({
+                Routes.gjenopptaStansOppsummeringRoute.createURL({
                     sakId: urlParams.sakId ?? '',
+                    revurderingId: arg.id,
                 })
             );
         };

@@ -790,7 +790,7 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.opprettStans.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+            state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(revurderingActions.gjenoppta.fulfilled, (state, action) => {

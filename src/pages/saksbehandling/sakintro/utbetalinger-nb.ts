@@ -4,7 +4,7 @@ const utbetalingsTypeTekstMapper: { [key in Utbetalingstype]: string } = {
     [Utbetalingstype.NY]: ' ',
     [Utbetalingstype.OPPHØR]: 'Opphørt',
     [Utbetalingstype.STANS]: 'Stanset',
-    [Utbetalingstype.GJENOPPTA]: 'Gjenopptat',
+    [Utbetalingstype.GJENOPPTA]: 'Gjenopptatt',
 };
 
 export default {

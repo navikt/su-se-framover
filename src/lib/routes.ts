@@ -201,13 +201,13 @@ export const stansOppsummeringRoute: Route<{ sakId: string; revurderingId: strin
 };
 
 export const gjenopptaStansRoot: Route<{ sakId: string }> = {
-    path: 'gjenoppta/',
+    path: 'gjenoppta/*',
     absPath: '/saksoversikt/:sakId/gjenoppta/',
     createURL: ({ sakId }) => `/saksoversikt/${sakId}/gjenoppta/`,
 };
 
 export const gjenopptaStansRoute: Route<{ sakId: string; revurderingId: string }> = {
-    path: '/gjenoppta/:revurderingId',
+    path: ':revurderingId',
     absPath: '/saksoversikt/:sakId/gjenoppta/:revurderingId',
     createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/gjenoppta/${revurderingId ?? ''}`,
 };
