@@ -22,7 +22,10 @@ import {
     hentBrevsending,
     OppsummeringState,
 } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
-import { TilbakekrevingForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import {
+    TilbakekrevingForm,
+    Tilbakekrevingsavgjørelse,
+} from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import {
     BeregnetIngenEndring,
     BeslutningEtterForhåndsvarsling,
@@ -237,6 +240,11 @@ const RevurderingOppsummeringPage = (props: {
                             props.revurdering.simulering,
                             props.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT
                         ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
+                    {props.revurdering.tilbakekrevingsbehandling !== null &&
+                        props.revurdering.tilbakekrevingsbehandling.avgjørelse ===
+                            Tilbakekrevingsavgjørelse.TILBAKEKREV && (
+                            <Alert variant={'warning'}>{formatMessage('tilbakereving.alert.brutto.netto')}</Alert>
+                        )}
                     {erRevurderingSimulert(props.revurdering) ||
                     erBeregnetIngenEndring(props.revurdering) ||
                     erRevurderingUnderkjent(props.revurdering) ? (

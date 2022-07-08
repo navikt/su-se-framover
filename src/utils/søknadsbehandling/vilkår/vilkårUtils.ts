@@ -68,44 +68,42 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
     }
 };
 
-const getBehandlingsinformasjonStatus = <VilkårKey extends keyof Behandlingsinformasjon>(
-    vilkår: Behandlingsinformasjon[VilkårKey]
-) => {
-    switch (vilkår?.status) {
-        case Vilkårstatus.Uavklart:
-            return VilkårVurderingStatus.Uavklart;
-        case Vilkårstatus.VilkårOppfylt:
-            return VilkårVurderingStatus.Ok;
-        case Vilkårstatus.VilkårIkkeOppfylt:
-            return VilkårVurderingStatus.IkkeOk;
-        default:
-            return VilkårVurderingStatus.IkkeVurdert;
+type VilkårVurderingStatusMapping<T extends number | string | symbol> = Record<T, VilkårVurderingStatus>;
+
+function getVilkårVurderingStatus<T extends number | string | symbol>(
+    mapping: VilkårVurderingStatusMapping<T>,
+    value: T | undefined | null
+): VilkårVurderingStatus {
+    if (!value) {
+        return VilkårVurderingStatus.IkkeVurdert;
     }
-};
+    return mapping[value];
+}
+
+const defaultVilkårstatusMapping: VilkårVurderingStatusMapping<Vilkårstatus> = {
+    [Vilkårstatus.Uavklart]: VilkårVurderingStatus.Uavklart,
+    [Vilkårstatus.VilkårIkkeOppfylt]: VilkårVurderingStatus.IkkeOk,
+    [Vilkårstatus.VilkårOppfylt]: VilkårVurderingStatus.Ok,
+} as const;
 
 const mapToVilkårsinformasjonUføre = (
     uføre: GrunnlagsdataOgVilkårsvurderinger['uføre'],
     flyktning: GrunnlagsdataOgVilkårsvurderinger['flyktning']
 ): Vilkårsinformasjon[] => [
     {
-        status:
-            uføre === null
-                ? VilkårVurderingStatus.IkkeVurdert
-                : uføre?.resultat === UføreResultat.HarUføresakTilBehandling
-                ? VilkårVurderingStatus.Uavklart
-                : uføre?.resultat === UføreResultat.VilkårOppfylt
-                ? VilkårVurderingStatus.Ok
-                : VilkårVurderingStatus.IkkeOk,
+        status: getVilkårVurderingStatus(
+            {
+                [UføreResultat.VilkårIkkeOppfylt]: VilkårVurderingStatus.IkkeOk,
+                [UføreResultat.HarUføresakTilBehandling]: VilkårVurderingStatus.Uavklart,
+                [UføreResultat.VilkårOppfylt]: VilkårVurderingStatus.Ok,
+            },
+            uføre?.resultat
+        ),
         vilkårtype: Vilkårtype.Uførhet,
         erStartet: uføre !== null,
     },
     {
-        status:
-            flyktning === null
-                ? VilkårVurderingStatus.IkkeVurdert
-                : flyktning?.resultat === Vilkårstatus.VilkårOppfylt
-                ? VilkårVurderingStatus.Ok
-                : VilkårVurderingStatus.IkkeOk,
+        status: getVilkårVurderingStatus(defaultVilkårstatusMapping, flyktning?.resultat),
         vilkårtype: Vilkårtype.Flyktning,
         erStartet: flyktning !== null,
     },
@@ -116,24 +114,19 @@ const mapToVilkårsinformasjonAlder = (
     familieforening: GrunnlagsdataOgVilkårsvurderinger['familiegjenforening']
 ): Vilkårsinformasjon[] => [
     {
-        status:
-            pensjon === null
-                ? VilkårVurderingStatus.IkkeVurdert
-                : pensjon?.resultat === Aldersresultat.HarAlderssakTilBehandling
-                ? VilkårVurderingStatus.Uavklart
-                : pensjon?.resultat === Aldersresultat.VilkårOppfylt
-                ? VilkårVurderingStatus.Ok
-                : VilkårVurderingStatus.IkkeOk,
+        status: getVilkårVurderingStatus(
+            {
+                [Aldersresultat.HarAlderssakTilBehandling]: VilkårVurderingStatus.Uavklart,
+                [Aldersresultat.VilkårOppfylt]: VilkårVurderingStatus.Ok,
+                [Aldersresultat.VilkårIkkeOppfylt]: VilkårVurderingStatus.IkkeOk,
+            },
+            pensjon?.resultat
+        ),
         vilkårtype: Vilkårtype.Alderspensjon,
         erStartet: pensjon !== null,
     },
     {
-        status:
-            familieforening === null
-                ? VilkårVurderingStatus.IkkeVurdert
-                : familieforening?.resultat === Vilkårstatus.VilkårOppfylt
-                ? VilkårVurderingStatus.Ok
-                : VilkårVurderingStatus.IkkeOk,
+        status: getVilkårVurderingStatus(defaultVilkårstatusMapping, familieforening?.resultat),
         vilkårtype: Vilkårtype.Familieforening,
         erStartet: familieforening !== null,
     },
@@ -156,48 +149,41 @@ export const mapToVilkårsinformasjon = (
         ...uførevilkår,
         ...aldersvilkår,
         {
-            status:
-                lovligOpphold === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : lovligOpphold?.resultat === Vilkårstatus.Uavklart
-                    ? VilkårVurderingStatus.Uavklart
-                    : lovligOpphold?.resultat === Vilkårstatus.VilkårOppfylt
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, lovligOpphold?.resultat),
             vilkårtype: Vilkårtype.LovligOpphold,
             erStartet: lovligOpphold !== null,
         },
         {
-            status: getBehandlingsinformasjonStatus(fastOppholdINorge),
+            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, fastOppholdINorge?.status),
             vilkårtype: Vilkårtype.FastOppholdINorge,
             erStartet: fastOppholdINorge !== null,
         },
         {
-            status: getBehandlingsinformasjonStatus(institusjonsopphold),
+            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, institusjonsopphold?.status),
             vilkårtype: Vilkårtype.Institusjonsopphold,
             erStartet: institusjonsopphold !== null,
         },
         {
-            status:
-                utenlandsopphold === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : utenlandsopphold?.status === Utenlandsoppholdstatus.Uavklart
-                    ? VilkårVurderingStatus.Uavklart
-                    : utenlandsopphold?.status === Utenlandsoppholdstatus.SkalHoldeSegINorge
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: getVilkårVurderingStatus(
+                {
+                    [Utenlandsoppholdstatus.Uavklart]: VilkårVurderingStatus.Uavklart,
+                    [Utenlandsoppholdstatus.SkalHoldeSegINorge]: VilkårVurderingStatus.Ok,
+                    [Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet]: VilkårVurderingStatus.IkkeOk,
+                },
+                utenlandsopphold?.status
+            ),
             vilkårtype: Vilkårtype.OppholdIUtlandet,
             erStartet: utenlandsopphold !== null,
         },
         {
-            status:
-                formue.resultat === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : formue.resultat === FormueStatus.MåInnhenteMerInformasjon
-                    ? VilkårVurderingStatus.Uavklart
-                    : formue.resultat === FormueStatus.VilkårOppfylt
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: getVilkårVurderingStatus(
+                {
+                    [FormueStatus.MåInnhenteMerInformasjon]: VilkårVurderingStatus.Uavklart,
+                    [FormueStatus.VilkårOppfylt]: VilkårVurderingStatus.Ok,
+                    [FormueStatus.VilkårIkkeOppfylt]: VilkårVurderingStatus.IkkeOk,
+                },
+                formue.resultat
+            ),
             vilkårtype: Vilkårtype.Formue,
             erStartet: formue.resultat !== null,
         },

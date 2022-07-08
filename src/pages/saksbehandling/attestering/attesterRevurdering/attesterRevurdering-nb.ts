@@ -8,6 +8,8 @@ export default {
         'Denne revurderingen fører til opphør og avkorting. Avkorting skjer automatisk når bruker får ny stønadsperiode.',
 
     'attester.iverksatt': 'Revurdering er iverksatt',
+    'attester.iverksatt.med.tilbakekreving':
+        'Vedtak iverksatt. Brev om tilbakekreving sendes automatisk til bruker etter at vi har mottatt informasjon om netto tilbakekreving fra økonomi.',
     'attester.sendtTilbake': 'Revurdering er sendt tilbake til vurdering',
 
     'knapp.brev': 'Vis brev',
@@ -18,4 +20,6 @@ export default {
     tilbakekrevingOgOpphør: 'Denne revurderingen fører til tilbakekreving og opphør for bruker',
     tilbakekrevingFlereTyper:
         'Revurderingen fører til tilbakekreving pga en eller flere feilutbetalinger. Varsel og vedtaksbrev vil kun kommunisere tilbakekreving. Endringer i tillegg (som opphør o.l.) må gjøres i separate revurderinger for å få riktig kommunikasjon inn i brev.',
+    'tilbakereving.alert.brutto.netto':
+        'Forhåndsvisningen av brev viser brutto tilbakekreving. Brevet oppdateres med netto tilbakekreving før det sendes til bruker.',
 };

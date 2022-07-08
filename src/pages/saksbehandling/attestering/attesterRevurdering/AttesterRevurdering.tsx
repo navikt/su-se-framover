@@ -14,7 +14,6 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types';
 import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
@@ -87,7 +86,12 @@ const AttesterRevurdering = () => {
     const iverksettCallback = () => {
         iverksett({ sakId: sakId, revurderingId: revurdering.id }, () => {
             dispatch(sakSlice.fetchSak({ saksnummer: saksnummer.toString() }));
-            const message = formatMessage('attester.iverksatt');
+
+            const message =
+                revurdering.tilbakekrevingsbehandling === null
+                    ? formatMessage('attester.iverksatt')
+                    : formatMessage('attester.iverksatt.med.tilbakekreving');
+
             Routes.navigateToSakIntroWithMessage(navigate, message, sakId);
         });
     };
@@ -99,7 +103,7 @@ const AttesterRevurdering = () => {
         });
     };
 
-    const warningId = hentIdForWarning(revurdering);
+    const warnings = hentWarnings(revurdering);
 
     return pipe(
         grunnlagsdataOgVilkårsvurderinger,
@@ -118,11 +122,12 @@ const AttesterRevurdering = () => {
                             grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     </div>
-                    {warningId && (
-                        <div className={styles.opphørsadvarsel}>
-                            <Alert variant="warning">{formatMessage(warningId)}</Alert>
-                        </div>
-                    )}
+                    {warnings !== [] &&
+                        warnings.map((w) => (
+                            <div key={w} className={styles.opphørsadvarsel}>
+                                <Alert variant="warning">{formatMessage(w)}</Alert>
+                            </div>
+                        ))}
                     {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
                         <Button
                             variant="secondary"
@@ -157,18 +162,25 @@ const AttesterRevurdering = () => {
     );
 };
 
-const hentIdForWarning = (revurdering: Revurdering): Nullable<keyof typeof messages> => {
+const hentWarnings = (revurdering: Revurdering): Array<keyof typeof messages> => {
     const tilbakekreving = revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV;
     const opphør = revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT;
+    const warnings: Array<keyof typeof messages> = [];
     if (harSimulering(revurdering) && periodenInneholderTilbakekrevingOgAndreTyper(revurdering.simulering, opphør)) {
-        return 'tilbakekrevingFlereTyper';
+        warnings.push('tilbakekrevingFlereTyper');
     } else if (tilbakekreving && opphør) {
-        return 'tilbakekrevingOgOpphør';
+        warnings.push('tilbakekrevingOgOpphør');
     } else if (tilbakekreving) {
-        return 'tilbakekreving';
+        warnings.push('tilbakekreving');
     } else if (opphør) {
-        return hentAvkortingFraRevurdering(revurdering) ? 'info.opphør.og.avkorting' : 'info.opphør';
-    } else return null;
+        hentAvkortingFraRevurdering(revurdering)
+            ? warnings.push('info.opphør.og.avkorting')
+            : warnings.push('info.opphør');
+    }
+    if (tilbakekreving) {
+        warnings.push('tilbakereving.alert.brutto.netto');
+    }
+    return warnings;
 };
 
 export default AttesterRevurdering;
