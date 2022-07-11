@@ -1,4 +1,4 @@
-import DateFns from 'date-fns';
+import * as DateFns from 'date-fns';
 
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~src/features/søknad/types';
