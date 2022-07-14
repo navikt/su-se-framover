@@ -145,6 +145,7 @@ const OppsummeringshandlingForm = (props: {
             )}
             {oppsummeringsformState === OppsummeringState.ATTESTERING && (
                 <SendTilAttesteringForm
+                    sakid={props.sakId}
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
                     brevsending={hentBrevsending(props.revurdering)}

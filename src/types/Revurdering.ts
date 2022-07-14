@@ -8,7 +8,6 @@ import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlands
 import { Periode } from './Periode';
 import { Simulering, SimulertPeriode } from './Simulering';
 import { Attestering } from './Søknadsbehandling';
-import { Vedtak } from './Vedtak';
 
 //Dette er feltene som deles av backends 'abstrakte' revurdering. Hadde vært fint å skille på dem litt mer, både bak og fram
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
@@ -16,7 +15,6 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     status: T;
     opprettet: string;
     periode: Periode<string>;
-    tilRevurdering: Vedtak;
     saksbehandler: string;
     attesteringer: Attestering[];
     årsak: OpprettetRevurderingGrunn;

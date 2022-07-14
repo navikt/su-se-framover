@@ -213,6 +213,7 @@ const getBrevutsending = (brevutsending: brevutsendingstype, value: boolean) => 
 };
 
 export const SendTilAttesteringForm = (props: {
+    sakid: string;
     revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
@@ -290,7 +291,7 @@ export const SendTilAttesteringForm = (props: {
                             tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
                             onVisBrevClick={() =>
                                 pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
-                                    sakId: props.revurdering.tilRevurdering.sakId,
+                                    sakId: props.sakid,
                                     revurderingId: props.revurdering.id,
                                     fritekst: field.value,
                                 })
