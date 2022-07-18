@@ -205,7 +205,7 @@ export enum InformasjonSomRevurderes {
     Formue = 'Formue',
     Utenlandsopphold = 'Utenlandsopphold',
     Flyktning = 'Flyktning',
-    FastOpphold = 'FastOpphold',
+    FastOpphold = 'FastOppholdINorge',
     Opplysningsplikt = 'Opplysningsplikt',
     Oppholdstillatelse = 'Oppholdstillatelse',
 }

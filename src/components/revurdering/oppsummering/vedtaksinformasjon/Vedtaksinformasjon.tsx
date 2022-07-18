@@ -137,7 +137,7 @@ const Vedtaksinformasjon = (props: {
         valgtRevurderingssteg.Flyktning === Vurderingstatus.Vurdert;
     const skalViseFastOpphold =
         !fastOppholdErLik(nyeData.fastOpphold, gamleData.fastOpphold) ||
-        valgtRevurderingssteg.FastOpphold === Vurderingstatus.Vurdert;
+        valgtRevurderingssteg.FastOppholdINorge === Vurderingstatus.Vurdert;
 
     return (
         <div className={styles.container}>
