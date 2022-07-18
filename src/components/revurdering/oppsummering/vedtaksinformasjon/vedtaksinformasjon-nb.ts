@@ -40,4 +40,5 @@ export default {
     'radTittel.opplysningsplikt': 'Opplysningsplikt',
     'radTittel.lovligOpphold': 'Oppholdstillatelse',
     'radTittel.flyktning': 'Flyktningstatus',
+    'radTittel.fastOpphold': 'Oppholder seg i Norge',
 };

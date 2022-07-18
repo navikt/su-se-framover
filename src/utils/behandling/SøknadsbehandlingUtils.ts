@@ -1,15 +1,12 @@
 import { FormueStatus, PersonligOppmøteStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import {
     mapToVilkårsinformasjon,
     vilkårsinformasjonForBeregningssteg,
 } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
-
-export const findBehandling = (sak: Sak, behandlingId: string) => sak.behandlinger.find((b) => b.id === behandlingId);
 
 export const erTilAttestering = ({ status }: Søknadsbehandling) =>
     [Behandlingsstatus.TIL_ATTESTERING_AVSLAG, Behandlingsstatus.TIL_ATTESTERING_INNVILGET].includes(status);
@@ -47,7 +44,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Søknadsbehandlin
     behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
     behandling.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
-    behandling.behandlingsinformasjon.fastOppholdINorge?.status === Vilkårstatus.VilkårIkkeOppfylt ||
+    behandling.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.behandlingsinformasjon.institusjonsopphold?.status === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
         Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet ||

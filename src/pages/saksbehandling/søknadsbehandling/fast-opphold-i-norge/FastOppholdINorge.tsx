@@ -23,16 +23,16 @@ import { VilkårsvurderingBaseProps } from '../types';
 import messages from './fastOppholdINorge-nb';
 
 interface FormData {
-    status: Nullable<Vilkårstatus>;
+    vurdering: Nullable<Vilkårstatus>;
 }
 
 const eqFormData = struct<FormData>({
-    status: eqNullable(S.Eq),
+    vurdering: eqNullable(S.Eq),
 });
 
 const schema = yup
     .object<FormData>({
-        status: yup
+        vurdering: yup
             .mixed<Vilkårstatus>()
             .defined()
             .oneOf(Object.values(Vilkårstatus), 'Du må velge om søker oppholder seg fast i norge'),
@@ -41,10 +41,10 @@ const schema = yup
 
 const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
+    const [status, lagreFastOppholdVilkår] = useAsyncActionCreator(sakSlice.lagreFastOppholdVilkår);
 
     const initialValues = {
-        status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status ?? null,
+        vurdering: props.behandling.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat ?? null,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
@@ -58,15 +58,16 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             onSuccess();
             return;
         }
-        await lagreBehandlingsinformasjon(
+        await lagreFastOppholdVilkår(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    fastOppholdINorge: {
-                        status: values.status!,
+                vurderinger: [
+                    {
+                        periode: props.behandling.stønadsperiode!.periode,
+                        vurdering: values.vurdering!,
                     },
-                },
+                ],
             },
             () => {
                 clearDraft();
@@ -96,7 +97,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                     >
                         <Controller
                             control={form.control}
-                            name="status"
+                            name="vurdering"
                             render={({ field, fieldState }) => (
                                 <RadioGroup
                                     legend={formatMessage('radio.fastOpphold.legend')}

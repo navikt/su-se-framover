@@ -104,9 +104,9 @@ const Vilkårsting = (props: {
         case Vilkårtype.FastOppholdINorge:
             return (
                 <FastOppholdVilkårsblokk
-                    info={props.info}
+                    status={props.info.status}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.fastOppholdINorge}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.fastOpphold}
                 />
             );
         case Vilkårtype.Institusjonsopphold:

@@ -137,8 +137,8 @@ export const mapToVilkårsinformasjon = (
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
-    const { fastOppholdINorge, institusjonsopphold, personligOppmøte } = behandlingsinformasjon;
-    const { flyktning, pensjon, familiegjenforening, lovligOpphold, formue, uføre, utenlandsopphold } =
+    const { institusjonsopphold, personligOppmøte } = behandlingsinformasjon;
+    const { flyktning, pensjon, fastOpphold, familiegjenforening, lovligOpphold, formue, uføre, utenlandsopphold } =
         grunnlagsdataOgVilkårsvurderinger;
 
     const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre, flyktning) : [];
@@ -154,9 +154,9 @@ export const mapToVilkårsinformasjon = (
             erStartet: lovligOpphold !== null,
         },
         {
-            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, fastOppholdINorge?.status),
+            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, fastOpphold?.resultat),
             vilkårtype: Vilkårtype.FastOppholdINorge,
-            erStartet: fastOppholdINorge !== null,
+            erStartet: fastOpphold !== null,
         },
         {
             status: getVilkårVurderingStatus(defaultVilkårstatusMapping, institusjonsopphold?.status),

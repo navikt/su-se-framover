@@ -12,6 +12,7 @@ export const stegmessages: { [key in RevurderingSteg]: string } = {
     [RevurderingSteg.Oppholdstillatelse]: 'Oppholdstillatelse',
     [RevurderingSteg.Oppsummering]: 'Oppsummering',
     [RevurderingSteg.Flyktning]: 'Flyktningsstatus',
+    [RevurderingSteg.FastOpphold]: 'Opphold i Norge',
 };
 
 export const opprettetRevurderingGrunn: { [key in OpprettetRevurderingGrunn]: string } = {

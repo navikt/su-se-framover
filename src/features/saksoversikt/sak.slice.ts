@@ -144,6 +144,25 @@ export const lagreFlyktningVilkår = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreFastOppholdVilkår = createAsyncThunk<
+    Søknadsbehandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vurderinger: Array<{
+            vurdering: Vilkårstatus;
+            periode: Periode<string>;
+        }>;
+    },
+    { rejectValue: ApiError }
+>('behandling/fastOpphold', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreFastOppholdVilkår(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const lagreBehandlingsinformasjon = createAsyncThunk<
     Søknadsbehandling,
     {
@@ -771,6 +790,16 @@ export default createSlice({
             );
         });
 
+        builder.addCase(lagreFastOppholdVilkår.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
         builder.addCase(lagreFradrag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
@@ -798,6 +827,10 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.lagreFlyktningVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
+        builder.addCase(revurderingActions.lagreFastOppholdVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 

@@ -125,6 +125,7 @@ export const revurderingstegrekkefølge = [
     RevurderingSteg.Uførhet,
     RevurderingSteg.Flyktning,
     RevurderingSteg.Bosituasjon,
+    RevurderingSteg.FastOpphold,
     RevurderingSteg.Formue,
     RevurderingSteg.Utenlandsopphold,
     RevurderingSteg.EndringAvFradrag,
@@ -152,6 +153,8 @@ export const revurderingstegTilInformasjonSomRevurderes = (
             return InformasjonSomRevurderes.Oppholdstillatelse;
         case RevurderingSteg.Flyktning:
             return InformasjonSomRevurderes.Flyktning;
+        case RevurderingSteg.FastOpphold:
+            return InformasjonSomRevurderes.FastOpphold;
     }
 };
 

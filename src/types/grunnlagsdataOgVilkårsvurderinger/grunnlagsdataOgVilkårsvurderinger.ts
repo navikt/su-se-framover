@@ -4,6 +4,7 @@ import { Nullable } from '~src/lib/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { Familiegjenforening } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
+import { FastOppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
@@ -18,6 +19,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     familiegjenforening: Nullable<Familiegjenforening>;
     uføre: Nullable<UføreVilkår>;
     flyktning: Nullable<FlyktningVilkår>;
+    fastOpphold: Nullable<FastOppholdVilkår>;
     lovligOpphold: Nullable<LovligOppholdVilkår>;
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];
@@ -84,6 +86,9 @@ export const lovligOppholdErLik = (ny: Nullable<LovligOppholdVilkår>, gammel: N
     isEqual(ny, gammel);
 
 export const flyktningErLik = (ny: Nullable<FlyktningVilkår>, gammel: Nullable<FlyktningVilkår>) => isEqual(ny, gammel);
+
+export const fastOppholdErLik = (ny: Nullable<FastOppholdVilkår>, gammel: Nullable<FastOppholdVilkår>) =>
+    isEqual(ny, gammel);
 
 const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
 

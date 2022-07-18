@@ -111,6 +111,18 @@ export async function lagreFlyktningVilkår(arg: {
     });
 }
 
+export async function lagreFastOppholdVilkår(arg: {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: Array<{ vurdering: Vilkårstatus; periode: Periode<string> }>;
+}) {
+    return apiClient<Søknadsbehandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/fastopphold`,
+        method: 'POST',
+        body: arg.vurderinger,
+    });
+}
+
 export async function lagreBehandlingsinformasjon(arg: {
     sakId: string;
     behandlingId: string;
