@@ -1,6 +1,6 @@
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
-import { Heading } from '~node_modules/@navikt/ds-react';
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~src/lib/i18n';
 import { vilkårstatusMessages } from '~src/typeMappinger/Vilkårsstatus';

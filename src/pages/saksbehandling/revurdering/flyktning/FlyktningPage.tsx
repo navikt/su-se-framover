@@ -1,8 +1,8 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';

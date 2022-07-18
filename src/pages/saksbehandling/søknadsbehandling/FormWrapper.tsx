@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import * as React from 'react';
 import { ReactElement } from 'react';
-import { UseFormReturn } from 'react-hook-form';
-import { FieldValues } from 'react-hook-form/dist/types/fields';
+import { UseFormReturn, FieldValues } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
