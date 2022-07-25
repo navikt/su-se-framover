@@ -1,5 +1,4 @@
 import { Fieldset, TextField } from '@navikt/ds-react';
-import { FormikErrors } from 'formik';
 import * as React from 'react';
 import { FieldError } from 'react-hook-form';
 
@@ -20,12 +19,7 @@ export const kjøretøyMessages = {
 
 const KjøretøyInputFelter = (props: {
     arr: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
-    errors:
-        | string
-        | string[]
-        | Array<FormikErrors<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>>
-        | undefined
-        | FieldError;
+    errors: string | undefined | FieldError;
     feltnavn: string;
     onChange: (element: { index: number; verdiPåKjøretøy: string; kjøretøyDeEier: string }) => void;
     onLeggTilClick: () => void;

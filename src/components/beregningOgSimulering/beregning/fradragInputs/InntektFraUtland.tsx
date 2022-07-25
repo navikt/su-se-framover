@@ -1,7 +1,7 @@
 import { TextField, Label, Select } from '@navikt/ds-react';
 import { currencies } from 'country-data-list';
-import { FormikErrors } from 'formik';
 import React from 'react';
+import { FieldErrors } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
 import { UtenlandskInntekt } from '~src/types/Fradrag';
@@ -15,7 +15,7 @@ const InntektFraUtland = (props: {
     name: string;
     value: UtenlandskInntektFormData;
     onChange: (e: UtenlandskInntektFormData) => void;
-    errors: FormikErrors<UtenlandskInntekt> | undefined;
+    errors: FieldErrors<UtenlandskInntekt> | undefined;
 }) => {
     const { formatMessage } = useI18n({ messages });
 

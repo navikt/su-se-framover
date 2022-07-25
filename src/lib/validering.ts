@@ -1,4 +1,3 @@
-import { FormikErrors } from 'formik';
 import { FieldError, FieldErrors } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -75,39 +74,6 @@ const norskLocale: yup.LocaleObject = {
 
 yup.setLocale(norskLocale);
 
-// Det er så godt som umulig å finne riktig typing på verdiene i T.
-// Kan eventuelt komme tilbake til det senere
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function formikErrorsTilFeiloppsummering<T extends Record<string, any>>(
-    errors: FormikErrors<T>
-): FeiloppsummeringFeil[] {
-    return Object.entries(errors).flatMap(([key, val]) => {
-        if (Array.isArray(val)) {
-            return val.flatMap((x, index) => {
-                if (x === undefined || x === null) {
-                    return [];
-                }
-                if (typeof x === 'string') {
-                    return [
-                        {
-                            skjemaelementId: `${key}[${index}]`,
-                            feilmelding: x,
-                        },
-                    ];
-                }
-                return formikErrorsTilFeiloppsummering(withFullPathKeyNames(`${key}[${index}]`, x));
-            });
-        }
-        if (typeof val === 'object') {
-            return formikErrorsTilFeiloppsummering(withFullPathKeyNames(key, val));
-        }
-        return {
-            skjemaelementId: key,
-            feilmelding: val ?? '',
-        };
-    });
-}
-
 export function hookFormErrorsTilFeiloppsummering<T>(errors: FieldErrors<T>): FeiloppsummeringFeil[] {
     return Object.entries(errors).flatMap(([key, value]) => {
         const k = key as keyof T;
@@ -141,10 +107,6 @@ const withFullPathKeyNames = (basePath: string, x: Record<string, unknown>) =>
         }),
         {}
     );
-
-export function formikErrorsHarFeil<T>(errors: FormikErrors<T>) {
-    return Object.values(errors).length > 0;
-}
 
 // Denne er egentlig litt tullete. Pga typingen i react-hook-form blir feilmeldinger som tilhører Date-felter
 // regnet som objekt-feilmeldinger (altså feilmelding per property). Dette er ikke tilfellet i praksis for oss;
