@@ -1,14 +1,14 @@
 import { Delete } from '@navikt/ds-icons';
 import { Button, Checkbox, Label, Panel, Select, TextField } from '@navikt/ds-react';
-import { lastDayOfMonth } from 'date-fns';
 import * as DateFns from 'date-fns';
-import { FormikErrors } from 'formik';
+import { lastDayOfMonth } from 'date-fns';
 import React from 'react';
+import { FieldErrors } from 'react-hook-form';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { InputWithFollowText } from '~src/components/inputWithFollowText/InputWithFollowText';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable, KeyDict } from '~src/lib/types';
+import { KeyDict, Nullable } from '~src/lib/types';
 import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
 import { Fradragskategori, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { NullablePeriode } from '~src/types/Periode';
@@ -48,14 +48,14 @@ const FradragsSelection = (props: {
     id: string;
     name: string;
     value: string;
-    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChange: (kategori: Nullable<Fradragskategori>) => void;
     feil: string | undefined;
 }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <Select
-            onChange={props.onChange}
+            onChange={(e) => props.onChange(e.target.value as Nullable<Fradragskategori>)}
             id={props.id}
             name={props.name}
             value={props.value}
@@ -134,8 +134,7 @@ export const FradragInputs = (props: {
     harEps: boolean;
     fradrag: FradragFormData[];
     feltnavn: string;
-    errors: string | string[] | Array<FormikErrors<FradragFormData>> | undefined;
-    onChange: (e: React.ChangeEvent<unknown>) => void;
+    errors: FieldErrors<FradragFormData> | undefined;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
     onFradragChange: (index: number, value: FradragFormData) => void;
@@ -181,27 +180,21 @@ export const FradragInputs = (props: {
                                 <div className={styles.fradragTypeOgBelopInputs}>
                                     <FradragsSelection
                                         label={formatMessage('display.fradrag.type')}
-                                        onChange={props.onChange}
+                                        onChange={(kategori) => props.onFradragChange(index, { ...fradrag, kategori })}
                                         id={typeId}
                                         name={typeId}
                                         value={fradrag.kategori?.toString() ?? ''}
-                                        feil={
-                                            errorForLinje && typeof errorForLinje === 'object'
-                                                ? errorForLinje.kategori
-                                                : undefined
-                                        }
+                                        feil={errorForLinje?.kategori?.message}
                                     />
                                     <InputWithFollowText
                                         tittel={formatMessage('display.fradrag.beløp')}
                                         inputName={belopId}
                                         value={fradrag.beløp?.toString() ?? ''}
                                         inputTekst="NOK"
-                                        onChange={props.onChange}
-                                        feil={
-                                            errorForLinje && typeof errorForLinje === 'object'
-                                                ? errorForLinje.beløp
-                                                : undefined
+                                        onChange={(e) =>
+                                            props.onFradragChange(index, { ...fradrag, beløp: e.target.value ?? null })
                                         }
+                                        feil={errorForLinje?.beløp?.message}
                                         disabled={fradrag.fraUtland}
                                     />
                                 </div>
@@ -212,12 +205,13 @@ export const FradragInputs = (props: {
                                         label={formatMessage('fradrag.input.spesifiserFradrag')}
                                         name={spesifisertTypeId}
                                         value={fradrag.spesifisertkategori ?? ''}
-                                        onChange={props.onChange}
-                                        error={
-                                            errorForLinje && typeof errorForLinje === 'object'
-                                                ? errorForLinje.spesifisertkategori
-                                                : undefined
+                                        onChange={(e) =>
+                                            props.onFradragChange(index, {
+                                                ...fradrag,
+                                                spesifisertkategori: e.target.value,
+                                            })
                                         }
+                                        error={errorForLinje?.spesifisertkategori?.message}
                                     />
                                 </div>
                             )}
@@ -227,7 +221,12 @@ export const FradragInputs = (props: {
                                         name={tilhørerEPSId}
                                         className={styles.checkbox}
                                         checked={fradrag.tilhørerEPS}
-                                        onChange={props.onChange}
+                                        onChange={(e) =>
+                                            props.onFradragChange(index, {
+                                                ...fradrag,
+                                                tilhørerEPS: e.target.value === 'true',
+                                            })
+                                        }
                                         disabled={!props.harEps}
                                     >
                                         {formatMessage('display.checkbox.tilhørerEPS')}
@@ -237,19 +236,22 @@ export const FradragInputs = (props: {
                                     name={fraUtlandId}
                                     checked={fradrag.fraUtland}
                                     className={styles.checkbox}
-                                    onChange={(e) => {
-                                        if (!e.target.checked) {
-                                            props.onFradragChange(index, {
-                                                ...fradrag,
-                                                utenlandskInntekt: {
-                                                    beløpIUtenlandskValuta: '',
-                                                    kurs: '',
-                                                    valuta: '',
-                                                },
-                                            });
-                                        }
-                                        props.onChange(e);
-                                    }}
+                                    onChange={(e) =>
+                                        props.onFradragChange(
+                                            index,
+                                            e.target.checked
+                                                ? { ...fradrag, fraUtland: true }
+                                                : {
+                                                      ...fradrag,
+                                                      fraUtland: false,
+                                                      utenlandskInntekt: {
+                                                          beløpIUtenlandskValuta: '',
+                                                          kurs: '',
+                                                          valuta: '',
+                                                      },
+                                                  }
+                                        )
+                                    }
                                 >
                                     {formatMessage('display.checkbox.fraUtland')}
                                 </Checkbox>
@@ -286,13 +288,7 @@ export const FradragInputs = (props: {
                                             beløp: Number.isNaN(beløp) ? '' : beløp.toString(),
                                         });
                                     }}
-                                    errors={
-                                        errorForLinje &&
-                                        typeof errorForLinje === 'object' &&
-                                        errorForLinje.utenlandskInntekt
-                                            ? errorForLinje.utenlandskInntekt
-                                            : undefined
-                                    }
+                                    errors={errorForLinje?.utenlandskInntekt?.message}
                                 />
                             )}
 
@@ -307,18 +303,8 @@ export const FradragInputs = (props: {
                                         });
                                     }}
                                     error={{
-                                        fraOgMed:
-                                            typeof errorForLinje === 'object' && errorForLinje?.periode
-                                                ? // formik sin typing er ikke god på nøstede feil
-                                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                  (errorForLinje.periode as any)?.fraOgMed
-                                                : undefined,
-                                        tilOgMed:
-                                            typeof errorForLinje === 'object' && errorForLinje?.periode
-                                                ? // formik sin typing er ikke god på nøstede feil
-                                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                  (errorForLinje.periode as any)?.tilOgMed
-                                                : undefined,
+                                        fraOgMed: errorForLinje?.periode?.fraOgMed,
+                                        tilOgMed: errorForLinje?.periode?.tilOgMed,
                                     }}
                                     size="S"
                                     minDate={{

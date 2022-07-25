@@ -1,7 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Heading } from '@navikt/ds-react';
-import { useFormik } from 'formik';
 import React from 'react';
+import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
@@ -17,9 +18,8 @@ import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering'
 import Fradragoppsummering from '~src/components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreFradragsgrunnlag } from '~src/features/revurdering/revurderingActions';
-import { customFormikSubmit } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
 import {
@@ -63,7 +63,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     });
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [hasSubmitted, setHasSubmitted] = React.useState(false);
     const [savingState, setSavingState] = React.useState<
         RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
     >(RemoteData.initial);
@@ -117,29 +116,20 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     const schema = yup.object<EndringAvFradragFormData>({
         fradrag: yup.array(fradragSchema.required()).defined(),
     });
-    const formik = useFormik<EndringAvFradragFormData>({
-        initialValues: {
+    const form = useForm<EndringAvFradragFormData>({
+        defaultValues: {
             fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
                 props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag
             ).map(fradragTilFradragFormData),
         },
-        async onSubmit(values) {
-            await save(values, () => navigate(props.nesteUrl));
-        },
-        validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        resolver: yupResolver(schema),
     });
 
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                        }}
-                    >
+                    <form onSubmit={form.handleSubmit((values) => save(values, () => navigate(props.nesteUrl)))}>
                         <div>
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
                                 (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold
@@ -149,55 +139,58 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                         </div>
                         <div>
                             <div className={styles.fradragInputsContainer}>
-                                <FradragInputs
-                                    harEps={props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.some(
-                                        bosituasjonHarEps
-                                    )}
-                                    feltnavn="fradrag"
-                                    fradrag={formik.values.fradrag}
-                                    errors={formik.errors.fradrag}
-                                    onChange={formik.handleChange}
-                                    onFradragChange={(index, value) => {
-                                        formik.setFieldValue(`fradrag[${index}]`, value);
-                                    }}
-                                    onFjernClick={(index) => {
-                                        formik.setValues((v) => ({
-                                            ...v,
-                                            fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
-                                        }));
-                                    }}
-                                    beregningsDato={{
-                                        fom: new Date(props.revurdering.periode.fraOgMed),
-                                        tom: new Date(props.revurdering.periode.tilOgMed),
-                                    }}
-                                    onLeggTilClick={() => {
-                                        formik.setValues({
-                                            ...formik.values,
-                                            fradrag: [
-                                                ...formik.values.fradrag,
-                                                {
-                                                    beløp: null,
-                                                    kategori: null,
-                                                    spesifisertkategori: null,
-                                                    fraUtland: false,
-                                                    utenlandskInntekt: {
-                                                        beløpIUtenlandskValuta: '',
-                                                        valuta: '',
-                                                        kurs: '',
+                                <Controller
+                                    control={form.control}
+                                    name={'fradrag'}
+                                    render={({ field, fieldState }) => (
+                                        <FradragInputs
+                                            harEps={props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.some(
+                                                bosituasjonHarEps
+                                            )}
+                                            feltnavn={field.name}
+                                            fradrag={field.value}
+                                            errors={fieldState.error as FieldErrors | undefined}
+                                            onLeggTilClick={() =>
+                                                field.onChange([
+                                                    ...field.value,
+                                                    {
+                                                        beløp: null,
+                                                        kategori: null,
+                                                        spesifisertkategori: null,
+                                                        fraUtland: false,
+                                                        utenlandskInntekt: {
+                                                            beløpIUtenlandskValuta: '',
+                                                            valuta: '',
+                                                            kurs: '',
+                                                        },
+                                                        periode: null,
+                                                        tilhørerEPS: false,
                                                     },
-                                                    periode: null,
-                                                    tilhørerEPS: false,
-                                                },
-                                            ],
-                                        });
-                                    }}
+                                                ])
+                                            }
+                                            onFjernClick={(index) =>
+                                                field.onChange(
+                                                    field.value.filter((_: FradragFormData, i: number) => index !== i)
+                                                )
+                                            }
+                                            onFradragChange={(index, value) =>
+                                                field.onChange(
+                                                    field.value.map((input, i) => (index === i ? value : input))
+                                                )
+                                            }
+                                            beregningsDato={{
+                                                fom: new Date(props.revurdering.periode.fraOgMed),
+                                                tom: new Date(props.revurdering.periode.tilOgMed),
+                                            }}
+                                        />
+                                    )}
                                 />
                             </div>
                             <Feiloppsummering
                                 tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                                 className={styles.feiloppsummering}
-                                feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                                hidden={!formikErrorsHarFeil(formik.errors)}
+                                feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                                hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                             />
                             {RemoteData.isFailure(savingState) && <ApiErrorAlert error={savingState.error} />}
                             {RemoteData.isSuccess(savingState) && (
@@ -209,12 +202,9 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                         ? { onTilbakeClick: props.onTilbakeClickOverride }
                                         : { url: props.forrigeUrl }
                                 }
-                                onLagreOgFortsettSenereClick={() => {
-                                    setHasSubmitted(true);
-                                    customFormikSubmit(formik, () =>
-                                        save(formik.values, () => navigate(props.avsluttUrl))
-                                    );
-                                }}
+                                onLagreOgFortsettSenereClick={() =>
+                                    save(form.getValues(), () => navigate(props.avsluttUrl))
+                                }
                                 loading={RemoteData.isPending(savingState)}
                             />
                         </div>

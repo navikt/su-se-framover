@@ -1,7 +1,8 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Fieldset } from '@navikt/ds-react';
-import { FormikErrors, useFormik } from 'formik';
 import * as React from 'react';
 import { ReactDatePickerProps } from 'react-datepicker';
+import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import DatePicker from '~src/components/datePicker/DatePicker';
@@ -12,7 +13,7 @@ import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadIn
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
-import { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { kalkulerTotaltAntallDagerIUtlandet, toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
@@ -24,9 +25,14 @@ import sharedI18n from '../steg-shared-i18n';
 import messages from './utenlandsopphold-nb';
 import * as styles from './utenlandsopphold.module.less';
 
+interface Reiseperiode {
+    utreisedato: string;
+    innreisedato: string;
+}
+
 const MultiTidsperiodevelger = (props: {
-    perioder: Array<{ utreisedato: string; innreisedato: string }>;
-    errors: string | string[] | Array<FormikErrors<{ utreisedato: string; innreisedato: string }>> | undefined;
+    perioder: Reiseperiode[];
+    errors: FieldErrors<Reiseperiode> | undefined;
     feltnavn: string;
     limitations?: {
         innreise?: Pick<ReactDatePickerProps, 'maxDate' | 'minDate'>;
@@ -38,6 +44,8 @@ const MultiTidsperiodevelger = (props: {
     onFjernClick: (index: number) => void;
 }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+
+    console.log({ er: props.errors });
 
     return (
         <SøknadInputliste leggTilLabel={formatMessage('button.leggTilReiserad')} onLeggTilClick={props.onLeggTilClick}>
@@ -116,7 +124,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
     const utenlandsopphold = useAppSelector((s) => s.soknad.utenlandsopphold);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
     const save = (values: FormData) => {
         dispatch(
@@ -129,162 +136,165 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
         );
     };
 
-    const formik = useFormik<FormData>({
-        initialValues: {
+    const form = useForm<FormData>({
+        defaultValues: {
             harReistTilUtlandetSiste90dager: utenlandsopphold.harReistTilUtlandetSiste90dager,
             harReistDatoer: utenlandsopphold.harReistDatoer,
             skalReiseTilUtlandetNeste12Måneder: utenlandsopphold.skalReiseTilUtlandetNeste12Måneder,
             skalReiseDatoer: utenlandsopphold.skalReiseDatoer,
         },
-        onSubmit: (values) => {
-            save(values);
-            navigate(props.nesteUrl);
-        },
-        validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        resolver: yupResolver(schema),
     });
 
-    const { intl, formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
     const antallDagerIUtlandet = React.useMemo(() => {
-        return formik.values.skalReiseTilUtlandetNeste12Måneder
-            ? kalkulerTotaltAntallDagerIUtlandet(formik.values.skalReiseDatoer)
+        return form.getValues('skalReiseTilUtlandetNeste12Måneder')
+            ? kalkulerTotaltAntallDagerIUtlandet(form.getValues('skalReiseDatoer'))
             : 0;
-    }, [formik.values.skalReiseDatoer]);
+    }, [form.watch('skalReiseDatoer')]);
 
     return (
         <div className={sharedStyles.container}>
             <form
-                onSubmit={(e) => {
-                    setHasSubmitted(true);
-                    formik.handleSubmit(e);
+                onSubmit={form.handleSubmit((values) => {
+                    save(values);
+                    navigate(props.nesteUrl);
                     focusAfterTimeout(feiloppsummeringref)();
-                }}
+                })}
             >
                 <SøknadSpørsmålsgruppe withoutLegend>
-                    <BooleanRadioGroup
+                    <Controller
+                        control={form.control}
                         name="harReistTilUtlandetSiste90dager"
-                        legend={formatMessage('harReistSiste90.label')}
-                        error={formik.errors.harReistTilUtlandetSiste90dager}
-                        value={formik.values.harReistTilUtlandetSiste90dager}
-                        onChange={(val) => {
-                            formik.setValues({
-                                ...formik.values,
-                                harReistTilUtlandetSiste90dager: val,
-                                harReistDatoer: val
-                                    ? formik.values.harReistDatoer.length === 0
-                                        ? [{ innreisedato: '', utreisedato: '' }]
-                                        : formik.values.harReistDatoer
-                                    : [],
-                            });
-                        }}
+                        render={({ field, fieldState }) => (
+                            <BooleanRadioGroup
+                                {...field}
+                                legend={formatMessage('harReistSiste90.label')}
+                                error={fieldState.error?.message}
+                                onChange={(boolean) => {
+                                    field.onChange(boolean);
+                                    form.setValue(
+                                        'harReistDatoer',
+                                        boolean
+                                            ? form.watch('harReistDatoer').length === 0
+                                                ? [{ innreisedato: '', utreisedato: '' }]
+                                                : form.getValues('harReistDatoer')
+                                            : []
+                                    );
+                                }}
+                            />
+                        )}
                     />
 
-                    {formik.values.harReistTilUtlandetSiste90dager && (
-                        <MultiTidsperiodevelger
-                            legendForNumber={(x) => formatMessage('gruppe.tidligereUtenlandsoppholdX.legend', { x })}
-                            feltnavn="harReistDatoer"
-                            perioder={formik.values.harReistDatoer}
-                            limitations={{
-                                utreise: { maxDate: new Date() },
-                                innreise: { maxDate: new Date() },
-                            }}
-                            errors={formik.errors.harReistDatoer}
-                            onLeggTilClick={() => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    harReistDatoer: [
-                                        ...formik.values.harReistDatoer,
-                                        {
-                                            innreisedato: '',
-                                            utreisedato: '',
-                                        },
-                                    ],
-                                });
-                            }}
-                            onFjernClick={(index) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    harReistDatoer: formik.values.harReistDatoer.filter((_, i) => index !== i),
-                                });
-                            }}
-                            onChange={(val) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    harReistDatoer: formik.values.harReistDatoer.map((periode, i) =>
-                                        val.index === i
-                                            ? {
-                                                  innreisedato: val.innreisedato,
-                                                  utreisedato: val.utreisedato,
-                                              }
-                                            : periode
-                                    ),
-                                });
-                            }}
+                    {form.watch('harReistTilUtlandetSiste90dager') && (
+                        <Controller
+                            control={form.control}
+                            name={'harReistDatoer'}
+                            render={({ field, fieldState }) => (
+                                <MultiTidsperiodevelger
+                                    legendForNumber={(x) =>
+                                        formatMessage('gruppe.tidligereUtenlandsoppholdX.legend', { x })
+                                    }
+                                    feltnavn={field.name}
+                                    perioder={field.value}
+                                    limitations={{
+                                        utreise: { maxDate: new Date() },
+                                        innreise: { maxDate: new Date() },
+                                    }}
+                                    errors={fieldState.error as FieldErrors<Reiseperiode> | undefined}
+                                    onLeggTilClick={() =>
+                                        field.onChange([
+                                            ...field.value,
+                                            {
+                                                innreisedato: '',
+                                                utreisedato: '',
+                                            },
+                                        ])
+                                    }
+                                    onFjernClick={(index) => field.onChange(field.value.filter((_, i) => index !== i))}
+                                    onChange={(val) =>
+                                        field.onChange(
+                                            field.value.map((periode, i) =>
+                                                val.index === i
+                                                    ? {
+                                                          innreisedato: val.innreisedato,
+                                                          utreisedato: val.utreisedato,
+                                                      }
+                                                    : periode
+                                            )
+                                        )
+                                    }
+                                />
+                            )}
                         />
                     )}
 
-                    <BooleanRadioGroup
+                    <Controller
+                        control={form.control}
                         name="skalReiseTilUtlandetNeste12Måneder"
-                        legend={formatMessage('skalReiseNeste12.label')}
-                        error={formik.errors.skalReiseTilUtlandetNeste12Måneder}
-                        value={formik.values.skalReiseTilUtlandetNeste12Måneder}
-                        onChange={(val) => {
-                            formik.setValues({
-                                ...formik.values,
-                                skalReiseTilUtlandetNeste12Måneder: val,
-                                skalReiseDatoer: val
-                                    ? formik.values.skalReiseDatoer.length === 0
-                                        ? [{ innreisedato: '', utreisedato: '' }]
-                                        : formik.values.skalReiseDatoer
-                                    : [],
-                            });
-                        }}
+                        render={({ field, fieldState }) => (
+                            <BooleanRadioGroup
+                                {...field}
+                                legend={formatMessage('skalReiseNeste12.label')}
+                                error={fieldState.error?.message}
+                                onChange={(boolean) => {
+                                    field.onChange(boolean);
+                                    form.setValue(
+                                        'skalReiseDatoer',
+                                        boolean
+                                            ? form.watch('skalReiseDatoer').length === 0
+                                                ? [{ innreisedato: '', utreisedato: '' }]
+                                                : form.getValues('skalReiseDatoer')
+                                            : []
+                                    );
+                                }}
+                            />
+                        )}
                     />
 
-                    {formik.values.skalReiseTilUtlandetNeste12Måneder && (
-                        <MultiTidsperiodevelger
-                            legendForNumber={(x) => formatMessage('gruppe.kommendeUtenlandsoppholdX.legend', { x })}
-                            feltnavn="skalReiseDatoer"
-                            perioder={formik.values.skalReiseDatoer}
-                            limitations={{
-                                utreise: { minDate: new Date() },
-                                innreise: { minDate: new Date() },
-                            }}
-                            errors={formik.errors.skalReiseDatoer}
-                            onLeggTilClick={() => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    skalReiseDatoer: [
-                                        ...formik.values.skalReiseDatoer,
-                                        {
-                                            innreisedato: '',
-                                            utreisedato: '',
-                                        },
-                                    ],
-                                });
-                            }}
-                            onFjernClick={(index) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    skalReiseDatoer: formik.values.skalReiseDatoer.filter((_, i) => index !== i),
-                                });
-                            }}
-                            onChange={(val) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    skalReiseDatoer: formik.values.skalReiseDatoer.map((periode, i) =>
-                                        val.index === i
-                                            ? {
-                                                  innreisedato: val.innreisedato,
-                                                  utreisedato: val.utreisedato,
-                                              }
-                                            : periode
-                                    ),
-                                });
-                            }}
+                    {form.watch('skalReiseTilUtlandetNeste12Måneder') && (
+                        <Controller
+                            control={form.control}
+                            name={'skalReiseDatoer'}
+                            render={({ field, fieldState }) => (
+                                <MultiTidsperiodevelger
+                                    legendForNumber={(x) =>
+                                        formatMessage('gruppe.kommendeUtenlandsoppholdX.legend', { x })
+                                    }
+                                    feltnavn={field.name}
+                                    perioder={field.value}
+                                    limitations={{
+                                        utreise: { minDate: new Date() },
+                                        innreise: { minDate: new Date() },
+                                    }}
+                                    errors={fieldState.error as FieldErrors<Reiseperiode> | undefined}
+                                    onLeggTilClick={() =>
+                                        field.onChange([
+                                            ...field.value,
+                                            {
+                                                innreisedato: '',
+                                                utreisedato: '',
+                                            },
+                                        ])
+                                    }
+                                    onFjernClick={(index) => field.onChange(field.value.filter((_, i) => index !== i))}
+                                    onChange={(val) =>
+                                        field.onChange(
+                                            field.value.map((periode, i) =>
+                                                val.index === i
+                                                    ? {
+                                                          innreisedato: val.innreisedato,
+                                                          utreisedato: val.utreisedato,
+                                                      }
+                                                    : periode
+                                            )
+                                        )
+                                    }
+                                />
+                            )}
                         />
                     )}
                 </SøknadSpørsmålsgruppe>
@@ -301,15 +311,15 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
-                    tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                    hidden={!formikErrorsHarFeil(formik.errors)}
-                    feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                    tittel={formatMessage('feiloppsummering.title')}
+                    feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                    hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                     ref={feiloppsummeringref}
                 />
                 <Bunnknapper
                     previous={{
                         onClick: () => {
-                            save(formik.values);
+                            save(form.getValues());
                             navigate(props.forrigeUrl);
                         },
                     }}
