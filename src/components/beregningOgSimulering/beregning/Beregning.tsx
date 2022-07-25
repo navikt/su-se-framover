@@ -1,12 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, Heading, Loader, Textarea } from '@navikt/ds-react';
-import { useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
 import * as B from 'fp-ts/lib/boolean';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 import React, { useEffect, useMemo, useState } from 'react';
+import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
@@ -27,12 +28,12 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~src/lib/validering';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { useAppDispatch } from '~src/redux/Store';
 import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
-import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
+import { Behandlingsstatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -169,14 +170,14 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     };
 
     const handleNesteClick = async () => {
-        const formikErrors = await formik.validateForm();
-        if (Object.values(formikErrors).length > 0) {
+        const validForm = form.formState.isValid;
+        if (!validForm) {
             return;
         }
         if (
             !props.behandling.beregning ||
-            erFradragUlike(props.behandling.beregning?.fradrag, formik.values.fradrag) ||
-            props.behandling.beregning.begrunnelse !== formik.values.begrunnelse
+            erFradragUlike(props.behandling.beregning?.fradrag, form.getValues('fradrag')) ||
+            props.behandling.beregning.begrunnelse !== form.getValues('begrunnelse')
         ) {
             return setNeedsBeregning(true);
         }
@@ -198,34 +199,31 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
         );
     };
 
-    const formik = useFormik<FormData>({
-        initialValues: draft ?? initialFormData,
-        onSubmit: (values) =>
-            lagreFradragOgBeregn(values, (b) => {
-                clearDraft();
-                setNeedsBeregning(false);
-                formik.resetForm({
-                    values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
-                });
-            }),
-        validationSchema: yup.object<FormData>({
-            fradrag: yup.array(fradragSchema.required()).defined(),
-            begrunnelse: yup.string(),
-        }),
-        validateOnChange: false,
+    const form = useForm<FormData>({
+        defaultValues: draft ?? initialFormData,
+        resolver: yupResolver(
+            yup.object<FormData>({
+                fradrag: yup.array(fradragSchema.required()).defined(),
+                begrunnelse: yup.string(),
+            })
+        ),
     });
 
-    useDraftFromFormikValues(formik.values);
+    const onSubmit = (values: FormData) => {
+        lagreFradragOgBeregn(values, (b) => {
+            clearDraft();
+            setNeedsBeregning(false);
+            form.reset(getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse));
+        });
+    };
+
+    useDraftFromFormikValues(form.getValues());
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <form
-                        onSubmit={(e) => {
-                            formik.handleSubmit(e);
-                        }}
-                    >
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
                         {props.behandling.simuleringForAvkortingsvarsel && (
                             <Alert variant={'info'} className={styles.avkortingAlert}>
                                 {formatMessage('alert.advarsel.avkorting')}
@@ -235,55 +233,62 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                             Fradrag
                         </Heading>
                         <div className={styles.container}>
-                            <FradragInputs
-                                harEps={
-                                    hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr !==
-                                    null
-                                }
-                                feltnavn="fradrag"
-                                fradrag={formik.values.fradrag}
-                                errors={undefined} // Todo
-                                onFradragChange={(index, value) => {
-                                    formik.setFieldValue(`fradrag[${index}]`, value);
-                                }}
-                                onFjernClick={(index) => {
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
-                                    }));
-                                }}
-                                beregningsDato={stønadsperiode}
-                                onLeggTilClick={() => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        fradrag: [
-                                            ...formik.values.fradrag,
-                                            {
-                                                periode: null,
-                                                beløp: null,
-                                                kategori: null,
-                                                spesifisertkategori: null,
-                                                fraUtland: false,
-                                                utenlandskInntekt: {
-                                                    beløpIUtenlandskValuta: '',
-                                                    valuta: '',
-                                                    kurs: '',
+                            <Controller
+                                control={form.control}
+                                name={'fradrag'}
+                                render={({ field, fieldState }) => (
+                                    <FradragInputs
+                                        harEps={
+                                            hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)
+                                                .fnr !== null
+                                        }
+                                        feltnavn={field.name}
+                                        fradrag={field.value}
+                                        errors={fieldState.error as FieldErrors | undefined}
+                                        beregningsDato={stønadsperiode}
+                                        onLeggTilClick={() =>
+                                            field.onChange([
+                                                ...field.value,
+                                                {
+                                                    beløp: null,
+                                                    kategori: null,
+                                                    spesifisertkategori: null,
+                                                    fraUtland: false,
+                                                    utenlandskInntekt: {
+                                                        beløpIUtenlandskValuta: '',
+                                                        valuta: '',
+                                                        kurs: '',
+                                                    },
+                                                    periode: null,
+                                                    tilhørerEPS: false,
                                                 },
-                                                tilhørerEPS: false,
-                                            },
-                                        ],
-                                    });
-                                }}
+                                            ])
+                                        }
+                                        onFjernClick={(index) =>
+                                            field.onChange(
+                                                field.value.filter((_: FradragFormData, i: number) => index !== i)
+                                            )
+                                        }
+                                        onFradragChange={(index, value) =>
+                                            field.onChange(field.value.map((input, i) => (index === i ? value : input)))
+                                        }
+                                    />
+                                )}
                             />
                         </div>
                         <div className={styles.textareaContainer}>
-                            <Textarea
-                                label={formatMessage('input.label.begrunnelse')}
-                                name="begrunnelse"
-                                onChange={formik.handleChange}
-                                value={formik.values.begrunnelse ?? ''}
-                                error={formik.errors.begrunnelse}
-                                description={formatMessage('input.begrunnelse.description')}
+                            <Controller
+                                control={form.control}
+                                name={'begrunnelse'}
+                                render={({ field, fieldState }) => (
+                                    <Textarea
+                                        {...field}
+                                        label={formatMessage('input.label.begrunnelse')}
+                                        value={field.value ?? ''}
+                                        error={fieldState.error?.message}
+                                        description={formatMessage('input.begrunnelse.description')}
+                                    />
+                                )}
                             />
                         </div>
                         <Heading level="2" size="medium">
@@ -294,14 +299,12 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         </Heading>
                         <div className={styles.beregningsContainer}>
                             {props.behandling.beregning && <VisBeregning beregning={props.behandling.beregning} />}
-                            {formik.errors && (
-                                <Feiloppsummering
-                                    feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                                    tittel={formatMessage('feiloppsummering.title')}
-                                    hidden={!formikErrorsHarFeil(formik.errors)}
-                                    className={styles.feiloppsummering}
-                                />
-                            )}
+                            <Feiloppsummering
+                                tittel={formatMessage('feiloppsummering.title')}
+                                className={styles.feiloppsummering}
+                                feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                                hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
+                            />
                             <Button
                                 className={styles.beregningButton}
                                 loading={RemoteData.isPending(beregningStatus)}
@@ -348,15 +351,13 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 RemoteData.isPending(beregningStatus) ||
                                 RemoteData.isPending(simuleringStatus)
                             }
-                            onLagreOgFortsettSenereClick={() =>
-                                formik.validateForm().then((res) => {
-                                    if (Object.keys(res).length === 0) {
-                                        lagreFradragOgBeregn(formik.values, () => {
-                                            navigate(props.avsluttUrl);
-                                        });
-                                    }
-                                })
-                            }
+                            onLagreOgFortsettSenereClick={() => {
+                                if (form.formState.isValid) {
+                                    lagreFradragOgBeregn(form.getValues(), () => {
+                                        navigate(props.avsluttUrl);
+                                    });
+                                }
+                            }}
                         />
                     </form>
                 ),

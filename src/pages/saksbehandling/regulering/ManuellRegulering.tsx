@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Loader, TextField } from '@navikt/ds-react';
-import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useEffect } from 'react';
+import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as reguleringApi from '~src/api/reguleringApi';
@@ -68,30 +68,31 @@ const ManuellRegulering = () => {
         );
     }
 
-    const formik = useFormik<FormData>({
-        initialValues: {
+    const form = useForm<FormData>({
+        defaultValues: {
             uføre: [],
             fradrag: [],
         },
-        onSubmit: (values) =>
-            reguler(
-                {
-                    uføre: values.uføre,
-                    reguleringId: regulering.id,
-                    fradrag: values.fradrag.map((f) =>
-                        fradragFormdataTilFradrag(f, {
-                            fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
-                            tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed)!,
-                        })
-                    ),
-                },
-                () => {
-                    hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
-                        Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification'), props.sak.id);
-                    });
-                }
-            ),
     });
+
+    const onSubmit = (values: FormData) =>
+        reguler(
+            {
+                uføre: values.uføre,
+                reguleringId: regulering.id,
+                fradrag: values.fradrag.map((f) =>
+                    fradragFormdataTilFradrag(f, {
+                        fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
+                        tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed)!,
+                    })
+                ),
+            },
+            () => {
+                hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
+                    Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification'), props.sak.id);
+                });
+            }
+        );
 
     useEffect(() => {
         hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(
@@ -101,7 +102,7 @@ const ManuellRegulering = () => {
                 tilOgMed: regulering.periode.tilOgMed,
             },
             (data) =>
-                formik.setValues({
+                form.reset({
                     uføre:
                         data.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger
                             .map((v) => v?.grunnlag)
@@ -128,7 +129,7 @@ const ManuellRegulering = () => {
                 const problemer = hentProblemer(regulering.årsakForManuell);
 
                 return (
-                    <form onSubmit={formik.handleSubmit} className={styles.form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
                         <Heading level="1" size="large" className={styles.tittel}>
                             {formatMessage('tittel')}
                         </Heading>
@@ -141,10 +142,10 @@ const ManuellRegulering = () => {
                                 </Heading>
 
                                 {harRegulerbarIEU ? (
-                                    formik.values.uføre.map((u, index) => {
-                                        if (u.forventetInntekt === 0) return null;
-
-                                        return (
+                                    form
+                                        .getValues('uføre')
+                                        .filter((u) => u.forventetInntekt === 0)
+                                        .map((u, index) => (
                                             <div key={u.id} className={styles.ieu}>
                                                 <p>
                                                     {`${formatMessage('ieu.verdi.tidligere')}: ${
@@ -156,9 +157,11 @@ const ManuellRegulering = () => {
                                                     size="medium"
                                                     value={u.forventetInntekt.toString()}
                                                     onChange={(e) =>
-                                                        formik.setFieldValue(
+                                                        form.setValue(
                                                             `uføre.${index}.forventetInntekt`,
-                                                            e.currentTarget.value
+                                                            e.currentTarget.value === ''
+                                                                ? 0
+                                                                : Number(e.currentTarget.value)
                                                         )
                                                     }
                                                     label={formatMessage('ieu', {
@@ -166,8 +169,7 @@ const ManuellRegulering = () => {
                                                     })}
                                                 />
                                             </div>
-                                        );
-                                    })
+                                        ))
                                 ) : (
                                     <p>{formatMessage('ingen.ieu')}.</p>
                                 )}
@@ -178,45 +180,51 @@ const ManuellRegulering = () => {
                                     {formatMessage('reguler.fradrag')}
                                 </Heading>
                                 {harRegulerbarFradrag ? (
-                                    <FradragInputs
-                                        harEps={false}
-                                        feltnavn="fradrag"
-                                        fradrag={formik.values.fradrag}
-                                        errors={undefined} // TODO
-                                        onLeggTilClick={() => {
-                                            formik.setValues({
-                                                ...formik.values,
-                                                fradrag: [
-                                                    ...formik.values.fradrag,
-                                                    {
-                                                        periode: null,
-                                                        beløp: null,
-                                                        kategori: null,
-                                                        spesifisertkategori: null,
-                                                        fraUtland: false,
-                                                        utenlandskInntekt: {
-                                                            beløpIUtenlandskValuta: '',
-                                                            valuta: '',
-                                                            kurs: '',
+                                    <Controller
+                                        control={form.control}
+                                        name={'fradrag'}
+                                        render={({ field, fieldState }) => (
+                                            <FradragInputs
+                                                harEps={false}
+                                                feltnavn={field.name}
+                                                fradrag={field.value}
+                                                errors={fieldState.error as FieldErrors | undefined}
+                                                onLeggTilClick={() =>
+                                                    field.onChange([
+                                                        ...field.value,
+                                                        {
+                                                            beløp: null,
+                                                            kategori: null,
+                                                            spesifisertkategori: null,
+                                                            fraUtland: false,
+                                                            utenlandskInntekt: {
+                                                                beløpIUtenlandskValuta: '',
+                                                                valuta: '',
+                                                                kurs: '',
+                                                            },
+                                                            periode: null,
+                                                            tilhørerEPS: false,
                                                         },
-                                                        tilhørerEPS: false,
-                                                    },
-                                                ],
-                                            });
-                                        }}
-                                        onFjernClick={(index) => {
-                                            formik.setValues((v) => ({
-                                                ...v,
-                                                fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
-                                            }));
-                                        }}
-                                        onFradragChange={(index, value) => {
-                                            formik.setFieldValue(`fradrag[${index}]`, value);
-                                        }}
-                                        beregningsDato={{
-                                            fom: DateUtils.parseIsoDateOnly(regulering.periode.fraOgMed),
-                                            tom: DateUtils.parseIsoDateOnly(regulering.periode.tilOgMed),
-                                        }}
+                                                    ])
+                                                }
+                                                onFjernClick={(index) =>
+                                                    field.onChange(
+                                                        field.value.filter(
+                                                            (_: FradragFormData, i: number) => index !== i
+                                                        )
+                                                    )
+                                                }
+                                                onFradragChange={(index, value) =>
+                                                    field.onChange(
+                                                        field.value.map((input, i) => (index === i ? value : input))
+                                                    )
+                                                }
+                                                beregningsDato={{
+                                                    fom: DateUtils.parseIsoDateOnly(regulering.periode.fraOgMed),
+                                                    tom: DateUtils.parseIsoDateOnly(regulering.periode.tilOgMed),
+                                                }}
+                                            />
+                                        )}
                                     />
                                 ) : (
                                     <p>{formatMessage('ingen.fradrag')}.</p>
