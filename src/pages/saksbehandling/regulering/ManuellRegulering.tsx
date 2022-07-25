@@ -182,8 +182,7 @@ const ManuellRegulering = () => {
                                         harEps={false}
                                         feltnavn="fradrag"
                                         fradrag={formik.values.fradrag}
-                                        errors={formik.errors.fradrag}
-                                        onChange={formik.handleChange}
+                                        errors={undefined} // TODO
                                         onLeggTilClick={() => {
                                             formik.setValues({
                                                 ...formik.values,

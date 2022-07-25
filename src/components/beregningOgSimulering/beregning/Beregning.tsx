@@ -242,8 +242,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 }
                                 feltnavn="fradrag"
                                 fradrag={formik.values.fradrag}
-                                errors={formik.errors.fradrag}
-                                onChange={formik.handleChange}
+                                errors={undefined} // Todo
                                 onFradragChange={(index, value) => {
                                     formik.setFieldValue(`fradrag[${index}]`, value);
                                 }}
