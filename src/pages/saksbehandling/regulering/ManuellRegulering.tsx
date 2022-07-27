@@ -144,7 +144,7 @@ const ManuellRegulering = () => {
                                 {harRegulerbarIEU ? (
                                     form
                                         .getValues('uføre')
-                                        .filter((u) => u.forventetInntekt === 0)
+                                        .filter((u) => u.forventetInntekt > 0)
                                         .map((u, index) => (
                                             <div key={u.id} className={styles.ieu}>
                                                 <p>
@@ -152,21 +152,21 @@ const ManuellRegulering = () => {
                                                         uføregrunnlag[index].forventetInntekt
                                                     } kr`}
                                                 </p>
-
-                                                <TextField
-                                                    size="medium"
-                                                    value={u.forventetInntekt.toString()}
-                                                    onChange={(e) =>
-                                                        form.setValue(
-                                                            `uføre.${index}.forventetInntekt`,
-                                                            e.currentTarget.value === ''
-                                                                ? 0
-                                                                : Number(e.currentTarget.value)
-                                                        )
-                                                    }
-                                                    label={formatMessage('ieu', {
-                                                        dato: DateUtils.formatPeriode(u.periode),
-                                                    })}
+                                                <Controller
+                                                    control={form.control}
+                                                    name={`uføre.${index}.forventetInntekt`}
+                                                    render={({ field }) => (
+                                                        <TextField
+                                                            value={field.value.toString()}
+                                                            size="medium"
+                                                            onChange={(e) => {
+                                                                field.onChange(e.currentTarget.value);
+                                                            }}
+                                                            label={formatMessage('ieu', {
+                                                                dato: DateUtils.formatPeriode(u.periode),
+                                                            })}
+                                                        />
+                                                    )}
                                                 />
                                             </div>
                                         ))
