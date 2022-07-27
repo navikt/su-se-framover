@@ -45,8 +45,6 @@ const MultiTidsperiodevelger = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    console.log({ er: props.errors });
-
     return (
         <SøknadInputliste leggTilLabel={formatMessage('button.leggTilReiserad')} onLeggTilClick={props.onLeggTilClick}>
             {props.perioder.map((periode, index) => {

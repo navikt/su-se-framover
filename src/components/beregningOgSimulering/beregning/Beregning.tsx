@@ -170,7 +170,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     };
 
     const handleNesteClick = async () => {
-        const validForm = form.formState.isValid;
+        const validForm = form.trigger().then(() => form.formState.isValid);
         if (!validForm) {
             return;
         }
