@@ -224,7 +224,7 @@ export const FradragInputs = (props: {
                                         onChange={(e) =>
                                             props.onFradragChange(index, {
                                                 ...fradrag,
-                                                tilhørerEPS: e.target.value === 'true',
+                                                tilhørerEPS: e.target.checked,
                                             })
                                         }
                                         disabled={!props.harEps}
