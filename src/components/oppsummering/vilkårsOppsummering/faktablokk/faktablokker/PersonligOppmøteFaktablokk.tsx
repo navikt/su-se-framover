@@ -99,7 +99,7 @@ export const PersonligOppmøteVilkårsblokk = (props: {
                                 ? [
                                       {
                                           tittel: formatMessage('radio.personligOppmøte.grunn.legend'),
-                                          verdi: vurderingsperiode.vurdering,
+                                          verdi: formatMessage(vurderingsperiode.vurdering),
                                       },
                                   ]
                                 : []),
