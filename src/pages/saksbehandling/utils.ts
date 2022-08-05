@@ -9,6 +9,10 @@ export const erVurdertUtenAvslagMenIkkeFerdigbehandlet = (vilkårsinformasjon: V
     vilkårsinformasjon.every((x) => x.status !== VilkårVurderingStatus.IkkeOk) &&
     vilkårsinformasjon.some((x) => x.status === VilkårVurderingStatus.Uavklart);
 
+export const erNoenVurdertUavklart = (vilkårsinformasjon: Vilkårsinformasjon[]): boolean => {
+    return vilkårsinformasjon.some((x) => x.status === VilkårVurderingStatus.Uavklart);
+};
+
 export const erFerdigbehandletMedAvslag = (vilkårsinformasjon: Vilkårsinformasjon[]): boolean =>
     erAlleVilkårVurdert(vilkårsinformasjon) &&
     vilkårsinformasjon.some((x) => x.status === VilkårVurderingStatus.IkkeOk);

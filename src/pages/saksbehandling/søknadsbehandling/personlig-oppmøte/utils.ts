@@ -4,14 +4,10 @@ import {
     ManglendeOppmøteGrunn,
     FormData,
 } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/types';
-import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     PersonligOppmøteVilkår,
     PersonligOppmøteÅrsak,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
-import { Sakstype } from '~src/types/Sak';
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 export const getInitialFormValues = (personligOppmøteFraVilkår: Nullable<PersonligOppmøteVilkår>): FormData => {
     if (!personligOppmøteFraVilkår || personligOppmøteFraVilkår?.vurderinger.length > 1) {
@@ -68,74 +64,25 @@ export const getInitialFormValues = (personligOppmøteFraVilkår: Nullable<Perso
     }
 };
 
-export const toPersonligOppmøteÅrsakOgResultat = (
-    formData: FormData
-): Nullable<{ årsak: PersonligOppmøteÅrsak; resultat: Vilkårstatus }> => {
+export const toPersonligOppmøteÅrsak = (formData: FormData): PersonligOppmøteÅrsak => {
     if (formData.møttPersonlig === HarMøttPersonlig.Ja) {
-        return { årsak: PersonligOppmøteÅrsak.MøttPersonlig, resultat: Vilkårstatus.VilkårOppfylt };
+        return PersonligOppmøteÅrsak.MøttPersonlig;
     }
 
     if (formData.møttPersonlig === HarMøttPersonlig.Uavklart) {
-        return { årsak: PersonligOppmøteÅrsak.Uavklart, resultat: Vilkårstatus.Uavklart };
+        return PersonligOppmøteÅrsak.Uavklart;
     }
 
-    switch (formData.grunnForManglendePersonligOppmøte) {
+    switch (formData.grunnForManglendePersonligOppmøte!) {
         case ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost:
-            return { årsak: PersonligOppmøteÅrsak.IkkeMøttMenVerge, resultat: Vilkårstatus.VilkårOppfylt };
+            return PersonligOppmøteÅrsak.IkkeMøttMenVerge;
         case ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt:
-            return {
-                årsak: PersonligOppmøteÅrsak.IkkeMøttMenSykMedLegeerklæringOgFullmakt,
-                resultat: Vilkårstatus.VilkårOppfylt,
-            };
+            return PersonligOppmøteÅrsak.IkkeMøttMenSykMedLegeerklæringOgFullmakt;
         case ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring:
-            return {
-                årsak: PersonligOppmøteÅrsak.IkkeMøttMenKortvarigSykMedLegeerklæring,
-                resultat: Vilkårstatus.VilkårOppfylt,
-            };
+            return PersonligOppmøteÅrsak.IkkeMøttMenKortvarigSykMedLegeerklæring;
         case ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt:
-            return {
-                årsak: PersonligOppmøteÅrsak.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt,
-                resultat: Vilkårstatus.VilkårOppfylt,
-            };
+            return PersonligOppmøteÅrsak.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt;
         case ManglendeOppmøteGrunn.BrukerIkkeMøttOppfyllerIkkeVilkår:
-            return { årsak: PersonligOppmøteÅrsak.IkkeMøttPersonlig, resultat: Vilkårstatus.VilkårOppfylt };
-        case null:
-            return null;
+            return PersonligOppmøteÅrsak.IkkeMøttPersonlig;
     }
-};
-
-export const tilOppdatertVilkårsinformasjon = (
-    søknadstema: Sakstype,
-    values: FormData,
-    behandlingsinformasjon: Behandlingsinformasjon,
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
-): Vilkårsinformasjon[] | 'personligOppmøteIkkeVurdert' => {
-    const s = toPersonligOppmøteÅrsakOgResultat(values);
-    if (!s) {
-        return 'personligOppmøteIkkeVurdert';
-    }
-
-    const personligOppmøte = grunnlagsdataOgVilkårsvurderinger.personligOppmøte;
-
-    if (!personligOppmøte || personligOppmøte.vurderinger.length > 1) {
-        throw new Error(
-            `forventet 1 vurderingsperiode. Denne eksisterte ikke, eller det fantes flere. ${personligOppmøte}`
-        );
-    }
-
-    const oppdatertegrunnlagsdata = {
-        ...grunnlagsdataOgVilkårsvurderinger,
-        personligOppmøte: {
-            ...personligOppmøte,
-            vurderinger: [
-                {
-                    ...personligOppmøte.vurderinger[0],
-                    resultat: s.resultat,
-                    vurdering: s.årsak,
-                },
-            ],
-        },
-    };
-
-    return mapToVilkårsinformasjon(søknadstema, behandlingsinformasjon, oppdatertegrunnlagsdata);
 };

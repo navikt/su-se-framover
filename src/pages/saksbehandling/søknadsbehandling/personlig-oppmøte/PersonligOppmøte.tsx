@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
-import React, { useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,14 +17,15 @@ import { eqNullable } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import {
     getInitialFormValues,
-    tilOppdatertVilkårsinformasjon,
-    toPersonligOppmøteÅrsakOgResultat,
+    toPersonligOppmøteÅrsak,
 } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/utils';
-import { erFerdigbehandletMedAvslag, erVurdertUtenAvslagMenIkkeFerdigbehandlet } from '~src/pages/saksbehandling/utils';
+import { erNoenVurdertUavklart } from '~src/pages/saksbehandling/utils';
+import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Sakstype } from '~src/types/Sak';
 import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
-import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/SøknadsbehandlingUtils';
+import { mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -60,29 +61,17 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
 
     const watch = form.watch();
 
-    const oppdatertVilkårsinformasjon = useMemo(
-        () =>
-            tilOppdatertVilkårsinformasjon(
-                props.sakstype,
-                watch,
-                props.behandling.behandlingsinformasjon,
-                props.behandling.grunnlagsdataOgVilkårsvurderinger
-            ),
-        [watch, props.behandling.grunnlagsdataOgVilkårsvurderinger]
-    );
+    const erNoenVilkårVurdertUavklart = (
+        behandlingsinformasjon: Behandlingsinformasjon,
+        grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
+    ) => {
+        return erNoenVurdertUavklart(
+            mapToVilkårsinformasjon(props.sakstype, behandlingsinformasjon, grunnlagsdataOgVilkårsvurderinger)
+        );
+    };
 
     const save = async (values: FormData, onSuccess: (res: Søknadsbehandling) => void) => {
-        const personligOppmøteStatus = toPersonligOppmøteÅrsakOgResultat(values);
-        if (!personligOppmøteStatus) {
-            return;
-        }
-        if (
-            personligOppmøteStatus.årsak ===
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte?.vurderinger[0].vurdering &&
-            !erVilkårsvurderingerVurdertAvslag(props.behandling)
-        ) {
-            clearDraft();
-        }
+        const personligOppmøteStatus = toPersonligOppmøteÅrsak(values);
 
         lagre(
             {
@@ -91,37 +80,20 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                 vurderinger: [
                     {
                         periode: props.behandling.stønadsperiode!.periode,
-                        vurdering: personligOppmøteStatus!.årsak,
+                        vurdering: personligOppmøteStatus,
                     },
                 ],
             },
             (res) => {
                 clearDraft();
+                if (erNoenVilkårVurdertUavklart(res.behandlingsinformasjon, res.grunnlagsdataOgVilkårsvurderinger)) {
+                    advarselRef.current?.focus();
+                    return;
+                }
+
                 onSuccess(res);
             }
         );
-    };
-
-    const handleSave = async (values: FormData, onSuccess: (res: Søknadsbehandling) => void) => {
-        const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(
-            props.sakstype,
-            values,
-            props.behandling.behandlingsinformasjon,
-            props.behandling.grunnlagsdataOgVilkårsvurderinger
-        );
-
-        if (
-            vilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
-            erVurdertUtenAvslagMenIkkeFerdigbehandlet(vilkårsinformasjon)
-        ) {
-            advarselRef.current?.focus();
-            return;
-        }
-
-        await save(values, (res) => {
-            clearDraft();
-            onSuccess(res);
-        });
     };
 
     const onSuccess = (res: Søknadsbehandling) => {
@@ -141,18 +113,12 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                 left: (
                     <FormWrapper
                         form={form}
-                        save={handleSave}
+                        save={save}
                         savingState={status}
                         avsluttUrl={props.avsluttUrl}
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
                         onSuccess={onSuccess}
-                        nesteKnappTekst={
-                            oppdatertVilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
-                            erFerdigbehandletMedAvslag(oppdatertVilkårsinformasjon)
-                                ? formatMessage('button.tilVedtak.label')
-                                : undefined
-                        }
                     >
                         <>
                             <div className={styles.formElement}>
@@ -235,10 +201,10 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                                 aria-atomic="true"
                                 className={styles.alertstripe}
                             >
-                                {oppdatertVilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
-                                    erVurdertUtenAvslagMenIkkeFerdigbehandlet(oppdatertVilkårsinformasjon) && (
-                                        <Alert variant="warning">{formatMessage('alert.ikkeFerdigbehandlet')}</Alert>
-                                    )}
+                                {erNoenVilkårVurdertUavklart(
+                                    props.behandling.behandlingsinformasjon,
+                                    props.behandling.grunnlagsdataOgVilkårsvurderinger
+                                ) && <Alert variant="warning">{formatMessage('alert.ikkeFerdigbehandlet')}</Alert>}
                             </div>
                         </>
                     </FormWrapper>

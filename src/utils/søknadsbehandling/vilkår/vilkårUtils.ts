@@ -1,13 +1,8 @@
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types';
 import { Behandlingsinformasjon, FormueStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { erBosituasjonFullstendig } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import {
-    PersonligOppmøteVilkår,
-    PersonligOppmøteÅrsak,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sakstype } from '~src/types/Sak';
@@ -195,7 +190,7 @@ export const mapToVilkårsinformasjon = (
             erStartet: formue.resultat !== null,
         },
         {
-            status: statusForPersonligOppmøte(personligOppmøte),
+            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, personligOppmøte?.resultat),
             vilkårtype: Vilkårtype.PersonligOppmøte,
             erStartet: personligOppmøte !== null,
         },
@@ -221,25 +216,6 @@ export const vilkårsinformasjonForBeregningssteg = (b: Søknadsbehandling): Vil
         },
     ];
 };
-
-function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøteVilkår>): VilkårVurderingStatus {
-    if (!personligOppmøte || personligOppmøte.vurderinger.length > 1) {
-        return VilkårVurderingStatus.IkkeVurdert;
-    }
-    switch (personligOppmøte.vurderinger[0].vurdering) {
-        case PersonligOppmøteÅrsak.MøttPersonlig:
-        case PersonligOppmøteÅrsak.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
-        case PersonligOppmøteÅrsak.IkkeMøttMenVerge:
-        case PersonligOppmøteÅrsak.IkkeMøttMenKortvarigSykMedLegeerklæring:
-        case PersonligOppmøteÅrsak.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
-            return VilkårVurderingStatus.Ok;
-
-        case PersonligOppmøteÅrsak.IkkeMøttPersonlig:
-            return VilkårVurderingStatus.IkkeOk;
-        case PersonligOppmøteÅrsak.Uavklart:
-            return VilkårVurderingStatus.Uavklart;
-    }
-}
 
 const getSatsStatus = (b: Søknadsbehandling) => {
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
