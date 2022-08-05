@@ -20,6 +20,8 @@ import { NullablePeriode } from '~src/types/Periode';
 import messages from './multiPeriodeVelger-nb';
 import styles from './multiPeriodeVelger.module.less';
 
+type PartialName<T> = `${keyof T & string}.${number}`;
+
 interface Props<T, U> {
     className?: string;
     name: keyof T & string;
@@ -30,7 +32,7 @@ interface Props<T, U> {
         maxTilOgMed: Date;
         size?: 'S' | 'L';
     };
-    getChild: (nameAndIdx: string) => React.ReactNode;
+    getChild: (nameAndIdx: PartialName<T>) => React.ReactNode;
     childrenOverDato?: boolean;
 }
 

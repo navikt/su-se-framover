@@ -22,6 +22,7 @@ import {
     OpplysningspliktRequest,
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
+    PersonligOppmøteVilkårRequest,
     Revurdering,
     RevurderingTilAttestering,
     SimulertRevurdering,
@@ -416,6 +417,22 @@ export const lagreFastOppholdVilkår = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/vilkår/fastOpphold/lagre', async (arg, thunkApi) => {
     const res = await revurderingApi.lagreFastOppholdVilkår({
+        sakId: arg.sakId,
+        revurderingId: arg.revurderingId,
+        vurderinger: arg.vurderinger,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagrePersonligOppmøteVilkår = createAsyncThunk<
+    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    PersonligOppmøteVilkårRequest,
+    { rejectValue: ApiError }
+>('revurdering/vilkår/personligOppmøte/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagrePersonligOppmøteVilkår({
         sakId: arg.sakId,
         revurderingId: arg.revurderingId,
         vurderinger: arg.vurderinger,

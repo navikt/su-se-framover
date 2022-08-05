@@ -139,7 +139,7 @@ const Vilkårsting = (props: {
                 <PersonligOppmøteVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.personligOppmøte}
+                    personligOppmøte={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
                 />
             );
         default:

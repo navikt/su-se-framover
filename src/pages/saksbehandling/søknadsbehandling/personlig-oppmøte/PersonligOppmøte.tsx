@@ -18,7 +18,7 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import {
     getInitialFormValues,
     tilOppdatertVilkårsinformasjon,
-    toPersonligOppmøteStatus,
+    toPersonligOppmøteÅrsakOgResultat,
 } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/utils';
 import { erFerdigbehandletMedAvslag, erVurdertUtenAvslagMenIkkeFerdigbehandlet } from '~src/pages/saksbehandling/utils';
 import { Sakstype } from '~src/types/Sak';
@@ -42,9 +42,9 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
     const navigate = useNavigate();
     const advarselRef = useRef<HTMLDivElement>(null);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
+    const [status, lagre] = useAsyncActionCreator(sakSlice.lagrePersonligOppmøteVilkår);
 
-    const initialValues = getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte);
+    const initialValues = getInitialFormValues(props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte);
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.PersonligOppmøte,
@@ -68,29 +68,32 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                 props.behandling.behandlingsinformasjon,
                 props.behandling.grunnlagsdataOgVilkårsvurderinger
             ),
-        [watch, props.behandling.behandlingsinformasjon, props.behandling.grunnlagsdataOgVilkårsvurderinger]
+        [watch, props.behandling.grunnlagsdataOgVilkårsvurderinger]
     );
 
     const save = async (values: FormData, onSuccess: (res: Søknadsbehandling) => void) => {
-        const personligOppmøteStatus = toPersonligOppmøteStatus(values);
+        const personligOppmøteStatus = toPersonligOppmøteÅrsakOgResultat(values);
         if (!personligOppmøteStatus) {
             return;
         }
         if (
-            personligOppmøteStatus === props.behandling.behandlingsinformasjon.personligOppmøte?.status &&
+            personligOppmøteStatus.årsak ===
+                props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte?.vurderinger[0].vurdering &&
             !erVilkårsvurderingerVurdertAvslag(props.behandling)
         ) {
             clearDraft();
         }
-        await lagreBehandlingsinformasjon(
+
+        lagre(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    personligOppmøte: {
-                        status: personligOppmøteStatus,
+                vurderinger: [
+                    {
+                        periode: props.behandling.stønadsperiode!.periode,
+                        vurdering: personligOppmøteStatus!.årsak,
                     },
-                },
+                ],
             },
             (res) => {
                 clearDraft();

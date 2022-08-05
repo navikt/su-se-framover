@@ -10,6 +10,7 @@ export const informasjonSomRevurderes: { [key in InformasjonSomRevurderes]: stri
     [InformasjonSomRevurderes.Flyktning]: 'Flyktningsstatus',
     [InformasjonSomRevurderes.Oppholdstillatelse]: 'Oppholdstillatelse',
     [InformasjonSomRevurderes.FastOpphold]: 'Fast opphold',
+    [InformasjonSomRevurderes.PersonligOppmøte]: 'Personlig oppmøte',
 };
 
 export default {

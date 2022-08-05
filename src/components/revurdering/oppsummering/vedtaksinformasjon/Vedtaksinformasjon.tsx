@@ -20,6 +20,7 @@ import {
     GrunnlagsdataOgVilkårsvurderinger,
     lovligOppholdErLik,
     opplysningspliktErLik,
+    personligOppmøteErLik,
     uføreErlik,
     utenlandsoppholdErlik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -30,6 +31,7 @@ import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåropps
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
 import LovligOppholdOppsummering from '../lovligOpphold/LovligOppholdOppsummering';
 import OpplysningspliktOppsummering from '../opplysningspliktoppsummering/Opplysningspliktoppsummering';
+import PersonligOppmøteOppsummering from '../personligOppmøte/PersonligOppmøteOppsummering';
 
 import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
@@ -138,6 +140,9 @@ const Vedtaksinformasjon = (props: {
     const skalViseFastOpphold =
         !fastOppholdErLik(nyeData.fastOpphold, gamleData.fastOpphold) ||
         valgtRevurderingssteg.FastOppholdINorge === Vurderingstatus.Vurdert;
+    const skalVisePersonligOppmøte =
+        !personligOppmøteErLik(nyeData.personligOppmøte, gamleData.personligOppmøte) ||
+        valgtRevurderingssteg.PersonligOppmøte === Vurderingstatus.Vurdert;
 
     return (
         <div className={styles.container}>
@@ -247,6 +252,18 @@ const Vedtaksinformasjon = (props: {
                         ) : null,
                         høyre: gamleData.fastOpphold ? (
                             <FastOppholdOppsummering fastOppholdVilkår={gamleData.fastOpphold} />
+                        ) : null,
+                    }}
+                </Rad>
+            )}
+            {skalVisePersonligOppmøte && (
+                <Rad radTittel={formatMessage('radTittel.personligOppmøte')}>
+                    {{
+                        venstre: nyeData.personligOppmøte ? (
+                            <PersonligOppmøteOppsummering personligOppmøteVilkår={nyeData.personligOppmøte} />
+                        ) : null,
+                        høyre: gamleData.personligOppmøte ? (
+                            <PersonligOppmøteOppsummering personligOppmøteVilkår={gamleData.personligOppmøte} />
                         ) : null,
                     }}
                 </Rad>

@@ -3,17 +3,21 @@ import React from 'react';
 
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
-import { ManglendeOppmøteGrunn } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/types';
-import { PersonligOppmøteStatus } from '~src/types/Behandlingsinformasjon';
-import { Søknadstype } from '~src/types/Søknad';
-import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+import { Nullable } from '~src/lib/types';
+import { personligOppmøteÅrsakTekster } from '~src/typeMappinger/PersonligOppmøteÅrsak';
+import {
+    PersonligOppmøteVilkår,
+    PersonligOppmøteÅrsak,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
+import { SøknadInnhold, Søknadstype } from '~src/types/Søknad';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/personlig-oppmøte/personligOppmøte-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
+import { FaktablokkProps } from './faktablokkUtils';
 
 export const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
     const { formatMessage } = useI18n({ messages });
@@ -50,39 +54,32 @@ export const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
     );
 };
 
-export const PersonligOppmøteVilkårsblokk = (props: VilkårsblokkProps<'personligOppmøte'>) => {
+export const PersonligOppmøteVilkårsblokk = (props: {
+    info: Vilkårsinformasjon;
+    søknadInnhold: SøknadInnhold;
+    personligOppmøte: Nullable<PersonligOppmøteVilkår>;
+}) => {
+    if (!props.personligOppmøte || props.personligOppmøte?.vurderinger.length > 1) {
+        //TODO - gjør bedre
+        return <>Forventet 1 vurdering, men fikk flere</>;
+    }
+
     const { formatMessage } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,
+            ...personligOppmøteÅrsakTekster,
         },
     });
 
-    const getStatusText = (status: PersonligOppmøteStatus) => {
-        switch (status) {
-            case PersonligOppmøteStatus.MøttPersonlig:
-                return '';
-            case PersonligOppmøteStatus.IkkeMøttMenVerge:
-                return formatMessage(ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost);
-            case PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
-                return formatMessage(ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt);
-            case PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring:
-                return formatMessage(ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring);
-            case PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
-                return formatMessage(ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt);
-            case PersonligOppmøteStatus.IkkeMøttPersonlig:
-                return '';
-            case PersonligOppmøteStatus.Uavklart:
-                return '';
-        }
-    };
+    const vurderingsperiode = props.personligOppmøte.vurderinger[0];
 
     return (
         <Vilkårsblokk
             tittel={vilkårTittelFormatted(props.info.vilkårtype)}
             søknadfaktablokk={<PersonligOppmøteFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.behandlingsinformasjon === null ? (
+                vurderingsperiode.resultat === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <Faktablokk
@@ -91,18 +88,18 @@ export const PersonligOppmøteVilkårsblokk = (props: VilkårsblokkProps<'person
                             {
                                 tittel: formatMessage('radio.personligOppmøte.legend'),
                                 verdi:
-                                    props.behandlingsinformasjon.status === PersonligOppmøteStatus.MøttPersonlig
+                                    vurderingsperiode.vurdering === PersonligOppmøteÅrsak.MøttPersonlig
                                         ? formatMessage('fraSøknad.ja')
-                                        : props.behandlingsinformasjon.status === PersonligOppmøteStatus.Uavklart
+                                        : vurderingsperiode.vurdering === PersonligOppmøteÅrsak.Uavklart
                                         ? formatMessage('fraSøknad.uavklart')
                                         : formatMessage('fraSøknad.nei'),
                             },
-                            ...(props.behandlingsinformasjon.status !== PersonligOppmøteStatus.MøttPersonlig &&
-                            props.behandlingsinformasjon.status !== PersonligOppmøteStatus.Uavklart
+                            ...(vurderingsperiode.vurdering !== PersonligOppmøteÅrsak.MøttPersonlig &&
+                            vurderingsperiode.vurdering !== PersonligOppmøteÅrsak.Uavklart
                                 ? [
                                       {
                                           tittel: formatMessage('radio.personligOppmøte.grunn.legend'),
-                                          verdi: getStatusText(props.behandlingsinformasjon.status),
+                                          verdi: vurderingsperiode.vurdering,
                                       },
                                   ]
                                 : []),

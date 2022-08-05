@@ -131,6 +131,7 @@ export const revurderingstegrekkefølge = [
     RevurderingSteg.EndringAvFradrag,
     RevurderingSteg.Opplysningsplikt,
     RevurderingSteg.Oppholdstillatelse,
+    RevurderingSteg.PersonligOppmøte,
 ] as const;
 
 export const revurderingstegTilInformasjonSomRevurderes = (
@@ -155,6 +156,8 @@ export const revurderingstegTilInformasjonSomRevurderes = (
             return InformasjonSomRevurderes.Flyktning;
         case RevurderingSteg.FastOpphold:
             return InformasjonSomRevurderes.FastOpphold;
+        case RevurderingSteg.PersonligOppmøte:
+            return InformasjonSomRevurderes.PersonligOppmøte;
     }
 };
 

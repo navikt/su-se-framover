@@ -11,6 +11,7 @@ import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';
 import { LovligOppholdVilkår } from './lovligOpphold/LovligOppholdVilkår';
 import { OpplysningspliktVilkår } from './opplysningsplikt/Opplysningsplikt';
+import { PersonligOppmøteVilkår } from './personligOppmøte/PersonligOppmøte';
 import { UføreVilkår } from './uføre/Uførevilkår';
 import { Utenlandsopphold } from './utenlandsopphold/Utenlandsopphold';
 
@@ -26,6 +27,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     formue: FormueVilkår;
     utenlandsopphold: Nullable<Utenlandsopphold>;
     opplysningsplikt: Nullable<OpplysningspliktVilkår>;
+    personligOppmøte: Nullable<PersonligOppmøteVilkår>;
 }
 
 export const uføreErlik = (ny: Nullable<UføreVilkår>, gammel: Nullable<UføreVilkår>) => {
@@ -88,6 +90,9 @@ export const lovligOppholdErLik = (ny: Nullable<LovligOppholdVilkår>, gammel: N
 export const flyktningErLik = (ny: Nullable<FlyktningVilkår>, gammel: Nullable<FlyktningVilkår>) => isEqual(ny, gammel);
 
 export const fastOppholdErLik = (ny: Nullable<FastOppholdVilkår>, gammel: Nullable<FastOppholdVilkår>) =>
+    isEqual(ny, gammel);
+
+export const personligOppmøteErLik = (ny: Nullable<PersonligOppmøteVilkår>, gammel: Nullable<PersonligOppmøteVilkår>) =>
     isEqual(ny, gammel);
 
 const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
