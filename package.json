@@ -59,7 +59,7 @@
         "@types/react-collapse": "^5.0.1",
         "@types/react-datepicker": "^4.4.2",
         "amplitude-js": "^8.18.5",
-        "autoprefixer": "^10.4.7",
+        "autoprefixer": "^10.4.8",
         "classnames": "^2.3.1",
         "core-js": "^3.24.1",
         "country-data-list": "^1.2.2",
