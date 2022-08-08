@@ -1,4 +1,4 @@
-import { FormueStatus, PersonligOppmøteStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { FormueStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
@@ -49,7 +49,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Søknadsbehandlin
     behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
         Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet ||
     behandling.grunnlagsdataOgVilkårsvurderinger.formue?.resultat === FormueStatus.VilkårIkkeOppfylt ||
-    behandling.behandlingsinformasjon.personligOppmøte?.status === PersonligOppmøteStatus.IkkeMøttPersonlig;
+    behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte?.resultat === Vilkårstatus.VilkårIkkeOppfylt;
 
 const hentSaksbehandlingssteg = (behandling: Søknadsbehandling) => {
     const vilkårsinformasjon = mapToVilkårsinformasjon(

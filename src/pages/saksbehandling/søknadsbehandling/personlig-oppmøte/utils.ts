@@ -5,61 +5,58 @@ import {
     FormData,
 } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/types';
 import {
-    Behandlingsinformasjon,
-    PersonligOppmøte as PersonligOppmøteType,
-    PersonligOppmøteStatus,
-} from '~src/types/Behandlingsinformasjon';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Sakstype } from '~src/types/Sak';
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+    PersonligOppmøteVilkår,
+    PersonligOppmøteÅrsak,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 
-export const getInitialFormValues = (
-    personligOppmøteFraBehandlingsinformasjon: Nullable<PersonligOppmøteType>
-): FormData => {
-    if (!personligOppmøteFraBehandlingsinformasjon) {
+export const getInitialFormValues = (personligOppmøteFraVilkår: Nullable<PersonligOppmøteVilkår>): FormData => {
+    if (!personligOppmøteFraVilkår || personligOppmøteFraVilkår?.vurderinger.length > 1) {
         return {
             møttPersonlig: null,
             grunnForManglendePersonligOppmøte: null,
         };
     }
-    switch (personligOppmøteFraBehandlingsinformasjon.status) {
-        case PersonligOppmøteStatus.MøttPersonlig:
+
+    const vurderingsperiode = personligOppmøteFraVilkår.vurderinger[0];
+
+    switch (vurderingsperiode.vurdering) {
+        case PersonligOppmøteÅrsak.MøttPersonlig:
             return {
                 møttPersonlig: HarMøttPersonlig.Ja,
                 grunnForManglendePersonligOppmøte: null,
             };
 
-        case PersonligOppmøteStatus.IkkeMøttMenVerge:
+        case PersonligOppmøteÅrsak.IkkeMøttMenVerge:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost,
             };
 
-        case PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
+        case PersonligOppmøteÅrsak.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt,
             };
 
-        case PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring:
+        case PersonligOppmøteÅrsak.IkkeMøttMenKortvarigSykMedLegeerklæring:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring,
             };
 
-        case PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
+        case PersonligOppmøteÅrsak.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt,
             };
 
-        case PersonligOppmøteStatus.IkkeMøttPersonlig:
+        case PersonligOppmøteÅrsak.IkkeMøttPersonlig:
             return {
                 møttPersonlig: HarMøttPersonlig.Nei,
                 grunnForManglendePersonligOppmøte: ManglendeOppmøteGrunn.BrukerIkkeMøttOppfyllerIkkeVilkår,
             };
 
-        case PersonligOppmøteStatus.Uavklart:
+        case PersonligOppmøteÅrsak.Uavklart:
             return {
                 møttPersonlig: HarMøttPersonlig.Uavklart,
                 grunnForManglendePersonligOppmøte: null,
@@ -67,49 +64,25 @@ export const getInitialFormValues = (
     }
 };
 
-export const toPersonligOppmøteStatus = (formData: FormData): Nullable<PersonligOppmøteStatus> => {
+export const toPersonligOppmøteÅrsak = (formData: FormData): PersonligOppmøteÅrsak => {
     if (formData.møttPersonlig === HarMøttPersonlig.Ja) {
-        return PersonligOppmøteStatus.MøttPersonlig;
+        return PersonligOppmøteÅrsak.MøttPersonlig;
     }
 
     if (formData.møttPersonlig === HarMøttPersonlig.Uavklart) {
-        return PersonligOppmøteStatus.Uavklart;
+        return PersonligOppmøteÅrsak.Uavklart;
     }
 
-    switch (formData.grunnForManglendePersonligOppmøte) {
+    switch (formData.grunnForManglendePersonligOppmøte!) {
         case ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost:
-            return PersonligOppmøteStatus.IkkeMøttMenVerge;
+            return PersonligOppmøteÅrsak.IkkeMøttMenVerge;
         case ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt:
-            return PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt;
+            return PersonligOppmøteÅrsak.IkkeMøttMenSykMedLegeerklæringOgFullmakt;
         case ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring:
-            return PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring;
+            return PersonligOppmøteÅrsak.IkkeMøttMenKortvarigSykMedLegeerklæring;
         case ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt:
-            return PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt;
+            return PersonligOppmøteÅrsak.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt;
         case ManglendeOppmøteGrunn.BrukerIkkeMøttOppfyllerIkkeVilkår:
-            return PersonligOppmøteStatus.IkkeMøttPersonlig;
-        case null:
-            return null;
+            return PersonligOppmøteÅrsak.IkkeMøttPersonlig;
     }
-};
-
-export const tilOppdatertVilkårsinformasjon = (
-    søknadstema: Sakstype,
-    values: FormData,
-    behandlingsinformasjon: Behandlingsinformasjon,
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
-): Vilkårsinformasjon[] | 'personligOppmøteIkkeVurdert' => {
-    const s = toPersonligOppmøteStatus(values);
-    if (!s) {
-        return 'personligOppmøteIkkeVurdert';
-    }
-    return mapToVilkårsinformasjon(
-        søknadstema,
-        {
-            ...behandlingsinformasjon,
-            personligOppmøte: {
-                status: s,
-            },
-        },
-        grunnlagsdataOgVilkårsvurderinger
-    );
 };

@@ -5,6 +5,7 @@ import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/
 
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { PersonligOppmøteVurderingRequest } from './grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
 import { Simulering, SimulertPeriode } from './Simulering';
@@ -206,6 +207,7 @@ export enum InformasjonSomRevurderes {
     FastOpphold = 'FastOppholdINorge',
     Opplysningsplikt = 'Opplysningsplikt',
     Oppholdstillatelse = 'Oppholdstillatelse',
+    PersonligOppmøte = 'PersonligOppmøte',
 }
 
 export enum Vurderingstatus {
@@ -278,6 +280,12 @@ export interface FastOppholdVilkårRequest {
     sakId: string;
     revurderingId: string;
     vurderinger: FastOppholdVurderingRequest[];
+}
+
+export interface PersonligOppmøteVilkårRequest {
+    sakId: string;
+    revurderingId: string;
+    vurderinger: PersonligOppmøteVurderingRequest[];
 }
 
 export interface RevurderingStegProps {

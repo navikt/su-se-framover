@@ -41,4 +41,5 @@ export default {
     'radTittel.lovligOpphold': 'Oppholdstillatelse',
     'radTittel.flyktning': 'Flyktningstatus',
     'radTittel.fastOpphold': 'Oppholder seg i Norge',
+    'radTittel.personligOppmøte': 'Personlig oppmøte',
 };

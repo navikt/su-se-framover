@@ -29,6 +29,7 @@ import SkjemaelementFeilmelding from '../../../components/formElements/Skjemaele
 import { RevurderingSteg } from '../types';
 
 import Formue from './formue/Formue';
+import { PersonligOppmøte } from './personligOppmøte/PersonligOppmøte';
 import sharedMessages, { stegmessages } from './revurdering-nb';
 import * as styles from './revurdering.module.less';
 
@@ -183,15 +184,6 @@ const RevurderingstegPage = (props: {
         sakId: props.sakId,
     });
 
-    const stegProps = {
-        sakId: props.sakId,
-        revurdering: props.informasjonsRevurdering,
-        forrigeUrl: forrigeUrl,
-        nesteUrl: nesteUrl,
-        onTilbakeClickOverride: erFørstesteg ? () => setModalOpen(true) : undefined,
-        avsluttUrl: avsluttUrl,
-    };
-
     return pipe(
         props.grunnlagsdataOgVilkårsvurderinger,
         RemoteData.fold(
@@ -203,6 +195,16 @@ const RevurderingstegPage = (props: {
                 </div>
             ),
             (gjeldendeData) => {
+                const stegProps = {
+                    sakId: props.sakId,
+                    revurdering: props.informasjonsRevurdering,
+                    forrigeUrl: forrigeUrl,
+                    nesteUrl: nesteUrl,
+                    onTilbakeClickOverride: erFørstesteg ? () => setModalOpen(true) : undefined,
+                    avsluttUrl: avsluttUrl,
+                    grunnlagsdataOgVilkårsvurderinger: gjeldendeData.grunnlagsdataOgVilkårsvurderinger,
+                };
+
                 return (
                     <div className={styles.sideMedFramdriftsindikatorContainer}>
                         {props.steg && <Framdriftsindikator aktivId={props.steg} elementer={props.aktiveSteg} />}
@@ -213,61 +215,16 @@ const RevurderingstegPage = (props: {
                                 tilbakeUrl={forrigeUrl}
                             />
                         )}
-                        {props.steg === RevurderingSteg.Uførhet && (
-                            <Uførhet
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
-                        {props.steg === RevurderingSteg.Bosituasjon && (
-                            <BosituasjonPage
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
-                        {props.steg === RevurderingSteg.Flyktning && (
-                            <FlyktningPage
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
-                        {props.steg === RevurderingSteg.FastOpphold && (
-                            <FastOppholdPage
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
-                        {props.steg === RevurderingSteg.Formue && (
-                            <Formue
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
-                        {props.steg === RevurderingSteg.EndringAvFradrag && (
-                            <EndringAvFradrag
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
-                        {props.steg === RevurderingSteg.Utenlandsopphold && (
-                            <UtenlandsoppholdPage
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
-                        {props.steg === RevurderingSteg.Opplysningsplikt && (
-                            <Opplysningsplikt
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
-
-                        {props.steg === RevurderingSteg.Oppholdstillatelse && (
-                            <Oppholdstillatelse
-                                grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                                {...stegProps}
-                            />
-                        )}
+                        {props.steg === RevurderingSteg.Uførhet && <Uførhet {...stegProps} />}
+                        {props.steg === RevurderingSteg.Bosituasjon && <BosituasjonPage {...stegProps} />}
+                        {props.steg === RevurderingSteg.Flyktning && <FlyktningPage {...stegProps} />}
+                        {props.steg === RevurderingSteg.FastOpphold && <FastOppholdPage {...stegProps} />}
+                        {props.steg === RevurderingSteg.Formue && <Formue {...stegProps} />}
+                        {props.steg === RevurderingSteg.EndringAvFradrag && <EndringAvFradrag {...stegProps} />}
+                        {props.steg === RevurderingSteg.Utenlandsopphold && <UtenlandsoppholdPage {...stegProps} />}
+                        {props.steg === RevurderingSteg.Opplysningsplikt && <Opplysningsplikt {...stegProps} />}
+                        {props.steg === RevurderingSteg.Oppholdstillatelse && <Oppholdstillatelse {...stegProps} />}
+                        {props.steg === RevurderingSteg.PersonligOppmøte && <PersonligOppmøte {...stegProps} />}
                     </div>
                 );
             }

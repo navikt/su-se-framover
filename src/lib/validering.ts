@@ -2,6 +2,7 @@ import { FieldError, FieldErrors } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { FeiloppsummeringFeil } from '~src/components/feiloppsummering/Feiloppsummering';
+import { NullablePeriode } from '~src/types/Periode';
 
 function label(data: Partial<yup.TestMessageParams>) {
     return data.label ?? 'Feltet';
@@ -12,6 +13,13 @@ export const validateStringAsPositiveNumber = yup
     .required('Feltet må fylles ut')
     .moreThan(0, 'Feltet må være et positivt tall høyere enn 0')
     .typeError('Feltet må være et tall') as unknown as yup.Schema<string>;
+
+export const validateDate = yup
+    .object<NullablePeriode>({
+        fraOgMed: yup.date().required().typeError('Dato må fylles inn!'),
+        tilOgMed: yup.date().required().typeError('Dato må fylles inn!'),
+    })
+    .required();
 
 export function validateStringAsNonNegativeNumber(name = 'feltet') {
     // Vi ønsker at tom streng skal regnes som at feltet ikke er fylt inn,

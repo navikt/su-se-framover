@@ -7,7 +7,6 @@ export interface Behandlingsinformasjon {
     familieforening: Nullable<Behandlingsstatus>;
 
     institusjonsopphold: Nullable<Behandlingsstatus>;
-    personligOppmøte: Nullable<PersonligOppmøte>;
 }
 
 export enum Vilkårstatus {
@@ -35,19 +34,6 @@ export enum FormueStatus {
     VilkårOppfylt = 'VilkårOppfylt',
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
     MåInnhenteMerInformasjon = 'MåInnhenteMerInformasjon',
-}
-
-export interface PersonligOppmøte {
-    status: PersonligOppmøteStatus;
-}
-export enum PersonligOppmøteStatus {
-    MøttPersonlig = 'MøttPersonlig',
-    IkkeMøttMenVerge = 'IkkeMøttMenVerge',
-    IkkeMøttMenSykMedLegeerklæringOgFullmakt = 'IkkeMøttMenSykMedLegeerklæringOgFullmakt',
-    IkkeMøttMenKortvarigSykMedLegeerklæring = 'IkkeMøttMenKortvarigSykMedLegeerklæring',
-    IkkeMøttMenMidlertidigUnntakFraOppmøteplikt = 'IkkeMøttMenMidlertidigUnntakFraOppmøteplikt',
-    IkkeMøttPersonlig = 'IkkeMøttPersonlig',
-    Uavklart = 'Uavklart',
 }
 
 export interface Bosituasjon {

@@ -20,6 +20,7 @@ export enum RevurderingSteg {
     Oppholdstillatelse = 'Oppholdstillatelse',
     Flyktning = 'flyktning',
     FastOpphold = 'fastOpphold',
+    PersonligOppmøte = 'personligOppmøte',
 }
 
 export enum KlageSteg {

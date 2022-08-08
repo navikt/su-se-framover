@@ -13,6 +13,7 @@ export const stegmessages: { [key in RevurderingSteg]: string } = {
     [RevurderingSteg.Oppsummering]: 'Oppsummering',
     [RevurderingSteg.Flyktning]: 'Flyktningsstatus',
     [RevurderingSteg.FastOpphold]: 'Opphold i Norge',
+    [RevurderingSteg.PersonligOppmøte]: 'Personlig oppmøte',
 };
 
 export const opprettetRevurderingGrunn: { [key in OpprettetRevurderingGrunn]: string } = {

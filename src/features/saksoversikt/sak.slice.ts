@@ -17,6 +17,7 @@ import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinf
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Klage } from '~src/types/Klage';
@@ -157,6 +158,25 @@ export const lagreFastOppholdVilkår = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/fastOpphold', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreFastOppholdVilkår(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagrePersonligOppmøteVilkår = createAsyncThunk<
+    Søknadsbehandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vurderinger: Array<{
+            vurdering: PersonligOppmøteÅrsak;
+            periode: Periode<string>;
+        }>;
+    },
+    { rejectValue: ApiError }
+>('behandling/personligoppmøte', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagrePersonligOppmøteVilkår(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -800,6 +820,16 @@ export default createSlice({
             );
         });
 
+        builder.addCase(lagrePersonligOppmøteVilkår.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
         builder.addCase(lagreFradrag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
@@ -831,6 +861,10 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.lagreFastOppholdVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
+        builder.addCase(revurderingActions.lagrePersonligOppmøteVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 

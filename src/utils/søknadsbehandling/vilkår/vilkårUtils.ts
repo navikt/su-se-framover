@@ -1,12 +1,5 @@
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types';
-import {
-    Behandlingsinformasjon,
-    FormueStatus,
-    PersonligOppmøte,
-    PersonligOppmøteStatus,
-    Vilkårstatus,
-} from '~src/types/Behandlingsinformasjon';
+import { Behandlingsinformasjon, FormueStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { erBosituasjonFullstendig } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -137,9 +130,18 @@ export const mapToVilkårsinformasjon = (
     behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
-    const { institusjonsopphold, personligOppmøte } = behandlingsinformasjon;
-    const { flyktning, pensjon, fastOpphold, familiegjenforening, lovligOpphold, formue, uføre, utenlandsopphold } =
-        grunnlagsdataOgVilkårsvurderinger;
+    const { institusjonsopphold } = behandlingsinformasjon;
+    const {
+        flyktning,
+        pensjon,
+        fastOpphold,
+        familiegjenforening,
+        lovligOpphold,
+        formue,
+        uføre,
+        utenlandsopphold,
+        personligOppmøte,
+    } = grunnlagsdataOgVilkårsvurderinger;
 
     const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre, flyktning) : [];
     const aldersvilkår =
@@ -188,7 +190,7 @@ export const mapToVilkårsinformasjon = (
             erStartet: formue.resultat !== null,
         },
         {
-            status: statusForPersonligOppmøte(personligOppmøte),
+            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, personligOppmøte?.resultat),
             vilkårtype: Vilkårtype.PersonligOppmøte,
             erStartet: personligOppmøte !== null,
         },
@@ -214,25 +216,6 @@ export const vilkårsinformasjonForBeregningssteg = (b: Søknadsbehandling): Vil
         },
     ];
 };
-
-function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøte>): VilkårVurderingStatus {
-    if (!personligOppmøte?.status) {
-        return VilkårVurderingStatus.IkkeVurdert;
-    }
-    switch (personligOppmøte.status) {
-        case PersonligOppmøteStatus.MøttPersonlig:
-        case PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
-        case PersonligOppmøteStatus.IkkeMøttMenVerge:
-        case PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring:
-        case PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
-            return VilkårVurderingStatus.Ok;
-
-        case PersonligOppmøteStatus.IkkeMøttPersonlig:
-            return VilkårVurderingStatus.IkkeOk;
-        case PersonligOppmøteStatus.Uavklart:
-            return VilkårVurderingStatus.Uavklart;
-    }
-}
 
 const getSatsStatus = (b: Søknadsbehandling) => {
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
