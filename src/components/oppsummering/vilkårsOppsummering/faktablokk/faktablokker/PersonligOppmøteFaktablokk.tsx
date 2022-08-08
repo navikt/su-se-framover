@@ -60,8 +60,7 @@ export const PersonligOppmøteVilkårsblokk = (props: {
     personligOppmøte: Nullable<PersonligOppmøteVilkår>;
 }) => {
     if (!props.personligOppmøte || props.personligOppmøte?.vurderinger.length > 1) {
-        //TODO - gjør bedre
-        return <>Forventet 1 vurdering, men fikk flere</>;
+        throw new Error(`Forventet 1 vurdering. Fikk ingen, eller flere enn 1. ${props.personligOppmøte}`);
     }
 
     const { formatMessage } = useI18n({

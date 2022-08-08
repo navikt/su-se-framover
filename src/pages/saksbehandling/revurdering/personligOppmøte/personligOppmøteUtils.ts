@@ -28,7 +28,6 @@ export const toPersonligOppmøteÅrsakInnsending = (
     møttPersonlig: Nullable<boolean>,
     årsak: Nullable<PersonligOppmøteÅrsak>
 ): Nullable<PersonligOppmøteÅrsak> => {
-    console.log(møttPersonlig, årsak);
     if (møttPersonlig) {
         return PersonligOppmøteÅrsak.MøttPersonlig;
     }
