@@ -297,7 +297,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 {...field}
                                 id={field.name}
                                 className={sharedStyles.narrow}
-                                label={formatMessage('eiendom.brukesTil')}
+                                label={formatMessage('innskudd.beløp')}
                                 value={field.value ?? ''}
                                 error={fieldState.error?.message}
                             />
