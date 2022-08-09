@@ -17,6 +17,7 @@ import {
     Gjenopptak,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
+    InstitusjonsoppholdVilkårRequest,
     IverksattRevurdering,
     OpplysningspliktRequest,
     OpprettetRevurdering,
@@ -418,6 +419,22 @@ export const lagreFastOppholdVilkår = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/vilkår/fastOpphold/lagre', async (arg, thunkApi) => {
     const res = await revurderingApi.lagreFastOppholdVilkår({
+        sakId: arg.sakId,
+        revurderingId: arg.revurderingId,
+        vurderinger: arg.vurderinger,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreInstitusjonsoppholdVilkår = createAsyncThunk<
+    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    InstitusjonsoppholdVilkårRequest,
+    { rejectValue: ApiError }
+>('revurdering/vilkår/institusjonsopphold/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreInstitusjonsoppholdVilkår({
         sakId: arg.sakId,
         revurderingId: arg.revurderingId,
         vurderinger: arg.vurderinger,

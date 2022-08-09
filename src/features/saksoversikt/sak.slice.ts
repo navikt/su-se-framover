@@ -864,6 +864,10 @@ export default createSlice({
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
+        builder.addCase(revurderingActions.lagreInstitusjonsoppholdVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
         builder.addCase(revurderingActions.lagrePersonligOppmøteVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
