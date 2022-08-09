@@ -59,10 +59,6 @@ export const PersonligOppmøteVilkårsblokk = (props: {
     søknadInnhold: SøknadInnhold;
     personligOppmøte: Nullable<PersonligOppmøteVilkår>;
 }) => {
-    if (!props.personligOppmøte || props.personligOppmøte?.vurderinger.length > 1) {
-        throw new Error(`Forventet 1 vurdering. Fikk ingen, eller flere enn 1. ${props.personligOppmøte}`);
-    }
-
     const { formatMessage } = useI18n({
         messages: {
             ...messages,
@@ -71,14 +67,14 @@ export const PersonligOppmøteVilkårsblokk = (props: {
         },
     });
 
-    const vurderingsperiode = props.personligOppmøte.vurderinger[0];
+    const vurderingsperiode = props.personligOppmøte?.vurderinger[0] ?? null;
 
     return (
         <Vilkårsblokk
             tittel={vilkårTittelFormatted(props.info.vilkårtype)}
             søknadfaktablokk={<PersonligOppmøteFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                vurderingsperiode.resultat === null ? (
+                vurderingsperiode === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <Faktablokk
