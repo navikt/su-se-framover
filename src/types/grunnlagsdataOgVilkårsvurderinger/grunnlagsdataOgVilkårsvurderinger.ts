@@ -9,6 +9,7 @@ import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';
+import { InstitusjonsoppholdVilkår } from './institusjonsopphold/Institusjonsopphold';
 import { LovligOppholdVilkår } from './lovligOpphold/LovligOppholdVilkår';
 import { OpplysningspliktVilkår } from './opplysningsplikt/Opplysningsplikt';
 import { PersonligOppmøteVilkår } from './personligOppmøte/PersonligOppmøte';
@@ -28,6 +29,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     utenlandsopphold: Nullable<Utenlandsopphold>;
     opplysningsplikt: Nullable<OpplysningspliktVilkår>;
     personligOppmøte: Nullable<PersonligOppmøteVilkår>;
+    institusjonsopphold: Nullable<InstitusjonsoppholdVilkår>;
 }
 
 export const uføreErlik = (ny: Nullable<UføreVilkår>, gammel: Nullable<UføreVilkår>) => {
@@ -77,12 +79,8 @@ export const formueErlik = (ny: FormueVilkår, gammel: FormueVilkår) => {
     return isEqual(trimmedNy, trimmedGammel);
 };
 
-export const opplysningspliktErLik = (
-    ny: Nullable<OpplysningspliktVilkår>,
-    gammel: Nullable<OpplysningspliktVilkår>
-) => {
-    return isEqual(ny, gammel);
-};
+export const opplysningspliktErLik = (ny: Nullable<OpplysningspliktVilkår>, gammel: Nullable<OpplysningspliktVilkår>) =>
+    isEqual(ny, gammel);
 
 export const lovligOppholdErLik = (ny: Nullable<LovligOppholdVilkår>, gammel: Nullable<LovligOppholdVilkår>) =>
     isEqual(ny, gammel);
@@ -94,6 +92,11 @@ export const fastOppholdErLik = (ny: Nullable<FastOppholdVilkår>, gammel: Nulla
 
 export const personligOppmøteErLik = (ny: Nullable<PersonligOppmøteVilkår>, gammel: Nullable<PersonligOppmøteVilkår>) =>
     isEqual(ny, gammel);
+
+export const institusjonsoppholdErLik = (
+    ny: Nullable<InstitusjonsoppholdVilkår>,
+    gammel: Nullable<InstitusjonsoppholdVilkår>
+) => isEqual(ny, gammel);
 
 const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
 

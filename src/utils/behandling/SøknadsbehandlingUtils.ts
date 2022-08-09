@@ -45,7 +45,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Søknadsbehandlin
     behandling.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
-    behandling.behandlingsinformasjon.institusjonsopphold?.status === Vilkårstatus.VilkårIkkeOppfylt ||
+    behandling.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
     behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
         Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet ||
     behandling.grunnlagsdataOgVilkårsvurderinger.formue?.resultat === FormueStatus.VilkårIkkeOppfylt ||
@@ -54,7 +54,6 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Søknadsbehandlin
 const hentSaksbehandlingssteg = (behandling: Søknadsbehandling) => {
     const vilkårsinformasjon = mapToVilkårsinformasjon(
         behandling.søknad.søknadInnhold.type,
-        behandling.behandlingsinformasjon,
         behandling.grunnlagsdataOgVilkårsvurderinger
     );
     const satsOgBeregningssteg = vilkårsinformasjonForBeregningssteg(behandling);

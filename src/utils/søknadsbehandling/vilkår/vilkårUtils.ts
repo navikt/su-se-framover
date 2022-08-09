@@ -1,5 +1,5 @@
 import * as Routes from '~src/lib/routes';
-import { Behandlingsinformasjon, FormueStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { FormueStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { erBosituasjonFullstendig } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -127,10 +127,8 @@ const mapToVilkårsinformasjonAlder = (
 
 export const mapToVilkårsinformasjon = (
     sakstype: Sakstype,
-    behandlingsinformasjon: Behandlingsinformasjon,
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
 ): Vilkårsinformasjon[] => {
-    const { institusjonsopphold } = behandlingsinformasjon;
     const {
         flyktning,
         pensjon,
@@ -141,6 +139,7 @@ export const mapToVilkårsinformasjon = (
         uføre,
         utenlandsopphold,
         personligOppmøte,
+        institusjonsopphold,
     } = grunnlagsdataOgVilkårsvurderinger;
 
     const uførevilkår = sakstype === Sakstype.Uføre ? mapToVilkårsinformasjonUføre(uføre, flyktning) : [];
@@ -161,7 +160,7 @@ export const mapToVilkårsinformasjon = (
             erStartet: fastOpphold !== null,
         },
         {
-            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, institusjonsopphold?.status),
+            status: getVilkårVurderingStatus(defaultVilkårstatusMapping, institusjonsopphold?.resultat),
             vilkårtype: Vilkårtype.Institusjonsopphold,
             erStartet: institusjonsopphold !== null,
         },

@@ -11,6 +11,7 @@ export const informasjonSomRevurderes: { [key in InformasjonSomRevurderes]: stri
     [InformasjonSomRevurderes.Oppholdstillatelse]: 'Oppholdstillatelse',
     [InformasjonSomRevurderes.FastOpphold]: 'Fast opphold',
     [InformasjonSomRevurderes.PersonligOppmøte]: 'Personlig oppmøte',
+    [InformasjonSomRevurderes.Institusjonsopphold]: 'Institusjonsopphold',
 };
 
 export default {

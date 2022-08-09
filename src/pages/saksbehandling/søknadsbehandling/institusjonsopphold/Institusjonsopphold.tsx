@@ -41,9 +41,9 @@ const schema = yup
 
 const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreBehandlingsinformasjon] = useAsyncActionCreator(sakSlice.lagreBehandlingsinformasjon);
+    const [status, lagre] = useAsyncActionCreator(sakSlice.lagreInstitusjonsoppholdVilkår);
     const initialValues = {
-        status: props.behandling.behandlingsinformasjon.institusjonsopphold?.status ?? null,
+        status: props.behandling.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.resultat ?? null,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } =
@@ -65,15 +65,11 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        await lagreBehandlingsinformasjon(
+        await lagre(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    institusjonsopphold: {
-                        status: values.status!,
-                    },
-                },
+                vurderinger: [{ periode: props.behandling.stønadsperiode!.periode, vurdering: values.status! }],
             },
             () => {
                 clearDraft();

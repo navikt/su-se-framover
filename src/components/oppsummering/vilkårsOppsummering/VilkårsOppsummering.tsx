@@ -4,7 +4,6 @@ import React from 'react';
 import { AlderspensjonVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/AlderspensjonFaktablokk';
 import { FamilieforeningVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FamilieforeningFaktablokk';
 import { useI18n } from '~src/lib/i18n';
-import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { isAldersøknad, isUføresøknad, SøknadInnhold } from '~src/types/Søknad';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
@@ -24,13 +23,11 @@ import * as styles from './vilkårsOppsummering.module.less';
 
 const VilkårsOppsummering = (props: {
     søknadInnhold: SøknadInnhold;
-    behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const vilkårsinformasjon = mapToVilkårsinformasjon(
         props.søknadInnhold.type,
-        props.behandlingsinformasjon,
         props.grunnlagsdataOgVilkårsvurderinger
     );
 
@@ -45,7 +42,6 @@ const VilkårsOppsummering = (props: {
                         key={v.vilkårtype}
                         info={v}
                         søknadInnhold={props.søknadInnhold}
-                        behandlingsinformasjon={props.behandlingsinformasjon}
                         grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
                     />
                 ))}
@@ -57,7 +53,6 @@ const VilkårsOppsummering = (props: {
 const Vilkårsting = (props: {
     info: Vilkårsinformasjon;
     søknadInnhold: SøknadInnhold;
-    behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     switch (props.info.vilkårtype) {
@@ -114,7 +109,7 @@ const Vilkårsting = (props: {
                 <InstitusjonsoppholdVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.institusjonsopphold}
+                    institusjonsopphold={props.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold}
                 />
             );
         case Vilkårtype.OppholdIUtlandet:
