@@ -69,7 +69,7 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                vurderinger: [{ periode: props.behandling.stønadsperiode!.periode, vurdering: values.status! }],
+                vurderingsperioder: [{ periode: props.behandling.stønadsperiode!.periode, vurdering: values.status! }],
             },
             () => {
                 clearDraft();

@@ -69,7 +69,7 @@ export const InstitusjonsoppholdVilkårsblokk = (props: {
         },
     });
 
-    const institusjonsopphold = props.institusjonsopphold?.vurderinger[0] ?? null;
+    const institusjonsopphold = props.institusjonsopphold?.vurderingsperioder[0] ?? null;
 
     return (
         <Vilkårsblokk
@@ -90,9 +90,9 @@ export const InstitusjonsoppholdVilkårsblokk = (props: {
                                     ),
                                 }),
                                 verdi:
-                                    institusjonsopphold.resultat === Vilkårstatus.VilkårOppfylt
+                                    institusjonsopphold.vurdering === Vilkårstatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
-                                        : institusjonsopphold.resultat === Vilkårstatus.VilkårIkkeOppfylt
+                                        : institusjonsopphold.vurdering === Vilkårstatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
                                         : intl.formatMessage({
                                               id: 'fraSøknad.uavklart',

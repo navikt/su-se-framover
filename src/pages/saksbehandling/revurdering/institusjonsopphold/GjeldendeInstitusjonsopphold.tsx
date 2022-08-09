@@ -14,6 +14,7 @@ const GjeldendeInstitusjonsopphold = (props: {
     gjeldendeInstitusjonsopphold: GrunnlagsdataOgVilkårsvurderinger['institusjonsopphold'];
 }) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...vilkårstatusMessages } });
+
     return (
         <div>
             <Heading size="large" level="2" spacing>
@@ -21,7 +22,7 @@ const GjeldendeInstitusjonsopphold = (props: {
             </Heading>
 
             <ul className={styles.grunnlagsliste}>
-                {props.gjeldendeInstitusjonsopphold?.vurderinger?.map((institusjonsopphold) => (
+                {props.gjeldendeInstitusjonsopphold?.vurderingsperioder?.map((institusjonsopphold) => (
                     <li key={`${institusjonsopphold.periode.fraOgMed} - ${institusjonsopphold.periode.tilOgMed}`}>
                         <OppsummeringPar
                             label={formatMessage('datepicker.fom')}
@@ -31,10 +32,7 @@ const GjeldendeInstitusjonsopphold = (props: {
                             label={formatMessage('datepicker.tom')}
                             verdi={formatDate(institusjonsopphold.periode.tilOgMed)}
                         />
-                        <OppsummeringPar
-                            label={formatMessage('resultat')}
-                            verdi={formatMessage(institusjonsopphold.resultat)}
-                        />
+                        <OppsummeringPar label={formatMessage('resultat')} verdi={institusjonsopphold.vurdering} />
                     </li>
                 ))}
             </ul>

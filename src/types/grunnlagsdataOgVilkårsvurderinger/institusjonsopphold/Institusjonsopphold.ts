@@ -4,12 +4,12 @@ import { Periode } from '~src/types/Periode';
 export interface InstitusjonsoppholdVilkår {
     vilkår: 'INSTITUSJONSOPPHOLD';
     resultat: Vilkårstatus;
-    vurderinger: VurderingsperiodeInstitusjonsopphold[];
+    vurderingsperioder: VurderingsperiodeInstitusjonsopphold[];
 }
 
 export interface VurderingsperiodeInstitusjonsopphold {
     periode: Periode<string>;
-    resultat: Vilkårstatus;
+    vurdering: Vilkårstatus;
 }
 
 export interface InstitusjonsoppholdVurderingRequest {

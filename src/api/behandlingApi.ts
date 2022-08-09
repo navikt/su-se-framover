@@ -2,6 +2,7 @@ import { Nullable } from '~src/lib/types';
 import { FormueVerdier, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -127,12 +128,14 @@ export async function lagreFastOppholdVilkår(arg: {
 export async function lagreInstitusjonsoppholdVilkår(arg: {
     sakId: string;
     behandlingId: string;
-    vurderinger: Array<{ vurdering: Vilkårstatus; periode: Periode<string> }>;
+    vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
 }) {
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/institusjonsopphold`,
         method: 'POST',
-        body: arg.vurderinger,
+        body: {
+            vurderingsperioder: arg.vurderingsperioder,
+        },
     });
 }
 

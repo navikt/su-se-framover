@@ -16,6 +16,7 @@ interface Props<T> {
         tekst?: string;
         verdi?: string;
     };
+    ommvendtVilkårStatus?: boolean;
 }
 
 const VilkårsResultatRadioGroup = <T extends FieldValues>(props: Props<T>) => {
@@ -28,8 +29,20 @@ const VilkårsResultatRadioGroup = <T extends FieldValues>(props: Props<T>) => {
                 name={props.name as Path<T>}
                 render={({ field, fieldState }) => (
                     <RadioGroup {...field} legend={props.legend} error={fieldState.error?.message}>
-                        <Radio value={Vilkårstatus.VilkårOppfylt}>{formatMessage('radio.label.ja')}</Radio>
-                        <Radio value={Vilkårstatus.VilkårIkkeOppfylt}>{formatMessage('radio.label.nei')}</Radio>
+                        <Radio
+                            value={
+                                props.ommvendtVilkårStatus ? Vilkårstatus.VilkårIkkeOppfylt : Vilkårstatus.VilkårOppfylt
+                            }
+                        >
+                            {formatMessage('radio.label.ja')}
+                        </Radio>
+                        <Radio
+                            value={
+                                props.ommvendtVilkårStatus ? Vilkårstatus.VilkårOppfylt : Vilkårstatus.VilkårIkkeOppfylt
+                            }
+                        >
+                            {formatMessage('radio.label.nei')}
+                        </Radio>
                         {props.uavklartConfig && (
                             <Radio value={props.uavklartConfig?.verdi ?? Vilkårstatus.Uavklart}>
                                 {props.uavklartConfig?.tekst ?? formatMessage('radio.label.uavklart')}

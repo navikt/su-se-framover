@@ -30,15 +30,15 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
     const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
     const { formatMessage } = useI18n({ messages });
 
-    const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.vurderinger ?? [
-        { periode: props.revurdering.periode, resultat: null },
+    const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.vurderingsperioder ?? [
+        { periode: props.revurdering.periode, vurdering: null },
     ];
 
     const form = useForm<InstitusjonsoppholdVilkårFormData>({
         resolver: yupResolver(institusjonsoppholdFormSchema),
         defaultValues: {
             institusjonsopphold: vurderinger.map((vurdering) => ({
-                resultat: vurdering.resultat,
+                resultat: vurdering.vurdering,
                 periode: {
                     fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
                     tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
@@ -52,7 +52,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
             {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                vurderinger: values.institusjonsopphold.map((v) => ({
+                vurderingsperioder: values.institusjonsopphold.map((v) => ({
                     periode: {
                         fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
                         tilOgMed: DateUtils.toIsoDateOnlyString(v.periode.tilOgMed!),
@@ -99,6 +99,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                                         name={`${nameAndIdx}.resultat`}
                                         legend={formatMessage('institusjonsopphold.vilkår')}
                                         controller={form.control}
+                                        ommvendtVilkårStatus
                                     />
                                 )}
                             />

@@ -17,6 +17,7 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -169,10 +170,7 @@ export const lagreInstitusjonsoppholdVilkår = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        vurderinger: Array<{
-            vurdering: Vilkårstatus;
-            periode: Periode<string>;
-        }>;
+        vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
     },
     { rejectValue: ApiError }
 >('behandling/institusjonsopphold', async (arg, thunkApi) => {
@@ -794,6 +792,16 @@ export default createSlice({
         });
 
         builder.addCase(lagreFastOppholdVilkår.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
+        builder.addCase(lagreInstitusjonsoppholdVilkår.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({

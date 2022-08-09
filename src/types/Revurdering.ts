@@ -287,7 +287,7 @@ export interface FastOppholdVilkårRequest {
 export interface InstitusjonsoppholdVilkårRequest {
     sakId: string;
     revurderingId: string;
-    vurderinger: InstitusjonsoppholdVurderingRequest[];
+    vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
 }
 
 export interface PersonligOppmøteVilkårRequest {

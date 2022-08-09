@@ -1,5 +1,5 @@
 export default {
-    'institusjonsopphold.vilkår': 'placeholder',
+    'institusjonsopphold.vilkår': 'Har søkeren eller har søkeren hatt institusjonsopphold som skal føre til avslag?',
 
     resultat: 'Resultat',
     'gjeldende.overskrift': 'Eksisterende vedtaksinformasjon',

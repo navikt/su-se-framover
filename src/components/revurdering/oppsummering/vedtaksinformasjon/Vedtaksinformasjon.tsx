@@ -18,6 +18,7 @@ import {
     formueErlik,
     fradragErlik,
     GrunnlagsdataOgVilkårsvurderinger,
+    institusjonsoppholdErLik,
     lovligOppholdErLik,
     opplysningspliktErLik,
     personligOppmøteErLik,
@@ -29,6 +30,7 @@ import { regnUtFormuegrunnlag } from '~src/utils/revurdering/formue/RevurderForm
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
+import InstitusjonsoppholdOppsummering from '../institusjonsopphold/InstitusjonsoppholdOppsummering';
 import LovligOppholdOppsummering from '../lovligOpphold/LovligOppholdOppsummering';
 import OpplysningspliktOppsummering from '../opplysningspliktoppsummering/Opplysningspliktoppsummering';
 import PersonligOppmøteOppsummering from '../personligOppmøte/PersonligOppmøteOppsummering';
@@ -143,6 +145,9 @@ const Vedtaksinformasjon = (props: {
     const skalVisePersonligOppmøte =
         !personligOppmøteErLik(nyeData.personligOppmøte, gamleData.personligOppmøte) ||
         valgtRevurderingssteg.PersonligOppmøte === Vurderingstatus.Vurdert;
+    const skalViseInstitusjonsopphold =
+        !institusjonsoppholdErLik(nyeData.institusjonsopphold, gamleData.institusjonsopphold) ||
+        valgtRevurderingssteg.Institusjonsopphold === Vurderingstatus.Vurdert;
 
     return (
         <div className={styles.container}>
@@ -264,6 +269,20 @@ const Vedtaksinformasjon = (props: {
                         ) : null,
                         høyre: gamleData.personligOppmøte ? (
                             <PersonligOppmøteOppsummering personligOppmøteVilkår={gamleData.personligOppmøte} />
+                        ) : null,
+                    }}
+                </Rad>
+            )}
+            {skalViseInstitusjonsopphold && (
+                <Rad radTittel={formatMessage('radTittel.institusjonsopphold')}>
+                    {{
+                        venstre: nyeData.institusjonsopphold ? (
+                            <InstitusjonsoppholdOppsummering institusjonsoppholdVilkår={nyeData.institusjonsopphold} />
+                        ) : null,
+                        høyre: gamleData.institusjonsopphold ? (
+                            <InstitusjonsoppholdOppsummering
+                                institusjonsoppholdVilkår={gamleData.institusjonsopphold}
+                            />
                         ) : null,
                     }}
                 </Rad>

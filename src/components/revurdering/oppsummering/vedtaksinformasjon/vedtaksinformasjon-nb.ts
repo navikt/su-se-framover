@@ -42,4 +42,5 @@ export default {
     'radTittel.flyktning': 'Flyktningstatus',
     'radTittel.fastOpphold': 'Oppholder seg i Norge',
     'radTittel.personligOppmøte': 'Personlig oppmøte',
+    'radTittel.institusjonsopphold': 'Institusjonsopphold',
 };

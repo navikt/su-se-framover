@@ -437,7 +437,7 @@ export const lagreInstitusjonsoppholdVilkår = createAsyncThunk<
     const res = await revurderingApi.lagreInstitusjonsoppholdVilkår({
         sakId: arg.sakId,
         revurderingId: arg.revurderingId,
-        vurderinger: arg.vurderinger,
+        vurderingsperioder: arg.vurderingsperioder,
     });
     if (res.status === 'ok') {
         return res.data;

@@ -317,14 +317,17 @@ export async function lagreFastOppholdVilkår(arg: {
 }
 
 export async function lagreInstitusjonsoppholdVilkår(arg: {
-    vurderinger: InstitusjonsoppholdVurderingRequest[];
+    vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
     sakId: string;
     revurderingId: string;
 }): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
+    console.log(arg.vurderingsperioder);
     return apiClient({
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/institusjonsopphold`,
         method: 'POST',
-        body: arg.vurderinger,
+        body: {
+            vurderingsperioder: arg.vurderingsperioder,
+        },
     });
 }
 
