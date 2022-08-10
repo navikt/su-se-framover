@@ -1,18 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
+import { Alert, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, useForm, UseFormWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { BrevInput } from '~src/components/brevInput/BrevInput';
 import { avsluttRevurdering } from '~src/features/revurdering/revurderingActions';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types';
-import yup from '~src/lib/validering';
 import { Revurdering } from '~src/types/Revurdering';
 import { erForhåndsvarselSendtEllerBesluttet } from '~src/utils/revurdering/revurderingUtils';
 
@@ -20,16 +19,7 @@ import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/Avslut
 
 import messages from './avsluttRevurdering-nb';
 import * as styles from './avsluttRevurdering.module.less';
-
-interface AvsluttRevurderingFormData {
-    fritekst: Nullable<string>;
-    begrunnelse: Nullable<string>;
-}
-
-const schema = yup.object<AvsluttRevurderingFormData>({
-    fritekst: yup.string().nullable().defined(),
-    begrunnelse: yup.string().required(),
-});
+import { AvsluttRevurderingFormData, Brevvalg, avsluttRevurderingSchema } from './avsluttRevurderingUtils';
 
 const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) => {
     const navigate = useNavigate();
@@ -38,8 +28,8 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
     const [avsluttRevurderingStatus, avsluttRevurderingAction] = useAsyncActionCreator(avsluttRevurdering);
 
     const { control, watch, handleSubmit } = useForm<AvsluttRevurderingFormData>({
-        defaultValues: { fritekst: null },
-        resolver: yupResolver(schema),
+        defaultValues: { fritekst: null, begrunnelse: null, brevvalgForForhåndsvarsel: null },
+        resolver: yupResolver(avsluttRevurderingSchema(erForhåndsvarselSendtEllerBesluttet(props.revurdering))),
     });
 
     const avsluttRevurderingSubmitHandler = (data: AvsluttRevurderingFormData) => {
@@ -48,7 +38,9 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 begrunnelse: data.begrunnelse!,
-                fritekst: data.fritekst,
+                fritekst:
+                    data.brevvalgForForhåndsvarsel === Brevvalg.SKAL_SENDE_BREV_MED_FRITEKST ? data.fritekst : null,
+                brevvalg: data.brevvalgForForhåndsvarsel,
             },
             () => {
                 const message = formatMessage('avslutt.revurderingHarBlittAvsluttet');
@@ -101,40 +93,47 @@ const ForhåndsvarsletRevurderingForm = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForAvslutningAvRevurdering);
-
     return (
         <div className={styles.revurderingForhåndsvarsletContainer}>
             <Alert variant="info">{formatMessage('alert.revurderingErForhåndsvarslet')}</Alert>
-            <div>
+            <Controller
+                control={props.formController}
+                name={'brevvalgForForhåndsvarsel'}
+                render={({ field, fieldState }) => (
+                    <RadioGroup
+                        {...field}
+                        legend={formatMessage('form.brev.skalSendeBrev')}
+                        value={field.value ?? ''}
+                        error={fieldState.error?.message}
+                    >
+                        {Object.values(Brevvalg).map((valg) => (
+                            <Radio key={valg} value={valg}>
+                                {formatMessage(valg)}
+                            </Radio>
+                        ))}
+                    </RadioGroup>
+                )}
+            />
+            {props.watch('brevvalgForForhåndsvarsel') === Brevvalg.SKAL_SENDE_BREV_MED_FRITEKST && (
                 <Controller
                     control={props.formController}
                     name={'fritekst'}
                     render={({ field, fieldState }) => (
-                        <Textarea
-                            {...field}
-                            label={formatMessage('form.fritekst.label')}
-                            value={field.value ?? ''}
-                            error={fieldState.error?.message}
+                        <BrevInput
+                            tekst={field.value}
+                            onVisBrevClick={() =>
+                                pdfApi.fetchBrevutkastForAvslutningAvRevurdering({
+                                    sakId: props.sakId,
+                                    revurderingId: props.revurderingId,
+                                    fritekst: props.watch('fritekst'),
+                                })
+                            }
+                            onChange={field.onChange}
+                            feil={fieldState.error}
                         />
                     )}
                 />
-            </div>
-            <Button
-                type="button"
-                variant="secondary"
-                onClick={() =>
-                    hentBrev({
-                        sakId: props.sakId,
-                        revurderingId: props.revurderingId,
-                        fritekst: props.watch('fritekst'),
-                    })
-                }
-            >
-                {formatMessage('knapp.seBrev')}
-                {RemoteData.isPending(brevStatus) && <Loader />}
-            </Button>
-            {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
+            )}
         </div>
     );
 };

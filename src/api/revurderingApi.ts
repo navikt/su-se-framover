@@ -1,6 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
+import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { Fradrag } from '~src/types/Fradrag';
 import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
@@ -430,6 +431,7 @@ export async function avsluttRevurdering(args: {
     revurderingId: string;
     begrunnelse: string;
     fritekst: Nullable<string>;
+    brevvalg: Nullable<Brevvalg>;
 }): Promise<ApiClientResult<Revurdering>> {
     return apiClient<Revurdering>({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/avslutt`,

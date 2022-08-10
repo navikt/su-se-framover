@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import * as revurderingApi from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
+import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { Fradrag } from '~src/types/Fradrag';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
@@ -463,7 +464,13 @@ export const lagrePersonligOppmøteVilkår = createAsyncThunk<
 
 export const avsluttRevurdering = createAsyncThunk<
     Revurdering,
-    { sakId: string; revurderingId: string; begrunnelse: string; fritekst: Nullable<string> },
+    {
+        sakId: string;
+        revurderingId: string;
+        begrunnelse: string;
+        fritekst: Nullable<string>;
+        brevvalg: Nullable<Brevvalg>;
+    },
     { rejectValue: ApiError }
 >('revurdering/avsluttRevurdering', async (arg, thunkApi) => {
     const res = await revurderingApi.avsluttRevurdering({
@@ -471,6 +478,7 @@ export const avsluttRevurdering = createAsyncThunk<
         revurderingId: arg.revurderingId,
         begrunnelse: arg.begrunnelse,
         fritekst: arg.fritekst,
+        brevvalg: arg.brevvalg,
     });
 
     if (res.status === 'ok') {
