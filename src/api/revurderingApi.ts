@@ -439,6 +439,7 @@ export async function avsluttRevurdering(args: {
         body: {
             begrunnelse: args.begrunnelse,
             fritekst: args.fritekst,
+            brevvalg: args.brevvalg,
         },
     });
 }
