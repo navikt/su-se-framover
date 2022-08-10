@@ -14,9 +14,9 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { LukkSøknadBegrunnelse, Søknad, Søknadstype } from '~src/types/Søknad';
 
-import AvslåttSøknad from '../../avslag/AvslåttSøknad';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
+import AvslåttSøknad from './avslag/AvslåttSøknad';
 import Avvist from './Avvist';
 import nb from './lukkSøknad-nb';
 import * as styles from './lukkSøknad.module.less';
