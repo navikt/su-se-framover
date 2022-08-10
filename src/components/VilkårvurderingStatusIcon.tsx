@@ -1,8 +1,7 @@
 import React from 'react';
 
+import { ErrorIcon, SuccessIcon, WarningIcon } from '~src/assets/Icons';
 import { VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
-
-import { ErrorIcon, SuccessIcon, WarningIcon } from './icons/Icons';
 
 const iconWidth = '24px';
 

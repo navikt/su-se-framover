@@ -3,7 +3,7 @@ import { last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import React from 'react';
 
-import { InformationIcon } from '~src/components/icons/Icons';
+import { InformationIcon } from '~src/assets/Icons';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~src/context/userContext';

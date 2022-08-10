@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import React from 'react';
 
 import * as pdfApi from '~src/api/pdfApi';
+import { InformationIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { InformationIcon } from '~src/components/icons/Icons';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,

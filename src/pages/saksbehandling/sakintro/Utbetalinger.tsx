@@ -3,7 +3,7 @@ import * as DateFns from 'date-fns';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { SuccessIcon, WarningIcon } from '~src/components/icons/Icons';
+import { SuccessIcon, WarningIcon } from '~src/assets/Icons';
 import { DateFormats, useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { KanStansesEllerGjenopptas } from '~src/types/Sak';
