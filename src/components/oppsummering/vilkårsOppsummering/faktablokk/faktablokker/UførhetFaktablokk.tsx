@@ -81,19 +81,3 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
         />
     );
 };
-
-/*
-...(uføre.resultat === UføreResultat.VilkårOppfylt
-                                ? [
-                                      FaktaSpacing,
-                                      {
-                                          tittel: formatMessage('input.label.uføregrad'),
-                                          verdi: uføre.vurderinger[0]?.grunnlag?.uføregrad?.toString() ?? '-',
-                                      },
-                                      {
-                                          tittel: formatMessage('input.label.forventetInntekt'),
-                                          verdi: uføre.vurderinger[0].grunnlag?.forventetInntekt?.toString() ?? '-',
-                                      },
-                                  ]
-                                : []),
-*/
