@@ -1,8 +1,8 @@
 import * as DateFns from 'date-fns';
 
+import { FormData, UføreperiodeFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
-import { FormData, UføreperiodeFormData } from '~src/pages/saksbehandling/steg/uføre/types';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { NullablePeriode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -58,7 +58,7 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
         }),
     });
 
-export const schema = (erGRegulering: boolean) =>
+export const uførhetSchema = (erGRegulering: boolean) =>
     yup
         .object<FormData>({
             grunnlag: yup

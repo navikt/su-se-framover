@@ -61,7 +61,29 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
                                         ? formatMessage('fraSøknad.nei')
                                         : formatMessage('radio.label.uføresakTilBehandling'),
                             },
-                            ...(uføre.resultat === UføreResultat.VilkårOppfylt
+                            ...uføre.vurderinger.flatMap((vurdering) => {
+                                return [
+                                    FaktaSpacing,
+                                    {
+                                        tittel: formatMessage('input.label.uføregrad'),
+                                        verdi: vurdering.grunnlag?.uføregrad?.toString() ?? '-',
+                                    },
+                                    {
+                                        tittel: formatMessage('input.label.forventetInntekt'),
+                                        verdi: vurdering.grunnlag?.forventetInntekt?.toString() ?? '-',
+                                    },
+                                ];
+                            }),
+                        ]}
+                    />
+                )
+            }
+        />
+    );
+};
+
+/*
+...(uføre.resultat === UføreResultat.VilkårOppfylt
                                 ? [
                                       FaktaSpacing,
                                       {
@@ -74,10 +96,4 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
                                       },
                                   ]
                                 : []),
-                        ]}
-                    />
-                )
-            }
-        />
-    );
-};
+*/

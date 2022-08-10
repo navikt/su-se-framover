@@ -27,7 +27,7 @@ const VilkårsOppsummering = (props: {
     behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const vilkårsinformasjon = mapToVilkårsinformasjon(
         props.søknadInnhold.type,
         props.behandlingsinformasjon,
@@ -37,7 +37,7 @@ const VilkårsOppsummering = (props: {
     return (
         <div>
             <Heading level="2" size="large" spacing>
-                {intl.formatMessage({ id: 'page.tittel' })}
+                {formatMessage('page.tittel')}
             </Heading>
             <div className={styles.vilkårsblokkerContainer}>
                 {vilkårsinformasjon.map((v) => (

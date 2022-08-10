@@ -4,13 +4,12 @@ import { useForm } from 'react-hook-form';
 
 import { UførhetFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
+import { FormData, vurderingsperiodeTilFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import { uførhetSchema } from '~src/components/vilkårForms/uførhet/validation';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { FormData } from '~src/pages/saksbehandling/steg/uføre/types';
-import { vurderingsperiodeTilFormData } from '~src/pages/saksbehandling/steg/uføre/UføreperiodeForm';
-import { UførhetForm } from '~src/pages/saksbehandling/steg/uføre/UførhetForm';
-import { schema } from '~src/pages/saksbehandling/steg/uføre/validation';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { SøknadInnholdUføre } from '~src/types/Søknad';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -30,7 +29,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                     vurderingsperiodeTilFormData
                 ) ?? [],
         },
-        resolver: yupResolver(schema(false)),
+        resolver: yupResolver(uførhetSchema(false)),
     });
 
     const handleSave = (values: FormData, onSuccess: () => void) =>
@@ -59,8 +58,12 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                 left: (
                     <UførhetForm
                         onFormSubmit={handleSave}
-                        minDate={DateUtils.parseIsoDateOnly(props.behandling.stønadsperiode?.periode.fraOgMed ?? null)}
-                        maxDate={DateUtils.parseIsoDateOnly(props.behandling.stønadsperiode?.periode.tilOgMed ?? null)}
+                        minDate={DateUtils.parseNonNullableIsoDateOnly(
+                            props.behandling.stønadsperiode!.periode.fraOgMed
+                        )}
+                        maxDate={DateUtils.parseNonNullableIsoDateOnly(
+                            props.behandling.stønadsperiode!.periode.tilOgMed
+                        )}
                         form={form}
                         savingState={lagreBehandlingsinformasjonStatus}
                         erSaksbehandling={true}
