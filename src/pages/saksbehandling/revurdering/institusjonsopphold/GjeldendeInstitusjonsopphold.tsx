@@ -32,7 +32,10 @@ const GjeldendeInstitusjonsopphold = (props: {
                             label={formatMessage('datepicker.tom')}
                             verdi={formatDate(institusjonsopphold.periode.tilOgMed)}
                         />
-                        <OppsummeringPar label={formatMessage('resultat')} verdi={institusjonsopphold.vurdering} />
+                        <OppsummeringPar
+                            label={formatMessage('resultat')}
+                            verdi={formatMessage(institusjonsopphold.vurdering)}
+                        />
                     </li>
                 ))}
             </ul>
