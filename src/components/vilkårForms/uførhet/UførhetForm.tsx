@@ -1,11 +1,10 @@
 import { TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
-import { v4 as uuid } from 'uuid';
 
 import { Uføregrunnlag } from '~src/api/revurderingApi';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
-import { FormData, UføreperiodeFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import { FormData, lagTomUføreperiode } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -31,17 +30,6 @@ interface Props {
 
 export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Props) => {
     const { formatMessage } = useI18n({ messages });
-
-    const lagTomUføreperiode = (): UføreperiodeFormData => ({
-        id: uuid(),
-        periode: {
-            fraOgMed: null,
-            tilOgMed: null,
-        },
-        forventetInntekt: '',
-        oppfylt: null,
-        uføregrad: '',
-    });
 
     return (
         <FormWrapper

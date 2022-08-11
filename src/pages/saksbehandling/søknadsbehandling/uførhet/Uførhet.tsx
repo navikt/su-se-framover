@@ -5,7 +5,11 @@ import { useForm } from 'react-hook-form';
 import { UførhetFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
-import { FormData, vurderingsperiodeTilFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import {
+    FormData,
+    vurderingsperiodeTilFormData,
+    lagTomUføreperiode,
+} from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
 import { uførhetSchema } from '~src/components/vilkårForms/uførhet/validation';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -24,10 +28,9 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
     const [lagreBehandlingsinformasjonStatus, lagreUføregrunnlag] = useAsyncActionCreator(sakSlice.lagreUføregrunnlag);
     const form = useForm<FormData>({
         defaultValues: {
-            grunnlag:
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger?.map(
-                    vurderingsperiodeTilFormData
-                ) ?? [],
+            grunnlag: props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger?.map(
+                vurderingsperiodeTilFormData
+            ) ?? [lagTomUføreperiode(props.behandling.stønadsperiode?.periode)],
         },
         resolver: yupResolver(uførhetSchema(false)),
     });

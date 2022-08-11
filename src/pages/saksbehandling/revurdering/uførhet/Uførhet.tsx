@@ -4,7 +4,11 @@ import { useForm } from 'react-hook-form';
 
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
-import { FormData, vurderingsperiodeTilFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import {
+    FormData,
+    lagTomUføreperiode,
+    vurderingsperiodeTilFormData,
+} from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
 import { uførhetSchema } from '~src/components/vilkårForms/uførhet/validation';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -19,10 +23,9 @@ import RevurderingsperiodeHeader from '../revurderingsperiodeheader/Revurderings
 const Uførhet = (props: RevurderingStegProps) => {
     const form = useForm<FormData>({
         defaultValues: {
-            grunnlag:
-                props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((u) =>
-                    vurderingsperiodeTilFormData(u)
-                ) ?? [],
+            grunnlag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((u) =>
+                vurderingsperiodeTilFormData(u)
+            ) ?? [lagTomUføreperiode()],
         },
         resolver: yupResolver(uførhetSchema(erGregulering(props.revurdering.årsak))),
     });

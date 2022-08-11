@@ -2,8 +2,17 @@ import { v4 as uuid } from 'uuid';
 
 import { Nullable } from '~src/lib/types';
 import { UføreResultat, VurderingsperiodeUføre } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { NullablePeriode } from '~src/types/Periode';
+import { NullablePeriode, Periode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
+import { lagDatePeriodeAvStringPeriodeEllerTomPeriode } from '~src/utils/periode/periodeUtils';
+
+export const lagTomUføreperiode = (periode?: Periode<string>): UføreperiodeFormData => ({
+    id: uuid(),
+    periode: lagDatePeriodeAvStringPeriodeEllerTomPeriode(periode),
+    forventetInntekt: '',
+    oppfylt: null,
+    uføregrad: '',
+});
 
 export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføreperiodeFormData => ({
     id: uuid(),
