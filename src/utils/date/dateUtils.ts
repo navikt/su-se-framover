@@ -96,3 +96,5 @@ export const sluttenAvMåneden = (d: Date) => DateFns.endOfMonth(d);
  */
 export const parseIsoDateOnly = (str: string | null) =>
     str ? DateFns.parse(str, DateFormats.IsoDateOnly, new Date()) : null;
+
+export const parseNonNullableIsoDateOnly = (str: string) => DateFns.parse(str, DateFormats.IsoDateOnly, new Date());

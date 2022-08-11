@@ -8,17 +8,21 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import messages from './vilkårsResultatRadioGroup-nb';
 
 interface Props<T> {
+    className?: string;
     name: string;
     controller: Control<T>;
     legend: string;
-    skalKunneVelgeUavklart?: boolean;
+    uavklartConfig?: {
+        tekst?: string;
+        verdi?: string;
+    };
 }
 
 const VilkårsResultatRadioGroup = <T extends FieldValues>(props: Props<T>) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div>
+        <div className={props.className}>
             <Controller
                 control={props.controller}
                 name={props.name as Path<T>}
@@ -26,8 +30,10 @@ const VilkårsResultatRadioGroup = <T extends FieldValues>(props: Props<T>) => {
                     <RadioGroup {...field} legend={props.legend} error={fieldState.error?.message}>
                         <Radio value={Vilkårstatus.VilkårOppfylt}>{formatMessage('radio.label.ja')}</Radio>
                         <Radio value={Vilkårstatus.VilkårIkkeOppfylt}>{formatMessage('radio.label.nei')}</Radio>
-                        {props.skalKunneVelgeUavklart && (
-                            <Radio value={Vilkårstatus.Uavklart}>{formatMessage('radio.label.uavklart')}</Radio>
+                        {props.uavklartConfig && (
+                            <Radio value={props.uavklartConfig?.verdi ?? Vilkårstatus.Uavklart}>
+                                {props.uavklartConfig?.tekst ?? formatMessage('radio.label.uavklart')}
+                            </Radio>
                         )}
                     </RadioGroup>
                 )}

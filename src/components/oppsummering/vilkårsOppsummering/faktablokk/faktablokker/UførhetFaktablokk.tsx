@@ -61,19 +61,19 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
                                         ? formatMessage('fraSøknad.nei')
                                         : formatMessage('radio.label.uføresakTilBehandling'),
                             },
-                            ...(uføre.resultat === UføreResultat.VilkårOppfylt
-                                ? [
-                                      FaktaSpacing,
-                                      {
-                                          tittel: formatMessage('input.label.uføregrad'),
-                                          verdi: uføre.vurderinger[0]?.grunnlag?.uføregrad?.toString() ?? '-',
-                                      },
-                                      {
-                                          tittel: formatMessage('input.label.forventetInntekt'),
-                                          verdi: uføre.vurderinger[0].grunnlag?.forventetInntekt?.toString() ?? '-',
-                                      },
-                                  ]
-                                : []),
+                            ...uføre.vurderinger.flatMap((vurdering) => {
+                                return [
+                                    FaktaSpacing,
+                                    {
+                                        tittel: formatMessage('input.label.uføregrad'),
+                                        verdi: vurdering.grunnlag?.uføregrad?.toString() ?? '-',
+                                    },
+                                    {
+                                        tittel: formatMessage('input.label.forventetInntekt'),
+                                        verdi: vurdering.grunnlag?.forventetInntekt?.toString() ?? '-',
+                                    },
+                                ];
+                            }),
                         ]}
                     />
                 )

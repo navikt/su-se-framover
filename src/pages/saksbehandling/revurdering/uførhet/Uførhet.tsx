@@ -3,13 +3,12 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
+import { FormData, vurderingsperiodeTilFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import { uførhetSchema } from '~src/components/vilkårForms/uførhet/validation';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { GjeldendeGrunnlagsdata } from '~src/pages/saksbehandling/revurdering/uførhet/GjeldendeGrunnlagsdata';
-import { FormData } from '~src/pages/saksbehandling/steg/uføre/types';
-import { vurderingsperiodeTilFormData } from '~src/pages/saksbehandling/steg/uføre/UføreperiodeForm';
-import { UførhetForm } from '~src/pages/saksbehandling/steg/uføre/UførhetForm';
-import { schema } from '~src/pages/saksbehandling/steg/uføre/validation';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -25,7 +24,7 @@ const Uførhet = (props: RevurderingStegProps) => {
                     vurderingsperiodeTilFormData(u)
                 ) ?? [],
         },
-        resolver: yupResolver(schema(erGregulering(props.revurdering.årsak))),
+        resolver: yupResolver(uførhetSchema(erGregulering(props.revurdering.årsak))),
     });
 
     const [lagreUføregrunnlagStatus, lagreUføregrunnlag] = useAsyncActionCreator(revurderingActions.lagreUføregrunnlag);
@@ -62,8 +61,8 @@ const Uførhet = (props: RevurderingStegProps) => {
                         onFormSubmit={handleSave}
                         form={form}
                         savingState={lagreUføregrunnlagStatus}
-                        minDate={DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed)}
-                        maxDate={DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed)}
+                        minDate={DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.fraOgMed)}
+                        maxDate={DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.tilOgMed)}
                         erSaksbehandling={false}
                         {...props}
                     />
