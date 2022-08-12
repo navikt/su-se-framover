@@ -25,20 +25,23 @@ export interface VurderingsperioderFlyktningFormData {
     resultat: Nullable<Vilkårstatus>;
 }
 
-export const flyktningVilkårTilFormData = (f: Nullable<FlyktningVilkår>): FlyktningVilkårFormData => {
-    return {
-        flyktning: f?.vurderinger.map(flyktningVurderingsperiodeTilFormData) ?? [
-            nyVurderingsperiodeFlyktningMedEllerUtenPeriode(),
-        ],
-    };
-};
-
-export const nyVurderingsperiodeFlyktningMedEllerUtenPeriode = (
-    p?: Periode<string>
-): VurderingsperioderFlyktningFormData => ({
-    periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
-    resultat: null,
+export const eqVurderingsperioderFlyktningFormData = struct<VurderingsperioderFlyktningFormData>({
+    periode: eqNullable(eqPeriode),
+    resultat: eqNullable(S.Eq),
 });
+
+export const eqFlyktningVilkårFormData = struct<FlyktningVilkårFormData>({
+    flyktning: getEq(eqVurderingsperioderFlyktningFormData),
+});
+
+export const flyktningVilkårTilFormData = (f: FlyktningVilkår): FlyktningVilkårFormData => ({
+    flyktning: f.vurderinger.map(flyktningVurderingsperiodeTilFormData),
+});
+
+export const flyktningVilkårTilFormDataEllerNy = (
+    f: Nullable<FlyktningVilkår>,
+    p?: Periode<string>
+): FlyktningVilkårFormData => (f ? flyktningVilkårTilFormData(f) : nyFlyktningVilkårMedEllerUtenPeriode(p));
 
 export const flyktningVurderingsperiodeTilFormData = (
     f: VurderingsperiodeFlyktning
@@ -47,31 +50,31 @@ export const flyktningVurderingsperiodeTilFormData = (
     resultat: f.resultat,
 });
 
+export const nyFlyktningVilkårMedEllerUtenPeriode = (p?: Periode<string>): FlyktningVilkårFormData => ({
+    flyktning: [nyVurderingsperiodeFlyktningMedEllerUtenPeriode(p)],
+});
+
+export const nyVurderingsperiodeFlyktningMedEllerUtenPeriode = (
+    p?: Periode<string>
+): VurderingsperioderFlyktningFormData => ({
+    periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
+    resultat: null,
+});
+
 export const flyktningFormDataTilRequest = (args: {
     sakId: string;
     behandlingId: string;
     vilkår: FlyktningVilkårFormData;
-}) => {
-    return {
-        sakId: args.sakId,
-        behandlingId: args.behandlingId,
-        vurderinger: args.vilkår.flyktning.map((v) => ({
-            periode: {
-                fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
-                tilOgMed: DateUtils.toIsoDateOnlyString(v.periode.tilOgMed!),
-            },
-            vurdering: v.resultat!,
-        })),
-    };
-};
-
-export const eqVurderingsperioderFlyktningFormData = struct<VurderingsperioderFlyktningFormData>({
-    periode: eqNullable(eqPeriode),
-    resultat: eqNullable(S.Eq),
-});
-
-export const eqFlyktningVilkårFormData = struct<FlyktningVilkårFormData>({
-    flyktning: getEq(eqVurderingsperioderFlyktningFormData),
+}) => ({
+    sakId: args.sakId,
+    behandlingId: args.behandlingId,
+    vurderinger: args.vilkår.flyktning.map((v) => ({
+        periode: {
+            fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
+            tilOgMed: DateUtils.toIsoDateOnlyString(v.periode.tilOgMed!),
+        },
+        vurdering: v.resultat!,
+    })),
 });
 
 export const flyktningFormSchema = yup.object<FlyktningVilkårFormData>({

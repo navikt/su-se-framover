@@ -9,10 +9,9 @@ import FlyktningForm from '~src/components/vilkårForms/flyktning/FlyktningForm'
 import {
     FlyktningVilkårFormData,
     flyktningFormSchema,
-    flyktningVilkårTilFormData,
-    nyVurderingsperiodeFlyktningMedEllerUtenPeriode,
     eqFlyktningVilkårFormData,
     flyktningFormDataTilRequest,
+    flyktningVilkårTilFormDataEllerNy,
 } from '~src/components/vilkårForms/flyktning/FlyktningFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -36,9 +35,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagreFlyktningVilkår] = useAsyncActionCreator(sakSlice.lagreFlyktningVilkår);
 
-    const initialValues = props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning
-        ? flyktningVilkårTilFormData(props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning)
-        : { flyktning: [nyVurderingsperiodeFlyktningMedEllerUtenPeriode(props.behandling.stønadsperiode?.periode)] };
+    const initialValues = flyktningVilkårTilFormDataEllerNy(
+        props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning,
+        props.behandling.stønadsperiode?.periode
+    );
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FlyktningVilkårFormData>(
         Vilkårtype.Flyktning,
@@ -63,11 +63,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
 
     const save = (values: FlyktningVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
         lagreFlyktningVilkår(
-            flyktningFormDataTilRequest({
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                vilkår: values,
-            }),
+            flyktningFormDataTilRequest({ sakId: props.sakId, behandlingId: props.behandling.id, vilkår: values }),
             (behandling) => {
                 clearDraft();
                 onSuccess(behandling);
@@ -82,15 +78,14 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                     <FlyktningForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={vilGiTidligAvslag ? vedtakUrl : props.nesteUrl}
-                        avsluttUrl={props.avsluttUrl}
                         onFormSubmit={save}
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                         nesteknappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
+                        {...props}
+                        nesteUrl={vilGiTidligAvslag ? vedtakUrl : props.nesteUrl}
                     >
                         {vilGiTidligAvslag && (
                             <Alert className={styles.avslagAdvarsel} variant="info">

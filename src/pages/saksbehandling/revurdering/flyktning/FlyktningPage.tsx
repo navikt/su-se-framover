@@ -8,7 +8,7 @@ import {
     FlyktningVilkårFormData,
     flyktningFormSchema,
     flyktningFormDataTilRequest,
-    flyktningVilkårTilFormData,
+    flyktningVilkårTilFormDataEllerNy,
 } from '~src/components/vilkårForms/flyktning/FlyktningFormUtils';
 import { lagreFlyktningVilkår } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -21,16 +21,12 @@ export function FlyktningPage(props: RevurderingStegProps) {
 
     const form = useForm<FlyktningVilkårFormData>({
         resolver: yupResolver(flyktningFormSchema),
-        defaultValues: flyktningVilkårTilFormData(props.grunnlagsdataOgVilkårsvurderinger.flyktning),
+        defaultValues: flyktningVilkårTilFormDataEllerNy(props.grunnlagsdataOgVilkårsvurderinger.flyktning),
     });
 
     const lagreFlyktning = (values: FlyktningVilkårFormData, onSuccess: () => void) =>
         lagre(
-            flyktningFormDataTilRequest({
-                sakId: props.sakId,
-                behandlingId: props.revurdering.id,
-                vilkår: values,
-            }),
+            flyktningFormDataTilRequest({ sakId: props.sakId, behandlingId: props.revurdering.id, vilkår: values }),
             (res) => {
                 if (res.feilmeldinger.length === 0) {
                     onSuccess();
@@ -49,13 +45,11 @@ export function FlyktningPage(props: RevurderingStegProps) {
                     <FlyktningForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={props.nesteUrl}
-                        avsluttUrl={props.avsluttUrl}
                         onFormSubmit={lagreFlyktning}
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         onTilbakeClickOverride={props.onTilbakeClickOverride}
+                        {...props}
                     />
                 ),
                 right: (
