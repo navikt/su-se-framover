@@ -403,7 +403,7 @@ export const lagreFlyktningVilkår = createAsyncThunk<
 >('revurdering/vilkår/flyktning/lagre', async (arg, thunkApi) => {
     const res = await revurderingApi.lagreFlyktningvilkår({
         sakId: arg.sakId,
-        revurderingId: arg.revurderingId,
+        revurderingId: arg.behandlingId,
         vurderinger: arg.vurderinger,
     });
     if (res.status === 'ok') {

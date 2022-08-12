@@ -10,6 +10,7 @@ import {
     VurderingsperiodeFlyktning,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 import { Periode } from '~src/types/Periode';
+import * as DateUtils from '~src/utils/date/dateUtils';
 import { eqPeriode, lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils';
 
 export interface FlyktningVilkårFormData {
@@ -24,14 +25,7 @@ export interface VurderingsperioderFlyktningFormData {
     resultat: Nullable<Vilkårstatus>;
 }
 
-export const nyVurderingsperiodeFlyktningMedEllerUtenPeriode = (
-    p?: Periode<string>
-): VurderingsperioderFlyktningFormData => ({
-    periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
-    resultat: null,
-});
-
-export const flyktningVilkårTilFlyktningVilkårFormData = (f: Nullable<FlyktningVilkår>): FlyktningVilkårFormData => {
+export const flyktningVilkårTilFormData = (f: Nullable<FlyktningVilkår>): FlyktningVilkårFormData => {
     return {
         flyktning: f?.vurderinger.map(flyktningVurderingsperiodeTilFormData) ?? [
             nyVurderingsperiodeFlyktningMedEllerUtenPeriode(),
@@ -39,12 +33,37 @@ export const flyktningVilkårTilFlyktningVilkårFormData = (f: Nullable<Flyktnin
     };
 };
 
+export const nyVurderingsperiodeFlyktningMedEllerUtenPeriode = (
+    p?: Periode<string>
+): VurderingsperioderFlyktningFormData => ({
+    periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
+    resultat: null,
+});
+
 export const flyktningVurderingsperiodeTilFormData = (
     f: VurderingsperiodeFlyktning
 ): VurderingsperioderFlyktningFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     resultat: f.resultat,
 });
+
+export const flyktningFormDataTilRequest = (args: {
+    sakId: string;
+    behandlingId: string;
+    vilkår: FlyktningVilkårFormData;
+}) => {
+    return {
+        sakId: args.sakId,
+        behandlingId: args.behandlingId,
+        vurderinger: args.vilkår.flyktning.map((v) => ({
+            periode: {
+                fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
+                tilOgMed: DateUtils.toIsoDateOnlyString(v.periode.tilOgMed!),
+            },
+            vurdering: v.resultat!,
+        })),
+    };
+};
 
 export const eqVurderingsperioderFlyktningFormData = struct<VurderingsperioderFlyktningFormData>({
     periode: eqNullable(eqPeriode),

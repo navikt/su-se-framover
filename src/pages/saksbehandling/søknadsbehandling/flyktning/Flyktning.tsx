@@ -9,9 +9,10 @@ import FlyktningForm from '~src/components/vilkårForms/flyktning/FlyktningForm'
 import {
     FlyktningVilkårFormData,
     flyktningFormSchema,
-    flyktningVilkårTilFlyktningVilkårFormData,
+    flyktningVilkårTilFormData,
     nyVurderingsperiodeFlyktningMedEllerUtenPeriode,
     eqFlyktningVilkårFormData,
+    flyktningFormDataTilRequest,
 } from '~src/components/vilkårForms/flyktning/FlyktningFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -23,7 +24,6 @@ import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uf
 import { SøknadInnholdUføre } from '~src/types/Søknad';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
-import * as DateUtils from '~src/utils/date/dateUtils';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -37,7 +37,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
     const [status, lagreFlyktningVilkår] = useAsyncActionCreator(sakSlice.lagreFlyktningVilkår);
 
     const initialValues = props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning
-        ? flyktningVilkårTilFlyktningVilkårFormData(props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning)
+        ? flyktningVilkårTilFormData(props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning)
         : { flyktning: [nyVurderingsperiodeFlyktningMedEllerUtenPeriode(props.behandling.stønadsperiode?.periode)] };
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FlyktningVilkårFormData>(
@@ -63,17 +63,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
 
     const save = (values: FlyktningVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
         lagreFlyktningVilkår(
-            {
+            flyktningFormDataTilRequest({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                vurderinger: values.flyktning.map((v) => ({
-                    periode: {
-                        fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
-                        tilOgMed: DateUtils.toIsoDateOnlyString(v.periode.tilOgMed!),
-                    },
-                    vurdering: v.resultat!,
-                })),
-            },
+                vilkår: values,
+            }),
             (behandling) => {
                 clearDraft();
                 onSuccess(behandling);
