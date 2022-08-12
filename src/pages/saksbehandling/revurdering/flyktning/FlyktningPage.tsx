@@ -1,33 +1,20 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
+import FlyktningForm from '~src/components/vilkårForms/flyktning/FlyktningForm';
+import { FlyktningVilkårFormData, flyktningFormSchema } from '~src/components/vilkårForms/flyktning/FlyktningFormUtils';
 import { lagreFlyktningVilkår } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
-import { useI18n } from '~src/lib/i18n';
-import {
-    FlyktningVilkårFormData,
-    flyktningFormSchema,
-    nyVurderingsperiodeFlyktning,
-} from '~src/pages/saksbehandling/revurdering/flyktning/flyktningUtils';
 import GjeldendeFlyktningVilkår from '~src/pages/saksbehandling/revurdering/flyktning/GjeldendeFlyktningVilkår';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
-import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 
-import messages from './flyktning-nb';
-import styles from './flyktningPage.module.less';
-
 export function FlyktningPage(props: RevurderingStegProps) {
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
-    const { formatMessage } = useI18n({ messages });
 
     const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning?.vurderinger ?? [
         { periode: props.revurdering.periode, resultat: null },
@@ -74,37 +61,17 @@ export function FlyktningPage(props: RevurderingStegProps) {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <FormWrapper
+                    <FlyktningForm
                         form={form}
-                        save={lagreFlyktning}
-                        savingState={status}
-                        avsluttUrl={props.avsluttUrl}
+                        minOgMaxPeriode={revurderingsperiode}
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
-                    >
-                        <>
-                            <MultiPeriodeVelger
-                                name="flyktning"
-                                className={styles.multiPeriodeVelger}
-                                controller={form.control}
-                                appendNyPeriode={nyVurderingsperiodeFlyktning}
-                                periodeConfig={{
-                                    minFraOgMed: revurderingsperiode.fraOgMed,
-                                    maxTilOgMed: revurderingsperiode.tilOgMed,
-                                }}
-                                getChild={(nameAndIdx: string) => (
-                                    <VilkårsResultatRadioGroup
-                                        name={`${nameAndIdx}.resultat`}
-                                        legend={formatMessage('flyktning.vilkår')}
-                                        controller={form.control}
-                                    />
-                                )}
-                            />
-                            {RemoteData.isSuccess(status) && (
-                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
-                            )}
-                        </>
-                    </FormWrapper>
+                        avsluttUrl={props.avsluttUrl}
+                        onFormSubmit={lagreFlyktning}
+                        savingState={status}
+                        søknadsbehandlingEllerRevurdering={'Revurdering'}
+                        onTilbakeClickOverride={props.onTilbakeClickOverride}
+                    />
                 ),
                 right: (
                     <GjeldendeFlyktningVilkår

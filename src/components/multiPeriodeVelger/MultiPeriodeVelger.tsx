@@ -34,6 +34,9 @@ interface Props<T, U> {
     };
     getChild: (nameAndIdx: PartialName<T>) => React.ReactNode;
     childrenOverDato?: boolean;
+    //disse er for å kun opprettholde søknadsbehandling som den er. sjekk om det er greit å periodisere andre vilkår
+    begrensTilEnPeriode?: boolean;
+    skalIkkeKunneVelgePeriode?: boolean;
 }
 
 const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(props: Props<T, U>) => {
@@ -81,29 +84,42 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                         <li key={el.id}>
                             <Panel className={styles.periodePanel}>
                                 <div className={styles.periodeOgSøppelbøtteContainer}>
-                                    {props.childrenOverDato ? props.getChild(`${props.name}.${idx}`) : periodeInput}
+                                    {props.childrenOverDato
+                                        ? props.getChild(`${props.name}.${idx}`)
+                                        : !props.skalIkkeKunneVelgePeriode && periodeInput}
 
-                                    <Button
-                                        variant="secondary"
-                                        type="button"
-                                        onClick={() => remove(idx)}
-                                        size="small"
-                                        aria-label={formatMessage('knapp.fjernPeriode')}
-                                    >
-                                        <Delete />
-                                    </Button>
+                                    {!props.begrensTilEnPeriode && (
+                                        <Button
+                                            variant="secondary"
+                                            type="button"
+                                            onClick={() => remove(idx)}
+                                            size="small"
+                                            aria-label={formatMessage('knapp.fjernPeriode')}
+                                        >
+                                            <Delete />
+                                        </Button>
+                                    )}
                                 </div>
-                                {!props.childrenOverDato ? props.getChild(`${props.name}.${idx}`) : periodeInput}
+                                {!props.childrenOverDato
+                                    ? props.getChild(`${props.name}.${idx}`)
+                                    : !props.skalIkkeKunneVelgePeriode && periodeInput}
                             </Panel>
                         </li>
                     );
                 })}
             </ul>
-            <div className={styles.nyPeriodeKnappContainer}>
-                <Button variant="secondary" type="button" size="small" onClick={() => append(props.appendNyPeriode())}>
-                    {formatMessage('knapp.nyPeriode')}
-                </Button>
-            </div>
+            {!props.begrensTilEnPeriode && (
+                <div className={styles.nyPeriodeKnappContainer}>
+                    <Button
+                        variant="secondary"
+                        type="button"
+                        size="small"
+                        onClick={() => append(props.appendNyPeriode())}
+                    >
+                        {formatMessage('knapp.nyPeriode')}
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };

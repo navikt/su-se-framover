@@ -2,9 +2,7 @@ import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
-import { keyOf } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnholdUføre } from '~src/types/Søknad';
 import { VilkårtypeFelles, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
@@ -17,66 +15,46 @@ import Faktablokk from '../Faktablokk';
 import messages from './faktablokker-nb';
 
 export const FlyktningFaktablokk = (props: { søknadInnhold: SøknadInnholdUføre }) => {
-    const { intl } = useI18n({
-        messages: {
-            ...messages,
-            ...søknadMessages,
-        },
-    });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...søknadMessages } });
 
     return (
         <Faktablokk
-            tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+            tittel={formatMessage('display.fraSøknad')}
             fakta={[
                 {
-                    tittel: intl.formatMessage({ id: keyOf<typeof søknadMessages>('flyktning.label') }),
+                    tittel: formatMessage('flyktning.label'),
                     verdi: props.søknadInnhold.flyktningsstatus.registrertFlyktning
-                        ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                        : intl.formatMessage({ id: 'fraSøknad.nei' }),
+                        ? formatMessage('fraSøknad.ja')
+                        : formatMessage('fraSøknad.nei'),
                 },
             ]}
         />
     );
 };
 
-interface Props {
+export const FlyktningVilkårsblokk = (props: {
     søknadInnhold: SøknadInnholdUføre;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger['flyktning'];
+    flyktningVilkår: GrunnlagsdataOgVilkårsvurderinger['flyktning'];
     status: VilkårVurderingStatus;
-}
-
-export const FlyktningVilkårsblokk = (props: Props) => {
-    const { intl } = useI18n({
-        messages: {
-            ...messages,
-            ...saksbehandlingMessages,
-        },
-    });
+}) => {
+    const { formatMessage } = useI18n({ messages: { ...messages, ...saksbehandlingMessages } });
 
     return (
         <Vilkårsblokk
             tittel={vilkårTittelFormatted(VilkårtypeFelles.Flyktning)}
             søknadfaktablokk={<FlyktningFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.grunnlagsdataOgVilkårsvurderinger?.resultat === null ? (
-                    <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
+                props.flyktningVilkår?.resultat === null ? (
+                    <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}
-                        fakta={[
+                        tittel={formatMessage('display.fraSaksbehandling')}
+                        fakta={props.flyktningVilkår!.vurderinger.flatMap((vurdering) => [
                             {
-                                tittel: intl.formatMessage({
-                                    id: keyOf<typeof saksbehandlingMessages>('radio.flyktning.legend'),
-                                }),
-                                verdi:
-                                    props.grunnlagsdataOgVilkårsvurderinger?.resultat === Vilkårstatus.VilkårOppfylt
-                                        ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.grunnlagsdataOgVilkårsvurderinger?.resultat ===
-                                          Vilkårstatus.VilkårIkkeOppfylt
-                                        ? intl.formatMessage({ id: 'fraSøknad.nei' })
-                                        : intl.formatMessage({ id: 'fraSøknad.uavklart' }),
+                                tittel: formatMessage('flyktning.vilkår'),
+                                verdi: formatMessage(vurdering.resultat),
                             },
-                        ]}
+                        ])}
                     />
                 )
             }
