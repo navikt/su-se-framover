@@ -1,24 +1,29 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
+import { Alert } from '@navikt/ds-react';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 import { FlyktningFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import FlyktningForm from '~src/components/vilkårForms/flyktning/FlyktningForm';
+import {
+    FlyktningVilkårFormData,
+    flyktningFormSchema,
+    eqFlyktningVilkårFormData,
+    flyktningFormDataTilRequest,
+    flyktningVilkårTilFormDataEllerNy,
+} from '~src/components/vilkårForms/flyktning/FlyktningFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types';
-import yup from '~src/lib/validering';
-import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { SøknadInnholdUføre } from '~src/types/Søknad';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -26,53 +31,39 @@ import { VilkårsvurderingBaseProps } from '../types';
 import messages from './flyktning-nb';
 import * as styles from './flyktning.module.less';
 
-interface FormData {
-    vurdering: Nullable<Vilkårstatus>;
-}
-
-const schema = yup
-    .object<FormData>({
-        vurdering: yup
-            .mixed()
-            .defined()
-            .oneOf(
-                [Vilkårstatus.VilkårOppfylt, Vilkårstatus.VilkårIkkeOppfylt, Vilkårstatus.Uavklart],
-                'Du må velge om vilkåret er oppfylt'
-            ),
-    })
-    .required();
-
 const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
-    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagreFlyktningVilkår] = useAsyncActionCreator(sakSlice.lagreFlyktningVilkår);
 
-    const initialValues: FormData = {
-        vurdering: props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat ?? null,
-    };
-
-    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
-        Vilkårtype.Flyktning,
-        (values) => values.vurdering === initialValues.vurdering
+    const initialValues = flyktningVilkårTilFormDataEllerNy(
+        props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning,
+        props.behandling.stønadsperiode?.periode
     );
+
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FlyktningVilkårFormData>(
+        Vilkårtype.Flyktning,
+        (values) => eqFlyktningVilkårFormData.equals(values, initialValues)
+    );
+
+    const form = useForm<FlyktningVilkårFormData>({
+        defaultValues: draft ?? initialValues,
+        resolver: yupResolver(flyktningFormSchema),
+    });
+
+    useDraftFormSubscribe(form.watch);
+
+    const vilGiTidligAvslag =
+        props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
+        form.watch('flyktning')?.some((vurdering) => vurdering.resultat === Vilkårstatus.VilkårIkkeOppfylt);
 
     const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
         sakId: props.sakId,
         behandlingId: props.behandling.id,
     });
 
-    const save = (values: FormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
+    const save = (values: FlyktningVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
         lagreFlyktningVilkår(
-            {
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                vurderinger: [
-                    {
-                        periode: props.behandling.stønadsperiode!.periode,
-                        vurdering: values.vurdering!,
-                    },
-                ],
-            },
+            flyktningFormDataTilRequest({ sakId: props.sakId, behandlingId: props.behandling.id, vilkår: values }),
             (behandling) => {
                 clearDraft();
                 onSuccess(behandling);
@@ -80,82 +71,28 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
         );
     };
 
-    const form = useForm({
-        defaultValues: draft ?? initialValues,
-        resolver: yupResolver(schema),
-    });
-
-    useDraftFormSubscribe(form.watch);
-
-    const kortBehandlingAvslag = (behandling: Søknadsbehandling) =>
-        behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
-        behandling.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat === Vilkårstatus.VilkårIkkeOppfylt;
-
-    const vilGiTidligAvslag =
-        props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
-        form.watch('vurdering') === Vilkårstatus.VilkårIkkeOppfylt;
-
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <FormWrapper
+                    <FlyktningForm
                         form={form}
-                        save={(values, onSuccess) => save(values, onSuccess)}
+                        minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
+                        onFormSubmit={save}
                         savingState={status}
-                        avsluttUrl={props.avsluttUrl}
-                        onSuccess={(behandling) =>
-                            navigate(kortBehandlingAvslag(behandling) ? vedtakUrl : props.nesteUrl)
-                        }
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={props.nesteUrl}
-                        nesteKnappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
+                        søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
+                        nesteknappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
+                        begrensTilEnPeriode
+                        skalIkkeKunneVelgePeriode
+                        {...props}
+                        nesteUrl={vilGiTidligAvslag ? vedtakUrl : props.nesteUrl}
                     >
-                        <>
-                            <Controller
-                                control={form.control}
-                                name="vurdering"
-                                render={({ field, fieldState }) => (
-                                    <RadioGroup
-                                        legend={formatMessage('radio.flyktning.legend')}
-                                        error={fieldState.error?.message}
-                                        onBlur={field.onBlur}
-                                        onChange={field.onChange}
-                                        value={field.value ?? ''}
-                                    >
-                                        <Radio
-                                            id={field.name}
-                                            name={field.name}
-                                            value={Vilkårstatus.VilkårOppfylt}
-                                            ref={field.ref}
-                                        >
-                                            {formatMessage('radio.label.ja')}
-                                        </Radio>
-                                        <Radio
-                                            name={field.name}
-                                            onChange={() => field.onChange(Vilkårstatus.VilkårIkkeOppfylt)}
-                                            value={Vilkårstatus.VilkårIkkeOppfylt}
-                                        >
-                                            {formatMessage('radio.label.nei')}
-                                        </Radio>
-                                        <Radio
-                                            name={field.name}
-                                            onChange={() => field.onChange(Vilkårstatus.Uavklart)}
-                                            value={Vilkårstatus.Uavklart}
-                                        >
-                                            {formatMessage('radio.label.uavklart')}
-                                        </Radio>
-                                    </RadioGroup>
-                                )}
-                            />
-
-                            {vilGiTidligAvslag && (
-                                <Alert className={styles.avslagAdvarsel} variant="info">
-                                    {formatMessage('display.avslag.advarsel')}
-                                </Alert>
-                            )}
-                        </>
-                    </FormWrapper>
+                        {vilGiTidligAvslag && (
+                            <Alert className={styles.avslagAdvarsel} variant="info">
+                                {formatMessage('display.avslag.advarsel')}
+                            </Alert>
+                        )}
+                    </FlyktningForm>
                 ),
                 right: <FlyktningFaktablokk søknadInnhold={props.søknadInnhold} />,
             }}

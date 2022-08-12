@@ -90,7 +90,7 @@ const Vilkårsting = (props: {
                 <FlyktningVilkårsblokk
                     status={props.info.status}
                     søknadInnhold={props.søknadInnhold}
-                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.flyktning}
+                    flyktningVilkår={props.grunnlagsdataOgVilkårsvurderinger.flyktning}
                 />
             ) : null;
         case Vilkårtype.LovligOpphold:

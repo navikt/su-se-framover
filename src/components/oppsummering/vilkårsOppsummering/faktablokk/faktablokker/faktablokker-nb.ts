@@ -39,6 +39,7 @@ export default {
     'fastOpphold.typeOppholdstillatelse': 'Type oppholdstillatelse',
 
     'flyktning.registrertFlyktning': 'Er du registrert flyktning?',
+    'flyktning.vilkår': 'Er søker registrert flyktning etter utlendingslova §28?',
 
     'formue.tittel': 'Formue',
     'formue.heading.søker': 'Søker',

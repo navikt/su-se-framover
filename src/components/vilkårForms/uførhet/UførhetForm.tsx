@@ -1,34 +1,20 @@
 import { TextField } from '@navikt/ds-react';
 import * as React from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
-import { Uføregrunnlag } from '~src/api/revurderingApi';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
-import { FormData, lagTomUføreperiode } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import { UførhetFormData, lagTomUføreperiode } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
-import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+
+import messages from '../VilkårForms-nb';
+import { VilkårFormProps } from '../VilkårFormUtils';
 
 import * as styles from './/uførhet.module.less';
-import messages from './uførhet-nb';
 
-interface Props {
-    form: UseFormReturn<FormData>;
-    minDate: Date;
-    maxDate: Date;
-    forrigeUrl: string;
-    nesteUrl: string;
-    avsluttUrl: string;
-    onFormSubmit: (values: FormData, onSuccess: () => void) => void;
-    savingState: ApiResult<Uføregrunnlag | Søknadsbehandling>;
-    erSaksbehandling: boolean;
-    onTilbakeClickOverride?: () => void;
-}
-
-export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Props) => {
+export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: VilkårFormProps<UførhetFormData>) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -47,8 +33,8 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                     controller={form.control}
                     appendNyPeriode={lagTomUføreperiode}
                     periodeConfig={{
-                        minFraOgMed: props.minDate,
-                        maxTilOgMed: props.maxDate,
+                        minFraOgMed: props.minOgMaxPeriode.fraOgMed,
+                        maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
                     }}
                     childrenOverDato
                     getChild={(nameAndIdx) => (
@@ -56,12 +42,12 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                             <VilkårsResultatRadioGroup
                                 className={styles.vilkårInput}
                                 name={`${nameAndIdx}.oppfylt`}
-                                legend={formatMessage('input.erVilkårOppfylt.label')}
+                                legend={formatMessage('uførhet.vilkår')}
                                 controller={form.control}
                                 uavklartConfig={
-                                    props.erSaksbehandling
+                                    props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling'
                                         ? {
-                                              tekst: formatMessage('radio.label.uføresakTilBehandling'),
+                                              tekst: formatMessage('uførhet.radio.label.uføresakTilBehandling'),
                                               verdi: UføreResultat.HarUføresakTilBehandling,
                                           }
                                         : undefined
@@ -76,7 +62,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                                         render={({ field, fieldState }) => (
                                             <TextField
                                                 id={field.name}
-                                                label={formatMessage('input.uføregrad.label')}
+                                                label={formatMessage('uførhet.input.uføregrad.label')}
                                                 error={fieldState.error?.message}
                                                 {...field}
                                             />
@@ -88,7 +74,7 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Prop
                                         render={({ field, fieldState }) => (
                                             <TextField
                                                 id={field.name}
-                                                label={formatMessage('input.forventetInntekt.label')}
+                                                label={formatMessage('uførhet.input.forventetInntekt.label')}
                                                 error={fieldState.error?.message}
                                                 {...field}
                                             />

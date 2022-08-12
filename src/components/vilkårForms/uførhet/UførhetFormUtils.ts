@@ -33,6 +33,6 @@ export interface UføreperiodeFormData {
     oppfylt: Nullable<UføreResultat>;
 }
 
-export interface FormData {
+export interface UførhetFormData {
     grunnlag: UføreperiodeFormData[];
 }

@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import * as revurderingApi from '~src/api/revurderingApi';
-import { Uføregrunnlag } from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { Fradrag } from '~src/types/Fradrag';
@@ -31,6 +30,8 @@ import {
     UtenlandsoppholdRequest,
 } from '~src/types/Revurdering';
 import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
+
+export type VilkårApiResult = { revurdering: Revurdering; feilmeldinger: ErrorMessage[] };
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
@@ -278,7 +279,7 @@ export const fortsettEtterForhåndsvarsel = createAsyncThunk<
 );
 
 export const lagreUføregrunnlag = createAsyncThunk<
-    Uføregrunnlag,
+    { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] },
     {
         sakId: string;
         revurderingId: string;
@@ -402,7 +403,7 @@ export const lagreFlyktningVilkår = createAsyncThunk<
 >('revurdering/vilkår/flyktning/lagre', async (arg, thunkApi) => {
     const res = await revurderingApi.lagreFlyktningvilkår({
         sakId: arg.sakId,
-        revurderingId: arg.revurderingId,
+        revurderingId: arg.behandlingId,
         vurderinger: arg.vurderinger,
     });
     if (res.status === 'ok') {

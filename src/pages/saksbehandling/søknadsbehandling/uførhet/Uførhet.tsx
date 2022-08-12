@@ -6,7 +6,7 @@ import { UførhetFaktablokk } from '~src/components/oppsummering/vilkårsOppsumm
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
 import {
-    FormData,
+    UførhetFormData,
     vurderingsperiodeTilFormData,
     lagTomUføreperiode,
 } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
@@ -26,7 +26,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
     const { formatMessage } = useI18n({ messages });
 
     const [lagreBehandlingsinformasjonStatus, lagreUføregrunnlag] = useAsyncActionCreator(sakSlice.lagreUføregrunnlag);
-    const form = useForm<FormData>({
+    const form = useForm<UførhetFormData>({
         defaultValues: {
             grunnlag: props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger?.map(
                 vurderingsperiodeTilFormData
@@ -35,7 +35,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
         resolver: yupResolver(uførhetSchema(false)),
     });
 
-    const handleSave = (values: FormData, onSuccess: () => void) =>
+    const handleSave = (values: UførhetFormData, onSuccess: () => void) =>
         lagreUføregrunnlag(
             {
                 sakId: props.sakId,
@@ -61,15 +61,17 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                 left: (
                     <UførhetForm
                         onFormSubmit={handleSave}
-                        minDate={DateUtils.parseNonNullableIsoDateOnly(
-                            props.behandling.stønadsperiode!.periode.fraOgMed
-                        )}
-                        maxDate={DateUtils.parseNonNullableIsoDateOnly(
-                            props.behandling.stønadsperiode!.periode.tilOgMed
-                        )}
+                        minOgMaxPeriode={{
+                            fraOgMed: DateUtils.parseNonNullableIsoDateOnly(
+                                props.behandling.stønadsperiode!.periode.fraOgMed
+                            ),
+                            tilOgMed: DateUtils.parseNonNullableIsoDateOnly(
+                                props.behandling.stønadsperiode!.periode.tilOgMed
+                            ),
+                        }}
                         form={form}
                         savingState={lagreBehandlingsinformasjonStatus}
-                        erSaksbehandling={true}
+                        søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                         {...props}
                     />
                 ),

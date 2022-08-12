@@ -272,7 +272,7 @@ export interface FormuegrunnlagRequest {
 
 export interface FlyktningVilkårRequest {
     sakId: string;
-    revurderingId: string;
+    behandlingId: string;
     vurderinger: FlyktningRequest[];
 }
 
