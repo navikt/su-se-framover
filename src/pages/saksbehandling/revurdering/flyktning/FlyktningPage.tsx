@@ -21,7 +21,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
 
     const form = useForm<FlyktningVilkårFormData>({
         resolver: yupResolver(flyktningFormSchema),
-        defaultValues: flyktningVilkårTilFormDataEllerNy(props.grunnlagsdataOgVilkårsvurderinger.flyktning),
+        defaultValues: flyktningVilkårTilFormDataEllerNy(props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning),
     });
 
     const lagreFlyktning = (values: FlyktningVilkårFormData, onSuccess: () => void) =>
