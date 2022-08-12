@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
 import {
-    FormData,
+    UførhetFormData,
     lagTomUføreperiode,
     vurderingsperiodeTilFormData,
 } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
@@ -21,7 +21,7 @@ import { erGregulering } from '~src/utils/revurdering/revurderingUtils';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
 const Uførhet = (props: RevurderingStegProps) => {
-    const form = useForm<FormData>({
+    const form = useForm<UførhetFormData>({
         defaultValues: {
             grunnlag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((u) =>
                 vurderingsperiodeTilFormData(u)
@@ -32,7 +32,7 @@ const Uførhet = (props: RevurderingStegProps) => {
 
     const [lagreUføregrunnlagStatus, lagreUføregrunnlag] = useAsyncActionCreator(revurderingActions.lagreUføregrunnlag);
 
-    const handleSave = (values: FormData, onSuccess: () => void) =>
+    const handleSave = (values: UførhetFormData, onSuccess: () => void) =>
         lagreUføregrunnlag(
             {
                 sakId: props.sakId,
@@ -64,9 +64,11 @@ const Uførhet = (props: RevurderingStegProps) => {
                         onFormSubmit={handleSave}
                         form={form}
                         savingState={lagreUføregrunnlagStatus}
-                        minDate={DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.fraOgMed)}
-                        maxDate={DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.tilOgMed)}
-                        erSaksbehandling={false}
+                        minOgMaxPeriode={{
+                            fraOgMed: DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.fraOgMed),
+                            tilOgMed: DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.tilOgMed),
+                        }}
+                        søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}
                     />
                 ),

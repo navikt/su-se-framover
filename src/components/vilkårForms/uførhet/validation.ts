@@ -1,6 +1,6 @@
 import * as DateFns from 'date-fns';
 
-import { FormData, UføreperiodeFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import { UførhetFormData, UføreperiodeFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -60,7 +60,7 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
 
 export const uførhetSchema = (erGRegulering: boolean) =>
     yup
-        .object<FormData>({
+        .object<UførhetFormData>({
             grunnlag: yup
                 .array(uføregrunnlagFormDataSchema(erGRegulering).required())
                 .required('Du må legge inn minst én periode')

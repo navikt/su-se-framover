@@ -1,38 +1,19 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import React from 'react';
-import { UseFormReturn } from 'react-hook-form';
 
-import { ErrorMessage } from '~src/api/apiClient';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
-import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import { Periode } from '~src/types/Periode';
-import { Revurdering, RevurderingsStatus } from '~src/types/Revurdering';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
-import messages from './FlyktningForm-nb';
+import messages from '../VilkårForms-nb';
+import { VilkårFormProps } from '../VilkårFormUtils';
+
 import styles from './flyktningForm.module.less';
 import { FlyktningVilkårFormData, nyVurderingsperiodeFlyktningMedEllerUtenPeriode } from './FlyktningFormUtils';
 
-interface Props {
-    form: UseFormReturn<FlyktningVilkårFormData>;
-    minOgMaxPeriode: Periode;
-    forrigeUrl: string;
-    nesteUrl: string;
-    avsluttUrl: string;
-    onFormSubmit: (values: FlyktningVilkårFormData, onSuccess: () => void) => void;
-    savingState: ApiResult<
-        | {
-              revurdering: Revurdering<RevurderingsStatus>;
-              feilmeldinger: ErrorMessage[];
-          }
-        | Søknadsbehandling
-    >;
-    søknadsbehandlingEllerRevurdering: 'Søknadsbehandling' | 'Revurdering';
-    onTilbakeClickOverride?: () => void;
+interface Props extends VilkårFormProps<FlyktningVilkårFormData> {
     children?: React.ReactNode;
     nesteknappTekst?: string;
     begrensTilEnPeriode?: boolean;
