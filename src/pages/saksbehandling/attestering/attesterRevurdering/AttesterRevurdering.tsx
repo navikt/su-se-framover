@@ -14,15 +14,19 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
+import {
+    InformasjonsRevurdering,
+    InformasjonsRevurderingStatus,
+    TilbakekrevingsAvgjørelse,
+} from '~src/types/Revurdering';
 import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 import {
     erGregulering,
     erInformasjonsRevurdering,
     erRevurderingTilAttestering,
+    erRevurderingTilbakekrevingsbehandling,
     harSimulering,
     hentAvkortingFraRevurdering,
     periodenInneholderTilbakekrevingOgAndreTyper,
@@ -84,11 +88,12 @@ const AttesterRevurdering = () => {
     };
 
     const iverksettCallback = () => {
-        iverksett({ sakId: sakId, revurderingId: revurdering.id }, () => {
+        iverksett({ sakId: sakId, revurderingId: revurdering.id }, (iverksatteRevurdering) => {
             dispatch(sakSlice.fetchSak({ saksnummer: saksnummer.toString() }));
 
             const message =
-                revurdering.tilbakekrevingsbehandling === null
+                iverksatteRevurdering.tilbakekrevingsbehandling === null ||
+                !(iverksatteRevurdering.tilbakekrevingsbehandling.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV)
                     ? formatMessage('attester.iverksatt')
                     : formatMessage('attester.iverksatt.med.tilbakekreving');
 
@@ -162,8 +167,10 @@ const AttesterRevurdering = () => {
     );
 };
 
-const hentWarnings = (revurdering: Revurdering): Array<keyof typeof messages> => {
-    const tilbakekreving = revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV;
+const hentWarnings = (revurdering: InformasjonsRevurdering): Array<keyof typeof messages> => {
+    const tilbakekreving = erRevurderingTilbakekrevingsbehandling(revurdering)
+        ? revurdering.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV
+        : false;
     const opphør = revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT;
     const warnings: Array<keyof typeof messages> = [];
     if (harSimulering(revurdering) && periodenInneholderTilbakekrevingOgAndreTyper(revurdering.simulering, opphør)) {

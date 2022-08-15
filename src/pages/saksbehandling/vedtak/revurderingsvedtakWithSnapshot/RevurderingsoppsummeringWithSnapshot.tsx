@@ -8,8 +8,8 @@ import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Re
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { MessageFormatter } from '~src/lib/i18n';
-import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { InformasjonsRevurdering } from '~src/types/Revurdering';
+import { erRevurderingTilbakekreving } from '~src/utils/revurdering/revurderingUtils';
 
 import * as styles from './revurderingsoppsummeringWithSnapshot.module.less';
 
@@ -39,8 +39,7 @@ const RevurderingsoppsummeringWithSnapshot = (props: {
                                 revurdering={props.revurdering}
                                 grunnlagsdataOgVilkårsvurderinger={snapshot}
                             />
-                            {props.revurdering.tilbakekrevingsbehandling?.avgjørelse ===
-                                Tilbakekrevingsavgjørelse.TILBAKEKREV && (
+                            {erRevurderingTilbakekreving(props.revurdering) && (
                                 <Alert className={styles.tilbakekrevingAlert} variant={'info'}>
                                     {props.formatMessage('tilbakekreving')}
                                 </Alert>

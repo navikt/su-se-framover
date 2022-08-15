@@ -14,7 +14,7 @@ import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { keyOf, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import sharedMessages, { opprettetRevurderingGrunn } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { FormValues } from '~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage';
 import {
     gyldigeÅrsaker,
@@ -63,7 +63,7 @@ const getInitialÅrsak = (årsak: OpprettetRevurderingGrunn | null | undefined) 
 
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     const { formatMessage } = useI18n({
-        messages: { ...messages, ...opprettetRevurderingGrunn, ...informasjonSomRevurderes, ...sharedMessages },
+        messages: { ...messages, ...informasjonSomRevurderes, ...sharedMessages },
     });
     const form = useForm<OpprettRevurderingFormData>({
         resolver: yupResolver(schema),

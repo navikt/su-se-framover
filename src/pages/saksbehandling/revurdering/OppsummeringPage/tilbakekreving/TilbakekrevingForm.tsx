@@ -13,19 +13,14 @@ import { useI18n } from '~src/lib/i18n';
 import yup from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { VelgForhåndsvarselForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
-import { InformasjonsRevurdering } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, TilbakekrevingsAvgjørelse } from '~src/types/Revurdering';
+import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './tilbakekrevingForm-nb';
 import * as styles from './tilbakekrevingForm.module.less';
 
-export enum Tilbakekrevingsavgjørelse {
-    TILBAKEKREV = 'TILBAKEKREV',
-    IKKE_TILBAKEKREV = 'IKKE_TILBAKEKREV',
-    IKKE_AVGJORT = 'IKKE_AVGJORT',
-}
-
 export type TilbakekrevingsbehandlingFormData = {
-    avgjørelse: Tilbakekrevingsavgjørelse;
+    avgjørelse: TilbakekrevingsAvgjørelse;
 };
 
 enum Page {
@@ -55,8 +50,9 @@ export const TilbakekrevingForm = (props: {
 
     const form = useForm<TilbakekrevingsbehandlingFormData>({
         defaultValues: {
-            avgjørelse:
-                props.revurdering.tilbakekrevingsbehandling?.avgjørelse ?? Tilbakekrevingsavgjørelse.IKKE_AVGJORT,
+            avgjørelse: erRevurderingTilbakekrevingsbehandling(props.revurdering)
+                ? props.revurdering.tilbakekrevingsbehandling?.avgjørelse
+                : TilbakekrevingsAvgjørelse.IKKE_AVGJORT,
         },
         resolver: yupResolver(
             yup
@@ -66,7 +62,7 @@ export const TilbakekrevingForm = (props: {
                         .required()
                         .defined()
                         .oneOf(
-                            [Tilbakekrevingsavgjørelse.TILBAKEKREV, Tilbakekrevingsavgjørelse.IKKE_TILBAKEKREV],
+                            [TilbakekrevingsAvgjørelse.TILBAKEKREV, TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV],
                             'Aktsomhet må vurderes ved tilbakekreving'
                         ),
                 })
@@ -94,16 +90,16 @@ export const TilbakekrevingForm = (props: {
                                 error={fieldState.error?.message}
                                 {...field}
                             >
-                                <Radio id={field.name} ref={field.ref} value={Tilbakekrevingsavgjørelse.TILBAKEKREV}>
+                                <Radio id={field.name} ref={field.ref} value={TilbakekrevingsAvgjørelse.TILBAKEKREV}>
                                     {formatMessage('aktsomhetJa')}
                                 </Radio>
-                                <Radio value={Tilbakekrevingsavgjørelse.IKKE_TILBAKEKREV}>
+                                <Radio value={TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV}>
                                     {formatMessage('aktsomhetNei')}
                                 </Radio>
                             </RadioGroup>
                         )}
                     />
-                    {form.watch('avgjørelse') === Tilbakekrevingsavgjørelse.IKKE_TILBAKEKREV && (
+                    {form.watch('avgjørelse') === TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV && (
                         <Alert variant={'info'}>{formatMessage('ingenTilbakekreving')}</Alert>
                     )}
                     {RemoteData.isFailure(lagreTilbakekrevingsbehandlingState) && (
