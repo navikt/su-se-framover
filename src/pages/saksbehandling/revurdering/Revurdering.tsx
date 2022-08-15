@@ -14,8 +14,6 @@ import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import NullstillRevurderingVarsel from '~src/pages/saksbehandling/revurdering/advarselReset/NullstillRevurderingVarsel';
-import { FastOppholdPage } from '~src/pages/saksbehandling/revurdering/fastOpphold/FastOppholdPage';
-import { FlyktningPage } from '~src/pages/saksbehandling/revurdering/flyktning/FlyktningPage';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 import {
@@ -41,6 +39,9 @@ const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 const Opplysningsplikt = React.lazy(() => import('./opplysningsplikt/Opplysningsplikt'));
 const Oppholdstillatelse = React.lazy(() => import('./oppholdstillatelse/LovligOpphold'));
+const FastOppholdPage = React.lazy(() => import('./fastOpphold/FastOppholdPage'));
+const FlyktningPage = React.lazy(() => import('./flyktning/FlyktningPage'));
+const Institusjonsopphold = React.lazy(() => import('./institusjonsopphold/Institusjonsopphold'));
 
 const RevurderingPage = () => {
     const { sak } = useOutletContext<AttesteringContext>();
@@ -225,6 +226,7 @@ const RevurderingstegPage = (props: {
                         {props.steg === RevurderingSteg.Opplysningsplikt && <Opplysningsplikt {...stegProps} />}
                         {props.steg === RevurderingSteg.Oppholdstillatelse && <Oppholdstillatelse {...stegProps} />}
                         {props.steg === RevurderingSteg.PersonligOppmøte && <PersonligOppmøte {...stegProps} />}
+                        {props.steg === RevurderingSteg.Institusjonsopphold && <Institusjonsopphold {...stegProps} />}
                     </div>
                 );
             }

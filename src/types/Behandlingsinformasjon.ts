@@ -1,22 +1,10 @@
 import { Person } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
 
-export interface Behandlingsinformasjon {
-    //TODO: fjern disse 2 - dem eksisterer ikke på behandlingsinformasjon med på grunnlagsdataOgVilkårsvurderinger
-    alderspensjon: Nullable<Behandlingsstatus>;
-    familieforening: Nullable<Behandlingsstatus>;
-
-    institusjonsopphold: Nullable<Behandlingsstatus>;
-}
-
 export enum Vilkårstatus {
     VilkårOppfylt = 'VilkårOppfylt',
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
     Uavklart = 'Uavklart',
-}
-
-export interface Behandlingsstatus {
-    status: Vilkårstatus;
 }
 
 export interface FormueVerdier {

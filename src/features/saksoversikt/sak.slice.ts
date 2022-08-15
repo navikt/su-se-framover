@@ -13,10 +13,11 @@ import { pipe } from '~src/lib/fp';
 import { Nullable } from '~src/lib/types';
 import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
-import { Behandlingsinformasjon, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -164,6 +165,22 @@ export const lagreFastOppholdVilkår = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreInstitusjonsoppholdVilkår = createAsyncThunk<
+    Søknadsbehandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
+    },
+    { rejectValue: ApiError }
+>('behandling/institusjonsopphold', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreInstitusjonsoppholdVilkår(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const lagrePersonligOppmøteVilkår = createAsyncThunk<
     Søknadsbehandling,
     {
@@ -177,22 +194,6 @@ export const lagrePersonligOppmøteVilkår = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/personligoppmøte', async (arg, thunkApi) => {
     const res = await behandlingApi.lagrePersonligOppmøteVilkår(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreBehandlingsinformasjon = createAsyncThunk<
-    Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        behandlingsinformasjon: Partial<Behandlingsinformasjon>;
-    },
-    { rejectValue: ApiError }
->('behandling/informasjon', async (arg, thunkApi) => {
-    const res = await behandlingApi.lagreBehandlingsinformasjon(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -572,26 +573,6 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, lagreBehandlingsinformasjon, {
-            pending: (state) => {
-                state.lagreBehandlingsinformasjonStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.lagreBehandlingsinformasjonStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.lagreBehandlingsinformasjonStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
         handleAsyncThunk(builder, lagreUføregrunnlag, {
             pending: (state) => {
                 state.lagreUføregrunnlagStatus = RemoteData.pending;
@@ -820,6 +801,16 @@ export default createSlice({
             );
         });
 
+        builder.addCase(lagreInstitusjonsoppholdVilkår.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
         builder.addCase(lagrePersonligOppmøteVilkår.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
@@ -861,6 +852,10 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.lagreFastOppholdVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
+        builder.addCase(revurderingActions.lagreInstitusjonsoppholdVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 

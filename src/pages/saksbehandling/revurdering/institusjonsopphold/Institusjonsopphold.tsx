@@ -6,38 +6,39 @@ import { useForm } from 'react-hook-form';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
-import { lagreFastOppholdVilkår } from '~src/features/revurdering/revurderingActions';
+import { lagreInstitusjonsoppholdVilkår } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import {
-    fastOppholdFormSchema,
-    FastOppholdVilkårFormData,
-    nyVurderingsperiodeFastOpphold,
-} from '~src/pages/saksbehandling/revurdering/fastOpphold/fastOppholdUtils';
-import { GjeldendeFastOppholdVilkår } from '~src/pages/saksbehandling/revurdering/fastOpphold/GjeldendeFastOppholdVilkår';
-import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
-import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
-import messages from './fastOpphold-nb';
-import styles from './fastOppholdPage.module.less';
+import { FormWrapper } from '../../søknadsbehandling/FormWrapper';
+import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
-export function FastOppholdPage(props: RevurderingStegProps) {
-    const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
+import GjeldendeInstitusjonsopphold from './GjeldendeInstitusjonsopphold';
+import messages from './institusjonsopphold-nb';
+import styles from './institusjonsopphold.module.less';
+import {
+    institusjonsoppholdFormSchema,
+    InstitusjonsoppholdVilkårFormData,
+    nyVurderingsperiodeInstitusjonsopphold,
+} from './institusjonsoppholdUtils';
+
+const Institusjonsopphold = (props: RevurderingStegProps) => {
+    const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
     const { formatMessage } = useI18n({ messages });
 
-    const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.vurderinger ?? [
-        { periode: props.revurdering.periode, resultat: null },
+    const vurderinger = props.revurdering.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.vurderingsperioder ?? [
+        { periode: props.revurdering.periode, vurdering: null },
     ];
 
-    const form = useForm<FastOppholdVilkårFormData>({
-        resolver: yupResolver(fastOppholdFormSchema),
+    const form = useForm<InstitusjonsoppholdVilkårFormData>({
+        resolver: yupResolver(institusjonsoppholdFormSchema),
         defaultValues: {
-            fastOpphold: vurderinger.map((vurdering) => ({
-                resultat: vurdering.resultat,
+            institusjonsopphold: vurderinger.map((vurdering) => ({
+                resultat: vurdering.vurdering,
                 periode: {
                     fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
                     tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
@@ -46,12 +47,12 @@ export function FastOppholdPage(props: RevurderingStegProps) {
         },
     });
 
-    const lagreFastOpphold = (values: FastOppholdVilkårFormData, onSuccess: () => void) =>
+    const lagreFastOpphold = (values: InstitusjonsoppholdVilkårFormData, onSuccess: () => void) =>
         lagre(
             {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                vurderinger: values.fastOpphold.map((v) => ({
+                vurderingsperioder: values.institusjonsopphold.map((v) => ({
                     periode: {
                         fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
                         tilOgMed: DateUtils.toIsoDateOnlyString(v.periode.tilOgMed!),
@@ -85,10 +86,10 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                     >
                         <>
                             <MultiPeriodeVelger
-                                name="fastOpphold"
+                                name="institusjonsopphold"
                                 className={styles.multiPeriodeVelger}
                                 controller={form.control}
-                                appendNyPeriode={nyVurderingsperiodeFastOpphold}
+                                appendNyPeriode={nyVurderingsperiodeInstitusjonsopphold}
                                 periodeConfig={{
                                     minFraOgMed: revurderingsperiode.fraOgMed,
                                     maxTilOgMed: revurderingsperiode.tilOgMed,
@@ -96,8 +97,9 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                                 getChild={(nameAndIdx: string) => (
                                     <VilkårsResultatRadioGroup
                                         name={`${nameAndIdx}.resultat`}
-                                        legend={formatMessage('fastOpphold.vilkår')}
+                                        legend={formatMessage('institusjonsopphold.vilkår')}
                                         controller={form.control}
+                                        ommvendtVilkårStatus
                                     />
                                 )}
                             />
@@ -108,13 +110,13 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                     </FormWrapper>
                 ),
                 right: (
-                    <GjeldendeFastOppholdVilkår
-                        gjeldendeFastOppholdVilkår={props.grunnlagsdataOgVilkårsvurderinger.fastOpphold}
+                    <GjeldendeInstitusjonsopphold
+                        gjeldendeInstitusjonsopphold={props.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold}
                     />
                 ),
             }}
         </ToKolonner>
     );
-}
+};
 
-export default FastOppholdPage;
+export default Institusjonsopphold;

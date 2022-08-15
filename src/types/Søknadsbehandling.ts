@@ -2,7 +2,6 @@ import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
 import { Simulering } from '~src/types/Simulering';
 
-import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Søknad } from './Søknad';
@@ -12,7 +11,6 @@ export interface Søknadsbehandling {
     sakId: string;
     søknad: Søknad;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-    behandlingsinformasjon: Behandlingsinformasjon;
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;
     simulering: Nullable<Simulering>;

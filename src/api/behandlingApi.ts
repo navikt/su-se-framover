@@ -1,7 +1,8 @@
 import { Nullable } from '~src/lib/types';
-import { Behandlingsinformasjon, FormueVerdier, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { FormueVerdier, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -124,6 +125,20 @@ export async function lagreFastOppholdVilkår(arg: {
     });
 }
 
+export async function lagreInstitusjonsoppholdVilkår(arg: {
+    sakId: string;
+    behandlingId: string;
+    vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
+}) {
+    return apiClient<Søknadsbehandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/institusjonsopphold`,
+        method: 'POST',
+        body: {
+            vurderingsperioder: arg.vurderingsperioder,
+        },
+    });
+}
+
 export async function lagrePersonligOppmøteVilkår(arg: {
     sakId: string;
     behandlingId: string;
@@ -133,18 +148,6 @@ export async function lagrePersonligOppmøteVilkår(arg: {
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/personligoppmøte`,
         method: 'POST',
         body: arg.vurderinger,
-    });
-}
-
-export async function lagreBehandlingsinformasjon(arg: {
-    sakId: string;
-    behandlingId: string;
-    behandlingsinformasjon: Partial<Behandlingsinformasjon>;
-}) {
-    return apiClient<Søknadsbehandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/informasjon`,
-        method: 'PATCH',
-        body: arg.behandlingsinformasjon,
     });
 }
 

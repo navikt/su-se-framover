@@ -14,6 +14,7 @@ export const stegmessages: { [key in RevurderingSteg]: string } = {
     [RevurderingSteg.Flyktning]: 'Flyktningsstatus',
     [RevurderingSteg.FastOpphold]: 'Opphold i Norge',
     [RevurderingSteg.PersonligOppmøte]: 'Personlig oppmøte',
+    [RevurderingSteg.Institusjonsopphold]: 'Institusjonsopphold',
 };
 
 export const opprettetRevurderingGrunn: { [key in OpprettetRevurderingGrunn]: string } = {

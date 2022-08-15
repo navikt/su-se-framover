@@ -6,6 +6,7 @@ import { Fradrag } from '~src/types/Fradrag';
 import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { PersonligOppmøteVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -312,6 +313,21 @@ export async function lagreFastOppholdVilkår(arg: {
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/fastopphold`,
         method: 'POST',
         body: arg.vurderinger,
+    });
+}
+
+export async function lagreInstitusjonsoppholdVilkår(arg: {
+    vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
+    sakId: string;
+    revurderingId: string;
+}): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
+    console.log(arg.vurderingsperioder);
+    return apiClient({
+        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/institusjonsopphold`,
+        method: 'POST',
+        body: {
+            vurderingsperioder: arg.vurderingsperioder,
+        },
     });
 }
 

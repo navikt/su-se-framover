@@ -53,7 +53,6 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
             <VilkårsOppsummering
                 grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
                 søknadInnhold={props.behandling.søknad.søknadInnhold}
-                behandlingsinformasjon={props.behandling.behandlingsinformasjon}
             />
             {props.behandling.beregning ? (
                 <div>

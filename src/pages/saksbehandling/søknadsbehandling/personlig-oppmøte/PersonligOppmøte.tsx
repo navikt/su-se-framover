@@ -20,7 +20,6 @@ import {
     toPersonligOppmøteÅrsak,
 } from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/utils';
 import { erNoenVurdertUavklart } from '~src/pages/saksbehandling/utils';
-import { Behandlingsinformasjon } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Sakstype } from '~src/types/Sak';
 import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
@@ -61,13 +60,8 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
 
     const watch = form.watch();
 
-    const erNoenVilkårVurdertUavklart = (
-        behandlingsinformasjon: Behandlingsinformasjon,
-        grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
-    ) => {
-        return erNoenVurdertUavklart(
-            mapToVilkårsinformasjon(props.sakstype, behandlingsinformasjon, grunnlagsdataOgVilkårsvurderinger)
-        );
+    const erNoenVilkårVurdertUavklart = (grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger) => {
+        return erNoenVurdertUavklart(mapToVilkårsinformasjon(props.sakstype, grunnlagsdataOgVilkårsvurderinger));
     };
 
     const save = async (values: FormData, onSuccess: (res: Søknadsbehandling) => void) => {
@@ -86,7 +80,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
             },
             (res) => {
                 clearDraft();
-                if (erNoenVilkårVurdertUavklart(res.behandlingsinformasjon, res.grunnlagsdataOgVilkårsvurderinger)) {
+                if (erNoenVilkårVurdertUavklart(res.grunnlagsdataOgVilkårsvurderinger)) {
                     advarselRef.current?.focus();
                     return;
                 }
@@ -201,10 +195,9 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                                 aria-atomic="true"
                                 className={styles.alertstripe}
                             >
-                                {erNoenVilkårVurdertUavklart(
-                                    props.behandling.behandlingsinformasjon,
-                                    props.behandling.grunnlagsdataOgVilkårsvurderinger
-                                ) && <Alert variant="warning">{formatMessage('alert.ikkeFerdigbehandlet')}</Alert>}
+                                {erNoenVilkårVurdertUavklart(props.behandling.grunnlagsdataOgVilkårsvurderinger) && (
+                                    <Alert variant="warning">{formatMessage('alert.ikkeFerdigbehandlet')}</Alert>
+                                )}
                             </div>
                         </>
                     </FormWrapper>

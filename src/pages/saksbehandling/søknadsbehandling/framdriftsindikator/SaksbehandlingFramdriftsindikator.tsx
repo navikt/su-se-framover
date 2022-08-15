@@ -37,7 +37,6 @@ const SaksbehandlingFramdriftsindikator = (props: {
 }) => {
     const vilkårrekkefølge = mapToVilkårsinformasjon(
         props.sakstype,
-        props.behandling.behandlingsinformasjon,
         props.behandling.grunnlagsdataOgVilkårsvurderinger
     );
     const beregningsrekkefølge = vilkårsinformasjonForBeregningssteg(props.behandling);
