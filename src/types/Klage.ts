@@ -102,6 +102,7 @@ export enum OpprettholdVedtakHjemmel {
     'SU_PARAGRAF_4' = 'SU_PARAGRAF_4',
     'SU_PARAGRAF_5' = 'SU_PARAGRAF_5',
     'SU_PARAGRAF_6' = 'SU_PARAGRAF_6',
+    'SU_PARAGRAF_7' = 'SU_PARAGRAF_7',
     'SU_PARAGRAF_8' = 'SU_PARAGRAF_8',
     'SU_PARAGRAF_9' = 'SU_PARAGRAF_9',
     'SU_PARAGRAF_10' = 'SU_PARAGRAF_10',

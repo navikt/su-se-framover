@@ -16,6 +16,7 @@ const opprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: str
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_4]: '§ 4',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_5]: '§ 5',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_6]: '§ 6',
+    [OpprettholdVedtakHjemmel.SU_PARAGRAF_7]: '§ 7',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_8]: '§ 8',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_9]: '§ 9',
     [OpprettholdVedtakHjemmel.SU_PARAGRAF_10]: '§ 10',
