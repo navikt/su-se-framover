@@ -351,8 +351,9 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 RemoteData.isPending(beregningStatus) ||
                                 RemoteData.isPending(simuleringStatus)
                             }
-                            onLagreOgFortsettSenereClick={() => {
-                                if (form.formState.isValid) {
+                            onLagreOgFortsettSenereClick={async () => {
+                                const validForm = await form.trigger().then(() => form.formState.isValid);
+                                if (validForm) {
                                     lagreFradragOgBeregn(form.getValues(), () => {
                                         navigate(props.avsluttUrl);
                                     });
