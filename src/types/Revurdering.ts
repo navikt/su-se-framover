@@ -1,5 +1,4 @@
 import { Nullable } from '~src/lib/types';
-import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 
@@ -9,6 +8,7 @@ import { InstitusjonsoppholdVurderingRequest } from './grunnlagsdataOgVilkårsvu
 import { PersonligOppmøteVurderingRequest } from './grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
+import { Sakstype } from './Sak';
 import { Simulering, SimulertPeriode } from './Simulering';
 import { Attestering } from './Søknadsbehandling';
 
@@ -24,7 +24,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     begrunnelse: Nullable<string>;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
-    tilbakekrevingsbehandling: Nullable<TilbakekrevingsbehandlingFormData>;
+    sakstype: Sakstype;
 }
 
 /**
@@ -84,6 +84,7 @@ export interface SimulertRevurdering
     beregning: Beregning;
     simulering: Simulering;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
+    tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
 export interface RevurderingTilAttestering
@@ -94,6 +95,7 @@ export interface RevurderingTilAttestering
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
+    tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
 export interface IverksattRevurdering
@@ -104,6 +106,7 @@ export interface IverksattRevurdering
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
+    tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
 export interface UnderkjentRevurdering
@@ -114,6 +117,7 @@ export interface UnderkjentRevurdering
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
+    tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
 export interface AvsluttetRevurdering extends InformasjonsRevurdering<InformasjonsRevurderingStatus.AVSLUTTET> {
@@ -187,6 +191,7 @@ export enum OpprettetRevurderingGrunn {
     MIGRERT = 'MIGRERT',
     MANGLENDE_KONTROLLERKLÆRING = 'MANGLENDE_KONTROLLERKLÆRING',
     MOTTATT_KONTROLLERKLÆRING = 'MOTTATT_KONTROLLERKLÆRING',
+    IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON = 'IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON',
 }
 
 export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
@@ -304,4 +309,14 @@ export interface RevurderingStegProps {
     forrigeUrl: string;
     nesteUrl: string;
     avsluttUrl: string;
+}
+
+export interface Tilbakekrevingsbehandling {
+    avgjørelse: TilbakekrevingsAvgjørelse;
+}
+
+export enum TilbakekrevingsAvgjørelse {
+    IKKE_AVGJORT = 'IKKE_AVGJORT',
+    TILBAKEKREV = 'TILBAKEKREV',
+    IKKE_TILBAKEKREV = 'IKKE_TILBAKEKREV',
 }

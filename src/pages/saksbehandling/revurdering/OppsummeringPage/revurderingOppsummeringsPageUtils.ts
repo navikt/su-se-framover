@@ -1,10 +1,11 @@
-import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { BeregnetIngenEndring, Revurdering, SimulertRevurdering, UnderkjentRevurdering } from '~src/types/Revurdering';
 import {
     erForhåndsvarslingBesluttet,
     erGregulering,
     erIngenForhåndsvarsel,
     erRevurderingForhåndsvarslet,
+    erRevurderingTilbakekrevingIkkeAvgjort,
+    erRevurderingTilbakekrevingsbehandling,
     erRevurderingUnderkjent,
     skalAttesteres,
 } from '~src/utils/revurdering/revurderingUtils';
@@ -32,8 +33,8 @@ export enum OppsummeringState {
 
 export const getOppsummeringsformState = (revurdering: Revurdering): OppsummeringState => {
     const visTilbakekrevingForm =
-        revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.IKKE_AVGJORT ||
-        ((revurdering.tilbakekrevingsbehandling ?? null) !== null && revurdering.forhåndsvarsel === null);
+        (erRevurderingTilbakekrevingsbehandling(revurdering) && erRevurderingTilbakekrevingIkkeAvgjort(revurdering)) ||
+        (erRevurderingTilbakekrevingsbehandling(revurdering) !== null && revurdering.forhåndsvarsel === null);
 
     if (visTilbakekrevingForm) return OppsummeringState.TILBAKEKREVING;
     if (skalAttesteres(revurdering)) return OppsummeringState.ATTESTERING;

@@ -12,9 +12,11 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
-import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';
-import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
+import {
+    erRevurderingOpphørPgaManglendeDokumentasjon,
+    erRevurderingTilbakekreving,
+} from '~src/utils/revurdering/revurderingUtils';
 
 import { Navigasjonsknapper } from '../../../bunnknapper/Navigasjonsknapper';
 
@@ -44,12 +46,11 @@ export const ResultatEtterForhåndsvarselform = (props: {
     const form = useForm<FormData>({
         defaultValues: {
             beslutningEtterForhåndsvarsel: null,
-            tekstTilVedtaksbrev:
-                props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV
-                    ? formatMessage('tilbakekreving.forhåndstekst')
-                    : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
-                    ? formatMessage('opplysningsplikt.forhåndstekst')
-                    : '',
+            tekstTilVedtaksbrev: erRevurderingTilbakekreving(props.revurdering)
+                ? formatMessage('tilbakekreving.forhåndstekst')
+                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                ? formatMessage('opplysningsplikt.forhåndstekst')
+                : '',
             tekstTilAvsluttRevurderingBrev: '',
             begrunnelse: '',
         },
@@ -226,8 +227,7 @@ export const SendTilAttesteringForm = (props: {
         skalFøreTilBrevutsending: boolean;
     }
     const harFritekst = props.revurdering.fritekstTilBrev.length > 0;
-    const tilbakekreving =
-        props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV;
+    const tilbakekreving = erRevurderingTilbakekreving(props.revurdering);
 
     const form = useForm<FormData>({
         defaultValues: {

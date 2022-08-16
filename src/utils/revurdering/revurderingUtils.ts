@@ -18,6 +18,8 @@ import {
     SimuleringForAvkortingsvarsel,
     SimulertRevurdering,
     StansAvYtelse,
+    TilbakekrevingsAvgjørelse,
+    Tilbakekrevingsbehandling,
     UnderkjentRevurdering,
     UtbetalingsRevurderingStatus,
     Vurderingstatus,
@@ -116,6 +118,27 @@ export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: 
 export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
     return 'simulering' in r && (r as SimulertRevurdering).simulering !== null;
 }
+
+export const erRevurderingTilbakekrevingsbehandling = (
+    r: Revurdering
+): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling> } =>
+    erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r;
+
+export const erRevurderingTilbakekreving = (
+    r: Revurdering
+): r is InformasjonsRevurdering & {
+    tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.TILBAKEKREV };
+} =>
+    erRevurderingTilbakekrevingsbehandling(r) &&
+    r.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV;
+
+export const erRevurderingTilbakekrevingIkkeAvgjort = (
+    r: Revurdering
+): r is InformasjonsRevurdering & {
+    tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.IKKE_AVGJORT };
+} =>
+    erRevurderingTilbakekrevingsbehandling(r) &&
+    r.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.IKKE_AVGJORT;
 
 /**
  * Dette er det som styrer rekkefølgen på når ting skal revurderes.
