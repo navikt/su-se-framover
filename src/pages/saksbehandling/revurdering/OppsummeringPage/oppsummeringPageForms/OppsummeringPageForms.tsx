@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { Checkbox } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -9,7 +9,6 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';

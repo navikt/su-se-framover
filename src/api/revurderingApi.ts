@@ -13,7 +13,6 @@ import { PersonligOppmøteVurderingRequest } from '~src/types/grunnlagsdataOgVil
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
 import {
-    BeslutningEtterForhåndsvarsling,
     BosituasjonRequest,
     FormuegrunnlagRequest,
     Gjenopptak,
@@ -23,6 +22,7 @@ import {
     OpplysningspliktRequest,
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
+    ResultatEtterForhåndsvarselRequest,
     Revurdering,
     RevurderingTilAttestering,
     SimulertRevurdering,
@@ -259,19 +259,15 @@ export async function iverksett(sakId: string, revurderingId: string): Promise<A
 }
 
 export async function fortsettEtterForhåndsvarsel(
-    sakId: string,
-    revurderingId: string,
-    begrunnelse: string,
-    valg: BeslutningEtterForhåndsvarsling,
-    fritekstTilBrev: string
+    args: ResultatEtterForhåndsvarselRequest
 ): Promise<ApiClientResult<SimulertRevurdering | RevurderingTilAttestering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/fortsettEtterForhåndsvarsel`,
+        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/fortsettEtterForhåndsvarsel`,
         method: 'POST',
         body: {
-            begrunnelse,
-            valg,
-            fritekstTilBrev,
+            begrunnelse: args.begrunnelse,
+            valg: args.valg,
+            fritekstTilBrev: args.fritekstTilBrev,
         },
     });
 }

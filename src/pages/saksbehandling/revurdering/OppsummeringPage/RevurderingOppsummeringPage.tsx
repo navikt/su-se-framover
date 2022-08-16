@@ -25,7 +25,6 @@ import {
 import { TilbakekrevingForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import {
     BeregnetIngenEndring,
-    BeslutningEtterForhåndsvarsling,
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
     SimulertRevurdering,
@@ -43,7 +42,8 @@ import {
 
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
-import { ResultatEtterForhåndsvarselform, SendTilAttesteringForm } from './oppsummeringPageForms/OppsummeringPageForms';
+import ResultatEtterForhåndsvarselform from './forhåndsvarsel/ResultatEtterForhåndsvarsel';
+import { SendTilAttesteringForm } from './oppsummeringPageForms/OppsummeringPageForms';
 import messages from './revurderingOppsummeringPage-nb';
 import * as styles from './revurderingOppsummeringPage.module.less';
 
@@ -79,47 +79,6 @@ const OppsummeringshandlingForm = (props: {
                 formatMessage('notification.sendtTilAttestering'),
                 props.sakId
             );
-        }
-    );
-
-    const [fortsettEtterForhåndsvarselState, fortsettEtterForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
-        RevurderingActions.fortsettEtterForhåndsvarsel,
-        (args: {
-            beslutningEtterForhåndsvarsel: BeslutningEtterForhåndsvarsling;
-            brevtekst: string;
-            begrunnelse: string;
-        }) => {
-            if (props.feilmeldinger.length > 0) {
-                feilRef.current?.focus();
-                return;
-            }
-            return {
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                begrunnelse: args.begrunnelse,
-                valg: args.beslutningEtterForhåndsvarsel,
-                fritekstTilBrev: args.brevtekst,
-            };
-        },
-        (args) => {
-            switch (args.beslutningEtterForhåndsvarsel) {
-                case BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger:
-                    navigate(props.førsteRevurderingstegUrl);
-                    break;
-                case BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger:
-                    Routes.navigateToSakIntroWithMessage(
-                        navigate,
-                        formatMessage('notification.sendtTilAttestering'),
-                        props.sakId
-                    );
-                    break;
-                case BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer:
-                    Routes.navigateToSakIntroWithMessage(
-                        navigate,
-                        formatMessage('notification.avsluttetRevurdering'),
-                        props.sakId
-                    );
-            }
         }
     );
 
@@ -170,8 +129,7 @@ const OppsummeringshandlingForm = (props: {
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
-                    submitStatus={fortsettEtterForhåndsvarselState}
-                    onSubmit={fortsettEtterForhåndsvarsel}
+                    førsteRevurderingstegUrl={props.førsteRevurderingstegUrl}
                 />
             )}
         </div>

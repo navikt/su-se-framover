@@ -134,7 +134,6 @@ export enum Forhåndsvarseltype {
 export enum BeslutningEtterForhåndsvarsling {
     FortsettSammeOpplysninger = 'FORTSETT_MED_SAMME_OPPLYSNINGER',
     FortsettMedAndreOpplysninger = 'FORTSETT_MED_ANDRE_OPPLYSNINGER',
-    AvsluttUtenEndringer = 'AVSLUTT_UTEN_ENDRINGER',
 }
 
 interface ForhåndsvarselBase<T extends Forhåndsvarseltype = Forhåndsvarseltype> {
@@ -319,4 +318,12 @@ export enum TilbakekrevingsAvgjørelse {
     IKKE_AVGJORT = 'IKKE_AVGJORT',
     TILBAKEKREV = 'TILBAKEKREV',
     IKKE_TILBAKEKREV = 'IKKE_TILBAKEKREV',
+}
+
+export interface ResultatEtterForhåndsvarselRequest {
+    sakId: string;
+    revurderingId: string;
+    valg: BeslutningEtterForhåndsvarsling;
+    begrunnelse: string;
+    fritekstTilBrev: Nullable<string>;
 }

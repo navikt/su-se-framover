@@ -10,7 +10,6 @@ import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderin
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
 import {
-    BeslutningEtterForhåndsvarsling,
     BosituasjonRequest,
     FastOppholdVilkårRequest,
     FlyktningVilkårRequest,
@@ -24,6 +23,7 @@ import {
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
     PersonligOppmøteVilkårRequest,
+    ResultatEtterForhåndsvarselRequest,
     Revurdering,
     RevurderingTilAttestering,
     SimulertRevurdering,
@@ -255,30 +255,15 @@ export const underkjennRevurdering = createAsyncThunk<
 
 export const fortsettEtterForhåndsvarsel = createAsyncThunk<
     SimulertRevurdering | RevurderingTilAttestering,
-    {
-        sakId: string;
-        revurderingId: string;
-        begrunnelse: string;
-        valg: BeslutningEtterForhåndsvarsling;
-        fritekstTilBrev: string;
-    },
+    ResultatEtterForhåndsvarselRequest,
     { rejectValue: ApiError }
->(
-    'revurdering/fortsettEtterForhåndsvarsel',
-    async ({ sakId, revurderingId, begrunnelse, valg, fritekstTilBrev }, thunkApi) => {
-        const res = await revurderingApi.fortsettEtterForhåndsvarsel(
-            sakId,
-            revurderingId,
-            begrunnelse,
-            valg,
-            fritekstTilBrev
-        );
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
+>('revurdering/fortsettEtterForhåndsvarsel', async (args, thunkApi) => {
+    const res = await revurderingApi.fortsettEtterForhåndsvarsel(args);
+    if (res.status === 'ok') {
+        return res.data;
     }
-);
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const lagreUføregrunnlag = createAsyncThunk<
     { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] },

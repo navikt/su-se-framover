@@ -1,7 +1,17 @@
+import { BeslutningEtterForhåndsvarslingFormData } from '../forhåndsvarsel/ResultatEtterForhåndsvarselUtils';
+
+export const beslutningEtterForhåndsvarseltekstMapper: { [key in BeslutningEtterForhåndsvarslingFormData]: string } = {
+    [BeslutningEtterForhåndsvarslingFormData.FortsettSammeOpplysninger]:
+        'Revurderingen skal fortsette med samme opplysninger',
+    [BeslutningEtterForhåndsvarslingFormData.FortsettMedAndreOpplysninger]:
+        'Revurdering skal fortsette med andre opplysninger',
+    [BeslutningEtterForhåndsvarslingFormData.AvsluttUtenEndringer]: 'Revurdering skal avsluttes uten endringer',
+};
+
 export default {
     'knapp.seBrev': 'Forhåndsvis brev',
 
-    'avslutt.button.label': 'Avslutt revurdering',
+    'button.label.neste': 'Neste',
 
     'sendTilAttestering.button.label': 'Send til attestering',
     'sendForhåndsvarsel.button.label': 'Send forhåndsvarsel',
@@ -13,14 +23,13 @@ export default {
     'brevInput.innhold.placeholder': 'Skriv teksten her',
 
     'sendTilAttestering.skalFøreTilBrev': 'Send vedtaksbrev til bruker',
+    'notification.sendtTilAttestering': 'Revurderingen er sendt til attestering',
 
     'velgForhåndsvarsel.handling.legend': 'Skal bruker forhåndsvarsles?',
     'velgForhåndsvarsel.submit.legend': 'Skal bruker forhåndsvarsles?',
 
     'etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel': 'Resultat etter forhåndsvarsel',
-    'etterForhåndsvarsel.radio.sammeOpplysninger': 'Revurderingen skal fortsette med samme opplysninger',
-    'etterForhåndsvarsel.radio.andreOpplysninger': 'Revurdering skal fortsette med andre opplysninger',
-    'etterForhåndsvarsel.radio.avsluttesUtenEndring': 'Revurdering skal avsluttes uten endringer',
+
     'etterForhåndsvarsel.begrunnelse.label': 'Begrunnelse',
 
     'tilbakekreving.forhåndstekst':
@@ -38,4 +47,6 @@ export default {
         'Det følger av § 18 at du er pliktig til å levere dokumentasjon som NAV trenger for å vurdere om du har rett på stønaden.\n' +
         '\n' +
         '_____',
+
+    ...beslutningEtterForhåndsvarseltekstMapper,
 };
