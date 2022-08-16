@@ -92,7 +92,7 @@ const ResultatEtterForhåndsvarselform = (props: {
                         legend={formatMessage('etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel')}
                         error={fieldState.error?.message}
                         name={field.name}
-                        value={field.value ?? undefined}
+                        value={field.value}
                         onChange={(val) => field.onChange(val as BeslutningEtterForhåndsvarsling)}
                     >
                         {Object.values(BeslutningEtterForhåndsvarslingFormData).map((alternativ) => (
