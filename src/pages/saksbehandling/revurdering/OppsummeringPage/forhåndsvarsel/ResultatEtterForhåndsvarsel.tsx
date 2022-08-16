@@ -36,34 +36,34 @@ const ResultatEtterForhåndsvarselform = (props: {
     const { formatMessage } = useI18n({ messages: { ...messages } });
     const navigate = useNavigate();
 
-    const [forhåndsvarselResultatStatus, sendForhåndsvarsel] = useAsyncActionCreator(
+    const [forhåndsvarselResultatStatus, sendForhåndsvarselAction] = useAsyncActionCreator(
         RevurderingActions.fortsettEtterForhåndsvarsel
     );
 
     const onFormSubmit = (values: ResultatEtterForhåndsvarselFormData) => {
+        const sendForhåndsvarsel = (onSuccess: () => void) =>
+            sendForhåndsvarselAction(
+                resultatEtterForhåndsvarselFormDataTilRequest(props.sakId, props.revurdering.id, values),
+                onSuccess
+            );
+
         switch (values.beslutningEtterForhåndsvarsel) {
             case BeslutningEtterForhåndsvarslingFormData.AvsluttUtenEndringer:
                 navigate(Routes.avsluttBehandling.createURL({ sakId: props.sakId, id: props.revurdering.id }));
                 break;
             case BeslutningEtterForhåndsvarslingFormData.FortsettMedAndreOpplysninger:
-                sendForhåndsvarsel(
-                    resultatEtterForhåndsvarselFormDataTilRequest(props.sakId, props.revurdering.id, values),
-                    () => {
-                        navigate(props.førsteRevurderingstegUrl);
-                    }
-                );
+                sendForhåndsvarsel(() => {
+                    navigate(props.førsteRevurderingstegUrl);
+                });
                 break;
             case BeslutningEtterForhåndsvarslingFormData.FortsettSammeOpplysninger:
-                sendForhåndsvarsel(
-                    resultatEtterForhåndsvarselFormDataTilRequest(props.sakId, props.revurdering.id, values),
-                    () => {
-                        Routes.navigateToSakIntroWithMessage(
-                            navigate,
-                            formatMessage('notification.sendtTilAttestering'),
-                            props.sakId
-                        );
-                    }
-                );
+                sendForhåndsvarsel(() => {
+                    Routes.navigateToSakIntroWithMessage(
+                        navigate,
+                        formatMessage('notification.sendtTilAttestering'),
+                        props.sakId
+                    );
+                });
         }
     };
 
