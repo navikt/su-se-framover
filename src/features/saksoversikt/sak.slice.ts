@@ -29,7 +29,6 @@ import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
     Sak,
@@ -104,25 +103,6 @@ export const fetchBehandling = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/fetch', async ({ sakId, behandlingId }, thunkApi) => {
     const res = await behandlingApi.hentBehandling(sakId, behandlingId);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreVilkårsvurdering = createAsyncThunk<
-    Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        vilkårsvurderingId: string;
-        vilkårtype: Vilkårtype;
-        status: VilkårVurderingStatus;
-        begrunnelse: string;
-    },
-    { rejectValue: ApiError }
->('behandling/lagreVilkårsvurdering', async (arg, thunkApi) => {
-    const res = await behandlingApi.lagreVilkårsvurdering(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -470,24 +450,10 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
 
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
-    lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
-    lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
-    lagreUføregrunnlagStatus: RemoteData.RemoteData<ApiError, null>;
-    beregningStatus: RemoteData.RemoteData<ApiError, null>;
-    simuleringStatus: RemoteData.RemoteData<ApiError, null>;
-    sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
-    attesteringStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
     sak: RemoteData.initial,
-    lagreVilkårsvurderingStatus: RemoteData.initial,
-    lagreBehandlingsinformasjonStatus: RemoteData.initial,
-    lagreUføregrunnlagStatus: RemoteData.initial,
-    beregningStatus: RemoteData.initial,
-    simuleringStatus: RemoteData.initial,
-    sendtTilAttesteringStatus: RemoteData.initial,
-    attesteringStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -496,9 +462,6 @@ export default createSlice({
     reducers: {
         resetSak(state) {
             state.sak = RemoteData.initial;
-        },
-        resetBeregningstatus(state) {
-            state.beregningStatus = RemoteData.initial;
         },
     },
     extraReducers: (builder) => {
@@ -514,198 +477,46 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, startBehandling, {
-            pending: (state) => {
-                state.sak = { ...state.sak };
-            },
-            fulfilled: (state, action) => {
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: [...sak.behandlinger, action.payload],
-                    }))
-                );
-            },
-            rejected: (state) => {
-                state.sak = { ...state.sak };
-            },
+        builder.addCase(startBehandling.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: [...sak.behandlinger, action.payload],
+                }))
+            );
         });
 
-        handleAsyncThunk(builder, lagreVirkningstidspunkt, {
-            pending: (state) => state,
-            fulfilled: (state, action) => {
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) =>
-                            b.id === action.meta.arg.behandlingId ? action.payload : b
-                        ),
-                    }))
-                );
-            },
-            rejected: (state) => state,
+        builder.addCase(lagreVirkningstidspunkt.fulfilled, (state, action) => {
+            state.sak = oppaderSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        handleAsyncThunk(builder, lagreVilkårsvurdering, {
-            pending: (state) => {
-                state.lagreVilkårsvurderingStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.lagreVilkårsvurderingStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.lagreVilkårsvurderingStatus = simpleRejectedActionToRemoteData(action);
-            },
+        builder.addCase(lagreUføregrunnlag.fulfilled, (state, action) => {
+            state.sak = oppaderSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        handleAsyncThunk(builder, lagreUføregrunnlag, {
-            pending: (state) => {
-                state.lagreUføregrunnlagStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.lagreUføregrunnlagStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.lagreUføregrunnlagStatus = simpleRejectedActionToRemoteData(action);
-            },
+        builder.addCase(lagreEpsGrunnlag.fulfilled, (state, action) => {
+            state.sak = oppaderSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        handleAsyncThunk(builder, lagreEpsGrunnlag, {
-            pending: (state) => {
-                state.lagreUføregrunnlagStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.lagreUføregrunnlagStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.lagreUføregrunnlagStatus = simpleRejectedActionToRemoteData(action);
-            },
+        builder.addCase(startBeregning.fulfilled, (state, action) => {
+            state.sak = oppaderSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        handleAsyncThunk(builder, startBeregning, {
-            pending: (state) => {
-                state.beregningStatus = RemoteData.pending;
-                state.simuleringStatus = RemoteData.initial;
-            },
-            fulfilled: (state, action) => {
-                state.beregningStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.beregningStatus = simpleRejectedActionToRemoteData(action);
-            },
+        builder.addCase(startSimulering.fulfilled, (state, action) => {
+            state.sak = oppaderSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        handleAsyncThunk(builder, startSimulering, {
-            pending: (state) => {
-                state.simuleringStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.simuleringStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.simuleringStatus = simpleRejectedActionToRemoteData(action);
-            },
+        builder.addCase(attesteringIverksett.fulfilled, (state, action) => {
+            state.sak = oppaderSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        handleAsyncThunk(builder, attesteringIverksett, {
-            pending: (state) => {
-                state.attesteringStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.attesteringStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.attesteringStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-        handleAsyncThunk(builder, attesteringUnderkjenn, {
-            pending: (state) => {
-                state.attesteringStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.attesteringStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.attesteringStatus = simpleRejectedActionToRemoteData(action);
-            },
+        builder.addCase(attesteringUnderkjenn.fulfilled, (state, action) => {
+            state.sak = oppaderSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        handleAsyncThunk(builder, sendTilAttestering, {
-            pending: (state) => {
-                state.sendtTilAttesteringStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.sendtTilAttesteringStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.sendtTilAttesteringStatus = simpleRejectedActionToRemoteData(action);
-            },
+        builder.addCase(sendTilAttestering.fulfilled, (state, action) => {
+            state.sak = oppaderSøknadsbehandlingISak(state.sak, action.payload);
         });
 
         builder.addCase(lukkSøknad.fulfilled, (state, action) => {
@@ -879,7 +690,6 @@ export default createSlice({
         });
 
         builder.addCase(revurderingActions.lagreOpplysningsplikt.fulfilled, (state, action) => {
-            //state action.payload.feilmeldinger
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
@@ -1012,6 +822,16 @@ function oppdaterKlageISak(sak: RemoteData.RemoteData<ApiError, Sak>, klage: Kla
         RemoteData.map((s) => ({
             ...s,
             klager: s.klager.map((k) => (k.id === klage.id ? klage : k)),
+        }))
+    );
+}
+
+function oppaderSøknadsbehandlingISak(sak: RemoteData.RemoteData<ApiError, Sak>, søknadsbehandling: Søknadsbehandling) {
+    return pipe(
+        sak,
+        RemoteData.map((sak) => ({
+            ...sak,
+            behandlinger: sak.behandlinger.map((b) => (b.id === søknadsbehandling.id ? søknadsbehandling : b)),
         }))
     );
 }

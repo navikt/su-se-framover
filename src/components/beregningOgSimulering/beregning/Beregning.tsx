@@ -31,7 +31,6 @@ import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
-import { useAppDispatch } from '~src/redux/Store';
 import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
 import { Behandlingsstatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
@@ -81,7 +80,6 @@ function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): F
 
 type Søker = { søker: Person };
 const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
@@ -113,10 +111,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
             tom: DateUtils.parseIsoDateOnly(tom),
         };
     }, [props.behandling.stønadsperiode]);
-
-    useEffect(() => {
-        dispatch(sakSlice.default.actions.resetBeregningstatus());
-    }, []);
 
     useEffect(() => {
         hentSkattemeldingBruker({ fnr: props.søker.fnr });

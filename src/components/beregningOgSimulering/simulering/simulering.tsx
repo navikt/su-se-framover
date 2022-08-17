@@ -1,5 +1,4 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Heading, Label, Loader } from '@navikt/ds-react';
+import { Alert, Heading, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
@@ -9,7 +8,6 @@ import React from 'react';
 import sharedMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
-import { useAppSelector } from '~src/redux/Store';
 import { Simulering, SimulertUtbetalingstype } from '~src/types/Simulering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { groupWhile } from '~src/utils/array/arrayUtils';
@@ -90,12 +88,6 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
 export const VisSimulering = (props: Props) => {
     const { behandling } = props;
 
-    const simuleringStatus = useAppSelector((s) => s.sak.simuleringStatus);
-    if (RemoteData.isFailure(simuleringStatus)) {
-        return <div>Feilet mens vi hentet oppdrag/simulering</div>;
-    } else if (RemoteData.isPending(simuleringStatus)) {
-        return <Loader />;
-    }
     if (!behandling.simulering) {
         return <div>Behandlingen har ingen simulering</div>;
     }
