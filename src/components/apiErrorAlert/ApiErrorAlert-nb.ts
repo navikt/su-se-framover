@@ -58,7 +58,6 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år',
     [ApiErrorCode.FINNER_IKKE_PERSON]: 'Simulering feilet. Finner ikke person i TPS',
     [ApiErrorCode.FINNER_IKKE_UTBETALING]: 'Finner ikke utbetaling',
-    [ApiErrorCode.FINNES_ALLEREDE_EN_KLAGEBEHANDLING]: 'Det finnes allerede en klagebehandling for gitt journalpostId',
     [ApiErrorCode.FINNES_ALLEREDE_EN_ÅPEN_KLAGE]: 'Det finnes allerede en åpen klage',
     [ApiErrorCode.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'Formue som fører til opphør må revurderes',
     [ApiErrorCode.FORMUELISTE_KAN_IKKE_VÆRE_TOM]: 'Formuelisten kan ikke være tom',
