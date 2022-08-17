@@ -48,7 +48,7 @@ export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectV
 );
 
 export const bekreftFormkrav = createAsyncThunk<Klage, { sakId: string; klageId: string }, { rejectValue: ApiError }>(
-    'klage/bekreftVurderinger',
+    'klage/bekreftFormkrav',
     async ({ sakId, klageId }, thunkApi) => {
         const res = await klageApi.bekreftVilkårsvurderinger({
             sakId,

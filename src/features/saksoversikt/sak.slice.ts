@@ -940,6 +940,10 @@ export default createSlice({
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
 
+        builder.addCase(klageActions.bekreftFormkrav.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
         builder.addCase(klageActions.lagreVurderingAvKlage.fulfilled, (state, action) => {
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
@@ -957,6 +961,10 @@ export default createSlice({
         });
 
         builder.addCase(klageActions.oversend.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
+        builder.addCase(klageActions.iverksattAvvist.fulfilled, (state, action) => {
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
 
