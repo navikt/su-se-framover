@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import { Button, Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
@@ -19,6 +20,8 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
+
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './utenlandsopphold-nb';
 import * as styles from './utenlandsopphold.module.less';
@@ -140,7 +143,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                             control={form.control}
                                             render={({ field }) => (
                                                 <PeriodeForm
-                                                    {...field}
                                                     error={form.formState.errors.utenlandsopphold?.[index]?.periode}
                                                     minDate={{
                                                         fraOgMed: revurderingsperiode.fraOgMed,
@@ -151,6 +153,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                                         tilOgMed: revurderingsperiode.tilOgMed,
                                                     }}
                                                     size="S"
+                                                    {...field}
                                                 />
                                             )}
                                         />
@@ -167,10 +170,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                                 onChange={field.onChange}
                                                 name={field.name}
                                             >
-                                                <Radio
-                                                    value={Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet}
-                                                    ref={field.ref}
-                                                >
+                                                <Radio value={Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet}>
                                                     {formatMessage('radiobutton.utenlands')}
                                                 </Radio>
                                                 <Radio value={Utenlandsoppholdstatus.SkalHoldeSegINorge}>
@@ -194,6 +194,9 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                             >
                                 Ny periode for utenlandsopphold
                             </Button>
+                            {RemoteData.isSuccess(status) && (
+                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                            )}
                         </>
                     </FormWrapper>
                 ),
