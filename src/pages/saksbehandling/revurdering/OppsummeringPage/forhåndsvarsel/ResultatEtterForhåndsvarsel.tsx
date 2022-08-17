@@ -12,9 +12,11 @@ import * as RevurderingActions from '~src/features/revurdering/revurderingAction
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Tilbakekrevingsavgjørelse } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';
-import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
+import {
+    erRevurderingOpphørPgaManglendeDokumentasjon,
+    erRevurderingTilbakekreving,
+} from '~src/utils/revurdering/revurderingUtils';
 
 import { Navigasjonsknapper } from '../../../bunnknapper/Navigasjonsknapper';
 import messages from '../oppsummeringPageForms/oppsummeringPageForms-nb';
@@ -70,12 +72,11 @@ const ResultatEtterForhåndsvarselform = (props: {
     const form = useForm<ResultatEtterForhåndsvarselFormData>({
         defaultValues: {
             beslutningEtterForhåndsvarsel: null,
-            tekstTilVedtaksbrev:
-                props.revurdering.tilbakekrevingsbehandling?.avgjørelse === Tilbakekrevingsavgjørelse.TILBAKEKREV
-                    ? formatMessage('tilbakekreving.forhåndstekst')
-                    : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
-                    ? formatMessage('opplysningsplikt.forhåndstekst')
-                    : null,
+            tekstTilVedtaksbrev: erRevurderingTilbakekreving(props.revurdering)
+                ? formatMessage('tilbakekreving.forhåndstekst')
+                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                ? formatMessage('opplysningsplikt.forhåndstekst')
+                : null,
             begrunnelse: null,
         },
         resolver: yupResolver(resultatEtterForhpndsvarselSchema(props.revurdering)),

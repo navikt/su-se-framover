@@ -12,6 +12,7 @@ export default {
     'knapp.seBrev': 'Forhåndsvis brev',
 
     'button.label.neste': 'Neste',
+    'button.avslutt.label': 'Avslutt',
 
     'sendTilAttestering.button.label': 'Send til attestering',
     'sendForhåndsvarsel.button.label': 'Send forhåndsvarsel',
