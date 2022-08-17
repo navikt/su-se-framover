@@ -5,20 +5,24 @@ import { FieldError } from 'react-hook-form';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
 
+import messages from './brevInput-nb';
 import * as styles from './brevInput.module.less';
 
 export interface BrevInputProps {
-    tekst: string;
+    tekst: Nullable<string>;
     onVisBrevClick: () => Promise<ApiClientResult<Blob>>;
     onChange: (e: React.ChangeEvent<unknown>) => void;
-    tittel: string;
-    knappLabel: string;
+    tittel?: string;
+    knappLabel?: string;
     placeholder?: string;
     feil?: FieldError;
 }
 
 export function BrevInput(props: BrevInputProps) {
+    const { formatMessage } = useI18n({ messages });
     const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError | undefined, null>>(
         RemoteData.initial
     );
@@ -42,7 +46,7 @@ export function BrevInput(props: BrevInputProps) {
             <div className={styles.textAreaContainer}>
                 <Textarea
                     minRows={4}
-                    label={props.tittel}
+                    label={props.tittel ?? formatMessage('input.tittel')}
                     name="tekstTilVedtaksbrev"
                     placeholder={props.placeholder}
                     value={props.tekst ?? ''}
@@ -58,7 +62,7 @@ export function BrevInput(props: BrevInputProps) {
                     loading={RemoteData.isPending(hentBrevStatus)}
                     onClick={onHentBrev}
                 >
-                    {props.knappLabel}
+                    {props.knappLabel ?? formatMessage('knapp.seBrev')}
                 </Button>
                 {RemoteData.isFailure(hentBrevStatus) && <ApiErrorAlert error={hentBrevStatus.error} />}
             </div>

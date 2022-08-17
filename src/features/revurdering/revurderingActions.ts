@@ -3,13 +3,13 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import * as revurderingApi from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
+import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { Fradrag } from '~src/types/Fradrag';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
 import {
-    BeslutningEtterForhåndsvarsling,
     BosituasjonRequest,
     FastOppholdVilkårRequest,
     FlyktningVilkårRequest,
@@ -23,6 +23,7 @@ import {
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
     PersonligOppmøteVilkårRequest,
+    ResultatEtterForhåndsvarselRequest,
     Revurdering,
     RevurderingTilAttestering,
     SimulertRevurdering,
@@ -254,30 +255,15 @@ export const underkjennRevurdering = createAsyncThunk<
 
 export const fortsettEtterForhåndsvarsel = createAsyncThunk<
     SimulertRevurdering | RevurderingTilAttestering,
-    {
-        sakId: string;
-        revurderingId: string;
-        begrunnelse: string;
-        valg: BeslutningEtterForhåndsvarsling;
-        fritekstTilBrev: string;
-    },
+    ResultatEtterForhåndsvarselRequest,
     { rejectValue: ApiError }
->(
-    'revurdering/fortsettEtterForhåndsvarsel',
-    async ({ sakId, revurderingId, begrunnelse, valg, fritekstTilBrev }, thunkApi) => {
-        const res = await revurderingApi.fortsettEtterForhåndsvarsel(
-            sakId,
-            revurderingId,
-            begrunnelse,
-            valg,
-            fritekstTilBrev
-        );
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
+>('revurdering/fortsettEtterForhåndsvarsel', async (args, thunkApi) => {
+    const res = await revurderingApi.fortsettEtterForhåndsvarsel(args);
+    if (res.status === 'ok') {
+        return res.data;
     }
-);
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const lagreUføregrunnlag = createAsyncThunk<
     { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] },
@@ -463,7 +449,13 @@ export const lagrePersonligOppmøteVilkår = createAsyncThunk<
 
 export const avsluttRevurdering = createAsyncThunk<
     Revurdering,
-    { sakId: string; revurderingId: string; begrunnelse: string; fritekst: Nullable<string> },
+    {
+        sakId: string;
+        revurderingId: string;
+        begrunnelse: string;
+        fritekst: Nullable<string>;
+        brevvalg: Nullable<Brevvalg>;
+    },
     { rejectValue: ApiError }
 >('revurdering/avsluttRevurdering', async (arg, thunkApi) => {
     const res = await revurderingApi.avsluttRevurdering({
@@ -471,6 +463,7 @@ export const avsluttRevurdering = createAsyncThunk<
         revurderingId: arg.revurderingId,
         begrunnelse: arg.begrunnelse,
         fritekst: arg.fritekst,
+        brevvalg: arg.brevvalg,
     });
 
     if (res.status === 'ok') {

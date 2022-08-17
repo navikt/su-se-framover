@@ -12,13 +12,14 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
-import { BeslutningEtterForhåndsvarsling, InformasjonsRevurdering } from '~src/types/Revurdering';
+import { InformasjonsRevurdering } from '~src/types/Revurdering';
 import {
     erRevurderingOpphørPgaManglendeDokumentasjon,
     erRevurderingTilbakekreving,
 } from '~src/utils/revurdering/revurderingUtils';
 
 import { Navigasjonsknapper } from '../../../bunnknapper/Navigasjonsknapper';
+import { BeslutningEtterForhåndsvarslingFormData } from '../forhåndsvarsel/ResultatEtterForhåndsvarselUtils';
 
 import messages from './oppsummeringPageForms-nb';
 import * as styles from './oppsummeringPageForms.module.less';
@@ -29,7 +30,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
     onSubmit(args: {
-        beslutningEtterForhåndsvarsel: BeslutningEtterForhåndsvarsling;
+        beslutningEtterForhåndsvarsel: BeslutningEtterForhåndsvarslingFormData;
         brevtekst: string;
         begrunnelse: string;
     }): void;
@@ -37,7 +38,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
     const { formatMessage } = useI18n({ messages });
 
     interface FormData {
-        beslutningEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
+        beslutningEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarslingFormData>;
         tekstTilVedtaksbrev: string;
         tekstTilAvsluttRevurderingBrev: string;
         begrunnelse: string;
@@ -59,13 +60,13 @@ export const ResultatEtterForhåndsvarselform = (props: {
                 .object<FormData>({
                     beslutningEtterForhåndsvarsel: yup
                         .mixed()
-                        .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
+                        .oneOf(Object.values(BeslutningEtterForhåndsvarslingFormData), 'Feltet må fylles ut')
                         .required(),
                     tekstTilVedtaksbrev: yup
                         .string()
                         .defined()
                         .when('beslutningEtterForhåndsvarsel', {
-                            is: BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger,
+                            is: BeslutningEtterForhåndsvarslingFormData.FortsettSammeOpplysninger,
                             then: yup
                                 .string()
                                 .matches(
@@ -91,7 +92,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     beslutningEtterForhåndsvarsel: values.beslutningEtterForhåndsvarsel!,
                     brevtekst:
                         values.beslutningEtterForhåndsvarsel ===
-                        BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger
+                        BeslutningEtterForhåndsvarslingFormData.FortsettSammeOpplysninger
                             ? values.tekstTilVedtaksbrev
                             : values.tekstTilAvsluttRevurderingBrev,
                 })
@@ -107,21 +108,13 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         error={fieldState.error?.message}
                         name={field.name}
                         value={field.value ?? undefined}
-                        onChange={(val) => field.onChange(val as BeslutningEtterForhåndsvarsling)}
+                        onChange={(val) => field.onChange(val)}
                     >
-                        <Radio
-                            id={field.name}
-                            ref={field.ref}
-                            value={BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger}
-                        >
-                            {formatMessage('etterForhåndsvarsel.radio.sammeOpplysninger')}
-                        </Radio>
-                        <Radio value={BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger}>
-                            {formatMessage('etterForhåndsvarsel.radio.andreOpplysninger')}
-                        </Radio>
-                        <Radio value={BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer}>
-                            {formatMessage('etterForhåndsvarsel.radio.avsluttesUtenEndring')}
-                        </Radio>
+                        {Object.values(BeslutningEtterForhåndsvarslingFormData).map((alternativ) => (
+                            <Radio key={alternativ} value={alternativ}>
+                                {formatMessage(alternativ)}
+                            </Radio>
+                        ))}
                     </RadioGroup>
                 )}
             />
@@ -138,7 +131,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     </div>
                 )}
             />
-            {resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger && (
+            {resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarslingFormData.FortsettSammeOpplysninger && (
                 <Controller
                     control={form.control}
                     name="tekstTilVedtaksbrev"
@@ -161,7 +154,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     )}
                 />
             )}
-            {resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer && (
+            {resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarslingFormData.AvsluttUtenEndringer && (
                 <Controller
                     control={form.control}
                     name="tekstTilAvsluttRevurderingBrev"
@@ -188,10 +181,10 @@ export const ResultatEtterForhåndsvarselform = (props: {
             <Navigasjonsknapper
                 tilbake={{ url: props.forrigeUrl }}
                 nesteKnappTekst={
-                    resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger
+                    resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarslingFormData.FortsettMedAndreOpplysninger
                         ? formatMessage('fortsett.button.label')
-                        : resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer
-                        ? formatMessage('avslutt.button.label')
+                        : resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarslingFormData.AvsluttUtenEndringer
+                        ? formatMessage('button.avslutt.label')
                         : formatMessage('sendTilAttestering.button.label')
                 }
                 loading={RemoteData.isPending(props.submitStatus)}

@@ -1,6 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
+import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { Fradrag } from '~src/types/Fradrag';
 import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
@@ -12,7 +13,6 @@ import { PersonligOppmøteVurderingRequest } from '~src/types/grunnlagsdataOgVil
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
 import {
-    BeslutningEtterForhåndsvarsling,
     BosituasjonRequest,
     FormuegrunnlagRequest,
     Gjenopptak,
@@ -22,6 +22,7 @@ import {
     OpplysningspliktRequest,
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
+    ResultatEtterForhåndsvarselRequest,
     Revurdering,
     RevurderingTilAttestering,
     SimulertRevurdering,
@@ -258,19 +259,15 @@ export async function iverksett(sakId: string, revurderingId: string): Promise<A
 }
 
 export async function fortsettEtterForhåndsvarsel(
-    sakId: string,
-    revurderingId: string,
-    begrunnelse: string,
-    valg: BeslutningEtterForhåndsvarsling,
-    fritekstTilBrev: string
+    args: ResultatEtterForhåndsvarselRequest
 ): Promise<ApiClientResult<SimulertRevurdering | RevurderingTilAttestering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/fortsettEtterForhåndsvarsel`,
+        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/fortsettEtterForhåndsvarsel`,
         method: 'POST',
         body: {
-            begrunnelse,
-            valg,
-            fritekstTilBrev,
+            begrunnelse: args.begrunnelse,
+            valg: args.valg,
+            fritekstTilBrev: args.fritekstTilBrev,
         },
     });
 }
@@ -430,6 +427,7 @@ export async function avsluttRevurdering(args: {
     revurderingId: string;
     begrunnelse: string;
     fritekst: Nullable<string>;
+    brevvalg: Nullable<Brevvalg>;
 }): Promise<ApiClientResult<Revurdering>> {
     return apiClient<Revurdering>({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/avslutt`,
@@ -437,6 +435,7 @@ export async function avsluttRevurdering(args: {
         body: {
             begrunnelse: args.begrunnelse,
             fritekst: args.fritekst,
+            brevvalg: args.brevvalg,
         },
     });
 }
