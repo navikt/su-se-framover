@@ -113,7 +113,7 @@ export const LovligOppholdVilkårsblokk = (props: {
                         tittel={formatMessage('display.fraSaksbehandling')}
                         fakta={[
                             {
-                                tittel: formatMessage('radio.lovligOpphold.legend'),
+                                tittel: formatMessage('lovligOpphold.vilkår'),
                                 verdi:
                                     props.lovligOpphold?.resultat === Vilkårstatus.VilkårOppfylt
                                         ? formatMessage('fraSøknad.ja')

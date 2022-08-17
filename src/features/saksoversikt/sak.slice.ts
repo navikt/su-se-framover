@@ -18,6 +18,7 @@ import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
+import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -240,14 +241,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
 
 export const lagreLovligOppholdVilkår = createAsyncThunk<
     Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        vurderinger: Array<{
-            periode: Periode<string>;
-            status: Vilkårstatus;
-        }>;
-    },
+    LovligOppholdRequest,
     { rejectValue: ApiError }
 >('behandling/lovligopphold', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreLovligOppholdVilkår(arg);

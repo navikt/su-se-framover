@@ -7,4 +7,6 @@ export default {
     'uførhet.radio.label.uføresakTilBehandling': 'Har uføresak til behandling',
 
     'flyktning.vilkår': 'Er søker registrert flyktning etter utlendingslova §28?',
+
+    'lovligOpphold.vilkår': 'Har søker lovlig opphold i Norge?',
 };

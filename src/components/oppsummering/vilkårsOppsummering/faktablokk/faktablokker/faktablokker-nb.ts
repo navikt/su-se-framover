@@ -41,6 +41,8 @@ export default {
     'flyktning.registrertFlyktning': 'Er du registrert flyktning?',
     'flyktning.vilkår': 'Er søker registrert flyktning etter utlendingslova §28?',
 
+    'lovligOpphold.vilkår': 'Har søker lovlig opphold i Norge?',
+
     'formue.tittel': 'Formue',
     'formue.heading.søker': 'Søker',
     'formue.heading.eps': 'Ektefelle/\u200Bsamboer',

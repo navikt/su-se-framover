@@ -3,6 +3,7 @@ import { FormueVerdier, Vilkårstatus } from '~src/types/Behandlingsinformasjon'
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
+import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -263,14 +264,7 @@ export async function lagreUføregrunnlag(arg: {
     });
 }
 
-export async function lagreLovligOppholdVilkår(arg: {
-    sakId: string;
-    behandlingId: string;
-    vurderinger: Array<{
-        periode: Periode<string>;
-        status: Vilkårstatus;
-    }>;
-}) {
+export async function lagreLovligOppholdVilkår(arg: LovligOppholdRequest) {
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/lovligOpphold`,
         method: 'POST',
