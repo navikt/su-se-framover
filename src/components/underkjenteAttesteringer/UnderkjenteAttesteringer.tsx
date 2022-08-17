@@ -2,7 +2,8 @@ import { Alert, BodyShort, Label } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
-import { Attestering, UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
+import { underkjennelsesGrunnTextMapper } from '~src/typeMappinger/UnderkjennelseGrunn';
+import { Attestering } from '~src/types/Behandling';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from './underkjenteAttestering-nb';
@@ -47,7 +48,7 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                                 <BodyShort className={styles.tidspunkt}>{formatDateTime(a.opprettet)}</BodyShort>
                             </td>
                             <td>
-                                <BodyShort>{underkjentGrunnTilTekst(a.underkjennelse!.grunn, formatMessage)}</BodyShort>
+                                <BodyShort>{underkjennelsesGrunnTextMapper[a.underkjennelse!.grunn]}</BodyShort>
                             </td>
                             <td>
                                 <BodyShort className={styles.kommentar}>{a.underkjennelse!.kommentar}</BodyShort>
@@ -62,25 +63,5 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
         </div>
     );
 };
-
-function underkjentGrunnTilTekst(
-    grunn: UnderkjennelseGrunn,
-    formatMessage: (string: keyof typeof messages) => string
-): string {
-    switch (grunn) {
-        case UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT:
-            return formatMessage('underkjent.grunn.InngangsvilkåreneErFeilvurdert');
-        case UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL:
-            return formatMessage('underkjent.grunn.BeregningenErFeil');
-        case UnderkjennelseGrunn.DOKUMENTASJON_MANGLER:
-            return formatMessage('underkjent.grunn.DokumentasjonenMangler');
-        case UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL:
-            return formatMessage('underkjent.grunn.VedtaksbrevetErFeil');
-        case UnderkjennelseGrunn.ANDRE_FORHOLD:
-            return formatMessage('underkjent.grunn.AndreForhold');
-        default:
-            return '';
-    }
-}
 
 export default UnderkjenteAttesteringer;

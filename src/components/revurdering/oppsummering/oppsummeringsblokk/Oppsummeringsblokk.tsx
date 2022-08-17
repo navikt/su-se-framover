@@ -8,6 +8,7 @@ import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/U
 import { pipe, maxBy } from '~src/lib/fp';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { Attestering } from '~src/types/Behandling';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     InformasjonsRevurdering,
@@ -16,7 +17,6 @@ import {
     RevurderingsStatus,
     UtbetalingsRevurderingStatus,
 } from '~src/types/Revurdering';
-import { Attestering } from '~src/types/Søknadsbehandling';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';

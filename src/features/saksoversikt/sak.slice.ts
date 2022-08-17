@@ -13,6 +13,7 @@ import { pipe } from '~src/lib/fp';
 import { Nullable } from '~src/lib/types';
 import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
@@ -27,7 +28,7 @@ import { Periode } from '~src/types/Periode';
 import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
-import { Søknadsbehandling, UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<

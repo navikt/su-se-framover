@@ -1,4 +1,5 @@
 import { Nullable } from '~src/lib/types';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { FormueVerdier, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
@@ -8,7 +9,7 @@ import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurde
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from '~src/types/Periode';
-import { Søknadsbehandling, UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';

@@ -10,8 +10,9 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
-import { Søknadsbehandling, UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { erIverksatt, erTilAttestering } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 

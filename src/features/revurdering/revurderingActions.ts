@@ -5,6 +5,7 @@ import * as revurderingApi from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Fradrag } from '~src/types/Fradrag';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -31,7 +32,6 @@ import {
     UnderkjentRevurdering,
     UtenlandsoppholdRequest,
 } from '~src/types/Revurdering';
-import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 
 export type VilkårApiResult = { revurdering: Revurdering; feilmeldinger: ErrorMessage[] };
 

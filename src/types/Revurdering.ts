@@ -2,29 +2,28 @@ import { Nullable } from '~src/lib/types';
 import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 
+import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InstitusjonsoppholdVurderingRequest } from './grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { PersonligOppmøteVurderingRequest } from './grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
-import { Sakstype } from './Sak';
 import { Simulering, SimulertPeriode } from './Simulering';
-import { Attestering } from './Søknadsbehandling';
 
 //Dette er feltene som deles av backends 'abstrakte' revurdering. Hadde vært fint å skille på dem litt mer, både bak og fram
-export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
-    id: string;
+export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> extends Behandling<RevurderingsStatus> {
     status: T;
-    opprettet: string;
     periode: Periode<string>;
     saksbehandler: string;
-    attesteringer: Attestering[];
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
-    sakstype: Sakstype;
+}
+
+export interface InformasjonsRevurdering2 extends Revurdering<InformasjonsRevurderingStatus> {
+    fritekstTilBrev: string;
+    informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
 
 /**
@@ -55,7 +54,7 @@ export interface Gjenopptak
  * eksempler som ikke inngår, stans og gjenoppta av utbetaling, siden dem kun endrer utbetaling
  */
 export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus = InformasjonsRevurderingStatus>
-    extends Revurdering {
+    extends Revurdering<InformasjonsRevurderingStatus> {
     status: T;
     fritekstTilBrev: string;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;

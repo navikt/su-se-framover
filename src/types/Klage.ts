@@ -1,15 +1,12 @@
 import { Nullable } from '~src/lib/types';
 
-import { Attestering } from './Søknadsbehandling';
+import { Behandling } from './Behandling';
 
-export interface Klage {
-    id: string;
+export interface Klage extends Behandling<KlageStatus> {
     sakid: string;
-    opprettet: string;
     journalpostId: string;
     saksbehandler: string;
     datoKlageMottatt: string;
-    status: KlageStatus;
     vedtakId: Nullable<string>;
     innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
@@ -17,7 +14,6 @@ export interface Klage {
     begrunnelse: Nullable<string>;
     vedtaksvurdering: Nullable<Vedtaksvurdering>;
     fritekstTilBrev: Nullable<string>;
-    attesteringer: Attestering[];
     klagevedtakshistorikk: VedtattUtfall[];
     avsluttet: AvsluttKlageStatus;
 }

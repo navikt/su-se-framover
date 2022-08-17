@@ -3,6 +3,7 @@ import { formatISO } from 'date-fns';
 import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Fradrag } from '~src/types/Fradrag';
 import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
@@ -30,7 +31,6 @@ import {
     UnderkjentRevurdering,
     UtenlandsoppholdRequest,
 } from '~src/types/Revurdering';
-import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 

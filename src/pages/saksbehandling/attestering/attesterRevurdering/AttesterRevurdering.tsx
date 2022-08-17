@@ -16,12 +16,12 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
+import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import {
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
     TilbakekrevingsAvgjørelse,
 } from '~src/types/Revurdering';
-import { UnderkjennelseGrunn } from '~src/types/Søknadsbehandling';
 import {
     erGregulering,
     erInformasjonsRevurdering,
