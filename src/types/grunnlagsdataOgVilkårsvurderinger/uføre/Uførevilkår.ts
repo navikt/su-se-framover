@@ -22,3 +22,16 @@ export enum UføreResultat {
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
     HarUføresakTilBehandling = 'HarUføresakTilBehandling',
 }
+
+export interface UførevilkårRequest {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: UføreVurderingsperiodeRequest[];
+}
+
+export interface UføreVurderingsperiodeRequest {
+    periode: Periode<string>;
+    uføregrad: Nullable<number>;
+    forventetInntekt: Nullable<number>;
+    resultat: UføreResultat;
+}

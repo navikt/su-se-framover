@@ -5,10 +5,11 @@ import * as S from 'fp-ts/string';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { FastOppholdFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FastOppholdFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { lagreFastOppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
@@ -41,7 +42,7 @@ const schema = yup
 
 const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreFastOppholdVilkår] = useAsyncActionCreator(sakSlice.lagreFastOppholdVilkår);
+    const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
 
     const initialValues = {
         vurdering: props.behandling.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat ?? null,
@@ -58,7 +59,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             onSuccess();
             return;
         }
-        await lagreFastOppholdVilkår(
+        await lagre(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -68,6 +69,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         vurdering: values.vurdering!,
                     },
                 ],
+                behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             () => {
                 clearDraft();

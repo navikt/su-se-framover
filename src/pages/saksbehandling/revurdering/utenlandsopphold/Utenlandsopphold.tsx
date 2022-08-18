@@ -5,10 +5,11 @@ import { Button, Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
+import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { lagreUtenlandsopphold } from '~src/features/revurdering/revurderingActions';
+import { lagreUtenlandsopphold } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
@@ -80,7 +81,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         lagre(
             {
                 sakId: props.sakId,
-                revurderingId: props.revurdering.id,
+                behandlingId: props.revurdering.id,
                 utenlandsopphold: form.utenlandsopphold.map((vurdering) => ({
                     status: vurdering.status!,
                     periode: {
@@ -88,9 +89,10 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                         tilOgMed: toIsoDateOnlyString(sluttenAvMåneden(vurdering.periode.tilOgMed!)),
                     },
                 })),
+                behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if (res.feilmeldinger.length === 0) {
+                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
                     onSuccess();
                 }
             }
@@ -195,7 +197,9 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                 Ny periode for utenlandsopphold
                             </Button>
                             {RemoteData.isSuccess(status) && (
-                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                                <UtfallSomIkkeStøttes
+                                    feilmeldinger={(status.value as RevurderingOgFeilmeldinger).feilmeldinger}
+                                />
                             )}
                         </>
                     </FormWrapper>

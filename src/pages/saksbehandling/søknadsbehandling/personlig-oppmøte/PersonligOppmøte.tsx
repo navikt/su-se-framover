@@ -6,10 +6,11 @@ import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { PersonligOppmøteFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { lagrePersonligOppmøteVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -42,7 +43,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
     const navigate = useNavigate();
     const advarselRef = useRef<HTMLDivElement>(null);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagre] = useAsyncActionCreator(sakSlice.lagrePersonligOppmøteVilkår);
+    const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
     const initialValues = getInitialFormValues(props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte);
 
@@ -77,15 +78,17 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                         vurdering: personligOppmøteStatus,
                     },
                 ],
+                behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             (res) => {
+                const oppdatertSøknadsbehandling = res as Søknadsbehandling;
                 clearDraft();
-                if (erNoenVilkårVurdertUavklart(res.grunnlagsdataOgVilkårsvurderinger)) {
+                if (erNoenVilkårVurdertUavklart(oppdatertSøknadsbehandling.grunnlagsdataOgVilkårsvurderinger)) {
                     advarselRef.current?.focus();
                     return;
                 }
 
-                onSuccess(res);
+                onSuccess(oppdatertSøknadsbehandling);
             }
         );
     };

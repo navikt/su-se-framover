@@ -8,7 +8,7 @@ import { personligOppmøteÅrsakTekster } from '~src/typeMappinger/PersonligOppm
 import {
     PersonligOppmøteVilkår,
     PersonligOppmøteÅrsak,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { SøknadInnhold, Søknadstype } from '~src/types/Søknad';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 

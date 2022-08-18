@@ -13,6 +13,12 @@ export interface VurderingsperiodePersonligOppmøte {
     vurdering: PersonligOppmøteÅrsak;
 }
 
+export interface PersonligOppmøteVilkårRequest {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: PersonligOppmøteVurderingRequest[];
+}
+
 export interface PersonligOppmøteVurderingRequest {
     periode: Periode<string>;
     vurdering: PersonligOppmøteÅrsak;

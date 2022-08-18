@@ -5,10 +5,11 @@ import * as S from 'fp-ts/string';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { UtenlandsOppholdFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { lagreUtenlandsopphold } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
@@ -45,7 +46,7 @@ const schema = yup
 
 const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreUtenlandsopphold] = useAsyncActionCreator(sakSlice.lagreUtenlandsopphold);
+    const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
     const initialValues = {
         status: props.behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.vurderinger[0]?.status ?? null,
     };
@@ -69,17 +70,23 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        await lagreUtenlandsopphold(
+        await lagre(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                status: values.status!,
-                periode: {
-                    fraOgMed: props.behandling.stønadsperiode?.periode.fraOgMed ?? toIsoDateOnlyString(new Date()),
-                    tilOgMed:
-                        props.behandling.stønadsperiode?.periode.tilOgMed ??
-                        toIsoDateOnlyString(sluttenAvMåneden(new Date())),
-                },
+                utenlandsopphold: [
+                    {
+                        status: values.status!,
+                        periode: {
+                            fraOgMed:
+                                props.behandling.stønadsperiode?.periode.fraOgMed ?? toIsoDateOnlyString(new Date()),
+                            tilOgMed:
+                                props.behandling.stønadsperiode?.periode.tilOgMed ??
+                                toIsoDateOnlyString(sluttenAvMåneden(new Date())),
+                        },
+                    },
+                ],
+                behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             () => {
                 clearDraft();

@@ -1,4 +1,4 @@
-import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
+import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 
 export const personligOppmøteÅrsakTekster: { [key in PersonligOppmøteÅrsak]: string } = {
     [PersonligOppmøteÅrsak.MøttPersonlig]: 'Møtt personlig',

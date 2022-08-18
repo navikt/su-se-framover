@@ -12,6 +12,12 @@ export interface VurderingsperiodeInstitusjonsopphold {
     vurdering: Vilkårstatus;
 }
 
+export interface InstitusjonsoppholdVilkårRequest {
+    sakId: string;
+    behandlingId: string;
+    vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
+}
+
 export interface InstitusjonsoppholdVurderingRequest {
     periode: Periode<string>;
     vurdering: Vilkårstatus;

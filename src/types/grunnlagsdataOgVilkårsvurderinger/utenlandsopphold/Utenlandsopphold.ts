@@ -15,3 +15,9 @@ export enum Utenlandsoppholdstatus {
     SkalHoldeSegINorge = 'SkalHoldeSegINorge',
     Uavklart = 'Uavklart',
 }
+
+export interface UtenlandsoppholdRequest {
+    sakId: string;
+    behandlingId: string;
+    utenlandsopphold: Utenlandsperiode[];
+}

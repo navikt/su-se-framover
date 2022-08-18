@@ -6,13 +6,8 @@ import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/rev
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Fradrag } from '~src/types/Fradrag';
 import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
-import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
-import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
-import { PersonligOppmøteVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
-import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
 import {
     BosituasjonRequest,
@@ -29,7 +24,6 @@ import {
     SimulertRevurdering,
     StansAvYtelse,
     UnderkjentRevurdering,
-    UtenlandsoppholdRequest,
 } from '~src/types/Revurdering';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
@@ -272,35 +266,6 @@ export async function fortsettEtterForhåndsvarsel(
     });
 }
 
-export async function lagreUføregrunnlag(arg: {
-    sakId: string;
-    revurderingId: string;
-    vurderinger: Array<{
-        periode: Periode<string>;
-        uføregrad: Nullable<number>;
-        forventetInntekt: Nullable<number>;
-        resultat: UføreResultat;
-    }>;
-}) {
-    return apiClient<{ revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] }>({
-        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
-        method: 'POST',
-        body: { vurderinger: arg.vurderinger },
-    });
-}
-
-export async function lagreFlyktningvilkår(arg: {
-    vurderinger: FlyktningRequest[];
-    sakId: string;
-    revurderingId: string;
-}): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/flyktning`,
-        method: 'POST',
-        body: arg.vurderinger,
-    });
-}
-
 export async function lagreFastOppholdVilkår(arg: {
     vurderinger: FastOppholdVurderingRequest[];
     sakId: string;
@@ -308,33 +273,6 @@ export async function lagreFastOppholdVilkår(arg: {
 }): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/fastopphold`,
-        method: 'POST',
-        body: arg.vurderinger,
-    });
-}
-
-export async function lagreInstitusjonsoppholdVilkår(arg: {
-    vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
-    sakId: string;
-    revurderingId: string;
-}): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
-    console.log(arg.vurderingsperioder);
-    return apiClient({
-        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/institusjonsopphold`,
-        method: 'POST',
-        body: {
-            vurderingsperioder: arg.vurderingsperioder,
-        },
-    });
-}
-
-export async function lagrePersonligOppmøteVilkår(arg: {
-    vurderinger: PersonligOppmøteVurderingRequest[];
-    sakId: string;
-    revurderingId: string;
-}): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/personligoppmøte`,
         method: 'POST',
         body: arg.vurderinger,
     });
@@ -364,18 +302,6 @@ export async function lagreBosituasjonsgrunnlag(
     });
 }
 
-export async function lagreUtenlandsopphold(
-    data: UtenlandsoppholdRequest
-): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
-    return apiClient({
-        url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/utenlandsopphold`,
-        method: 'POST',
-        body: {
-            utenlandsopphold: data.utenlandsopphold,
-        },
-    });
-}
-
 export async function lagreOpplysningsplikt(
     data: OpplysningspliktRequest
 ): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
@@ -397,18 +323,6 @@ export async function lagreFormuegrunnlag(
         url: `/saker/${data.sakId}/revurderinger/${data.behandlingId}/formuegrunnlag`,
         method: 'POST',
         body: data.vurderinger,
-    });
-}
-
-export async function lagreLovligOppholdVilkår(
-    data: LovligOppholdRequest
-): Promise<ApiClientResult<{ revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] }>> {
-    return apiClient({
-        url: `/saker/${data.sakId}/revurderinger/${data.behandlingId}/lovligopphold`,
-        method: 'POST',
-        body: {
-            vurderinger: data.vurderinger,
-        },
     });
 }
 
