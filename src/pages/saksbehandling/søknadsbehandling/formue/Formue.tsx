@@ -28,6 +28,11 @@ import { FormueFaktablokk } from '~src/components/oppsummering/vilkårsOppsummer
 import { Personkort } from '~src/components/personkort/Personkort';
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import FormueForm from '~src/components/vilkårForms/formue/FormueForm';
+import {
+    FormueVilkårFormData,
+    nyFormuegrunnlagMedEllerUtenPeriode,
+} from '~src/components/vilkårForms/formue/FormueFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import personSlice from '~src/features/person/person.slice';
 import sakSliceActions, * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -43,6 +48,7 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { useAppDispatch } from '~src/redux/Store';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { removeSpaces } from '~src/utils/format/formatUtils';
+import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 import { showName } from '~src/utils/person/personUtils';
 import {
     getSenesteHalvGVerdi,
@@ -259,166 +265,198 @@ const Formue = (
     );
     const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormDataVerdier(watch.epsFormue));
 
+    const nyForm = useForm<FormueVilkårFormData>({
+        defaultValues: {
+            formue: [nyFormuegrunnlagMedEllerUtenPeriode()],
+        },
+    });
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <FormWrapper
-                        form={form}
-                        save={handleSave}
-                        savingState={combinedLagringsstatus}
-                        avsluttUrl={props.avsluttUrl}
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={props.nesteUrl}
-                    >
-                        <>
-                            <div className={styles.ektefellePartnerSamboer}>
-                                <Controller
-                                    control={form.control}
-                                    name="borSøkerMedEPS"
-                                    render={({ field, fieldState }) => (
-                                        <BooleanRadioGroup
-                                            legend={formatMessage('input.label.borSøkerMedEktefelle')}
-                                            error={fieldState.error?.message}
-                                            {...field}
-                                        />
-                                    )}
-                                />
-                                {watch.borSøkerMedEPS && (
-                                    <>
-                                        <div className={styles.fnrInputContainer}>
-                                            <Controller
-                                                control={form.control}
-                                                name="epsFnr"
-                                                render={({ field, fieldState }) => (
-                                                    <TextField
-                                                        id={field.name}
-                                                        label={formatMessage('input.label.ektefellesFødselsnummer')}
-                                                        className={styles.fnrInput}
-                                                        error={fieldState.error?.message}
-                                                        size="small"
-                                                        {...field}
-                                                        value={field.value ?? ''}
-                                                        onChange={(e) => field.onChange(removeSpaces(e.target.value))}
-                                                    />
-                                                )}
+                    <div>
+                        <FormueForm
+                            form={nyForm}
+                            minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
+                            onFormSubmit={handleSave}
+                            savingState={combinedLagringsstatus}
+                            søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
+                            begrensTilEnPeriode
+                            skalIkkeKunneVelgePeriode
+                            formuegrenser={props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser}
+                            eps={RemoteData.isSuccess(eps) ? eps.value : null}
+                            {...props}
+                        />
+                        <p>-----------------------------</p>
+                        <FormWrapper
+                            form={form}
+                            save={handleSave}
+                            savingState={combinedLagringsstatus}
+                            avsluttUrl={props.avsluttUrl}
+                            forrigeUrl={props.forrigeUrl}
+                            nesteUrl={props.nesteUrl}
+                        >
+                            <>
+                                <div className={styles.ektefellePartnerSamboer}>
+                                    <Controller
+                                        control={form.control}
+                                        name="borSøkerMedEPS"
+                                        render={({ field, fieldState }) => (
+                                            <BooleanRadioGroup
+                                                legend={formatMessage('input.label.borSøkerMedEktefelle')}
+                                                error={fieldState.error?.message}
+                                                {...field}
                                             />
-                                            <div className={styles.result}>
-                                                {pipe(
-                                                    eps,
-                                                    RemoteData.fold(
-                                                        () => null,
-                                                        () => <Loader />,
-                                                        (err) => (
-                                                            <Alert variant="error">
-                                                                {err?.statusCode === ErrorCode.Unauthorized ? (
-                                                                    <Modal
-                                                                        open={true}
-                                                                        onClose={() => {
-                                                                            return;
-                                                                        }}
-                                                                    >
-                                                                        <Modal.Content>
-                                                                            <div className={styles.modalInnhold}>
-                                                                                <Heading level="2" size="small" spacing>
-                                                                                    {formatMessage(
-                                                                                        'modal.skjerming.heading'
-                                                                                    )}
-                                                                                </Heading>
-                                                                                <BodyLong spacing>
-                                                                                    {formatMessage(
-                                                                                        'modal.skjerming.innhold',
-                                                                                        {
-                                                                                            navn: showName(
-                                                                                                props.søker.navn
-                                                                                            ),
-                                                                                            fnr: søknadInnhold
-                                                                                                .personopplysninger.fnr,
-                                                                                            b: (chunks) => (
-                                                                                                <b>{chunks}</b>
-                                                                                            ),
-                                                                                            // eslint-disable-next-line react/display-name
-                                                                                            br: () => <br />,
-                                                                                        }
-                                                                                    )}
-                                                                                </BodyLong>
-                                                                                {RemoteData.isFailure(
-                                                                                    lagreEpsGrunnlagSkjermetStatus
-                                                                                ) && (
-                                                                                    <ApiErrorAlert
-                                                                                        error={
-                                                                                            lagreEpsGrunnlagSkjermetStatus.error
-                                                                                        }
-                                                                                    />
-                                                                                )}
-                                                                                <Button
-                                                                                    variant="secondary"
-                                                                                    type="button"
-                                                                                    onClick={() =>
-                                                                                        handleEpsSkjermingModalContinueClick(
-                                                                                            form.getValues().epsFnr ??
-                                                                                                ''
-                                                                                        )
-                                                                                    }
-                                                                                >
-                                                                                    OK
-                                                                                    {RemoteData.isPending(
+                                        )}
+                                    />
+                                    {watch.borSøkerMedEPS && (
+                                        <>
+                                            <div className={styles.fnrInputContainer}>
+                                                <Controller
+                                                    control={form.control}
+                                                    name="epsFnr"
+                                                    render={({ field, fieldState }) => (
+                                                        <TextField
+                                                            id={field.name}
+                                                            label={formatMessage('input.label.ektefellesFødselsnummer')}
+                                                            className={styles.fnrInput}
+                                                            error={fieldState.error?.message}
+                                                            size="small"
+                                                            {...field}
+                                                            value={field.value ?? ''}
+                                                            onChange={(e) =>
+                                                                field.onChange(removeSpaces(e.target.value))
+                                                            }
+                                                        />
+                                                    )}
+                                                />
+                                                <div className={styles.result}>
+                                                    {pipe(
+                                                        eps,
+                                                        RemoteData.fold(
+                                                            () => null,
+                                                            () => <Loader />,
+                                                            (err) => (
+                                                                <Alert variant="error">
+                                                                    {err?.statusCode === ErrorCode.Unauthorized ? (
+                                                                        <Modal
+                                                                            open={true}
+                                                                            onClose={() => {
+                                                                                return;
+                                                                            }}
+                                                                        >
+                                                                            <Modal.Content>
+                                                                                <div className={styles.modalInnhold}>
+                                                                                    <Heading
+                                                                                        level="2"
+                                                                                        size="small"
+                                                                                        spacing
+                                                                                    >
+                                                                                        {formatMessage(
+                                                                                            'modal.skjerming.heading'
+                                                                                        )}
+                                                                                    </Heading>
+                                                                                    <BodyLong spacing>
+                                                                                        {formatMessage(
+                                                                                            'modal.skjerming.innhold',
+                                                                                            {
+                                                                                                navn: showName(
+                                                                                                    props.søker.navn
+                                                                                                ),
+                                                                                                fnr: søknadInnhold
+                                                                                                    .personopplysninger
+                                                                                                    .fnr,
+                                                                                                b: (chunks) => (
+                                                                                                    <b>{chunks}</b>
+                                                                                                ),
+                                                                                                // eslint-disable-next-line react/display-name
+                                                                                                br: () => <br />,
+                                                                                            }
+                                                                                        )}
+                                                                                    </BodyLong>
+                                                                                    {RemoteData.isFailure(
                                                                                         lagreEpsGrunnlagSkjermetStatus
-                                                                                    ) && <Loader />}
-                                                                                </Button>
-                                                                            </div>
-                                                                        </Modal.Content>
-                                                                    </Modal>
-                                                                ) : err?.statusCode === ErrorCode.NotFound ? (
-                                                                    formatMessage('feilmelding.ikkeFunnet')
-                                                                ) : (
-                                                                    formatMessage('feilmelding.ukjent')
-                                                                )}
-                                                            </Alert>
-                                                        ),
-                                                        (person) => <Personkort person={person} />
-                                                    )
-                                                )}
+                                                                                    ) && (
+                                                                                        <ApiErrorAlert
+                                                                                            error={
+                                                                                                lagreEpsGrunnlagSkjermetStatus.error
+                                                                                            }
+                                                                                        />
+                                                                                    )}
+                                                                                    <Button
+                                                                                        variant="secondary"
+                                                                                        type="button"
+                                                                                        onClick={() =>
+                                                                                            handleEpsSkjermingModalContinueClick(
+                                                                                                form.getValues()
+                                                                                                    .epsFnr ?? ''
+                                                                                            )
+                                                                                        }
+                                                                                    >
+                                                                                        OK
+                                                                                        {RemoteData.isPending(
+                                                                                            lagreEpsGrunnlagSkjermetStatus
+                                                                                        ) && <Loader />}
+                                                                                    </Button>
+                                                                                </div>
+                                                                            </Modal.Content>
+                                                                        </Modal>
+                                                                    ) : err?.statusCode === ErrorCode.NotFound ? (
+                                                                        formatMessage('feilmelding.ikkeFunnet')
+                                                                    ) : (
+                                                                        formatMessage('feilmelding.ukjent')
+                                                                    )}
+                                                                </Alert>
+                                                            ),
+                                                            (person) => <Personkort person={person} />
+                                                        )
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
+                                        </>
+                                    )}
+                                </div>
 
-                            <Accordion className={styles.formuePanelerContainer}>
-                                <FormuePanel
-                                    tilhører={'Søkers'}
-                                    sumFormue={søkersBekreftetFormue}
-                                    setBekreftetFormue={setSøkersBekreftetFormue}
-                                    watch={watch}
-                                    formController={form.control}
-                                    triggerValidation={form.trigger}
-                                />
-                                {watch.borSøkerMedEPS && (
+                                <Accordion className={styles.formuePanelerContainer}>
                                     <FormuePanel
-                                        tilhører={'Ektefelle/Samboers'}
-                                        sumFormue={epsBekreftetFormue}
-                                        setBekreftetFormue={setEPSBekreftetFormue}
+                                        tilhører={'Søkers'}
+                                        sumFormue={søkersBekreftetFormue}
+                                        setBekreftetFormue={setSøkersBekreftetFormue}
                                         watch={watch}
                                         formController={form.control}
                                         triggerValidation={form.trigger}
                                     />
-                                )}
-                            </Accordion>
+                                    {watch.borSøkerMedEPS && (
+                                        <FormuePanel
+                                            tilhører={'Ektefelle/Samboers'}
+                                            sumFormue={epsBekreftetFormue}
+                                            setBekreftetFormue={setEPSBekreftetFormue}
+                                            watch={watch}
+                                            formController={form.control}
+                                            triggerValidation={form.trigger}
+                                        />
+                                    )}
+                                </Accordion>
 
-                            <Formuestatus bekreftetFormue={totalFormue} erVilkårOppfylt={erVilkårOppfylt} />
+                                <Formuestatus bekreftetFormue={totalFormue} erVilkårOppfylt={erVilkårOppfylt} />
 
-                            <Controller
-                                control={form.control}
-                                name="måInnhenteMerInformasjon"
-                                render={({ field }) => (
-                                    <Checkbox className={styles.henteMerInfoCheckbox} {...field} checked={field.value}>
-                                        {formatMessage('checkbox.henteMerInfo')}
-                                    </Checkbox>
-                                )}
-                            />
-                        </>
-                    </FormWrapper>
+                                <Controller
+                                    control={form.control}
+                                    name="måInnhenteMerInformasjon"
+                                    render={({ field }) => (
+                                        <Checkbox
+                                            className={styles.henteMerInfoCheckbox}
+                                            {...field}
+                                            checked={field.value}
+                                        >
+                                            {formatMessage('checkbox.henteMerInfo')}
+                                        </Checkbox>
+                                    )}
+                                />
+                            </>
+                        </FormWrapper>
+                    </div>
                 ),
                 right: (
                     <FormueFaktablokk

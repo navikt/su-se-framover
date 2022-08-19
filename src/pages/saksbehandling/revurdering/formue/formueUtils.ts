@@ -21,7 +21,6 @@ export interface FormueFormData {
 }
 
 export interface FormueData {
-    epsFnr: Nullable<string>;
     periode: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> };
     søkersFormue: VerdierFormData;
     epsFormue: Nullable<VerdierFormData>;
@@ -49,7 +48,6 @@ const getTomFormueVerdier = (): VerdierFormData => {
 
 export const getTomFormueData = (periode?: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }): FormueData => {
     return {
-        epsFnr: null,
         periode: periode ?? { fraOgMed: null, tilOgMed: null },
         søkersFormue: getTomFormueVerdier(),
         epsFormue: null,
