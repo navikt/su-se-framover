@@ -45,13 +45,13 @@ export async function lagreFlyktningVilkår(arg: FlyktningVilkårRequest & { beh
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/flyktning`,
         method: 'POST',
-        body: { vurderinger: arg.vurderinger },
+        body: arg.vurderinger,
     });
 }
 
 export async function lagreLovligOppholdVilkår(arg: LovligOppholdRequest & { behandlingstype: Behandlingstype }) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/lovligOpphold`,
+        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/lovligopphold`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
     });
@@ -61,7 +61,7 @@ export async function lagreFastOppholdVilkår(arg: FastOppholdVilkårRequest & {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/fastopphold`,
         method: 'POST',
-        body: { vurderinger: arg.vurderinger },
+        body: arg.vurderinger,
     });
 }
 
@@ -79,7 +79,7 @@ export async function lagreUtenlandsopphold(arg: UtenlandsoppholdRequest & { beh
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/utenlandsopphold`,
         method: 'POST',
-        body: { utenlandsopphold: arg.utenlandsopphold },
+        body: { vurderinger: arg.utenlandsopphold },
     });
 }
 

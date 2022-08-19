@@ -567,7 +567,34 @@ export default createSlice({
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
+        builder.addCase(GrunnlagOgVilkårActions.lagreFlyktningVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
+        });
+
         builder.addCase(GrunnlagOgVilkårActions.lagreLovligOppholdVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
+        });
+
+        builder.addCase(GrunnlagOgVilkårActions.lagreFastOppholdVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
+        });
+
+        builder.addCase(GrunnlagOgVilkårActions.lagreInstitusjonsoppholdVilkår.fulfilled, (state, action) => {
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
+        });
+
+        builder.addCase(GrunnlagOgVilkårActions.lagreUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
+        });
+
+        /*
+        TODO - Formue trenger litt mer arbeid
+        builder.addCase(GrunnlagOgVilkårActions.lagreFormuegrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
+        });
+        */
+
+        builder.addCase(GrunnlagOgVilkårActions.lagrePersonligOppmøteVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
     },
