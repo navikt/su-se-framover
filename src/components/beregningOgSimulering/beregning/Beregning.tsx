@@ -6,12 +6,12 @@ import * as B from 'fp-ts/lib/boolean';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Person } from '~src/api/personApi';
-import { hentSkattemelding } from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import {
     FradragFormData,
@@ -21,17 +21,20 @@ import {
 import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import BeregningFaktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
+import { SkattemeldingFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/skatt/SkattegrunnlagFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useFeatureToggle } from '~src/lib/featureToggles';
 import { pipe } from '~src/lib/fp';
-import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
+import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { Behandlingsstatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/SøknadsbehandlingUtils';
@@ -83,13 +86,11 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
+    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     const [lagreFradragstatus, lagreFradrag] = useAsyncActionCreator(sakSlice.lagreFradrag);
     const [beregningStatus, beregn] = useAsyncActionCreator(sakSlice.startBeregning);
     const [simuleringStatus, simuler] = useAsyncActionCreator(sakSlice.startSimulering);
-
-    const [skattemeldingBruker, hentSkattemeldingBruker] = useApiCall(hentSkattemelding);
-    const [skattemeldingEPS, hentSkattemeldingEPS] = useApiCall(hentSkattemelding);
 
     const initialFormData = useMemo<FormData>(
         () =>
@@ -111,15 +112,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
             tom: DateUtils.parseIsoDateOnly(tom),
         };
     }, [props.behandling.stønadsperiode]);
-
-    useEffect(() => {
-        hentSkattemeldingBruker({ fnr: props.søker.fnr });
-        const bosituasjon = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger); // TODO ai: Støtte for kun 1 bosituasjon. Støtte fler i framtiden.
-
-        if (bosituasjon?.fnr) {
-            hentSkattemeldingEPS({ fnr: bosituasjon.fnr });
-        }
-    }, []);
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling) || stønadsperiode === null) {
         return <div>{formatMessage('beregning.behandlingErIkkeFerdig')}</div>;
@@ -357,11 +349,18 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                     </form>
                 ),
                 right: (
-                    <BeregningFaktablokk
-                        søknadInnhold={props.behandling.søknad.søknadInnhold}
-                        skattegrunnlagBruker={skattemeldingBruker}
-                        skattegrunnlagEPS={skattemeldingEPS}
-                    />
+                    <div>
+                        <BeregningFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />
+                        {skattemeldingToggle && (
+                            <SkattemeldingFaktablokk
+                                søkerFnr={props.søker.fnr}
+                                skalHenteSkattegrunnlagForEPS={
+                                    hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr
+                                }
+                                kategori={SkattegrunnlagKategori.INNTEKT}
+                            />
+                        )}
+                    </div>
                 ),
             }}
         </ToKolonner>

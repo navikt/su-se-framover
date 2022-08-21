@@ -20,7 +20,7 @@ import { NullablePeriode } from '~src/types/Periode';
 import messages from './multiPeriodeVelger-nb';
 import styles from './multiPeriodeVelger.module.less';
 
-type PartialName<T> = `${keyof T & string}.${number}`;
+export type PartialName<T> = `${keyof T & string}.${number}`;
 
 interface Props<T, U> {
     className?: string;

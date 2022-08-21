@@ -2,18 +2,15 @@ import { Alert, Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
-import { useFeatureToggle } from '~src/lib/featureToggles';
+import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårForms/formue/FormueFormUtils';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadInnhold } from '~src/types/Søknad';
 import { formatCurrency } from '~src/utils/format/formatUtils';
-import { regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
 import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
@@ -22,12 +19,9 @@ import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import * as styles from './faktablokker.module.less';
-import { FaktablokkProps, SkattegrunnlagApiProps } from './faktablokkUtils';
-import { SkattemeldingFaktablokk } from './skatt/SkattegrunnlagFaktablokk';
+import { FaktablokkProps } from './faktablokkUtils';
 
-type Props = FaktablokkProps & Partial<SkattegrunnlagApiProps>;
-export const FormueFaktablokk = (props: Props) => {
-    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
+export const FormueFaktablokk = (props: FaktablokkProps) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -68,13 +62,6 @@ export const FormueFaktablokk = (props: Props) => {
                           ]),
                 ]}
             />
-            {skattemeldingToggle && props.skattegrunnlagBruker && (
-                <SkattemeldingFaktablokk
-                    skattegrunnlagBruker={props.skattegrunnlagBruker}
-                    skattegrunnlagEPS={props.skattegrunnlagEPS}
-                    kategori={SkattegrunnlagKategori.FORMUE}
-                />
-            )}
         </div>
     );
 };
@@ -233,10 +220,12 @@ export const FormueVilkårsblokk = (props: {
         if (!props.formue) {
             return 0;
         }
-        const søkersFormueFraSøknad = regnUtFormueVerdier(props.formue.vurderinger[0]?.grunnlag.søkersFormue ?? null);
+        const søkersFormueFraSøknad = regnUtFormuegrunnlagVerdier(
+            props.formue.vurderinger[0]?.grunnlag.søkersFormue ?? null
+        );
 
         if (props.ektefelle.fnr && props.formue.vurderinger[0]?.grunnlag.epsFormue) {
-            return søkersFormueFraSøknad + regnUtFormueVerdier(props.formue.vurderinger[0].grunnlag.epsFormue);
+            return søkersFormueFraSøknad + regnUtFormuegrunnlagVerdier(props.formue.vurderinger[0].grunnlag.epsFormue);
         }
 
         return søkersFormueFraSøknad;
@@ -287,13 +276,13 @@ export const FormueVilkårsblokk = (props: {
                                 },
                                 FaktaSpacing,
                                 {
-                                    tittel: formatMessage('input.label.borSøkerMedEktefelle'),
+                                    tittel: formatMessage('formue.label.borSøkerMedEktefelle'),
                                     verdi: props.ektefelle.fnr !== null ? 'Ja' : 'Nei',
                                 },
                                 ...(props.ektefelle.fnr
                                     ? [
                                           {
-                                              tittel: formatMessage('input.label.ektefellesFødselsnummer'),
+                                              tittel: formatMessage('formue.label.ektefellesFødselsnummer'),
                                               verdi: props.ektefelle.fnr,
                                           },
                                       ]

@@ -31,7 +31,7 @@ function setup() {
             defaultTargetOptions: {
                 shouldScopeHoist: false,
                 shouldOptimize: false,
-                sourceMaps: true,
+                sourceMaps: false,
                 isLibrary: false,
                 engines: {
                     browsers: ['> 0.5%, last 2 versions, not dead'],

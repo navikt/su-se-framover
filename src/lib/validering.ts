@@ -1,8 +1,11 @@
+import * as DateFns from 'date-fns';
 import { FieldError, FieldErrors } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { FeiloppsummeringFeil } from '~src/components/feiloppsummering/Feiloppsummering';
 import { NullablePeriode } from '~src/types/Periode';
+
+import { Nullable } from './types';
 
 function label(data: Partial<yup.TestMessageParams>) {
     return data.label ?? 'Feltet';
@@ -14,10 +17,33 @@ export const validateStringAsPositiveNumber = yup
     .moreThan(0, 'Feltet må være et positivt tall høyere enn 0')
     .typeError('Feltet må være et tall') as unknown as yup.Schema<string>;
 
-export const validateDate = yup
+export const validerAtNullablePeriodeErUtfylt = yup
     .object<NullablePeriode>({
         fraOgMed: yup.date().required().typeError('Dato må fylles inn!'),
         tilOgMed: yup.date().required().typeError('Dato må fylles inn!'),
+    })
+    .required();
+
+export const validerPeriodeTomEtterFom = yup
+    .object<NullablePeriode>({
+        fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
+        tilOgMed: yup
+            .date()
+            .required()
+            .typeError('Feltet må fylles ut')
+            .test('etterFom', 'Til-og-med kan ikke være før fra-og-med', function (value) {
+                const fom = this.parent.fraOgMed as Nullable<Date>;
+                if (value && fom) {
+                    return !DateFns.isBefore(value, fom);
+                }
+                return true;
+            })
+            .test('slutten av måned', 'Til og med må være siste dagen i måneden', function (value) {
+                if (value && DateFns.isLastDayOfMonth(value)) {
+                    return true;
+                }
+                return false;
+            }),
     })
     .required();
 

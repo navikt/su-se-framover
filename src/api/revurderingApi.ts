@@ -7,6 +7,7 @@ import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Fradrag } from '~src/types/Fradrag';
 import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
+import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
@@ -15,7 +16,6 @@ import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uf
 import { Periode } from '~src/types/Periode';
 import {
     BosituasjonRequest,
-    FormuegrunnlagRequest,
     Gjenopptak,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
@@ -391,12 +391,12 @@ export async function lagreOpplysningsplikt(
 }
 
 export async function lagreFormuegrunnlag(
-    data: FormuegrunnlagRequest
+    data: FormueVilkårRequest
 ): Promise<ApiClientResult<{ revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
-        url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/formuegrunnlag`,
+        url: `/saker/${data.sakId}/revurderinger/${data.behandlingId}/formuegrunnlag`,
         method: 'POST',
-        body: data.formue,
+        body: data.vurderinger,
     });
 }
 

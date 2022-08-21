@@ -1,19 +1,19 @@
-import { FormueVerdier } from '~src/types/Behandlingsinformasjon';
-import { kalkulerFormueFraSøknad, regnUtFormueVerdier } from '~src/utils/søknadsbehandling/formue/formueUtils';
 import {
-    regnUtFormDataVerdier,
-    VerdierFormData,
-} from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+    FormuegrunnlagVerdierFormData,
+    regnUtFormuegrunnlagVerdier,
+} from '~src/components/vilkårForms/formue/FormueFormUtils';
+import { FormuegrunnlagVerdier } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
+import { kalkulerFormueFraSøknad } from '~src/utils/søknadsbehandling/formue/formueUtils';
 
 describe('kalkulation for formue', () => {
-    const formue: VerdierFormData = {
-        verdiPåBolig: '1000',
-        verdiPåEiendom: '1000',
-        verdiPåKjøretøy: '1000',
-        innskuddsbeløp: '1000',
+    const formue: FormuegrunnlagVerdierFormData = {
+        verdiIkkePrimærbolig: '1000',
+        verdiEiendommer: '1000',
+        verdiKjøretøy: '1000',
+        innskudd: '1000',
         verdipapir: '1000',
-        stårNoenIGjeldTilDeg: '1000',
-        kontanterOver1000: '1000',
+        pengerSkyldt: '1000',
+        kontanter: '1000',
         depositumskonto: '1000',
     };
 
@@ -32,15 +32,15 @@ describe('kalkulation for formue', () => {
     };
 
     it('utregning av formue skal trekke fra depositumskonto', () => {
-        expect(regnUtFormDataVerdier(formue)).toBe(6000);
+        expect(regnUtFormuegrunnlagVerdier(formue)).toBe(6000);
     });
 
     it('total formue kan ikke bli negativ', () => {
-        const formueMedHøyDepositumskonto: VerdierFormData = {
+        const formueMedHøyDepositumskonto: FormuegrunnlagVerdierFormData = {
             ...formue,
             depositumskonto: '100000000',
         };
-        expect(regnUtFormDataVerdier(formueMedHøyDepositumskonto)).toBe(6000);
+        expect(regnUtFormuegrunnlagVerdier(formueMedHøyDepositumskonto)).toBe(6000);
     });
 
     it('utregning av formue fra søknad skal trekke fra depositumskonto', () => {
@@ -57,17 +57,17 @@ describe('kalkulation for formue', () => {
 
     it('trekking av depositumskonto fra innskudd kan ikke bli negativ', () => {
         const f = {
-            verdiPåBolig: '0',
-            verdiPåEiendom: '0',
-            verdiPåKjøretøy: '0',
-            innskuddsbeløp: '0',
+            verdiIkkePrimærbolig: '0',
+            verdiEiendommer: '0',
+            verdiKjøretøy: '0',
+            innskudd: '0',
             verdipapir: '0',
-            stårNoenIGjeldTilDeg: '0',
-            kontanterOver1000: '0',
+            pengerSkyldt: '0',
+            kontanter: '0',
             depositumskonto: '2000',
         };
 
-        expect(regnUtFormDataVerdier(f)).toBe(0);
+        expect(regnUtFormuegrunnlagVerdier(f)).toBe(0);
     });
 
     it('trekking av depositumskonto fra innskudd kan ikke bli negativ', () => {
@@ -89,7 +89,7 @@ describe('kalkulation for formue', () => {
     });
 
     it('regner ut formueVerdier', () => {
-        const verdier: FormueVerdier = {
+        const verdier: FormuegrunnlagVerdier = {
             verdiIkkePrimærbolig: 1000,
             verdiEiendommer: 1000,
             verdiKjøretøy: 1000,
@@ -100,6 +100,6 @@ describe('kalkulation for formue', () => {
             depositumskonto: 1000,
         };
 
-        expect(regnUtFormueVerdier(verdier)).toBe(6000);
+        expect(regnUtFormuegrunnlagVerdier(verdier)).toBe(6000);
     });
 });

@@ -1,19 +1,13 @@
 import React from 'react';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
-import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useI18n } from '~src/lib/i18n';
-import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import { FaktablokkProps, SkattegrunnlagApiProps } from './faktablokkUtils';
-import { SkattemeldingFaktablokk } from './skatt/SkattegrunnlagFaktablokk';
+import { FaktablokkProps } from './faktablokkUtils';
 
-type Props = FaktablokkProps & Partial<SkattegrunnlagApiProps>;
-const BeregningFaktablokk = (props: Props) => {
-    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
+const BeregningFaktablokk = (props: FaktablokkProps) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -128,14 +122,6 @@ const BeregningFaktablokk = (props: Props) => {
                             ),
                         },
                     ]}
-                />
-            )}
-
-            {skattemeldingToggle && props.skattegrunnlagBruker && skattemeldingToggle && props.skattegrunnlagBruker && (
-                <SkattemeldingFaktablokk
-                    skattegrunnlagBruker={props.skattegrunnlagBruker}
-                    skattegrunnlagEPS={props.skattegrunnlagEPS}
-                    kategori={SkattegrunnlagKategori.INNTEKT}
                 />
             )}
         </div>

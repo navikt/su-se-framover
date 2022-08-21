@@ -1,34 +1,54 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Accordion, BodyShort, Button, Label, TextField } from '@navikt/ds-react';
-import React, { useMemo, useState } from 'react';
+import { RemoteSuccess } from '@devexperts/remote-data-ts';
+import { Accordion, BodyShort, Button, Checkbox, Label, Loader, TextField } from '@navikt/ds-react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Control, Controller, UseFormTrigger, useWatch } from 'react-hook-form';
 
-import { Person } from '~src/api/personApi';
+import { ApiError } from '~src/api/apiClient';
+import * as PersonApi from '~src/api/personApi';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import { Personkort } from '~src/components/personkort/Personkort';
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
+import { VilkårApiResult } from '~src/features/revurdering/revurderingActions';
+import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
-import { erFormueVilkårOppfylt } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
+import {
+    Bosituasjon,
+    bosituasjonPåDato,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Formuegrenser } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { regnUtFormDataVerdier } from '~src/utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import messages from '../VilkårForms-nb';
-import { VilkårFormProps } from '../VilkårFormUtils';
+import { VilkårFormProps, VilkårFormSaveState } from '../VilkårFormUtils';
 
 import styles from './formueForm.module.less';
-import { FormueVilkårFormData, nyFormuegrunnlagMedEllerUtenPeriode, verdierId } from './FormueFormUtils';
+import {
+    FormueVilkårFormData,
+    nyFormuegrunnlagMedEllerUtenPeriode,
+    FormueFormDataer,
+    verdierId,
+    erFormueVilkårOppfylt,
+    regnUtFormuegrunnlagVerdier,
+} from './FormueFormUtils';
 
-interface Props extends VilkårFormProps<FormueVilkårFormData> {
+//Omitter savingState, slik at vi kan override den
+interface Props extends Omit<VilkårFormProps<FormueVilkårFormData>, 'savingState' | 'onFormSubmit'> {
+    onFormSubmit<T extends FormueFormDataer>(values: T, onSuccess: () => void): void;
+    savingState:
+        | VilkårFormSaveState
+        | RemoteData.RemoteData<ApiError | undefined, [Søknadsbehandling, Søknadsbehandling]>;
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
     formuegrenser: Formuegrenser[];
-    eps: Nullable<Person>;
+    bosituasjonsgrunnlag: Bosituasjon[];
 }
 
 const FormueForm = (props: Props) => {
+    const { formatMessage } = useI18n({ messages });
     return (
         <FormWrapper
             form={props.form}
@@ -49,20 +69,50 @@ const FormueForm = (props: Props) => {
                         maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
                     }}
                     getChild={(nameAndIdx: `formue.${number}`) => (
-                        <FormueGrunnlagsperiode
-                            nameAndIdx={nameAndIdx}
-                            eps={props.eps}
-                            control={props.form.control}
-                            triggerValidation={props.form.trigger}
-                            formuegrenser={props.formuegrenser}
-                        />
+                        <>
+                            <FormueGrunnlagsperiode
+                                nameAndIdx={nameAndIdx}
+                                bosituasjonsgrunnlag={props.bosituasjonsgrunnlag}
+                                control={props.form.control}
+                                triggerValidation={props.form.trigger}
+                                formuegrenser={props.formuegrenser}
+                            />
+                            {props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling' && (
+                                <Controller
+                                    control={props.form.control}
+                                    name={`${nameAndIdx}.måInnhenteMerInformasjon`}
+                                    render={({ field }) => (
+                                        <Checkbox
+                                            className={styles.henteMerInfoCheckbox}
+                                            {...field}
+                                            checked={field.value}
+                                        >
+                                            {formatMessage('formue.checkbox.henteMerInfo')}
+                                        </Checkbox>
+                                    )}
+                                />
+                            )}
+                        </>
                     )}
                     begrensTilEnPeriode={props.begrensTilEnPeriode}
                     skalIkkeKunneVelgePeriode={props.skalIkkeKunneVelgePeriode}
                 />
-                {RemoteData.isSuccess(props.savingState) && 'feilmeldinger' in props.savingState.value && (
-                    <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />
-                )}
+
+                {/* Fordi formue ved søkadsbehandling skal være så spesiell, blir vanskelig å gjøre formet generisk. */}
+                {/* Vi vet dermed hva retur typene på Api-kallene ved revurdering er alltid, og dermed bare gjør et kasting helvete */}
+                {props.søknadsbehandlingEllerRevurdering === 'Revurdering' &&
+                    RemoteData.isSuccess(props.savingState as ApiResult<VilkårApiResult>) &&
+                    'feilmeldinger' in
+                        (props.savingState as unknown as RemoteSuccess<ApiResult<VilkårApiResult>>).value && (
+                        <UtfallSomIkkeStøttes
+                            feilmeldinger={
+                                (
+                                    (props.savingState as unknown as RemoteSuccess<ApiResult<VilkårApiResult>>)
+                                        .value as unknown as VilkårApiResult
+                                ).feilmeldinger
+                            }
+                        />
+                    )}
             </>
         </FormWrapper>
     );
@@ -72,7 +122,7 @@ export default FormueForm;
 
 const FormueGrunnlagsperiode = (props: {
     nameAndIdx: `formue.${number}`;
-    eps: Nullable<Person>;
+    bosituasjonsgrunnlag: Bosituasjon[];
     formuegrenser: Formuegrenser[];
     control: Control<FormueVilkårFormData>;
     triggerValidation: UseFormTrigger<FormueVilkårFormData>;
@@ -82,18 +132,34 @@ const FormueGrunnlagsperiode = (props: {
     const watch = useWatch({ control: props.control, name: props.nameAndIdx });
 
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
-        regnUtFormDataVerdier(watch.søkersFormue)
+        regnUtFormuegrunnlagVerdier(watch.søkersFormue)
     );
-    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormDataVerdier(watch.epsFormue));
+    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormuegrunnlagVerdier(watch.epsFormue));
+
+    const bosituasjon = watch.periode.fraOgMed
+        ? bosituasjonPåDato(props.bosituasjonsgrunnlag, toStringDateOrNull(watch.periode.fraOgMed)!)
+        : undefined;
+
+    const [epsStatus, hentEPS, resetToInitial] = useApiCall(PersonApi.fetchPerson);
+
+    useEffect(() => {
+        if (bosituasjon?.fnr) {
+            hentEPS(bosituasjon.fnr);
+        } else {
+            resetToInitial();
+        }
+    }, [bosituasjon?.fnr]);
 
     return (
         <div>
-            {props.eps && (
+            {RemoteData.isPending(epsStatus) && <Loader />}
+            {RemoteData.isSuccess(epsStatus) && (
                 <div className={styles.personkortContainer}>
                     <Label>{formatMessage('formue.personkort.eps')}</Label>
-                    <Personkort person={props.eps} />
+                    <Personkort person={epsStatus.value} />
                 </div>
             )}
+
             <Accordion className={styles.accordion}>
                 <FormuegrunnlagPanel
                     nameAndIdx={`${props.nameAndIdx}`}
@@ -103,7 +169,7 @@ const FormueGrunnlagsperiode = (props: {
                     control={props.control}
                     triggerValidation={props.triggerValidation}
                 />
-                {props.eps && (
+                {bosituasjon?.fnr && (
                     <FormuegrunnlagPanel
                         nameAndIdx={`${props.nameAndIdx}`}
                         tilhører={'Eps'}
@@ -145,7 +211,7 @@ const FormuegrunnlagPanel = (props: {
     const watch = useWatch({ control: props.control, name: navn });
 
     const utregnetFormue = useMemo(() => {
-        return regnUtFormDataVerdier(watch);
+        return regnUtFormuegrunnlagVerdier(watch);
     }, [watch]);
 
     const handleBekreftClick = () => {

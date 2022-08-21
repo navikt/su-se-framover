@@ -3,7 +3,7 @@ import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 
 import { eqNullable, Nullable } from '~src/lib/types';
-import yup, { validateDate } from '~src/lib/validering';
+import yup, { validerAtNullablePeriodeErUtfylt } from '~src/lib/validering';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import {
     FlyktningVilkår,
@@ -82,7 +82,7 @@ export const flyktningFormSchema = yup.object<FlyktningVilkårFormData>({
         .array<VurderingsperioderFlyktningFormData>(
             yup
                 .object<VurderingsperioderFlyktningFormData>({
-                    periode: validateDate,
+                    periode: validerAtNullablePeriodeErUtfylt,
                     resultat: yup.string().nullable().defined().oneOf(Object.values(Vilkårstatus)).required(),
                 })
                 .required()

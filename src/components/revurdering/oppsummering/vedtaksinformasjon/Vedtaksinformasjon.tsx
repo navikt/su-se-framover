@@ -7,6 +7,7 @@ import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fa
 import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
+import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårForms/formue/FormueFormUtils';
 import { useI18n } from '~src/lib/i18n';
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
@@ -26,7 +27,6 @@ import {
     utenlandsoppholdErlik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
-import { regnUtFormuegrunnlag } from '~src/utils/revurdering/formue/RevurderFormueUtils';
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
@@ -91,8 +91,8 @@ const Bosituasjonblokk = (props: { nyeData: Bosituasjon[]; gamleData: Bosituasjo
 const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår }) => (
     <ul>
         {props.formuevilkår.vurderinger.map((vurdering) => {
-            const søkersFormue = regnUtFormuegrunnlag(vurdering.grunnlag.søkersFormue);
-            const epsFormue = regnUtFormuegrunnlag(vurdering.grunnlag.epsFormue);
+            const søkersFormue = regnUtFormuegrunnlagVerdier(vurdering.grunnlag.søkersFormue);
+            const epsFormue = regnUtFormuegrunnlagVerdier(vurdering.grunnlag.epsFormue);
             const bekreftetFormue = søkersFormue + epsFormue;
 
             return (

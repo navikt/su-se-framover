@@ -1,5 +1,5 @@
 import { Nullable } from '~src/lib/types';
-import yup, { validateDate } from '~src/lib/validering';
+import yup, { validerAtNullablePeriodeErUtfylt } from '~src/lib/validering';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 
 export interface InstitusjonsoppholdVilkårFormData {
@@ -27,7 +27,7 @@ export const institusjonsoppholdFormSchema = yup.object<InstitusjonsoppholdVilk�
         .array<VurderingsperiodeInstitusjonsoppholdFormData>(
             yup
                 .object<VurderingsperiodeInstitusjonsoppholdFormData>({
-                    periode: validateDate,
+                    periode: validerAtNullablePeriodeErUtfylt,
                     resultat: yup
                         .string()
                         .nullable()

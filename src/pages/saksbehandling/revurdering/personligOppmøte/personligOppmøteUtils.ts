@@ -1,5 +1,5 @@
 import { Nullable } from '~src/lib/types';
-import yup, { validateDate } from '~src/lib/validering';
+import yup, { validerAtNullablePeriodeErUtfylt } from '~src/lib/validering';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
 
 export interface PersonligOppmøteVilkårFormData {
@@ -44,7 +44,7 @@ export const personligOppmøteFormSchema = yup.object<PersonligOppmøteVilkårFo
         .array<VurderingsperiodePersonligOppmøteFormData>(
             yup
                 .object<VurderingsperiodePersonligOppmøteFormData>({
-                    periode: validateDate,
+                    periode: validerAtNullablePeriodeErUtfylt,
                     møttPersonlig: yup.boolean().required(),
                     årsakForManglendePersonligOppmøte: yup
                         .string<PersonligOppmøteÅrsak>()
