@@ -11,3 +11,9 @@ export interface FamiliegjenforeningVurdering {
     periode: Periode;
     resultat: Vilkårstatus;
 }
+
+export interface Familiegjenforeningrequest {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: Array<{ status: Vilkårstatus }>;
+}

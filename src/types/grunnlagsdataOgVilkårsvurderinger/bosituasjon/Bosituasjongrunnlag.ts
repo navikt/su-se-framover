@@ -101,3 +101,9 @@ export interface UfullstendigBosituasjonRequest<T extends Nullable<string> = Nul
     behandlingId: string;
     epsFnr: T;
 }
+
+export interface FullstendigBosituasjonRequest {
+    sakId: string;
+    behandlingId: string;
+    bosituasjon: string;
+}

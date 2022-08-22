@@ -30,3 +30,9 @@ export enum Aldersresultat {
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
     HarAlderssakTilBehandling = 'HarAlderssakTilBehandling',
 }
+
+export interface AlderspensjonVilkårRequest {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: Aldersvurdering[];
+}

@@ -110,3 +110,9 @@ export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
             return false;
     }
 };
+
+export interface Fradragsgrunnlagrequest {
+    sakId: string;
+    behandlingId: string;
+    fradrag: Fradrag[];
+}

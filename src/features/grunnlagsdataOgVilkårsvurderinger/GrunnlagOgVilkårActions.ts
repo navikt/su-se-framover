@@ -2,10 +2,13 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
 import * as GrunnlagOgVilkårApi from '~src/api/GrunnlagOgVilkårApi';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
-import { Fradrag } from '~src/types/Fradrag';
-import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
-import { UfullstendigBosituasjonRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Fradragsgrunnlagrequest } from '~src/types/Fradrag';
+import { AlderspensjonVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import {
+    FullstendigBosituasjonRequest,
+    UfullstendigBosituasjonRequest,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Familiegjenforeningrequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
 import { FastOppholdVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
 import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
@@ -32,11 +35,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
 
 export const lagreAlderspensjongrunnlag = createAsyncThunk<
     Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        vurderinger: Aldersvurdering[];
-    },
+    AlderspensjonVilkårRequest,
     { rejectValue: ApiError }
 >('behandling/pensjon/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreAldersgrunnlag(arg);
@@ -48,11 +47,7 @@ export const lagreAlderspensjongrunnlag = createAsyncThunk<
 
 export const lagreFamilieforeninggrunnlag = createAsyncThunk<
     Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        vurderinger: Array<{ status: Vilkårstatus }>;
-    },
+    Familiegjenforeningrequest,
     { rejectValue: ApiError }
 >('behandling/familieforening/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFamilieforeningsgrunnlag(arg);
@@ -160,11 +155,7 @@ export const lagrePersonligOppmøteVilkår = createAsyncThunk<
 
 export const lagreFullstendigBosituasjon = createAsyncThunk<
     Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        bosituasjon: string;
-    },
+    FullstendigBosituasjonRequest,
     { rejectValue: ApiError }
 >('behandling/grunnlag/bosituasjon/fullfør', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFullstendigBosituasjon(arg);
@@ -176,9 +167,7 @@ export const lagreFullstendigBosituasjon = createAsyncThunk<
 
 export const lagreFradragsgrunnlag = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    { sakId: string; behandlingId: string; fradrag: Fradrag[] } & {
-        behandlingstype: GrunnlagOgVilkårApi.Behandlingstype;
-    },
+    Fradragsgrunnlagrequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
     { rejectValue: ApiError }
 >('beregning/fradrag/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFradragsgrunnlag(arg);
