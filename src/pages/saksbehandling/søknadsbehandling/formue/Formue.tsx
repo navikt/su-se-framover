@@ -15,8 +15,8 @@ import {
     FormueVilkårOgDelvisBosituasjonFormData,
     FormueFormDataer,
     formueFormSchema,
-    formuegrunnlagVerdierTilRequest,
-    getInitialValuesForFormueVilkårOgDelvisBosituasjon,
+    getInitialFormueVilkårOgDelvisBosituasjon,
+    formueVilkårFormTilRequest,
 } from '~src/components/vilkårForms/formue/FormueFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -36,23 +36,16 @@ import sharedI18n from '../sharedI18n-nb';
 
 import messages from './formue-nb';
 
-const Formue = (
-    props: VilkårsvurderingBaseProps & {
-        søker: personApi.Person;
-    }
-) => {
+const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-
-    const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(sakSlice.lagreFormuegrunnlag);
     const [lagreEpsGrunnlagStatus, lagreEpsGrunnlag] = useAsyncActionCreator(sakSlice.lagreEpsGrunnlag);
-
     const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
-
     const combinedLagringsstatus = RemoteData.combine(lagreFormueStatus, lagreEpsGrunnlagStatus);
+    const [eps, fetchEps, resetEpsToInitial] = useApiCall(personApi.fetchPerson);
 
-    const initialValues = getInitialValuesForFormueVilkårOgDelvisBosituasjon(
-        søknadInnhold,
+    const initialValues = getInitialFormueVilkårOgDelvisBosituasjon(
+        props.behandling.søknad.søknadInnhold,
         props.behandling.grunnlagsdataOgVilkårsvurderinger,
         lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)
     );
@@ -72,17 +65,8 @@ const Formue = (
 
     useDraftFormSubscribe(form.watch);
 
-    const [eps, fetchEps, resetEpsToInitial] = useApiCall(personApi.fetchPerson);
-
     const handleSave = async (values: FormueVilkårOgDelvisBosituasjonFormData, onSuccess: () => void) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
-
-        const formueValues = {
-            periode: props.behandling.stønadsperiode!.periode,
-            måInnhenteMerInformasjon: values.formue[0].måInnhenteMerInformasjon,
-            søkersFormue: formuegrunnlagVerdierTilRequest(values.formue[0].søkersFormue!),
-            epsFormue: values.borSøkerMedEPS ? formuegrunnlagVerdierTilRequest(values.formue[0].epsFormue!) : null,
-        };
 
         await lagreEpsGrunnlag(
             {
@@ -90,26 +74,21 @@ const Formue = (
                 behandlingId: props.behandling.id,
                 epsFnr: values.epsFnr,
             },
-            () => {
-                return lagreFormue(
-                    {
-                        sakId: props.sakId,
-                        behandlingId: props.behandling.id,
-                        vurderinger: [formueValues],
-                    },
+            () =>
+                lagreFormue(
+                    formueVilkårFormTilRequest(props.sakId, props.behandling.id, values as FormueVilkårFormData),
                     () => {
                         clearDraft();
                         onSuccess();
                     }
-                );
-            }
+                )
         );
     };
 
     const formDataTilMidlertidigKonstruertBosituasjon = (
         values: FormueVilkårOgDelvisBosituasjonFormData
-    ): UfullstendigBosituasjon => {
-        return {
+    ): UfullstendigBosituasjon =>
+        ({
             sats: null,
             type: values.borSøkerMedEPS
                 ? BosituasjonTyper.UFULLSTENDIG_HAR_EPS
@@ -118,8 +97,7 @@ const Formue = (
             fnr: values.borSøkerMedEPS ? watch.epsFnr : null,
             delerBolig: null,
             ektemakeEllerSamboerUførFlyktning: null,
-        } as UfullstendigBosituasjon;
-    };
+        } as UfullstendigBosituasjon);
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>

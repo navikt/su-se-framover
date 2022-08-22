@@ -50,15 +50,7 @@ interface Props extends Omit<VilkårFormProps<FormueVilkårFormData>, 'savingSta
 const FormueForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <FormWrapper
-            form={props.form}
-            save={props.onFormSubmit}
-            savingState={props.savingState}
-            avsluttUrl={props.avsluttUrl}
-            forrigeUrl={props.forrigeUrl}
-            nesteUrl={props.nesteUrl}
-            onTilbakeClickOverride={props.onTilbakeClickOverride}
-        >
+        <FormWrapper save={props.onFormSubmit} onTilbakeClickOverride={props.onTilbakeClickOverride} {...props}>
             <>
                 <MultiPeriodeVelger
                     name="formue"
@@ -94,8 +86,7 @@ const FormueForm = (props: Props) => {
                             )}
                         </>
                     )}
-                    begrensTilEnPeriode={props.begrensTilEnPeriode}
-                    skalIkkeKunneVelgePeriode={props.skalIkkeKunneVelgePeriode}
+                    {...props}
                 />
 
                 {/* Fordi formue ved søkadsbehandling skal være så spesiell, blir vanskelig å gjøre formet generisk. */}
@@ -128,22 +119,20 @@ const FormueGrunnlagsperiode = (props: {
     triggerValidation: UseFormTrigger<FormueVilkårFormData>;
 }) => {
     const { formatMessage } = useI18n({ messages });
-
     const watch = useWatch({ control: props.control, name: props.nameAndIdx });
+    const [epsStatus, hentEPS, resetToInitial] = useApiCall(PersonApi.fetchPerson);
 
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
         regnUtFormuegrunnlagVerdier(watch.søkersFormue)
     );
     const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormuegrunnlagVerdier(watch.epsFormue));
 
-    const bosituasjon = watch.periode.fraOgMed
-        ? bosituasjonPåDato(props.bosituasjonsgrunnlag, toStringDateOrNull(watch.periode.fraOgMed)!)
-        : undefined;
-
-    const [epsStatus, hentEPS, resetToInitial] = useApiCall(PersonApi.fetchPerson);
+    const bosituasjon =
+        watch.periode.fraOgMed &&
+        bosituasjonPåDato(props.bosituasjonsgrunnlag, toStringDateOrNull(watch.periode.fraOgMed)!);
 
     useEffect(() => {
-        if (bosituasjon?.fnr) {
+        if (bosituasjon?.fnr?.length === 11) {
             hentEPS(bosituasjon.fnr);
         } else {
             resetToInitial();
@@ -269,9 +258,8 @@ const FormueGrunnlagInputs = (props: {
                             control={props.control}
                             render={({ field, fieldState }) => (
                                 <TextField
-                                    id={field.name}
-                                    label={formatMessage(`formue.grunnlag.verdi.${id}`)}
                                     {...field}
+                                    label={formatMessage(`formue.grunnlag.verdi.${id}`)}
                                     error={fieldState?.error?.message}
                                     inputMode="numeric"
                                     pattern="[0-9]*"

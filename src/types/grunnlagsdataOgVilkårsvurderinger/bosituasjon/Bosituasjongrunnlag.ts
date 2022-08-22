@@ -1,3 +1,5 @@
+import { Nullable } from '~src/lib/types';
+
 import { Periode } from '../../Periode';
 
 export enum BosituasjonTyper {
@@ -93,3 +95,9 @@ export const bosituasjonHarEps = (bosituasjon: Bosituasjon) =>
         BosituasjonTyper.EPS_UFØR_FLYKTNING,
         BosituasjonTyper.UFULLSTENDIG_HAR_EPS,
     ].includes(bosituasjon.type);
+
+export interface UfullstendigBosituasjonRequest<T extends Nullable<string> = Nullable<string>> {
+    sakId: string;
+    behandlingId: string;
+    epsFnr: T;
+}

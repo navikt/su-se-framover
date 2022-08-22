@@ -72,35 +72,31 @@ export const nyFormueVilkår = () => ({ formue: [nyFormuegrunnlagMedEllerUtenPer
 export const formueVilkårTilFormData = (
     formueVilkår: FormueVilkår,
     bosituasjonsgrunnlag: Bosituasjon[]
-): FormueVilkårFormData => {
-    return {
-        formue: formueVilkår.vurderinger.map((formue) => {
-            const epsFnr = bosituasjonPåDato(bosituasjonsgrunnlag, formue.periode.fraOgMed)?.fnr;
-            return {
-                epsFnr: epsFnr ?? null,
-                periode: {
-                    fraOgMed: new Date(formue.periode.fraOgMed),
-                    tilOgMed: new Date(formue.periode.tilOgMed),
-                },
-                søkersFormue:
-                    formuegrunnlagVerdierTilVerdierFormDataEllerNy(formue.grunnlag.søkersFormue) ??
-                    lagTomFormuegrunnlagVerdier(),
-                epsFormue: epsFnr ? formuegrunnlagVerdierTilVerdierFormDataEllerNy(formue.grunnlag.epsFormue) : null,
-                måInnhenteMerInformasjon: formue.resultat === 'MåInnhenteMerInformasjon',
-            };
-        }),
-    };
-};
+): FormueVilkårFormData => ({
+    formue: formueVilkår.vurderinger.map((formue) => {
+        const epsFnr = bosituasjonPåDato(bosituasjonsgrunnlag, formue.periode.fraOgMed)?.fnr;
+        return {
+            epsFnr: epsFnr ?? null,
+            periode: {
+                fraOgMed: new Date(formue.periode.fraOgMed),
+                tilOgMed: new Date(formue.periode.tilOgMed),
+            },
+            søkersFormue:
+                formuegrunnlagVerdierTilVerdierFormDataEllerNy(formue.grunnlag.søkersFormue) ??
+                lagTomFormuegrunnlagVerdier(),
+            epsFormue: epsFnr ? formuegrunnlagVerdierTilVerdierFormDataEllerNy(formue.grunnlag.epsFormue) : null,
+            måInnhenteMerInformasjon: formue.resultat === 'MåInnhenteMerInformasjon',
+        };
+    }),
+});
 
-export const nyFormuegrunnlagMedEllerUtenPeriode = (periode?: NullablePeriode): FormuegrunnlagFormData => {
-    return {
-        epsFnr: null,
-        periode: periode ?? lagTomPeriode(),
-        søkersFormue: lagTomFormuegrunnlagVerdier(),
-        epsFormue: null,
-        måInnhenteMerInformasjon: false,
-    };
-};
+export const nyFormuegrunnlagMedEllerUtenPeriode = (periode?: NullablePeriode): FormuegrunnlagFormData => ({
+    epsFnr: null,
+    periode: periode ?? lagTomPeriode(),
+    søkersFormue: lagTomFormuegrunnlagVerdier(),
+    epsFormue: null,
+    måInnhenteMerInformasjon: false,
+});
 
 export const formuegrunnlagVerdierTilVerdierFormDataEllerNy = (
     verdier: Nullable<FormuegrunnlagVerdier>
@@ -121,18 +117,16 @@ export const formuegrunnlagVerdierTilVerdierFormDataEllerNy = (
     };
 };
 
-export const lagTomFormuegrunnlagVerdier = (): FormuegrunnlagVerdierFormData => {
-    return {
-        verdiIkkePrimærbolig: '0',
-        verdiEiendommer: '0',
-        verdiKjøretøy: '0',
-        innskudd: '0',
-        verdipapir: '0',
-        kontanter: '0',
-        pengerSkyldt: '0',
-        depositumskonto: '0',
-    };
-};
+export const lagTomFormuegrunnlagVerdier = (): FormuegrunnlagVerdierFormData => ({
+    verdiIkkePrimærbolig: '0',
+    verdiEiendommer: '0',
+    verdiKjøretøy: '0',
+    innskudd: '0',
+    verdipapir: '0',
+    kontanter: '0',
+    pengerSkyldt: '0',
+    depositumskonto: '0',
+});
 
 export const erFormueVilkårOppfylt = (
     søkersBekreftetFormue: number,
@@ -145,33 +139,29 @@ export const formueVilkårFormTilRequest = (
     sakId: string,
     behandlingId: string,
     f: FormueVilkårFormData
-): FormueVilkårRequest => {
-    return {
-        sakId: sakId,
-        behandlingId: behandlingId,
-        vurderinger: f.formue.map((grunnlag) => ({
-            periode: periodeTilIsoDateString(grunnlag.periode!),
-            søkersFormue: formuegrunnlagVerdierTilRequest(grunnlag.søkersFormue),
-            epsFormue: grunnlag.epsFormue ? formuegrunnlagVerdierTilRequest(grunnlag.epsFormue) : null,
-            måInnhenteMerInformasjon: grunnlag.måInnhenteMerInformasjon,
-        })),
-    };
-};
+): FormueVilkårRequest => ({
+    sakId: sakId,
+    behandlingId: behandlingId,
+    vurderinger: f.formue.map((grunnlag) => ({
+        periode: periodeTilIsoDateString(grunnlag.periode!),
+        søkersFormue: formuegrunnlagVerdierTilRequest(grunnlag.søkersFormue),
+        epsFormue: grunnlag.epsFormue ? formuegrunnlagVerdierTilRequest(grunnlag.epsFormue) : null,
+        måInnhenteMerInformasjon: grunnlag.måInnhenteMerInformasjon,
+    })),
+});
 
 export const formuegrunnlagVerdierTilRequest = (
     verdier: FormuegrunnlagVerdierFormData
-): FormuegrunnlagVerdierRequest => {
-    return {
-        verdiIkkePrimærbolig: Number.parseInt(verdier.verdiIkkePrimærbolig, 0),
-        verdiEiendommer: Number.parseInt(verdier.verdiEiendommer, 0),
-        verdiKjøretøy: Number.parseInt(verdier.verdiKjøretøy, 0),
-        innskudd: Number.parseInt(verdier.innskudd, 0),
-        verdipapir: Number.parseInt(verdier.verdipapir, 0),
-        kontanter: Number.parseInt(verdier.kontanter, 0),
-        pengerSkyldt: Number.parseInt(verdier.pengerSkyldt, 0),
-        depositumskonto: Number.parseInt(verdier.depositumskonto, 0),
-    };
-};
+): FormuegrunnlagVerdierRequest => ({
+    verdiIkkePrimærbolig: Number.parseInt(verdier.verdiIkkePrimærbolig, 0),
+    verdiEiendommer: Number.parseInt(verdier.verdiEiendommer, 0),
+    verdiKjøretøy: Number.parseInt(verdier.verdiKjøretøy, 0),
+    innskudd: Number.parseInt(verdier.innskudd, 0),
+    verdipapir: Number.parseInt(verdier.verdipapir, 0),
+    kontanter: Number.parseInt(verdier.kontanter, 0),
+    pengerSkyldt: Number.parseInt(verdier.pengerSkyldt, 0),
+    depositumskonto: Number.parseInt(verdier.depositumskonto, 0),
+});
 
 //hvis fraOgMed ikke er utfyllt, eller vi ikke finner en match for fraOgMed,
 //bruker vi den høyeste g-verdien som default
@@ -234,7 +224,23 @@ export const regnUtFormuegrunnlagVerdier = (
     return summerFormue(formue);
 };
 
-export function getInitialValuesForFormueVilkårOgDelvisBosituasjon(
+const getInitialVerdierFraGrunnlagEllerSøknad = (
+    verdier: Nullable<FormuegrunnlagVerdier>,
+    søknadsFormue: Nullable<SøknadInnhold['formue']>
+): FormuegrunnlagVerdierFormData => ({
+    verdiIkkePrimærbolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
+    verdiEiendommer: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
+    verdiKjøretøy: verdier?.verdiKjøretøy?.toString() ?? (søknadsFormue?.kjøretøy?.length ? '' : 0).toString(),
+    innskudd: (
+        verdier?.innskudd ?? (søknadsFormue?.innskuddsBeløp ?? 0) + (søknadsFormue?.depositumsBeløp ?? 0)
+    ).toString(),
+    verdipapir: (verdier?.verdipapir ?? søknadsFormue?.verdipapirBeløp ?? 0).toString(),
+    pengerSkyldt: (verdier?.pengerSkyldt ?? søknadsFormue?.skylderNoenMegPengerBeløp ?? 0).toString(),
+    kontanter: (verdier?.kontanter ?? søknadsFormue?.kontanterBeløp ?? 0).toString(),
+    depositumskonto: (verdier?.depositumskonto ?? søknadsFormue?.depositumsBeløp ?? 0).toString(),
+});
+
+export function getInitialFormueVilkårOgDelvisBosituasjon(
     søknadsInnhold: SøknadInnhold,
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger,
     stønadsperiode: Periode
@@ -258,24 +264,6 @@ export function getInitialValuesForFormueVilkårOgDelvisBosituasjon(
                 måInnhenteMerInformasjon: grunnlagsdata.formue?.resultat === FormueStatus.MåInnhenteMerInformasjon,
             },
         ],
-    };
-}
-
-function getInitialVerdierFraGrunnlagEllerSøknad(
-    verdier: Nullable<FormuegrunnlagVerdier>,
-    søknadsFormue: Nullable<SøknadInnhold['formue']>
-): FormuegrunnlagVerdierFormData {
-    return {
-        verdiIkkePrimærbolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
-        verdiEiendommer: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
-        verdiKjøretøy: verdier?.verdiKjøretøy?.toString() ?? (søknadsFormue?.kjøretøy?.length ? '' : 0).toString(),
-        innskudd: (
-            verdier?.innskudd ?? (søknadsFormue?.innskuddsBeløp ?? 0) + (søknadsFormue?.depositumsBeløp ?? 0)
-        ).toString(),
-        verdipapir: (verdier?.verdipapir ?? søknadsFormue?.verdipapirBeløp ?? 0).toString(),
-        pengerSkyldt: (verdier?.pengerSkyldt ?? søknadsFormue?.skylderNoenMegPengerBeløp ?? 0).toString(),
-        kontanter: (verdier?.kontanter ?? søknadsFormue?.kontanterBeløp ?? 0).toString(),
-        depositumskonto: (verdier?.depositumskonto ?? søknadsFormue?.depositumsBeløp ?? 0).toString(),
     };
 }
 

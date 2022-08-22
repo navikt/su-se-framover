@@ -19,7 +19,7 @@ import { SøknadInnhold } from '~src/types/Søknad';
 import { removeSpaces } from '~src/utils/format/formatUtils';
 import { showName } from '~src/utils/person/personUtils';
 
-import { FormueVilkårOgDelvisBosituasjonFormData, lagTomFormuegrunnlagVerdier } from '../formue/FormueFormUtils';
+import { FormueVilkårOgDelvisBosituasjonFormData } from '../formue/FormueFormUtils';
 import messages from '../VilkårForms-nb';
 
 import styles from './bosituasjonFormIntegrertMedFormue.module.less';
@@ -35,7 +35,6 @@ const BosituasjonFormIntegrertMedFormue = (props: {
     form: UseFormReturn<FormueVilkårOgDelvisBosituasjonFormData>;
 }) => {
     const { formatMessage } = useI18n({ messages });
-
     const watch = props.form.watch();
 
     useEffect(() => {
@@ -60,7 +59,7 @@ const BosituasjonFormIntegrertMedFormue = (props: {
                             onChange={(val) => {
                                 field.onChange(val);
                                 props.form.setValue('epsFnr', null);
-                                props.form.setValue('formue.0.epsFormue', lagTomFormuegrunnlagVerdier());
+                                props.form.setValue('formue.0.epsFormue', null);
                                 props.resetEpsToInitial();
                             }}
                         />
@@ -75,24 +74,16 @@ const BosituasjonFormIntegrertMedFormue = (props: {
                             name="epsFnr"
                             render={({ field, fieldState }) => (
                                 <TextField
-                                    id={field.name}
+                                    {...field}
                                     label={formatMessage('formueOgBosituasjon.input.ektefellesFødselsnummer')}
                                     error={fieldState.error?.message}
                                     size="small"
-                                    {...field}
                                     value={field.value ?? ''}
                                     onChange={(e) => field.onChange(removeSpaces(e.target.value))}
                                 />
                             )}
                         />
-                        <EpsSkjermingModalOgPersonkort
-                            sakId={props.sakId}
-                            søknadsbehandlingId={props.søknadsbehandlingId}
-                            form={props.form}
-                            eps={props.eps}
-                            søknadInnhold={props.søknadInnhold}
-                            søker={props.søker}
-                        />
+                        <EpsSkjermingModalOgPersonkort {...props} />
                     </div>
                 </>
             )}
