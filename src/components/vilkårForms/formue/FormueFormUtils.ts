@@ -302,10 +302,7 @@ export const formueFormSchema = yup.object<FormueFormDataer>({
                         .object<FormuegrunnlagVerdierFormData>()
                         .defined()
                         .when('epsFnr', {
-                            is: (value) => {
-                                console.log(value?.length === 11);
-                                return value?.length === 11;
-                            },
+                            is: (value) => value?.length === 11,
                             then: verdierFormDataValidering,
                         }),
                     måInnhenteMerInformasjon: yup.boolean(),
