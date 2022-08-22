@@ -33,6 +33,8 @@ import {
     verdierId,
     erFormueVilkårOppfylt,
     regnUtFormuegrunnlagVerdier,
+    FormuegrunnlagVerdierFormData,
+    lagTomFormuegrunnlagVerdier,
 } from './FormueFormUtils';
 
 //Omitter savingState, slik at vi kan override den
@@ -68,6 +70,8 @@ const FormueForm = (props: Props) => {
                                 control={props.form.control}
                                 triggerValidation={props.form.trigger}
                                 formuegrenser={props.formuegrenser}
+                                setEpsValues={(epsValues) => props.form.setValue(`${nameAndIdx}.epsFormue`, epsValues)}
+                                setEpsFnr={(epsFnr) => props.form.setValue(`${nameAndIdx}.epsFnr`, epsFnr)}
                             />
                             {props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling' && (
                                 <Controller
@@ -117,6 +121,8 @@ const FormueGrunnlagsperiode = (props: {
     formuegrenser: Formuegrenser[];
     control: Control<FormueVilkårFormData>;
     triggerValidation: UseFormTrigger<FormueVilkårFormData>;
+    setEpsValues: (epsValues: FormuegrunnlagVerdierFormData) => void;
+    setEpsFnr: (epsFnr: string) => void;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const watch = useWatch({ control: props.control, name: props.nameAndIdx });
@@ -133,7 +139,10 @@ const FormueGrunnlagsperiode = (props: {
 
     useEffect(() => {
         if (bosituasjon?.fnr?.length === 11) {
-            hentEPS(bosituasjon.fnr);
+            hentEPS(bosituasjon.fnr, (eps) => {
+                props.setEpsValues(lagTomFormuegrunnlagVerdier());
+                props.setEpsFnr(eps.fnr);
+            });
         } else {
             resetToInitial();
         }

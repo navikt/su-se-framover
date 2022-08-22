@@ -59,6 +59,7 @@ const BosituasjonFormIntegrertMedFormue = (props: {
                             onChange={(val) => {
                                 field.onChange(val);
                                 props.form.setValue('epsFnr', null);
+                                props.form.setValue('formue.0.epsFnr', null);
                                 props.form.setValue('formue.0.epsFormue', null);
                                 props.resetEpsToInitial();
                             }}
