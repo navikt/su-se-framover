@@ -5,7 +5,6 @@ import React from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import * as GrunnlagOgVilkårActions from 'src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -19,6 +18,7 @@ import {
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Fradragoppsummering from '~src/components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
