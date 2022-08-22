@@ -9,7 +9,7 @@ import { Control, Controller, FieldErrors, useFieldArray, useForm, UseFormWatch 
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup, PeriodeForm } from '~src/components/formElements/FormElements';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { lagreBosituasjonsgrunnlag } from '~src/features/revurdering/revurderingActions';
+import { lagreBosituasjonsgrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';

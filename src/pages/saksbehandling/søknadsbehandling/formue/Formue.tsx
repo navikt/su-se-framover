@@ -4,6 +4,7 @@ import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import * as personApi from '~src/api/personApi';
 import { FormueFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { SkattemeldingFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/skatt/SkattegrunnlagFaktablokk';
@@ -19,7 +20,7 @@ import {
     formueVilkårFormTilRequest,
 } from '~src/components/vilkårForms/formue/FormueFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -38,8 +39,10 @@ import messages from './formue-nb';
 
 const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(sakSlice.lagreFormuegrunnlag);
-    const [lagreEpsGrunnlagStatus, lagreEpsGrunnlag] = useAsyncActionCreator(sakSlice.lagreEpsGrunnlag);
+    const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFormuegrunnlag);
+    const [lagreEpsGrunnlagStatus, lagreEpsGrunnlag] = useAsyncActionCreator(
+        GrunnlagOgVilkårActions.lagreUfullstendigBosituasjon
+    );
     const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
     const combinedLagringsstatus = RemoteData.combine(lagreFormueStatus, lagreEpsGrunnlagStatus);
     const [eps, fetchEps, resetEpsToInitial] = useApiCall(personApi.fetchPerson);
@@ -76,7 +79,10 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }
             },
             () =>
                 lagreFormue(
-                    formueVilkårFormTilRequest(props.sakId, props.behandling.id, values as FormueVilkårFormData),
+                    {
+                        ...formueVilkårFormTilRequest(props.sakId, props.behandling.id, values as FormueVilkårFormData),
+                        behandlingstype: Behandlingstype.Søknadsbehandling,
+                    },
                     () => {
                         clearDraft();
                         onSuccess();

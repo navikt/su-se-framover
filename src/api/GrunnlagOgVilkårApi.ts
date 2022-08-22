@@ -1,11 +1,21 @@
+import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { Fradrag } from '~src/types/Fradrag';
+import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { UfullstendigBosituasjonRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { FastOppholdVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
+import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { InstitusjonsoppholdVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { PersonligOppmøteVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { UførevilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { UtenlandsoppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { InformasjonsRevurdering, OpprettetRevurdering } from '~src/types/Revurdering';
+import {
+    BosituasjonRequest,
+    InformasjonsRevurdering,
+    OpplysningspliktRequest,
+    OpprettetRevurdering,
+} from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ErrorMessage } from './apiClient';
@@ -36,6 +46,30 @@ const mapBehandlingstypeTilriktigUrl = (sakId: string, behandlingId: string, b: 
 export async function lagreUføregrunnlag(arg: UførevilkårRequest & { behandlingstype: Behandlingstype }) {
     return apiClient<VilkårOgGrunnlagApiResult<OpprettetRevurdering>>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/uføregrunnlag`,
+        method: 'POST',
+        body: { vurderinger: arg.vurderinger },
+    });
+}
+
+export async function lagreAldersgrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: Aldersvurdering[];
+}) {
+    return apiClient<Søknadsbehandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/pensjon`,
+        method: 'POST',
+        body: arg.vurderinger,
+    });
+}
+
+export async function lagreFamilieforeningsgrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+    vurderinger: Array<{ status: Vilkårstatus }>;
+}) {
+    return apiClient<Søknadsbehandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/familiegjenforening`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
     });
@@ -83,16 +117,23 @@ export async function lagreUtenlandsopphold(arg: UtenlandsoppholdRequest & { beh
     });
 }
 
-/*
-TODO - Formue trenger litt mer arbeid
-export async function lagreFormuegrunnlag(arg: FormuegrunnlagRequest & { behandlingstype: Behandlingstype }) {
+export async function lagreUfullstendigBosituasjon(arg: UfullstendigBosituasjonRequest) {
+    return apiClient<Søknadsbehandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps`,
+        method: 'POST',
+        body: {
+            epsFnr: arg.epsFnr,
+        },
+    });
+}
+
+export async function lagreFormuegrunnlag(arg: FormueVilkårRequest & { behandlingstype: Behandlingstype }) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/formuegrunnlag`,
         method: 'POST',
-        body: { formue: arg.formue },
+        body: arg.vurderinger,
     });
 }
-*/
 
 export async function lagrePersonligOppmøteVilkår(
     arg: PersonligOppmøteVilkårRequest & { behandlingstype: Behandlingstype }
@@ -101,5 +142,51 @@ export async function lagrePersonligOppmøteVilkår(
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/personligoppmøte`,
         method: 'POST',
         body: arg.vurderinger,
+    });
+}
+
+export async function lagreFullstendigBosituasjon(arg: { sakId: string; behandlingId: string; bosituasjon: string }) {
+    return apiClient<Søknadsbehandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/fullfør`,
+        method: 'POST',
+        body: {
+            bosituasjon: arg.bosituasjon,
+        },
+    });
+}
+
+export async function lagreFradragsgrunnlag(
+    arg: {
+        sakId: string;
+        behandlingId: string;
+        fradrag: Fradrag[];
+    } & { behandlingstype: Behandlingstype }
+) {
+    return apiClient<VilkårOgGrunnlagApiResult>({
+        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/grunnlag/fradrag`,
+        method: 'POST',
+        body: {
+            fradrag: arg.fradrag,
+        },
+    });
+}
+
+export async function lagreBosituasjonsgrunnlag(data: BosituasjonRequest) {
+    return apiClient<RevurderingOgFeilmeldinger>({
+        url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/bosituasjongrunnlag`,
+        method: 'POST',
+        body: data,
+    });
+}
+
+export async function lagreOpplysningsplikt(data: OpplysningspliktRequest) {
+    return apiClient<RevurderingOgFeilmeldinger>({
+        url: `/vilkar/opplysningsplikt`,
+        method: 'POST',
+        body: {
+            id: data.id,
+            type: data.type,
+            data: data.data,
+        },
     });
 }

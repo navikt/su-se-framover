@@ -1,11 +1,10 @@
 import { UseFormReturn } from 'react-hook-form';
 
-import { VilkårApiResult } from '~src/features/revurdering/revurderingActions';
+import { VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
 import { ApiResult } from '~src/lib/hooks';
 import { Periode } from '~src/types/Periode';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
-export type VilkårFormSaveState = ApiResult<VilkårApiResult | Søknadsbehandling>;
+export type VilkårFormSaveState = ApiResult<VilkårOgGrunnlagApiResult>;
 
 export interface VilkårFormProps<FormData> {
     form: UseFormReturn<FormData>;

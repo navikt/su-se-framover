@@ -15,12 +15,8 @@ import { pipe } from '~src/lib/fp';
 import { Nullable } from '~src/lib/types';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
-import { Fradrag } from '~src/types/Fradrag';
-import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { UfullstendigBosituasjonRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Klage } from '~src/types/Klage';
 import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
@@ -106,61 +102,6 @@ export const fetchBehandling = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const lagreAlderspensjongrunnlag = createAsyncThunk<
-    Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        vurderinger: Aldersvurdering[];
-    },
-    { rejectValue: ApiError }
->('behandling/grunnlag/pensjon', async (arg, thunkApi) => {
-    const res = await behandlingApi.lagreAldersgrunnlag(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreFamilieforeninggrunnlag = createAsyncThunk<
-    Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        vurderinger: Array<{ status: Vilkårstatus }>;
-    },
-    { rejectValue: ApiError }
->('behandling/grunnlag/familieforening', async (arg, thunkApi) => {
-    const res = await behandlingApi.lagreFamilieforeningsgrunnlag(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreFormuegrunnlag = createAsyncThunk<Søknadsbehandling, FormueVilkårRequest, { rejectValue: ApiError }>(
-    'behandling/grunnlag/formue',
-    async (arg, thunkApi) => {
-        const res = await behandlingApi.lagreFormuegrunnlag(arg);
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
-    }
-);
-
-export const lagreEpsGrunnlag = createAsyncThunk<
-    Søknadsbehandling,
-    UfullstendigBosituasjonRequest,
-    { rejectValue: ApiError }
->('behandling/grunnlag/bosituasjon/eps', async (arg, thunkApi) => {
-    const res = await behandlingApi.lagreGrunnlagEps(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 export const lagreEpsGrunnlagSkjermet = createAsyncThunk<
     unknown,
     UfullstendigBosituasjonRequest<string>,
@@ -173,40 +114,12 @@ export const lagreEpsGrunnlagSkjermet = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const lagreBosituasjonGrunnlag = createAsyncThunk<
-    Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        bosituasjon: string;
-    },
-    { rejectValue: ApiError }
->('behandling/grunnlag/bosituasjon/fullfør', async (arg, thunkApi) => {
-    const res = await behandlingApi.lagreGrunnlagBosituasjon(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 export const startBeregning = createAsyncThunk<
     Søknadsbehandling,
     { sakId: string; behandlingId: string; begrunnelse: Nullable<string> },
     { rejectValue: ApiError }
 >('beregning/start', async ({ sakId, behandlingId, begrunnelse }, thunkApi) => {
     const res = await behandlingApi.startBeregning(sakId, behandlingId, { begrunnelse });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreFradrag = createAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; behandlingId: string; fradrag: Fradrag[] },
-    { rejectValue: ApiError }
->('beregning/grunnlag/fradrag', async ({ sakId, behandlingId, fradrag }, thunkApi) => {
-    const res = await behandlingApi.lagreFradragsgrunnlag(sakId, behandlingId, fradrag);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -360,10 +273,6 @@ export default createSlice({
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        builder.addCase(lagreEpsGrunnlag.fulfilled, (state, action) => {
-            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
-        });
-
         builder.addCase(startBeregning.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
@@ -392,56 +301,6 @@ export default createSlice({
             state.sak = RemoteData.success(action.payload);
         });
 
-        builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
-        });
-
-        builder.addCase(lagreFormuegrunnlag.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
-        });
-
-        builder.addCase(lagreAlderspensjongrunnlag.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
-        });
-
-        builder.addCase(lagreFamilieforeninggrunnlag.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
-        });
-
-        builder.addCase(lagreFradrag.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
-        });
-
         builder.addCase(revurderingActions.opprettRevurdering.fulfilled, (state, action) => {
             state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload);
         });
@@ -456,22 +315,6 @@ export default createSlice({
 
         builder.addCase(revurderingActions.gjenoppta.fulfilled, (state, action) => {
             state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload);
-        });
-
-        builder.addCase(revurderingActions.lagreFradragsgrunnlag.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
-        });
-
-        builder.addCase(revurderingActions.lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
-        });
-
-        builder.addCase(revurderingActions.lagreFormuegrunnlag.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
-        });
-
-        builder.addCase(revurderingActions.lagreOpplysningsplikt.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
         builder.addCase(revurderingActions.beregnOgSimuler.fulfilled, (state, action) => {
@@ -587,12 +430,9 @@ export default createSlice({
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
-        /*
-        TODO - Formue trenger litt mer arbeid
         builder.addCase(GrunnlagOgVilkårActions.lagreFormuegrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
-        */
 
         builder.addCase(GrunnlagOgVilkårActions.lagrePersonligOppmøteVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);

@@ -6,16 +6,11 @@ import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Fradrag } from '~src/types/Fradrag';
-import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~src/types/Periode';
 import {
-    BosituasjonRequest,
     Gjenopptak,
     InformasjonSomRevurderes,
-    InformasjonsRevurdering,
     IverksattRevurdering,
-    OpplysningspliktRequest,
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
     ResultatEtterForhåndsvarselRequest,
@@ -25,8 +20,6 @@ import {
     StansAvYtelse,
     UnderkjentRevurdering,
 } from '~src/types/Revurdering';
-
-export type VilkårApiResult = { revurdering: Revurdering; feilmeldinger: ErrorMessage[] };
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
@@ -252,67 +245,6 @@ export const fortsettEtterForhåndsvarsel = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/fortsettEtterForhåndsvarsel', async (args, thunkApi) => {
     const res = await revurderingApi.fortsettEtterForhåndsvarsel(args);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreFradragsgrunnlag = createAsyncThunk<
-    { revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] },
-    {
-        sakId: string;
-        revurderingId: string;
-        fradrag: Fradrag[];
-    },
-    { rejectValue: ApiError }
->('revurdering/grunnlag/fradrag/lagre', async (arg, thunkApi) => {
-    const res = await revurderingApi.lagreFradragsgrunnlag(arg.sakId, arg.revurderingId, arg.fradrag);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreBosituasjonsgrunnlag = createAsyncThunk<
-    { revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] },
-    BosituasjonRequest,
-    { rejectValue: ApiError }
->('revurdering/grunnlag/bosituasjon/lagre', async (arg, thunkApi) => {
-    const res = await revurderingApi.lagreBosituasjonsgrunnlag({
-        sakId: arg.sakId,
-        revurderingId: arg.revurderingId,
-        bosituasjoner: arg.bosituasjoner,
-    });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreOpplysningsplikt = createAsyncThunk<
-    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
-    OpplysningspliktRequest,
-    { rejectValue: ApiError }
->('revurdering/grunnlag/opplysningsplikt/lagre', async (arg, thunkApi) => {
-    const res = await revurderingApi.lagreOpplysningsplikt({
-        id: arg.id,
-        type: arg.type,
-        data: arg.data,
-    });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-//TODO - gjør endringer for å kunne bruke fra GrunnlagOgVilkårApi.ts
-export const lagreFormuegrunnlag = createAsyncThunk<
-    { revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] },
-    FormueVilkårRequest,
-    { rejectValue: ApiError }
->('revurdering/grunnlag/formue/lagre', async (arg, thunkApi) => {
-    const res = await revurderingApi.lagreFormuegrunnlag(arg);
     if (res.status === 'ok') {
         return res.data;
     }

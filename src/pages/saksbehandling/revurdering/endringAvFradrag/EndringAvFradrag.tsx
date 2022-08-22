@@ -5,7 +5,9 @@ import React from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import * as GrunnlagOgVilkårActions from 'src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
+import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import fradragMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
 import { fradragTilFradragFormData } from '~src/components/beregningOgSimulering/beregning/beregningUtils';
@@ -17,7 +19,6 @@ import {
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Fradragoppsummering from '~src/components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { lagreFradragsgrunnlag } from '~src/features/revurdering/revurderingActions';
 import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
@@ -74,9 +75,9 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
         setSavingState(RemoteData.pending);
 
         const res = await dispatch(
-            lagreFradragsgrunnlag({
+            GrunnlagOgVilkårActions.lagreFradragsgrunnlag({
                 sakId: props.sakId,
-                revurderingId: props.revurdering.id,
+                behandlingId: props.revurdering.id,
                 fradrag: values.fradrag.map((f: FradragFormData) => ({
                     periode: {
                         fraOgMed: DateUtils.toIsoDateOnlyString(
@@ -100,15 +101,17 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                         : null,
                     tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
                 })),
+                behandlingstype: Behandlingstype.Revurdering,
             })
         );
 
-        if (lagreFradragsgrunnlag.fulfilled.match(res)) {
-            setSavingState(RemoteData.success(res.payload));
-            if (res.payload.feilmeldinger.length === 0) {
+        if (GrunnlagOgVilkårActions.lagreFradragsgrunnlag.fulfilled.match(res)) {
+            const castedPayload = res.payload as RevurderingOgFeilmeldinger;
+            setSavingState(RemoteData.success(castedPayload));
+            if (castedPayload.feilmeldinger.length === 0) {
                 onSuccess();
             }
-        } else if (lagreFradragsgrunnlag.rejected.match(res)) {
+        } else if (GrunnlagOgVilkårActions.lagreFradragsgrunnlag.rejected.match(res)) {
             setSavingState(RemoteData.failure(res.payload!));
         }
     };

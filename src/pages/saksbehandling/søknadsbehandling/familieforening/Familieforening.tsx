@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FamilieforeningBlokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FamilieforeningFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { FamilieforeningForm } from '~src/pages/saksbehandling/steg/familieforening/FamilieforeningForm';
@@ -17,7 +17,7 @@ const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: S
     const { formatMessage } = useI18n({ messages });
 
     const [lagreFamilieforeninggrunnlagStatus, lagreFamilieforeninggrunnlag] = useAsyncActionCreator(
-        sakSlice.lagreFamilieforeninggrunnlag
+        GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag
     );
 
     const handleSave = (values: FormData, onSuccess: () => void) =>

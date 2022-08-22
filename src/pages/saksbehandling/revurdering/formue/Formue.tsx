@@ -3,6 +3,7 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import FormuevilkårOppsummering from '~src/components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import FormueForm from '~src/components/vilkårForms/formue/FormueForm';
@@ -12,7 +13,7 @@ import {
     formueFormSchema,
     formueVilkårFormTilRequest,
 } from '~src/components/vilkårForms/formue/FormueFormUtils';
-import { lagreFormuegrunnlag } from '~src/features/revurdering/revurderingActions';
+import { lagreFormuegrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { RevurderingStegProps } from '~src/types/Revurdering';
@@ -36,11 +37,17 @@ const Formue = (props: RevurderingStegProps) => {
     });
 
     const lagreFormuegrunnlaget = (data: FormueVilkårFormData, onSuccess: () => void) => {
-        lagreFormuegrunnlagAction(formueVilkårFormTilRequest(props.sakId, props.revurdering.id, data), (res) => {
-            if (res.feilmeldinger.length === 0) {
-                onSuccess();
+        lagreFormuegrunnlagAction(
+            {
+                ...formueVilkårFormTilRequest(props.sakId, props.revurdering.id, data),
+                behandlingstype: Behandlingstype.Revurdering,
+            },
+            (res) => {
+                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
+                    onSuccess();
+                }
             }
-        });
+        );
     };
 
     return (
