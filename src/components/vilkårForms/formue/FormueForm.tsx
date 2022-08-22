@@ -140,7 +140,7 @@ const FormueGrunnlagsperiode = (props: {
     useEffect(() => {
         if (bosituasjon?.fnr?.length === 11) {
             hentEPS(bosituasjon.fnr, (eps) => {
-                props.setEpsValues(lagTomFormuegrunnlagVerdier());
+                props.setEpsValues(watch.epsFormue ?? lagTomFormuegrunnlagVerdier());
                 props.setEpsFnr(eps.fnr);
             });
         } else {
