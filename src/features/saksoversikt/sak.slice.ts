@@ -410,6 +410,14 @@ export default createSlice({
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
+        builder.addCase(GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+        });
+
         builder.addCase(GrunnlagOgVilkårActions.lagreFlyktningVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
@@ -430,12 +438,32 @@ export default createSlice({
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
+        builder.addCase(GrunnlagOgVilkårActions.lagreUfullstendigBosituasjon.fulfilled, (state, action) => {
+            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+        });
+
         builder.addCase(GrunnlagOgVilkårActions.lagreFormuegrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
         builder.addCase(GrunnlagOgVilkårActions.lagrePersonligOppmøteVilkår.fulfilled, (state, action) => {
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
+        });
+
+        builder.addCase(GrunnlagOgVilkårActions.lagreFullstendigBosituasjon.fulfilled, (state, action) => {
+            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(GrunnlagOgVilkårActions.lagreFradragsgrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
+        });
+
+        builder.addCase(GrunnlagOgVilkårActions.lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
+            state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
+        builder.addCase(GrunnlagOgVilkårActions.lagreOpplysningsplikt.fulfilled, (state, action) => {
+            state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
     },
 });

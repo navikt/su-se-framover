@@ -2,7 +2,6 @@ import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { UfullstendigBosituasjonRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -53,27 +52,6 @@ export async function lagreVirkningstidspunkt(arg: {
         method: 'POST',
         body: {
             periode: { fraOgMed: arg.fraOgMed, tilOgMed: arg.tilOgMed },
-        },
-    });
-}
-
-export async function lagreVilkårsvurdering(arg: {
-    sakId: string;
-    behandlingId: string;
-    vilkårsvurderingId: string;
-    vilkårtype: Vilkårtype;
-    status: VilkårVurderingStatus;
-    begrunnelse: string;
-}) {
-    return apiClient<Søknadsbehandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/vilkarsvurderinger`,
-        method: 'PATCH',
-        body: {
-            [arg.vilkårtype]: {
-                id: arg.vilkårsvurderingId,
-                begrunnelse: arg.begrunnelse,
-                status: arg.status,
-            },
         },
     });
 }
