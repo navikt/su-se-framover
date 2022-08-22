@@ -1,5 +1,3 @@
-import { Nullable } from '~src/lib/types';
-import { FormueVerdier } from '~src/types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~src/types/Søknad';
 
 function totalVerdiKjøretøy(kjøretøyArray: Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>) {
@@ -16,32 +14,4 @@ export function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
         f.skylderNoenMegPengerBeløp ?? 0,
         f.kontanterBeløp ?? 0,
     ].reduce((acc, formue) => acc + formue, 0);
-}
-
-export function regnUtFormueVerdier(verdier: Nullable<FormueVerdier>) {
-    if (!verdier) {
-        return 0;
-    }
-
-    const keyNavnForFormueVerdier: Array<keyof FormueVerdier> = [
-        'verdiIkkePrimærbolig',
-        'verdiEiendommer',
-        'verdiKjøretøy',
-        'innskudd',
-        'verdipapir',
-        'pengerSkyldt',
-        'kontanter',
-        'depositumskonto',
-    ];
-
-    const formuer = keyNavnForFormueVerdier
-        .filter((keyNavn) => keyNavn !== 'depositumskonto')
-        .map((keyNavn) => {
-            if (keyNavn === 'innskudd') {
-                return Math.max((verdier?.innskudd ?? 0) - (verdier?.depositumskonto ?? 0), 0);
-            }
-            return verdier[keyNavn];
-        }) as number[];
-
-    return formuer.reduce((acc, formue) => acc + formue, 0);
 }

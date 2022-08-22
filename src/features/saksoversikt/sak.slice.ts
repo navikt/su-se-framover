@@ -11,13 +11,14 @@ import * as klageActions from '~src/features/klage/klageActions';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { pipe } from '~src/lib/fp';
 import { Nullable } from '~src/lib/types';
-import { FormueSøknadsbehandlingForm } from '~src/pages/saksbehandling/revurdering/formue/formueUtils';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { UfullstendigBosituasjonRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
@@ -264,29 +265,20 @@ export const lagreFamilieforeninggrunnlag = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const lagreFormuegrunnlag = createAsyncThunk<
-    Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        vurderinger: FormueSøknadsbehandlingForm[];
-    },
-    { rejectValue: ApiError }
->('behandling/grunnlag/formue', async (arg, thunkApi) => {
-    const res = await behandlingApi.lagreFormuegrunnlag(arg);
-    if (res.status === 'ok') {
-        return res.data;
+export const lagreFormuegrunnlag = createAsyncThunk<Søknadsbehandling, FormueVilkårRequest, { rejectValue: ApiError }>(
+    'behandling/grunnlag/formue',
+    async (arg, thunkApi) => {
+        const res = await behandlingApi.lagreFormuegrunnlag(arg);
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
 
 export const lagreEpsGrunnlag = createAsyncThunk<
     Søknadsbehandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        epsFnr: Nullable<string>;
-    },
+    UfullstendigBosituasjonRequest,
     { rejectValue: ApiError }
 >('behandling/grunnlag/bosituasjon/eps', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreGrunnlagEps(arg);
@@ -298,11 +290,7 @@ export const lagreEpsGrunnlag = createAsyncThunk<
 
 export const lagreEpsGrunnlagSkjermet = createAsyncThunk<
     unknown,
-    {
-        sakId: string;
-        behandlingId: string;
-        epsFnr: string;
-    },
+    UfullstendigBosituasjonRequest<string>,
     { rejectValue: ApiError }
 >('behandling/grunnlag/bosituasjon/eps/skjermet', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreGrunnlagEpsSkjermet(arg);

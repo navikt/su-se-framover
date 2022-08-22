@@ -62,6 +62,9 @@ export default {
     'formue.depositumsBeløp': 'Depositumskonto',
     'formue.totalt': 'Totalt',
 
+    'formue.label.borSøkerMedEktefelle': 'Bor søker med en ektefelle eller samboer?',
+    'formue.label.ektefellesFødselsnummer': 'Ektefelle/samboers fødselsnummer',
+
     'formue.vilkårOppfylt': 'Oppfylt vilkår',
     'formue.vilkårOppfyltGrunn': 'Formue er lavere enn 0.5G',
     'formue.vilkårIkkeOppfylt': 'Ikke oppfylt vilkår',

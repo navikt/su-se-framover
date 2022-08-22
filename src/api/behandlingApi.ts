@@ -1,8 +1,10 @@
 import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { FormueVerdier, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { UfullstendigBosituasjonRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { InstitusjonsoppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
@@ -153,7 +155,7 @@ export async function lagrePersonligOppmøteVilkår(arg: {
     });
 }
 
-export async function lagreGrunnlagEps(arg: { sakId: string; behandlingId: string; epsFnr: Nullable<string> }) {
+export async function lagreGrunnlagEps(arg: UfullstendigBosituasjonRequest) {
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps`,
         method: 'POST',
@@ -163,7 +165,7 @@ export async function lagreGrunnlagEps(arg: { sakId: string; behandlingId: strin
     });
 }
 
-export async function lagreGrunnlagEpsSkjermet(arg: { sakId: string; behandlingId: string; epsFnr: string }) {
+export async function lagreGrunnlagEpsSkjermet(arg: UfullstendigBosituasjonRequest<string>) {
     return apiClient({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps/skjermet`,
         method: 'POST',
@@ -297,16 +299,7 @@ export async function lagreFamilieforeningsgrunnlag(arg: {
     });
 }
 
-export async function lagreFormuegrunnlag(arg: {
-    sakId: string;
-    behandlingId: string;
-    vurderinger: Array<{
-        periode: Periode<string>;
-        epsFormue: Nullable<FormueVerdier>;
-        søkersFormue: FormueVerdier;
-        måInnhenteMerInformasjon: boolean;
-    }>;
-}) {
+export async function lagreFormuegrunnlag(arg: FormueVilkårRequest) {
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/formuegrunnlag`,
         method: 'POST',

@@ -2,12 +2,14 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading, Label, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { pipe } from 'fp-ts/lib/function';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ApiError } from '~src/api/apiClient';
+import { hentSkattemelding } from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { ApiResult } from '~src/lib/hooks';
+import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
 import { SamletSkattegrunnlag, SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
@@ -19,10 +21,23 @@ import skattegrunnlagMessages from './skattegrunnlag-nb';
 
 export const SkattemeldingFaktablokk = (props: {
     kategori: SkattegrunnlagKategori;
-    skattegrunnlagBruker: ApiResult<SamletSkattegrunnlag>;
-    skattegrunnlagEPS?: ApiResult<SamletSkattegrunnlag>;
+    søkerFnr: string;
+    skalHenteSkattegrunnlagForEPS?: Nullable<string>;
 }) => {
     const { formatMessage } = useI18n({ messages: skattegrunnlagMessages });
+    const [skattemeldingBruker, hentSkattemeldingBruker] = useApiCall(hentSkattemelding);
+    const [skattemeldingEPS, hentSkattemeldingEPS, resetSkattemeldingEPS] = useApiCall(hentSkattemelding);
+
+    useEffect(() => {
+        hentSkattemeldingBruker({ fnr: props.søkerFnr });
+    }, []);
+
+    useEffect(() => {
+        resetSkattemeldingEPS();
+        if (props.skalHenteSkattegrunnlagForEPS) {
+            hentSkattemeldingEPS({ fnr: props.skalHenteSkattegrunnlagForEPS });
+        }
+    }, [props.skalHenteSkattegrunnlagForEPS]);
 
     return (
         <div className={styles.skattegrunnlag}>
@@ -31,7 +46,7 @@ export const SkattemeldingFaktablokk = (props: {
             </Heading>
 
             {pipe(
-                props.skattegrunnlagBruker,
+                skattemeldingBruker,
                 RemoteData.fold(
                     () => null,
                     () => <Loader />,
@@ -55,9 +70,9 @@ export const SkattemeldingFaktablokk = (props: {
                     )
                 )
             )}
-            {props.skattegrunnlagEPS &&
+            {skattemeldingEPS &&
                 pipe(
-                    props.skattegrunnlagEPS,
+                    skattemeldingEPS,
                     RemoteData.fold(
                         () => null,
                         () => <Loader />,

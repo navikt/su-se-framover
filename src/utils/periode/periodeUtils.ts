@@ -20,6 +20,16 @@ export const lagDatePeriodeAvStringPeriode = (periode: Periode<string>): Periode
 export const lagDatePeriodeAvStringPeriodeEllerTomPeriode = (periode?: Periode<string>) =>
     periode ? lagDatePeriodeAvStringPeriode(periode) : lagTomPeriode();
 
+/**
+ *
+ * @param p skal være en periode der fraOgMed & tilOgMed må være utfylt
+ * @returns Periode objekt i IsoDate
+ */
+export const periodeTilIsoDateString = (p: Periode | NullablePeriode) => ({
+    fraOgMed: DateUtils.toIsoDateOnlyString(p.fraOgMed!),
+    tilOgMed: DateUtils.toIsoDateOnlyString(p.tilOgMed!),
+});
+
 export const eqPeriode = struct<NullablePeriode>({
     fraOgMed: eqNullable(D.Eq),
     tilOgMed: eqNullable(D.Eq),

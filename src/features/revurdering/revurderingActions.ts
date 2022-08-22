@@ -7,6 +7,7 @@ import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRev
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Fradrag } from '~src/types/Fradrag';
+import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~src/types/Periode';
@@ -14,7 +15,6 @@ import {
     BosituasjonRequest,
     FastOppholdVilkårRequest,
     FlyktningVilkårRequest,
-    FormuegrunnlagRequest,
     Gjenopptak,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
@@ -353,14 +353,10 @@ export const lagreOpplysningsplikt = createAsyncThunk<
 
 export const lagreFormuegrunnlag = createAsyncThunk<
     { revurdering: InformasjonsRevurdering; feilmeldinger: ErrorMessage[] },
-    FormuegrunnlagRequest,
+    FormueVilkårRequest,
     { rejectValue: ApiError }
 >('revurdering/grunnlag/formue/lagre', async (arg, thunkApi) => {
-    const res = await revurderingApi.lagreFormuegrunnlag({
-        sakId: arg.sakId,
-        revurderingId: arg.revurderingId,
-        formue: arg.formue,
-    });
+    const res = await revurderingApi.lagreFormuegrunnlag(arg);
     if (res.status === 'ok') {
         return res.data;
     }
