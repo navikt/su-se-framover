@@ -149,6 +149,7 @@ const FormueGrunnlagsperiode = (props: {
             });
         } else {
             resetToInitial();
+            setEPSBekreftetFormue(0);
         }
     }, [bosituasjon?.fnr]);
 

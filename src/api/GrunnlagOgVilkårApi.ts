@@ -150,7 +150,7 @@ export async function lagreFullstendigBosituasjon(arg: FullstendigBosituasjonReq
 
 export async function lagreFradragsgrunnlag(arg: Fradragsgrunnlagrequest & { behandlingstype: Behandlingstype }) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/grunnlag/fradrag`,
+        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/fradrag`,
         method: 'POST',
         body: {
             fradrag: arg.fradrag,

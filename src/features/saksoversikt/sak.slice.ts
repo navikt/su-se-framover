@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
 import * as behandlingApi from '~src/api/behandlingApi';
@@ -236,14 +236,6 @@ export default createSlice({
     reducers: {
         resetSak(state) {
             state.sak = RemoteData.initial;
-        },
-        oppdaterKlagerISak(state, klager: PayloadAction<Klage[]>) {
-            if (!RemoteData.isSuccess(state.sak)) {
-                throw new Error('Prøve å oppdatere klager i sak, når sak er ikke success');
-            }
-            console.log('prev sak state', state.sak.value);
-            console.log(klager.payload);
-            state.sak.value.klager = klager.payload;
         },
     },
     extraReducers: (builder) => {
