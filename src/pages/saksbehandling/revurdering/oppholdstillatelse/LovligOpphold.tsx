@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import LovligOppholdForm from '~src/components/vilkårForms/lovligOpphold/LovligOppholdForm';
 import {
@@ -10,7 +11,7 @@ import {
     LovligOppholdVilkårFormData,
     lovligOppholdVilkårTilFormDataEllerNy,
 } from '~src/components/vilkårForms/lovligOpphold/LovligOppholdFormUtils';
-import { lagreLovligOppholdVilkår } from '~src/features/revurdering/revurderingActions';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 
@@ -19,7 +20,7 @@ import RevurderingsperiodeHeader from '../revurderingsperiodeheader/Revurderings
 import GjeldendeOppholdstillatelse from './GjeldendeLovligOpphold';
 
 const LovligOpphold = (props: RevurderingStegProps) => {
-    const [status, lagre] = useAsyncActionCreator(lagreLovligOppholdVilkår);
+    const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreLovligOppholdVilkår);
 
     const revurderingsperiode = {
         fraOgMed: new Date(props.revurdering.periode.fraOgMed),
@@ -35,9 +36,16 @@ const LovligOpphold = (props: RevurderingStegProps) => {
 
     const lagreLovligOpphold = (data: LovligOppholdVilkårFormData, onSuccess: () => void) => {
         lagre(
-            lovligOppholdFormDataTilRequest({ sakId: props.sakId, behandlingId: props.revurdering.id, vilkår: data }),
+            {
+                ...lovligOppholdFormDataTilRequest({
+                    sakId: props.sakId,
+                    behandlingId: props.revurdering.id,
+                    vilkår: data,
+                }),
+                behandlingstype: Behandlingstype.Revurdering,
+            },
             (res) => {
-                if (res.feilmeldinger.length === 0) {
+                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
                     onSuccess();
                 }
             }

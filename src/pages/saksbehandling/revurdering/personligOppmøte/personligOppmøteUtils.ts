@@ -1,6 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import yup, { validerAtNullablePeriodeErUtfylt } from '~src/lib/validering';
-import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
+import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 
 export interface PersonligOppmøteVilkårFormData {
     personligOppmøte: VurderingsperiodePersonligOppmøteFormData[];

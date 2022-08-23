@@ -256,10 +256,12 @@ export function getInitialFormueVilkårOgDelvisBosituasjon(
                     grunnlagsdata.formue?.vurderinger[0]?.grunnlag.søkersFormue ?? null,
                     søknadsInnhold.formue
                 ),
-                epsFormue: getInitialVerdierFraGrunnlagEllerSøknad(
-                    grunnlagsdata.formue?.vurderinger[0]?.grunnlag.epsFormue ?? null,
-                    søknadsInnhold.ektefelle?.formue ?? null
-                ),
+                epsFormue: epsInformasjon?.borSøkerMedEPS
+                    ? getInitialVerdierFraGrunnlagEllerSøknad(
+                          grunnlagsdata.formue?.vurderinger[0]?.grunnlag.epsFormue ?? null,
+                          søknadsInnhold.ektefelle?.formue ?? null
+                      )
+                    : null,
                 periode: stønadsperiode,
                 måInnhenteMerInformasjon: grunnlagsdata.formue?.resultat === FormueStatus.MåInnhenteMerInformasjon,
             },

@@ -3,10 +3,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
-import { lagreInstitusjonsoppholdVilkår } from '~src/features/revurdering/revurderingActions';
+import { lagreInstitusjonsoppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { RevurderingStegProps } from '~src/types/Revurdering';
@@ -51,7 +52,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
         lagre(
             {
                 sakId: props.sakId,
-                revurderingId: props.revurdering.id,
+                behandlingId: props.revurdering.id,
                 vurderingsperioder: values.institusjonsopphold.map((v) => ({
                     periode: {
                         fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
@@ -59,9 +60,10 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                     },
                     vurdering: v.resultat!,
                 })),
+                behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if (res.feilmeldinger.length === 0) {
+                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
                     onSuccess();
                 }
             }
@@ -104,7 +106,9 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                                 )}
                             />
                             {RemoteData.isSuccess(status) && (
-                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                                <UtfallSomIkkeStøttes
+                                    feilmeldinger={(status.value as RevurderingOgFeilmeldinger).feilmeldinger}
+                                />
                             )}
                         </>
                     </FormWrapper>

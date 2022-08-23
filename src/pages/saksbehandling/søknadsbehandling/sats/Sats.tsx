@@ -14,7 +14,7 @@ import { SatsFaktablokk } from '~src/components/oppsummering/vilkårsOppsummerin
 import { Personkort } from '~src/components/personkort/Personkort';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import { lagreBosituasjonGrunnlag } from '~src/features/saksoversikt/sak.slice';
+import { lagreFullstendigBosituasjon } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
@@ -198,7 +198,7 @@ function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasj
 }
 
 const SatsForm = (props: SatsProps) => {
-    const [status, lagreBosituasjon] = useAsyncActionCreator(lagreBosituasjonGrunnlag);
+    const [status, lagreBosituasjon] = useAsyncActionCreator(lagreFullstendigBosituasjon);
 
     const eps = props.eps;
 

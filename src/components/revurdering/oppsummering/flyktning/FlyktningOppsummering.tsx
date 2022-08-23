@@ -3,7 +3,7 @@ import React from 'react';
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~src/lib/i18n';
 import { vilkårstatusMessages } from '~src/typeMappinger/Vilkårsstatus';
-import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
+import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
 import { formatPeriode } from '~src/utils/date/dateUtils';
 
 import messages from './flyktningOppsummering-nb';

@@ -7,7 +7,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { lagreOpplysningsplikt } from '~src/features/revurdering/revurderingActions';
+import { lagreOpplysningsplikt } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';

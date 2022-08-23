@@ -4,15 +4,16 @@ import { Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { lagrePersonligOppmøteVilkår } from '~src/features/revurdering/revurderingActions';
+import { lagrePersonligOppmøteVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
+import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -53,7 +54,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
         lagre(
             {
                 sakId: props.sakId,
-                revurderingId: props.revurdering.id,
+                behandlingId: props.revurdering.id,
                 vurderinger: values.personligOppmøte.map((v) => ({
                     periode: {
                         fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
@@ -61,9 +62,10 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                     },
                     vurdering: toPersonligOppmøteÅrsakInnsending(v.møttPersonlig, v.årsakForManglendePersonligOppmøte)!,
                 })),
+                behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if (res.feilmeldinger.length === 0) {
+                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
                     onSuccess();
                 }
             }
@@ -145,7 +147,9 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                                 )}
                             />
                             {RemoteData.isSuccess(status) && (
-                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                                <UtfallSomIkkeStøttes
+                                    feilmeldinger={(status.value as RevurderingOgFeilmeldinger).feilmeldinger}
+                                />
                             )}
                         </>
                     </FormWrapper>

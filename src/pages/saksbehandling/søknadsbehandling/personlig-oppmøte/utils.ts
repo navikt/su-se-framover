@@ -7,7 +7,7 @@ import {
 import {
     PersonligOppmøteVilkår,
     PersonligOppmøteÅrsak,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 
 export const getInitialFormValues = (personligOppmøteFraVilkår: Nullable<PersonligOppmøteVilkår>): FormData => {
     if (!personligOppmøteFraVilkår || personligOppmøteFraVilkår?.vurderinger.length > 1) {

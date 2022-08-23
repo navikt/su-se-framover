@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { LovligOppholdFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/LovligOppholdFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import LovligOppholdForm from '~src/components/vilkårForms/lovligOpphold/LovligOppholdForm';
@@ -13,7 +14,7 @@ import {
     lovligOppholdVilkårTilFormDataEllerNy,
 } from '~src/components/vilkårForms/lovligOpphold/LovligOppholdFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -27,7 +28,7 @@ import messages from './lovligOppholdINorge-nb';
 
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreLovligopphold] = useAsyncActionCreator(sakSlice.lagreLovligOppholdVilkår);
+    const [status, lagreLovligopphold] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreLovligOppholdVilkår);
 
     const initialValues = lovligOppholdVilkårTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.lovligOpphold,
@@ -41,10 +42,17 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
 
     const save = (values: LovligOppholdVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
         lagreLovligopphold(
-            lovligOppholdFormDataTilRequest({ sakId: props.sakId, behandlingId: props.behandling.id, vilkår: values }),
+            {
+                ...lovligOppholdFormDataTilRequest({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    vilkår: values,
+                }),
+                behandlingstype: Behandlingstype.Søknadsbehandling,
+            },
             (behandling) => {
                 clearDraft();
-                onSuccess(behandling);
+                onSuccess(behandling as Søknadsbehandling);
             }
         );
     };

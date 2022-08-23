@@ -1,13 +1,8 @@
 import { Nullable } from '~src/lib/types';
-import { FastOppholdVurderingRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
-import { FlyktningRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
 
 import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InstitusjonsoppholdVurderingRequest } from './grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
-import { PersonligOppmøteVurderingRequest } from './grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
-import { Utenlandsperiode } from './grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from './Periode';
 import { Simulering, SimulertPeriode } from './Simulering';
 
@@ -234,12 +229,6 @@ export interface BosituasjonRequest {
     }>;
 }
 
-export interface UtenlandsoppholdRequest {
-    sakId: string;
-    revurderingId: string;
-    utenlandsopphold: Utenlandsperiode[];
-}
-
 export interface OpplysningspliktRequest {
     id: string;
     type: string;
@@ -250,30 +239,6 @@ export interface OpplysningspliktRequest {
         };
         beskrivelse: Nullable<string>;
     }>;
-}
-
-export interface FlyktningVilkårRequest {
-    sakId: string;
-    behandlingId: string;
-    vurderinger: FlyktningRequest[];
-}
-
-export interface FastOppholdVilkårRequest {
-    sakId: string;
-    revurderingId: string;
-    vurderinger: FastOppholdVurderingRequest[];
-}
-
-export interface InstitusjonsoppholdVilkårRequest {
-    sakId: string;
-    revurderingId: string;
-    vurderingsperioder: InstitusjonsoppholdVurderingRequest[];
-}
-
-export interface PersonligOppmøteVilkårRequest {
-    sakId: string;
-    revurderingId: string;
-    vurderinger: PersonligOppmøteVurderingRequest[];
 }
 
 export interface RevurderingStegProps {

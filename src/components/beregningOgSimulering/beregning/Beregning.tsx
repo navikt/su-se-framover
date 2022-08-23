@@ -11,6 +11,7 @@ import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { Person } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import {
@@ -24,6 +25,7 @@ import BeregningFaktablokk from '~src/components/oppsummering/vilkårsOppsummeri
 import { SkattemeldingFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/skatt/SkattegrunnlagFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~src/lib/featureToggles';
 import { pipe } from '~src/lib/fp';
@@ -88,7 +90,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     const [needsBeregning, setNeedsBeregning] = useState(false);
     const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
-    const [lagreFradragstatus, lagreFradrag] = useAsyncActionCreator(sakSlice.lagreFradrag);
+    const [lagreFradragstatus, lagreFradrag] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFradragsgrunnlag);
     const [beregningStatus, beregn] = useAsyncActionCreator(sakSlice.startBeregning);
     const [simuleringStatus, simuler] = useAsyncActionCreator(sakSlice.startSimulering);
 
@@ -132,6 +134,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                     tilOgMed: stønadsperiode.tom!,
                 })
             ),
+            behandlingstype: Behandlingstype.Søknadsbehandling,
         });
 
     const lagreFradragOgBeregn = async (values: FormData, onSuccess: (behandling: Søknadsbehandling) => void) => {

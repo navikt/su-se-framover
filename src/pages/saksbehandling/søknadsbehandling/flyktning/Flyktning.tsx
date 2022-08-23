@@ -3,6 +3,7 @@ import { Alert } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { FlyktningFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import FlyktningForm from '~src/components/vilkårForms/flyktning/FlyktningForm';
@@ -14,7 +15,7 @@ import {
     flyktningVilkårTilFormDataEllerNy,
 } from '~src/components/vilkårForms/flyktning/FlyktningFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { lagreFlyktningVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -33,7 +34,7 @@ import * as styles from './flyktning.module.less';
 
 const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [status, lagreFlyktningVilkår] = useAsyncActionCreator(sakSlice.lagreFlyktningVilkår);
+    const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
 
     const initialValues = flyktningVilkårTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning,
@@ -62,11 +63,18 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
     });
 
     const save = (values: FlyktningVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
-        lagreFlyktningVilkår(
-            flyktningFormDataTilRequest({ sakId: props.sakId, behandlingId: props.behandling.id, vilkår: values }),
+        lagre(
+            {
+                ...flyktningFormDataTilRequest({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    vilkår: values,
+                }),
+                behandlingstype: Behandlingstype.Søknadsbehandling,
+            },
             (behandling) => {
                 clearDraft();
-                onSuccess(behandling);
+                onSuccess(behandling as Søknadsbehandling);
             }
         );
     };

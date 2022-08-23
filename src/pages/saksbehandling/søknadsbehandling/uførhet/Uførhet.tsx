@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { UførhetFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
@@ -11,7 +12,7 @@ import {
     lagTomUføreperiode,
 } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
 import { uførhetSchema } from '~src/components/vilkårForms/uførhet/validation';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -25,7 +26,7 @@ import messages from './uførhet-nb';
 const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const [lagreBehandlingsinformasjonStatus, lagreUføregrunnlag] = useAsyncActionCreator(sakSlice.lagreUføregrunnlag);
+    const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreUføregrunnlag);
     const form = useForm<UførhetFormData>({
         defaultValues: {
             grunnlag: props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger?.map(
@@ -36,7 +37,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
     });
 
     const handleSave = (values: UførhetFormData, onSuccess: () => void) =>
-        lagreUføregrunnlag(
+        lagre(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -51,6 +52,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                     uføregrad: g.oppfylt ? Number.parseInt(g.uføregrad, 10) : null,
                     resultat: g.oppfylt ?? UføreResultat.HarUføresakTilBehandling,
                 })),
+                behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             onSuccess
         );
@@ -70,7 +72,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                             ),
                         }}
                         form={form}
-                        savingState={lagreBehandlingsinformasjonStatus}
+                        savingState={status}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                         {...props}
                     />

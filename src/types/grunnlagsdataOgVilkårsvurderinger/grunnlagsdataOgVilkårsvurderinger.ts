@@ -5,14 +5,14 @@ import { Fradrag } from '~src/types/Fradrag';
 import { Aldersvilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { Familiegjenforening } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
 import { FastOppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
-import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
+import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
 
 import { Bosituasjon } from './bosituasjon/Bosituasjongrunnlag';
 import { FormueVilkår } from './formue/Formuevilkår';
 import { InstitusjonsoppholdVilkår } from './institusjonsopphold/Institusjonsopphold';
 import { LovligOppholdVilkår } from './lovligOpphold/LovligOppholdVilkår';
 import { OpplysningspliktVilkår } from './opplysningsplikt/Opplysningsplikt';
-import { PersonligOppmøteVilkår } from './personligOppmøte/PersonligOppmøte';
+import { PersonligOppmøteVilkår } from './personligOppmøte/PersonligOppmøteVilkår';
 import { UføreVilkår } from './uføre/Uførevilkår';
 import { Utenlandsopphold } from './utenlandsopphold/Utenlandsopphold';
 

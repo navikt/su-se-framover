@@ -8,7 +8,7 @@ import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import {
     FlyktningVilkår,
     VurderingsperiodeFlyktning,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/Flyktning';
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
 import { Periode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { eqPeriode, lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils';

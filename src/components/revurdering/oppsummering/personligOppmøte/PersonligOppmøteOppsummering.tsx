@@ -4,7 +4,7 @@ import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsum
 import { useI18n } from '~src/lib/i18n';
 import personligOppmøteMessages from '~src/pages/saksbehandling/revurdering/personligOppmøte/personligOppmøte-nb';
 import { vilkårstatusMessages } from '~src/typeMappinger/Vilkårsstatus';
-import { PersonligOppmøteVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøte';
+import { PersonligOppmøteVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { formatPeriode } from '~src/utils/date/dateUtils';
 
 import messages from './personligOppmøteOppsummering-nb';

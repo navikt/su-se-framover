@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AlderspensjonBlokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/AlderspensjonFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { AlderspensjonForm } from '~src/pages/saksbehandling/steg/alderspensjon/AlderspensjonForm';
@@ -17,7 +17,7 @@ const Alderspensjon = (props: VilkårsvurderingBaseProps & { søknadInnhold: Sø
     const { formatMessage } = useI18n({ messages });
 
     const [lagreAlderspensjongrunnlagStatus, lagreAlderspensjongrunnlag] = useAsyncActionCreator(
-        sakSlice.lagreAlderspensjongrunnlag
+        GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag
     );
 
     const handleSave = (values: FormData, onSuccess: () => void) =>

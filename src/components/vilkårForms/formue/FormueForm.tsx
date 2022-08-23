@@ -5,11 +5,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Control, Controller, UseFormTrigger, useWatch } from 'react-hook-form';
 
 import { ApiError } from '~src/api/apiClient';
+import { RevurderingOgFeilmeldinger, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
 import * as PersonApi from '~src/api/personApi';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import { Personkort } from '~src/components/personkort/Personkort';
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
-import { VilkårApiResult } from '~src/features/revurdering/revurderingActions';
 import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -42,7 +42,7 @@ interface Props extends Omit<VilkårFormProps<FormueVilkårFormData>, 'savingSta
     onFormSubmit<T extends FormueFormDataer>(values: T, onSuccess: () => void): void;
     savingState:
         | VilkårFormSaveState
-        | RemoteData.RemoteData<ApiError | undefined, [Søknadsbehandling, Søknadsbehandling]>;
+        | RemoteData.RemoteData<ApiError | undefined, [VilkårOgGrunnlagApiResult, Søknadsbehandling]>;
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
     formuegrenser: Formuegrenser[];
@@ -96,14 +96,18 @@ const FormueForm = (props: Props) => {
                 {/* Fordi formue ved søkadsbehandling skal være så spesiell, blir vanskelig å gjøre formet generisk. */}
                 {/* Vi vet dermed hva retur typene på Api-kallene ved revurdering er alltid, og dermed bare gjør et kasting helvete */}
                 {props.søknadsbehandlingEllerRevurdering === 'Revurdering' &&
-                    RemoteData.isSuccess(props.savingState as ApiResult<VilkårApiResult>) &&
+                    RemoteData.isSuccess(props.savingState as ApiResult<RevurderingOgFeilmeldinger>) &&
                     'feilmeldinger' in
-                        (props.savingState as unknown as RemoteSuccess<ApiResult<VilkårApiResult>>).value && (
+                        (props.savingState as unknown as RemoteSuccess<ApiResult<RevurderingOgFeilmeldinger>>)
+                            .value && (
                         <UtfallSomIkkeStøttes
                             feilmeldinger={
                                 (
-                                    (props.savingState as unknown as RemoteSuccess<ApiResult<VilkårApiResult>>)
-                                        .value as unknown as VilkårApiResult
+                                    (
+                                        props.savingState as unknown as RemoteSuccess<
+                                            ApiResult<RevurderingOgFeilmeldinger>
+                                        >
+                                    ).value as unknown as RevurderingOgFeilmeldinger
                                 ).feilmeldinger
                             }
                         />
@@ -145,6 +149,7 @@ const FormueGrunnlagsperiode = (props: {
             });
         } else {
             resetToInitial();
+            setEPSBekreftetFormue(0);
         }
     }, [bosituasjon?.fnr]);
 
