@@ -13,11 +13,11 @@ interface Props {
 }
 
 const SuHeader = (props: Props) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     return (
         <Header>
             <Header.Title href="/" style={{ marginRight: 'auto' }}>
-                {intl.formatMessage({ id: 'title' })}
+                {formatMessage('title')}
             </Header.Title>
             {props.user && (
                 <>
@@ -27,7 +27,7 @@ const SuHeader = (props: Props) => {
                                 papirsøknad: true,
                             })}
                         >
-                            {intl.formatMessage({ id: 'link.papirsøknad' })}
+                            {formatMessage('link.papirsøknad')}
                         </Header.Title>
                     )}
                     <Dropdown>
@@ -38,12 +38,8 @@ const SuHeader = (props: Props) => {
                         />
                         <Dropdown.Menu>
                             <Dropdown.Menu.List>
-                                <Dropdown.Menu.List.Item
-                                    onClick={() => {
-                                        window.location.href = LOGOUT_URL;
-                                    }}
-                                >
-                                    Logg ut
+                                <Dropdown.Menu.List.Item>
+                                    <a href={LOGOUT_URL}>Logg ut</a>
                                 </Dropdown.Menu.List.Item>
                             </Dropdown.Menu.List>
                         </Dropdown.Menu>
