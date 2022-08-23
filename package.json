@@ -48,7 +48,7 @@
         "@hookform/resolvers": "^2.9.7",
         "@navikt/ds-css": "^0.18.28",
         "@navikt/ds-css-internal": "^1.1.0",
-        "@navikt/ds-icons": "^0.8.20",
+        "@navikt/ds-icons": "^1.1.0",
         "@navikt/ds-react": "^0.19.25",
         "@navikt/ds-react-internal": "^1.1.0",
         "@radix-ui/react-tabs": "^1.0.0",
