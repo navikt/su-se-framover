@@ -22,7 +22,7 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const lagreUføregrunnlag = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult<OpprettetRevurdering>,
-    UførevilkårRequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<UførevilkårRequest>,
     { rejectValue: ApiError }
 >('behandling/uføre/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreUføregrunnlag(arg);
@@ -59,7 +59,7 @@ export const lagreFamilieforeninggrunnlag = createAsyncThunk<
 
 export const lagreFlyktningVilkår = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    FlyktningVilkårRequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<FlyktningVilkårRequest>,
     { rejectValue: ApiError }
 >('behandling/flyktning/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFlyktningVilkår(arg);
@@ -71,7 +71,7 @@ export const lagreFlyktningVilkår = createAsyncThunk<
 
 export const lagreLovligOppholdVilkår = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    LovligOppholdRequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<LovligOppholdRequest>,
     { rejectValue: ApiError }
 >('behandling/lovligopphold/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreLovligOppholdVilkår(arg);
@@ -83,7 +83,7 @@ export const lagreLovligOppholdVilkår = createAsyncThunk<
 
 export const lagreFastOppholdVilkår = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    FastOppholdVilkårRequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<FastOppholdVilkårRequest>,
     { rejectValue: ApiError }
 >('behandling/fastopphold/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFastOppholdVilkår(arg);
@@ -95,7 +95,7 @@ export const lagreFastOppholdVilkår = createAsyncThunk<
 
 export const lagreInstitusjonsoppholdVilkår = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    InstitusjonsoppholdVilkårRequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<InstitusjonsoppholdVilkårRequest>,
     { rejectValue: ApiError }
 >('behandling/institusjonsopphold/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreInstitusjonsoppholdVilkår(arg);
@@ -107,7 +107,7 @@ export const lagreInstitusjonsoppholdVilkår = createAsyncThunk<
 
 export const lagreUtenlandsopphold = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    UtenlandsoppholdRequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<UtenlandsoppholdRequest>,
     { rejectValue: ApiError }
 >('behandling/utlandsopphold/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreUtenlandsopphold(arg);
@@ -131,7 +131,7 @@ export const lagreUfullstendigBosituasjon = createAsyncThunk<
 
 export const lagreFormuegrunnlag = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    FormueVilkårRequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<FormueVilkårRequest>,
     { rejectValue: ApiError }
 >('behandling/formue/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFormuegrunnlag(arg);
@@ -143,7 +143,7 @@ export const lagreFormuegrunnlag = createAsyncThunk<
 
 export const lagrePersonligOppmøteVilkår = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    PersonligOppmøteVilkårRequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<PersonligOppmøteVilkårRequest>,
     { rejectValue: ApiError }
 >('behandling//personligOppmøte/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagrePersonligOppmøteVilkår(arg);
@@ -167,7 +167,7 @@ export const lagreFullstendigBosituasjon = createAsyncThunk<
 
 export const lagreFradragsgrunnlag = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
-    Fradragsgrunnlagrequest & { behandlingstype: GrunnlagOgVilkårApi.Behandlingstype },
+    GrunnlagOgVilkårApi.ApiRequestMedBehandlingstype<Fradragsgrunnlagrequest>,
     { rejectValue: ApiError }
 >('beregning/fradrag/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFradragsgrunnlag(arg);

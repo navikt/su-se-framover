@@ -37,6 +37,8 @@ export type RevurderingOgFeilmeldinger<T extends InformasjonsRevurdering = Infor
     feilmeldinger: ErrorMessage[];
 };
 
+export type ApiRequestMedBehandlingstype<T> = T & { behandlingstype: Behandlingstype };
+
 const mapBehandlingstypeTilriktigUrl = (sakId: string, behandlingId: string, b: Behandlingstype) => {
     switch (b) {
         case Behandlingstype.Søknadsbehandling:
@@ -46,7 +48,7 @@ const mapBehandlingstypeTilriktigUrl = (sakId: string, behandlingId: string, b: 
     }
 };
 
-export async function lagreUføregrunnlag(arg: UførevilkårRequest & { behandlingstype: Behandlingstype }) {
+export async function lagreUføregrunnlag(arg: ApiRequestMedBehandlingstype<UførevilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult<OpprettetRevurdering>>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/uføregrunnlag`,
         method: 'POST',
@@ -70,7 +72,7 @@ export async function lagreFamilieforeningsgrunnlag(arg: Familiegjenforeningrequ
     });
 }
 
-export async function lagreFlyktningVilkår(arg: FlyktningVilkårRequest & { behandlingstype: Behandlingstype }) {
+export async function lagreFlyktningVilkår(arg: ApiRequestMedBehandlingstype<FlyktningVilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/flyktning`,
         method: 'POST',
@@ -78,7 +80,7 @@ export async function lagreFlyktningVilkår(arg: FlyktningVilkårRequest & { beh
     });
 }
 
-export async function lagreLovligOppholdVilkår(arg: LovligOppholdRequest & { behandlingstype: Behandlingstype }) {
+export async function lagreLovligOppholdVilkår(arg: ApiRequestMedBehandlingstype<LovligOppholdRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/lovligopphold`,
         method: 'POST',
@@ -86,7 +88,7 @@ export async function lagreLovligOppholdVilkår(arg: LovligOppholdRequest & { be
     });
 }
 
-export async function lagreFastOppholdVilkår(arg: FastOppholdVilkårRequest & { behandlingstype: Behandlingstype }) {
+export async function lagreFastOppholdVilkår(arg: ApiRequestMedBehandlingstype<FastOppholdVilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/fastopphold`,
         method: 'POST',
@@ -95,7 +97,7 @@ export async function lagreFastOppholdVilkår(arg: FastOppholdVilkårRequest & {
 }
 
 export async function lagreInstitusjonsoppholdVilkår(
-    arg: InstitusjonsoppholdVilkårRequest & { behandlingstype: Behandlingstype }
+    arg: ApiRequestMedBehandlingstype<InstitusjonsoppholdVilkårRequest>
 ) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/institusjonsopphold`,
@@ -104,7 +106,7 @@ export async function lagreInstitusjonsoppholdVilkår(
     });
 }
 
-export async function lagreUtenlandsopphold(arg: UtenlandsoppholdRequest & { behandlingstype: Behandlingstype }) {
+export async function lagreUtenlandsopphold(arg: ApiRequestMedBehandlingstype<UtenlandsoppholdRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/utenlandsopphold`,
         method: 'POST',
@@ -116,13 +118,11 @@ export async function lagreUfullstendigBosituasjon(arg: UfullstendigBosituasjonR
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps`,
         method: 'POST',
-        body: {
-            epsFnr: arg.epsFnr,
-        },
+        body: { epsFnr: arg.epsFnr },
     });
 }
 
-export async function lagreFormuegrunnlag(arg: FormueVilkårRequest & { behandlingstype: Behandlingstype }) {
+export async function lagreFormuegrunnlag(arg: ApiRequestMedBehandlingstype<FormueVilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/formuegrunnlag`,
         method: 'POST',
@@ -130,9 +130,7 @@ export async function lagreFormuegrunnlag(arg: FormueVilkårRequest & { behandli
     });
 }
 
-export async function lagrePersonligOppmøteVilkår(
-    arg: PersonligOppmøteVilkårRequest & { behandlingstype: Behandlingstype }
-) {
+export async function lagrePersonligOppmøteVilkår(arg: ApiRequestMedBehandlingstype<PersonligOppmøteVilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/personligoppmøte`,
         method: 'POST',
@@ -148,13 +146,11 @@ export async function lagreFullstendigBosituasjon(arg: FullstendigBosituasjonReq
     });
 }
 
-export async function lagreFradragsgrunnlag(arg: Fradragsgrunnlagrequest & { behandlingstype: Behandlingstype }) {
+export async function lagreFradragsgrunnlag(arg: ApiRequestMedBehandlingstype<Fradragsgrunnlagrequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/fradrag`,
         method: 'POST',
-        body: {
-            fradrag: arg.fradrag,
-        },
+        body: { fradrag: arg.fradrag },
     });
 }
 
