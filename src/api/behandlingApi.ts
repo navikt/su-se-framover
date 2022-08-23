@@ -1,6 +1,5 @@
 import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { UfullstendigBosituasjonRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -53,17 +52,6 @@ export async function lagreVirkningstidspunkt(arg: {
         body: {
             periode: { fraOgMed: arg.fraOgMed, tilOgMed: arg.tilOgMed },
         },
-    });
-}
-
-export async function lagreGrunnlagEpsSkjermet(arg: UfullstendigBosituasjonRequest<string>) {
-    return apiClient({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps/skjermet`,
-        method: 'POST',
-        body: {
-            epsFnr: arg.epsFnr,
-        },
-        bodyTransformer: () => Promise.resolve({}),
     });
 }
 
