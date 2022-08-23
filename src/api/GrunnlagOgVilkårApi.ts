@@ -37,9 +37,9 @@ export type RevurderingOgFeilmeldinger<T extends InformasjonsRevurdering = Infor
     feilmeldinger: ErrorMessage[];
 };
 
-export type ApiRequestMedBehandlingstype<T> = T & { behandlingstype: Behandlingstype };
+export type BehandlingstypeMedApiRequest<T> = T & { behandlingstype: Behandlingstype };
 
-const mapBehandlingstypeTilriktigUrl = (sakId: string, behandlingId: string, b: Behandlingstype) => {
+const mapBehandlingstypeTilBaseUrl = (sakId: string, behandlingId: string, b: Behandlingstype) => {
     switch (b) {
         case Behandlingstype.Søknadsbehandling:
             return `/saker/${sakId}/behandlinger/${behandlingId}`;
@@ -48,9 +48,9 @@ const mapBehandlingstypeTilriktigUrl = (sakId: string, behandlingId: string, b: 
     }
 };
 
-export async function lagreUføregrunnlag(arg: ApiRequestMedBehandlingstype<UførevilkårRequest>) {
+export async function lagreUføregrunnlag(arg: BehandlingstypeMedApiRequest<UførevilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult<OpprettetRevurdering>>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/uføregrunnlag`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/uføregrunnlag`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
     });
@@ -72,43 +72,43 @@ export async function lagreFamilieforeningsgrunnlag(arg: Familiegjenforeningrequ
     });
 }
 
-export async function lagreFlyktningVilkår(arg: ApiRequestMedBehandlingstype<FlyktningVilkårRequest>) {
+export async function lagreFlyktningVilkår(arg: BehandlingstypeMedApiRequest<FlyktningVilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/flyktning`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/flyktning`,
         method: 'POST',
         body: arg.vurderinger,
     });
 }
 
-export async function lagreLovligOppholdVilkår(arg: ApiRequestMedBehandlingstype<LovligOppholdRequest>) {
+export async function lagreLovligOppholdVilkår(arg: BehandlingstypeMedApiRequest<LovligOppholdRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/lovligopphold`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/lovligopphold`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
     });
 }
 
-export async function lagreFastOppholdVilkår(arg: ApiRequestMedBehandlingstype<FastOppholdVilkårRequest>) {
+export async function lagreFastOppholdVilkår(arg: BehandlingstypeMedApiRequest<FastOppholdVilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/fastopphold`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/fastopphold`,
         method: 'POST',
         body: arg.vurderinger,
     });
 }
 
 export async function lagreInstitusjonsoppholdVilkår(
-    arg: ApiRequestMedBehandlingstype<InstitusjonsoppholdVilkårRequest>
+    arg: BehandlingstypeMedApiRequest<InstitusjonsoppholdVilkårRequest>
 ) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/institusjonsopphold`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/institusjonsopphold`,
         method: 'POST',
         body: { vurderingsperioder: arg.vurderingsperioder },
     });
 }
 
-export async function lagreUtenlandsopphold(arg: ApiRequestMedBehandlingstype<UtenlandsoppholdRequest>) {
+export async function lagreUtenlandsopphold(arg: BehandlingstypeMedApiRequest<UtenlandsoppholdRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/utenlandsopphold`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/utenlandsopphold`,
         method: 'POST',
         body: { vurderinger: arg.utenlandsopphold },
     });
@@ -122,17 +122,17 @@ export async function lagreUfullstendigBosituasjon(arg: UfullstendigBosituasjonR
     });
 }
 
-export async function lagreFormuegrunnlag(arg: ApiRequestMedBehandlingstype<FormueVilkårRequest>) {
+export async function lagreFormuegrunnlag(arg: BehandlingstypeMedApiRequest<FormueVilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/formuegrunnlag`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/formuegrunnlag`,
         method: 'POST',
         body: arg.vurderinger,
     });
 }
 
-export async function lagrePersonligOppmøteVilkår(arg: ApiRequestMedBehandlingstype<PersonligOppmøteVilkårRequest>) {
+export async function lagrePersonligOppmøteVilkår(arg: BehandlingstypeMedApiRequest<PersonligOppmøteVilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/personligoppmøte`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/personligoppmøte`,
         method: 'POST',
         body: arg.vurderinger,
     });
@@ -146,9 +146,9 @@ export async function lagreFullstendigBosituasjon(arg: FullstendigBosituasjonReq
     });
 }
 
-export async function lagreFradragsgrunnlag(arg: ApiRequestMedBehandlingstype<Fradragsgrunnlagrequest>) {
+export async function lagreFradragsgrunnlag(arg: BehandlingstypeMedApiRequest<Fradragsgrunnlagrequest>) {
     return apiClient<VilkårOgGrunnlagApiResult>({
-        url: `${mapBehandlingstypeTilriktigUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/fradrag`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/fradrag`,
         method: 'POST',
         body: { fradrag: arg.fradrag },
     });
