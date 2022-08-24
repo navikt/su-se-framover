@@ -10,6 +10,8 @@ export default {
 
     'fastOpphold.vilkår': 'Oppholder søker seg fast i Norge?',
 
+    'institusjonsopphold.vilkår': 'Har søkeren eller har søkeren hatt institusjonsopphold som skal føre til avslag?',
+
     'formue.personkort.eps': 'Ektefelle/Samboer',
 
     'formue.grunnlag.verdi.verdiIkkePrimærbolig': 'Verdier på bolig',
