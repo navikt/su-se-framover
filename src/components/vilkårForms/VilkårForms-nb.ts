@@ -8,6 +8,8 @@ export default {
 
     'lovligOpphold.vilkår': 'Har søker lovlig opphold i Norge?',
 
+    'fastOpphold.vilkår': 'Oppholder søker seg fast i Norge?',
+
     'formue.personkort.eps': 'Ektefelle/Samboer',
 
     'formue.grunnlag.verdi.verdiIkkePrimærbolig': 'Verdier på bolig',
