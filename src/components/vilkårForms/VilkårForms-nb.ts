@@ -12,6 +12,9 @@ export default {
 
     'institusjonsopphold.vilkår': 'Har søkeren eller har søkeren hatt institusjonsopphold som skal føre til avslag?',
 
+    'utenlandsopphold.vilkår':
+        'Har søker planlagt å oppholde seg i utlandet i mer enn 90 dager innenfor stønadsperioden?',
+
     'formue.personkort.eps': 'Ektefelle/Samboer',
 
     'formue.grunnlag.verdi.verdiIkkePrimærbolig': 'Verdier på bolig',

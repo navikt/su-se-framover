@@ -14,7 +14,7 @@ import { LovligOppholdVilkår } from './lovligOpphold/LovligOppholdVilkår';
 import { OpplysningspliktVilkår } from './opplysningsplikt/Opplysningsplikt';
 import { PersonligOppmøteVilkår } from './personligOppmøte/PersonligOppmøteVilkår';
 import { UføreVilkår } from './uføre/Uførevilkår';
-import { Utenlandsopphold } from './utenlandsopphold/Utenlandsopphold';
+import { UtenlandsoppholdVilkår } from './utenlandsopphold/Utenlandsopphold';
 
 export interface GrunnlagsdataOgVilkårsvurderinger {
     pensjon: Nullable<Aldersvilkår>;
@@ -26,7 +26,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];
     formue: FormueVilkår;
-    utenlandsopphold: Nullable<Utenlandsopphold>;
+    utenlandsopphold: Nullable<UtenlandsoppholdVilkår>;
     opplysningsplikt: Nullable<OpplysningspliktVilkår>;
     personligOppmøte: Nullable<PersonligOppmøteVilkår>;
     institusjonsopphold: Nullable<InstitusjonsoppholdVilkår>;
@@ -56,7 +56,7 @@ export const uføreErlik = (ny: Nullable<UføreVilkår>, gammel: Nullable<Uføre
 
 export const fradragErlik = (ny: Fradrag[], gammel: Fradrag[]) => isEqual(ny, gammel);
 
-export const utenlandsoppholdErlik = (ny: Nullable<Utenlandsopphold>, gammel: Nullable<Utenlandsopphold>) =>
+export const utenlandsoppholdErlik = (ny: Nullable<UtenlandsoppholdVilkår>, gammel: Nullable<UtenlandsoppholdVilkår>) =>
     isEqual(ny, gammel);
 
 export const bosituasjonErlik = (ny: Bosituasjon[], gammel: Bosituasjon[]) => {
