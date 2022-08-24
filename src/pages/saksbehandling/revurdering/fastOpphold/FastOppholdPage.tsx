@@ -9,13 +9,13 @@ import {
     FastOppholdVilkårFormData,
     fastOppholdFormSchema,
     fastOppholdVilkårTilFormDataEllerNy,
+    fastOppholdFormDataTilRequest,
 } from '~src/components/vilkårForms/fastOpphold/FastOppholdFormUtils';
 import { lagreFastOppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { GjeldendeFastOppholdVilkår } from '~src/pages/saksbehandling/revurdering/fastOpphold/GjeldendeFastOppholdVilkår';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { RevurderingStegProps } from '~src/types/Revurdering';
-import * as DateUtils from '~src/utils/date/dateUtils';
 
 export function FastOppholdPage(props: RevurderingStegProps) {
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
@@ -30,16 +30,12 @@ export function FastOppholdPage(props: RevurderingStegProps) {
     const lagreFastOpphold = (values: FastOppholdVilkårFormData, onSuccess: () => void) =>
         lagre(
             {
-                sakId: props.sakId,
-                behandlingId: props.revurdering.id,
-                vurderinger: values.fastOpphold.map((v) => ({
-                    periode: {
-                        fraOgMed: DateUtils.toIsoDateOnlyString(v.periode.fraOgMed!),
-                        tilOgMed: DateUtils.toIsoDateOnlyString(v.periode.tilOgMed!),
-                    },
-                    vurdering: v.resultat!,
-                })),
-                behandlingstype: Behandlingstype.Revurdering,
+                ...fastOppholdFormDataTilRequest({
+                    sakId: props.sakId,
+                    behandlingId: props.revurdering.id,
+                    vilkår: values,
+                }),
+                behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             (res) => {
                 if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {

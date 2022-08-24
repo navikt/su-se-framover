@@ -11,6 +11,7 @@ import {
     fastOppholdFormSchema,
     FastOppholdVilkårFormData,
     fastOppholdVilkårTilFormDataEllerNy,
+    fastOppholdFormDataTilRequest,
 } from '~src/components/vilkårForms/fastOpphold/FastOppholdFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreFastOppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -38,20 +39,19 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         (values) => eqFastOppholdVilkårFormData.equals(values, initialValues)
     );
 
-    const handleSave = async (values: FastOppholdVilkårFormData, onSuccess: () => void) => {
+    const handleSave = (values: FastOppholdVilkårFormData, onSuccess: () => void) => {
         if (eqFastOppholdVilkårFormData.equals(values, initialValues)) {
             clearDraft();
             onSuccess();
             return;
         }
-        await lagre(
+        lagre(
             {
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                vurderinger: values.fastOpphold.map((fastOpphold) => ({
-                    periode: props.behandling.stønadsperiode!.periode,
-                    vurdering: fastOpphold.resultat!,
-                })),
+                ...fastOppholdFormDataTilRequest({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    vilkår: values,
+                }),
                 behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             () => {
