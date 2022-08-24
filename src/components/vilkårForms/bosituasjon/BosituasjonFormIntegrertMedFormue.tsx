@@ -8,8 +8,9 @@ import { ErrorCode } from '~src/api/apiClient';
 import * as personApi from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import personSlice from '~src/features/person/person.slice';
-import sakSliceActions, * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import sakSliceActions from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -104,15 +105,16 @@ const EpsSkjermingModalOgPersonkort = (props: {
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages });
 
-    const [lagreEpsGrunnlagSkjermetStatus, lagreEpsGrunnlagSkjermet] = useAsyncActionCreator(
-        sakSlice.lagreEpsGrunnlagSkjermet
+    const [lagreEpsGrunnlagStatus, lagreEpsGrunnlag] = useAsyncActionCreator(
+        GrunnlagOgVilkårActions.lagreUfullstendigBosituasjon
     );
-    const handleEpsSkjermingModalContinueClick = (epsFnr: string) => {
-        lagreEpsGrunnlagSkjermet(
+
+    const handleEpsSkjermingModalContinueClick = async () => {
+        await lagreEpsGrunnlag(
             {
                 sakId: props.sakId,
                 behandlingId: props.søknadsbehandlingId,
-                epsFnr: epsFnr,
+                epsFnr: props.form.getValues('epsFnr'),
             },
             () => {
                 dispatch(sakSliceActions.actions.resetSak());
@@ -155,20 +157,16 @@ const EpsSkjermingModalOgPersonkort = (props: {
                                                         br: () => <br />,
                                                     })}
                                                 </BodyLong>
-                                                {RemoteData.isFailure(lagreEpsGrunnlagSkjermetStatus) && (
-                                                    <ApiErrorAlert error={lagreEpsGrunnlagSkjermetStatus.error} />
+                                                {RemoteData.isFailure(lagreEpsGrunnlagStatus) && (
+                                                    <ApiErrorAlert error={lagreEpsGrunnlagStatus.error} />
                                                 )}
                                                 <Button
                                                     variant="secondary"
                                                     type="button"
-                                                    onClick={() =>
-                                                        handleEpsSkjermingModalContinueClick(
-                                                            props.form.getValues().epsFnr ?? ''
-                                                        )
-                                                    }
+                                                    onClick={() => handleEpsSkjermingModalContinueClick()}
                                                 >
                                                     OK
-                                                    {RemoteData.isPending(lagreEpsGrunnlagSkjermetStatus) && <Loader />}
+                                                    {RemoteData.isPending(lagreEpsGrunnlagStatus) && <Loader />}
                                                 </Button>
                                             </div>
                                         </Modal.Content>

@@ -96,10 +96,10 @@ export const bosituasjonHarEps = (bosituasjon: Bosituasjon) =>
         BosituasjonTyper.UFULLSTENDIG_HAR_EPS,
     ].includes(bosituasjon.type);
 
-export interface UfullstendigBosituasjonRequest<T extends Nullable<string> = Nullable<string>> {
+export interface UfullstendigBosituasjonRequest {
     sakId: string;
     behandlingId: string;
-    epsFnr: T;
+    epsFnr: Nullable<string>;
 }
 
 export interface FullstendigBosituasjonRequest {

@@ -16,7 +16,6 @@ import { Nullable } from '~src/lib/types';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
-import { UfullstendigBosituasjonRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Klage } from '~src/types/Klage';
 import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
@@ -96,18 +95,6 @@ export const fetchBehandling = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/fetch', async ({ sakId, behandlingId }, thunkApi) => {
     const res = await behandlingApi.hentBehandling(sakId, behandlingId);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreEpsGrunnlagSkjermet = createAsyncThunk<
-    unknown,
-    UfullstendigBosituasjonRequest<string>,
-    { rejectValue: ApiError }
->('behandling/grunnlag/bosituasjon/eps/skjermet', async (arg, thunkApi) => {
-    const res = await behandlingApi.lagreGrunnlagEpsSkjermet(arg);
     if (res.status === 'ok') {
         return res.data;
     }
