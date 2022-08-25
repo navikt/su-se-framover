@@ -1,6 +1,7 @@
 import { struct } from 'fp-ts/lib/Eq';
 import * as N from 'fp-ts/lib/number';
 import * as S from 'fp-ts/lib/string';
+import isEqual from 'lodash.isequal';
 
 import { eqNullable, Nullable } from '~src/lib/types';
 
@@ -14,6 +15,8 @@ export interface Fradrag {
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
     tilhører: FradragTilhører;
 }
+
+export const fradragErlik = (ny: Fradrag[], gammel: Fradrag[]) => isEqual(ny, gammel);
 
 const eqUtenlandskInntekt = struct<UtenlandskInntekt>({
     beløpIUtenlandskValuta: N.Eq,

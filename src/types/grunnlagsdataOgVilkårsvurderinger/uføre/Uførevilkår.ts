@@ -1,5 +1,9 @@
+import isEqual from 'lodash.isequal';
+
 import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
+
+import { trimIdFromList, trimIdFromObject } from '../grunnlagsdataOgVilkårsvurderinger';
 
 import { Uføregrunnlag } from './Uføregrunnlag';
 
@@ -35,3 +39,25 @@ export interface UføreVurderingsperiodeRequest {
     forventetInntekt: Nullable<number>;
     resultat: UføreResultat;
 }
+
+export const uføreErlik = (ny: Nullable<UføreVilkår>, gammel: Nullable<UføreVilkår>) => {
+    const trimmedNy = {
+        ...ny,
+        vurderinger: trimIdFromList(
+            (ny?.vurderinger ?? []).map((vurdering) => ({
+                ...vurdering,
+                grunnlag: trimIdFromObject(vurdering.grunnlag),
+            }))
+        ),
+    };
+    const trimmedGammel = {
+        ...gammel,
+        vurderinger: trimIdFromList(
+            (gammel?.vurderinger ?? []).map((vurdering) => ({
+                ...vurdering,
+                grunnlag: trimIdFromObject(vurdering.grunnlag),
+            }))
+        ),
+    };
+    return isEqual(trimmedNy, trimmedGammel);
+};

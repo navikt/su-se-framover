@@ -1,3 +1,6 @@
+import isEqual from 'lodash.isequal';
+
+import { Nullable } from '~src/lib/types';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
 
@@ -33,3 +36,6 @@ export enum PersonligOppmøteÅrsak {
     IkkeMøttPersonlig = 'IkkeMøttPersonlig',
     Uavklart = 'Uavklart',
 }
+
+export const personligOppmøteErLik = (ny: Nullable<PersonligOppmøteVilkår>, gammel: Nullable<PersonligOppmøteVilkår>) =>
+    isEqual(ny, gammel);

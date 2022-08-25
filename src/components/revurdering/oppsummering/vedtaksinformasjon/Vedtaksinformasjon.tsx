@@ -10,22 +10,21 @@ import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/
 import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårForms/formue/FormueFormUtils';
 import { useI18n } from '~src/lib/i18n';
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
-import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { fradragErlik } from '~src/types/Fradrag';
 import {
+    Bosituasjon,
     bosituasjonErlik,
-    fastOppholdErLik,
-    flyktningErLik,
-    formueErlik,
-    fradragErlik,
-    GrunnlagsdataOgVilkårsvurderinger,
-    institusjonsoppholdErLik,
-    lovligOppholdErLik,
-    opplysningspliktErLik,
-    personligOppmøteErLik,
-    uføreErlik,
-    utenlandsoppholdErlik,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { fastOppholdErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
+import { flyktningErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
+import { formueErlik, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { institusjonsoppholdErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
+import { lovligOppholdErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
+import { opplysningspliktErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
+import { personligOppmøteErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
+import { uføreErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { utenlandsoppholdErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';

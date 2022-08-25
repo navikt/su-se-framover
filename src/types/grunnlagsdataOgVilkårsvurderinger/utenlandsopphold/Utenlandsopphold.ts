@@ -1,3 +1,6 @@
+import isEqual from 'lodash.isequal';
+
+import { Nullable } from '~src/lib/types';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
 
@@ -44,3 +47,6 @@ export const utenlandsoppholdStatusTilVilkårStatus = (u: Utenlandsoppholdstatus
             return Vilkårstatus.Uavklart;
     }
 };
+
+export const utenlandsoppholdErlik = (ny: Nullable<UtenlandsoppholdVilkår>, gammel: Nullable<UtenlandsoppholdVilkår>) =>
+    isEqual(ny, gammel);

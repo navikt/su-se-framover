@@ -1,6 +1,10 @@
+import isEqual from 'lodash.isequal';
+
 import { Nullable } from '~src/lib/types';
 import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
+
+import { trimIdFromObject } from '../grunnlagsdataOgVilkårsvurderinger';
 
 import { Formuegrunnlag, FormuegrunnlagRequest } from './Formuegrunnlag';
 
@@ -29,3 +33,16 @@ export interface FormueVilkårRequest {
     behandlingId: string;
     vurderinger: FormuegrunnlagRequest[];
 }
+
+export const formueErlik = (ny: FormueVilkår, gammel: FormueVilkår) => {
+    const trimmedNy = {
+        ...ny,
+        vurderinger: ny.vurderinger.map((vurdering) => ({ ...trimIdFromObject(vurdering), opprettet: '' })),
+    };
+    const trimmedGammel = {
+        ...gammel,
+        vurderinger: gammel.vurderinger.map((vurdering) => ({ ...trimIdFromObject(vurdering), opprettet: '' })),
+    };
+
+    return isEqual(trimmedNy, trimmedGammel);
+};

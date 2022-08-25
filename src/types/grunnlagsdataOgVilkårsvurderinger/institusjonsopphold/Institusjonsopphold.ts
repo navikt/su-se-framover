@@ -1,3 +1,6 @@
+import isEqual from 'lodash.isequal';
+
+import { Nullable } from '~src/lib/types';
 import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
 
@@ -22,3 +25,8 @@ export interface InstitusjonsoppholdVurderingRequest {
     periode: Periode<string>;
     vurdering: Vilkårstatus;
 }
+
+export const institusjonsoppholdErLik = (
+    ny: Nullable<InstitusjonsoppholdVilkår>,
+    gammel: Nullable<InstitusjonsoppholdVilkår>
+) => isEqual(ny, gammel);

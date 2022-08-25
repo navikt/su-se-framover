@@ -1,3 +1,5 @@
+import isEqual from 'lodash.isequal';
+
 import { Nullable } from '~src/lib/types';
 
 import { Periode } from '../../Periode';
@@ -107,3 +109,10 @@ export interface FullstendigBosituasjonRequest {
     behandlingId: string;
     bosituasjon: string;
 }
+
+export const bosituasjonErlik = (ny: Bosituasjon[], gammel: Bosituasjon[]) => {
+    const trimmedNy = { ...ny };
+    const trimmedGammel = { ...gammel };
+
+    return isEqual(trimmedNy, trimmedGammel);
+};
