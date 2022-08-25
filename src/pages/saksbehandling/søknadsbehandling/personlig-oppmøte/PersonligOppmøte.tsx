@@ -41,7 +41,8 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
     const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
     const initialValues = personligOppmøteVilkårTilFormDataEllerNy(
-        props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte
+        props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte,
+        props.behandling.stønadsperiode?.periode
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } =
