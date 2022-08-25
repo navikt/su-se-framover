@@ -10,7 +10,6 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import messages from '../VilkårForms-nb';
 import { VilkårFormProps } from '../VilkårFormUtils';
 
-import styles from './fastOppholdForm.module.less';
 import { FastOppholdVilkårFormData, nyVurderingsperiodeFastOppholdMedEllerUtenPeriode } from './FastOppholdFormUtils';
 
 interface Props extends VilkårFormProps<FastOppholdVilkårFormData> {
@@ -22,19 +21,10 @@ const FastOppholdForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <FormWrapper
-            form={props.form}
-            save={props.onFormSubmit}
-            savingState={props.savingState}
-            avsluttUrl={props.avsluttUrl}
-            forrigeUrl={props.forrigeUrl}
-            nesteUrl={props.nesteUrl}
-            onTilbakeClickOverride={props.onTilbakeClickOverride}
-        >
+        <FormWrapper save={props.onFormSubmit} {...props}>
             <>
                 <MultiPeriodeVelger
                     name="fastOpphold"
-                    className={styles.multiperiodeVelger}
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodeFastOppholdMedEllerUtenPeriode}
                     periodeConfig={{
@@ -51,8 +41,7 @@ const FastOppholdForm = (props: Props) => {
                             }
                         />
                     )}
-                    begrensTilEnPeriode={props.begrensTilEnPeriode}
-                    skalIkkeKunneVelgePeriode={props.skalIkkeKunneVelgePeriode}
+                    {...props}
                 />
                 {RemoteData.isSuccess(props.savingState) && 'feilmeldinger' in props.savingState.value && (
                     <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />

@@ -10,7 +10,6 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import messages from '../VilkårForms-nb';
 import { VilkårFormProps } from '../VilkårFormUtils';
 
-import styles from './utenlandsoppholdForm.module.less';
 import {
     UtenlandsoppholdVilkårFormData,
     nyVurderingsperiodeUtenlandsoppholdMedEllerUtenPeriode,
@@ -29,7 +28,6 @@ const UtenlandsoppholdForm = (props: Props) => {
             <>
                 <MultiPeriodeVelger
                     name="utenlandsopphold"
-                    className={styles.multiperiodeVelger}
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodeUtenlandsoppholdMedEllerUtenPeriode}
                     periodeConfig={{

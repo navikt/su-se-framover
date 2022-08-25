@@ -10,7 +10,6 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import messages from '../VilkårForms-nb';
 import { VilkårFormProps } from '../VilkårFormUtils';
 
-import styles from './flyktningForm.module.less';
 import { FlyktningVilkårFormData, nyVurderingsperiodeFlyktningMedEllerUtenPeriode } from './FlyktningFormUtils';
 
 interface Props extends VilkårFormProps<FlyktningVilkårFormData> {
@@ -24,20 +23,10 @@ const FlyktningForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <FormWrapper
-            form={props.form}
-            save={props.onFormSubmit}
-            savingState={props.savingState}
-            avsluttUrl={props.avsluttUrl}
-            forrigeUrl={props.forrigeUrl}
-            nesteUrl={props.nesteUrl}
-            onTilbakeClickOverride={props.onTilbakeClickOverride}
-            nesteKnappTekst={props.nesteknappTekst}
-        >
+        <FormWrapper save={props.onFormSubmit} {...props}>
             <>
                 <MultiPeriodeVelger
                     name="flyktning"
-                    className={styles.multiperiodeVelger}
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodeFlyktningMedEllerUtenPeriode}
                     periodeConfig={{
@@ -54,8 +43,7 @@ const FlyktningForm = (props: Props) => {
                             }
                         />
                     )}
-                    begrensTilEnPeriode={props.begrensTilEnPeriode}
-                    skalIkkeKunneVelgePeriode={props.skalIkkeKunneVelgePeriode}
+                    {...props}
                 />
                 {props.children}
                 {RemoteData.isSuccess(props.savingState) && 'feilmeldinger' in props.savingState.value && (

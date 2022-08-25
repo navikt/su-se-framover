@@ -10,7 +10,6 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import messages from '../VilkårForms-nb';
 import { VilkårFormProps } from '../VilkårFormUtils';
 
-import styles from './institusjonsoppholdForm.module.less';
 import {
     InstitusjonsoppholdVilkårFormData,
     nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode,
@@ -29,7 +28,6 @@ const InstitusjonsoppholdForm = (props: Props) => {
             <>
                 <MultiPeriodeVelger
                     name="institusjonsopphold"
-                    className={styles.multiperiodeVelger}
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode}
                     periodeConfig={{
@@ -47,8 +45,7 @@ const InstitusjonsoppholdForm = (props: Props) => {
                             ommvendtVilkårStatus
                         />
                     )}
-                    begrensTilEnPeriode={props.begrensTilEnPeriode}
-                    skalIkkeKunneVelgePeriode={props.skalIkkeKunneVelgePeriode}
+                    {...props}
                 />
                 {RemoteData.isSuccess(props.savingState) && 'feilmeldinger' in props.savingState.value && (
                     <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />

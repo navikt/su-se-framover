@@ -52,7 +52,7 @@ interface Props extends Omit<VilkårFormProps<FormueVilkårFormData>, 'savingSta
 const FormueForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <FormWrapper save={props.onFormSubmit} onTilbakeClickOverride={props.onTilbakeClickOverride} {...props}>
+        <FormWrapper save={props.onFormSubmit} {...props}>
             <>
                 <MultiPeriodeVelger
                     name="formue"

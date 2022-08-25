@@ -13,7 +13,6 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import messages from '../VilkårForms-nb';
 import { VilkårFormProps } from '../VilkårFormUtils';
 
-import styles from './personligOppmøteForm.module.less';
 import {
     HarMøttPersonlig,
     nyVurderingsperiodePersonligOppmøteMedEllerUtenPeriode,
@@ -35,7 +34,6 @@ const PersonligOppmøteForm = (props: Props) => {
             <>
                 <MultiPeriodeVelger
                     name="personligOppmøte"
-                    className={styles.multiperiodeVelger}
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodePersonligOppmøteMedEllerUtenPeriode}
                     periodeConfig={{
@@ -49,7 +47,6 @@ const PersonligOppmøteForm = (props: Props) => {
                                 name={`${nameAndIdx}.møttPersonlig`}
                                 render={({ field, fieldState }) => (
                                     <RadioGroup
-                                        className={styles.vurderingRadiogroup}
                                         {...field}
                                         legend={formatMessage('personligOppmøte.vilkår')}
                                         error={fieldState.error?.message}
