@@ -1,3 +1,5 @@
+import { personligOppmøteÅrsakTekster } from '~src/typeMappinger/PersonligOppmøteÅrsak';
+
 export default {
     'uførhet.vilkår': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
     'uførhet.input.uføregrad.label': 'Uføregrad',
@@ -39,4 +41,11 @@ export default {
     'formueOgBosituasjon.modal.skjerming.ariaBeskrivelse': 'Advarsel om at søkers ektefelle har en type skjerming',
     'formueOgBosituasjon.modal.skjerming.heading': 'Ektefelle/samboer har en type skjerming',
     'formueOgBosituasjon.modal.skjerming.innhold': `Ektefellen/samboeren til {navn} ({fnr}) har en type <b>skjerming</b> (fortrolig adresse, strengt fortrolig adresse eller skjerming). {br} {br} Derfor mister du tilgang til saken og den må behandles av noen med riktig tilgang.`,
+
+    'personligOppmøte.vilkår': 'Har bruker møtt personlig?',
+    'personligOppmøte.ikkeMøttPersonlig.vilkår': 'Hvorfor har ikke bruker møtt personlig?',
+    'radio.label.ja': 'Ja',
+    'radio.label.nei': 'Nei',
+    'radio.label.uavklart': 'Uavklart',
+    ...personligOppmøteÅrsakTekster,
 };
