@@ -1,10 +1,8 @@
-import { BodyLong, Button, Heading, Loader, Modal } from '@navikt/ds-react';
+import { BodyLong, Button, Heading, Modal } from '@navikt/ds-react';
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
-import TextProvider from '~src/components/TextProvider';
-import { Languages } from '~src/lib/i18n';
+import { useI18n } from '~src/lib/i18n';
 
 import messages from './bunnknapper-nb';
 import * as styles from './bunnknapper.module.less';
@@ -24,13 +22,11 @@ const Bunnknapper = (props: {
     };
 }) => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const { formatMessage } = useI18n({ messages });
+
     return (
-        <TextProvider messages={{ [Languages.nb]: messages }}>
+        <div>
             <div className={styles.container}>
-                <Button type="submit" className={styles.navKnapp}>
-                    {props.next?.label ?? <FormattedMessage id="steg.neste" />}
-                    {props.next?.spinner && <Loader />}
-                </Button>
                 {props.previous && (
                     <Button
                         variant="secondary"
@@ -44,9 +40,12 @@ const Bunnknapper = (props: {
                             }
                         }}
                     >
-                        {props.previous.label ?? <FormattedMessage id="steg.forrige" />}
+                        {props.previous.label ?? formatMessage('steg.forrige')}
                     </Button>
                 )}
+                <Button type="submit" className={styles.navKnapp} loading={props.next?.spinner}>
+                    {props.next?.label ?? formatMessage('steg.neste')}
+                </Button>
             </div>
             <div className={styles.avbrytknappContainer}>
                 <Button
@@ -55,35 +54,31 @@ const Bunnknapper = (props: {
                     onClick={() => setModalOpen(true)}
                     className={styles.avbrytknapp}
                 >
-                    <FormattedMessage id="steg.avbryt" />
+                    {formatMessage('steg.avbryt')}
                 </Button>
             </div>
             <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
                 <Modal.Content>
                     <div className={styles.modalContainer}>
-                        <Heading level="2" size="medium" className={styles.modalTittel}>
-                            <FormattedMessage id="modal.tittel" />
+                        <Heading level="2" size="medium" spacing>
+                            {formatMessage('modal.tittel')}
                         </Heading>
-                        <BodyLong>
-                            <p>
-                                <FormattedMessage id="modal.infoTekst.p1" />
-                            </p>
-                            <p>
-                                <FormattedMessage id="modal.infoTekst.p2" />
-                            </p>
+                        <BodyLong as={'div'}>
+                            <p>{formatMessage('modal.infoTekst.p1')}</p>
+                            <p>{formatMessage('modal.infoTekst.p2')}</p>
                         </BodyLong>
                         <div className={styles.modalKnappContainer}>
                             <Button variant="tertiary" onClick={() => setModalOpen(false)}>
-                                <FormattedMessage id="steg.avbryt" />
+                                {formatMessage('steg.avbryt')}
                             </Button>
                             <LinkAsButton variant="danger" href={props.avbryt.toRoute}>
-                                <FormattedMessage id="modal.lukkSøknad" />
+                                {formatMessage('modal.lukkSøknad')}
                             </LinkAsButton>
                         </div>
                     </div>
                 </Modal.Content>
             </Modal>
-        </TextProvider>
+        </div>
     );
 };
 
