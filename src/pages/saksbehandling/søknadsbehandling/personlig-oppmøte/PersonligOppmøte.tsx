@@ -1,30 +1,31 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
-import { struct } from 'fp-ts/lib/Eq';
-import * as S from 'fp-ts/string';
+import { Alert } from '@navikt/ds-react';
 import React, { useRef } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { PersonligOppmøteFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import PersonligOppmøteForm from '~src/components/vilkårForms/personligOppmøte/PersonligOppmøteForm';
+import {
+    PersonligOppmøteVilkårFormData,
+    personligOppmøteFormDataTilRequest,
+    eqPersonligOppmøteVilkårFormData,
+    personligOppmøteFormSchema,
+    personligOppmøteVilkårTilFormDataEllerNy,
+} from '~src/components/vilkårForms/personligOppmøte/PersonligOppmøteFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagrePersonligOppmøteVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { eqNullable } from '~src/lib/types';
-import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import {
-    getInitialFormValues,
-    toPersonligOppmøteÅrsak,
-} from '~src/pages/saksbehandling/søknadsbehandling/personlig-oppmøte/utils';
 import { erNoenVurdertUavklart } from '~src/pages/saksbehandling/utils';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Sakstype } from '~src/types/Sak';
 import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
+import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 import { mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -32,12 +33,6 @@ import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './personligOppmøte-nb';
 import * as styles from './personligOppmøte.module.less';
-import { FormData, HarMøttPersonlig, ManglendeOppmøteGrunn, schema } from './types';
-
-const eqFormData = struct<FormData>({
-    møttPersonlig: eqNullable(S.Eq),
-    grunnForManglendePersonligOppmøte: eqNullable(S.Eq),
-});
 
 const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakstype }) => {
     const navigate = useNavigate();
@@ -45,55 +40,49 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
-    const initialValues = getInitialFormValues(props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte);
-
-    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
-        Vilkårtype.PersonligOppmøte,
-        (values) => eqFormData.equals(values, initialValues)
+    const initialValues = personligOppmøteVilkårTilFormDataEllerNy(
+        props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte
     );
+
+    const { draft, clearDraft, useDraftFormSubscribe } =
+        useSøknadsbehandlingDraftContextFor<PersonligOppmøteVilkårFormData>(Vilkårtype.PersonligOppmøte, (values) =>
+            eqPersonligOppmøteVilkårFormData.equals(values, initialValues)
+        );
 
     const form = useForm({
         defaultValues: draft ?? initialValues,
-        resolver: yupResolver(schema),
+        resolver: yupResolver(personligOppmøteFormSchema),
     });
 
     useDraftFormSubscribe(form.watch);
-
-    const watch = form.watch();
 
     const erNoenVilkårVurdertUavklart = (grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger) => {
         return erNoenVurdertUavklart(mapToVilkårsinformasjon(props.sakstype, grunnlagsdataOgVilkårsvurderinger));
     };
 
-    const save = async (values: FormData, onSuccess: (res: Søknadsbehandling) => void) => {
-        const personligOppmøteStatus = toPersonligOppmøteÅrsak(values);
-
+    const save = async (values: PersonligOppmøteVilkårFormData, onSuccess: (res: Søknadsbehandling) => void) => {
         lagre(
             {
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                vurderinger: [
-                    {
-                        periode: props.behandling.stønadsperiode!.periode,
-                        vurdering: personligOppmøteStatus,
-                    },
-                ],
+                ...personligOppmøteFormDataTilRequest({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    vilkår: values,
+                }),
                 behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             (res) => {
                 const oppdatertSøknadsbehandling = res as Søknadsbehandling;
                 clearDraft();
-                if (erNoenVilkårVurdertUavklart(oppdatertSøknadsbehandling.grunnlagsdataOgVilkårsvurderinger)) {
-                    advarselRef.current?.focus();
-                    return;
-                }
-
                 onSuccess(oppdatertSøknadsbehandling);
             }
         );
     };
 
     const onSuccess = (res: Søknadsbehandling) => {
+        if (erNoenVilkårVurdertUavklart(res.grunnlagsdataOgVilkårsvurderinger)) {
+            advarselRef.current?.focus();
+            return;
+        }
         res.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
             ? navigate(
                   Routes.saksbehandlingSendTilAttestering.createURL({
@@ -108,102 +97,29 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <FormWrapper
+                    <PersonligOppmøteForm
                         form={form}
-                        save={save}
+                        minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
+                        onFormSubmit={save}
                         savingState={status}
-                        avsluttUrl={props.avsluttUrl}
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={props.nesteUrl}
+                        søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                         onSuccess={onSuccess}
+                        begrensTilEnPeriode
+                        skalIkkeKunneVelgePeriode
+                        {...props}
                     >
-                        <>
-                            <div className={styles.formElement}>
-                                <Controller
-                                    control={form.control}
-                                    name="møttPersonlig"
-                                    render={({ field, fieldState }) => (
-                                        <RadioGroup
-                                            legend={formatMessage('radio.personligOppmøte.legend')}
-                                            error={fieldState.error?.message}
-                                            onBlur={field.onBlur}
-                                            name={field.name}
-                                            value={field.value ?? ''}
-                                            onChange={(val) => {
-                                                field.onChange(val);
-                                                val !== HarMøttPersonlig.Nei &&
-                                                    form.setValue('grunnForManglendePersonligOppmøte', null);
-                                            }}
-                                        >
-                                            <Radio id={field.name} value={HarMøttPersonlig.Ja} ref={field.ref}>
-                                                {formatMessage('radio.label.ja')}
-                                            </Radio>
-                                            <Radio value={HarMøttPersonlig.Nei}>
-                                                {formatMessage('radio.label.nei')}
-                                            </Radio>
-                                            <Radio value={HarMøttPersonlig.Uavklart}>
-                                                {formatMessage('radio.label.uavklart')}
-                                            </Radio>
-                                        </RadioGroup>
-                                    )}
-                                />
-                            </div>
-                            {watch.møttPersonlig === HarMøttPersonlig.Nei && (
-                                <div className={styles.formElement}>
-                                    <Controller
-                                        control={form.control}
-                                        name="grunnForManglendePersonligOppmøte"
-                                        render={({ field, fieldState }) => (
-                                            <RadioGroup
-                                                legend={formatMessage('radio.personligOppmøte.grunn.legend')}
-                                                error={fieldState.error?.message}
-                                                onBlur={field.onBlur}
-                                                name={field.name}
-                                                value={field.value ?? ''}
-                                                onChange={field.onChange}
-                                            >
-                                                <Radio
-                                                    id={field.name}
-                                                    ref={field.ref}
-                                                    value={ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt}
-                                                >
-                                                    {formatMessage(ManglendeOppmøteGrunn.SykMedLegeerklæringOgFullmakt)}
-                                                </Radio>
-                                                <Radio value={ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost}>
-                                                    {formatMessage(ManglendeOppmøteGrunn.OppnevntVergeSøktPerPost)}
-                                                </Radio>
-                                                <Radio value={ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring}>
-                                                    {formatMessage(ManglendeOppmøteGrunn.KortvarigSykMedLegeerklæring)}
-                                                </Radio>
-                                                <Radio value={ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt}>
-                                                    {formatMessage(
-                                                        ManglendeOppmøteGrunn.MidlertidigUnntakFraOppmøteplikt
-                                                    )}
-                                                </Radio>
-                                                <Radio value={ManglendeOppmøteGrunn.BrukerIkkeMøttOppfyllerIkkeVilkår}>
-                                                    {formatMessage(
-                                                        ManglendeOppmøteGrunn.BrukerIkkeMøttOppfyllerIkkeVilkår
-                                                    )}
-                                                </Radio>
-                                            </RadioGroup>
-                                        )}
-                                    />
-                                </div>
+                        <div
+                            ref={advarselRef}
+                            tabIndex={-1}
+                            aria-live="polite"
+                            aria-atomic="true"
+                            className={styles.alertstripe}
+                        >
+                            {erNoenVilkårVurdertUavklart(props.behandling.grunnlagsdataOgVilkårsvurderinger) && (
+                                <Alert variant="warning">{formatMessage('alert.ikkeFerdigbehandlet')}</Alert>
                             )}
-
-                            <div
-                                ref={advarselRef}
-                                tabIndex={-1}
-                                aria-live="polite"
-                                aria-atomic="true"
-                                className={styles.alertstripe}
-                            >
-                                {erNoenVilkårVurdertUavklart(props.behandling.grunnlagsdataOgVilkårsvurderinger) && (
-                                    <Alert variant="warning">{formatMessage('alert.ikkeFerdigbehandlet')}</Alert>
-                                )}
-                            </div>
-                        </>
-                    </FormWrapper>
+                        </div>
+                    </PersonligOppmøteForm>
                 ),
                 right: <PersonligOppmøteFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
