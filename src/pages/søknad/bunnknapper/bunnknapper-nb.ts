@@ -1,7 +1,6 @@
 export default {
     'steg.neste': 'Neste',
     'steg.forrige': 'Forrige',
-    'steg.sendInn': 'Send inn søknaden',
     'steg.avbryt': 'Avbryt',
 
     'modal.tittel': 'Lukk søknaden',

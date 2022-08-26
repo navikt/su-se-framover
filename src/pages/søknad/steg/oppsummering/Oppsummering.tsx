@@ -3,7 +3,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { FormattedMessage } from 'react-intl';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
@@ -143,7 +142,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                         onClick: () => navigate(props.forrigeUrl),
                     }}
                     next={{
-                        label: <FormattedMessage id="steg.sendInn" />,
+                        label: formatMessage('steg.sendInn'),
                         spinner: RemoteData.isPending(innsending),
                     }}
                     avbryt={{

@@ -9,12 +9,12 @@ import * as styles from './bunnknapper.module.less';
 
 const Bunnknapper = (props: {
     previous?: {
-        label?: React.ReactNode;
+        label?: string;
         onClick: () => void;
         handleClickAsAvbryt?: boolean;
     };
     next?: {
-        label?: React.ReactNode;
+        label?: string;
         spinner?: boolean;
     };
     avbryt: {
