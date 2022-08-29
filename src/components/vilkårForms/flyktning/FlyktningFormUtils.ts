@@ -4,12 +4,12 @@ import * as S from 'fp-ts/lib/string';
 
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { validerAtNullablePeriodeErUtfylt } from '~src/lib/validering';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import {
     FlyktningVilkår,
     VurderingsperiodeFlyktning,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
 import { Periode } from '~src/types/Periode';
+import { Vilkårstatus } from '~src/types/Vilkår';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { eqPeriode, lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils';
 

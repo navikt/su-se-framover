@@ -1,5 +1,5 @@
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
+import { Vilkårstatus } from '~src/types/Vilkår';
 
 export interface Familiegjenforening {
     vilkår: 'Familiegjenforening';

@@ -1,4 +1,4 @@
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~src/types/Vilkår';
 
 export const vilkårstatusMessages: { [key in Vilkårstatus]: string } = {
     [Vilkårstatus.Uavklart]: 'Uavklart',

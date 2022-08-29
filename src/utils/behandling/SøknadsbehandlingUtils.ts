@@ -1,7 +1,8 @@
-import { FormueStatus, Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
+import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import {
     mapToVilkårsinformasjon,

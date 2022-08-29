@@ -3,7 +3,7 @@ import React from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~src/types/Vilkår';
 
 import messages from './vilkårsResultatRadioGroup-nb';
 

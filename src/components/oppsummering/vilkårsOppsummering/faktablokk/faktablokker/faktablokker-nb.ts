@@ -1,5 +1,5 @@
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import { Vilkårstatus } from '~src/types/Vilkår';
 
 const pensjonsOpplysningerUtvidetSvarMessages = {
     [PensjonsOpplysningerUtvidetSvar.JA]: 'Ja',

@@ -1,8 +1,8 @@
 import isEqual from 'lodash.isequal';
 
 import { Nullable } from '~src/lib/types';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
+import { Vilkårstatus } from '~src/types/Vilkår';
 
 export interface PersonligOppmøteVilkår {
     vilkår: 'PERSONLIG_OPPMØTE';

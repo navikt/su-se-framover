@@ -2,7 +2,6 @@ import * as DateFns from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber, validerPeriodeTomEtterFom } from '~src/lib/validering';
-import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import {
     Bosituasjon,
     bosituasjonPåDato,
@@ -13,6 +12,7 @@ import {
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 import {
     Formuegrenser,
+    FormueStatus,
     FormueVilkår,
     FormueVilkårRequest,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';

@@ -1,7 +1,6 @@
 import isEqual from 'lodash.isequal';
 
 import { Nullable } from '~src/lib/types';
-import { FormueStatus } from '~src/types/Behandlingsinformasjon';
 import { Periode } from '~src/types/Periode';
 
 import { trimIdFromObject } from '../grunnlagsdataOgVilkårsvurderinger';
@@ -26,6 +25,12 @@ export interface VurderingsperiodeFormue {
     resultat: FormueStatus;
     grunnlag: Formuegrunnlag;
     periode: Periode<string>;
+}
+
+export enum FormueStatus {
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
+    MåInnhenteMerInformasjon = 'MåInnhenteMerInformasjon',
 }
 
 export interface FormueVilkårRequest {

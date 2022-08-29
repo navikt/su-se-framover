@@ -1,6 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
+import { Vilkårstatus } from '~src/types/Vilkår';
 
 export interface FormData {
     familieforening: Nullable<Vilkårstatus>;

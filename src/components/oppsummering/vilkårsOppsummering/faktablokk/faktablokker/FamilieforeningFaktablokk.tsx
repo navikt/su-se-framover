@@ -5,9 +5,9 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import saksbehandlingMessages from '~src/pages/saksbehandling/steg/familieforening/familieforening-nb';
 import søknadMessages from '~src/pages/søknad/steg/oppholdstillatelse/oppholdstillatelse-nb';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnholdAlder } from '~src/types/Søknad';
+import { Vilkårstatus } from '~src/types/Vilkår';
 import { VilkårtypeAlder, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 

@@ -9,8 +9,8 @@ import messages from '~src/pages/saksbehandling/steg/familieforening/familiefore
 import { FormData, schema } from '~src/pages/saksbehandling/steg/familieforening/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { Vilkårstatus } from '~src/types/Vilkår';
 
 interface Props extends VilkårsvurderingBaseProps {
     save: (values: FormData, onSuccess: () => void) => void;

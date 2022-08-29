@@ -5,9 +5,9 @@ import { IntlShape } from 'react-intl';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import { LovligOppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { SøknadInnhold } from '~src/types/Søknad';
+import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/lovlig-opphold-i-norge/lovligOppholdINorge-nb';

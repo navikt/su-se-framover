@@ -5,7 +5,7 @@ import { useI18n } from '~src/lib/i18n';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnholdUføre } from '~src/types/Søknad';
-import { VilkårtypeFelles, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
+import { VilkårtypeUføre, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/flyktning/flyktning-nb';
@@ -41,7 +41,7 @@ export const FlyktningVilkårsblokk = (props: {
 
     return (
         <Vilkårsblokk
-            tittel={vilkårTittelFormatted(VilkårtypeFelles.Flyktning)}
+            tittel={vilkårTittelFormatted(VilkårtypeUføre.Flyktning)}
             søknadfaktablokk={<FlyktningFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
                 props.flyktningVilkår?.resultat === null ? (

@@ -4,13 +4,13 @@ import * as S from 'fp-ts/lib/string';
 
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { validerAtNullablePeriodeErUtfylt } from '~src/lib/validering';
-import { Vilkårstatus } from '~src/types/Behandlingsinformasjon';
 import {
     FastOppholdVilkår,
     FastOppholdVilkårRequest,
     VurderingsperiodeFastOpphold,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { Periode } from '~src/types/Periode';
+import { Vilkårstatus } from '~src/types/Vilkår';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { lagDatePeriodeAvStringPeriode, lagTomPeriode, eqPeriode } from '~src/utils/periode/periodeUtils';
 

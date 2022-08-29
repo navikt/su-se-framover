@@ -13,11 +13,11 @@ export enum VilkårtypeAlder {
 
 export enum VilkårtypeUføre {
     Uførhet = 'UFØRHET',
+    Flyktning = 'FLYKTNING',
 }
 
 export enum VilkårtypeFelles {
     Virkningstidspunkt = 'VIRKNINGSTIDSPUNKT',
-    Flyktning = 'FLYKTNING',
     Oppholdstillatelse = 'OPPHOLDSTILLATELSE',
     PersonligOppmøte = 'PERSONLIG_OPPMØTE',
     Formue = 'FORMUE',
