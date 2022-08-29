@@ -2,16 +2,19 @@ import { Delete } from '@navikt/ds-icons';
 import { Button, Checkbox, Label, Panel, Select, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { lastDayOfMonth } from 'date-fns';
+import * as B from 'fp-ts/lib/boolean';
+import { struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
 import React from 'react';
 import { FieldErrors } from 'react-hook-form';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { InputWithFollowText } from '~src/components/inputWithFollowText/InputWithFollowText';
 import { useI18n } from '~src/lib/i18n';
-import { KeyDict, Nullable } from '~src/lib/types';
+import { eqNullable, Nullable, KeyDict } from '~src/lib/types';
 import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
 import { Fradragskategori, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
-import { NullablePeriode } from '~src/types/Periode';
+import { NullablePeriode, eqNullableDatePeriode } from '~src/types/Periode';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import { UtenlandskInntektFormData } from '../beregningstegTypes';
@@ -332,3 +335,19 @@ export const FradragInputs = (props: {
         </div>
     );
 };
+
+const eqUtenlandskInntekt = struct<UtenlandskInntektFormData>({
+    beløpIUtenlandskValuta: S.Eq,
+    valuta: S.Eq,
+    kurs: S.Eq,
+});
+
+export const eqFradragFormData = struct<FradragFormData>({
+    kategori: eqNullable(S.Eq),
+    spesifisertkategori: eqNullable(S.Eq),
+    beløp: eqNullable(S.Eq),
+    fraUtland: B.Eq,
+    utenlandskInntekt: eqUtenlandskInntekt,
+    tilhørerEPS: B.Eq,
+    periode: eqNullable(eqNullableDatePeriode),
+});

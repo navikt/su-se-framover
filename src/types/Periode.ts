@@ -2,7 +2,7 @@ import * as D from 'fp-ts/Date';
 import { Eq, struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 
-import { Nullable } from '~src/lib/types';
+import { eqNullable, Nullable } from '~src/lib/types';
 
 //TODO - rename til type til Periode, så kan Periode interfacet få et annet navn (sikkert endringer i et par filer)
 export type PeriodeType = Periode | NullablePeriode;
@@ -25,4 +25,9 @@ export const eqStringPeriode: Eq<Periode<string>> = struct({
 export const eqDatePeriode: Eq<Periode<Date>> = struct({
     fraOgMed: D.Eq,
     tilOgMed: D.Eq,
+});
+
+export const eqNullableDatePeriode = struct<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
+    fraOgMed: eqNullable(D.Eq),
+    tilOgMed: eqNullable(D.Eq),
 });

@@ -2,8 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, Heading, Loader, Textarea } from '@navikt/ds-react';
 import { getEq } from 'fp-ts/Array';
-import * as B from 'fp-ts/lib/boolean';
-import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 import React, { useMemo, useState } from 'react';
@@ -18,6 +16,7 @@ import {
     FradragFormData,
     FradragInputs,
     fradragSchema,
+    eqFradragFormData,
 } from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
 import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -48,7 +47,6 @@ import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI
 
 import messages from './beregning-nb';
 import * as styles from './beregning.module.less';
-import { UtenlandskInntektFormData } from './beregningstegTypes';
 import {
     erIGyldigStatusForÅKunneBeregne,
     fradragFormdataTilFradrag,
@@ -378,27 +376,6 @@ function erFradragUlike(fradrag: Fradrag[] | undefined, formFradrag: FradragForm
 
     return !getEq(eqFradragFormData).equals(formFradrag, fradragFraDatabase);
 }
-
-const eqUtenlandskInntekt = struct<UtenlandskInntektFormData>({
-    beløpIUtenlandskValuta: S.Eq,
-    valuta: S.Eq,
-    kurs: S.Eq,
-});
-
-const eqPeriode = struct<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
-    fraOgMed: eqNullable(D.Eq),
-    tilOgMed: eqNullable(D.Eq),
-});
-
-const eqFradragFormData = struct<FradragFormData>({
-    kategori: eqNullable(S.Eq),
-    spesifisertkategori: eqNullable(S.Eq),
-    beløp: eqNullable(S.Eq),
-    fraUtland: B.Eq,
-    utenlandskInntekt: eqUtenlandskInntekt,
-    tilhørerEPS: B.Eq,
-    periode: eqNullable(eqPeriode),
-});
 
 const eqBeregningFormData = struct<FormData>({
     fradrag: getEq(eqFradragFormData),
