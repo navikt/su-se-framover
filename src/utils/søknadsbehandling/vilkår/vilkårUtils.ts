@@ -6,7 +6,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVi
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sakstype } from '~src/types/Sak';
-import { Behandlingsstatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -208,7 +208,7 @@ export const vilkårsinformasjonForBeregningssteg = (b: Søknadsbehandling): Vil
             status:
                 b.beregning === null
                     ? VilkårVurderingStatus.IkkeVurdert
-                    : b.status === Behandlingsstatus.BEREGNET_AVSLAG
+                    : b.status === SøknadsbehandlingStatus.BEREGNET_AVSLAG
                     ? VilkårVurderingStatus.IkkeOk
                     : VilkårVurderingStatus.Ok,
             vilkårtype: Vilkårtype.Beregning,
@@ -219,7 +219,7 @@ export const vilkårsinformasjonForBeregningssteg = (b: Søknadsbehandling): Vil
 
 const getSatsStatus = (b: Søknadsbehandling) => {
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
-    if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+    if (b.status === SøknadsbehandlingStatus.OPPRETTET || b.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG) {
         return VilkårVurderingStatus.IkkeVurdert;
     }
 
@@ -231,7 +231,7 @@ const getSatsStatus = (b: Søknadsbehandling) => {
 
 const erSatsStartet = (b: Søknadsbehandling) => {
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
-    if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+    if (b.status === SøknadsbehandlingStatus.OPPRETTET || b.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG) {
         return false;
     }
 

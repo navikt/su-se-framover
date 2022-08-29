@@ -2,19 +2,19 @@ import { formatISO } from 'date-fns';
 
 import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Periode } from '~src/types/Periode';
-import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import { FradragFormData } from './fradragInputs/FradragInputs';
 
 export const erIGyldigStatusForÅKunneBeregne = (behandling: Søknadsbehandling) =>
     [
-        Behandlingsstatus.BEREGNET_AVSLAG,
-        Behandlingsstatus.BEREGNET_INNVILGET,
-        Behandlingsstatus.SIMULERT,
-        Behandlingsstatus.VILKÅRSVURDERT_INNVILGET,
-        Behandlingsstatus.UNDERKJENT_AVSLAG,
-        Behandlingsstatus.UNDERKJENT_INNVILGET,
+        SøknadsbehandlingStatus.BEREGNET_AVSLAG,
+        SøknadsbehandlingStatus.BEREGNET_INNVILGET,
+        SøknadsbehandlingStatus.SIMULERT,
+        SøknadsbehandlingStatus.VILKÅRSVURDERT_INNVILGET,
+        SøknadsbehandlingStatus.UNDERKJENT_AVSLAG,
+        SøknadsbehandlingStatus.UNDERKJENT_INNVILGET,
     ].some((status) => status === behandling.status);
 
 export const fradragTilFradragFormData = (fradrag: Fradrag): FradragFormData => ({

@@ -1,6 +1,6 @@
 import { Fradrag } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
-import { Regulering, Reguleringsstatus } from '~src/types/Regulering';
+import { Regulering, ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -14,7 +14,7 @@ export async function startRegulering({ startDato }: { startDato: string }) {
     });
 }
 
-export async function hentReguleringsstatus(): Promise<ApiClientResult<Reguleringsstatus[]>> {
+export async function hentReguleringsstatus(): Promise<ApiClientResult<ReguleringOversiktsstatus[]>> {
     return apiClient({
         url: `/reguleringer/status`,
         method: 'GET',

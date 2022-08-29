@@ -2,7 +2,7 @@ import { formatDate } from '~src/utils/date/dateUtils';
 
 import { Sak } from '../../types/Sak';
 import { Søknad, Søknadstype } from '../../types/Søknad';
-import { Behandlingsstatus } from '../../types/Søknadsbehandling';
+import { SøknadsbehandlingStatus } from '../../types/Søknadsbehandling';
 
 export function søknadMottatt(søknad: Søknad): string {
     if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {
@@ -15,7 +15,7 @@ export function getIverksatteInnvilgedeSøknader(sak: Sak) {
     return sak.søknader
         .filter((søknad) => {
             const behandling = sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-            return søknad.lukket === null && behandling?.status === Behandlingsstatus.IVERKSATT_INNVILGET;
+            return søknad.lukket === null && behandling?.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET;
         })
         .map((s) => {
             const behandling = sak.behandlinger.find((b) => b.søknad.id === s.id);
@@ -34,7 +34,7 @@ export function getIverksatteAvslåtteSøknader(sak: Sak) {
         .filter((søknad) => {
             const behandling = sak.behandlinger.find((b) => b.søknad.id === søknad.id);
 
-            return søknad.lukket === null && behandling?.status === Behandlingsstatus.IVERKSATT_AVSLAG;
+            return søknad.lukket === null && behandling?.status === SøknadsbehandlingStatus.IVERKSATT_AVSLAG;
         })
         .map((s) => {
             const behandling = sak.behandlinger.find((b) => b.søknad.id === s.id);

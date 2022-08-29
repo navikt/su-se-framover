@@ -12,7 +12,7 @@ import { useUserContext } from '~src/context/userContext';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
-import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erIverksatt } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
@@ -169,19 +169,19 @@ const Tilleggsinfo = (props: {
     );
 };
 
-function statusTilTekst(behandlingsstatus: Behandlingsstatus, intl: IntlShape): string {
+function statusTilTekst(behandlingsstatus: SøknadsbehandlingStatus, intl: IntlShape): string {
     switch (behandlingsstatus) {
-        case Behandlingsstatus.VILKÅRSVURDERT_AVSLAG:
-        case Behandlingsstatus.BEREGNET_AVSLAG:
-        case Behandlingsstatus.TIL_ATTESTERING_AVSLAG:
-        case Behandlingsstatus.IVERKSATT_AVSLAG:
-        case Behandlingsstatus.UNDERKJENT_AVSLAG:
+        case SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG:
+        case SøknadsbehandlingStatus.BEREGNET_AVSLAG:
+        case SøknadsbehandlingStatus.TIL_ATTESTERING_AVSLAG:
+        case SøknadsbehandlingStatus.IVERKSATT_AVSLAG:
+        case SøknadsbehandlingStatus.UNDERKJENT_AVSLAG:
             return intl.formatMessage({ id: 'vurdering.avslag' });
-        case Behandlingsstatus.TIL_ATTESTERING_INNVILGET:
-        case Behandlingsstatus.SIMULERT:
-        case Behandlingsstatus.VILKÅRSVURDERT_INNVILGET:
-        case Behandlingsstatus.IVERKSATT_INNVILGET:
-        case Behandlingsstatus.UNDERKJENT_INNVILGET:
+        case SøknadsbehandlingStatus.TIL_ATTESTERING_INNVILGET:
+        case SøknadsbehandlingStatus.SIMULERT:
+        case SøknadsbehandlingStatus.VILKÅRSVURDERT_INNVILGET:
+        case SøknadsbehandlingStatus.IVERKSATT_INNVILGET:
+        case SøknadsbehandlingStatus.UNDERKJENT_INNVILGET:
             return intl.formatMessage({ id: 'vurdering.innvilgelse' });
         default:
             return '';

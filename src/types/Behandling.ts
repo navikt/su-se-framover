@@ -2,11 +2,13 @@ import { Nullable } from '~src/lib/types';
 
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { KlageStatus } from './Klage';
-import { RevurderingsStatus } from './Revurdering';
+import { RevurderingStatus } from './Revurdering';
 import { Sakstype } from './Sak';
-import { Behandlingsstatus } from './Søknadsbehandling';
+import { SøknadsbehandlingStatus } from './Søknadsbehandling';
 
-export interface Behandling<Status = Behandlingsstatus | RevurderingsStatus | KlageStatus> {
+export type Behandlingsstatus = SøknadsbehandlingStatus | RevurderingStatus | KlageStatus;
+
+export interface Behandling<Status = Behandlingsstatus> {
     id: string;
     sakstype: Sakstype;
     opprettet: string;

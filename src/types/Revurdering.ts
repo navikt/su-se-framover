@@ -7,7 +7,7 @@ import { Periode } from './Periode';
 import { Simulering, SimulertPeriode } from './Simulering';
 
 //Dette er feltene som deles av backends 'abstrakte' revurdering. Hadde vært fint å skille på dem litt mer, både bak og fram
-export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> extends Behandling<RevurderingsStatus> {
+export interface Revurdering<T extends RevurderingStatus = RevurderingStatus> extends Behandling<RevurderingStatus> {
     status: T;
     periode: Periode<string>;
     saksbehandler: string;
@@ -142,7 +142,7 @@ export interface Besluttet extends ForhåndsvarselBase<Forhåndsvarseltype.SkalV
 
 export type Forhåndsvarsel = Ingen | Sendt | Besluttet;
 
-export type RevurderingsStatus = InformasjonsRevurderingStatus | UtbetalingsRevurderingStatus;
+export type RevurderingStatus = InformasjonsRevurderingStatus | UtbetalingsRevurderingStatus;
 
 export enum InformasjonsRevurderingStatus {
     OPPRETTET = 'OPPRETTET',

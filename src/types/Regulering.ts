@@ -3,6 +3,7 @@ import { Nullable } from '~src/lib/types';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Periode } from './Periode';
+import { Sakstype } from './Sak';
 import { Simulering } from './Simulering';
 
 export interface Regulering {
@@ -20,9 +21,17 @@ export interface Regulering {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     avsluttet: { begrunnelse: string };
     årsakForManuell: ÅrsakForManuell[];
+    sakstype: Sakstype;
+    reguleringsstatus: Reguleringsstatus;
 }
 
-export interface Reguleringsstatus {
+export enum Reguleringsstatus {
+    OPPRETTET = 'OPPRETTET',
+    IVERKSATT = 'IVERKSATT',
+    AVSLUTTET = 'AVSLUTTET',
+}
+
+export interface ReguleringOversiktsstatus {
     regulering: Regulering;
     merknad: ReguleringMerknad[];
 }

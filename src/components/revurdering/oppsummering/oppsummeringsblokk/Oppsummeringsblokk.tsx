@@ -14,7 +14,7 @@ import {
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
     Revurdering,
-    RevurderingsStatus,
+    RevurderingStatus,
     UtbetalingsRevurderingStatus,
 } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -100,7 +100,7 @@ const Oppsummeringsblokk = (props: {
     );
 };
 
-function statusTilTekst(status: RevurderingsStatus, formatMessage: MessageFormatter<typeof messages>): string {
+function statusTilTekst(status: RevurderingStatus, formatMessage: MessageFormatter<typeof messages>): string {
     switch (status) {
         case InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING:
         case InformasjonsRevurderingStatus.TIL_ATTESTERING_INGEN_ENDRING:

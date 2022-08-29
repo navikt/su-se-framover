@@ -9,23 +9,23 @@ import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import VelgSakKnapp from '~src/components/velgSakKnapp/velgSakKnapp';
 import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
-import { Reguleringsstatus } from '~src/types/Regulering';
+import { ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import messages from './regulering-nb';
 import * as styles from './regulering.module.less';
 
 interface Props {
-    reguleringsstatus: Reguleringsstatus[];
+    reguleringsstatus: ReguleringOversiktsstatus[];
 }
 const Reguleringsoversikt = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     const sortByFnr = pipe(
         S.Ord,
-        contramap((r: Reguleringsstatus) => r.regulering.fnr)
+        contramap((r: ReguleringOversiktsstatus) => r.regulering.fnr)
     );
 
-    const Reguleringstabell = ({ data }: { data: Reguleringsstatus[] }) => {
+    const Reguleringstabell = ({ data }: { data: ReguleringOversiktsstatus[] }) => {
         return (
             <div>
                 <Table className="tabell">

@@ -6,7 +6,7 @@ import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { Søknad } from './Søknad';
 
-export interface Søknadsbehandling extends Behandling<Behandlingsstatus> {
+export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus> {
     sakId: string;
     søknad: Søknad;
     beregning: Nullable<Beregning>;
@@ -22,7 +22,7 @@ export interface Stønadsperiode {
     periode: Periode<string>;
 }
 
-export enum Behandlingsstatus {
+export enum SøknadsbehandlingStatus {
     OPPRETTET = 'OPPRETTET',
     VILKÅRSVURDERT_INNVILGET = 'VILKÅRSVURDERT_INNVILGET',
     VILKÅRSVURDERT_AVSLAG = 'VILKÅRSVURDERT_AVSLAG',

@@ -23,7 +23,7 @@ import * as Routes from '~src/lib/routes';
 import { erNoenVurdertUavklart } from '~src/pages/saksbehandling/utils';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Sakstype } from '~src/types/Sak';
-import { Søknadsbehandling, Behandlingsstatus } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 import { mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -84,7 +84,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
             advarselRef.current?.focus();
             return;
         }
-        res.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
+        res.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG
             ? navigate(
                   Routes.saksbehandlingSendTilAttestering.createURL({
                       sakId: props.sakId,

@@ -37,7 +37,7 @@ import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Naviga
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
 import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
-import { Behandlingsstatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -172,7 +172,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
         }
 
         if (!kanSimuleres(props.behandling)) {
-            if (props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG) {
+            if (props.behandling.status === SøknadsbehandlingStatus.BEREGNET_AVSLAG) {
                 return navigate(props.nesteUrl);
             }
 
@@ -304,7 +304,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                     : formatMessage('knapp.startBeregning')}
                             </Button>
 
-                            {props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG && (
+                            {props.behandling.status === SøknadsbehandlingStatus.BEREGNET_AVSLAG && (
                                 <Alert variant="warning" className={styles.avslagadvarsel}>
                                     {formatMessage(
                                         props.behandling.beregning &&
