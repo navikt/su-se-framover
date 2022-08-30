@@ -3,14 +3,14 @@ import * as React from 'react';
 import { Controller } from 'react-hook-form';
 
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
-import { UførhetFormData, lagTomUføreperiode } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import { UførhetFormData, lagTomUføreperiode } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
 import { useI18n } from '~src/lib/i18n';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 
-import messages from '../VilkårForms-nb';
-import { VilkårFormProps } from '../VilkårFormUtils';
+import messages from '../VilkårOgGrunnlagForms-nb';
+import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
 import * as styles from './/uførhet.module.less';
 

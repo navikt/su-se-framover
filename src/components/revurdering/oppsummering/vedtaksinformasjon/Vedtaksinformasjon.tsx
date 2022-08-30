@@ -7,7 +7,7 @@ import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fa
 import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
 import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
-import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårForms/formue/FormueFormUtils';
+import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { useI18n } from '~src/lib/i18n';
 import { fradragErlik } from '~src/types/Fradrag';
 import {

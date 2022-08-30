@@ -7,14 +7,14 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { PersonligOppmøteFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import PersonligOppmøteForm from '~src/components/vilkårForms/personligOppmøte/PersonligOppmøteForm';
+import PersonligOppmøteForm from '~src/components/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteForm';
 import {
     PersonligOppmøteVilkårFormData,
     personligOppmøteFormDataTilRequest,
     eqPersonligOppmøteVilkårFormData,
     personligOppmøteFormSchema,
     personligOppmøteVilkårTilFormDataEllerNy,
-} from '~src/components/vilkårForms/personligOppmøte/PersonligOppmøteFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagrePersonligOppmøteVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

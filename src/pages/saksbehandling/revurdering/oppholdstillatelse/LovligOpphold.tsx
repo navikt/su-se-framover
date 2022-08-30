@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import LovligOppholdForm from '~src/components/vilkårForms/lovligOpphold/LovligOppholdForm';
+import LovligOppholdForm from '~src/components/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
 import {
     lovligOppholdFormDataTilRequest,
     lovligOppholdFormSchema,
     LovligOppholdVilkårFormData,
     lovligOppholdVilkårTilFormDataEllerNy,
-} from '~src/components/vilkårForms/lovligOpphold/LovligOppholdFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdFormUtils';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { RevurderingStegProps } from '~src/types/Revurdering';

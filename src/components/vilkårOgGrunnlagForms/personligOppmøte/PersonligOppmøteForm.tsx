@@ -10,8 +10,8 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
-import messages from '../VilkårForms-nb';
-import { VilkårFormProps } from '../VilkårFormUtils';
+import messages from '../VilkårOgGrunnlagForms-nb';
+import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
 import {
     HarMøttPersonlig,

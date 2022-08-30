@@ -5,13 +5,13 @@ import { useForm } from 'react-hook-form';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { UførhetFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
+import { UførhetForm } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
     UførhetFormData,
     vurderingsperiodeTilFormData,
     lagTomUføreperiode,
-} from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
-import { uførhetSchema } from '~src/components/vilkårForms/uførhet/validation';
+} from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
+import { uførhetSchema } from '~src/components/vilkårOgGrunnlagForms/uførhet/validation';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

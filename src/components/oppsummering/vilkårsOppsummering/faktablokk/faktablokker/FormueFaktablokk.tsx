@@ -2,7 +2,7 @@ import { Alert, Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 
-import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårForms/formue/FormueFormUtils';
+import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/formue/formue-nb';

@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import PersonligOppmøteForm from '~src/components/vilkårForms/personligOppmøte/PersonligOppmøteForm';
+import PersonligOppmøteForm from '~src/components/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteForm';
 import {
     PersonligOppmøteVilkårFormData,
     personligOppmøteFormSchema,
     personligOppmøteVilkårTilFormDataEllerNy,
     personligOppmøteFormDataTilRequest,
-} from '~src/components/vilkårForms/personligOppmøte/PersonligOppmøteFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
 import { lagrePersonligOppmøteVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';

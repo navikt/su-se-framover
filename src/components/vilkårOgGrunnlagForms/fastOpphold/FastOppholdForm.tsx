@@ -7,29 +7,26 @@ import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 
-import messages from '../VilkårForms-nb';
-import { VilkårFormProps } from '../VilkårFormUtils';
+import messages from '../VilkårOgGrunnlagForms-nb';
+import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import {
-    InstitusjonsoppholdVilkårFormData,
-    nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode,
-} from './InstitusjonsoppholdFormUtils';
+import { FastOppholdVilkårFormData, nyVurderingsperiodeFastOppholdMedEllerUtenPeriode } from './FastOppholdFormUtils';
 
-interface Props extends VilkårFormProps<InstitusjonsoppholdVilkårFormData> {
+interface Props extends VilkårFormProps<FastOppholdVilkårFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
 }
 
-const InstitusjonsoppholdForm = (props: Props) => {
+const FastOppholdForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <FormWrapper save={props.onFormSubmit} {...props}>
             <>
                 <MultiPeriodeVelger
-                    name="institusjonsopphold"
+                    name="fastOpphold"
                     controller={props.form.control}
-                    appendNyPeriode={nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode}
+                    appendNyPeriode={nyVurderingsperiodeFastOppholdMedEllerUtenPeriode}
                     periodeConfig={{
                         minFraOgMed: props.minOgMaxPeriode.fraOgMed,
                         maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
@@ -37,12 +34,11 @@ const InstitusjonsoppholdForm = (props: Props) => {
                     getChild={(nameAndIdx: string) => (
                         <VilkårsResultatRadioGroup
                             name={`${nameAndIdx}.resultat`}
-                            legend={formatMessage('institusjonsopphold.vilkår')}
+                            legend={formatMessage('fastOpphold.vilkår')}
                             controller={props.form.control}
                             uavklartConfig={
                                 props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling' ? {} : undefined
                             }
-                            ommvendtVilkårStatus
                         />
                     )}
                     {...props}
@@ -55,4 +51,4 @@ const InstitusjonsoppholdForm = (props: Props) => {
     );
 };
 
-export default InstitusjonsoppholdForm;
+export default FastOppholdForm;

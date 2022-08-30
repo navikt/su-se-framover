@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import FastOppholdForm from '~src/components/vilkårForms/fastOpphold/FastOppholdForm';
+import FastOppholdForm from '~src/components/vilkårOgGrunnlagForms/fastOpphold/FastOppholdForm';
 import {
     FastOppholdVilkårFormData,
     fastOppholdFormSchema,
     fastOppholdVilkårTilFormDataEllerNy,
     fastOppholdFormDataTilRequest,
-} from '~src/components/vilkårForms/fastOpphold/FastOppholdFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
 import { lagreFastOppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { GjeldendeFastOppholdVilkår } from '~src/pages/saksbehandling/revurdering/fastOpphold/GjeldendeFastOppholdVilkår';

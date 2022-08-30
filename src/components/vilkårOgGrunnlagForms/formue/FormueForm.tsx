@@ -22,8 +22,8 @@ import { Formuegrenser } from '~src/types/grunnlagsdataOgVilkårsvurderinger/for
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
-import messages from '../VilkårForms-nb';
-import { VilkårFormProps, VilkårFormSaveState } from '../VilkårFormUtils';
+import messages from '../VilkårOgGrunnlagForms-nb';
+import { VilkårFormProps, VilkårFormSaveState } from '../VilkårOgGrunnlagFormUtils';
 
 import styles from './formueForm.module.less';
 import {

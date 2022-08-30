@@ -1,6 +1,6 @@
 import * as DateFns from 'date-fns';
 
-import { UførhetFormData, UføreperiodeFormData } from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
+import { UførhetFormData, UføreperiodeFormData } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';

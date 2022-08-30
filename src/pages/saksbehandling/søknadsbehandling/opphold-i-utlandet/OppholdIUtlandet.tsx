@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { UtenlandsOppholdFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import UtenlandsoppholdForm from '~src/components/vilkårForms/utenlandsopphold/UtenlandsoppholdForm';
+import UtenlandsoppholdForm from '~src/components/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdForm';
 import {
     eqUtenlandsoppholdVilkårFormData,
     utenlandsoppholdFormSchema,
     UtenlandsoppholdVilkårFormData,
     utenlandsoppholdVilkårTilFormDataEllerNy,
     utenlandsoppholdFormDataTilRequest,
-} from '~src/components/vilkårForms/utenlandsopphold/UtenlandsoppholdFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreUtenlandsopphold } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

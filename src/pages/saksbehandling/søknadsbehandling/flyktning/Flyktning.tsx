@@ -6,14 +6,14 @@ import { useForm } from 'react-hook-form';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { FlyktningFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import FlyktningForm from '~src/components/vilkårForms/flyktning/FlyktningForm';
+import FlyktningForm from '~src/components/vilkårOgGrunnlagForms/flyktning/FlyktningForm';
 import {
     FlyktningVilkårFormData,
     flyktningFormSchema,
     eqFlyktningVilkårFormData,
     flyktningFormDataTilRequest,
     flyktningVilkårTilFormDataEllerNy,
-} from '~src/components/vilkårForms/flyktning/FlyktningFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreFlyktningVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

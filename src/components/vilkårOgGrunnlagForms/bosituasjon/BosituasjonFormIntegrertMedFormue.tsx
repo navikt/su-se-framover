@@ -21,7 +21,7 @@ import { removeSpaces } from '~src/utils/format/formatUtils';
 import { showName } from '~src/utils/person/personUtils';
 
 import { FormueVilkårOgDelvisBosituasjonFormData } from '../formue/FormueFormUtils';
-import messages from '../VilkårForms-nb';
+import messages from '../VilkårOgGrunnlagForms-nb';
 
 import styles from './bosituasjonFormIntegrertMedFormue.module.less';
 

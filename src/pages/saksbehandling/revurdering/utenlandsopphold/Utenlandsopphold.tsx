@@ -6,13 +6,13 @@ import { useForm } from 'react-hook-form';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import UtenlandsoppholdForm from '~src/components/vilkårForms/utenlandsopphold/UtenlandsoppholdForm';
+import UtenlandsoppholdForm from '~src/components/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdForm';
 import {
     utenlandsoppholdFormSchema,
     UtenlandsoppholdVilkårFormData,
     utenlandsoppholdFormDataTilRequest,
     utenlandsoppholdVilkårTilFormDataEllerNy,
-} from '~src/components/vilkårForms/utenlandsopphold/UtenlandsoppholdFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdFormUtils';
 import { lagreUtenlandsopphold } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

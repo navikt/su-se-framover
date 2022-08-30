@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { InstitusjonsoppholdBlokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import InstitusjonsoppholdForm from '~src/components/vilkårForms/institusjonsopphold/InstitusjonsoppholdForm';
+import InstitusjonsoppholdForm from '~src/components/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdForm';
 import {
     eqInstitusjonsoppholdFormData,
     InstitusjonsoppholdVilkårFormData,
     institusjonsoppholdVilkårTilFormDataEllerNy,
     institusjonsoppholdFormDataTilRequest,
     institusjonsoppholdFormSchema,
-} from '~src/components/vilkårForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreInstitusjonsoppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

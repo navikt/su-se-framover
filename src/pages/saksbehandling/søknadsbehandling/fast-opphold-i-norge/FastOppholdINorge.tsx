@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { FastOppholdFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FastOppholdFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import FastOppholdForm from '~src/components/vilkårForms/fastOpphold/FastOppholdForm';
+import FastOppholdForm from '~src/components/vilkårOgGrunnlagForms/fastOpphold/FastOppholdForm';
 import {
     eqFastOppholdVilkårFormData,
     fastOppholdFormSchema,
     FastOppholdVilkårFormData,
     fastOppholdVilkårTilFormDataEllerNy,
     fastOppholdFormDataTilRequest,
-} from '~src/components/vilkårForms/fastOpphold/FastOppholdFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreFastOppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

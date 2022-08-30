@@ -7,28 +7,29 @@ import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 
-import messages from '../VilkårForms-nb';
-import { VilkårFormProps } from '../VilkårFormUtils';
+import messages from '../VilkårOgGrunnlagForms-nb';
+import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import { FlyktningVilkårFormData, nyVurderingsperiodeFlyktningMedEllerUtenPeriode } from './FlyktningFormUtils';
+import {
+    LovligOppholdVilkårFormData,
+    nyVurderingsperiodeLovligOppholdMedEllerUtenPeriode,
+} from './LovligOppholdFormUtils';
 
-interface Props extends VilkårFormProps<FlyktningVilkårFormData> {
-    children?: React.ReactNode;
-    nesteknappTekst?: string;
+interface Props extends VilkårFormProps<LovligOppholdVilkårFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
 }
 
-const FlyktningForm = (props: Props) => {
+const LovligOppholdForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <FormWrapper save={props.onFormSubmit} {...props}>
             <>
                 <MultiPeriodeVelger
-                    name="flyktning"
+                    name="lovligOpphold"
                     controller={props.form.control}
-                    appendNyPeriode={nyVurderingsperiodeFlyktningMedEllerUtenPeriode}
+                    appendNyPeriode={nyVurderingsperiodeLovligOppholdMedEllerUtenPeriode}
                     periodeConfig={{
                         minFraOgMed: props.minOgMaxPeriode.fraOgMed,
                         maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
@@ -36,7 +37,7 @@ const FlyktningForm = (props: Props) => {
                     getChild={(nameAndIdx: string) => (
                         <VilkårsResultatRadioGroup
                             name={`${nameAndIdx}.resultat`}
-                            legend={formatMessage('flyktning.vilkår')}
+                            legend={formatMessage('lovligOpphold.vilkår')}
                             controller={props.form.control}
                             uavklartConfig={
                                 props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling' ? {} : undefined
@@ -45,7 +46,6 @@ const FlyktningForm = (props: Props) => {
                     )}
                     {...props}
                 />
-                {props.children}
                 {RemoteData.isSuccess(props.savingState) && 'feilmeldinger' in props.savingState.value && (
                     <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />
                 )}
@@ -54,4 +54,4 @@ const FlyktningForm = (props: Props) => {
     );
 };
 
-export default FlyktningForm;
+export default LovligOppholdForm;

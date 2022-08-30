@@ -9,8 +9,8 @@ import * as personApi from '~src/api/personApi';
 import { FormueFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { SkattemeldingFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/skatt/SkattegrunnlagFaktablokk';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import BosituasjonFormIntegrertMedFormue from '~src/components/vilkårForms/bosituasjon/BosituasjonFormIntegrertMedFormue';
-import FormueForm from '~src/components/vilkårForms/formue/FormueForm';
+import BosituasjonFormIntegrertMedFormue from '~src/components/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormIntegrertMedFormue';
+import FormueForm from '~src/components/vilkårOgGrunnlagForms/formue/FormueForm';
 import {
     FormueVilkårFormData,
     FormueVilkårOgDelvisBosituasjonFormData,
@@ -18,7 +18,7 @@ import {
     formueFormSchema,
     getInitialFormueVilkårOgDelvisBosituasjon,
     formueVilkårFormTilRequest,
-} from '~src/components/vilkårForms/formue/FormueFormUtils';
+} from '~src/components/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useFeatureToggle } from '~src/lib/featureToggles';

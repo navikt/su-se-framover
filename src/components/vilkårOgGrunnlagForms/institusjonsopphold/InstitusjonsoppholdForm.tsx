@@ -7,29 +7,29 @@ import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 
-import messages from '../VilkårForms-nb';
-import { VilkårFormProps } from '../VilkårFormUtils';
+import messages from '../VilkårOgGrunnlagForms-nb';
+import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
 import {
-    UtenlandsoppholdVilkårFormData,
-    nyVurderingsperiodeUtenlandsoppholdMedEllerUtenPeriode,
-} from './UtenlandsoppholdFormUtils';
+    InstitusjonsoppholdVilkårFormData,
+    nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode,
+} from './InstitusjonsoppholdFormUtils';
 
-interface Props extends VilkårFormProps<UtenlandsoppholdVilkårFormData> {
+interface Props extends VilkårFormProps<InstitusjonsoppholdVilkårFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
 }
 
-const UtenlandsoppholdForm = (props: Props) => {
+const InstitusjonsoppholdForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <FormWrapper save={props.onFormSubmit} {...props}>
             <>
                 <MultiPeriodeVelger
-                    name="utenlandsopphold"
+                    name="institusjonsopphold"
                     controller={props.form.control}
-                    appendNyPeriode={nyVurderingsperiodeUtenlandsoppholdMedEllerUtenPeriode}
+                    appendNyPeriode={nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode}
                     periodeConfig={{
                         minFraOgMed: props.minOgMaxPeriode.fraOgMed,
                         maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
@@ -37,7 +37,7 @@ const UtenlandsoppholdForm = (props: Props) => {
                     getChild={(nameAndIdx: string) => (
                         <VilkårsResultatRadioGroup
                             name={`${nameAndIdx}.resultat`}
-                            legend={formatMessage('utenlandsopphold.vilkår')}
+                            legend={formatMessage('institusjonsopphold.vilkår')}
                             controller={props.form.control}
                             uavklartConfig={
                                 props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling' ? {} : undefined
@@ -55,4 +55,4 @@ const UtenlandsoppholdForm = (props: Props) => {
     );
 };
 
-export default UtenlandsoppholdForm;
+export default InstitusjonsoppholdForm;

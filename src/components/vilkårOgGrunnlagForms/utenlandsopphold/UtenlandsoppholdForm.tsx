@@ -7,29 +7,29 @@ import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 
-import messages from '../VilkårForms-nb';
-import { VilkårFormProps } from '../VilkårFormUtils';
+import messages from '../VilkårOgGrunnlagForms-nb';
+import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
 import {
-    LovligOppholdVilkårFormData,
-    nyVurderingsperiodeLovligOppholdMedEllerUtenPeriode,
-} from './LovligOppholdFormUtils';
+    UtenlandsoppholdVilkårFormData,
+    nyVurderingsperiodeUtenlandsoppholdMedEllerUtenPeriode,
+} from './UtenlandsoppholdFormUtils';
 
-interface Props extends VilkårFormProps<LovligOppholdVilkårFormData> {
+interface Props extends VilkårFormProps<UtenlandsoppholdVilkårFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
 }
 
-const LovligOppholdForm = (props: Props) => {
+const UtenlandsoppholdForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <FormWrapper save={props.onFormSubmit} {...props}>
             <>
                 <MultiPeriodeVelger
-                    name="lovligOpphold"
+                    name="utenlandsopphold"
                     controller={props.form.control}
-                    appendNyPeriode={nyVurderingsperiodeLovligOppholdMedEllerUtenPeriode}
+                    appendNyPeriode={nyVurderingsperiodeUtenlandsoppholdMedEllerUtenPeriode}
                     periodeConfig={{
                         minFraOgMed: props.minOgMaxPeriode.fraOgMed,
                         maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
@@ -37,11 +37,12 @@ const LovligOppholdForm = (props: Props) => {
                     getChild={(nameAndIdx: string) => (
                         <VilkårsResultatRadioGroup
                             name={`${nameAndIdx}.resultat`}
-                            legend={formatMessage('lovligOpphold.vilkår')}
+                            legend={formatMessage('utenlandsopphold.vilkår')}
                             controller={props.form.control}
                             uavklartConfig={
                                 props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling' ? {} : undefined
                             }
+                            ommvendtVilkårStatus
                         />
                     )}
                     {...props}
@@ -54,4 +55,4 @@ const LovligOppholdForm = (props: Props) => {
     );
 };
 
-export default LovligOppholdForm;
+export default UtenlandsoppholdForm;

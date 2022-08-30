@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { UførhetForm } from '~src/components/vilkårForms/uførhet/UførhetForm';
+import { UførhetForm } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
     UførhetFormData,
     lagTomUføreperiode,
     vurderingsperiodeTilFormData,
-} from '~src/components/vilkårForms/uførhet/UførhetFormUtils';
-import { uførhetSchema } from '~src/components/vilkårForms/uførhet/validation';
+} from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
+import { uførhetSchema } from '~src/components/vilkårOgGrunnlagForms/uførhet/validation';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { GjeldendeGrunnlagsdata } from '~src/pages/saksbehandling/revurdering/uførhet/GjeldendeGrunnlagsdata';
