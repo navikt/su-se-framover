@@ -72,7 +72,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'G-regulering kan ikke føre til opphør',
     [ApiErrorCode.GENERERER_BREV_FRA_UGYLDIG_TILSTAND]: 'Klagen er i en tilstand der generering av brev ikke støttes',
     [ApiErrorCode.HAR_ALLEREDE_EN_AKTIV_BEHANDLING]:
-        'Det finnes allerede en åpen søknadsbehandling. Du må fullføre denne før du kan avslå en annen',
+        'Det finnes allerede en åpen behandling. Du må fullføre denne før du kan starte en annen',
     [ApiErrorCode.HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING]:
         'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
     [ApiErrorCode.HAR_IKKE_EKTEFELLE]: 'Har ikke ektefelle',
