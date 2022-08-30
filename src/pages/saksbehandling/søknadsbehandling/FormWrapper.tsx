@@ -15,7 +15,7 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import * as styles from './søknadsbehandlingWrapper.module.less';
 
-interface Props<T, U> {
+interface Props<T extends FieldValues, U> {
     form: UseFormReturn<T>;
     save: (values: T, onSuccess: (res?: U) => void) => void;
     savingState: ApiResult<unknown>;

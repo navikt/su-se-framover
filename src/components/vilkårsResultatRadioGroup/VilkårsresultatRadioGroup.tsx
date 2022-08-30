@@ -7,7 +7,7 @@ import { Vilkårstatus } from '~src/types/Vilkår';
 
 import messages from './vilkårsResultatRadioGroup-nb';
 
-interface Props<T> {
+interface Props<T extends FieldValues> {
     className?: string;
     name: string;
     controller: Control<T>;
