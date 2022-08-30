@@ -127,7 +127,7 @@ const AttesterRevurdering = () => {
                             grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     </div>
-                    {warnings !== [] &&
+                    {warnings.length === 0 &&
                         warnings.map((w) => (
                             <div key={w} className={styles.opphørsadvarsel}>
                                 <Alert variant="warning">{formatMessage(w)}</Alert>

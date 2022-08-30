@@ -50,7 +50,7 @@ const tilOgMedErGyldig = (fraOgMed: Nullable<Date> | undefined, tilOgMed: Nullab
     return tilOgMed >= fraOgMed;
 };
 
-export const hentFiltrerteVerdier = <T,>(filter: T): Array<keyof T> =>
+export const hentFiltrerteVerdier = <T extends Record<string, unknown>>(filter: T): Array<keyof T> =>
     Object.entries(filter)
         .filter(([_, value]) => value)
         .map(([key, _]) => key) as Array<keyof T>;

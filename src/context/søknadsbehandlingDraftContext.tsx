@@ -1,6 +1,6 @@
 import debounce from 'lodash.debounce';
 import React, { createContext, useContext, useState } from 'react';
-import { UseFormWatch } from 'react-hook-form';
+import { FieldValues, UseFormWatch } from 'react-hook-form';
 
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
@@ -36,7 +36,7 @@ export const useSøknadsbehandlingDraftContext = () => {
     return { draft: value, isDraftDirty };
 };
 
-export const useSøknadsbehandlingDraftContextFor = <U, T extends DraftKey = DraftKey>(
+export const useSøknadsbehandlingDraftContextFor = <U extends FieldValues, T extends DraftKey = DraftKey>(
     vilkårtype: T,
     equalsInitialValues?: (values: U) => boolean
 ) => {

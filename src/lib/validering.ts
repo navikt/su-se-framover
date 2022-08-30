@@ -1,5 +1,5 @@
 import * as DateFns from 'date-fns';
-import { FieldError, FieldErrors } from 'react-hook-form';
+import { FieldError, FieldErrors, FieldValues } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { FeiloppsummeringFeil } from '~src/components/feiloppsummering/Feiloppsummering';
@@ -108,7 +108,9 @@ const norskLocale: yup.LocaleObject = {
 
 yup.setLocale(norskLocale);
 
-export function hookFormErrorsTilFeiloppsummering<T>(errors: FieldErrors<T>): FeiloppsummeringFeil[] {
+export function hookFormErrorsTilFeiloppsummering<T extends FieldValues>(
+    errors: FieldErrors<T>
+): FeiloppsummeringFeil[] {
     return Object.entries(errors).flatMap(([key, value]) => {
         const k = key as keyof T;
         const v = value as FieldError | Array<FieldErrors<T[typeof k]>>;

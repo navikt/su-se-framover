@@ -22,7 +22,7 @@ import styles from './multiPeriodeVelger.module.less';
 
 export type PartialName<T> = `${keyof T & string}.${number}`;
 
-interface Props<T, U> {
+interface Props<T extends FieldValues, U> {
     className?: string;
     name: keyof T & string;
     controller: Control<T>;

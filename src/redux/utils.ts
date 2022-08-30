@@ -1,9 +1,28 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { ActionReducerMapBuilder, AsyncThunk, CaseReducer, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import {
+    ActionReducerMapBuilder,
+    AsyncThunk,
+    CaseReducer,
+    createAsyncThunk,
+    Dispatch,
+    PayloadAction,
+} from '@reduxjs/toolkit';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
 
-export const handleAsyncThunk = <State, A, B, C>(
+// Kopiert fra createAsyncThunk.d.ts siden den ikke er eksportert enda.
+declare type AsyncThunkConfig = {
+    state?: unknown;
+    dispatch?: Dispatch;
+    extra?: unknown;
+    rejectValue?: unknown;
+    serializedErrorType?: unknown;
+    pendingMeta?: unknown;
+    fulfilledMeta?: unknown;
+    rejectedMeta?: unknown;
+};
+
+export const handleAsyncThunk = <State, A, B, C extends AsyncThunkConfig>(
     builder: ActionReducerMapBuilder<State>,
     t: AsyncThunk<A, B, C>,
     x: {
