@@ -17,5 +17,17 @@ export enum OpplysningspliktBeksrivelse {
     UtilstrekkeligDokumentasjon = 'UtilstrekkeligDokumentasjon',
 }
 
+export interface OpplysningspliktRequest {
+    id: string;
+    type: string;
+    data: Array<{
+        periode: {
+            fraOgMed: string;
+            tilOgMed: string;
+        };
+        beskrivelse: Nullable<string>;
+    }>;
+}
+
 export const opplysningspliktErLik = (ny: Nullable<OpplysningspliktVilkår>, gammel: Nullable<OpplysningspliktVilkår>) =>
     isEqual(ny, gammel);

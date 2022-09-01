@@ -8,10 +8,11 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVi
 import { Periode } from '~src/types/Periode';
 import {
     Gjenopptak,
-    InformasjonSomRevurderes,
     IverksattRevurdering,
+    OppdaterRevurderingRequest,
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
+    OpprettRevurderingRequest,
     ResultatEtterForhåndsvarselRequest,
     Revurdering,
     RevurderingTilAttestering,
@@ -23,23 +24,16 @@ import {
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 
 export async function opprettRevurdering(
-    sakId: string,
-    periode: {
-        fraOgMed: Date;
-        tilOgMed: Date;
-    },
-    årsak: OpprettetRevurderingGrunn,
-    informasjonSomRevurderes: InformasjonSomRevurderes[],
-    begrunnelse: string
+    arg: OpprettRevurderingRequest
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger`,
+        url: `/saker/${arg.sakId}/revurderinger`,
         method: 'POST',
         body: {
-            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
-            årsak: årsak,
-            informasjonSomRevurderes: informasjonSomRevurderes,
-            begrunnelse: begrunnelse,
+            fraOgMed: formatISO(arg.periode.fraOgMed, { representation: 'date' }),
+            årsak: arg.årsak,
+            informasjonSomRevurderes: arg.informasjonSomRevurderes,
+            begrunnelse: arg.begrunnelse,
         },
     });
 }
@@ -131,24 +125,16 @@ export async function iverksettStans(args: {
 }
 
 export async function oppdaterRevurdering(
-    sakId: string,
-    revurderingId: string,
-    periode: {
-        fraOgMed: Date;
-        tilOgMed: Date;
-    },
-    årsak: OpprettetRevurderingGrunn,
-    informasjonSomRevurderes: InformasjonSomRevurderes[],
-    begrunnelse: string
+    arg: OppdaterRevurderingRequest
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}`,
+        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}`,
         method: 'PUT',
         body: {
-            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
-            årsak: årsak,
-            informasjonSomRevurderes: informasjonSomRevurderes,
-            begrunnelse: begrunnelse,
+            fraOgMed: formatISO(arg.periode.fraOgMed, { representation: 'date' }),
+            årsak: arg.årsak,
+            informasjonSomRevurderes: arg.informasjonSomRevurderes,
+            begrunnelse: arg.begrunnelse,
         },
     });
 }

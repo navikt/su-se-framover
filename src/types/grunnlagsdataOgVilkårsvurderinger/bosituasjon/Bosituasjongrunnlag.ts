@@ -110,6 +110,20 @@ export interface FullstendigBosituasjonRequest {
     bosituasjon: string;
 }
 
+export interface BosituasjonRequest {
+    sakId: string;
+    revurderingId: string;
+    bosituasjoner: Array<{
+        periode: {
+            fraOgMed: string;
+            tilOgMed: string;
+        };
+        epsFnr: Nullable<string>;
+        delerBolig: Nullable<boolean>;
+        erEPSUførFlyktning: Nullable<boolean>;
+    }>;
+}
+
 export const bosituasjonErlik = (ny: Bosituasjon[], gammel: Bosituasjon[]) => {
     const trimmedNy = { ...ny };
     const trimmedGammel = { ...gammel };

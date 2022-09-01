@@ -9,10 +9,11 @@ import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Periode } from '~src/types/Periode';
 import {
     Gjenopptak,
-    InformasjonSomRevurderes,
     IverksattRevurdering,
+    OppdaterRevurderingRequest,
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
+    OpprettRevurderingRequest,
     ResultatEtterForhåndsvarselRequest,
     Revurdering,
     RevurderingTilAttestering,
@@ -23,33 +24,15 @@ import {
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
-    {
-        sakId: string;
-        periode: {
-            fraOgMed: Date;
-            tilOgMed: Date;
-        };
-        årsak: OpprettetRevurderingGrunn;
-        informasjonSomRevurderes: InformasjonSomRevurderes[];
-        begrunnelse: string;
-    },
+    OpprettRevurderingRequest,
     { rejectValue: ApiError }
->(
-    'revurdering/opprettRevurdering',
-    async ({ sakId, periode, årsak, informasjonSomRevurderes, begrunnelse }, thunkApi) => {
-        const res = await revurderingApi.opprettRevurdering(
-            sakId,
-            periode,
-            årsak,
-            informasjonSomRevurderes,
-            begrunnelse
-        );
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
+>('revurdering/opprettRevurdering', async (arg, thunkApi) => {
+    const res = await revurderingApi.opprettRevurdering(arg);
+    if (res.status === 'ok') {
+        return res.data;
     }
-);
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const opprettStans = createAsyncThunk<
     StansAvYtelse,
@@ -123,35 +106,15 @@ export const oppdaterGjenopptak = createAsyncThunk<
 
 export const oppdaterRevurderingsPeriode = createAsyncThunk<
     OpprettetRevurdering,
-    {
-        sakId: string;
-        revurderingId: string;
-        periode: {
-            fraOgMed: Date;
-            tilOgMed: Date;
-        };
-        årsak: OpprettetRevurderingGrunn;
-        informasjonSomRevurderes: InformasjonSomRevurderes[];
-        begrunnelse: string;
-    },
+    OppdaterRevurderingRequest,
     { rejectValue: ApiError }
->(
-    'revurdering/oppdaterRevurderingsPeriode',
-    async ({ sakId, revurderingId, periode, årsak, informasjonSomRevurderes, begrunnelse }, thunkApi) => {
-        const res = await revurderingApi.oppdaterRevurdering(
-            sakId,
-            revurderingId,
-            periode,
-            årsak,
-            informasjonSomRevurderes,
-            begrunnelse
-        );
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
+>('revurdering/oppdaterRevurderingsPeriode', async (arg, thunkApi) => {
+    const res = await revurderingApi.oppdaterRevurdering(arg);
+    if (res.status === 'ok') {
+        return res.data;
     }
-);
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const beregnOgSimuler = createAsyncThunk<
     { revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[]; varselmeldinger: ErrorMessage[] },

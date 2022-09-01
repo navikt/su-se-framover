@@ -210,32 +210,6 @@ export enum Vurderingstatus {
     Vurdert = 'Vurdert',
 }
 
-export interface BosituasjonRequest {
-    sakId: string;
-    revurderingId: string;
-    bosituasjoner: Array<{
-        periode: {
-            fraOgMed: string;
-            tilOgMed: string;
-        };
-        epsFnr: Nullable<string>;
-        delerBolig: Nullable<boolean>;
-        erEPSUførFlyktning: Nullable<boolean>;
-    }>;
-}
-
-export interface OpplysningspliktRequest {
-    id: string;
-    type: string;
-    data: Array<{
-        periode: {
-            fraOgMed: string;
-            tilOgMed: string;
-        };
-        beskrivelse: Nullable<string>;
-    }>;
-}
-
 export interface RevurderingStegProps {
     sakId: string;
     revurdering: InformasjonsRevurdering;
@@ -262,4 +236,19 @@ export interface ResultatEtterForhåndsvarselRequest {
     valg: BeslutningEtterForhåndsvarsling;
     begrunnelse: string;
     fritekstTilBrev: Nullable<string>;
+}
+
+export interface OpprettRevurderingRequest {
+    sakId: string;
+    periode: {
+        fraOgMed: Date;
+        tilOgMed: Date;
+    };
+    årsak: OpprettetRevurderingGrunn;
+    informasjonSomRevurderes: InformasjonSomRevurderes[];
+    begrunnelse: string;
+}
+
+export interface OppdaterRevurderingRequest extends OpprettRevurderingRequest {
+    revurderingId: string;
 }
