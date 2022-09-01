@@ -76,6 +76,7 @@ export const PeriodeForm = (props: {
         fraOgMed?: Nullable<Date>;
         tilOgMed?: Nullable<Date>;
     };
+    disableTom?: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages: nb });
 
@@ -113,7 +114,8 @@ export const PeriodeForm = (props: {
                 feil={props.error?.tilOgMed?.message}
                 dateFormat="MM/yyyy"
                 showMonthYearPicker
-                isClearable
+                disabled={props.disableTom}
+                isClearable={!props.disableTom}
                 autoComplete="off"
                 value={props.value?.tilOgMed}
                 minDate={props.minDate.fraOgMed}

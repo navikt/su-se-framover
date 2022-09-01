@@ -24,7 +24,10 @@ import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 
 export async function opprettRevurdering(
     sakId: string,
-    fraOgMed: Date,
+    periode: {
+        fraOgMed: Date;
+        tilOgMed: Date;
+    },
     årsak: OpprettetRevurderingGrunn,
     informasjonSomRevurderes: InformasjonSomRevurderes[],
     begrunnelse: string
@@ -33,7 +36,7 @@ export async function opprettRevurdering(
         url: `/saker/${sakId}/revurderinger`,
         method: 'POST',
         body: {
-            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
+            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
             årsak: årsak,
             informasjonSomRevurderes: informasjonSomRevurderes,
             begrunnelse: begrunnelse,
@@ -130,7 +133,10 @@ export async function iverksettStans(args: {
 export async function oppdaterRevurdering(
     sakId: string,
     revurderingId: string,
-    fraOgMed: Date,
+    periode: {
+        fraOgMed: Date;
+        tilOgMed: Date;
+    },
     årsak: OpprettetRevurderingGrunn,
     informasjonSomRevurderes: InformasjonSomRevurderes[],
     begrunnelse: string
@@ -139,7 +145,7 @@ export async function oppdaterRevurdering(
         url: `/saker/${sakId}/revurderinger/${revurderingId}`,
         method: 'PUT',
         body: {
-            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
+            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
             årsak: årsak,
             informasjonSomRevurderes: informasjonSomRevurderes,
             begrunnelse: begrunnelse,

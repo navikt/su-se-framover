@@ -18,7 +18,10 @@ import { AttesteringContext } from '~src/utils/router/routerUtils';
 import RevurderingIntroForm from './RevurderingIntroForm';
 
 export interface FormValues {
-    fraOgMed: Date;
+    periode: {
+        fraOgMed: Date;
+        tilOgMed: Date;
+    };
     årsak: OpprettetRevurderingGrunn;
     informasjonSomRevurderes: InformasjonSomRevurderes[];
     begrunnelse: string;
@@ -83,8 +86,15 @@ const RevurderingIntroPage = () => {
             save={endre}
             tilbakeUrl={forrigeUrl}
             revurdering={informasjonsRevurdering}
-            maxFraOgMed={DateFns.parseISO(sisteUtbetaling.tilOgMed)}
-            minFraOgMed={DateFns.parseISO(førsteUtbetaling.fraOgMed)}
+            periodeConfig={{
+                fraOgMed: {
+                    min: DateFns.parseISO(førsteUtbetaling.fraOgMed),
+                    max: DateFns.parseISO(sisteUtbetaling.tilOgMed),
+                },
+                tilOgMed: {
+                    max: DateFns.parseISO(sisteUtbetaling.tilOgMed),
+                },
+            }}
             opprettRevurderingStatus={opprettStatus}
             oppdaterRevurderingStatus={oppdaterStatus}
         />
