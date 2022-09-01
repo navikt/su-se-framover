@@ -32,6 +32,33 @@ export default createSlice({
         resetSøker(state) {
             state.søker = RemoteData.initial;
         },
+        setSøker(state) {
+            state.søker = RemoteData.success({
+                fnr: '12312312312',
+                aktorId: 'aktørId',
+                navn: {
+                    fornavn: 'fornavn',
+                    mellomnavn: null,
+                    etternavn: 'etternavn',
+                },
+                kjønn: null,
+                fødselsdato: null,
+                alder: null,
+                telefonnummer: {
+                    landskode: '+47',
+                    nummer: '2225555',
+                },
+                adresse: null,
+                statsborgerskap: null,
+                adressebeskyttelse: null,
+                skjermet: null,
+                sivilstand: null,
+                kontaktinfo: null,
+                vergemål: null,
+                fullmakt: null,
+                dødsdato: null,
+            });
+        },
     },
     extraReducers: (builder) => {
         handleAsyncThunk(builder, fetchPerson, {

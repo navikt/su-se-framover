@@ -15,7 +15,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import NullstillRevurderingVarsel from '~src/pages/saksbehandling/revurdering/advarselReset/NullstillRevurderingVarsel';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
+import { InformasjonSomRevurderes, InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 import {
     erInformasjonsRevurdering,
     revurderingstegrekkefølge,
@@ -109,7 +109,7 @@ const RevurderingPage = () => {
             A.filterMap((steg) =>
                 pipe(
                     O.fromNullable(revurderingstegTilInformasjonSomRevurderes(steg.id)),
-                    O.chainNullableK((i) => revurdering?.informasjonSomRevurderes[i]),
+                    O.chainNullableK((i: InformasjonSomRevurderes) => revurdering.informasjonSomRevurderes[i]),
                     O.map((vurderingstatus) => ({
                         ...steg,
                         status:

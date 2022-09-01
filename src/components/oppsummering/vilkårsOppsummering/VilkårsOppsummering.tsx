@@ -126,7 +126,7 @@ const Vilkårsting = (props: {
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
                     formue={props.grunnlagsdataOgVilkårsvurderinger.formue}
-                    ektefelle={{ fnr: hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger)?.fnr }}
+                    ektefelle={{ fnr: hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger).fnr }}
                 />
             );
         case Vilkårtype.PersonligOppmøte:

@@ -44,9 +44,7 @@ const index = () => {
             </div>
             <div className={styles.contentContainer}>
                 <div className={styles.content}>
-                    <div className={styles.infoContainer}>
-                        <Outlet context={{ sakstype, isPapirsøknad }} />
-                    </div>
+                    <Outlet context={{ sakstype, isPapirsøknad }} />
                 </div>
             </div>
         </div>
