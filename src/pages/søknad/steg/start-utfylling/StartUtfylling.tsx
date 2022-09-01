@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, ContentContainer, Heading, Loader, StepIndicator } from '@navikt/ds-react';
+import { Alert, Button, ContentContainer, Heading, Loader, Stepper } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import { fetchMe } from '~src/api/meApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { Personkort } from '~src/components/personkort/Personkort';
 import { useUserContext } from '~src/context/userContext';
+import * as personSlice from '~src/features/person/person.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
 import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
@@ -18,7 +19,7 @@ import * as styles from '~src/pages/søknad/index.module.less';
 import messages from '~src/pages/søknad/nb';
 import { Steg } from '~src/pages/søknad/steg/Steg';
 import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
-import { useAppSelector } from '~src/redux/Store';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
 import { Sakstype } from '~src/types/Sak';
 import { Søknadstype } from '~src/types/Søknad';
@@ -33,6 +34,7 @@ const StartUtfylling = () => {
     const navigate = useNavigate();
     const [sisteStartetSteg, setSisteStartetSteg] = useState(0);
     const isLocal = process.env.NODE_ENV === 'development';
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         // check that user is still logged in first
@@ -99,7 +101,7 @@ const StartUtfylling = () => {
             <LinkAsButton
                 variant="secondary"
                 href={routes.soknadPersonSøk.createURL({
-                    soknadstema: routes.urlForSakstype(sakstype ?? Sakstype.Uføre),
+                    soknadstema: routes.urlForSakstype(sakstype),
                 })}
             >
                 {formatMessage('feilmelding.knapp')}
@@ -107,61 +109,74 @@ const StartUtfylling = () => {
         </ContentContainer>
     );
 
+    const StartSøknadMedDefaultPerson = () => {
+        return (
+            <div>
+                <Button
+                    type="button"
+                    onClick={() => {
+                        dispatch(personSlice.default.actions.setSøker());
+                        navigate(
+                            routes.soknadsutfylling.createURL({
+                                step: sakstype === Sakstype.Uføre ? Uføresteg.Uførevedtak : Alderssteg.Alderspensjon,
+                                soknadstema: routes.urlForSakstype(sakstype),
+                                papirsøknad:
+                                    søknad.forVeileder.type === Søknadstype.Papirsøknad &&
+                                    user.roller.includes(Rolle.Saksbehandler),
+                            })
+                        );
+                    }}
+                >
+                    Start søknad med en default person
+                </Button>
+                <ManglendeData />
+            </div>
+        );
+    };
+
     return (
         <div>
             {pipe(
                 søkerFraStore,
                 RemoteData.fold(
-                    () => <ManglendeData />,
+                    () => (isLocal ? <StartSøknadMedDefaultPerson /> : <ManglendeData />),
                     () => <Loader />,
                     () => <ManglendeData />,
                     (søker) => (
                         <>
-                            <div className={styles.headerContainer}>
+                            <div>
                                 <Heading level="2" size="large" className={styles.personkortContainer}>
                                     <Personkort person={søker} variant="wide" />
                                 </Heading>
                             </div>
                             <div className={styles.content}>
-                                <div className={styles.stegindikatorContainer}>
-                                    <StepIndicator
-                                        activeStep={aktivtStegIndex}
-                                        hideLabels
+                                <div className={styles.stepperContainer}>
+                                    <Stepper
+                                        activeStep={aktivtStegIndex + 1}
+                                        orientation={'horizontal'}
                                         onStepChange={(index) => {
-                                            const nyttSteg = steg[index];
-                                            if (nyttSteg) {
-                                                navigate(
-                                                    routes.soknadsutfylling.createURL({
-                                                        step: nyttSteg.step,
-                                                        soknadstema: routes.urlForSakstype(sakstype ?? Sakstype.Uføre),
-                                                    })
-                                                );
-                                            }
+                                            navigate(
+                                                routes.soknadsutfylling.createURL({
+                                                    step: steg[index - 1].step,
+                                                    soknadstema: routes.urlForSakstype(sakstype),
+                                                })
+                                            );
                                         }}
                                     >
-                                        {steg.map((s, index) => (
-                                            <StepIndicator.Step
-                                                key={index}
-                                                disabled={
-                                                    isLocal
-                                                        ? false
-                                                        : aktivtStegIndex !== index && index > sisteStartetSteg
-                                                }
-                                            >
-                                                {formatMessage(s.step)}
-                                            </StepIndicator.Step>
+                                        {steg.map((s) => (
+                                            <Stepper.Step key={s.step}> </Stepper.Step>
                                         ))}
-                                    </StepIndicator>
-                                    <Steg
-                                        title={formatMessage(aktivtSteg?.step ?? Uføresteg.Uførevedtak)}
-                                        step={step ?? Uføresteg.Uførevedtak}
-                                        søknad={søknad}
-                                        søker={søker}
-                                        sakstype={sakstype ?? Sakstype.Uføre}
-                                        erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
-                                        hjelpetekst={aktivtSteg?.hjelpetekst}
-                                    />
+                                    </Stepper>
                                 </div>
+                                <Steg
+                                    title={formatMessage(aktivtSteg!.step)}
+                                    step={step!}
+                                    søknad={søknad}
+                                    søker={søker}
+                                    sakstype={sakstype}
+                                    erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
+                                    hjelpetekst={aktivtSteg?.hjelpetekst}
+                                />
                             </div>
                         </>
                     )

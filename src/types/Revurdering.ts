@@ -16,11 +16,6 @@ export interface Revurdering<T extends RevurderingStatus = RevurderingStatus> ex
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
 }
 
-export interface InformasjonsRevurdering2 extends Revurdering<InformasjonsRevurderingStatus> {
-    fritekstTilBrev: string;
-    informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
-}
-
 /**
  * Dette gjelder kun de revurderingene som kun endrer på utbetalingene
  * eksempler: stans og gjenoppta

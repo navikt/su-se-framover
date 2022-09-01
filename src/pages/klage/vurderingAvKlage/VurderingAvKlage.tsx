@@ -285,6 +285,9 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                             <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
                                                 <Label>{formatMessage('form.fritekst.label')}</Label>
                                                 <HelpText>
+                                                    {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
+                                                    {/*eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                                                    {/*@ts-ignore */}
                                                     <Label className={styles.hjelpetekst}>
                                                         <DsReactLink href={hjelpetekstLink} target="_blank">
                                                             {formatMessage('form.fritekst.hjelpeTekst')}

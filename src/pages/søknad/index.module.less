@@ -9,7 +9,6 @@
 }
 
 .infostripe {
-    width: 100%;
     text-align: center;
     padding: var(--navds-spacing-3) 0;
     min-height: @spacing-l;
@@ -24,25 +23,15 @@
 }
 
 .contentContainer {
-    width: 100%;
     max-width: @container-md;
     margin: 0 auto @spacing-xxl auto;
     background-color: @navBakgrunn;
 }
 
 .content {
-    width: 100%;
     max-width: @container-sm;
     margin: 0 auto;
-    padding: @spacing-l 0;
-}
-
-.infoContainer {
-    padding: @spacing 0;
-}
-
-.headerContainer {
-    width: 100%;
+    padding: @spacing-xl 0;
 }
 
 .stegHeadingContainer {
@@ -57,16 +46,8 @@
 }
 
 .personkortContainer {
-    width: 100%;
-    font-size: initial;
-    font-weight: initial;
-    line-height: initial;
-    padding: @spacing-xs @spacing;
+    padding: @spacing-xxxs @spacing-xxl;
     border-bottom: var(--navds-border-default);
-}
-
-.stegindikatorContainer {
-    margin: @spacing-xs 0;
 }
 
 .feilmeldingContainer {
@@ -76,5 +57,9 @@
 }
 
 .feilmeldingTekst {
+    margin-bottom: @spacing-s;
+}
+
+.stepperContainer {
     margin-bottom: @spacing-s;
 }

@@ -35,7 +35,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                     behandlingId: props.revurdering.id,
                     vilkår: values,
                 }),
-                behandlingstype: Behandlingstype.Søknadsbehandling,
+                behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
                 if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
