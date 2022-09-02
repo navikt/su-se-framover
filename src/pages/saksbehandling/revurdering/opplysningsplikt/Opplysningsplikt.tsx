@@ -10,7 +10,6 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreOpplysningsplikt } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import * as sharedStyles from '~src/pages/saksbehandling/revurdering/revurdering.module.less';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
@@ -87,7 +86,6 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                         avsluttUrl={props.avsluttUrl}
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
-                        className={sharedStyles.revurderingContainer}
                     >
                         <>
                             {fields.map((opplysningsplikt, index) => (

@@ -112,50 +112,52 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                     {formatMessage('periode.overskrift')}
                 </Heading>
                 <div className={styles.formInputContainer}>
-                    <Controller
-                        control={form.control}
-                        name={'periode'}
-                        render={({ field }) => (
-                            <PeriodeForm
-                                name={field.name}
-                                value={field.value}
-                                onChange={field.onChange}
-                                minDate={{
-                                    fraOgMed: props.periodeConfig.fraOgMed.min,
-                                    tilOgMed: form.watch('periode.fraOgMed'),
-                                }}
-                                maxDate={{
-                                    fraOgMed: props.periodeConfig.fraOgMed.max,
-                                    tilOgMed: props.periodeConfig.tilOgMed.max,
-                                }}
-                                error={form.formState.errors.periode}
-                                disableTom
-                            />
-                        )}
-                    />
+                    <div className={styles.periodeOgÅrsakContainer}>
+                        <Controller
+                            control={form.control}
+                            name={'periode'}
+                            render={({ field }) => (
+                                <PeriodeForm
+                                    name={field.name}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    minDate={{
+                                        fraOgMed: props.periodeConfig.fraOgMed.min,
+                                        tilOgMed: form.watch('periode.fraOgMed'),
+                                    }}
+                                    maxDate={{
+                                        fraOgMed: props.periodeConfig.fraOgMed.max,
+                                        tilOgMed: props.periodeConfig.tilOgMed.max,
+                                    }}
+                                    error={form.formState.errors.periode}
+                                    disableTom
+                                />
+                            )}
+                        />
 
-                    <Controller
-                        control={form.control}
-                        name={'årsak'}
-                        render={({ field: { value, ...field }, fieldState }) => (
-                            <Select
-                                id={field.name}
-                                label={formatMessage('input.årsak.label')}
-                                error={fieldState.error?.message}
-                                value={value ?? ''}
-                                {...field}
-                            >
-                                <option value="" disabled>
-                                    {formatMessage('input.årsak.value.default')}
-                                </option>
-                                {gyldigeÅrsaker.map((grunn) => (
-                                    <option value={grunn} key={grunn}>
-                                        {formatMessage(grunn)}
+                        <Controller
+                            control={form.control}
+                            name={'årsak'}
+                            render={({ field: { value, ...field }, fieldState }) => (
+                                <Select
+                                    id={field.name}
+                                    label={formatMessage('input.årsak.label')}
+                                    error={fieldState.error?.message}
+                                    value={value ?? ''}
+                                    {...field}
+                                >
+                                    <option value="" disabled>
+                                        {formatMessage('input.årsak.value.default')}
                                     </option>
-                                ))}
-                            </Select>
-                        )}
-                    />
+                                    {gyldigeÅrsaker.map((grunn) => (
+                                        <option value={grunn} key={grunn}>
+                                            {formatMessage(grunn)}
+                                        </option>
+                                    ))}
+                                </Select>
+                            )}
+                        />
+                    </div>
 
                     <Controller
                         control={form.control}
@@ -192,20 +194,22 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         )}
                     />
 
-                    <Controller
-                        control={form.control}
-                        name={'begrunnelse'}
-                        render={({ field: { value, ...field }, fieldState }) => (
-                            <Textarea
-                                id={field.name}
-                                label={formatMessage('input.begrunnelse.label')}
-                                error={fieldState.error?.message}
-                                value={value ?? ''}
-                                {...field}
-                                description={formatMessage('revurdering.begrunnelse.description')}
-                            />
-                        )}
-                    />
+                    <div className={styles.begrunnelseContainer}>
+                        <Controller
+                            control={form.control}
+                            name={'begrunnelse'}
+                            render={({ field: { value, ...field }, fieldState }) => (
+                                <Textarea
+                                    id={field.name}
+                                    label={formatMessage('input.begrunnelse.label')}
+                                    error={fieldState.error?.message}
+                                    value={value ?? ''}
+                                    {...field}
+                                    description={formatMessage('revurdering.begrunnelse.description')}
+                                />
+                            )}
+                        />
+                    </div>
                 </div>
                 <Feiloppsummering
                     tittel={formatMessage('feiloppsummering.title')}
