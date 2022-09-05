@@ -1,14 +1,14 @@
 import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
+import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import { useI18n } from '~src/lib/i18n';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { SøknadInnholdUføre } from '~src/types/Søknad';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
-import Faktablokk, { FaktaSpacing } from '../Faktablokk';
+import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 
@@ -49,31 +49,12 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
                 uføre === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <Faktablokk
-                        tittel={formatMessage('display.fraSaksbehandling')}
-                        fakta={[
-                            {
-                                tittel: formatMessage('radio.uførhet.legend'),
-                                verdi:
-                                    uføre.resultat === UføreResultat.VilkårOppfylt
-                                        ? formatMessage('fraSøknad.ja')
-                                        : uføre.resultat === UføreResultat.VilkårIkkeOppfylt
-                                        ? formatMessage('fraSøknad.nei')
-                                        : formatMessage('radio.label.uføresakTilBehandling'),
-                            },
-                            ...uføre.vurderinger.flatMap((vurdering) => [
-                                FaktaSpacing,
-                                {
-                                    tittel: formatMessage('input.label.uføregrad'),
-                                    verdi: vurdering.grunnlag?.uføregrad?.toString() ?? '-',
-                                },
-                                {
-                                    tittel: formatMessage('input.label.forventetInntekt'),
-                                    verdi: vurdering.grunnlag?.forventetInntekt?.toString() ?? '-',
-                                },
-                            ]),
-                        ]}
-                    />
+                    <>
+                        <OppsummeringAvUførevilkår
+                            uførevilkår={props.grunnlagsdataOgVilkårsvurderinger.uføre}
+                            visesIVedtak
+                        />
+                    </>
                 )
             }
         />

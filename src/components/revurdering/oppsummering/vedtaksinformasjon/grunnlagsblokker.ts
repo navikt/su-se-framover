@@ -1,12 +1,10 @@
-import { MessageFormatter, UseI18N } from '~src/lib/i18n';
+import { UseI18N } from '~src/lib/i18n';
 import {
     erBosituasjonFullstendig,
     BosituasjonTyper,
     Bosituasjon,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { UføreResultat, UføreVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { formatPeriode } from '~src/utils/date/dateUtils';
-import { formatCurrency } from '~src/utils/format/formatUtils';
 
 import messages from './vedtaksinformasjon-nb';
 
@@ -16,39 +14,6 @@ export type Grunnlagsblokk = Array<{
     label: string;
     verdi: string;
 }>;
-
-export function getUførevilkårgrunnlagsblokker(
-    vilkår: UføreVilkår,
-    formatMessage: MessageFormatter<Messages>
-): Grunnlagsblokk[] {
-    return vilkår.vurderinger.map((v) =>
-        v.grunnlag && v.resultat === UføreResultat.VilkårOppfylt
-            ? [
-                  {
-                      label: formatMessage('uførhet.label.uføregrad'),
-                      verdi: `${v.grunnlag.uføregrad.toString()}%`,
-                  },
-                  {
-                      label: formatMessage('generell.label.periode'),
-                      verdi: formatPeriode(v.grunnlag.periode),
-                  },
-                  {
-                      label: formatMessage('uførhet.label.ieu'),
-                      verdi: formatCurrency(v.grunnlag.forventetInntekt),
-                  },
-              ]
-            : [
-                  {
-                      label: formatMessage('uførhet.label.harUførevedtak'),
-                      verdi: formatMessage('generell.nei'),
-                  },
-                  {
-                      label: formatMessage('generell.label.periode'),
-                      verdi: formatPeriode(v.periode),
-                  },
-              ]
-    );
-}
 
 export function getBosituasjongrunnlagsblokker(
     bosituasjoner: Bosituasjon[],

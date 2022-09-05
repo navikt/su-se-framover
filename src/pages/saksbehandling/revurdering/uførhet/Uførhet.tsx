@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
+import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { UførhetForm } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
@@ -13,7 +15,7 @@ import {
 import { uførhetSchema } from '~src/components/vilkårOgGrunnlagForms/uførhet/validation';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
-import { GjeldendeGrunnlagsdata } from '~src/pages/saksbehandling/revurdering/uførhet/GjeldendeGrunnlagsdata';
+import { useI18n } from '~src/lib/i18n';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -21,7 +23,10 @@ import { erGregulering } from '~src/utils/revurdering/revurderingUtils';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
+import messages from './uførhet-nb';
 const Uførhet = (props: RevurderingStegProps) => {
+    const { formatMessage } = useI18n({ messages });
+
     const form = useForm<UførhetFormData>({
         defaultValues: {
             grunnlag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((u) =>
@@ -74,7 +79,14 @@ const Uførhet = (props: RevurderingStegProps) => {
                         {...props}
                     />
                 ),
-                right: <GjeldendeGrunnlagsdata vilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger} />,
+                right: (
+                    <>
+                        <Heading level="2" size="large" spacing>
+                            {formatMessage('heading.gjeldendeGrunnlag')}
+                        </Heading>
+                        <OppsummeringAvUførevilkår uførevilkår={props.grunnlagsdataOgVilkårsvurderinger.uføre} />
+                    </>
+                ),
             }}
         </ToKolonner>
     );
