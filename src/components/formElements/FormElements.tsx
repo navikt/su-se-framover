@@ -99,10 +99,7 @@ export const PeriodeForm = (props: {
                 minDate={props.minDate.fraOgMed}
                 maxDate={props.maxDate.tilOgMed}
                 onChange={(date: Nullable<Date>) =>
-                    props.onChange({
-                        ...(props.value ?? lagNyPeriode()),
-                        fraOgMed: date ? startOfMonth(date) : null,
-                    })
+                    props.onChange({ ...(props.value ?? lagNyPeriode()), fraOgMed: date ? startOfMonth(date) : null })
                 }
                 startDate={props.value?.fraOgMed}
                 endDate={props.value?.tilOgMed}

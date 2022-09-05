@@ -54,7 +54,6 @@ export const FnrInput = ({ label, inputId, name, fnr, onFnrChange, feil, getHent
                 description={formatMessage('input.ektefelleEllerSamboerFnrDescription.label')}
                 onChange={(e) => onFnrChange(e.target.value)}
                 value={fnr ?? ''}
-                maxLength={11}
                 error={feil}
             />
 

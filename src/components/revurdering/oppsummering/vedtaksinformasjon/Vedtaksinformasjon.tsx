@@ -2,6 +2,7 @@ import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
+import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
 import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fastOpphold/FastOppholdOppsummering';
 import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
@@ -37,7 +38,7 @@ import LovligOppholdOppsummering from '../lovligOpphold/LovligOppholdOppsummerin
 import OpplysningspliktOppsummering from '../opplysningspliktoppsummering/Opplysningspliktoppsummering';
 import PersonligOppmøteOppsummering from '../personligOppmøte/PersonligOppmøteOppsummering';
 
-import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
+import { getBosituasjongrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
 import * as styles from './vedtaksinformasjon.module.less';
 
@@ -171,14 +172,10 @@ const Vedtaksinformasjon = (props: {
                 <Rad radTittel={formatMessage('radTittel.uførhet')}>
                     {{
                         venstre: nyeData.uføre ? (
-                            <Vilkårvisning
-                                grunnlagsblokker={getUførevilkårgrunnlagsblokker(nyeData.uføre, formatMessage)}
-                            />
+                            <OppsummeringAvUførevilkår uførevilkår={nyeData.uføre} visesIVedtak />
                         ) : null,
                         høyre: gamleData.uføre ? (
-                            <Vilkårvisning
-                                grunnlagsblokker={getUførevilkårgrunnlagsblokker(gamleData.uføre, formatMessage)}
-                            />
+                            <OppsummeringAvUførevilkår uførevilkår={gamleData.uføre} visesIVedtak />
                         ) : null,
                     }}
                 </Rad>

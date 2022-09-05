@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller } from 'react-hook-form';
@@ -6,6 +7,7 @@ import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeV
 import { UførhetFormData, lagTomUføreperiode } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
 import { useI18n } from '~src/lib/i18n';
+import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 
@@ -85,6 +87,9 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Vilk
                         </div>
                     )}
                 />
+                {RemoteData.isSuccess(savingState) && 'feilmeldinger' in savingState.value && (
+                    <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
+                )}
             </>
         </FormWrapper>
     );
