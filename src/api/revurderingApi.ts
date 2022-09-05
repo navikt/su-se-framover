@@ -31,6 +31,7 @@ export async function opprettRevurdering(
         method: 'POST',
         body: {
             fraOgMed: formatISO(arg.periode.fraOgMed, { representation: 'date' }),
+            tilOgMed: formatISO(arg.periode.tilOgMed, { representation: 'date' }),
             årsak: arg.årsak,
             informasjonSomRevurderes: arg.informasjonSomRevurderes,
             begrunnelse: arg.begrunnelse,
@@ -132,6 +133,7 @@ export async function oppdaterRevurdering(
         method: 'PUT',
         body: {
             fraOgMed: formatISO(arg.periode.fraOgMed, { representation: 'date' }),
+            tilOgMed: formatISO(arg.periode.tilOgMed, { representation: 'date' }),
             årsak: arg.årsak,
             informasjonSomRevurderes: arg.informasjonSomRevurderes,
             begrunnelse: arg.begrunnelse,

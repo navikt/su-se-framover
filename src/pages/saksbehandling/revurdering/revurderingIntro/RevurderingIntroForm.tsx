@@ -130,7 +130,6 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                         tilOgMed: props.periodeConfig.tilOgMed.max,
                                     }}
                                     error={form.formState.errors.periode}
-                                    disableTom
                                 />
                             )}
                         />
