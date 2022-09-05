@@ -2,19 +2,16 @@ import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
+import OppsummeringAvBosituasjon from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
 import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fastOpphold/FastOppholdOppsummering';
 import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
-import { OppsummeringPar } from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { useI18n } from '~src/lib/i18n';
 import { fradragErlik } from '~src/types/Fradrag';
-import {
-    Bosituasjon,
-    bosituasjonErlik,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { bosituasjonErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { fastOppholdErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { flyktningErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
 import {
@@ -38,7 +35,6 @@ import LovligOppholdOppsummering from '../lovligOpphold/LovligOppholdOppsummerin
 import OpplysningspliktOppsummering from '../opplysningspliktoppsummering/Opplysningspliktoppsummering';
 import PersonligOppmøteOppsummering from '../personligOppmøte/PersonligOppmøteOppsummering';
 
-import { getBosituasjongrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
 import * as styles from './vedtaksinformasjon.module.less';
 
@@ -65,31 +61,6 @@ const Rad = (props: {
         </div>
     </div>
 );
-
-const Vilkårvisning = (props: { grunnlagsblokker: Grunnlagsblokk[] }) => (
-    <div className={styles.vilkårvisningContainer}>
-        {props.grunnlagsblokker.map((grunnlagsblokk, idx) => (
-            <div key={idx} className={styles.grunnlagsblokk}>
-                {grunnlagsblokk.map(({ label, verdi }) => (
-                    <OppsummeringPar key={label} className={styles.info} label={label} verdi={verdi} />
-                ))}
-            </div>
-        ))}
-    </div>
-);
-
-const Bosituasjonblokk = (props: { nyeData: Bosituasjon[]; gamleData: Bosituasjon[] }) => {
-    const i18n = useI18n({ messages });
-
-    return (
-        <Rad radTittel={i18n.formatMessage('radTittel.bosituasjon')}>
-            {{
-                venstre: <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(props.nyeData, i18n)} />,
-                høyre: <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(props.gamleData, i18n)} />,
-            }}
-        </Rad>
-    );
-};
 
 const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår }) => (
     <ul>
@@ -181,7 +152,12 @@ const Vedtaksinformasjon = (props: {
                 </Rad>
             )}
             {skalVisebosituasjon && (
-                <Bosituasjonblokk nyeData={nyeData.bosituasjon} gamleData={gamleData.bosituasjon} />
+                <Rad radTittel={formatMessage('radTittel.bosituasjon')}>
+                    {{
+                        venstre: <OppsummeringAvBosituasjon bosituasjon={nyeData.bosituasjon} visesIVedtak />,
+                        høyre: <OppsummeringAvBosituasjon bosituasjon={gamleData.bosituasjon} visesIVedtak />,
+                    }}
+                </Rad>
             )}
             {skalViseformue && (
                 <Rad radTittel={formatMessage('radTittel.formue')}>

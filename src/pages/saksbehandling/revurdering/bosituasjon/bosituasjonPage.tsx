@@ -1,11 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
+import OppsummeringAvBosituasjon from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreBosituasjonsgrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -26,7 +28,6 @@ import {
     bosituasjonTilFormItemData,
     nyBosituasjon,
 } from './bosituasjonPageUtils';
-import GjeldendeBosituasjon from './GjeldendeBosituasjon';
 
 const BosituasjonPage = (props: RevurderingStegProps) => {
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
@@ -154,10 +155,12 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                     </FormWrapper>
                 ),
                 right: (
-                    <GjeldendeBosituasjon
-                        bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
-                        formatMessage={formatMessage}
-                    />
+                    <>
+                        <Heading level="2" size="large" spacing>
+                            {formatMessage('eksisterende.vedtakinfo.tittel')}
+                        </Heading>
+                        <OppsummeringAvBosituasjon bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon} />
+                    </>
                 ),
             }}
         </ToKolonner>
