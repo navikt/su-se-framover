@@ -65,7 +65,7 @@
         "country-data-list": "^1.2.2",
         "date-fns": "^2.29.2",
         "dayjs": "^1.11.5",
-        "fp-ts": "^2.12.2",
+        "fp-ts": "^2.12.3",
         "io-ts": "^2.2.17",
         "io-ts-types": "^0.5.16",
         "lodash.debounce": "^4.0.8",
