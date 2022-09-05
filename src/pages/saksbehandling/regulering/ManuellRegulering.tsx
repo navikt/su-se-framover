@@ -5,8 +5,8 @@ import React, { useEffect } from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as reguleringApi from '~src/api/reguleringApi';
-import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import {
     fradragFormdataTilFradrag,
@@ -42,7 +42,7 @@ const ManuellRegulering = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.manuellRegulering>();
     const regulering = props.sak.reguleringer.find((r) => r.id === urlParams.reguleringId);
     const [gjeldendeGrunnlagsdataOgVilkårsvurderinger, hentGjeldendeGrunnlagsdataOgVilkårsvurderinger] = useApiCall(
-        sakApi.hentgjeldendeGrunnlagsdataOgVilkårsvurderinger
+        hentgjeldendeGrunnlagsdataOgVilkårsvurderinger
     );
     const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
     const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);

@@ -4,8 +4,8 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorMessage } from '~src/api/apiClient';
+import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import { BeregnOgSimuler } from '~src/api/revurderingApi';
-import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
@@ -146,7 +146,7 @@ const RevurderingOppsummeringPage = (props: {
     const { formatMessage } = useI18n({ messages });
 
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
-    const [gjeldendeData, hentGjeldendeData] = useApiCall(sakApi.hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
+    const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
 
     const beregningStatus = harBeregninger(props.revurdering)
         ? RemoteData.success<never, BeregnOgSimuler>({
@@ -169,6 +169,7 @@ const RevurderingOppsummeringPage = (props: {
             hentGjeldendeData({
                 sakId: props.sakId,
                 fraOgMed: props.revurdering.periode.fraOgMed,
+                tilOgMed: props.revurdering.periode.tilOgMed,
             });
         }
     }, [props.revurdering.id]);

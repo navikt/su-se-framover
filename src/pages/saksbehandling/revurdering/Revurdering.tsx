@@ -5,7 +5,7 @@ import * as O from 'fp-ts/Option';
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import * as sakApi from '~src/api/sakApi';
+import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, { Linje, Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
@@ -55,10 +55,14 @@ const RevurderingPage = () => {
 
     const påbegyntRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
 
-    const [gjeldendeData, hentGjeldendeData] = useApiCall(sakApi.hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
+    const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
     React.useEffect(() => {
         if (RemoteData.isInitial(gjeldendeData) && påbegyntRevurdering) {
-            hentGjeldendeData({ sakId: props.sakId, fraOgMed: påbegyntRevurdering.periode.fraOgMed });
+            hentGjeldendeData({
+                sakId: props.sakId,
+                fraOgMed: påbegyntRevurdering.periode.fraOgMed,
+                tilOgMed: påbegyntRevurdering.periode.tilOgMed,
+            });
         }
     }, [gjeldendeData._tag, påbegyntRevurdering?.id]);
 

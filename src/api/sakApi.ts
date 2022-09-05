@@ -1,4 +1,3 @@
-import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Restans } from '~src/types/Restans';
 import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
 import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
@@ -40,25 +39,6 @@ export async function hentFerdigeBehandlinger(): Promise<ApiClientResult<Restans
 
 export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<AlleredeGjeldendeSakForBruker>> {
     return apiClient({ url: `/saker/info/${fnr}`, method: 'GET' });
-}
-
-export async function hentgjeldendeGrunnlagsdataOgVilkårsvurderinger({
-    sakId,
-    fraOgMed,
-    tilOgMed,
-}: {
-    sakId: string;
-    fraOgMed: string;
-    tilOgMed?: string;
-}): Promise<ApiClientResult<{ grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger }>> {
-    return apiClient({
-        url: `/saker/${sakId}/gjeldendeVedtaksdata`,
-        method: 'POST',
-        body: {
-            fraOgMed: fraOgMed,
-            tilOgMed: tilOgMed ?? null,
-        },
-    });
 }
 
 export async function kallInnTilKontrollsamtale(sakId: string) {

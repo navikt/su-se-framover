@@ -3,8 +3,8 @@ import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as PdfApi from '~src/api/pdfApi';
-import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
@@ -52,7 +52,7 @@ const AttesterRevurdering = () => {
     const [iverksettStatus, iverksett] = useAsyncActionCreator(RevurderingActions.iverksettRevurdering);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(RevurderingActions.underkjennRevurdering);
     const [grunnlagsdataOgVilkårsvurderinger, hentGrunnlagsdataOgVilkårsvurderinger] = useApiCall(
-        sakApi.hentgjeldendeGrunnlagsdataOgVilkårsvurderinger
+        hentgjeldendeGrunnlagsdataOgVilkårsvurderinger
     );
 
     useEffect(() => {
@@ -62,6 +62,7 @@ const AttesterRevurdering = () => {
         hentGrunnlagsdataOgVilkårsvurderinger({
             sakId: sakId,
             fraOgMed: revurdering.periode.fraOgMed,
+            tilOgMed: revurdering.periode.tilOgMed,
         });
     }, [revurdering?.id]);
 

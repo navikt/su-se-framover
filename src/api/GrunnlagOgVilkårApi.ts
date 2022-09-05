@@ -9,6 +9,7 @@ import { Familiegjenforeningrequest } from '~src/types/grunnlagsdataOgVilkårsvu
 import { FastOppholdVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
 import { FormueVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InstitusjonsoppholdVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
 import { LovligOppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { OpplysningspliktRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
@@ -167,6 +168,21 @@ export async function lagreOpplysningsplikt(data: OpplysningspliktRequest) {
             id: data.id,
             type: data.type,
             data: data.data,
+        },
+    });
+}
+
+export async function hentgjeldendeGrunnlagsdataOgVilkårsvurderinger(arg: {
+    sakId: string;
+    fraOgMed: string;
+    tilOgMed: string;
+}) {
+    return apiClient<{ grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger }>({
+        url: `/saker/${arg.sakId}/gjeldendeVedtaksdata`,
+        method: 'POST',
+        body: {
+            fraOgMed: arg.fraOgMed,
+            tilOgMed: arg.tilOgMed,
         },
     });
 }
