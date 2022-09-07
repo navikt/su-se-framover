@@ -4,7 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import FormuevilkårOppsummering from '~src/components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
+import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import FormueForm from '~src/components/vilkårOgGrunnlagForms/formue/FormueForm';
 import {
@@ -72,7 +72,7 @@ const Formue = (props: RevurderingStegProps) => {
                                 {formatMessage('eksisterende.vedtakinfo.tittel')}
                             </Heading>
                         </div>
-                        <FormuevilkårOppsummering gjeldendeFormue={props.grunnlagsdataOgVilkårsvurderinger.formue} />
+                        <OppsummeringAvFormueVilkår formue={props.grunnlagsdataOgVilkårsvurderinger.formue} />
                     </div>
                 ),
             }}

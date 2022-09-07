@@ -8,7 +8,6 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVi
 import { isAldersøknad, isUføresøknad, SøknadInnhold } from '~src/types/Søknad';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
-import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import { FastOppholdVilkårsblokk } from './faktablokk/faktablokker/FastOppholdFaktablokk';
 import { FlyktningVilkårsblokk } from './faktablokk/faktablokker/FlyktningFaktablokk';
@@ -126,7 +125,6 @@ const Vilkårsting = (props: {
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
                     formue={props.grunnlagsdataOgVilkårsvurderinger.formue}
-                    ektefelle={{ fnr: hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger)?.fnr ?? null }}
                 />
             );
         case Vilkårtype.PersonligOppmøte:

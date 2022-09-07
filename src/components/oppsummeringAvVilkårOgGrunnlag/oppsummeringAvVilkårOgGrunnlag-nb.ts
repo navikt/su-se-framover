@@ -14,6 +14,16 @@ export default {
     'bosituasjon.eps.erEpsUførFlyktning': 'Er ektefelle/samboer ufør flyktning',
     'bosituasjon.ORDINÆR': 'Ordinær',
     'bosituasjon.HØY': 'Høy',
+    'bosituasjon.harIkkeSatsgrunnlag': 'Ikke noe satsgrunnlag',
+
+    'formue.verdi.bolig': 'Verdi på bolig',
+    'formue.verdi.eiendom': 'Verdi på eiendom',
+    'formue.verdi.kjøretøy': 'Verdi på kjøretøy',
+    'formue.innskuddsbeløp': 'Innskuddsbeløp',
+    'formue.verdipapir': 'Verdipapir',
+    'formue.noenIGjeld': 'Står noen i gjeld til deg',
+    'formue.kontanterOver1000': 'Kontanter over 1000',
+    'formue.depositumskonto': 'Depositumskonto',
 
     ...vilkårstatusMessages,
     ...uførevilkårstatusMessages,
@@ -25,4 +35,5 @@ export default {
     periode: 'Periode',
     'bool.true': 'Ja',
     'bool.false': 'Nei',
+    ubesvart: 'Ubesvart',
 };

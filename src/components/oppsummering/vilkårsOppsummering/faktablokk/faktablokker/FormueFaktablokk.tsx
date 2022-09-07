@@ -1,13 +1,11 @@
-import { Alert, Heading } from '@navikt/ds-react';
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React, { useMemo } from 'react';
+import React from 'react';
 
-import { regnUtFormuegrunnlagVerdier } from '~src/components/vilkårOgGrunnlagForms/formue/FormueFormUtils';
+import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
 import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/formue/formue-nb';
-import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
-import { FormueStatus, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { SøknadInnhold } from '~src/types/Søknad';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
@@ -124,62 +122,6 @@ function søknadsfakta(innhold: SøknadInnhold, formatMessage: MessageFormatter<
     );
 }
 
-function saksbehandlingfakta(
-    info: Formuegrunnlag | undefined,
-    harEktefelle: boolean,
-    formatMessage: MessageFormatter<typeof messages>
-): Fakta[] {
-    return [
-        {
-            tittel: formatMessage('formue.verdiPåBolig'),
-            verdi: info?.søkersFormue?.verdiIkkePrimærbolig,
-            epsVerdi: info?.epsFormue?.verdiIkkePrimærbolig,
-        },
-        {
-            tittel: formatMessage('formue.verdiPåEiendom'),
-            verdi: info?.søkersFormue?.verdiEiendommer,
-            epsVerdi: info?.epsFormue?.verdiEiendommer,
-        },
-        {
-            tittel: formatMessage('formue.verdiPåKjøretøy'),
-            verdi: info?.søkersFormue?.verdiKjøretøy,
-            epsVerdi: info?.epsFormue?.verdiKjøretøy,
-        },
-        {
-            tittel: formatMessage('formue.innskuddsbeløp'),
-            verdi: info?.søkersFormue?.innskudd,
-            epsVerdi: info?.epsFormue?.innskudd,
-        },
-        {
-            tittel: formatMessage('formue.verdipapirbeløp'),
-            verdi: info?.søkersFormue?.verdipapir,
-            epsVerdi: info?.epsFormue?.verdipapir,
-        },
-        {
-            tittel: formatMessage('formue.kontanter'),
-            verdi: info?.søkersFormue?.kontanter,
-            epsVerdi: info?.epsFormue?.kontanter,
-        },
-        {
-            tittel: formatMessage('formue.skylderNoenSøkerPengerBeløp'),
-            verdi: info?.søkersFormue?.pengerSkyldt,
-            epsVerdi: info?.epsFormue?.pengerSkyldt,
-        },
-        {
-            tittel: formatMessage('formue.depositumsBeløp'),
-            verdi: info?.søkersFormue?.depositumskonto,
-            epsVerdi: info?.epsFormue?.depositumskonto,
-        },
-    ].map((f) =>
-        formuelinje({
-            harEktefelle: harEktefelle,
-            tittel: f.tittel,
-            verdi: f.verdi ?? 0,
-            epsVerdi: f.epsVerdi ?? 0,
-        })
-    );
-}
-
 function formuelinje(f: {
     harEktefelle: boolean;
     tittel: string;
@@ -207,7 +149,6 @@ export const FormueVilkårsblokk = (props: {
     info: Vilkårsinformasjon;
     søknadInnhold: SøknadInnhold;
     formue: FormueVilkår;
-    ektefelle: { fnr: Nullable<string> };
 }) => {
     const { formatMessage } = useI18n({
         messages: {
@@ -215,20 +156,6 @@ export const FormueVilkårsblokk = (props: {
             ...saksbehandlingMessages,
         },
     });
-    const totalFormue = useMemo(() => {
-        if (!props.formue) {
-            return 0;
-        }
-        const søkersFormueFraSøknad = regnUtFormuegrunnlagVerdier(
-            props.formue.vurderinger[0]?.grunnlag.søkersFormue ?? null
-        );
-
-        if (props.ektefelle.fnr && props.formue.vurderinger[0]?.grunnlag.epsFormue) {
-            return søkersFormueFraSøknad + regnUtFormuegrunnlagVerdier(props.formue.vurderinger[0].grunnlag.epsFormue);
-        }
-
-        return søkersFormueFraSøknad;
-    }, [props.formue.vurderinger[0]?.grunnlag.søkersFormue, props.formue.vurderinger[0]?.grunnlag.epsFormue]);
 
     return (
         <Vilkårsblokk
@@ -239,76 +166,7 @@ export const FormueVilkårsblokk = (props: {
                 props.formue.vurderinger.length === 0 ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <div>
-                        <Faktablokk
-                            tittel={formatMessage('display.fraSaksbehandling')}
-                            fakta={[
-                                {
-                                    tittel: formatMessage('formue.tittel'),
-                                    verdi: (
-                                        <div
-                                            className={classNames(
-                                                styles.formueForBrukerOgEps,
-                                                styles.formueForBrukerOgEpsHeading
-                                            )}
-                                        >
-                                            <span className={styles.søker}>
-                                                {formatMessage('formue.heading.søker')}
-                                            </span>
-                                            {props.ektefelle.fnr && (
-                                                <span className={classNames(styles.eps, styles.breakPls)}>
-                                                    {formatMessage('formue.heading.eps')}
-                                                </span>
-                                            )}
-                                        </div>
-                                    ),
-                                },
-                                ...saksbehandlingfakta(
-                                    props.formue.vurderinger[0]?.grunnlag,
-                                    props.ektefelle.fnr !== null,
-                                    formatMessage
-                                ),
-                                FaktaSpacing,
-                                {
-                                    tittel: formatMessage('formue.totalt'),
-                                    verdi: formatCurrency(totalFormue),
-                                },
-                                FaktaSpacing,
-                                {
-                                    tittel: formatMessage('formue.label.borSøkerMedEktefelle'),
-                                    verdi: props.ektefelle.fnr !== null ? 'Ja' : 'Nei',
-                                },
-                                ...(props.ektefelle.fnr
-                                    ? [
-                                          {
-                                              tittel: formatMessage('formue.label.ektefellesFødselsnummer'),
-                                              verdi: props.ektefelle.fnr,
-                                          },
-                                      ]
-                                    : []),
-                                FaktaSpacing,
-                            ]}
-                        />
-                        <div>
-                            {props.formue.resultat === FormueStatus.VilkårOppfylt ? (
-                                <>
-                                    <Heading size="small" level="5">
-                                        {formatMessage('formue.vilkårOppfylt')}
-                                    </Heading>
-                                    <p>{formatMessage('formue.vilkårOppfyltGrunn')}</p>
-                                </>
-                            ) : props.formue.resultat === FormueStatus.VilkårIkkeOppfylt ? (
-                                <>
-                                    <p>{formatMessage('formue.vilkårIkkeOppfylt')}</p>
-                                    <p>{formatMessage('formue.vilkårIkkeOppfyltGrunn')}</p>
-                                </>
-                            ) : (
-                                <>
-                                    <p>{formatMessage('fraSøknad.uavklart')}</p>
-                                </>
-                            )}
-                        </div>
-                    </div>
+                    <OppsummeringAvFormueVilkår formue={props.formue} visesIVedtak />
                 )
             }
         />

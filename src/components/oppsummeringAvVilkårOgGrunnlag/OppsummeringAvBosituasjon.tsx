@@ -10,7 +10,7 @@ import { OppsummeringPar } from '../revurdering/oppsummering/oppsummeringspar/Op
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
-const OppsummeringAvBosituasjon = (props: { bosituasjon: Bosituasjon[]; visesIVedtak?: boolean }) => {
+const OppsummeringAvBosituasjongrunnlag = (props: { bosituasjon: Bosituasjon[]; visesIVedtak?: boolean }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -30,7 +30,11 @@ const OppsummeringAvBosituasjon = (props: { bosituasjon: Bosituasjon[]; visesIVe
                     >
                         <OppsummeringPar
                             label={formatMessage('bosituasjon.sats')}
-                            verdi={formatMessage(`bosituasjon.${b.sats as `ORDINÆR` | 'HØY'}`)}
+                            verdi={formatMessage(
+                                b.sats
+                                    ? `bosituasjon.${b.sats as `ORDINÆR` | 'HØY'}`
+                                    : 'bosituasjon.harIkkeSatsgrunnlag'
+                            )}
                         />
                         <OppsummeringPar label={formatMessage('periode')} verdi={formatPeriode(b.periode)} />
                         <OppsummeringPar
@@ -42,14 +46,20 @@ const OppsummeringAvBosituasjon = (props: { bosituasjon: Bosituasjon[]; visesIVe
                                 <OppsummeringPar label={formatMessage('bosituasjon.eps.fnr')} verdi={b.fnr} />
                                 <OppsummeringPar
                                     label={formatMessage('bosituasjon.eps.erEpsUførFlyktning')}
-                                    verdi={formatMessage(`bool.${b.ektemakeEllerSamboerUførFlyktning !== null}`)}
+                                    verdi={formatMessage(
+                                        b.ektemakeEllerSamboerUførFlyktning !== null
+                                            ? `bool.${b.ektemakeEllerSamboerUførFlyktning}`
+                                            : 'ubesvart'
+                                    )}
                                 />
                             </>
                         )}
-                        <OppsummeringPar
-                            label={formatMessage('bosituasjon.delerBolig')}
-                            verdi={formatMessage(`bool.${b.delerBolig !== null}`)}
-                        />
+                        {b.fnr === null && (
+                            <OppsummeringPar
+                                label={formatMessage('bosituasjon.delerBolig')}
+                                verdi={formatMessage(b.delerBolig !== null ? `bool.${b.delerBolig}` : 'ubesvart')}
+                            />
+                        )}
                     </li>
                 ))}
             </ul>
@@ -57,4 +67,4 @@ const OppsummeringAvBosituasjon = (props: { bosituasjon: Bosituasjon[]; visesIVe
     );
 };
 
-export default OppsummeringAvBosituasjon;
+export default OppsummeringAvBosituasjongrunnlag;

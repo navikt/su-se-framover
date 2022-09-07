@@ -49,12 +49,10 @@ export const UførhetVilkårsblokk = (props: UføreVilkårsblokkProps) => {
                 uføre === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <>
-                        <OppsummeringAvUførevilkår
-                            uførevilkår={props.grunnlagsdataOgVilkårsvurderinger.uføre}
-                            visesIVedtak
-                        />
-                    </>
+                    <OppsummeringAvUførevilkår
+                        uførevilkår={props.grunnlagsdataOgVilkårsvurderinger.uføre}
+                        visesIVedtak
+                    />
                 )
             }
         />

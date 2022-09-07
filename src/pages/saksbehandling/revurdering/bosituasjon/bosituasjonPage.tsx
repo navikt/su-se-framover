@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
-import OppsummeringAvBosituasjon from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
+import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreBosituasjonsgrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -159,7 +159,9 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                         <Heading level="2" size="large" spacing>
                             {formatMessage('eksisterende.vedtakinfo.tittel')}
                         </Heading>
-                        <OppsummeringAvBosituasjon bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon} />
+                        <OppsummeringAvBosituasjongrunnlag
+                            bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                        />
                     </>
                 ),
             }}

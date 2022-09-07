@@ -9,7 +9,6 @@ import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import messages from './søknadsbehandling-nb';
 import SøknadsbehandlingHeader from './SøknadsbehandlingHeader';
@@ -54,16 +53,14 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
                 grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
                 søknadInnhold={props.behandling.søknad.søknadInnhold}
             />
+            <SatsVilkårsblokk
+                bosituasjon={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                søknadInnhold={props.behandling.søknad.søknadInnhold}
+            />
             {props.behandling.beregning ? (
-                <div>
-                    <SatsVilkårsblokk
-                        bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)}
-                        søknadInnhold={props.behandling.søknad.søknadInnhold}
-                    />
-                    <Panel border>
-                        <VisBeregningOgSimulering behandling={props.behandling} />
-                    </Panel>
-                </div>
+                <Panel border>
+                    <VisBeregningOgSimulering behandling={props.behandling} />
+                </Panel>
             ) : (
                 <Label>{formatMessage('feilmelding.ikkeGjortEnBeregning')}</Label>
             )}
