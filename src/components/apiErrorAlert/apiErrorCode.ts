@@ -61,7 +61,7 @@ export enum ApiErrorCode {
     HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING = 'har_allerede_en_åpen_søknadsbehandling',
     HAR_IKKE_EKTEFELLE = 'har_ikke_ektefelle',
     HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING = 'hele_behandlingsperioden_må_ha_vurderinger',
-    HULL_I_TIDSLINJE = 'tidslinje_for_vedtak_ikke_kontinuerlig',
+    VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING = 'vedtak_mangler_i_en_eller_flere_måneder_av_revurderingsperiode',
     IKKE_FORHÅNDSVARSLET = 'ikke_forhåndsvarslet',
     IKKE_GYLDIG_FØDSELSNUMMER = 'ikke_gyldig_fødselsnummer',
     IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS = 'ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',

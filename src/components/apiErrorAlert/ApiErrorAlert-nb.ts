@@ -77,8 +77,8 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
     [ApiErrorCode.HAR_IKKE_EKTEFELLE]: 'Har ikke ektefelle',
     [ApiErrorCode.HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING]: 'Hele behandlingsperioden må ha vurderinger',
-    [ApiErrorCode.HULL_I_TIDSLINJE]:
-        'Mangler systemstøtte for revurdering av perioder med hull i tidslinjen for vedtak',
+    [ApiErrorCode.VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING]:
+        'Vedtak mangler i en eller flere måneder av valgt revurderingsperiode.',
     [ApiErrorCode.IKKE_FORHÅNDSVARSLET]: 'Kan ikke beslutte forhåndsvarsel. Revurderingen er ikke forhåndsvarslet',
     [ApiErrorCode.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
     [ApiErrorCode.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS]:
