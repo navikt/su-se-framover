@@ -1,4 +1,8 @@
-import { uførevilkårstatusMessages, vilkårstatusMessages } from '~src/typeMappinger/Vilkårsstatus';
+import {
+    uførevilkårstatusMessages,
+    utenlandsoppholdStatusMessages,
+    vilkårstatusMessages,
+} from '~src/typeMappinger/Vilkårsstatus';
 
 import {
     ikkeVelgbareFradragskategoriMessages,
@@ -6,11 +10,9 @@ import {
 } from '../beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 
 export default {
-    'uførhet.vilkår.resultat': 'Resultat av vilkår',
     'uførhet.vilkår.erOppfylt': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
     'uførhet.grunnlag.uføregrad': 'Uføregrad',
     'uførhet.grunnlag.forventetInntekt': 'Forventet inntekt etter uførhet',
-    'uførhet.vilkår.ikkeVurdert': 'Vilkåret er ikke vurdert',
 
     'bosituasjon.sats': 'Sats',
     'bosituasjon.harEPS': 'Har søker ektefelle eller samboer?',
@@ -33,11 +35,18 @@ export default {
     'fradrag.utenlandsk.beløp': 'Beløp i utenlandsk valuta',
     'fradrag.utenlandsk.kurs': 'Kurs',
     'fradrag.suffix.eps': '(ektefelle/samboer)',
+
+    'utenlandsopphold.vilkår.text': 'Skal søkeren oppholde seg mer enn 90 dager i utlandet?',
+    'utenlandsopphold.vilkår.erOppfylt.SkalHoldeSegINorge': 'Oppfylt',
+    'utenlandsopphold.vilkår.erOppfylt.SkalVæreMerEnn90DagerIUtlandet': 'Ikke oppfylt',
+    'utenlandsopphold.vilkår.erOppfylt.Uavklart': 'Uavklart',
+
     ...velgbareFradragskategoriMessages,
     ...ikkeVelgbareFradragskategoriMessages,
 
     ...vilkårstatusMessages,
     ...uførevilkårstatusMessages,
+    ...utenlandsoppholdStatusMessages,
 
     'grunnlagOgVilkår.oppfylt.ja': 'Ja',
     'grunnlagOgVilkår.ikkeOppfylt.nei': 'Nei',
@@ -47,5 +56,7 @@ export default {
     'bool.true': 'Ja',
     'bool.false': 'Nei',
     ubesvart: 'Ubesvart',
+    'vilkår.resultat': 'Resultat av vilkår',
+    'vilkår.ikkeVurdert': 'Vilkåret er ikke vurdert',
     'feil.ukjent.periode': 'Ukjent periode',
 };

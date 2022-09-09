@@ -4,7 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
+import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import UtenlandsoppholdForm from '~src/components/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdForm';
 import {
@@ -75,7 +75,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                             {formatMessage('eksisterende.vedtakinfo.tittel')}
                         </Heading>
                         {props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold && (
-                            <Utenlandsoppsummering
+                            <OppsummeringAvUtenlandsopphold
                                 utenlandsopphold={props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
                             />
                         )}

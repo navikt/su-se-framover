@@ -26,8 +26,8 @@ const OppsummeringAvUførevilkår = (props: { uførevilkår: Nullable<UføreVilk
         >
             <OppsummeringPar
                 className={classNames(styles.oppsummeringAvResultat)}
-                label={formatMessage('uførhet.vilkår.resultat')}
-                verdi={formatMessage(props.uførevilkår?.resultat ?? 'uførhet.vilkår.ikkeVurdert')}
+                label={formatMessage('vilkår.resultat')}
+                verdi={formatMessage(props.uførevilkår?.resultat ?? 'vilkår.ikkeVurdert')}
             />
             <ul>
                 {props.uførevilkår?.vurderinger?.map((u) => (

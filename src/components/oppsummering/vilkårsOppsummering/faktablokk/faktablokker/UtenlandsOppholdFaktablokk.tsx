@@ -2,10 +2,9 @@ import { Alert } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 
+import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import { useI18n } from '~src/lib/i18n';
-import { keyOf } from '~src/lib/types';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { SøknadInnhold } from '~src/types/Søknad';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~src/utils/date/dateUtils';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -25,20 +24,14 @@ export interface UtenlandsoppholdVilkårsblokkPros {
 }
 
 export const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
-    const { intl } = useI18n({
-        messages: {
-            ...messages,
-        },
-    });
+    const { formatMessage } = useI18n({ messages });
 
     return (
         <Faktablokk
-            tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+            tittel={formatMessage('display.fraSøknad')}
             fakta={[
                 {
-                    tittel: intl.formatMessage({
-                        id: 'utenlandsOpphold.antallDagerSiste90',
-                    }),
+                    tittel: formatMessage('utenlandsOpphold.antallDagerSiste90'),
                     verdi: kalkulerTotaltAntallDagerIUtlandet(
                         props.søknadInnhold.utenlandsopphold.registrertePerioder
                     ).toString(),
@@ -47,9 +40,7 @@ export const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
                     ? []
                     : [reisedatoer(props.søknadInnhold.utenlandsopphold.registrertePerioder), FaktaSpacing]),
                 {
-                    tittel: intl.formatMessage({
-                        id: 'utenlandsOpphold.antallDagerPlanlagt',
-                    }),
+                    tittel: formatMessage('utenlandsOpphold.antallDagerPlanlagt'),
                     verdi: kalkulerTotaltAntallDagerIUtlandet(
                         props.søknadInnhold.utenlandsopphold.planlagtePerioder
                     ).toString(),
@@ -77,7 +68,7 @@ function formatDate(date: string) {
 }
 
 export const UtenlandsoppholdVilkårsblokk = (props: UtenlandsoppholdVilkårsblokkPros) => {
-    const { intl } = useI18n({
+    const { formatMessage } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,
@@ -90,27 +81,11 @@ export const UtenlandsoppholdVilkårsblokk = (props: UtenlandsoppholdVilkårsblo
             søknadfaktablokk={<UtenlandsOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
                 (props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ?? null) === null ? (
-                    <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
+                    <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}
-                        fakta={[
-                            {
-                                tittel: intl.formatMessage({
-                                    id: keyOf<typeof saksbehandlingMessages>('radio.oppholdIUtland.legend'),
-                                }),
-                                verdi:
-                                    props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
-                                    Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet
-                                        ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
-                                          Utenlandsoppholdstatus.SkalHoldeSegINorge
-                                        ? intl.formatMessage({ id: 'fraSøknad.nei' })
-                                        : intl.formatMessage({
-                                              id: 'fraSøknad.uavklart',
-                                          }),
-                            },
-                        ]}
+                    <OppsummeringAvUtenlandsopphold
+                        utenlandsopphold={props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
+                        visesIVedtak
                     />
                 )
             }

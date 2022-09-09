@@ -6,9 +6,9 @@ import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummeringAvVil
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
+import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fastOpphold/FastOppholdOppsummering';
 import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
-import { Utenlandsoppsummering } from '~src/components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import { useI18n } from '~src/lib/i18n';
 import { fradragErlik } from '~src/types/Fradrag';
 import { bosituasjonErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
@@ -158,10 +158,13 @@ const Vedtaksinformasjon = (props: {
                 <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
                     {{
                         venstre: nyeData.utenlandsopphold ? (
-                            <Utenlandsoppsummering utenlandsopphold={nyeData.utenlandsopphold} />
+                            <OppsummeringAvUtenlandsopphold utenlandsopphold={nyeData.utenlandsopphold} visesIVedtak />
                         ) : null,
                         høyre: gamleData.utenlandsopphold ? (
-                            <Utenlandsoppsummering utenlandsopphold={gamleData.utenlandsopphold} />
+                            <OppsummeringAvUtenlandsopphold
+                                utenlandsopphold={gamleData.utenlandsopphold}
+                                visesIVedtak
+                            />
                         ) : null,
                     }}
                 </Rad>
