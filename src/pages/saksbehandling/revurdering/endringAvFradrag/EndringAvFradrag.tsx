@@ -16,19 +16,14 @@ import {
     fradragSchema,
 } from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import Fradragoppsummering from '~src/components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
+import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import {
-    Fradrag,
-    FradragTilhører,
-    IkkeVelgbareFradragskategorier,
-    VelgbareFradragskategorier,
-} from '~src/types/Fradrag';
+import { FradragTilhører, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -46,21 +41,9 @@ interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
 }
 
-const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
-    const { intl } = useI18n({ messages: { ...messages } });
-    return (
-        <div>
-            <Heading level="2" size="large" spacing>
-                {intl.formatMessage({ id: 'heading.gjeldendeFradrag' })}
-            </Heading>
-            <Fradragoppsummering fradrag={props.fradrag} />
-        </div>
-    );
-};
-
 const EndringAvFradrag = (props: RevurderingStegProps) => {
     const { intl } = useI18n({
-        messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages },
+        messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...messages },
     });
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -213,7 +196,14 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                         </div>
                     </form>
                 ),
-                right: <GjeldendeFradrag fradrag={props.grunnlagsdataOgVilkårsvurderinger.fradrag} />,
+                right: (
+                    <div>
+                        <Heading level="2" size="large" spacing>
+                            {intl.formatMessage({ id: 'heading.gjeldendeFradrag' })}
+                        </Heading>
+                        <OppsummeringAvFradrag fradrag={props.grunnlagsdataOgVilkårsvurderinger.fradrag} />
+                    </div>
+                ),
             }}
         </ToKolonner>
     );

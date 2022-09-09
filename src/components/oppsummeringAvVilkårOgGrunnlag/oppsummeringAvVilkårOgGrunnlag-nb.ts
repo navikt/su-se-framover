@@ -1,5 +1,10 @@
 import { uførevilkårstatusMessages, vilkårstatusMessages } from '~src/typeMappinger/Vilkårsstatus';
 
+import {
+    ikkeVelgbareFradragskategoriMessages,
+    velgbareFradragskategoriMessages,
+} from '../beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
+
 export default {
     'uførhet.vilkår.resultat': 'Resultat av vilkår',
     'uførhet.vilkår.erOppfylt': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
@@ -25,6 +30,12 @@ export default {
     'formue.kontanterOver1000': 'Kontanter over 1000',
     'formue.depositumskonto': 'Depositumskonto',
 
+    'fradrag.utenlandsk.beløp': 'Beløp i utenlandsk valuta',
+    'fradrag.utenlandsk.kurs': 'Kurs',
+    'fradrag.suffix.eps': '(ektefelle/samboer)',
+    ...velgbareFradragskategoriMessages,
+    ...ikkeVelgbareFradragskategoriMessages,
+
     ...vilkårstatusMessages,
     ...uførevilkårstatusMessages,
 
@@ -36,4 +47,5 @@ export default {
     'bool.true': 'Ja',
     'bool.false': 'Nei',
     ubesvart: 'Ubesvart',
+    'feil.ukjent.periode': 'Ukjent periode',
 };

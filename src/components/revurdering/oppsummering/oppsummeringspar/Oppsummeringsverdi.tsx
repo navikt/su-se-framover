@@ -14,6 +14,7 @@ interface Props {
     verdi: string | number | undefined | null;
     triple?: string | number | undefined | null;
     sorteres?: OppsummeringsParSortering;
+    textSomSmall?: boolean;
     className?: string;
 }
 
@@ -22,20 +23,26 @@ export const OppsummeringPar = ({
     verdi,
     triple,
     className = '',
+    textSomSmall,
     sorteres = OppsummeringsParSortering.Horisontalt,
 }: Props) => {
     if (sorteres === OppsummeringsParSortering.Vertikalt) {
         return (
             <div className={classNames(styles.oppsummeringspar2, className)}>
-                <Label>{label}</Label>
-                <BodyShort>{verdi ?? ''}</BodyShort>
+                <Label size={textSomSmall ? 'small' : undefined}>{label}</Label>
+                <BodyShort size={textSomSmall ? 'small' : undefined}>{verdi ?? ''}</BodyShort>
             </div>
         );
     }
     return (
         <div className={classNames(styles.oppsummeringspar, className)}>
-            <BodyShort>{label}</BodyShort>
-            <Label className={classNames({ [styles.verdi]: triple !== undefined })}>{verdi ?? ''}</Label>
+            <BodyShort size={textSomSmall ? 'small' : undefined}>{label}</BodyShort>
+            <Label
+                className={classNames({ [styles.verdi]: triple !== undefined })}
+                size={textSomSmall ? 'small' : undefined}
+            >
+                {verdi ?? ''}
+            </Label>
             {triple !== null && triple !== undefined && <Label>{triple}</Label>}
         </div>
     );

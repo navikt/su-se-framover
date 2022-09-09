@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
+import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fastOpphold/FastOppholdOppsummering';
 import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
@@ -23,7 +24,6 @@ import { uføreErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/ufør
 import { utenlandsoppholdErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 
-import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
 import InstitusjonsoppholdOppsummering from '../institusjonsopphold/InstitusjonsoppholdOppsummering';
 import LovligOppholdOppsummering from '../lovligOpphold/LovligOppholdOppsummering';
 import OpplysningspliktOppsummering from '../opplysningspliktoppsummering/Opplysningspliktoppsummering';
@@ -143,9 +143,14 @@ const Vedtaksinformasjon = (props: {
             {skalVisefradrag && (
                 <Rad radTittel={formatMessage('radTittel.fradrag')}>
                     {{
-                        venstre: nyeData.fradrag.length > 0 ? <Fradragoppsummering fradrag={nyeData.fradrag} /> : null,
+                        venstre:
+                            nyeData.fradrag.length > 0 ? (
+                                <OppsummeringAvFradrag fradrag={nyeData.fradrag} visesIVedtak />
+                            ) : null,
                         høyre:
-                            gamleData.fradrag.length > 0 ? <Fradragoppsummering fradrag={gamleData.fradrag} /> : null,
+                            gamleData.fradrag.length > 0 ? (
+                                <OppsummeringAvFradrag fradrag={gamleData.fradrag} visesIVedtak />
+                            ) : null,
                     }}
                 </Rad>
             )}

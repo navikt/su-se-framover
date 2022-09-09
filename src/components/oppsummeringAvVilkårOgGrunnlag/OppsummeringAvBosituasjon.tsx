@@ -21,13 +21,7 @@ const OppsummeringAvBosituasjongrunnlag = (props: { bosituasjon: Bosituasjon[]; 
         >
             <ul>
                 {props.bosituasjon.map((b) => (
-                    <li
-                        key={`${b.periode.fraOgMed}-${b.periode.tilOgMed}`}
-                        className={classNames({
-                            [styles.grunnlagslisteAsGrid]: !props.visesIVedtak,
-                            [styles.grunnlagslisteAsFlex]: props.visesIVedtak,
-                        })}
-                    >
+                    <li key={`${b.periode.fraOgMed}-${b.periode.tilOgMed}`} className={styles.grunnlagsListe}>
                         <OppsummeringPar
                             label={formatMessage('bosituasjon.sats')}
                             verdi={formatMessage(

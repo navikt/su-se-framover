@@ -31,13 +31,7 @@ const OppsummeringAvUførevilkår = (props: { uførevilkår: Nullable<UføreVilk
             />
             <ul>
                 {props.uførevilkår?.vurderinger?.map((u) => (
-                    <li
-                        key={u.id}
-                        className={classNames({
-                            [styles.grunnlagslisteAsGrid]: !props.visesIVedtak,
-                            [styles.grunnlagslisteAsFlex]: props.visesIVedtak,
-                        })}
-                    >
+                    <li key={u.id} className={styles.grunnlagsListe}>
                         <VurderingsperiodeUføreOppsummering vurderingsperiodeUføre={u} />
                     </li>
                 ))}

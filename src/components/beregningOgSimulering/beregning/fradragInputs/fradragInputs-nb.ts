@@ -1,6 +1,6 @@
 import { IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 
-const velgbareFradragskategoriMessages: { [key in VelgbareFradragskategorier]: string } = {
+export const velgbareFradragskategoriMessages: { [key in VelgbareFradragskategorier]: string } = {
     [VelgbareFradragskategorier.Sosialstønad]: 'Sosialstønad',
     [VelgbareFradragskategorier.Uføretrygd]: 'Uføretrygd',
     [VelgbareFradragskategorier.Alderspensjon]: 'Alderspensjon',
@@ -23,7 +23,7 @@ const velgbareFradragskategoriMessages: { [key in VelgbareFradragskategorier]: s
     [VelgbareFradragskategorier.Annet]: 'Annet',
 };
 
-const ikkeVelgbareFradragskategoriMessages: { [key in IkkeVelgbareFradragskategorier]: string } = {
+export const ikkeVelgbareFradragskategoriMessages: { [key in IkkeVelgbareFradragskategorier]: string } = {
     [IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold]: 'NAV-ytelser til livsopphold',
     [IkkeVelgbareFradragskategorier.ForventetInntekt]: 'Forventet inntekt etter uførhet',
     [IkkeVelgbareFradragskategorier.BeregnetFradragEPS]: 'Ektefelle/samboer totalt',

@@ -30,13 +30,7 @@ const OppsummeringAvFormueVilkår = (props: { formue: FormueVilkår; visesIVedta
                     const epsFormue = regnUtFormuegrunnlagVerdier(f.grunnlag.epsFormue);
                     const bekreftetFormue = søkersFormue + epsFormue;
                     return (
-                        <li
-                            key={f.id}
-                            className={classNames({
-                                [styles.grunnlagslisteAsGrid]: !props.visesIVedtak,
-                                [styles.grunnlagslisteAsFlex]: props.visesIVedtak,
-                            })}
-                        >
+                        <li key={f.id} className={styles.grunnlagsListe}>
                             <OppsummeringPar label={formatMessage('periode')} verdi={formatPeriode(f.periode)} />
                             <OppsummeringAvFormuegrunnlag g={f.grunnlag} />
                             <Formuestatus
