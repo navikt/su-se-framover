@@ -86,7 +86,7 @@
         "redux-thunk": "^2.4.1",
         "regenerator-runtime": "^0.13.9",
         "reset-css": "^5.0.1",
-        "uuid": "^8.3.2",
+        "uuid": "^9.0.0",
         "yup": "^0.29.3"
     },
     "devDependencies": {
