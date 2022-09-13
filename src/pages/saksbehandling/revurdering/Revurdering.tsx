@@ -57,14 +57,14 @@ const RevurderingPage = () => {
 
     const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
     React.useEffect(() => {
-        if (RemoteData.isInitial(gjeldendeData) && påbegyntRevurdering) {
+        if ((RemoteData.isInitial(gjeldendeData) || RemoteData.isSuccess(gjeldendeData)) && påbegyntRevurdering) {
             hentGjeldendeData({
                 sakId: props.sakId,
                 fraOgMed: påbegyntRevurdering.periode.fraOgMed,
                 tilOgMed: påbegyntRevurdering.periode.tilOgMed,
             });
         }
-    }, [gjeldendeData._tag, påbegyntRevurdering?.id]);
+    }, [påbegyntRevurdering?.periode.fraOgMed, påbegyntRevurdering?.periode.tilOgMed]);
 
     const createRevurderingsPath = (steg: RevurderingSteg) => {
         return routes.revurderValgtRevurdering.createURL({
@@ -133,6 +133,16 @@ const RevurderingPage = () => {
                 {formatMessage('revurdering.tittel')}
             </Heading>
             {urlParams.steg === RevurderingSteg.Periode && <RevurderingIntroPage />}
+            {urlParams.steg !== RevurderingSteg.Periode && urlParams.steg !== RevurderingSteg.Oppsummering && (
+                <RevurderingstegPage
+                    steg={urlParams.steg}
+                    revurderingId={påbegyntRevurdering.id}
+                    sakId={props.sakId}
+                    aktiveSteg={aktiveSteg(påbegyntRevurdering)}
+                    informasjonsRevurdering={påbegyntRevurdering}
+                    grunnlagsdataOgVilkårsvurderinger={gjeldendeData}
+                />
+            )}
             {urlParams.steg === RevurderingSteg.Oppsummering && (
                 <RevurderingOppsummeringPage
                     sakId={props.sakId}
@@ -144,16 +154,6 @@ const RevurderingPage = () => {
                     førsteRevurderingstegUrl={
                         aktiveSteg(påbegyntRevurdering)[0]?.url ?? createRevurderingsPath(RevurderingSteg.Periode)
                     }
-                />
-            )}
-            {urlParams.steg !== RevurderingSteg.Periode && urlParams.steg !== RevurderingSteg.Oppsummering && (
-                <RevurderingstegPage
-                    steg={urlParams.steg}
-                    revurderingId={påbegyntRevurdering.id}
-                    sakId={props.sakId}
-                    aktiveSteg={aktiveSteg(påbegyntRevurdering)}
-                    informasjonsRevurdering={påbegyntRevurdering}
-                    grunnlagsdataOgVilkårsvurderinger={gjeldendeData}
                 />
             )}
         </div>
