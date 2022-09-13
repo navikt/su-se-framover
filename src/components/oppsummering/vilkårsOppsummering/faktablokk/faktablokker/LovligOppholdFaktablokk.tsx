@@ -2,12 +2,12 @@ import { Alert } from '@navikt/ds-react';
 import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
+import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { LovligOppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
 import { SøknadInnhold } from '~src/types/Søknad';
-import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/lovlig-opphold-i-norge/lovligOppholdINorge-nb';
@@ -109,20 +109,7 @@ export const LovligOppholdVilkårsblokk = (props: {
                 !props.lovligOpphold?.resultat ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <Faktablokk
-                        tittel={formatMessage('display.fraSaksbehandling')}
-                        fakta={[
-                            {
-                                tittel: formatMessage('lovligOpphold.vilkår'),
-                                verdi:
-                                    props.lovligOpphold?.resultat === Vilkårstatus.VilkårOppfylt
-                                        ? formatMessage('fraSøknad.ja')
-                                        : props.lovligOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt
-                                        ? formatMessage('fraSøknad.nei')
-                                        : formatMessage('fraSøknad.uavklart'),
-                            },
-                        ]}
-                    />
+                    <OppsummeringAvLovligOppholdvilkår lovligOpphold={props.lovligOpphold} visesIVedtak />
                 )
             }
             status={props.info.status}

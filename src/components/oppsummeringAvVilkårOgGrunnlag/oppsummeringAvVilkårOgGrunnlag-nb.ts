@@ -44,10 +44,12 @@ export default {
 
     'opplysningsplikt.vilkår.vurderingAvDokumentasjon': 'Vurdering av dokumentasjon',
 
+    'lovligOpphold.vilkår.text': 'Har søker lovlig opphold i Norge?',
+
     ...velgbareFradragskategoriMessages,
     ...ikkeVelgbareFradragskategoriMessages,
-
     ...vilkårstatusMessages,
+
     ...uførevilkårstatusMessages,
     ...utenlandsoppholdStatusMessages,
     ...opplysningspliktStatusMessages,
@@ -59,6 +61,10 @@ export default {
     periode: 'Periode',
     'bool.true': 'Ja',
     'bool.false': 'Nei',
+    'bool.VilkårOppfylt': 'Ja',
+    'bool.VilkårIkkeOppfylt': 'Nei',
+    'bool.Uavklart': 'Uavklart',
+
     ubesvart: 'Ubesvart',
     'vilkår.resultat': 'Resultat av vilkår',
     'vilkår.ikkeVurdert': 'Vilkåret er ikke vurdert',

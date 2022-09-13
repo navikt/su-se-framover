@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
+import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import LovligOppholdForm from '~src/components/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
 import {
@@ -13,13 +15,15 @@ import {
 } from '~src/components/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdFormUtils';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
-import GjeldendeOppholdstillatelse from './GjeldendeLovligOpphold';
+import messages from './lovligOpphold-nb';
 
 const LovligOpphold = (props: RevurderingStegProps) => {
+    const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreLovligOppholdVilkår);
 
     const revurderingsperiode = {
@@ -67,9 +71,14 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                     />
                 ),
                 right: (
-                    <GjeldendeOppholdstillatelse
-                        gjeldendeOppholdstillatelse={props.grunnlagsdataOgVilkårsvurderinger.lovligOpphold}
-                    />
+                    <>
+                        <Heading level="2" size="large" spacing>
+                            {formatMessage('eksisterende.vedtakinfo.tittel')}
+                        </Heading>
+                        <OppsummeringAvLovligOppholdvilkår
+                            lovligOpphold={props.grunnlagsdataOgVilkårsvurderinger.lovligOpphold}
+                        />
+                    </>
                 ),
             }}
         </ToKolonner>

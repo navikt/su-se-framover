@@ -5,6 +5,7 @@ import * as React from 'react';
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
+import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold';
 import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
@@ -26,7 +27,6 @@ import { utenlandsoppholdErlik } from '~src/types/grunnlagsdataOgVilkårsvurderi
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 
 import InstitusjonsoppholdOppsummering from '../institusjonsopphold/InstitusjonsoppholdOppsummering';
-import LovligOppholdOppsummering from '../lovligOpphold/LovligOppholdOppsummering';
 import PersonligOppmøteOppsummering from '../personligOppmøte/PersonligOppmøteOppsummering';
 
 import messages from './vedtaksinformasjon-nb';
@@ -191,10 +191,10 @@ const Vedtaksinformasjon = (props: {
                 <Rad radTittel={formatMessage('radTittel.lovligOpphold')}>
                     {{
                         venstre: nyeData.lovligOpphold ? (
-                            <LovligOppholdOppsummering lovligOppholdVilkår={nyeData.lovligOpphold} />
+                            <OppsummeringAvLovligOppholdvilkår lovligOpphold={nyeData.lovligOpphold} visesIVedtak />
                         ) : null,
                         høyre: gamleData.lovligOpphold ? (
-                            <LovligOppholdOppsummering lovligOppholdVilkår={gamleData.lovligOpphold} />
+                            <OppsummeringAvLovligOppholdvilkår lovligOpphold={gamleData.lovligOpphold} visesIVedtak />
                         ) : null,
                     }}
                 </Rad>
