@@ -201,7 +201,7 @@ export const lagreOpplysningsplikt = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/grunnlag/opplysningsplikt/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreOpplysningsplikt({
-        id: arg.id,
+        behandlingId: arg.behandlingId,
         type: arg.type,
         data: arg.data,
     });

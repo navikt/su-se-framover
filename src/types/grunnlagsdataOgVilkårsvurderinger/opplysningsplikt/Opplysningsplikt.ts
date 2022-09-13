@@ -18,7 +18,7 @@ export enum OpplysningspliktBeksrivelse {
 }
 
 export interface OpplysningspliktRequest {
-    id: string;
+    behandlingId: string;
     type: string;
     data: Array<{
         periode: {

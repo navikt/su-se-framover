@@ -5,6 +5,7 @@ import * as React from 'react';
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
+import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fastOpphold/FastOppholdOppsummering';
@@ -26,7 +27,6 @@ import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering
 
 import InstitusjonsoppholdOppsummering from '../institusjonsopphold/InstitusjonsoppholdOppsummering';
 import LovligOppholdOppsummering from '../lovligOpphold/LovligOppholdOppsummering';
-import OpplysningspliktOppsummering from '../opplysningspliktoppsummering/Opplysningspliktoppsummering';
 import PersonligOppmøteOppsummering from '../personligOppmøte/PersonligOppmøteOppsummering';
 
 import messages from './vedtaksinformasjon-nb';
@@ -173,10 +173,16 @@ const Vedtaksinformasjon = (props: {
                 <Rad radTittel={formatMessage('radTittel.opplysningsplikt')}>
                     {{
                         venstre: nyeData.opplysningsplikt ? (
-                            <OpplysningspliktOppsummering opplysningsplikter={nyeData.opplysningsplikt} />
+                            <OppsummeringAvOpplysningspliktvilkår
+                                opplysningspliktVilkår={nyeData.opplysningsplikt}
+                                visesIVedtak
+                            />
                         ) : null,
                         høyre: gamleData.opplysningsplikt ? (
-                            <OpplysningspliktOppsummering opplysningsplikter={gamleData.opplysningsplikt} />
+                            <OppsummeringAvOpplysningspliktvilkår
+                                opplysningspliktVilkår={gamleData.opplysningsplikt}
+                                visesIVedtak
+                            />
                         ) : null,
                     }}
                 </Rad>

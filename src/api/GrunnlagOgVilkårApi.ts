@@ -165,7 +165,7 @@ export async function lagreOpplysningsplikt(data: OpplysningspliktRequest) {
         url: `/vilkar/opplysningsplikt`,
         method: 'POST',
         body: {
-            id: data.id,
+            id: data.behandlingId,
             type: data.type,
             data: data.data,
         },

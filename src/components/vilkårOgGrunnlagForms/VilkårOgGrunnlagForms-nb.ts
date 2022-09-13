@@ -1,4 +1,5 @@
 import { personligOppmøteÅrsakTekster } from '~src/typeMappinger/PersonligOppmøteÅrsak';
+import { opplysningspliktStatusMessages } from '~src/typeMappinger/Vilkårsstatus';
 
 export default {
     'uførhet.vilkår': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
@@ -44,6 +45,12 @@ export default {
 
     'personligOppmøte.vilkår': 'Har bruker møtt personlig?',
     'personligOppmøte.ikkeMøttPersonlig.vilkår': 'Hvorfor har ikke bruker møtt personlig?',
+
+    'opplysningsplikt.select.label': 'Vurdering av dokumentasjon:',
+    'opplysningsplikt.select.defaultValue': 'Velg vurdering',
+
+    ...opplysningspliktStatusMessages,
+
     'radio.label.ja': 'Ja',
     'radio.label.nei': 'Nei',
     'radio.label.uavklart': 'Uavklart',

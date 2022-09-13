@@ -1,4 +1,5 @@
 import {
+    opplysningspliktStatusMessages,
     uførevilkårstatusMessages,
     utenlandsoppholdStatusMessages,
     vilkårstatusMessages,
@@ -41,12 +42,15 @@ export default {
     'utenlandsopphold.vilkår.erOppfylt.SkalVæreMerEnn90DagerIUtlandet': 'Ikke oppfylt',
     'utenlandsopphold.vilkår.erOppfylt.Uavklart': 'Uavklart',
 
+    'opplysningsplikt.vilkår.vurderingAvDokumentasjon': 'Vurdering av dokumentasjon',
+
     ...velgbareFradragskategoriMessages,
     ...ikkeVelgbareFradragskategoriMessages,
 
     ...vilkårstatusMessages,
     ...uførevilkårstatusMessages,
     ...utenlandsoppholdStatusMessages,
+    ...opplysningspliktStatusMessages,
 
     'grunnlagOgVilkår.oppfylt.ja': 'Ja',
     'grunnlagOgVilkår.ikkeOppfylt.nei': 'Nei',

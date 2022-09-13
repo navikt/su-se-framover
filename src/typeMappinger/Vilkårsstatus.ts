@@ -1,3 +1,4 @@
+import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Vilkårstatus } from '~src/types/Vilkår';
@@ -18,4 +19,9 @@ export const utenlandsoppholdStatusMessages: { [key in Utenlandsoppholdstatus]: 
     [Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet]: 'Ja',
     [Utenlandsoppholdstatus.SkalHoldeSegINorge]: 'Nei',
     [Utenlandsoppholdstatus.Uavklart]: 'Uavklart',
+};
+
+export const opplysningspliktStatusMessages: { [key in OpplysningspliktBeksrivelse]: string } = {
+    [OpplysningspliktBeksrivelse.TilstrekkeligDokumentasjon]: 'Tilstrekkeling dokumentasjon',
+    [OpplysningspliktBeksrivelse.UtilstrekkeligDokumentasjon]: 'Utilstrekkelig dokumentasjon',
 };
