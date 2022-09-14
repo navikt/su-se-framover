@@ -64,7 +64,7 @@ export const SatsVilkårsblokk = (props: { bosituasjon: Bosituasjon[]; søknadIn
                 props.bosituasjon.length === 0 ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <OppsummeringAvBosituasjongrunnlag bosituasjon={props.bosituasjon} />
+                    <OppsummeringAvBosituasjongrunnlag bosituasjon={props.bosituasjon} visesIVedtak />
                 )
             }
         />

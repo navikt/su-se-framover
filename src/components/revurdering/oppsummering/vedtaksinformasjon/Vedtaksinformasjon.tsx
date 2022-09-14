@@ -7,6 +7,7 @@ import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummeringAvVilk
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
+import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
 import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold';
 import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
@@ -26,8 +27,6 @@ import { personligOppmøteErLik } from '~src/types/grunnlagsdataOgVilkårsvurder
 import { uføreErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { utenlandsoppholdErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
-
-import InstitusjonsoppholdOppsummering from '../institusjonsopphold/InstitusjonsoppholdOppsummering';
 
 import messages from './vedtaksinformasjon-nb';
 import * as styles from './vedtaksinformasjon.module.less';
@@ -245,11 +244,15 @@ const Vedtaksinformasjon = (props: {
                 <Rad radTittel={formatMessage('radTittel.institusjonsopphold')}>
                     {{
                         venstre: nyeData.institusjonsopphold ? (
-                            <InstitusjonsoppholdOppsummering institusjonsoppholdVilkår={nyeData.institusjonsopphold} />
+                            <OppsummeringAvInstitusjonsoppholdvilkår
+                                institusjonsopphold={nyeData.institusjonsopphold}
+                                visesIVedtak
+                            />
                         ) : null,
                         høyre: gamleData.institusjonsopphold ? (
-                            <InstitusjonsoppholdOppsummering
-                                institusjonsoppholdVilkår={gamleData.institusjonsopphold}
+                            <OppsummeringAvInstitusjonsoppholdvilkår
+                                institusjonsopphold={gamleData.institusjonsopphold}
+                                visesIVedtak
                             />
                         ) : null,
                     }}

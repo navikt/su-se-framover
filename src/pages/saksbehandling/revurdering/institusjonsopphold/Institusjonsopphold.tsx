@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
+import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import InstitusjonsoppholdForm from '~src/components/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdForm';
 import {
@@ -13,13 +15,15 @@ import {
 } from '~src/components/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
 import { lagreInstitusjonsoppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
-import GjeldendeInstitusjonsopphold from './GjeldendeInstitusjonsopphold';
+import messages from './institusjonsopphold-nb';
 
 const Institusjonsopphold = (props: RevurderingStegProps) => {
+    const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
 
     const form = useForm<InstitusjonsoppholdVilkårFormData>({
@@ -66,9 +70,14 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                     />
                 ),
                 right: (
-                    <GjeldendeInstitusjonsopphold
-                        gjeldendeInstitusjonsopphold={props.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold}
-                    />
+                    <>
+                        <Heading size="large" level="2" spacing>
+                            {formatMessage('gjeldende.overskrift')}
+                        </Heading>
+                        <OppsummeringAvInstitusjonsoppholdvilkår
+                            institusjonsopphold={props.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold}
+                        />
+                    </>
                 ),
             }}
         </ToKolonner>

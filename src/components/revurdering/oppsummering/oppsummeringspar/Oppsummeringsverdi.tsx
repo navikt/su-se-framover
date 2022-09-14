@@ -12,7 +12,6 @@ export enum OppsummeringsParSortering {
 interface Props {
     label: string;
     verdi: string | number | undefined | null;
-    triple?: string | number | undefined | null;
     sorteres?: OppsummeringsParSortering;
     textSomSmall?: boolean;
     className?: string;
@@ -21,7 +20,6 @@ interface Props {
 export const OppsummeringPar = ({
     label,
     verdi,
-    triple,
     className = '',
     textSomSmall,
     sorteres = OppsummeringsParSortering.Horisontalt,
@@ -37,13 +35,7 @@ export const OppsummeringPar = ({
     return (
         <div className={classNames(styles.oppsummeringspar, className)}>
             <BodyShort size={textSomSmall ? 'small' : undefined}>{label}</BodyShort>
-            <Label
-                className={classNames({ [styles.verdi]: triple !== undefined })}
-                size={textSomSmall ? 'small' : undefined}
-            >
-                {verdi ?? ''}
-            </Label>
-            {triple !== null && triple !== undefined && <Label>{triple}</Label>}
+            <Label size={textSomSmall ? 'small' : undefined}>{verdi ?? ''}</Label>
         </div>
     );
 };

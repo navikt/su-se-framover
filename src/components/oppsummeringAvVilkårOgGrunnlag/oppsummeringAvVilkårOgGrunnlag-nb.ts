@@ -54,6 +54,9 @@ export default {
     'personligOppmøte.vilkår.text': 'Har bruker møtt personlig?',
     'personligOppmøte.vilkår.text.ikkeMøttPersonlig': 'Hvorfor har ikke bruker møtt personlig?',
 
+    'institusjonsopphold.vilkår.text':
+        'Har søkeren eller har søkeren hatt institusjonsopphold som skal føre til avslag?',
+
     ...personligOppmøteÅrsakTekster,
     ...velgbareFradragskategoriMessages,
     ...ikkeVelgbareFradragskategoriMessages,
