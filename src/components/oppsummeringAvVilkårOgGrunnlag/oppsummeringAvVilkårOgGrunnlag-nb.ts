@@ -48,6 +48,8 @@ export default {
 
     'flyktning.vilkår.text': 'Er søker registrert flyktning etter utlendingslova §28?',
 
+    'fastOpphold.vilkår.text': 'Oppholder søker seg fast i Norge?',
+
     ...velgbareFradragskategoriMessages,
     ...ikkeVelgbareFradragskategoriMessages,
     ...vilkårstatusMessages,

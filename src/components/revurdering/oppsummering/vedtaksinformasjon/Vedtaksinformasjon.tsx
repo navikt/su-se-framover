@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
+import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
@@ -10,7 +11,6 @@ import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummeringAvVi
 import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
-import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fastOpphold/FastOppholdOppsummering';
 import { useI18n } from '~src/lib/i18n';
 import { fradragErlik } from '~src/types/Fradrag';
 import { bosituasjonErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
@@ -215,10 +215,10 @@ const Vedtaksinformasjon = (props: {
                 <Rad radTittel={formatMessage('radTittel.fastOpphold')}>
                     {{
                         venstre: nyeData.fastOpphold ? (
-                            <FastOppholdOppsummering fastOppholdVilkår={nyeData.fastOpphold} />
+                            <OppsummeringAvFastOppholdvilkår fastOpphold={nyeData.fastOpphold} visesIVedtak />
                         ) : null,
                         høyre: gamleData.fastOpphold ? (
-                            <FastOppholdOppsummering fastOppholdVilkår={gamleData.fastOpphold} />
+                            <OppsummeringAvFastOppholdvilkår fastOpphold={gamleData.fastOpphold} visesIVedtak />
                         ) : null,
                     }}
                 </Rad>

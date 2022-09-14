@@ -3,13 +3,13 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { IngenAdresseGrunn } from '~src/api/personApi';
+import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
 import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import boOgOppholdSøknadMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import flyktningstatusSøknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~src/types/Søknad';
-import { Vilkårstatus } from '~src/types/Vilkår';
 import { VilkårtypeFelles, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -79,7 +79,7 @@ const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape)
 
 interface Props {
     søknadInnhold: SøknadInnhold;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger['fastOpphold'];
+    fastOppholdVilkår: GrunnlagsdataOgVilkårsvurderinger['fastOpphold'];
     status: VilkårVurderingStatus;
 }
 
@@ -95,20 +95,10 @@ export const FastOppholdVilkårsblokk = (props: Props) => {
             tittel={vilkårTittelFormatted(VilkårtypeFelles.FastOppholdINorge)}
             søknadfaktablokk={<FastOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.grunnlagsdataOgVilkårsvurderinger === null ? (
+                props.fastOppholdVilkår === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <Faktablokk
-                        tittel={formatMessage('display.fraSaksbehandling')}
-                        fakta={[
-                            {
-                                tittel: formatMessage('radio.fastOpphold.legend'),
-                                verdi: formatMessage(
-                                    props.grunnlagsdataOgVilkårsvurderinger.resultat ?? Vilkårstatus.VilkårOppfylt
-                                ),
-                            },
-                        ]}
-                    />
+                    <OppsummeringAvFastOppholdvilkår fastOpphold={props.fastOppholdVilkår} visesIVedtak />
                 )
             }
             status={props.status}

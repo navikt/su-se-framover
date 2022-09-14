@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
+import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import FastOppholdForm from '~src/components/vilkårOgGrunnlagForms/fastOpphold/FastOppholdForm';
 import {
@@ -13,11 +15,14 @@ import {
 } from '~src/components/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
 import { lagreFastOppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
-import { GjeldendeFastOppholdVilkår } from '~src/pages/saksbehandling/revurdering/fastOpphold/GjeldendeFastOppholdVilkår';
+import { useI18n } from '~src/lib/i18n';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 
+import messages from './fastOpphold-nb';
+
 export function FastOppholdPage(props: RevurderingStegProps) {
+    const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
 
     const form = useForm<FastOppholdVilkårFormData>({
@@ -63,9 +68,14 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                     />
                 ),
                 right: (
-                    <GjeldendeFastOppholdVilkår
-                        gjeldendeFastOppholdVilkår={props.grunnlagsdataOgVilkårsvurderinger.fastOpphold}
-                    />
+                    <>
+                        <Heading size="large" level="2" spacing>
+                            {formatMessage('gjeldende.overskrift')}
+                        </Heading>
+                        <OppsummeringAvFastOppholdvilkår
+                            fastOpphold={props.grunnlagsdataOgVilkårsvurderinger.fastOpphold}
+                        />
+                    </>
                 ),
             }}
         </ToKolonner>
