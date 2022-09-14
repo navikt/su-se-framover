@@ -33,15 +33,6 @@ export default {
     'display.fraSaksbehandling': 'Fra saksbehandling',
     'display.ikkeVurdert': 'Ikke vurdert',
 
-    'fastOpphold.adresse': 'Adresse',
-    'fastOpphold.erNorskStatsborger': 'Er søker norsk statsborger?',
-    'fastOpphold.harOppholdstillatelse': 'Har oppholdstillatelse?',
-    'fastOpphold.typeOppholdstillatelse': 'Type oppholdstillatelse',
-
-    'flyktning.registrertFlyktning': 'Er du registrert flyktning?',
-
-    'lovligOpphold.vilkår': 'Har søker lovlig opphold i Norge?',
-
     'formue.tittel': 'Formue',
     'formue.heading.søker': 'Søker',
     'formue.heading.eps': 'Ektefelle/\u200Bsamboer',
@@ -64,18 +55,12 @@ export default {
     'formue.label.borSøkerMedEktefelle': 'Bor søker med en ektefelle eller samboer?',
     'formue.label.ektefellesFødselsnummer': 'Ektefelle/samboers fødselsnummer',
 
-    'formue.vilkårOppfylt': 'Oppfylt vilkår',
-    'formue.vilkårOppfyltGrunn': 'Formue er lavere enn 0.5G',
-    'formue.vilkårIkkeOppfylt': 'Ikke oppfylt vilkår',
-    'formue.vilkårIkkeOppfyltGrunn': 'Formue er høyere enn 0.5G',
-
     'fraSøknad.ja': 'Ja',
     'fraSøknad.nei': 'Nei',
     'fraSøknad.uavklart': 'Uavklart',
     'fraSøknad.ikkeRegistert': 'Ikke registert fra søknad',
 
     'sats.tittel': 'Sats',
-    'sats.harOppholdstillatelse': 'Har oppholdstillatelse?',
     'sats.hvemDelerSøkerBoligMed': 'Hvem deler søker bolig med?',
     'sats.hvemDelerSøkerBoligMed.ingen': 'Ingen',
     'sats.ektemakeEllerSamboerUførFlyktning': 'Er ektefelle eller samboer ufør flyktning?',
@@ -90,13 +75,4 @@ export default {
 
     'utenlandsOpphold.antallDagerSiste90': 'Antall dager oppholdt i utlandet siste 90 dager',
     'utenlandsOpphold.antallDagerPlanlagt': 'Antall dager planlagt opphold i utlandet',
-    'utenlandsOpphold.datoerSiste90': 'Datoer for opphold i siste 90 dager',
-    'utenlandsOpphold.datoerPlanlagt': 'Planlagt opphold i utlandet',
-    'utenlandsOpphold.ikkeRegistert': 'Det er ikke registert noen datoer',
-    'utenlandsOpphold.utreisedato': 'Det er ikke registert noen datoer',
-    'utenlandsOpphold.innreisedato': 'Det er ikke registert noen datoer',
-
-    'bosituasjon.vurderingAvSats': 'Vurdering av sats',
-    'bosituasjon.sats.høy': 'Høy',
-    'bosituasjon.sats.ordinær': 'Ordinær',
 };
