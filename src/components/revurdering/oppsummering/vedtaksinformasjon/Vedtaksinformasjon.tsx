@@ -9,6 +9,7 @@ import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOg
 import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
 import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold';
 import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
+import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import { useI18n } from '~src/lib/i18n';
@@ -27,7 +28,6 @@ import { utenlandsoppholdErlik } from '~src/types/grunnlagsdataOgVilkårsvurderi
 import { InformasjonsRevurdering, Vurderingstatus } from '~src/types/Revurdering';
 
 import InstitusjonsoppholdOppsummering from '../institusjonsopphold/InstitusjonsoppholdOppsummering';
-import PersonligOppmøteOppsummering from '../personligOppmøte/PersonligOppmøteOppsummering';
 
 import messages from './vedtaksinformasjon-nb';
 import * as styles from './vedtaksinformasjon.module.less';
@@ -227,10 +227,16 @@ const Vedtaksinformasjon = (props: {
                 <Rad radTittel={formatMessage('radTittel.personligOppmøte')}>
                     {{
                         venstre: nyeData.personligOppmøte ? (
-                            <PersonligOppmøteOppsummering personligOppmøteVilkår={nyeData.personligOppmøte} />
+                            <OppsummeringAvPersonligoppmøtevilkår
+                                personligoppmøte={nyeData.personligOppmøte}
+                                visesIVedtak
+                            />
                         ) : null,
                         høyre: gamleData.personligOppmøte ? (
-                            <PersonligOppmøteOppsummering personligOppmøteVilkår={gamleData.personligOppmøte} />
+                            <OppsummeringAvPersonligoppmøtevilkår
+                                personligoppmøte={gamleData.personligOppmøte}
+                                visesIVedtak
+                            />
                         ) : null,
                     }}
                 </Rad>

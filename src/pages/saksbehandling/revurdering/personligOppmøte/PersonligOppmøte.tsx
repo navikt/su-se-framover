@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
+import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import PersonligOppmøteForm from '~src/components/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteForm';
 import {
@@ -13,12 +15,14 @@ import {
 } from '~src/components/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
 import { lagrePersonligOppmøteVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { RevurderingStegProps } from '~src/types/Revurdering';
 
-import { GjeldendePersonligOppmøte } from './GjeldendePersonligOppmøte';
+import messages from './personligOppmøte-nb';
 
 export function PersonligOppmøte(props: RevurderingStegProps) {
+    const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
     const form = useForm<PersonligOppmøteVilkårFormData>({
@@ -64,9 +68,14 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                     />
                 ),
                 right: (
-                    <GjeldendePersonligOppmøte
-                        gjeldendePersonligOppmøte={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
-                    />
+                    <>
+                        <Heading size="large" level="2" spacing>
+                            {formatMessage('gjeldende.overskrift')}
+                        </Heading>
+                        <OppsummeringAvPersonligoppmøtevilkår
+                            personligoppmøte={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
+                        />
+                    </>
                 ),
             }}
         </ToKolonner>

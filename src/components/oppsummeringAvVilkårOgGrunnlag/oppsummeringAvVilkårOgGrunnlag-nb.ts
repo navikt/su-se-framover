@@ -1,3 +1,4 @@
+import { personligOppmøteÅrsakTekster } from '~src/typeMappinger/PersonligOppmøteÅrsak';
 import {
     opplysningspliktStatusMessages,
     uførevilkårstatusMessages,
@@ -50,13 +51,17 @@ export default {
 
     'fastOpphold.vilkår.text': 'Oppholder søker seg fast i Norge?',
 
+    'personligOppmøte.vilkår.text': 'Har bruker møtt personlig?',
+    'personligOppmøte.vilkår.text.ikkeMøttPersonlig': 'Hvorfor har ikke bruker møtt personlig?',
+
+    ...personligOppmøteÅrsakTekster,
     ...velgbareFradragskategoriMessages,
     ...ikkeVelgbareFradragskategoriMessages,
     ...vilkårstatusMessages,
 
     ...uførevilkårstatusMessages,
-    ...utenlandsoppholdStatusMessages,
     ...opplysningspliktStatusMessages,
+    ...utenlandsoppholdStatusMessages,
 
     'grunnlagOgVilkår.oppfylt.ja': 'Ja',
     'grunnlagOgVilkår.ikkeOppfylt.nei': 'Nei',

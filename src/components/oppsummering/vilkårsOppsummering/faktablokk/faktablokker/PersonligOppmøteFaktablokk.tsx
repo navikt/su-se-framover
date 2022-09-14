@@ -1,18 +1,14 @@
 import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
+import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { personligOppmøteÅrsakTekster } from '~src/typeMappinger/PersonligOppmøteÅrsak';
-import {
-    PersonligOppmøteVilkår,
-    PersonligOppmøteÅrsak,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
+import { PersonligOppmøteVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { SøknadInnhold, Søknadstype } from '~src/types/Søknad';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/personlig-oppmøte/personligOppmøte-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 
@@ -59,13 +55,7 @@ export const PersonligOppmøteVilkårsblokk = (props: {
     søknadInnhold: SøknadInnhold;
     personligOppmøte: Nullable<PersonligOppmøteVilkår>;
 }) => {
-    const { formatMessage } = useI18n({
-        messages: {
-            ...messages,
-            ...saksbehandlingMessages,
-            ...personligOppmøteÅrsakTekster,
-        },
-    });
+    const { formatMessage } = useI18n({ messages });
 
     const vurderingsperiode = props.personligOppmøte?.vurderinger[0] ?? null;
 
@@ -77,29 +67,7 @@ export const PersonligOppmøteVilkårsblokk = (props: {
                 vurderingsperiode === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <Faktablokk
-                        tittel={formatMessage('display.fraSaksbehandling')}
-                        fakta={[
-                            {
-                                tittel: formatMessage('radio.personligOppmøte.legend'),
-                                verdi:
-                                    vurderingsperiode.vurdering === PersonligOppmøteÅrsak.MøttPersonlig
-                                        ? formatMessage('fraSøknad.ja')
-                                        : vurderingsperiode.vurdering === PersonligOppmøteÅrsak.Uavklart
-                                        ? formatMessage('fraSøknad.uavklart')
-                                        : formatMessage('fraSøknad.nei'),
-                            },
-                            ...(vurderingsperiode.vurdering !== PersonligOppmøteÅrsak.MøttPersonlig &&
-                            vurderingsperiode.vurdering !== PersonligOppmøteÅrsak.Uavklart
-                                ? [
-                                      {
-                                          tittel: formatMessage('radio.personligOppmøte.grunn.legend'),
-                                          verdi: formatMessage(vurderingsperiode.vurdering),
-                                      },
-                                  ]
-                                : []),
-                        ]}
-                    />
+                    <OppsummeringAvPersonligoppmøtevilkår personligoppmøte={props.personligOppmøte} visesIVedtak />
                 )
             }
             status={props.info.status}
