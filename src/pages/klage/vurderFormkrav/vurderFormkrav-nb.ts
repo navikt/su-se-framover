@@ -10,6 +10,7 @@ const vedtakMessages: { [key in VedtakType]: string } = {
     [VedtakType.STANS_AV_YTELSE]: 'Stans av ytelse',
     [VedtakType.GJENOPPTAK_AV_YTELSE]: 'Gjenopptak av ytelse',
     [VedtakType.AVVIST_KLAGE]: 'Avvist klage',
+    [VedtakType.REGULERING]: 'Regulering',
 };
 
 const svarordMessages: { [key in Svarord]: string } = {
