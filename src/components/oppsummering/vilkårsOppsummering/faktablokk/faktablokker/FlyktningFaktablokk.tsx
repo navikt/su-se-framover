@@ -1,6 +1,7 @@
 import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
+import OppsummeringAvFlyktningvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import { useI18n } from '~src/lib/i18n';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -47,15 +48,7 @@ export const FlyktningVilkårsblokk = (props: {
                 props.flyktningVilkår?.resultat === null ? (
                     <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
-                    <Faktablokk
-                        tittel={formatMessage('display.fraSaksbehandling')}
-                        fakta={props.flyktningVilkår!.vurderinger.flatMap((vurdering) => [
-                            {
-                                tittel: formatMessage('flyktning.vilkår'),
-                                verdi: formatMessage(vurdering.resultat),
-                            },
-                        ])}
-                    />
+                    <OppsummeringAvFlyktningvilkår flyktning={props.flyktningVilkår} visesIVedtak />
                 )
             }
             status={props.status}

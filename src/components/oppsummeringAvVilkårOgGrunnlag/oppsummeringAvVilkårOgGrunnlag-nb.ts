@@ -46,6 +46,8 @@ export default {
 
     'lovligOpphold.vilkår.text': 'Har søker lovlig opphold i Norge?',
 
+    'flyktning.vilkår.text': 'Er søker registrert flyktning etter utlendingslova §28?',
+
     ...velgbareFradragskategoriMessages,
     ...ikkeVelgbareFradragskategoriMessages,
     ...vilkårstatusMessages,

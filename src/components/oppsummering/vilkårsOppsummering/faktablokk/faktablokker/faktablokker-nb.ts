@@ -39,7 +39,6 @@ export default {
     'fastOpphold.typeOppholdstillatelse': 'Type oppholdstillatelse',
 
     'flyktning.registrertFlyktning': 'Er du registrert flyktning?',
-    'flyktning.vilkår': 'Er søker registrert flyktning etter utlendingslova §28?',
 
     'lovligOpphold.vilkår': 'Har søker lovlig opphold i Norge?',
 

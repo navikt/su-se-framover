@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
+import OppsummeringAvFlyktningvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
 import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold';
@@ -10,7 +11,6 @@ import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringA
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import FastOppholdOppsummering from '~src/components/revurdering/oppsummering/fastOpphold/FastOppholdOppsummering';
-import FlyktningOppsummering from '~src/components/revurdering/oppsummering/flyktning/FlyktningOppsummering';
 import { useI18n } from '~src/lib/i18n';
 import { fradragErlik } from '~src/types/Fradrag';
 import { bosituasjonErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
@@ -203,10 +203,10 @@ const Vedtaksinformasjon = (props: {
                 <Rad radTittel={formatMessage('radTittel.flyktning')}>
                     {{
                         venstre: nyeData.flyktning ? (
-                            <FlyktningOppsummering flyktningVilkår={nyeData.flyktning} />
+                            <OppsummeringAvFlyktningvilkår flyktning={nyeData.flyktning} visesIVedtak />
                         ) : null,
                         høyre: gamleData.flyktning ? (
-                            <FlyktningOppsummering flyktningVilkår={gamleData.flyktning} />
+                            <OppsummeringAvFlyktningvilkår flyktning={gamleData.flyktning} visesIVedtak />
                         ) : null,
                     }}
                 </Rad>
