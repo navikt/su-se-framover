@@ -17,7 +17,6 @@ import * as styles from './søknadsbehandlingoppsummering.module.less';
 interface Props {
     sak: Sak;
     behandling: Søknadsbehandling;
-    tittel?: React.ReactNode;
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;
 }
@@ -28,13 +27,6 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
 
     return (
         <div>
-            {props.tittel && typeof props.tittel !== 'string' ? (
-                props.tittel
-            ) : (
-                <Heading level="1" size="large" spacing>
-                    {props.tittel ?? formatMessage('tittel')}
-                </Heading>
-            )}
             <SøknadsbehandlingHeader
                 sakId={props.sak.id}
                 behandling={props.behandling}

@@ -8,6 +8,7 @@ import { Revurdering } from './Revurdering';
 import { Søknad } from './Søknad';
 import { Søknadsbehandling } from './Søknadsbehandling';
 import { Vedtak } from './Vedtak';
+import { VedtakPåTidslinje } from './VedtakPåTidslinje';
 
 export interface Sak {
     id: string;
@@ -22,6 +23,7 @@ export interface Sak {
     klager: Klage[];
     reguleringer: Regulering[];
     sakstype: Sakstype;
+    vedtakerPåTidslinje: VedtakPåTidslinje[];
 }
 
 export enum KanStansesEllerGjenopptas {

@@ -51,6 +51,7 @@
         "@navikt/ds-icons": "^1.2.4",
         "@navikt/ds-react": "^1.2.4",
         "@navikt/ds-react-internal": "^1.2.4",
+        "@navikt/helse-frontend-tidslinje": "^6.1.8",
         "@radix-ui/react-tabs": "^1.0.0",
         "@reduxjs/toolkit": "^1.8.5",
         "@sentry/browser": "^7.12.1",
