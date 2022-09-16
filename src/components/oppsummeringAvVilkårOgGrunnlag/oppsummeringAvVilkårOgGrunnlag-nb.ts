@@ -77,6 +77,10 @@ export default {
     'bool.VilkårIkkeOppfylt': 'Nei',
     'bool.Uavklart': 'Uavklart',
 
+    '!bool.VilkårOppfylt': 'Nei',
+    '!bool.VilkårIkkeOppfylt': 'Ja',
+    '!bool.Uavklart': 'Uavklart',
+
     ubesvart: 'Ubesvart',
     'vilkår.resultat': 'Resultat av vilkår',
     'vilkår.ikkeVurdert': 'Vilkåret er ikke vurdert',

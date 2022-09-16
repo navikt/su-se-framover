@@ -57,7 +57,7 @@ const VurderingsperiodeInstitusjonsoppholdOppsummering = (props: {
             />
             <OppsummeringPar
                 label={formatMessage('institusjonsopphold.vilkår.text')}
-                verdi={formatMessage(`bool.${props.vurderingsperiodeInstitusjonsopphold.vurdering}`)}
+                verdi={formatMessage(`!bool.${props.vurderingsperiodeInstitusjonsopphold.vurdering}`)}
             />
         </>
     );
