@@ -1,4 +1,4 @@
-import { Alert } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
@@ -77,12 +77,10 @@ const Attesteringsinnhold = ({
 
     return (
         <div className={styles.pageContainer}>
-            <Søknadsbehandlingoppsummering
-                sak={props.sak}
-                behandling={props.behandling}
-                medBrevutkastknapp
-                tittel={intl.formatMessage({ id: 'page.tittel' })}
-            />
+            <Heading level="1" size="large" spacing>
+                {intl.formatMessage({ id: 'page.tittel' })}
+            </Heading>
+            <Søknadsbehandlingoppsummering sak={props.sak} behandling={props.behandling} medBrevutkastknapp />
             <AttesteringsForm
                 sakId={props.sak.id}
                 iverksett={{

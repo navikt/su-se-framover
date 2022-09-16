@@ -3,7 +3,6 @@ import { Alert, Button, Label, Loader } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { isSome } from 'fp-ts/lib/Option';
 import React from 'react';
-import { IntlShape } from 'react-intl';
 
 import * as DokumentApi from '~src/api/dokumentApi';
 import * as PdfApi from '~src/api/pdfApi';
@@ -11,10 +10,12 @@ import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/U
 import { useUserContext } from '~src/context/userContext';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper } from '~src/typeMappinger/SøknadsbehandlingStatus';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
-import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erIverksatt } from '~src/utils/behandling/SøknadsbehandlingUtils';
+import { formatDate } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
@@ -27,7 +28,6 @@ const SøknadsbehandlingHeader = (props: {
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;
 }) => {
-    const { intl } = useI18n({ messages });
     const underkjenteAttesteringer = props.behandling.attesteringer.filter((att) => att.underkjennelse != null);
 
     if (underkjenteAttesteringer.length > 0) {
@@ -39,7 +39,6 @@ const SøknadsbehandlingHeader = (props: {
                     behandling={props.behandling}
                     vedtakForBehandling={props.vedtakForBehandling}
                     medBrevutkastknapp={props.medBrevutkastknapp}
-                    intl={intl}
                 />
             </div>
         );
@@ -51,7 +50,6 @@ const SøknadsbehandlingHeader = (props: {
             behandling={props.behandling}
             vedtakForBehandling={props.vedtakForBehandling}
             medBrevutkastknapp={props.medBrevutkastknapp}
-            intl={intl}
         />
     );
 };
@@ -61,8 +59,10 @@ const Tilleggsinfo = (props: {
     behandling: Søknadsbehandling;
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;
-    intl: IntlShape;
 }) => {
+    const { formatMessage } = useI18n({
+        messages: { ...messages, ...søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper },
+    });
     const user = useUserContext();
     const senesteAttestering = last(props.behandling.attesteringer);
 
@@ -105,20 +105,20 @@ const Tilleggsinfo = (props: {
             <div className={styles.tilleggsinfoContainer}>
                 <div>
                     <Label size="small" spacing>
-                        {props.intl.formatMessage({ id: 'vurdering.tittel' })}
+                        {formatMessage('vurdering.tittel')}
                     </Label>
-                    <p>{statusTilTekst(props.behandling.status, props.intl)}</p>
+                    <p>{formatMessage(props.behandling.status)}</p>
                 </div>
                 <div>
                     <Label size="small" spacing>
-                        {props.intl.formatMessage({ id: 'behandlet.av' })}
+                        {formatMessage('behandlet.av')}
                     </Label>
                     <p>{props.behandling.saksbehandler || user.navn}</p>
                 </div>
                 {isSome(senesteAttestering) && (
                     <div>
                         <Label size="small" spacing>
-                            {props.intl.formatMessage({ id: 'attestert.av' })}
+                            {formatMessage('attestert.av')}
                         </Label>
                         <p>{senesteAttestering.value.attestant}</p>
                     </div>
@@ -126,40 +126,39 @@ const Tilleggsinfo = (props: {
 
                 <div>
                     <Label size="small" spacing>
-                        {props.intl.formatMessage({ id: 'behandling.søknadsdato' })}
+                        {formatMessage('behandling.søknadsdato')}
                     </Label>
                     <p>{søknadMottatt(props.behandling.søknad)}</p>
                 </div>
                 <div>
                     <Label size="small" spacing>
-                        {props.intl.formatMessage({ id: 'behandling.saksbehandlingStartet' })}
+                        {formatMessage('behandling.saksbehandlingStartet')}
                     </Label>
-                    <p>{props.intl.formatDate(props.behandling.opprettet)}</p>
+                    <p>{formatDate(props.behandling.opprettet)}</p>
                 </div>
                 {erIverksatt(props.behandling) && (
                     <div>
                         <Label size="small" spacing>
-                            {props.intl.formatMessage({ id: 'behandling.iverksattDato' })}
+                            {formatMessage('behandling.iverksattDato')}
                         </Label>
-                        <p>{props.intl.formatDate(props.vedtakForBehandling?.opprettet)}</p>
+                        <p>{formatDate(props.vedtakForBehandling!.opprettet)}</p>
                     </div>
                 )}
                 {props.medBrevutkastknapp && (
                     <div>
                         <Label size="small" spacing>
                             {erIverksatt(props.behandling)
-                                ? props.intl.formatMessage({ id: 'brev.vedtaksbrev' })
-                                : props.intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}
+                                ? formatMessage('brev.vedtaksbrev')
+                                : formatMessage('brev.utkastVedtaksbrev')}
                         </Label>
                         <Button variant="secondary" size="small" type="button" onClick={hentBrev}>
-                            {props.intl.formatMessage({ id: 'knapp.vis' })}
+                            {formatMessage('knapp.vis')}
                             {(RemoteData.isPending(hentBrevutkastStatus) ||
                                 RemoteData.isPending(hentDokumenterStatus)) && <Loader />}
                         </Button>
                         {hentBrevError && (
                             <Alert variant="error" size="small" className={styles.brevutkastFeil}>
-                                {hentBrevError?.body?.message ??
-                                    props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
+                                {hentBrevError?.body?.message ?? formatMessage('feilmelding.ukjentFeil')}
                             </Alert>
                         )}
                     </div>
@@ -168,24 +167,5 @@ const Tilleggsinfo = (props: {
         </div>
     );
 };
-
-function statusTilTekst(behandlingsstatus: SøknadsbehandlingStatus, intl: IntlShape): string {
-    switch (behandlingsstatus) {
-        case SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG:
-        case SøknadsbehandlingStatus.BEREGNET_AVSLAG:
-        case SøknadsbehandlingStatus.TIL_ATTESTERING_AVSLAG:
-        case SøknadsbehandlingStatus.IVERKSATT_AVSLAG:
-        case SøknadsbehandlingStatus.UNDERKJENT_AVSLAG:
-            return intl.formatMessage({ id: 'vurdering.avslag' });
-        case SøknadsbehandlingStatus.TIL_ATTESTERING_INNVILGET:
-        case SøknadsbehandlingStatus.SIMULERT:
-        case SøknadsbehandlingStatus.VILKÅRSVURDERT_INNVILGET:
-        case SøknadsbehandlingStatus.IVERKSATT_INNVILGET:
-        case SøknadsbehandlingStatus.UNDERKJENT_INNVILGET:
-            return intl.formatMessage({ id: 'vurdering.innvilgelse' });
-        default:
-            return '';
-    }
-}
 
 export default SøknadsbehandlingHeader;

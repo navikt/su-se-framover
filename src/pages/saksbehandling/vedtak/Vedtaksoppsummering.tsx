@@ -14,16 +14,16 @@ import { hentInformasjonKnyttetTilVedtak, hentKlagevedtakFraKlageinstans } from 
 import messages from './vedtaksoppsummering-nb';
 import * as styles from './vedtaksoppsummering.module.less';
 
-const Vedtaksoppsummering = () => {
-    const props = useOutletContext<AttesteringContext>();
+const Vedtaksoppsummering = (props: { vedtakId?: string; ikkeVisTilbakeKnapp?: boolean }) => {
+    const contextProps = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
-    const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
+    const vedtak = contextProps.sak.vedtak.find((v) => v.id === props.vedtakId || urlParams.vedtakId);
 
     const vedtaksinformasjon = vedtak
-        ? hentInformasjonKnyttetTilVedtak(props.sak, vedtak)
-        : hentKlagevedtakFraKlageinstans(props.sak, urlParams.vedtakId);
+        ? hentInformasjonKnyttetTilVedtak(contextProps.sak, vedtak)
+        : hentKlagevedtakFraKlageinstans(contextProps.sak, urlParams.vedtakId);
 
     const Oppsummering = () => {
         switch (vedtaksinformasjon?.type) {
@@ -32,14 +32,14 @@ const Vedtaksoppsummering = () => {
                     <RevurderingsoppsummeringWithSnapshot
                         revurdering={vedtaksinformasjon.revurdering}
                         formatMessage={formatMessage}
-                        sakId={props.sak.id}
+                        sakId={contextProps.sak.id}
                         vedtakId={vedtaksinformasjon.vedtak.id}
                     />
                 );
             case 'søknadsbehandling':
                 return (
                     <Søknadsbehandlingoppsummering
-                        sak={props.sak}
+                        sak={contextProps.sak}
                         behandling={vedtaksinformasjon.behandling}
                         vedtakForBehandling={vedtaksinformasjon.vedtak}
                         medBrevutkastknapp
@@ -50,7 +50,7 @@ const Vedtaksoppsummering = () => {
             case 'regulering':
                 return (
                     <ReguleringVedtaksoppsummering
-                        sakId={props.sak.id}
+                        sakId={contextProps.sak.id}
                         vedtak={vedtaksinformasjon.vedtak}
                         regulering={vedtaksinformasjon.regulering}
                     />
@@ -63,9 +63,11 @@ const Vedtaksoppsummering = () => {
     return (
         <div className={styles.container}>
             <Oppsummering />
-            <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={() => navigate(-1)}>
-                {formatMessage('knapp.tilbake')}
-            </Button>
+            {!props.ikkeVisTilbakeKnapp && (
+                <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={() => navigate(-1)}>
+                    {formatMessage('knapp.tilbake')}
+                </Button>
+            )}
         </div>
     );
 };

@@ -9,6 +9,7 @@ import { Link, useOutletContext } from 'react-router-dom';
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import SuTidslinje from '~src/components/su-tidslinje/SuTidslinje';
 import { useFeatureToggle } from '~src/lib/featureToggles';
 import { ApiResult, useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -118,6 +119,9 @@ const Sakintro = () => {
                     )}
                 </div>
             </div>
+
+            <SuTidslinje vedtakerPåTidslinje={props.sak.vedtakerPåTidslinje} />
+
             {props.sak.søknader.length > 0 ? (
                 <div className={styles.søknadOgUtbetalingContainer}>
                     <ÅpneSøknader
