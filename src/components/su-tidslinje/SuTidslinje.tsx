@@ -16,9 +16,9 @@ import styles from './suTidslinje.module.less';
 
 const SuTidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] }) => {
     const { formatMessage } = useI18n({ messages });
-    const pRef = useRef<HTMLDivElement>(null);
+    const divRef = useRef<HTMLDivElement>(null);
 
-    if (!props.vedtakerPåTidslinje.length) {
+    if (!props.vedtakerPåTidslinje?.length) {
         return null;
     }
 
@@ -48,13 +48,13 @@ const SuTidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] }) => {
                 ]}
             />
 
-            <div ref={pRef} />
+            <div ref={divRef} />
             <Popover
                 open={!!vedtakIdPåKlikketPeriode}
                 onClose={() => {
                     return;
                 }}
-                anchorEl={pRef.current}
+                anchorEl={divRef.current}
                 placement="bottom"
                 arrow={false}
             >
