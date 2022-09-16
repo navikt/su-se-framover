@@ -120,7 +120,7 @@ const Sakintro = () => {
                 </div>
             </div>
 
-            <SuTidslinje vedtakerPåTidslinje={props.sak.vedtakerPåTidslinje} />
+            <SuTidslinje vedtakerPåTidslinje={props.sak.vedtakPåTidslinje} />
 
             {props.sak.søknader.length > 0 ? (
                 <div className={styles.søknadOgUtbetalingContainer}>
