@@ -23,7 +23,7 @@ export interface Sak {
     klager: Klage[];
     reguleringer: Regulering[];
     sakstype: Sakstype;
-    vedtakerPåTidslinje: VedtakPåTidslinje[];
+    vedtakPåTidslinje: VedtakPåTidslinje[];
 }
 
 export enum KanStansesEllerGjenopptas {
