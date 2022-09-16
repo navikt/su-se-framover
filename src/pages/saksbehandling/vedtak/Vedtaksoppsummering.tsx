@@ -19,11 +19,13 @@ const Vedtaksoppsummering = (props: { vedtakId?: string; ikkeVisTilbakeKnapp?: b
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
-    const vedtak = contextProps.sak.vedtak.find((v) => v.id === props.vedtakId || urlParams.vedtakId);
+
+    const vedtakId = props.vedtakId ?? urlParams.vedtakId;
+    const vedtak = contextProps.sak.vedtak.find((v) => v.id === vedtakId);
 
     const vedtaksinformasjon = vedtak
         ? hentInformasjonKnyttetTilVedtak(contextProps.sak, vedtak)
-        : hentKlagevedtakFraKlageinstans(contextProps.sak, urlParams.vedtakId);
+        : hentKlagevedtakFraKlageinstans(contextProps.sak, vedtakId);
 
     const Oppsummering = () => {
         switch (vedtaksinformasjon?.type) {

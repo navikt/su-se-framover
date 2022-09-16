@@ -75,11 +75,6 @@ const ReguleringVedtaksoppsummering = (props: Props) => {
                                     <BodyShort>{props.regulering.saksbehandler}</BodyShort>
                                 </div>
                             </div>
-                            {/* // TODO ai: Lag oppsummering for uførhet */}
-                            {/* <Uførhet
-                                nyeData={props.regulering.grunnlagsdataOgVilkårsvurderinger.uføre}
-                                gamleData={historiskData.uføre}
-                            /> */}
                         </Oppsummeringspanel>
                         {props.regulering.beregning && props.regulering.simulering && (
                             <Oppsummeringspanel
