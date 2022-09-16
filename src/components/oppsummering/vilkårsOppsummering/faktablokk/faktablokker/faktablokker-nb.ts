@@ -60,6 +60,8 @@ export default {
     'fraSøknad.uavklart': 'Uavklart',
     'fraSøknad.ikkeRegistert': 'Ikke registert fra søknad',
 
+    'fastOpphold.adresse': 'Adresse',
+
     'sats.tittel': 'Sats',
     'sats.hvemDelerSøkerBoligMed': 'Hvem deler søker bolig med?',
     'sats.hvemDelerSøkerBoligMed.ingen': 'Ingen',
