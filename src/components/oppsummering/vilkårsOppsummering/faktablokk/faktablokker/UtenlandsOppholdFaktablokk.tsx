@@ -5,7 +5,7 @@ import React from 'react';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import { useI18n } from '~src/lib/i18n';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~src/utils/date/dateUtils';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 

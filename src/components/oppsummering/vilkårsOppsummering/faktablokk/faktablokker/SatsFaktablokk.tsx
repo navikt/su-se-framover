@@ -5,7 +5,7 @@ import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummeringAvVil
 import { DelerBoligMed } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 

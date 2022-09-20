@@ -2,7 +2,7 @@ import { ForVeilederDigitalSøknad } from '~src/features/søknad/søknad.slice';
 import { Vergemål } from '~src/features/søknad/types';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 
 export type FormData = ForVeilederDigitalSøknad;
 

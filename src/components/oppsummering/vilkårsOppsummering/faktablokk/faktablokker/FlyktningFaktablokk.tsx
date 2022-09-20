@@ -5,7 +5,7 @@ import OppsummeringAvFlyktningvilkår from '~src/components/oppsummeringAvVilkå
 import { useI18n } from '~src/lib/i18n';
 import søknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnholdUføre } from '~src/types/Søknad';
+import { SøknadInnholdUføre } from '~src/types/Søknadinnhold';
 import { VilkårtypeUføre, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 

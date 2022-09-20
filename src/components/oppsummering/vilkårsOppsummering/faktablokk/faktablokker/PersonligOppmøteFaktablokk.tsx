@@ -6,7 +6,7 @@ import { GrunnForPapirinnsending } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { PersonligOppmøteVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
-import { SøknadInnhold, Søknadstype } from '~src/types/Søknad';
+import { SøknadInnhold, Søknadstype } from '~src/types/Søknadinnhold';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';

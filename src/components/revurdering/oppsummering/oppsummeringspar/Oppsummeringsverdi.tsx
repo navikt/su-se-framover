@@ -34,7 +34,9 @@ export const OppsummeringPar = ({
     }
     return (
         <div className={classNames(styles.oppsummeringspar, className)}>
-            <BodyShort size={textSomSmall ? 'small' : undefined}>{label}</BodyShort>
+            <BodyShort size={textSomSmall ? 'small' : undefined} className={styles.label}>
+                {label}
+            </BodyShort>
             <Label size={textSomSmall ? 'small' : undefined}>{verdi ?? ''}</Label>
         </div>
     );

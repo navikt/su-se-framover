@@ -1,8 +1,15 @@
+import { SøknadInnhold, SøknadInnholdAlder, SøknadInnholdUføre, Søknadstype } from '~src/types/Søknadinnhold';
 import { formatDate } from '~src/utils/date/dateUtils';
 
 import { Sak } from '../../types/Sak';
-import { Søknad, Søknadstype } from '../../types/Søknad';
+import { Søknad } from '../../types/Søknad';
 import { SøknadsbehandlingStatus } from '../../types/Søknadsbehandling';
+
+export const isUføresøknad = (søknadInnhold: SøknadInnhold): søknadInnhold is SøknadInnholdUføre =>
+    'uførevedtak' in søknadInnhold;
+
+export const isAldersøknad = (søknadInnhold: SøknadInnhold): søknadInnhold is SøknadInnholdAlder =>
+    'harSøktAlderspensjon' in søknadInnhold;
 
 export function søknadMottatt(søknad: Søknad): string {
     if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {

@@ -6,7 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import søknadMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import { InstitusjonsoppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';

@@ -1,0 +1,64 @@
+import { DelerBoligMed, GrunnForPapirinnsending } from '~src/features/søknad/types';
+import { typeOppholdstillatelse } from '~src/pages/søknad/steg/oppholdstillatelse/oppholdstillatelse-nb';
+
+const grunnForPapirInnsendingMessages: { [key in GrunnForPapirinnsending]: string } = {
+    [GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker]: 'Verge har søkt på vegne av bruker',
+    [GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt]: 'Midlertidig unntak fra oppmøteplikt',
+    [GrunnForPapirinnsending.Annet]: 'Annet',
+};
+
+const delerBoligMedMessages: { [key in DelerBoligMed]: string } = {
+    [DelerBoligMed.EKTEMAKE_SAMBOER]: 'Ektefelle/samboer',
+    [DelerBoligMed.VOKSNE_BARN]: 'Voksne barn',
+    [DelerBoligMed.ANNEN_VOKSEN]: 'Andre voksne',
+};
+
+export default {
+    'uføre.vedtakOmUføretrygd': 'Har du fått vedtak om uføretrygd?',
+    'flyktning.registrertSomFlyktning': 'Er du registrert som flyktning?',
+
+    'opphold.erNorskStatsborger': 'Er du norsk statsborger?',
+    'opphold.harOppholdstillatelse': 'Har du oppholdstillatelse i Norge',
+    'opphold.oppholdstillatelse.midlertidigEllerPermanent': 'Er oppholdstillatelsen din permanent eller midlertidig?',
+    'opphold.statsborgerskapAndreLand': 'Har du statsborgerskap i andre land enn Norge?',
+    'opphold.hvilkeLandStatsborger': 'Hvilke land har du statsborgerskap i?',
+    ...typeOppholdstillatelse,
+
+    'boforhold.adresse': 'Adresse',
+    'boforhold.adresse.ingenAdresse.harIkkeFastBosted': 'Har ikke fast bosted',
+    'boforhold.adresse.ingenAdresse.borPåAnnenAdresse': 'Bor på en annen adresse',
+
+    'boforhold.innlagtPåInstitusjon.harDuVærtInnlagtSiste3Måneder':
+        'Har du vært innlagt på institusjon de siste 3 månedene?',
+    'boforhold.innlagtPåInstitusjon.datoForInnleggelse': 'Datoen for innleggelse',
+    'boforhold.innlagtPåInstitusjon.datoForUtskrivelse': 'Datoen for utskrivelse',
+    'boforhold.innlagtPåInstitusjon.fortsattInnlagt': 'Fortsatt innlagt',
+
+    'utenlandsOpphold.antallDagerSiste90': 'Antall dager oppholdt i utlandet siste 90 dager',
+    'utenlandsOpphold.antallDagerPlanlagt': 'Antall dager planlagt opphold i utlandet',
+
+    'formue.heading.søker': 'Søker',
+    'formue.heading.eps': 'Ektefelle/samboer',
+    'formue.verdiPåBolig': 'Verdi på bolig',
+    'formue.verdiPåEiendom': 'Verdi på eiendom',
+    'formue.verdiPåKjøretøy': 'Verdi på kjøretøy',
+    'formue.innskuddsbeløp': 'Innskuddsbeløp',
+    'formue.verdipapirbeløp': 'Verdipapirbeløp',
+    'formue.kontanter': 'Kontanter over 1000',
+    'formue.skylderNoenSøkerPengerBeløp': 'Skylder noen søker penger',
+    'formue.depositumsBeløp': 'Depositumskonto',
+
+    'forNav.papirSøknad.mottaksdatoForSøknad': 'Mottaksdato for søknad',
+    'forNav.papirSøknad.hvorforSendtInnUtenOppmøte': 'Hvorfor er søknaden sendt inn uten personlig oppmøte',
+    'forNav.papirSøknad.beskrivelse': 'Beskrivelse',
+    'forNav.digitalSøknad.harSøkerMøttPersonlig': 'Har søker møtt personlig?',
+    'forNav.digitalSøknad.harSøkerFullmektigEllerVerge': 'Har søker fullmektig eller verge?',
+    ...grunnForPapirInnsendingMessages,
+
+    'boforhold.delerBoligMedNoenOver18år': 'Deler du bolig med noen over 18 år?',
+    'boforhold.ektemakeEllerSamboerUførFlyktning': 'Er ektefelle eller samboer ufør flyktning?',
+    ...delerBoligMedMessages,
+
+    'bool.true': 'Ja',
+    'bool.false': 'Nei',
+};

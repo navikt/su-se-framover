@@ -7,7 +7,7 @@ import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import boOgOppholdSøknadMessages from '~src/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import flyktningstatusSøknadMessages from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { VilkårtypeFelles, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';

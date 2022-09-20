@@ -5,7 +5,7 @@ import {
     BosituasjonTyper,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 
 export const hentBosituasjongrunnlag = (g: GrunnlagsdataOgVilkårsvurderinger): Bosituasjon => {
     if (g.bosituasjon.length > 1) {

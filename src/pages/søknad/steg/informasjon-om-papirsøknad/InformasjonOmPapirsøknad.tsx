@@ -13,7 +13,7 @@ import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/informasjon-om-papirsøknad/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 import { toDateOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';

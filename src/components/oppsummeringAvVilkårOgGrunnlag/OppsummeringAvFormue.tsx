@@ -95,7 +95,7 @@ const OppsummeringAvFormuegrunnlag = (props: { g: Formuegrunnlag }) => {
     );
 };
 
-const FormueTrippel = (props: {
+export const FormueTrippel = (props: {
     label: string;
     søkersVerdi: number | string;
     epsverdi?: Nullable<number | string>;

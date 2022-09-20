@@ -31,7 +31,7 @@ const OppsummeringAvFastOppholdvilkår = (props: {
                 label={formatMessage('vilkår.resultat')}
                 //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore - liten clash mellom resultatstyper som deleer 'vilkårOppfylt' etc som gjør at typingen ikke forstår det helt. Dette er i realiteten ikke et problem
-                verdi={formatMessage(props.fastOpphold!.resultat ?? 'vilkår.ikkeVurdert')}
+                verdi={formatMessage(props.fastOpphold?.resultat ?? 'vilkår.ikkeVurdert')}
             />
             <ul>
                 {props.fastOpphold?.vurderinger?.map((u) => (

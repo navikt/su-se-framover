@@ -13,6 +13,7 @@ import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringA
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
+import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import { useI18n } from '~src/lib/i18n';
 import { fradragErlik } from '~src/types/Fradrag';
 import { bosituasjonErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
@@ -95,168 +96,195 @@ const Vedtaksinformasjon = (props: {
         !institusjonsoppholdErLik(nyeData.institusjonsopphold, gamleData.institusjonsopphold) ||
         valgtRevurderingssteg.Institusjonsopphold === Vurderingstatus.Vurdert;
 
+    const visVilkårSomAccordions = true;
+
     return (
         <div className={styles.container}>
-            <Rad overskrift>
-                {{
-                    venstre: (
-                        <Heading level="3" size="medium">
-                            {formatMessage('heading.nyInfo')}
-                        </Heading>
-                    ),
-                    høyre: (
-                        <Heading level="3" size="medium">
-                            {formatMessage('heading.eksisterende')}
-                        </Heading>
-                    ),
-                }}
-            </Rad>
-            {skalViseUføre && (
-                <Rad radTittel={formatMessage('radTittel.uførhet')}>
-                    {{
-                        venstre: nyeData.uføre ? (
-                            <OppsummeringAvUførevilkår uførevilkår={nyeData.uføre} visesIVedtak />
-                        ) : null,
-                        høyre: gamleData.uføre ? (
-                            <OppsummeringAvUførevilkår uførevilkår={gamleData.uføre} visesIVedtak />
-                        ) : null,
-                    }}
-                </Rad>
-            )}
-            {skalVisebosituasjon && (
-                <Rad radTittel={formatMessage('radTittel.bosituasjon')}>
-                    {{
-                        venstre: <OppsummeringAvBosituasjongrunnlag bosituasjon={nyeData.bosituasjon} visesIVedtak />,
-                        høyre: <OppsummeringAvBosituasjongrunnlag bosituasjon={gamleData.bosituasjon} visesIVedtak />,
-                    }}
-                </Rad>
-            )}
-            {skalViseformue && (
-                <Rad radTittel={formatMessage('radTittel.formue')}>
-                    {{
-                        venstre: <OppsummeringAvFormueVilkår formue={nyeData.formue} visesIVedtak />,
-                        høyre: <OppsummeringAvFormueVilkår formue={gamleData.formue} visesIVedtak />,
-                    }}
-                </Rad>
-            )}
-            {skalVisefradrag && (
-                <Rad radTittel={formatMessage('radTittel.fradrag')}>
-                    {{
-                        venstre:
-                            nyeData.fradrag.length > 0 ? (
-                                <OppsummeringAvFradrag fradrag={nyeData.fradrag} visesIVedtak />
-                            ) : null,
-                        høyre:
-                            gamleData.fradrag.length > 0 ? (
-                                <OppsummeringAvFradrag fradrag={gamleData.fradrag} visesIVedtak />
-                            ) : null,
-                    }}
-                </Rad>
-            )}
-            {skalViseutenlandsopphold && (
-                <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
-                    {{
-                        venstre: nyeData.utenlandsopphold ? (
-                            <OppsummeringAvUtenlandsopphold utenlandsopphold={nyeData.utenlandsopphold} visesIVedtak />
-                        ) : null,
-                        høyre: gamleData.utenlandsopphold ? (
-                            <OppsummeringAvUtenlandsopphold
-                                utenlandsopphold={gamleData.utenlandsopphold}
-                                visesIVedtak
-                            />
-                        ) : null,
-                    }}
-                </Rad>
-            )}
-            {skalViseOpplysningsplikt && (
-                <Rad radTittel={formatMessage('radTittel.opplysningsplikt')}>
-                    {{
-                        venstre: nyeData.opplysningsplikt ? (
-                            <OppsummeringAvOpplysningspliktvilkår
-                                opplysningspliktVilkår={nyeData.opplysningsplikt}
-                                visesIVedtak
-                            />
-                        ) : null,
-                        høyre: gamleData.opplysningsplikt ? (
-                            <OppsummeringAvOpplysningspliktvilkår
-                                opplysningspliktVilkår={gamleData.opplysningsplikt}
-                                visesIVedtak
-                            />
-                        ) : null,
-                    }}
-                </Rad>
-            )}
-            {skalViseLovligOpphold && (
-                <Rad radTittel={formatMessage('radTittel.lovligOpphold')}>
-                    {{
-                        venstre: nyeData.lovligOpphold ? (
-                            <OppsummeringAvLovligOppholdvilkår lovligOpphold={nyeData.lovligOpphold} visesIVedtak />
-                        ) : null,
-                        høyre: gamleData.lovligOpphold ? (
-                            <OppsummeringAvLovligOppholdvilkår lovligOpphold={gamleData.lovligOpphold} visesIVedtak />
-                        ) : null,
-                    }}
-                </Rad>
-            )}
-            {skalViseFlyktning && (
-                <Rad radTittel={formatMessage('radTittel.flyktning')}>
-                    {{
-                        venstre: nyeData.flyktning ? (
-                            <OppsummeringAvFlyktningvilkår flyktning={nyeData.flyktning} visesIVedtak />
-                        ) : null,
-                        høyre: gamleData.flyktning ? (
-                            <OppsummeringAvFlyktningvilkår flyktning={gamleData.flyktning} visesIVedtak />
-                        ) : null,
-                    }}
-                </Rad>
-            )}
-            {skalViseFastOpphold && (
-                <Rad radTittel={formatMessage('radTittel.fastOpphold')}>
-                    {{
-                        venstre: nyeData.fastOpphold ? (
-                            <OppsummeringAvFastOppholdvilkår fastOpphold={nyeData.fastOpphold} visesIVedtak />
-                        ) : null,
-                        høyre: gamleData.fastOpphold ? (
-                            <OppsummeringAvFastOppholdvilkår fastOpphold={gamleData.fastOpphold} visesIVedtak />
-                        ) : null,
-                    }}
-                </Rad>
-            )}
-            {skalVisePersonligOppmøte && (
-                <Rad radTittel={formatMessage('radTittel.personligOppmøte')}>
-                    {{
-                        venstre: nyeData.personligOppmøte ? (
-                            <OppsummeringAvPersonligoppmøtevilkår
-                                personligoppmøte={nyeData.personligOppmøte}
-                                visesIVedtak
-                            />
-                        ) : null,
-                        høyre: gamleData.personligOppmøte ? (
-                            <OppsummeringAvPersonligoppmøtevilkår
-                                personligoppmøte={gamleData.personligOppmøte}
-                                visesIVedtak
-                            />
-                        ) : null,
-                    }}
-                </Rad>
-            )}
-            {skalViseInstitusjonsopphold && (
-                <Rad radTittel={formatMessage('radTittel.institusjonsopphold')}>
-                    {{
-                        venstre: nyeData.institusjonsopphold ? (
-                            <OppsummeringAvInstitusjonsoppholdvilkår
-                                institusjonsopphold={nyeData.institusjonsopphold}
-                                visesIVedtak
-                            />
-                        ) : null,
-                        høyre: gamleData.institusjonsopphold ? (
-                            <OppsummeringAvInstitusjonsoppholdvilkår
-                                institusjonsopphold={gamleData.institusjonsopphold}
-                                visesIVedtak
-                            />
-                        ) : null,
-                    }}
-                </Rad>
+            {visVilkårSomAccordions ? (
+                <SidestiltOppsummeringAvVilkårOgGrunnlag
+                    grunnlagsdataOgVilkårsvurderinger={nyeData}
+                    visesSidestiltMed={gamleData}
+                />
+            ) : (
+                <>
+                    <Rad overskrift>
+                        {{
+                            venstre: (
+                                <Heading level="3" size="medium">
+                                    {formatMessage('heading.nyInfo')}
+                                </Heading>
+                            ),
+                            høyre: (
+                                <Heading level="3" size="medium">
+                                    {formatMessage('heading.eksisterende')}
+                                </Heading>
+                            ),
+                        }}
+                    </Rad>
+                    {skalViseUføre && (
+                        <Rad radTittel={formatMessage('radTittel.uførhet')}>
+                            {{
+                                venstre: nyeData.uføre ? (
+                                    <OppsummeringAvUførevilkår uførevilkår={nyeData.uføre} visesIVedtak />
+                                ) : null,
+                                høyre: gamleData.uføre ? (
+                                    <OppsummeringAvUførevilkår uførevilkår={gamleData.uføre} visesIVedtak />
+                                ) : null,
+                            }}
+                        </Rad>
+                    )}
+                    {skalVisebosituasjon && (
+                        <Rad radTittel={formatMessage('radTittel.bosituasjon')}>
+                            {{
+                                venstre: (
+                                    <OppsummeringAvBosituasjongrunnlag bosituasjon={nyeData.bosituasjon} visesIVedtak />
+                                ),
+                                høyre: (
+                                    <OppsummeringAvBosituasjongrunnlag
+                                        bosituasjon={gamleData.bosituasjon}
+                                        visesIVedtak
+                                    />
+                                ),
+                            }}
+                        </Rad>
+                    )}
+                    {skalViseformue && (
+                        <Rad radTittel={formatMessage('radTittel.formue')}>
+                            {{
+                                venstre: <OppsummeringAvFormueVilkår formue={nyeData.formue} visesIVedtak />,
+                                høyre: <OppsummeringAvFormueVilkår formue={gamleData.formue} visesIVedtak />,
+                            }}
+                        </Rad>
+                    )}
+                    {skalVisefradrag && (
+                        <Rad radTittel={formatMessage('radTittel.fradrag')}>
+                            {{
+                                venstre:
+                                    nyeData.fradrag.length > 0 ? (
+                                        <OppsummeringAvFradrag fradrag={nyeData.fradrag} visesIVedtak />
+                                    ) : null,
+                                høyre:
+                                    gamleData.fradrag.length > 0 ? (
+                                        <OppsummeringAvFradrag fradrag={gamleData.fradrag} visesIVedtak />
+                                    ) : null,
+                            }}
+                        </Rad>
+                    )}
+                    {skalViseutenlandsopphold && (
+                        <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
+                            {{
+                                venstre: nyeData.utenlandsopphold ? (
+                                    <OppsummeringAvUtenlandsopphold
+                                        utenlandsopphold={nyeData.utenlandsopphold}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                                høyre: gamleData.utenlandsopphold ? (
+                                    <OppsummeringAvUtenlandsopphold
+                                        utenlandsopphold={gamleData.utenlandsopphold}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                            }}
+                        </Rad>
+                    )}
+                    {skalViseOpplysningsplikt && (
+                        <Rad radTittel={formatMessage('radTittel.opplysningsplikt')}>
+                            {{
+                                venstre: nyeData.opplysningsplikt ? (
+                                    <OppsummeringAvOpplysningspliktvilkår
+                                        opplysningspliktVilkår={nyeData.opplysningsplikt}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                                høyre: gamleData.opplysningsplikt ? (
+                                    <OppsummeringAvOpplysningspliktvilkår
+                                        opplysningspliktVilkår={gamleData.opplysningsplikt}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                            }}
+                        </Rad>
+                    )}
+                    {skalViseLovligOpphold && (
+                        <Rad radTittel={formatMessage('radTittel.lovligOpphold')}>
+                            {{
+                                venstre: nyeData.lovligOpphold ? (
+                                    <OppsummeringAvLovligOppholdvilkår
+                                        lovligOpphold={nyeData.lovligOpphold}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                                høyre: gamleData.lovligOpphold ? (
+                                    <OppsummeringAvLovligOppholdvilkår
+                                        lovligOpphold={gamleData.lovligOpphold}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                            }}
+                        </Rad>
+                    )}
+                    {skalViseFlyktning && (
+                        <Rad radTittel={formatMessage('radTittel.flyktning')}>
+                            {{
+                                venstre: nyeData.flyktning ? (
+                                    <OppsummeringAvFlyktningvilkår flyktning={nyeData.flyktning} visesIVedtak />
+                                ) : null,
+                                høyre: gamleData.flyktning ? (
+                                    <OppsummeringAvFlyktningvilkår flyktning={gamleData.flyktning} visesIVedtak />
+                                ) : null,
+                            }}
+                        </Rad>
+                    )}
+                    {skalViseFastOpphold && (
+                        <Rad radTittel={formatMessage('radTittel.fastOpphold')}>
+                            {{
+                                venstre: nyeData.fastOpphold ? (
+                                    <OppsummeringAvFastOppholdvilkår fastOpphold={nyeData.fastOpphold} visesIVedtak />
+                                ) : null,
+                                høyre: gamleData.fastOpphold ? (
+                                    <OppsummeringAvFastOppholdvilkår fastOpphold={gamleData.fastOpphold} visesIVedtak />
+                                ) : null,
+                            }}
+                        </Rad>
+                    )}
+                    {skalVisePersonligOppmøte && (
+                        <Rad radTittel={formatMessage('radTittel.personligOppmøte')}>
+                            {{
+                                venstre: nyeData.personligOppmøte ? (
+                                    <OppsummeringAvPersonligoppmøtevilkår
+                                        personligoppmøte={nyeData.personligOppmøte}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                                høyre: gamleData.personligOppmøte ? (
+                                    <OppsummeringAvPersonligoppmøtevilkår
+                                        personligoppmøte={gamleData.personligOppmøte}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                            }}
+                        </Rad>
+                    )}
+                    {skalViseInstitusjonsopphold && (
+                        <Rad radTittel={formatMessage('radTittel.institusjonsopphold')}>
+                            {{
+                                venstre: nyeData.institusjonsopphold ? (
+                                    <OppsummeringAvInstitusjonsoppholdvilkår
+                                        institusjonsopphold={nyeData.institusjonsopphold}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                                høyre: gamleData.institusjonsopphold ? (
+                                    <OppsummeringAvInstitusjonsoppholdvilkår
+                                        institusjonsopphold={gamleData.institusjonsopphold}
+                                        visesIVedtak
+                                    />
+                                ) : null,
+                            }}
+                        </Rad>
+                    )}
+                </>
             )}
         </div>
     );

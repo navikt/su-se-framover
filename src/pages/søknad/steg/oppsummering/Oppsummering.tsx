@@ -28,7 +28,7 @@ import { schema as utenlandsoppholdSchema } from '~src/pages/søknad/steg/utenla
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
 import { Sakstype } from '~src/types/Sak';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import * as sharedStyles from '../../steg-shared.module.less';

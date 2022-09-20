@@ -7,7 +7,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { AlderspensjonForm } from '~src/pages/saksbehandling/steg/alderspensjon/AlderspensjonForm';
 import { FormData } from '~src/pages/saksbehandling/steg/alderspensjon/types';
-import { SøknadInnholdAlder } from '~src/types/Søknad';
+import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 
 import { VilkårsvurderingBaseProps } from '../types';
 

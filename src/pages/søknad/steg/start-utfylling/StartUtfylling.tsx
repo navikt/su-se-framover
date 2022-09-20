@@ -22,7 +22,7 @@ import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
 import { Sakstype } from '~src/types/Sak';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 
 const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);

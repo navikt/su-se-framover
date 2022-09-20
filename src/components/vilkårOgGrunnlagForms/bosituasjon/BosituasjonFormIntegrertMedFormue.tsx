@@ -16,7 +16,7 @@ import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch } from '~src/redux/Store';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { removeSpaces } from '~src/utils/format/formatUtils';
 import { showName } from '~src/utils/person/personUtils';
 

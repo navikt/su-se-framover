@@ -6,7 +6,7 @@ import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOg
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import saksbehandlingMessages from '~src/pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { delerBoligMedFormatted } from '~src/utils/søknadsbehandling/søknadsbehandlingUtils';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';

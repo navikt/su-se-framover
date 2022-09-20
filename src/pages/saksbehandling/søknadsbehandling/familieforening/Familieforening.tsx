@@ -7,7 +7,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { FamilieforeningForm } from '~src/pages/saksbehandling/steg/familieforening/FamilieforeningForm';
 import { FormData } from '~src/pages/saksbehandling/steg/familieforening/types';
-import { SøknadInnholdAlder } from '~src/types/Søknad';
+import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 
 import { VilkårsvurderingBaseProps } from '../types';
 

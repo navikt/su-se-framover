@@ -1,7 +1,7 @@
 import { ForVeilederPapirsøknad } from '~src/features/søknad/søknad.slice';
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
 import yup from '~src/lib/validering';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 
 export type FormData = ForVeilederPapirsøknad;
 

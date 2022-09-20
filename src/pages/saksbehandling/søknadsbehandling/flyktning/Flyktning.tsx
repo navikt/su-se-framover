@@ -20,7 +20,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { SøknadInnholdUføre } from '~src/types/Søknad';
+import { SøknadInnholdUføre } from '~src/types/Søknadinnhold';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';

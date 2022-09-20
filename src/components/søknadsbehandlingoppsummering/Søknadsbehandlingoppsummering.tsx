@@ -10,6 +10,8 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
+import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
+
 import messages from './søknadsbehandling-nb';
 import SøknadsbehandlingHeader from './SøknadsbehandlingHeader';
 import * as styles from './søknadsbehandlingoppsummering.module.less';
@@ -24,6 +26,8 @@ interface Props {
 const Søknadsbehandlingoppsummering = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     const periode = props.behandling.stønadsperiode?.periode;
+
+    const visVilkårSomAccordions = true;
 
     return (
         <div>
@@ -41,14 +45,27 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
                     }`}
                 </Heading>
             </div>
-            <VilkårsOppsummering
-                grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
-                søknadInnhold={props.behandling.søknad.søknadInnhold}
-            />
-            <SatsVilkårsblokk
-                bosituasjon={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
-                søknadInnhold={props.behandling.søknad.søknadInnhold}
-            />
+
+            {visVilkårSomAccordions ? (
+                <div className={styles.sidestiltOppsummeringContainer}>
+                    <SidestiltOppsummeringAvVilkårOgGrunnlag
+                        grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
+                        visesSidestiltMed={props.behandling.søknad.søknadInnhold}
+                    />
+                </div>
+            ) : (
+                <>
+                    <VilkårsOppsummering
+                        grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
+                        søknadInnhold={props.behandling.søknad.søknadInnhold}
+                    />
+                    <SatsVilkårsblokk
+                        bosituasjon={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                        søknadInnhold={props.behandling.søknad.søknadInnhold}
+                    />
+                </>
+            )}
+
             {props.behandling.beregning ? (
                 <Panel border>
                     <VisBeregningOgSimulering behandling={props.behandling} />

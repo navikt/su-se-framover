@@ -7,7 +7,7 @@ import {
     SøknadInnholdFelles,
     SøknadInnholdUføre,
     Søknadstype,
-} from '~src/types/Søknad';
+} from '~src/types/Søknadinnhold';
 
 import { AdresseFraSøknad, AlderssøknadState, SøknadState, UføresøknadState } from './søknad.slice';
 import { DelerBoligMed, EPSFormData } from './types';

@@ -1,0 +1,88 @@
+import classNames from 'classnames';
+import React from 'react';
+
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { Formue } from '~src/types/Søknadinnhold';
+
+import { FormueTrippel } from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
+
+import messages from './OppsummeringAvSøknadinnhold-nb';
+import styles from './OppsummeringAvSøknadinnhold.module.less';
+
+const OppsummeringAvFormue = (props: {
+    formue: {
+        søkers: Formue;
+        eps?: Nullable<Formue>;
+    };
+    visesIVedtak?: boolean;
+}) => {
+    const { formatMessage } = useI18n({ messages });
+
+    return (
+        <div
+            className={classNames({
+                [styles.oppsummeringsContainer]: !props.visesIVedtak,
+            })}
+        >
+            <FormueTrippel
+                label={''}
+                søkersVerdi={formatMessage('formue.heading.søker')}
+                epsverdi={props.formue.eps ? formatMessage('formue.heading.eps') : undefined}
+            />
+            <FormueTrippel
+                label={formatMessage('formue.verdiPåBolig')}
+                søkersVerdi={props.formue.søkers.verdiPåBolig ?? 0}
+                epsverdi={props.formue.eps ? props.formue.eps?.verdiPåBolig : null}
+            />
+            <FormueTrippel
+                label={formatMessage('formue.verdiPåEiendom')}
+                søkersVerdi={props.formue.søkers.verdiPåEiendom ?? 0}
+                epsverdi={props.formue.eps ? props.formue.eps?.verdiPåEiendom : null}
+            />
+            {props.formue.søkers.kjøretøy?.map((kjøretøy) => (
+                <FormueTrippel
+                    key={kjøretøy.kjøretøyDeEier}
+                    label={`${formatMessage('formue.verdiPåKjøretøy')} (${kjøretøy.kjøretøyDeEier})`}
+                    søkersVerdi={kjøretøy.verdiPåKjøretøy}
+                    epsverdi={props.formue.eps ? '-' : null}
+                />
+            ))}
+            {props.formue.eps?.kjøretøy?.map((kjøretøy) => (
+                <FormueTrippel
+                    key={kjøretøy.kjøretøyDeEier}
+                    label={`${formatMessage('formue.verdiPåKjøretøy')} (${kjøretøy.kjøretøyDeEier})`}
+                    søkersVerdi={'-'}
+                    epsverdi={kjøretøy.verdiPåKjøretøy}
+                />
+            ))}
+            <FormueTrippel
+                label={formatMessage('formue.innskuddsbeløp')}
+                søkersVerdi={props.formue.søkers.innskuddsBeløp ?? 0}
+                epsverdi={props.formue.eps ? props.formue.eps.innskuddsBeløp : null}
+            />
+            <FormueTrippel
+                label={formatMessage('formue.verdipapirbeløp')}
+                søkersVerdi={props.formue.søkers.verdipapirBeløp ?? 0}
+                epsverdi={props.formue.eps ? props.formue.eps.verdipapirBeløp : null}
+            />
+            <FormueTrippel
+                label={formatMessage('formue.kontanter')}
+                søkersVerdi={props.formue.søkers.kontanterBeløp ?? 0}
+                epsverdi={props.formue.eps ? props.formue.eps?.kontanterBeløp : null}
+            />
+            <FormueTrippel
+                label={formatMessage('formue.skylderNoenSøkerPengerBeløp')}
+                søkersVerdi={props.formue.søkers.skylderNoenMegPengerBeløp ?? 0}
+                epsverdi={props.formue.eps ? props.formue.eps.skylderNoenMegPengerBeløp : null}
+            />
+            <FormueTrippel
+                label={formatMessage('formue.depositumsBeløp')}
+                søkersVerdi={props.formue.søkers.depositumsBeløp ?? 0}
+                epsverdi={props.formue.eps ? props.formue.eps.depositumsBeløp ?? 0 : null}
+            />
+        </div>
+    );
+};
+
+export default OppsummeringAvFormue;

@@ -5,8 +5,9 @@ import { AlderspensjonVilkårsblokk } from '~src/components/oppsummering/vilkår
 import { FamilieforeningVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FamilieforeningFaktablokk';
 import { useI18n } from '~src/lib/i18n';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { isAldersøknad, isUføresøknad, SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
+import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import { FastOppholdVilkårsblokk } from './faktablokk/faktablokker/FastOppholdFaktablokk';

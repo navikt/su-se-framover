@@ -5,7 +5,7 @@ import { useI18n } from '~src/lib/i18n';
 import saksbehandlingMessages from '~src/pages/saksbehandling/steg/alderspensjon/alderspensjon-nb';
 import søknadMessages from '~src/pages/søknad/steg/alderspensjon/alderspensjon-nb';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { SøknadInnholdAlder } from '~src/types/Søknad';
+import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 import { VilkårtypeAlder, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 

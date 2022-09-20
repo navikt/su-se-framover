@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import { UførhetFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
+import OppsummeringAvUføre from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvUføre';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { UførhetForm } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
@@ -16,7 +17,7 @@ import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårs
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { SøknadInnholdUføre } from '~src/types/Søknad';
+import { SøknadInnholdUføre } from '~src/types/Søknadinnhold';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import { VilkårsvurderingBaseProps } from '../types';
@@ -77,7 +78,12 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                         {...props}
                     />
                 ),
-                right: <UførhetFaktablokk søknadInnhold={props.søknadInnhold} />,
+                right: (
+                    <>
+                        <Heading size={'small'}>Fra søknad</Heading>
+                        <OppsummeringAvUføre uføre={props.søknadInnhold.uførevedtak} />
+                    </>
+                ),
             }}
         </ToKolonner>
     );

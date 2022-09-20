@@ -24,7 +24,7 @@ import { getSøknadstematekst } from '~src/pages/søknad/utils';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Periode } from '~src/types/Periode';
 import { AlleredeGjeldendeSakForBruker, Sakstype } from '~src/types/Sak';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 

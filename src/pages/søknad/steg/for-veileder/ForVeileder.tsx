@@ -14,7 +14,7 @@ import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/for-veileder/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import * as sharedStyles from '../../steg-shared.module.less';

@@ -18,7 +18,7 @@ import {
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { NullablePeriode, Periode } from '~src/types/Periode';
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { lagTomPeriode, periodeTilIsoDateString } from '~src/utils/periode/periodeUtils';
 import {
     hentBosituasjongrunnlag,

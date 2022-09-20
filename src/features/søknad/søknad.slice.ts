@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Adresse, IngenAdresseGrunn } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import {
     DelerBoligMed,

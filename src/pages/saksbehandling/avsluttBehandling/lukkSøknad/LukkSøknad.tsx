@@ -12,7 +12,8 @@ import { pickRemoteData } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { LukkSøknadBegrunnelse, Søknad, Søknadstype } from '~src/types/Søknad';
+import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 

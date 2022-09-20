@@ -1,4 +1,4 @@
-import { SøknadInnhold } from '~src/types/Søknad';
+import { SøknadInnhold } from '~src/types/Søknadinnhold';
 
 export interface FaktablokkProps {
     søknadInnhold: SøknadInnhold;

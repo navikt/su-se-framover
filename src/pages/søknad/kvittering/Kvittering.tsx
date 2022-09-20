@@ -16,7 +16,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { Søknadstype } from '~src/types/Søknad';
+import { Søknadstype } from '~src/types/Søknadinnhold';
 import { showName } from '~src/utils/person/personUtils';
 
 import messages from './kvittering-nb';

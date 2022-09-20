@@ -1,0 +1,28 @@
+@import '~/src/styles/variables.less';
+
+.pageContainer {
+    width: 900px;
+}
+
+.accordionOverskrift {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: @spacing-xs @spacing-xs;
+}
+
+.accordionHeaderContent {
+    display: flex;
+    align-items: center;
+    gap: @spacing-xxs;
+}
+
+.accordionContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: @spacing;
+
+    > :first-child {
+        padding-right: @spacing;
+        border-right: 1px solid @navBorder;
+    }
+}
