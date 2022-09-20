@@ -136,7 +136,7 @@ const Tilleggsinfo = (props: {
                     </Label>
                     <p>{formatDate(props.behandling.opprettet)}</p>
                 </div>
-                {erIverksatt(props.behandling) && (
+                {props.vedtakForBehandling && (
                     <div>
                         <Label size="small" spacing>
                             {formatMessage('behandling.iverksattDato')}
