@@ -10,7 +10,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
-import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
+import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
@@ -189,7 +189,7 @@ const RevurderingOppsummeringPage = (props: {
             ),
             ([beregning, data]) => (
                 <div className={styles.content}>
-                    <Revurderingoppsummering
+                    <OppsummeringAvInformasjonsrevurdering
                         revurdering={props.revurdering}
                         grunnlagsdataOgVilkårsvurderinger={data.grunnlagsdataOgVilkårsvurderinger}
                     />

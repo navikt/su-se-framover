@@ -10,10 +10,6 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import {
-    OppsummeringPar,
-    OppsummeringsParSortering,
-} from '~src/components/revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Klage, KlageStatus, KlageVurderingType } from '~src/types/Klage';
@@ -23,6 +19,7 @@ import { erKlageOmgjort, erKlageOpprettholdt } from '~src/utils/klage/klageUtils
 import formkravMessages from '../../pages/klage/vurderFormkrav/vurderFormkrav-nb';
 import vurderingMessages from '../../pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
 import * as DateUtils from '../../utils/date/dateUtils';
+import { OppsummeringPar, OppsummeringsParSortering } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
 import * as styles from './oppsummeringAvKlage.module.less';

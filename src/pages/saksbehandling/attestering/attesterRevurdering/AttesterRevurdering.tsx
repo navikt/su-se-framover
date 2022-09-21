@@ -7,7 +7,7 @@ import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/Grunnl
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
-import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
+import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
@@ -123,7 +123,7 @@ const AttesterRevurdering = () => {
                         {formatMessage('page.tittel')}
                     </Heading>
                     <div className={styles.oppsummeringContainer}>
-                        <Revurderingoppsummering
+                        <OppsummeringAvInformasjonsrevurdering
                             revurdering={revurdering}
                             grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                         />

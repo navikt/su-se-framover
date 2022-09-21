@@ -8,8 +8,8 @@ import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fo
 import { FormueStatus, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { formatPeriode } from '~src/utils/date/dateUtils';
 
+import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import Formuestatus from '../revurdering/formuestatus/Formuestatus';
-import { OppsummeringPar } from '../revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
 import { regnUtFormuegrunnlagVerdier } from '../vilkårOgGrunnlagForms/formue/FormueFormUtils';
 
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';

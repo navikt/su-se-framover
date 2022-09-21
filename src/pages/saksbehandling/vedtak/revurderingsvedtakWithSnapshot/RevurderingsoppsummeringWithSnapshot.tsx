@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import Revurderingoppsummering from '~src/components/revurdering/oppsummering/Revurderingoppsummering';
+import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { MessageFormatter } from '~src/lib/i18n';
@@ -35,7 +35,7 @@ const RevurderingsoppsummeringWithSnapshot = (props: {
                     (error) => <ApiErrorAlert error={error} />,
                     (snapshot) => (
                         <>
-                            <Revurderingoppsummering
+                            <OppsummeringAvInformasjonsrevurdering
                                 revurdering={props.revurdering}
                                 grunnlagsdataOgVilkårsvurderinger={snapshot}
                             />

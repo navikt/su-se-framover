@@ -9,7 +9,7 @@ import {
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { formatPeriode } from '~src/utils/date/dateUtils';
 
-import { OppsummeringPar } from '../revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';

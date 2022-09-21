@@ -4,10 +4,10 @@ import Beregningblokk from '~src/components/revurdering/oppsummering/beregningbl
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering } from '~src/types/Revurdering';
 
+import * as styles from './OppsummeringAvInformasjonsrevurdering.module.less';
 import Oppsummeringsblokk from './oppsummeringsblokk/Oppsummeringsblokk';
-import * as styles from './revurderingoppsummering.module.less';
 
-const Revurderingoppsummering = (props: {
+const OppsummeringAvInformasjonsrevurdering = (props: {
     revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
@@ -22,4 +22,4 @@ const Revurderingoppsummering = (props: {
     );
 };
 
-export default Revurderingoppsummering;
+export default OppsummeringAvInformasjonsrevurdering;

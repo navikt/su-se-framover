@@ -13,7 +13,7 @@ import { groupByEq } from '~src/utils/array/arrayUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
-import { OppsummeringPar } from '../revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';

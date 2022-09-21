@@ -7,7 +7,7 @@ import { useI18n } from '~src/lib/i18n';
 import { Boforhold, Oppholdstillatelse } from '~src/types/Søknadinnhold';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 
-import { OppsummeringPar } from '../revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
 import styles from './OppsummeringAvSøknadinnhold.module.less';

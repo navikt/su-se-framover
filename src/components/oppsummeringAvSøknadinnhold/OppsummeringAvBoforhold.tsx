@@ -5,7 +5,7 @@ import { DelerBoligMed } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { Boforhold } from '~src/types/Søknadinnhold';
 
-import { OppsummeringPar } from '../revurdering/oppsummering/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
 import styles from './OppsummeringAvSøknadinnhold.module.less';

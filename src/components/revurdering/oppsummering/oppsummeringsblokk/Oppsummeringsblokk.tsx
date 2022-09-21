@@ -82,10 +82,10 @@ const Oppsummeringsblokk = (props: {
     revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     return (
         <Oppsummeringspanel
-            tittel={intl.formatMessage({ id: 'heading' })}
+            tittel={formatMessage('heading')}
             farge={Oppsummeringsfarge.Lilla}
             ikon={Oppsummeringsikon.Liste}
         >
