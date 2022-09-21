@@ -11,21 +11,22 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
+import { Revurdering, UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import StansOppsummeringskomponent from './components/StansOppsummeringskomponent';
 import messages from './stans-nb';
 import * as styles from './stans.module.less';
 
-const StansOppsummering = () => {
-    const props = useOutletContext<AttesteringContext>();
+const StansOppsummering = (props: { revurdering?: Revurdering }) => {
+    const contextProps = useOutletContext<AttesteringContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.stansOppsummeringRoute>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
-    const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
+    const revurderingId = props.revurdering?.id ?? urlParams.revurderingId;
+    const revurdering = contextProps.sak.revurderinger.find((r) => r.id === revurderingId);
     const [iverksettStatus, iverksettStans] = useApiCall(revurderingApi.iverksettStans);
     const error = RemoteData.isFailure(iverksettStatus) ? iverksettStatus.error : null;
 
@@ -33,7 +34,7 @@ const StansOppsummering = () => {
         return (
             <div>
                 <Alert variant="error"> {formatMessage('stans.oppsummering.error.fant.ingen')} </Alert>
-                <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: contextProps.sak.id })}>
                     {formatMessage('stans.bunnknapper.tilbake')}
                 </LinkAsButton>
             </div>
@@ -41,9 +42,9 @@ const StansOppsummering = () => {
     }
 
     const iverksettOgGåVidere = () => {
-        iverksettStans({ sakId: props.sak.id, revurderingId: revurdering.id }, async () => {
-            await dispatch(fetchSak({ fnr: props.sak.fnr }));
-            Routes.navigateToSakIntroWithMessage(navigate, formatMessage('stans.notification'), props.sak.id);
+        iverksettStans({ sakId: contextProps.sak.id, revurderingId: revurdering.id }, async () => {
+            await dispatch(fetchSak({ fnr: contextProps.sak.fnr }));
+            Routes.navigateToSakIntroWithMessage(navigate, formatMessage('stans.notification'), contextProps.sak.id);
         });
     };
 
@@ -78,7 +79,10 @@ const StansOppsummering = () => {
                             tekst: formatMessage('stans.bunnknapper.tilbake'),
                             onClick: () =>
                                 navigate(
-                                    Routes.stansRoute.createURL({ sakId: props.sak.id, revurderingId: revurdering.id })
+                                    Routes.stansRoute.createURL({
+                                        sakId: contextProps.sak.id,
+                                        revurderingId: revurdering.id,
+                                    })
                                 ),
                         },
                         neste: {

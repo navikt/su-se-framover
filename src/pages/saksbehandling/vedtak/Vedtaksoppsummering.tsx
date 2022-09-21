@@ -5,12 +5,16 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { InformasjonsRevurdering } from '~src/types/Revurdering';
+import { VedtakType } from '~src/types/Vedtak';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
+
+import GjenopptaOppsummering from '../stans/gjenoppta/gjenopptaOppsummering';
+import StansOppsummering from '../stans/stansOppsummering';
 
 import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
 import ReguleringVedtaksoppsummering from './reguleringsvedtaksoppsummering/reguleringVedtaksoppsummering';
 import RevurderingsoppsummeringWithSnapshot from './revurderingsvedtakWithSnapshot/RevurderingsoppsummeringWithSnapshot';
-import { hentInformasjonKnyttetTilVedtak, hentKlagevedtakFraKlageinstans } from './utils';
 import messages from './vedtaksoppsummering-nb';
 import * as styles from './vedtaksoppsummering.module.less';
 
@@ -23,38 +27,61 @@ const Vedtaksoppsummering = (props: { vedtakId?: string; ikkeVisTilbakeKnapp?: b
     const vedtakId = props.vedtakId ?? urlParams.vedtakId;
     const vedtak = contextProps.sak.vedtak.find((v) => v.id === vedtakId);
 
-    const vedtaksinformasjon = vedtak
-        ? hentInformasjonKnyttetTilVedtak(contextProps.sak, vedtak)
-        : hentKlagevedtakFraKlageinstans(contextProps.sak, vedtakId);
-
-    const Oppsummering = () => {
-        switch (vedtaksinformasjon?.type) {
-            case 'revurdering':
+    const Oppsummering = (): JSX.Element => {
+        switch (vedtak?.type) {
+            case VedtakType.AVVIST_KLAGE:
+                return (
+                    <Klagevedtaksoppsummering
+                        vedtak={vedtak}
+                        klage={contextProps.sak.klager.find((k) => k.id === vedtak.behandlingId)!}
+                    />
+                );
+            case VedtakType.ENDRING:
+            case VedtakType.INGEN_ENDRING:
+            case VedtakType.OPPHØR:
                 return (
                     <RevurderingsoppsummeringWithSnapshot
-                        revurdering={vedtaksinformasjon.revurdering}
+                        revurdering={
+                            contextProps.sak.revurderinger.find(
+                                (r) => r.id === vedtak.behandlingId
+                            )! as InformasjonsRevurdering
+                        }
                         formatMessage={formatMessage}
                         sakId={contextProps.sak.id}
-                        vedtakId={vedtaksinformasjon.vedtak.id}
+                        vedtakId={vedtak.id}
                     />
                 );
-            case 'søknadsbehandling':
+
+            case VedtakType.GJENOPPTAK_AV_YTELSE:
                 return (
-                    <Søknadsbehandlingoppsummering
-                        sak={contextProps.sak}
-                        behandling={vedtaksinformasjon.behandling}
-                        vedtakForBehandling={vedtaksinformasjon.vedtak}
-                        medBrevutkastknapp
+                    <GjenopptaOppsummering
+                        revurdering={contextProps.sak.revurderinger.find((r) => r.id === vedtak.behandlingId)!}
                     />
                 );
-            case 'klage':
-                return <Klagevedtaksoppsummering vedtak={vedtaksinformasjon.vedtak} klage={vedtaksinformasjon.klage} />;
-            case 'regulering':
+            case VedtakType.STANS_AV_YTELSE:
+                return (
+                    <StansOppsummering
+                        revurdering={contextProps.sak.revurderinger.find((r) => r.id === vedtak.behandlingId)!}
+                    />
+                );
+
+            case VedtakType.REGULERING:
                 return (
                     <ReguleringVedtaksoppsummering
                         sakId={contextProps.sak.id}
-                        vedtak={vedtaksinformasjon.vedtak}
-                        regulering={vedtaksinformasjon.regulering}
+                        vedtak={vedtak}
+                        regulering={contextProps.sak.reguleringer.find((r) => r.id === vedtak.behandlingId)!}
+                    />
+                );
+
+            case VedtakType.AVSLAG:
+            case VedtakType.SØKNAD:
+                return (
+                    <Søknadsbehandlingoppsummering
+                        sak={contextProps.sak}
+                        behandling={contextProps.sak.behandlinger.find((b) => b.id === vedtak.behandlingId)!}
+                        vedtakForBehandling={vedtak}
+                        medBrevutkastknapp
                     />
                 );
             case undefined:
