@@ -74,9 +74,8 @@ export interface Person {
     kontaktinfo: Nullable<{
         epostadresse: Nullable<string>;
         mobiltelefonnummer: Nullable<string>;
-        reservert: boolean;
-        kanVarsles: boolean;
         språk: Nullable<boolean>;
+        kanKontaktesDigitalt: boolean;
     }>;
     vergemål: Nullable<boolean>;
     fullmakt: Nullable<boolean>;

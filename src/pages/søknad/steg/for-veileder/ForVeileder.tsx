@@ -36,7 +36,6 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
     const kontaktinfo = søker.kontaktinfo;
     const telefonnummerKrr = kontaktinfo?.mobiltelefonnummer;
     const epostKrr = kontaktinfo?.epostadresse;
-    const digitalBruker: boolean = kontaktinfo != null && !kontaktinfo?.reservert && kontaktinfo?.kanVarsles;
 
     const save = (values: FormData) => dispatch(søknadSlice.actions.ForVeileder(values));
 
@@ -87,7 +86,9 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                 <div className={styles.infoboks}>
                     <Label spacing>{formatMessage('info.kontaktform.tittel')}</Label>
                     {kontaktinfo ? (
-                        <BodyShort>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</BodyShort>
+                        <BodyShort>
+                            {kontaktinfo.kanKontaktesDigitalt ? 'Digital' : 'Kan ikke kontaktes digitalt'}
+                        </BodyShort>
                     ) : (
                         <BodyShort>{formatMessage('info.kontaktinfo.mangler')}</BodyShort>
                     )}
