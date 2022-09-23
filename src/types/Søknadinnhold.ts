@@ -41,7 +41,7 @@ export interface Alderspensjon {
     harSøktAlderspensjon: boolean;
 }
 
-interface OppholdstillatelseAlder {
+export interface OppholdstillatelseAlder {
     eøsborger: Nullable<boolean>;
     familieforening: Nullable<boolean>;
 }
@@ -84,7 +84,7 @@ export interface Utenlandsopphold {
     planlagtePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
 }
 
-interface InntektOgPensjon {
+export interface InntektOgPensjon {
     forventetInntekt: Nullable<number>;
     andreYtelserINav: Nullable<string>;
     andreYtelserINavBeløp: Nullable<number>;

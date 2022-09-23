@@ -17,6 +17,10 @@ export default {
     'uføre.vedtakOmUføretrygd': 'Har du fått vedtak om uføretrygd?',
     'flyktning.registrertSomFlyktning': 'Er du registrert som flyktning?',
 
+    'alderspensjon.søktOmAlderspensjon': 'Har du søkt om alderspensjon og fått svar på søknaden?',
+    'familiegjenforening.komTilNorgePgaFamiliegjenforening':
+        'Kom du til Norge på grunn av familiegjenforening med barn, barnebarn, nevø eller niese, og fikk oppholdstillatelse med krav til underhold?',
+
     'opphold.erNorskStatsborger': 'Er du norsk statsborger?',
     'opphold.harOppholdstillatelse': 'Har du oppholdstillatelse i Norge',
     'opphold.oppholdstillatelse.midlertidigEllerPermanent': 'Er oppholdstillatelsen din permanent eller midlertidig?',
@@ -56,9 +60,19 @@ export default {
     ...grunnForPapirInnsendingMessages,
 
     'boforhold.delerBoligMedNoenOver18år': 'Deler du bolig med noen over 18 år?',
+    'boforhold.hvemDelerBoligMed': 'Hvem deler du bolig med?',
+    'boforhold.epsFnr': 'Ektefelle/samboer fødselsnummer',
     'boforhold.ektemakeEllerSamboerUførFlyktning': 'Er ektefelle eller samboer ufør flyktning?',
     ...delerBoligMedMessages,
 
+    'inntektOgPensjon.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
+    'inntektOgPensjon.andreYtelserINav': 'Har du andre ytelser i NAV?',
+    'inntektOgPensjon.andreYtelserIkkeBehandlet': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
+    'inntektOgPensjon.ytelserIUtlandet': 'Har du trygdeytelser i utlandet?',
+    'inntektOgPensjon.tjenestepensjon': 'Har du tjenestepensjon og/eller pensjonssparing?',
+
     'bool.true': 'Ja',
     'bool.false': 'Nei',
+
+    'svar.nei': 'Nei',
 };

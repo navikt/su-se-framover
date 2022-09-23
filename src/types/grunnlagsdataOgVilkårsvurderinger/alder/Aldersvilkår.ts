@@ -1,3 +1,6 @@
+import isEqual from 'lodash.isequal';
+
+import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
 
 export interface Aldersvilkår {
@@ -36,3 +39,5 @@ export interface AlderspensjonVilkårRequest {
     behandlingId: string;
     vurderinger: Aldersvurdering[];
 }
+
+export const aldersvilkårErLik = (ny: Nullable<Aldersvilkår>, gammel: Nullable<Aldersvilkår>) => isEqual(ny, gammel);

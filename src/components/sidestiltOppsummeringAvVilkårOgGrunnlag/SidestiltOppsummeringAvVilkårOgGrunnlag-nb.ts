@@ -6,6 +6,8 @@ export default {
 
     'accordion.header.uføre': 'Uførhet',
     'accordion.header.flyktning': 'Flyktning',
+    'accordion.header.alderspensjon': 'Alderspensjon',
+    'accordion.header.familiegjenforening': 'Familiegjenforening',
     'accordion.header.lovligOpphold': 'Lovlig opphold',
     'accordion.header.fastOpphold': 'Opphold i Norge',
     'accordion.header.institusjonsopphold': 'Institusjonsopphold',

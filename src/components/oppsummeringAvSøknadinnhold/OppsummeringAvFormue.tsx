@@ -33,12 +33,12 @@ const OppsummeringAvFormue = (props: {
             <FormueTrippel
                 label={formatMessage('formue.verdiPåBolig')}
                 søkersVerdi={props.formue.søkers.verdiPåBolig ?? 0}
-                epsverdi={props.formue.eps ? props.formue.eps?.verdiPåBolig : null}
+                epsverdi={props.formue.eps ? props.formue.eps?.verdiPåBolig ?? 0 : null}
             />
             <FormueTrippel
                 label={formatMessage('formue.verdiPåEiendom')}
                 søkersVerdi={props.formue.søkers.verdiPåEiendom ?? 0}
-                epsverdi={props.formue.eps ? props.formue.eps?.verdiPåEiendom : null}
+                epsverdi={props.formue.eps ? props.formue.eps?.verdiPåEiendom ?? 0 : null}
             />
             {props.formue.søkers.kjøretøy?.map((kjøretøy) => (
                 <FormueTrippel
@@ -59,22 +59,22 @@ const OppsummeringAvFormue = (props: {
             <FormueTrippel
                 label={formatMessage('formue.innskuddsbeløp')}
                 søkersVerdi={props.formue.søkers.innskuddsBeløp ?? 0}
-                epsverdi={props.formue.eps ? props.formue.eps.innskuddsBeløp : null}
+                epsverdi={props.formue.eps ? props.formue.eps.innskuddsBeløp ?? 0 : null}
             />
             <FormueTrippel
                 label={formatMessage('formue.verdipapirbeløp')}
                 søkersVerdi={props.formue.søkers.verdipapirBeløp ?? 0}
-                epsverdi={props.formue.eps ? props.formue.eps.verdipapirBeløp : null}
+                epsverdi={props.formue.eps ? props.formue.eps.verdipapirBeløp ?? 0 : null}
             />
             <FormueTrippel
                 label={formatMessage('formue.kontanter')}
                 søkersVerdi={props.formue.søkers.kontanterBeløp ?? 0}
-                epsverdi={props.formue.eps ? props.formue.eps?.kontanterBeløp : null}
+                epsverdi={props.formue.eps ? props.formue.eps?.kontanterBeløp ?? 0 : null}
             />
             <FormueTrippel
                 label={formatMessage('formue.skylderNoenSøkerPengerBeløp')}
                 søkersVerdi={props.formue.søkers.skylderNoenMegPengerBeløp ?? 0}
-                epsverdi={props.formue.eps ? props.formue.eps.skylderNoenMegPengerBeløp : null}
+                epsverdi={props.formue.eps ? props.formue.eps.skylderNoenMegPengerBeløp ?? 0 : null}
             />
             <FormueTrippel
                 label={formatMessage('formue.depositumsBeløp')}

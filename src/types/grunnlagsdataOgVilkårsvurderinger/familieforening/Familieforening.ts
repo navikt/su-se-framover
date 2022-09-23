@@ -1,3 +1,6 @@
+import isEqual from 'lodash.isequal';
+
+import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
 import { Vilkårstatus } from '~src/types/Vilkår';
 
@@ -8,7 +11,7 @@ export interface Familiegjenforening {
 }
 
 export interface FamiliegjenforeningVurdering {
-    periode: Periode;
+    periode: Periode<string>;
     resultat: Vilkårstatus;
 }
 
@@ -17,3 +20,6 @@ export interface Familiegjenforeningrequest {
     behandlingId: string;
     vurderinger: Array<{ status: Vilkårstatus }>;
 }
+
+export const familiegjenforeningErLik = (ny: Nullable<Familiegjenforening>, gammel: Nullable<Familiegjenforening>) =>
+    isEqual(ny, gammel);

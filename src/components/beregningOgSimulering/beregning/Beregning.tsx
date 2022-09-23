@@ -20,8 +20,8 @@ import {
 } from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
 import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import BeregningFaktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
 import { SkattemeldingFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/skatt/SkattegrunnlagFaktablokk';
+import OppsummeringAvInntektOgPensjon from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -351,7 +351,14 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                 ),
                 right: (
                     <div>
-                        <BeregningFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvInntektOgPensjon
+                            inntektOgPensjon={{
+                                søkers: props.behandling.søknad.søknadInnhold.inntektOgPensjon,
+                                eps: props.behandling.søknad.søknadInnhold.ektefelle?.inntektOgPensjon,
+                            }}
+                        />
+
                         {skattemeldingToggle && (
                             <SkattemeldingFaktablokk
                                 søkerFnr={props.søker.fnr}

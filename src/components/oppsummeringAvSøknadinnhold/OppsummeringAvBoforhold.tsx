@@ -24,16 +24,22 @@ const OppsummeringAvBoforhold = (props: { boforhold: Boforhold; visesIVedtak?: b
             />
             {props.boforhold.delerBoligMedVoksne && (
                 <OppsummeringPar
-                    label={formatMessage('boforhold.delerBoligMedNoenOver18år')}
+                    label={formatMessage('boforhold.hvemDelerBoligMed')}
                     verdi={formatMessage(props.boforhold.delerBoligMed!)}
                 />
             )}
 
             {props.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
-                <OppsummeringPar
-                    label={formatMessage('boforhold.ektemakeEllerSamboerUførFlyktning')}
-                    verdi={formatMessage(`bool.${props.boforhold.ektefellePartnerSamboer!.erUførFlyktning!}`)}
-                />
+                <>
+                    <OppsummeringPar
+                        label={formatMessage('boforhold.epsFnr')}
+                        verdi={props.boforhold.ektefellePartnerSamboer!.fnr}
+                    />
+                    <OppsummeringPar
+                        label={formatMessage('boforhold.ektemakeEllerSamboerUførFlyktning')}
+                        verdi={formatMessage(`bool.${props.boforhold.ektefellePartnerSamboer!.erUførFlyktning!}`)}
+                    />
+                </>
             )}
         </div>
     );

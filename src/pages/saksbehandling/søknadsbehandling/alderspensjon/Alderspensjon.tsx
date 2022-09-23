@@ -1,6 +1,7 @@
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
-import { AlderspensjonBlokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/AlderspensjonFaktablokk';
+import OppsummeringAvAlderspensjon from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -9,12 +10,12 @@ import { AlderspensjonForm } from '~src/pages/saksbehandling/steg/alderspensjon/
 import { FormData } from '~src/pages/saksbehandling/steg/alderspensjon/types';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 
+import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './alderspensjon-nb';
-
-const Alderspensjon = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdAlder }) => {
-    const { formatMessage } = useI18n({ messages });
+const Alderspensjon = (props: VilkårsvurderingBaseProps) => {
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [lagreAlderspensjongrunnlagStatus, lagreAlderspensjongrunnlag] = useAsyncActionCreator(
         GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag
@@ -43,7 +44,16 @@ const Alderspensjon = (props: VilkårsvurderingBaseProps & { søknadInnhold: Sø
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: <AlderspensjonForm save={handleSave} savingState={lagreAlderspensjongrunnlagStatus} {...props} />,
-                right: <AlderspensjonBlokk harSøktAlderspensjon={props.søknadInnhold.harSøktAlderspensjon} />,
+                right: (
+                    <>
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvAlderspensjon
+                            alderspensjon={
+                                (props.behandling.søknad.søknadInnhold as SøknadInnholdAlder).harSøktAlderspensjon
+                            }
+                        />
+                    </>
+                ),
             }}
         </ToKolonner>
     );

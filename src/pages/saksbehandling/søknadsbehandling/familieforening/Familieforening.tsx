@@ -1,6 +1,7 @@
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
-import { FamilieforeningBlokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FamilieforeningFaktablokk';
+import OppsummeringAvOppholdstillatelseAlder from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvOppholdstillatelseAlder';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -9,12 +10,13 @@ import { FamilieforeningForm } from '~src/pages/saksbehandling/steg/familieforen
 import { FormData } from '~src/pages/saksbehandling/steg/familieforening/types';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 
+import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './familieforening-nb';
 
 const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdAlder }) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [lagreFamilieforeninggrunnlagStatus, lagreFamilieforeninggrunnlag] = useAsyncActionCreator(
         GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag
@@ -41,9 +43,14 @@ const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: S
                     />
                 ),
                 right: (
-                    <FamilieforeningBlokk
-                        familieforening={props.søknadInnhold.oppholdstillatelseAlder.familieforening}
-                    />
+                    <>
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvOppholdstillatelseAlder
+                            oppholdstillatelse={
+                                (props.behandling.søknad.søknadInnhold as SøknadInnholdAlder).oppholdstillatelseAlder
+                            }
+                        />
+                    </>
                 ),
             }}
         </ToKolonner>

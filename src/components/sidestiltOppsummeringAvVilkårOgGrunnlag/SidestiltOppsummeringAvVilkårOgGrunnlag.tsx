@@ -5,10 +5,15 @@ import React from 'react';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Fradrag, fradragErlik } from '~src/types/Fradrag';
+import { Aldersvilkår, aldersvilkårErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import {
     Bosituasjon,
     bosituasjonErlik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import {
+    Familiegjenforening,
+    familiegjenforeningErLik,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
 import {
     fastOppholdErLik,
     FastOppholdVilkår,
@@ -37,28 +42,35 @@ import {
     UtenlandsoppholdVilkår,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import {
+    Alderspensjon,
     Boforhold,
     Flyktningstatus,
     Formue,
     ForNav,
     InnlagtPåInstitusjon,
     Oppholdstillatelse,
+    OppholdstillatelseAlder,
     SøknadInnhold,
+    SøknadInnholdAlder,
     SøknadInnholdUføre,
     Uførevedtak,
     Utenlandsopphold,
 } from '~src/types/Søknadinnhold';
-import { isUføresøknad } from '~src/utils/søknad/søknadUtils';
+import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
 
+import OppsummeringAvAlderspensjon from '../oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
 import OppsummeringAvBoforhold from '../oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
 import OppsummeringAvFlyktningstatus from '../oppsummeringAvSøknadinnhold/OppsummeringAvFlyktningstatus';
 import OppsummeringAvFormue from '../oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
 import OppsummeringAvForNav from '../oppsummeringAvSøknadinnhold/OppsummeringAvForNav';
 import OppsummeringAvInnlagtPåInstitusjon from '../oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon';
 import OppsummeringAvOpphold from '../oppsummeringAvSøknadinnhold/OppsummeringAvOpphold';
+import OppsummeringAvOppholdstillatelseAlder from '../oppsummeringAvSøknadinnhold/OppsummeringAvOppholdstillatelseAlder';
 import OppsummeringAvUføre from '../oppsummeringAvSøknadinnhold/OppsummeringAvUføre';
 import OppsummeringAvUtenlandsoppholdSøknad from '../oppsummeringAvSøknadinnhold/OppsummeringAvUtenlandsopphold';
+import OppsummeringAvAldersvilkår from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvAldersvilkår';
 import OppsummeringAvBosituasjongrunnlag from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
+import OppsummeringAvFamiliegjenforening from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFamiliegjenforening';
 import OppsummeringAvFastOppholdvilkår from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
 import OppsummeringAvFlyktningvilkår from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import OppsummeringAvFormueVilkår from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
@@ -100,32 +112,68 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                 )}
             </div>
             <Accordion>
-                <AccordionItemUføre
-                    uføreFraGrunnlagsdata={props.grunnlagsdataOgVilkårsvurderinger.uføre}
-                    sidestiltUførevilkår={
-                        sidestiltMedGrunnlagOgVilkår
-                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).uføre
-                            : undefined
-                    }
-                    sidestiltUføreFraSøknad={
-                        sidestiltMedSøknad && isUføresøknad(props.visesSidestiltMed as SøknadInnhold)
-                            ? (props.visesSidestiltMed as SøknadInnholdUføre).uførevedtak
-                            : undefined
-                    }
-                />
-                <AccordionItemFlyktning
-                    flyktningFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.flyktning}
-                    sidestiltFlyktningVilkår={
-                        sidestiltMedGrunnlagOgVilkår
-                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).flyktning
-                            : undefined
-                    }
-                    sidestiltFlyktningFraSøknad={
-                        sidestiltMedSøknad && isUføresøknad(props.visesSidestiltMed as SøknadInnhold)
-                            ? (props.visesSidestiltMed as SøknadInnholdUføre).flyktningsstatus
-                            : undefined
-                    }
-                />
+                {props.grunnlagsdataOgVilkårsvurderinger.uføre && (
+                    <AccordionItemUføre
+                        uføreFraGrunnlagsdata={props.grunnlagsdataOgVilkårsvurderinger.uføre}
+                        sidestiltUførevilkår={
+                            sidestiltMedGrunnlagOgVilkår
+                                ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).uføre
+                                : undefined
+                        }
+                        sidestiltUføreFraSøknad={
+                            sidestiltMedSøknad && isUføresøknad(props.visesSidestiltMed as SøknadInnhold)
+                                ? (props.visesSidestiltMed as SøknadInnholdUføre).uførevedtak
+                                : undefined
+                        }
+                    />
+                )}
+                {props.grunnlagsdataOgVilkårsvurderinger.flyktning && (
+                    <AccordionItemFlyktning
+                        flyktningFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.flyktning}
+                        sidestiltFlyktningVilkår={
+                            sidestiltMedGrunnlagOgVilkår
+                                ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).flyktning
+                                : undefined
+                        }
+                        sidestiltFlyktningFraSøknad={
+                            sidestiltMedSøknad && isUføresøknad(props.visesSidestiltMed as SøknadInnhold)
+                                ? (props.visesSidestiltMed as SøknadInnholdUføre).flyktningsstatus
+                                : undefined
+                        }
+                    />
+                )}
+                {props.grunnlagsdataOgVilkårsvurderinger.pensjon && (
+                    <AccordionItemAldersvilkår
+                        aldersvilkårFraGrunnlagsdata={props.grunnlagsdataOgVilkårsvurderinger.pensjon}
+                        sidestiltAldersvilkår={
+                            sidestiltMedGrunnlagOgVilkår
+                                ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).pensjon
+                                : undefined
+                        }
+                        sidestiltAlderspensjon={
+                            sidestiltMedSøknad && isAldersøknad(props.visesSidestiltMed as SøknadInnhold)
+                                ? (props.visesSidestiltMed as SøknadInnholdAlder).harSøktAlderspensjon
+                                : undefined
+                        }
+                    />
+                )}
+                {props.grunnlagsdataOgVilkårsvurderinger.familiegjenforening && (
+                    <AccordionItemFamiliegjenforening
+                        familiegjenforeningFraGrunnlagsdata={
+                            props.grunnlagsdataOgVilkårsvurderinger.familiegjenforening
+                        }
+                        sidestiltFamiliegjenforening={
+                            sidestiltMedGrunnlagOgVilkår
+                                ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).familiegjenforening
+                                : undefined
+                        }
+                        sidestiltOppholdstillatelseAlder={
+                            sidestiltMedSøknad && isAldersøknad(props.visesSidestiltMed as SøknadInnhold)
+                                ? (props.visesSidestiltMed as SøknadInnholdAlder).oppholdstillatelseAlder
+                                : undefined
+                        }
+                    />
+                )}
                 <AccordionItemLovligOpphold
                     lovligOppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.lovligOpphold}
                     sidestiltLovligOppholdVilkår={
@@ -300,6 +348,93 @@ const AccordionItemFlyktning = (props: {
                 )}
                 {props.sidestiltFlyktningFraSøknad && (
                     <OppsummeringAvFlyktningstatus flyktningstatus={props.sidestiltFlyktningFraSøknad} visesIVedtak />
+                )}
+            </Accordion.Content>
+        </Accordion.Item>
+    );
+};
+
+const AccordionItemAldersvilkår = (props: {
+    aldersvilkårFraGrunnlagsdata: Nullable<Aldersvilkår>;
+    sidestiltAldersvilkår?: Nullable<Aldersvilkår>;
+    sidestiltAlderspensjon?: Alderspensjon;
+}) => {
+    const { formatMessage } = useI18n({ messages });
+    const harEndretAldersvilkår =
+        props.sidestiltAldersvilkår &&
+        !aldersvilkårErLik(props.aldersvilkårFraGrunnlagsdata, props.sidestiltAldersvilkår);
+
+    return (
+        <Accordion.Item>
+            <Accordion.Header>
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.aldersvilkårFraGrunnlagsdata?.resultat ?? null} />
+                        {formatMessage('accordion.header.alderspensjon')}
+                    </div>
+                    {harEndretAldersvilkår && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
+                </div>
+            </Accordion.Header>
+            <Accordion.Content className={styles.accordionContent}>
+                <OppsummeringAvAldersvilkår aldersvilkår={props.aldersvilkårFraGrunnlagsdata} visesIVedtak />
+                {props.sidestiltAldersvilkår && (
+                    <OppsummeringAvAldersvilkår aldersvilkår={props.sidestiltAldersvilkår} visesIVedtak />
+                )}
+                {props.sidestiltAlderspensjon && (
+                    <OppsummeringAvAlderspensjon alderspensjon={props.sidestiltAlderspensjon} visesIVedtak />
+                )}
+            </Accordion.Content>
+        </Accordion.Item>
+    );
+};
+
+const AccordionItemFamiliegjenforening = (props: {
+    familiegjenforeningFraGrunnlagsdata: Nullable<Familiegjenforening>;
+    sidestiltFamiliegjenforening?: Nullable<Familiegjenforening>;
+    sidestiltOppholdstillatelseAlder?: OppholdstillatelseAlder;
+}) => {
+    const { formatMessage } = useI18n({ messages });
+    const harEndretFamiliegjenforening =
+        props.sidestiltFamiliegjenforening &&
+        !familiegjenforeningErLik(props.familiegjenforeningFraGrunnlagsdata, props.sidestiltFamiliegjenforening);
+
+    return (
+        <Accordion.Item>
+            <Accordion.Header>
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon
+                            resultat={props.familiegjenforeningFraGrunnlagsdata?.resultat ?? null}
+                        />
+                        {formatMessage('accordion.header.familiegjenforening')}
+                    </div>
+                    {harEndretFamiliegjenforening && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
+                </div>
+            </Accordion.Header>
+            <Accordion.Content className={styles.accordionContent}>
+                <OppsummeringAvFamiliegjenforening
+                    familiegjenforening={props.familiegjenforeningFraGrunnlagsdata}
+                    visesIVedtak
+                />
+                {props.sidestiltFamiliegjenforening && (
+                    <OppsummeringAvFamiliegjenforening
+                        familiegjenforening={props.sidestiltFamiliegjenforening}
+                        visesIVedtak
+                    />
+                )}
+                {props.sidestiltOppholdstillatelseAlder && (
+                    <OppsummeringAvOppholdstillatelseAlder
+                        oppholdstillatelse={props.sidestiltOppholdstillatelseAlder}
+                        visesIVedtak
+                    />
                 )}
             </Accordion.Content>
         </Accordion.Item>

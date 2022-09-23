@@ -1,6 +1,8 @@
 import { personligOppmøteÅrsakTekster } from '~src/typeMappinger/PersonligOppmøteÅrsak';
 import {
+    aldersresultatMessages,
     opplysningspliktStatusMessages,
+    pensjonsOpplysningerUtvidetSvarMessages,
     uførevilkårstatusMessages,
     utenlandsoppholdStatusMessages,
     vilkårstatusMessages,
@@ -15,6 +17,16 @@ export default {
     'uførhet.vilkår.erOppfylt': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
     'uførhet.grunnlag.uføregrad': 'Uføregrad',
     'uførhet.grunnlag.forventetInntekt': 'Forventet inntekt etter uførhet',
+
+    'alderspensjon.søktOmAlderspensjon': 'Har søker søkt om alderspensjon og fått svar på søknaden?',
+    'alderspensjon.søktOmAndrePensjonsordninger':
+        'Har søker søkt om andre norske pensjonsordninger og fått svar på søknaden?',
+    'alderspensjon.søktOmPensjonIUtlandet': 'Har søker søkt om pensjon i utlandet og fått svar på søknaden?',
+    ...pensjonsOpplysningerUtvidetSvarMessages,
+    ...aldersresultatMessages,
+
+    'familiegjenforening.gjenforentMedFamilieMedlemmer':
+        'Familiegjenforening med barn/barnebarn/nevø/niese og de har garantert underholdet?',
 
     'bosituasjon.sats': 'Sats',
     'bosituasjon.harEPS': 'Har søker ektefelle eller samboer?',
