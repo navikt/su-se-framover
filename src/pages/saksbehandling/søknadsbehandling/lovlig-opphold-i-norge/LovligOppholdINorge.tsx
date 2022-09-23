@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import { LovligOppholdFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/LovligOppholdFaktablokk';
+import OppsummeringAvOpphold from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvOpphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import LovligOppholdForm from '~src/components/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
 import {
@@ -79,7 +80,14 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         {...props}
                     />
                 ),
-                right: <LovligOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: (
+                    <>
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvOpphold
+                            oppholdstillatelse={props.behandling.søknad.søknadInnhold.oppholdstillatelse}
+                        />
+                    </>
+                ),
             }}
         </ToKolonner>
     );

@@ -20,12 +20,13 @@ import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uf
 import { SøknadInnholdUføre } from '~src/types/Søknadinnhold';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
+import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './uførhet-nb';
 
 const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreUføregrunnlag);
     const form = useForm<UførhetFormData>({
@@ -80,7 +81,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                 ),
                 right: (
                     <>
-                        <Heading size={'small'}>Fra søknad</Heading>
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
                         <OppsummeringAvUføre uføre={props.søknadInnhold.uførevedtak} />
                     </>
                 ),

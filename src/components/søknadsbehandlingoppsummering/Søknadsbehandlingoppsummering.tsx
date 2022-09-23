@@ -2,8 +2,6 @@ import { Heading, Label, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 
 import VisBeregningOgSimulering from '~src/components/beregningOgSimulering/BeregningOgSimulering';
-import { SatsVilkårsblokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
-import VilkårsOppsummering from '~src/components/oppsummering/vilkårsOppsummering/VilkårsOppsummering';
 import { useI18n } from '~src/lib/i18n';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -27,8 +25,6 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     const periode = props.behandling.stønadsperiode?.periode;
 
-    const visVilkårSomAccordions = true;
-
     return (
         <div>
             <SøknadsbehandlingHeader
@@ -46,25 +42,12 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
                 </Heading>
             </div>
 
-            {visVilkårSomAccordions ? (
-                <div className={styles.sidestiltOppsummeringContainer}>
-                    <SidestiltOppsummeringAvVilkårOgGrunnlag
-                        grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
-                        visesSidestiltMed={props.behandling.søknad.søknadInnhold}
-                    />
-                </div>
-            ) : (
-                <>
-                    <VilkårsOppsummering
-                        grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
-                        søknadInnhold={props.behandling.søknad.søknadInnhold}
-                    />
-                    <SatsVilkårsblokk
-                        bosituasjon={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
-                        søknadInnhold={props.behandling.søknad.søknadInnhold}
-                    />
-                </>
-            )}
+            <div className={styles.sidestiltOppsummeringContainer}>
+                <SidestiltOppsummeringAvVilkårOgGrunnlag
+                    grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
+                    visesSidestiltMed={props.behandling.søknad.søknadInnhold}
+                />
+            </div>
 
             {props.behandling.beregning ? (
                 <Panel border>

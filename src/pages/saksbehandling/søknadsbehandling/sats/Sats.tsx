@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchPerson, Person } from '~src/api/personApi';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
-import { SatsFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
+import OppsummeringAvBoforhold from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
 import { Personkort } from '~src/components/personkort/Personkort';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -294,7 +294,7 @@ const SatsForm = (props: SatsProps) => {
                         </>
                     </FormWrapper>
                 ),
-                right: <SatsFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: <OppsummeringAvBoforhold boforhold={props.behandling.søknad.søknadInnhold.boforhold} />,
             }}
         </ToKolonner>
     );

@@ -1,19 +1,41 @@
+import { InformationColored } from '@navikt/ds-icons';
 import { Accordion, Heading } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { Fradrag } from '~src/types/Fradrag';
-import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { FastOppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
-import { FlyktningVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
-import { FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { Fradrag, fradragErlik } from '~src/types/Fradrag';
+import {
+    Bosituasjon,
+    bosituasjonErlik,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import {
+    fastOppholdErLik,
+    FastOppholdVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
+import {
+    flyktningErLik,
+    FlyktningVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
+import { formueErlik, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InstitusjonsoppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
-import { LovligOppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
-import { PersonligOppmøteVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
-import { UføreVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { UtenlandsoppholdVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import {
+    institusjonsoppholdErLik,
+    InstitusjonsoppholdVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold';
+import {
+    lovligOppholdErLik,
+    LovligOppholdVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
+import {
+    personligOppmøteErLik,
+    PersonligOppmøteVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
+import { uføreErlik, UføreVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import {
+    utenlandsoppholdErlik,
+    UtenlandsoppholdVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import {
     Boforhold,
     Flyktningstatus,
@@ -173,12 +195,12 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                 />
                 <AccordionItemPersonligOppmøte
                     personligOppmøteFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
-                    sitestiltPersonligOppmøte={
+                    sidestiltPersonligOppmøte={
                         sidestiltMedGrunnlagOgVilkår
                             ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).personligOppmøte
                             : undefined
                     }
-                    sitestiltForNav={sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).forNav : undefined}
+                    sidestiltForNav={sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).forNav : undefined}
                 />
                 <AccordionItemBosituasjon
                     bosituasjonFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
@@ -216,13 +238,22 @@ const AccordionItemUføre = (props: {
     sidestiltUføreFraSøknad?: Uførevedtak;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretUføre =
+        props.sidestiltUførevilkår && !uføreErlik(props.uføreFraGrunnlagsdata, props.sidestiltUførevilkår);
 
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>
-                    <VilkårResultatStatusIkon resultat={props.uføreFraGrunnlagsdata?.resultat ?? null} />
-                    {formatMessage('accordion.header.uføre')}
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.uføreFraGrunnlagsdata?.resultat ?? null} />
+                        {formatMessage('accordion.header.uføre')}
+                    </div>
+                    {harEndretUføre && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
                 </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
@@ -244,12 +275,22 @@ const AccordionItemFlyktning = (props: {
     sidestiltFlyktningFraSøknad?: Flyktningstatus;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretFlyktning =
+        props.sidestiltFlyktningVilkår && !flyktningErLik(props.flyktningFraGrunnlag, props.sidestiltFlyktningVilkår);
+
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>
-                    <VilkårResultatStatusIkon resultat={props.flyktningFraGrunnlag?.resultat ?? null} />
-                    {formatMessage('accordion.header.flyktning')}
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.flyktningFraGrunnlag?.resultat ?? null} />
+                        {formatMessage('accordion.header.flyktning')}
+                    </div>
+                    {harEndretFlyktning && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
                 </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
@@ -271,12 +312,23 @@ const AccordionItemLovligOpphold = (props: {
     sidestiltOppholdstillatelseFraSøknad?: Oppholdstillatelse;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretLovligOpphold =
+        props.sidestiltLovligOppholdVilkår &&
+        !lovligOppholdErLik(props.lovligOppholdFraGrunnlag, props.sidestiltLovligOppholdVilkår);
+
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>
-                    <VilkårResultatStatusIkon resultat={props.lovligOppholdFraGrunnlag?.resultat ?? null} />
-                    {formatMessage('accordion.header.lovligOpphold')}
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.lovligOppholdFraGrunnlag?.resultat ?? null} />
+                        {formatMessage('accordion.header.lovligOpphold')}
+                    </div>
+                    {harEndretLovligOpphold && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
                 </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
@@ -304,12 +356,23 @@ const AccordionItemFastOpphold = (props: {
     sidestiltOppholdstillatelseFraSøknad?: { oppholdstillatelse: Oppholdstillatelse; boforhold: Boforhold };
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretFastOpphold =
+        props.sidestiltFastOppholdVilkår &&
+        !fastOppholdErLik(props.fastOppholdFraGrunnlag, props.sidestiltFastOppholdVilkår);
+
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>
-                    <VilkårResultatStatusIkon resultat={props.fastOppholdFraGrunnlag?.resultat ?? null} />
-                    {formatMessage('accordion.header.fastOpphold')}
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.fastOppholdFraGrunnlag?.resultat ?? null} />
+                        {formatMessage('accordion.header.fastOpphold')}
+                    </div>
+                    {harEndretFastOpphold && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
                 </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
@@ -335,12 +398,23 @@ const AccordionItemInstitusjonsopphold = (props: {
     sidestiltInstitusjonsoppholdFraSøknad?: Nullable<InnlagtPåInstitusjon>;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretInstitusjonsopphold =
+        props.sidestiltInstitusjonsopphold &&
+        !institusjonsoppholdErLik(props.institusjonsoppholdFraGrunnlag, props.sidestiltInstitusjonsopphold);
+
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>
-                    <VilkårResultatStatusIkon resultat={props.institusjonsoppholdFraGrunnlag?.resultat ?? null} />
-                    {formatMessage('accordion.header.institusjonsopphold')}
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.institusjonsoppholdFraGrunnlag?.resultat ?? null} />
+                        {formatMessage('accordion.header.institusjonsopphold')}
+                    </div>
+                    {harEndretInstitusjonsopphold && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
                 </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
@@ -371,12 +445,23 @@ const AccordionItemUtenlandsopphold = (props: {
     sidestiltUtenlandsoppholdFraSøknad?: Nullable<Utenlandsopphold>;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretUtenlandsopphold =
+        props.sidestiltUtenlandsopphold &&
+        !utenlandsoppholdErlik(props.utenlandsoppholdFraGrunnlag, props.sidestiltUtenlandsopphold);
+
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>
-                    <VilkårResultatStatusIkon resultat={props.utenlandsoppholdFraGrunnlag?.status ?? null} />
-                    {formatMessage('accordion.header.utenlandsopphold')}
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.utenlandsoppholdFraGrunnlag?.status ?? null} />
+                        {formatMessage('accordion.header.utenlandsopphold')}
+                    </div>
+                    {harEndretUtenlandsopphold && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
                 </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
@@ -404,12 +489,20 @@ const AccordionItemFormue = (props: {
     };
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretFormue = props.sidestiltFormue && !formueErlik(props.formueFraGrunnlag, props.sidestiltFormue);
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>
-                    <VilkårResultatStatusIkon resultat={props.formueFraGrunnlag.resultat ?? null} />
-                    {formatMessage('accordion.header.formue')}
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.formueFraGrunnlag.resultat ?? null} />
+                        {formatMessage('accordion.header.formue')}
+                    </div>
+                    {harEndretFormue && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
                 </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
@@ -425,16 +518,27 @@ const AccordionItemFormue = (props: {
 
 const AccordionItemPersonligOppmøte = (props: {
     personligOppmøteFraGrunnlag: Nullable<PersonligOppmøteVilkår>;
-    sitestiltPersonligOppmøte?: Nullable<PersonligOppmøteVilkår>;
-    sitestiltForNav?: ForNav;
+    sidestiltPersonligOppmøte?: Nullable<PersonligOppmøteVilkår>;
+    sidestiltForNav?: ForNav;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretPersonligOppmøte =
+        props.sidestiltPersonligOppmøte &&
+        !personligOppmøteErLik(props.personligOppmøteFraGrunnlag, props.sidestiltPersonligOppmøte);
+
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>
-                    <VilkårResultatStatusIkon resultat={props.personligOppmøteFraGrunnlag?.resultat ?? null} />
-                    {formatMessage('accordion.header.personligOppmøte')}
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>
+                        <VilkårResultatStatusIkon resultat={props.personligOppmøteFraGrunnlag?.resultat ?? null} />
+                        {formatMessage('accordion.header.personligOppmøte')}
+                    </div>
+                    {harEndretPersonligOppmøte && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
                 </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
@@ -442,13 +546,13 @@ const AccordionItemPersonligOppmøte = (props: {
                     personligoppmøte={props.personligOppmøteFraGrunnlag}
                     visesIVedtak
                 />
-                {props.sitestiltPersonligOppmøte && (
+                {props.sidestiltPersonligOppmøte && (
                     <OppsummeringAvPersonligoppmøtevilkår
-                        personligoppmøte={props.sitestiltPersonligOppmøte}
+                        personligoppmøte={props.sidestiltPersonligOppmøte}
                         visesIVedtak
                     />
                 )}
-                {props.sitestiltForNav && <OppsummeringAvForNav forNav={props.sitestiltForNav} visesIVedtak />}
+                {props.sidestiltForNav && <OppsummeringAvForNav forNav={props.sidestiltForNav} visesIVedtak />}
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -460,10 +564,20 @@ const AccordionItemBosituasjon = (props: {
     boforholdFraSøknad?: Boforhold;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretBosituasjon =
+        props.sidestiltBosituasjon && !bosituasjonErlik(props.bosituasjonFraGrunnlag, props.sidestiltBosituasjon);
+
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.bosituasjon')}</div>
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.bosituasjon')}</div>
+                    {harEndretBosituasjon && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
+                </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvBosituasjongrunnlag bosituasjon={props.bosituasjonFraGrunnlag} visesIVedtak />
@@ -480,11 +594,19 @@ const AccordionItemBosituasjon = (props: {
 
 const AccordionItemFradrag = (props: { fradragFraGrunnlag: Fradrag[]; sidestiltFradrag: Fradrag[] }) => {
     const { formatMessage } = useI18n({ messages });
+    const harEndretFradrag = !fradragErlik(props.fradragFraGrunnlag, props.sidestiltFradrag);
 
     return (
         <Accordion.Item>
             <Accordion.Header>
-                <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.inntekt')}</div>
+                <div className={styles.accordionHeaderContentContainer}>
+                    <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.inntekt')}</div>
+                    {harEndretFradrag && (
+                        <div className={styles.accordionHeaderContent}>
+                            <InformationColored width={'1.2em'} height={'1.2em'} />
+                        </div>
+                    )}
+                </div>
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvFradrag fradrag={props.fradragFraGrunnlag} visesIVedtak />

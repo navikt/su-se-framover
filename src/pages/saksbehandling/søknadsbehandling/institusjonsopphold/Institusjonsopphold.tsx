@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import { InstitusjonsoppholdBlokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
+import OppsummeringAvInnlagtPåInstitusjon from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import InstitusjonsoppholdForm from '~src/components/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdForm';
 import {
@@ -85,7 +86,14 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                         {...props}
                     />
                 ),
-                right: <InstitusjonsoppholdBlokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: (
+                    <>
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvInnlagtPåInstitusjon
+                            innlagtPåInstitusjon={props.behandling.søknad.søknadInnhold.boforhold.innlagtPåInstitusjon}
+                        />
+                    </>
+                ),
             }}
         </ToKolonner>
     );

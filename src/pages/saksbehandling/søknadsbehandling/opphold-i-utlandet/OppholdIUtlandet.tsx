@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import { UtenlandsOppholdFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
+import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvUtenlandsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import UtenlandsoppholdForm from '~src/components/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdForm';
 import {
@@ -84,7 +85,14 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                         {...props}
                     />
                 ),
-                right: <UtenlandsOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: (
+                    <>
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvUtenlandsopphold
+                            utenlandsopphold={props.behandling.søknad.søknadInnhold.utenlandsopphold}
+                        />
+                    </>
+                ),
             }}
         </ToKolonner>
     );

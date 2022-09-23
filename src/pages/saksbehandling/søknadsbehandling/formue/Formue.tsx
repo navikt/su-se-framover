@@ -1,13 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import * as personApi from '~src/api/personApi';
-import { FormueFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { SkattemeldingFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/skatt/SkattegrunnlagFaktablokk';
+import OppsummeringAvFormue from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import BosituasjonFormIntegrertMedFormue from '~src/components/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormIntegrertMedFormue';
 import FormueForm from '~src/components/vilkårOgGrunnlagForms/formue/FormueForm';
@@ -138,7 +139,13 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }
                 ),
                 right: (
                     <div>
-                        <FormueFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvFormue
+                            formue={{
+                                søkers: props.behandling.søknad.søknadInnhold.formue,
+                                eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
+                            }}
+                        />
                         {skattemeldingToggle && (
                             <SkattemeldingFaktablokk
                                 kategori={SkattegrunnlagKategori.FORMUE}

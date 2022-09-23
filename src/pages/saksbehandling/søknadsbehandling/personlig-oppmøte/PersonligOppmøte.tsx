@@ -1,11 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import { PersonligOppmøteFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
+import OppsummeringAvForNav from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvForNav';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import PersonligOppmøteForm from '~src/components/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteForm';
 import {
@@ -122,7 +122,12 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                         </div>
                     </PersonligOppmøteForm>
                 ),
-                right: <PersonligOppmøteFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: (
+                    <>
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvForNav forNav={props.behandling.søknad.søknadInnhold.forNav} />
+                    </>
+                ),
             }}
         </ToKolonner>
     );

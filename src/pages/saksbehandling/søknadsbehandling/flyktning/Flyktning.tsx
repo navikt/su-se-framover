@@ -1,10 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import { FlyktningFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
+import OppsummeringAvFlyktningstatus from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvFlyktningstatus';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import FlyktningForm from '~src/components/vilkårOgGrunnlagForms/flyktning/FlyktningForm';
 import {
@@ -102,7 +102,12 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                         )}
                     </FlyktningForm>
                 ),
-                right: <FlyktningFaktablokk søknadInnhold={props.søknadInnhold} />,
+                right: (
+                    <>
+                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvFlyktningstatus flyktningstatus={props.søknadInnhold.flyktningsstatus} />
+                    </>
+                ),
             }}
         </ToKolonner>
     );

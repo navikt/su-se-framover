@@ -4,6 +4,7 @@ import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import * as React from 'react';
 
+import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { pipe, maxBy } from '~src/lib/fp';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
@@ -20,7 +21,6 @@ import {
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
-import Vedtaksinformasjon from '../vedtaksinformasjon/Vedtaksinformasjon';
 
 import messages from './oppsummeringsblokk-nb';
 import * as styles from './oppsummeringsblokk.module.less';
@@ -91,9 +91,9 @@ const Oppsummeringsblokk = (props: {
         >
             <div className={styles.container}>
                 <Intro revurdering={props.revurdering} />
-                <Vedtaksinformasjon
-                    revurdering={props.revurdering}
-                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+                <SidestiltOppsummeringAvVilkårOgGrunnlag
+                    grunnlagsdataOgVilkårsvurderinger={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
+                    visesSidestiltMed={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             </div>
         </Oppsummeringspanel>
