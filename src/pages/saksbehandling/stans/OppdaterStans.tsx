@@ -15,7 +15,7 @@ import * as Routes from '~src/lib/routes';
 import { OpprettetRevurderingGrunn } from '~src/types/Revurdering';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 
-import styles from './Stans.module.less';
+import styles from './StansStyles.module.less';
 
 const OppdaterStans = () => {
     const props = useOutletContext<AttesteringContext>();

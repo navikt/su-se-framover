@@ -7,7 +7,7 @@ import * as routes from '~src/lib/routes';
 import { SaksoversiktContext } from '~src/utils/router/routerUtils';
 
 import messages from './stans-nb';
-import styles from './Stans.module.less';
+import styles from './StansStyles.module.less';
 
 const OpprettStansPage = React.lazy(() => import('~src/pages/saksbehandling/stans/OpprettStansPage'));
 const OppdaterStans = React.lazy(() => import('~src/pages/saksbehandling/stans/OppdaterStans'));

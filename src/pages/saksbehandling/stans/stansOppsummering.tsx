@@ -18,7 +18,7 @@ import { erUtbetalingsrevurdering } from '~src/utils/revurdering/revurderingUtil
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './stans-nb';
-import styles from './Stans.module.less';
+import styles from './StansStyles.module.less';
 
 const StansOppsummering = (props: { revurdering?: Revurdering }) => {
     const contextProps = useOutletContext<AttesteringContext>();
