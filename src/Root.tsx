@@ -32,8 +32,6 @@ const Behandlingsoversikt = React.lazy(
     () => import('~/src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt')
 );
 const Soknad = React.lazy(() => import('~/src/pages/søknad'));
-const Gjenoppta = React.lazy(() => import('~/src/pages/saksbehandling/stans/gjenoppta/gjenoppta'));
-const StansOppsummering = React.lazy(() => import('~src/pages/saksbehandling/stans/stansOppsummering'));
 const SendTilAttesteringPage = React.lazy(
     () => import('~/src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
 );
@@ -42,17 +40,15 @@ const AvsluttBehandling = React.lazy(() => import('~/src/pages/saksbehandling/av
 const Revurdering = React.lazy(() => import('~/src/pages/saksbehandling/revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('~/src/pages/saksbehandling/sakintro/Sakintro'));
 const DokumenterPage = React.lazy(() => import('~src/pages/saksbehandling/dokumenter/DokumenterPage'));
-const StansPage = React.lazy(() => import('~/src/pages/saksbehandling/stans/Stans'));
 const OpprettKlage = React.lazy(() => import('~src/pages/klage/opprettKlage/OpprettKlage'));
 const Klage = React.lazy(() => import('~src/pages/klage/Klage'));
 const NyDatoForKontrollsamtale = React.lazy(() => import('~src/pages/kontrollsamtale/KontrollsamtalePage'));
 const RevurderingIntroPage = React.lazy(
     () => import('~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage')
 );
-const GjenopptaOppsummering = React.lazy(
-    () => import('~src/pages/saksbehandling/stans/gjenoppta/gjenopptaOppsummering')
-);
 const ManuellReguleringPage = React.lazy(() => import('~src/pages/saksbehandling/regulering/ManuellRegulering'));
+const Stans = React.lazy(() => import('~src/pages/saksbehandling/stans/Stans'));
+const Gjenoppta = React.lazy(() => import('~src/pages/saksbehandling/gjenoppta/Gjenoppta'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -102,16 +98,9 @@ const AppRoutes = () => (
                 <Route path={routes.klageOpprett.path} element={<OpprettKlage />} />
                 <Route path={routes.klage.path} element={<Klage />} />
             </Route>
-            <Route path={routes.stansRoot.path}>
-                <Route index element={<StansPage />} />
-                <Route path={routes.stansRoute.path} element={<StansPage />} />
-                <Route path={routes.stansOppsummeringRoute.path} element={<StansOppsummering />} />
-            </Route>
-            <Route path={routes.gjenopptaStansRoot.path}>
-                <Route index element={<Gjenoppta />} />
-                <Route path={routes.gjenopptaStansRoute.path} element={<Gjenoppta />} />
-                <Route path={routes.gjenopptaStansOppsummeringRoute.path} element={<GjenopptaOppsummering />} />
-            </Route>
+            <Route path={routes.stansRoot.path} element={<Stans />} />
+            <Route path={routes.gjenopptaStansRoot.path} element={<Gjenoppta />} />
+
             <Route>
                 <Route path={routes.attesterSøknadsbehandling.path} element={<AttesterSøknadsbehandling />} />
                 <Route path={routes.attesterRevurdering.path} element={<AttesterRevurdering />} />

@@ -10,6 +10,8 @@ export default {
     'stans.oppsummering.error.fant.ingen': 'Fant ingen revurdering',
     'stans.oppsummering.error.ikke.simulert': 'Revurderingen er ikke simulert',
     'stans.oppsummering.iverksett': 'Stans utbetaling',
+    'stans.oppsummering.feilRevurderingstype':
+        'Prøvde å gjenoppta en revurdering som ikke er av typen "Utbetalingsrevurdering"',
 
     'stans.notification': 'Utbetalinger har blitt stoppet',
     'stans.error.ukjentFeil': 'Ukjent feil',

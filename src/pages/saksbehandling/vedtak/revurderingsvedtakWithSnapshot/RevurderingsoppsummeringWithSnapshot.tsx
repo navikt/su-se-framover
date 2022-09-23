@@ -7,9 +7,11 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
-import { MessageFormatter } from '~src/lib/i18n';
+import { useI18n } from '~src/lib/i18n';
 import { InformasjonsRevurdering } from '~src/types/Revurdering';
 import { erRevurderingTilbakekreving } from '~src/utils/revurdering/revurderingUtils';
+
+import messages from '../vedtaksoppsummering-nb';
 
 import * as styles from './revurderingsoppsummeringWithSnapshot.module.less';
 
@@ -17,10 +19,9 @@ const RevurderingsoppsummeringWithSnapshot = (props: {
     revurdering: InformasjonsRevurdering;
     sakId: string;
     vedtakId: string;
-    formatMessage: MessageFormatter<{ tilbakekreving: string }>;
 }) => {
     const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
-
+    const { formatMessage } = useI18n({ messages });
     useEffect(() => {
         hentRevurderingSnapshot({ sakId: props.sakId, vedtakId: props.vedtakId });
     }, []);
@@ -41,7 +42,7 @@ const RevurderingsoppsummeringWithSnapshot = (props: {
                             />
                             {erRevurderingTilbakekreving(props.revurdering) && (
                                 <Alert className={styles.tilbakekrevingAlert} variant={'info'}>
-                                    {props.formatMessage('tilbakekreving')}
+                                    {formatMessage('tilbakekreving')}
                                 </Alert>
                             )}
                         </>

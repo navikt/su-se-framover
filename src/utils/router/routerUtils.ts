@@ -5,3 +5,8 @@ export interface AttesteringContext {
     sak: Sak;
     søker: Person;
 }
+
+export interface SaksoversiktContext {
+    sak: Sak;
+    søker: Person;
+}

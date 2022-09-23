@@ -21,6 +21,7 @@ import {
     TilbakekrevingsAvgjørelse,
     Tilbakekrevingsbehandling,
     UnderkjentRevurdering,
+    UtbetalingsRevurdering,
     UtbetalingsRevurderingStatus,
     Vurderingstatus,
 } from '~src/types/Revurdering';
@@ -29,6 +30,14 @@ import { Simulering, SimulertUtbetalingstype } from '~src/types/Simulering';
 export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
     return 'fritekstTilBrev' in r && 'informasjonSomRevurderes' in r;
 };
+
+export const erUtbetalingsrevurdering = (r: Revurdering): r is UtbetalingsRevurdering =>
+    r.status === UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK ||
+    r.status === UtbetalingsRevurderingStatus.AVSLUTTET_STANS ||
+    r.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK ||
+    r.status === UtbetalingsRevurderingStatus.IVERKSATT_STANS ||
+    r.status === UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK ||
+    r.status === UtbetalingsRevurderingStatus.SIMULERT_STANS;
 
 export const hentAvkortingFraRevurdering = (r: Revurdering): Nullable<SimuleringForAvkortingsvarsel> =>
     erRevurderingSimulert(r) ||

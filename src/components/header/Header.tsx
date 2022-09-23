@@ -12,15 +12,23 @@ interface Props {
     user: LoggedInUser | null;
 }
 
+//TODO - lag classnames etc
+
 const SuHeader = (props: Props) => {
+    const isLocal = process.env.NODE_ENV === 'development';
+
     const { formatMessage } = useI18n({ messages });
     return (
-        <Header>
-            <Header.Title href="/" style={{ marginRight: 'auto' }}>
-                {formatMessage('title')}
-            </Header.Title>
+        <Header style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex' }}>
+                <Header.Title href="/">{formatMessage('title')}</Header.Title>
+                {isLocal && <Header.Title href="/saksoversikt">Til saksoversikt (local)</Header.Title>}
+                {isLocal && (
+                    <Header.Title href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Dev tools (local)</Header.Title>
+                )}
+            </div>
             {props.user && (
-                <>
+                <div style={{ display: 'flex' }}>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
                         <Header.Title
                             href={Routes.soknadtema.createURL({
@@ -44,7 +52,7 @@ const SuHeader = (props: Props) => {
                             </Dropdown.Menu.List>
                         </Dropdown.Menu>
                     </Dropdown>
-                </>
+                </div>
             )}
         </Header>
     );

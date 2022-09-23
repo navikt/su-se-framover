@@ -13,54 +13,57 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { Revurdering, UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
+import { UtbetalingsRevurdering, UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
 import { erUtbetalingsrevurdering } from '~src/utils/revurdering/revurderingUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 
-import messages from './stans-nb';
-import styles from './Stans.module.less';
+import messages from './gjenoppta-nb';
+import styles from './Gjenoppta.module.less';
 
-const StansOppsummering = (props: { revurdering?: Revurdering }) => {
+const GjenopptaOppsummering = (props: { revurdering?: UtbetalingsRevurdering }) => {
     const contextProps = useOutletContext<AttesteringContext>();
-    const urlParams = Routes.useRouteParams<typeof Routes.stansOppsummeringRoute>();
+    const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaOppsummeringRoute>();
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const revurderingId = props.revurdering?.id ?? urlParams.revurderingId;
     const revurdering = contextProps.sak.revurderinger.find((r) => r.id === revurderingId);
-    const [iverksettStatus, iverksettStans] = useApiCall(revurderingApi.iverksettStans);
+    const [iverksettStatus, iverksettGjenopptak] = useApiCall(revurderingApi.iverksettGjenopptak);
 
     if (!revurdering) {
         return (
             <div>
-                <Alert variant="error"> {formatMessage('stans.oppsummering.error.fant.ingen')} </Alert>
+                <Alert variant="error"> {formatMessage('gjenoppta.oppsummering.error.fant.ingen')}</Alert>
                 <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: contextProps.sak.id })}>
-                    {formatMessage('stans.bunnknapper.tilbake')}
+                    {formatMessage('gjenoppta.bunnknapper.tilbake')}
                 </LinkAsButton>
             </div>
         );
     }
-
     if (!erUtbetalingsrevurdering(revurdering)) {
         return (
             <div>
-                <Alert variant="error"> {formatMessage('stans.oppsummering.feilRevurderingstype')}</Alert>
+                <Alert variant="error"> {formatMessage('gjenoppta.oppsummering.feilRevurderingstype')}</Alert>
                 <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: contextProps.sak.id })}>
-                    {formatMessage('stans.bunnknapper.tilbake')}
+                    {formatMessage('gjenoppta.bunnknapper.tilbake')}
                 </LinkAsButton>
             </div>
         );
     }
 
     const iverksettOgGåVidere = () => {
-        iverksettStans({ sakId: contextProps.sak.id, revurderingId: revurdering.id }, async () => {
+        iverksettGjenopptak({ sakId: contextProps.sak.id, revurderingId: revurdering.id }, async () => {
             await dispatch(fetchSak({ fnr: contextProps.sak.fnr }));
-            Routes.navigateToSakIntroWithMessage(navigate, formatMessage('stans.notification'), contextProps.sak.id);
+            Routes.navigateToSakIntroWithMessage(
+                navigate,
+                formatMessage('gjenoppta.notification'),
+                contextProps.sak.id
+            );
         });
     };
 
-    if (revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_STANS) {
+    if (revurdering.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK) {
         return (
             <div>
                 <OppsummeringAvUtbetalingsrevurdering revurdering={revurdering} />
@@ -68,7 +71,7 @@ const StansOppsummering = (props: { revurdering?: Revurdering }) => {
                     variant="secondary"
                     href={Routes.saksoversiktValgtSak.createURL({ sakId: contextProps.sak.id })}
                 >
-                    {formatMessage('stans.bunnknapper.tilbake')}
+                    {formatMessage('gjenoppta.bunnknapper.tilbake')}
                 </LinkAsButton>
             </div>
         );
@@ -83,21 +86,21 @@ const StansOppsummering = (props: { revurdering?: Revurdering }) => {
                     variant="secondary"
                     onClick={() =>
                         navigate(
-                            Routes.oppdaterStansRoute.createURL({
+                            Routes.oppdaterGjenopptaRoute.createURL({
                                 sakId: contextProps.sak.id,
                                 revurderingId: revurdering.id,
                             })
                         )
                     }
                 >
-                    {formatMessage('stans.bunnknapper.tilbake')}
+                    {formatMessage('gjenoppta.oppsummering.tilbake')}
                 </Button>
                 <Button onClick={iverksettOgGåVidere} loading={RemoteData.isPending(iverksettStatus)}>
-                    {formatMessage('stans.oppsummering.iverksett')}
+                    {formatMessage('gjenoppta.oppsummering.iverksett')}
                 </Button>
             </div>
         </div>
     );
 };
 
-export default StansOppsummering;
+export default GjenopptaOppsummering;

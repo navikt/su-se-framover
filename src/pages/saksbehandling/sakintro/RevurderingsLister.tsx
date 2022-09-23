@@ -180,7 +180,7 @@ const RevurderingStartetKnapper = (props: {
                             : props.intl.formatMessage({ id: 'revurdering.fortsett' })
                     }
                     usePrimaryAsLink={{
-                        url: Routes.gjenopptaStansOppsummeringRoute.createURL({
+                        url: Routes.gjenopptaOppsummeringRoute.createURL({
                             sakId: props.sakId,
                             revurderingId: revurdering.id,
                         }),

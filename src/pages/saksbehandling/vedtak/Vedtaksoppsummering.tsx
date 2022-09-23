@@ -2,19 +2,15 @@ import { Button } from '@navikt/ds-react';
 import React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import OppsummeringAvRevurderingsvedtak from '~src/components/oppsummeringAvRevurdering/OppsummeringAvRevurderingsvedtak';
 import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { InformasjonsRevurdering } from '~src/types/Revurdering';
 import { VedtakType } from '~src/types/Vedtak';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 
-import GjenopptaOppsummering from '../stans/gjenoppta/gjenopptaOppsummering';
-import StansOppsummering from '../stans/stansOppsummering';
-
 import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
 import ReguleringVedtaksoppsummering from './reguleringsvedtaksoppsummering/reguleringVedtaksoppsummering';
-import RevurderingsoppsummeringWithSnapshot from './revurderingsvedtakWithSnapshot/RevurderingsoppsummeringWithSnapshot';
 import messages from './vedtaksoppsummering-nb';
 import * as styles from './vedtaksoppsummering.module.less';
 
@@ -36,35 +32,12 @@ const Vedtaksoppsummering = (props: { vedtakId?: string; ikkeVisTilbakeKnapp?: b
                         klage={contextProps.sak.klager.find((k) => k.id === vedtak.behandlingId)!}
                     />
                 );
+            case VedtakType.STANS_AV_YTELSE:
+            case VedtakType.GJENOPPTAK_AV_YTELSE:
             case VedtakType.ENDRING:
             case VedtakType.INGEN_ENDRING:
             case VedtakType.OPPHØR:
-                return (
-                    <RevurderingsoppsummeringWithSnapshot
-                        revurdering={
-                            contextProps.sak.revurderinger.find(
-                                (r) => r.id === vedtak.behandlingId
-                            )! as InformasjonsRevurdering
-                        }
-                        formatMessage={formatMessage}
-                        sakId={contextProps.sak.id}
-                        vedtakId={vedtak.id}
-                    />
-                );
-
-            case VedtakType.GJENOPPTAK_AV_YTELSE:
-                return (
-                    <GjenopptaOppsummering
-                        revurdering={contextProps.sak.revurderinger.find((r) => r.id === vedtak.behandlingId)!}
-                    />
-                );
-            case VedtakType.STANS_AV_YTELSE:
-                return (
-                    <StansOppsummering
-                        revurdering={contextProps.sak.revurderinger.find((r) => r.id === vedtak.behandlingId)!}
-                    />
-                );
-
+                return <OppsummeringAvRevurderingsvedtak sak={contextProps.sak} vedtak={vedtak} />;
             case VedtakType.REGULERING:
                 return (
                     <ReguleringVedtaksoppsummering
@@ -73,7 +46,6 @@ const Vedtaksoppsummering = (props: { vedtakId?: string; ikkeVisTilbakeKnapp?: b
                         regulering={contextProps.sak.reguleringer.find((r) => r.id === vedtak.behandlingId)!}
                     />
                 );
-
             case VedtakType.AVSLAG:
             case VedtakType.SØKNAD:
                 return (

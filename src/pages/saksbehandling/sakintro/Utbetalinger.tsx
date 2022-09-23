@@ -79,7 +79,7 @@ export const Utbetalinger = (props: {
                             <Button
                                 variant="secondary"
                                 size="small"
-                                onClick={() => navigate(Routes.gjenopptaStansRoot.createURL({ sakId: props.sakId }))}
+                                onClick={() => navigate(Routes.opprettGjenopptaRoute.createURL({ sakId: props.sakId }))}
                             >
                                 {formatMessage('display.utbetalingsperiode.gjenopptaUtbetaling')}
                             </Button>
@@ -88,7 +88,7 @@ export const Utbetalinger = (props: {
                                 <Button
                                     variant="danger"
                                     size="small"
-                                    onClick={() => navigate(Routes.stansRoot.createURL({ sakId: props.sakId }))}
+                                    onClick={() => navigate(Routes.stansOpprett.createURL({ sakId: props.sakId }))}
                                 >
                                     {formatMessage('display.utbetalingsperiode.stoppUtbetaling')}
                                 </Button>

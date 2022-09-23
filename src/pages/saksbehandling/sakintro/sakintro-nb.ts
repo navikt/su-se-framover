@@ -36,7 +36,6 @@ export default {
     'popover.default': 'Velg behandling',
     'popover.option.klage': 'Klage',
     'popover.option.revurder': 'Revurder',
-    'knapp.stoppUtbetaling': 'Stopp utbetaling',
 
     'link.dokumenter': 'Brev sendt fra SU',
     'link.kontrollsamtale': 'Kontrollsamtale',

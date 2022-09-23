@@ -17,7 +17,7 @@ export const stegmessages: { [key in RevurderingSteg]: string } = {
     [RevurderingSteg.Institusjonsopphold]: 'Institusjonsopphold',
 };
 
-const årsakIdMap: { [key in OpprettetRevurderingGrunn]: string } = {
+export const årsakIdMap: { [key in OpprettetRevurderingGrunn]: string } = {
     [OpprettetRevurderingGrunn.MELDING_FRA_BRUKER]: 'Melding fra bruker',
     [OpprettetRevurderingGrunn.INFORMASJON_FRA_KONTROLLSAMTALE]: 'Informasjon fra kontrollsamtale',
     [OpprettetRevurderingGrunn.DØDSFALL]: 'Dødsfall',
