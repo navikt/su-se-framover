@@ -7,7 +7,7 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import * as personApi from '~src/api/personApi';
-import { SkattemeldingFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/skatt/SkattegrunnlagFaktablokk';
+import OppsummeringAvSkattegrunnlag from '~src/components/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
 import OppsummeringAvFormue from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import BosituasjonFormIntegrertMedFormue from '~src/components/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormIntegrertMedFormue';
@@ -147,7 +147,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }
                             }}
                         />
                         {skattemeldingToggle && (
-                            <SkattemeldingFaktablokk
+                            <OppsummeringAvSkattegrunnlag
                                 kategori={SkattegrunnlagKategori.FORMUE}
                                 søkerFnr={props.søker.fnr}
                                 skalHenteSkattegrunnlagForEPS={watch.epsFnr?.length === 11 ? watch.epsFnr : null}

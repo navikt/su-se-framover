@@ -14,12 +14,12 @@ import { SamletSkattegrunnlag, SkattegrunnlagKategori } from '~src/types/skatt/S
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
-import Faktablokk from '../../Faktablokk';
-import styles from '../faktablokker.module.less';
+import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
-import skattegrunnlagMessages from './skattegrunnlag-nb';
+import skattegrunnlagMessages from './OppsummeringAvSkattegrunnlag-nb';
+import styles from './OppsummeringAvSkattegrunnlag.module.less';
 
-export const SkattemeldingFaktablokk = (props: {
+const OppsummeringAvSkattegrunnlag = (props: {
     kategori: SkattegrunnlagKategori;
     søkerFnr: string;
     skalHenteSkattegrunnlagForEPS?: Nullable<string>;
@@ -92,6 +92,8 @@ export const SkattemeldingFaktablokk = (props: {
     );
 };
 
+export default OppsummeringAvSkattegrunnlag;
+
 const SkattemeldingFaktablokkComponent = ({
     tittel,
     samletSkattegrunnlag,
@@ -105,22 +107,24 @@ const SkattemeldingFaktablokkComponent = ({
     const filtrertSkattefakta = samletSkattegrunnlag.grunnlag
         .filter((skattegrunnlag) => skattegrunnlag.beløp !== 0)
         .filter((skattegrunnlag) => skattegrunnlag.kategori.includes(kategori))
-        .map((skattegrunnlag) => ({
-            tittel: formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage),
-            verdi: formatCurrency(skattegrunnlag.beløp, { numDecimals: 0 }),
-        }));
+        .map((skattegrunnlag) => (
+            <OppsummeringPar
+                key={`${skattegrunnlag.navn} - ${skattegrunnlag.beløp}`}
+                label={formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage)}
+                verdi={formatCurrency(skattegrunnlag.beløp, { numDecimals: 0 })}
+            />
+        ));
 
-    if (filtrertSkattefakta.length === 0)
-        return (
-            <div>
-                <Label className={styles.overskrift} spacing>
-                    {tittel}
-                </Label>
-                <p>{formatMessage('skattegrunnlag.tom')}</p>
-            </div>
-        );
-
-    return <Faktablokk tittel={tittel} fakta={filtrertSkattefakta} />;
+    return (
+        <div>
+            <Heading size="small">{tittel}</Heading>
+            {filtrertSkattefakta.length === 0 ? (
+                <OppsummeringPar label={tittel} verdi={formatMessage('skattegrunnlag.tom')} />
+            ) : (
+                filtrertSkattefakta.map((it) => it)
+            )}
+        </div>
+    );
 };
 
 /* Hjelpefunksjon for å håndtere att vi får ukjente tekniske navn på formue / inntekt fra skatteetaten */

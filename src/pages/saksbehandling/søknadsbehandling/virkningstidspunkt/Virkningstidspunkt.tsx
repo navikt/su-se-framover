@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Loader } from '@navikt/ds-react';
+import { Alert, Heading, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import DatePicker from '~src/components/datePicker/DatePicker';
-import Faktablokk from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/Faktablokk';
+import { OppsummeringPar } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as SakSlice from '~src/features/saksoversikt/sak.slice';
@@ -187,15 +187,13 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     </FormWrapper>
                                 ),
                                 right: (
-                                    <Faktablokk
-                                        tittel={formatMessage('søker.personalia')}
-                                        fakta={[
-                                            {
-                                                tittel: formatMessage('søker.fødselsdato'),
-                                                verdi: søker.fødselsdato ? formatDate(søker.fødselsdato) : '',
-                                            },
-                                        ]}
-                                    />
+                                    <div className={styles.høyresideContainer}>
+                                        <Heading size="small">{formatMessage('søker.personalia')}</Heading>
+                                        <OppsummeringPar
+                                            label={formatMessage('søker.fødselsdato')}
+                                            verdi={formatDate(søker.fødselsdato ?? 'feil.fantIkkeFnr')}
+                                        />
+                                    </div>
                                 ),
                             }}
                         </ToKolonner>

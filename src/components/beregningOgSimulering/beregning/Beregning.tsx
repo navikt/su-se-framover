@@ -20,7 +20,7 @@ import {
 } from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
 import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import { SkattemeldingFaktablokk } from '~src/components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/skatt/SkattegrunnlagFaktablokk';
+import OppsummeringAvSkattegrunnlag from '~src/components/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
 import OppsummeringAvInntektOgPensjon from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -360,7 +360,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         />
 
                         {skattemeldingToggle && (
-                            <SkattemeldingFaktablokk
+                            <OppsummeringAvSkattegrunnlag
                                 søkerFnr={props.søker.fnr}
                                 skalHenteSkattegrunnlagForEPS={
                                     hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr
