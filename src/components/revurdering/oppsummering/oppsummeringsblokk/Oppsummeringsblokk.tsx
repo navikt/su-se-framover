@@ -1,9 +1,9 @@
-import { BodyShort, Label } from '@navikt/ds-react';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import * as React from 'react';
 
+import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { pipe, maxBy } from '~src/lib/fp';
@@ -14,18 +14,18 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVi
 import {
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
-    Revurdering,
     RevurderingStatus,
     UtbetalingsRevurderingStatus,
 } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
+import { erRevurderingTilbakekrevingsbehandlingMedAvgjørelse } from '~src/utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
 import messages from './oppsummeringsblokk-nb';
 import * as styles from './oppsummeringsblokk.module.less';
 
-const Intro = (props: { revurdering: Revurdering }) => {
+const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     return (
         <div className={styles.introContainer}>
@@ -67,11 +67,25 @@ const Intro = (props: { revurdering: Revurdering }) => {
                         verdi: props.revurdering.begrunnelse,
                     },
                 ].map((item) => (
-                    <div className={styles.introItem} key={item.tittel}>
-                        <Label>{item.tittel}</Label>
-                        <BodyShort>{item.verdi}</BodyShort>
+                    <div key={item.tittel}>
+                        <OppsummeringPar
+                            label={item.tittel}
+                            verdi={item.verdi}
+                            sorteres={OppsummeringsParSortering.Vertikalt}
+                        />
                     </div>
                 ))}
+            </div>
+            <div>
+                {erRevurderingTilbakekrevingsbehandlingMedAvgjørelse(props.revurdering) && (
+                    <OppsummeringPar
+                        label={formatMessage('tilbakekreving.skalTilbakekreves')}
+                        verdi={formatMessage(
+                            `tilbakekreving.resultat.tilJaNei.${props.revurdering.tilbakekrevingsbehandling.avgjørelse}`
+                        )}
+                        sorteres={OppsummeringsParSortering.Vertikalt}
+                    />
+                )}
             </div>
             <UnderkjenteAttesteringer attesteringer={props.revurdering.attesteringer} />
         </div>

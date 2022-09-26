@@ -17,4 +17,10 @@ export default {
     'vurdering.avsluttet': 'Avsluttet',
     'vurdering.stans': 'Stanset',
     'vurdering.gjenopptak': 'Gjenopptak',
+
+    'tilbakekreving.skalTilbakekreves': 'Skal tilbakekreves?',
+
+    'tilbakekreving.resultat.tilJaNei.IKKE_TILBAKEKREV': 'Nei',
+    'tilbakekreving.resultat.tilJaNei.TILBAKEKREV': 'Ja',
+    'tilbakekreving.resultat.tilJaNei.IKKE_AVGJORT': 'Ikke avgjort',
 };

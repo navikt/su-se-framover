@@ -133,6 +133,12 @@ export const erRevurderingTilbakekrevingsbehandling = (
 ): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling> } =>
     erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r;
 
+export const erRevurderingTilbakekrevingsbehandlingMedAvgjørelse = (
+    r: Revurdering
+): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Tilbakekrevingsbehandling } => {
+    return erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r && r['tilbakekrevingsbehandling'] !== null;
+};
+
 export const erRevurderingTilbakekreving = (
     r: Revurdering
 ): r is InformasjonsRevurdering & {
@@ -148,6 +154,14 @@ export const erRevurderingTilbakekrevingIkkeAvgjort = (
 } =>
     erRevurderingTilbakekrevingsbehandling(r) &&
     r.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.IKKE_AVGJORT;
+
+export const erRevurderingIkkeTilbakekrev = (
+    r: Revurdering
+): r is InformasjonsRevurdering & {
+    tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV };
+} =>
+    erRevurderingTilbakekrevingsbehandling(r) &&
+    r.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV;
 
 /**
  * Dette er det som styrer rekkefølgen på når ting skal revurderes.
