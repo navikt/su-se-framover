@@ -69,7 +69,12 @@ export default {
     'inntektOgPensjon.andreYtelserINav': 'Har du andre ytelser i NAV?',
     'inntektOgPensjon.andreYtelserIkkeBehandlet': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
     'inntektOgPensjon.ytelserIUtlandet': 'Har du trygdeytelser i utlandet?',
+    'inntektOgPensjon.ytelserIUtlandet.type': 'type',
+    'inntektOgPensjon.ytelserIUtlandet.beløp': 'beløp',
+    'inntektOgPensjon.ytelserIUtlandet.valuta': 'valuta',
     'inntektOgPensjon.tjenestepensjon': 'Har du tjenestepensjon og/eller pensjonssparing?',
+    'inntektOgPensjon.tjenestepensjon.ordning': 'ordning',
+    'inntektOgPensjon.tjenestepensjon.beløp': 'beløp',
 
     'bool.true': 'Ja',
     'bool.false': 'Nei',

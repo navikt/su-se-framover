@@ -73,9 +73,15 @@ const OppsummeringAvInntektOgPensjon = (props: {
                     label={formatMessage('inntektOgPensjon.ytelserIUtlandet')}
                     søkersVerdi={
                         <div>
-                            <div>type: {ytelse.type}</div>
-                            <div>beløp: {ytelse.beløp}</div>
-                            <div>valuta: {ytelse.valuta}</div>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.ytelserIUtlandet.type')}: {ytelse.type}
+                            </Label>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.ytelserIUtlandet.beløp')}: {ytelse.beløp}
+                            </Label>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.ytelserIUtlandet.valuta')}: {ytelse.valuta}
+                            </Label>
                         </div>
                     }
                     epsverdi={eps ? '-' : null}
@@ -88,9 +94,15 @@ const OppsummeringAvInntektOgPensjon = (props: {
                     søkersVerdi={'-'}
                     epsverdi={
                         <div>
-                            <div>type: {ytelse.type}</div>
-                            <div>beløp: {ytelse.beløp}</div>
-                            <div>valuta: {ytelse.valuta}</div>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.ytelserIUtlandet.type')}: {ytelse.type}
+                            </Label>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.ytelserIUtlandet.beløp')}: {ytelse.beløp}
+                            </Label>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.ytelserIUtlandet.valuta')}: {ytelse.valuta}
+                            </Label>
                         </div>
                     }
                 />
@@ -101,8 +113,12 @@ const OppsummeringAvInntektOgPensjon = (props: {
                     label={formatMessage('inntektOgPensjon.tjenestepensjon')}
                     søkersVerdi={
                         <div>
-                            <div>Ordning: {p.ordning}</div>
-                            <div>Beløp: {p.beløp}</div>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.tjenestepensjon.ordning')}: {p.ordning}
+                            </Label>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.tjenestepensjon.beløp')}: {p.beløp}
+                            </Label>
                         </div>
                     }
                     epsverdi={eps ? '-' : null}
@@ -115,8 +131,12 @@ const OppsummeringAvInntektOgPensjon = (props: {
                     søkersVerdi={'-'}
                     epsverdi={
                         <div>
-                            <div>Ordning: {p.ordning}</div>
-                            <div>Beløp: {p.beløp}</div>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.tjenestepensjon.ordning')}: {p.ordning}
+                            </Label>
+                            <Label>
+                                {formatMessage('inntektOgPensjon.tjenestepensjon.beløp')}: {p.beløp}
+                            </Label>
                         </div>
                     }
                 />
