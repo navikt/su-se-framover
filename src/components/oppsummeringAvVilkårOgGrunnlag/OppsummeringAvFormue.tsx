@@ -25,22 +25,30 @@ const OppsummeringAvFormueVilkår = (props: { formue: FormueVilkår; visesIVedta
             })}
         >
             <ul>
-                {props.formue?.vurderinger?.map((f) => {
-                    const søkersFormue = regnUtFormuegrunnlagVerdier(f.grunnlag.søkersFormue);
-                    const epsFormue = regnUtFormuegrunnlagVerdier(f.grunnlag.epsFormue);
-                    const bekreftetFormue = søkersFormue + epsFormue;
-                    return (
-                        <li key={f.id} className={styles.grunnlagsListe}>
-                            <OppsummeringPar label={formatMessage('periode')} verdi={formatPeriode(f.periode)} />
-                            <OppsummeringAvFormuegrunnlag g={f.grunnlag} />
-                            <Formuestatus
-                                bekreftetFormue={bekreftetFormue}
-                                erVilkårOppfylt={f.resultat === FormueStatus.VilkårOppfylt}
-                                skalVisesSomOppsummering={props.visesIVedtak}
-                            />
-                        </li>
-                    );
-                })}
+                {props.formue.vurderinger.length === 0 ? (
+                    <OppsummeringPar
+                        className={classNames(styles.oppsummeringAvResultat)}
+                        label={formatMessage('vilkår.resultat')}
+                        verdi={formatMessage('vilkår.ikkeVurdert')}
+                    />
+                ) : (
+                    props.formue.vurderinger.map((f) => {
+                        const søkersFormue = regnUtFormuegrunnlagVerdier(f.grunnlag.søkersFormue);
+                        const epsFormue = regnUtFormuegrunnlagVerdier(f.grunnlag.epsFormue);
+                        const bekreftetFormue = søkersFormue + epsFormue;
+                        return (
+                            <li key={f.id} className={styles.grunnlagsListe}>
+                                <OppsummeringPar label={formatMessage('periode')} verdi={formatPeriode(f.periode)} />
+                                <OppsummeringAvFormuegrunnlag g={f.grunnlag} />
+                                <Formuestatus
+                                    bekreftetFormue={bekreftetFormue}
+                                    erVilkårOppfylt={f.resultat === FormueStatus.VilkårOppfylt}
+                                    skalVisesSomOppsummering={props.visesIVedtak}
+                                />
+                            </li>
+                        );
+                    })
+                )}
             </ul>
         </div>
     );

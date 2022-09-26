@@ -1,11 +1,10 @@
+import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { InntektOgPensjon } from '~src/types/Søknadinnhold';
-
-import { FormueTrippel } from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
 import styles from './OppsummeringAvSøknadinnhold.module.less';
@@ -16,6 +15,7 @@ const OppsummeringAvInntektOgPensjon = (props: {
         eps?: Nullable<InntektOgPensjon>;
     };
     visesIVedtak?: boolean;
+    fullSpace?: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const { søkers, eps } = props.inntektOgPensjon;
@@ -23,19 +23,20 @@ const OppsummeringAvInntektOgPensjon = (props: {
         <div
             className={classNames({
                 [styles.oppsummeringsContainer]: !props.visesIVedtak,
+                [styles.fullSpace]: props.fullSpace,
             })}
         >
-            <FormueTrippel
+            <OppsummeringsTrippel
                 label={''}
                 søkersVerdi={formatMessage('formue.heading.søker')}
                 epsverdi={eps ? formatMessage('formue.heading.eps') : undefined}
             />
-            <FormueTrippel
+            <OppsummeringsTrippel
                 label={formatMessage('inntektOgPensjon.forventerArbeidsinntekt')}
                 søkersVerdi={søkers.forventetInntekt ?? formatMessage('svar.nei')}
                 epsverdi={eps ? eps?.forventetInntekt ?? formatMessage('svar.nei') : null}
             />
-            <FormueTrippel
+            <OppsummeringsTrippel
                 label={formatMessage('inntektOgPensjon.andreYtelserINav')}
                 søkersVerdi={
                     søkers.andreYtelserINav
@@ -50,7 +51,7 @@ const OppsummeringAvInntektOgPensjon = (props: {
                         : null
                 }
             />
-            <FormueTrippel
+            <OppsummeringsTrippel
                 label={formatMessage('inntektOgPensjon.andreYtelserIkkeBehandlet')}
                 søkersVerdi={
                     søkers.søktAndreYtelserIkkeBehandletBegrunnelse
@@ -67,7 +68,7 @@ const OppsummeringAvInntektOgPensjon = (props: {
             />
 
             {søkers.trygdeytelserIUtlandet?.map((ytelse) => (
-                <FormueTrippel
+                <OppsummeringsTrippel
                     key={`${ytelse.type} - ${ytelse.valuta} - ${ytelse.beløp}`}
                     label={formatMessage('inntektOgPensjon.ytelserIUtlandet')}
                     søkersVerdi={
@@ -77,12 +78,11 @@ const OppsummeringAvInntektOgPensjon = (props: {
                             <div>valuta: {ytelse.valuta}</div>
                         </div>
                     }
-                    //søkersVerdi={`type: ${ytelse.type} beløp: ${ytelse.beløp} valuta: ${ytelse.valuta}`}
                     epsverdi={eps ? '-' : null}
                 />
             ))}
             {eps?.trygdeytelserIUtlandet?.map((ytelse) => (
-                <FormueTrippel
+                <OppsummeringsTrippel
                     key={`${ytelse.type} - ${ytelse.valuta} - ${ytelse.beløp}`}
                     label={formatMessage('inntektOgPensjon.ytelserIUtlandet')}
                     søkersVerdi={'-'}
@@ -96,7 +96,7 @@ const OppsummeringAvInntektOgPensjon = (props: {
                 />
             ))}
             {søkers.pensjon?.map((p) => (
-                <FormueTrippel
+                <OppsummeringsTrippel
                     key={`${p.ordning} - ${p.beløp}`}
                     label={formatMessage('inntektOgPensjon.tjenestepensjon')}
                     søkersVerdi={
@@ -109,7 +109,7 @@ const OppsummeringAvInntektOgPensjon = (props: {
                 />
             ))}
             {eps?.pensjon?.map((p) => (
-                <FormueTrippel
+                <OppsummeringsTrippel
                     key={`${p.ordning} - ${p.beløp}`}
                     label={formatMessage('inntektOgPensjon.tjenestepensjon')}
                     søkersVerdi={'-'}
@@ -126,3 +126,30 @@ const OppsummeringAvInntektOgPensjon = (props: {
 };
 
 export default OppsummeringAvInntektOgPensjon;
+
+export const OppsummeringsTrippel = ({
+    label,
+    søkersVerdi,
+    epsverdi,
+    tightSpaced,
+}: {
+    label: string;
+    søkersVerdi: string | number | JSX.Element;
+    epsverdi?: Nullable<string | number | JSX.Element>;
+    tightSpaced?: boolean;
+}) => {
+    return (
+        <div className={styles.oppsummeringstrippel}>
+            <BodyShort>{label}</BodyShort>
+            <div
+                className={classNames({
+                    [styles.tightSpaced]: tightSpaced,
+                    [styles.oppsummeringsVerdier]: !tightSpaced,
+                })}
+            >
+                <Label>{søkersVerdi}</Label>
+                <Label>{epsverdi}</Label>
+            </div>
+        </div>
+    );
+};

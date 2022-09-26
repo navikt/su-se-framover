@@ -96,5 +96,8 @@ export default {
     ubesvart: 'Ubesvart',
     'vilkår.resultat': 'Resultat av vilkår',
     'vilkår.ikkeVurdert': 'Vilkåret er ikke vurdert',
+
+    'grunnlag.ikkeVurdert': 'Grunnlaget er ikke vurdert',
+
     'feil.ukjent.periode': 'Ukjent periode',
 };

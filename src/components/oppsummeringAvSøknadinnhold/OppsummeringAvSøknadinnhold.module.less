@@ -1,3 +1,19 @@
+@import '~/src/styles/variables.less';
+
 .oppsummeringsContainer {
-    max-width: 65%;
+    max-width: 60%;
+}
+
+.fullSpace {
+    max-width: 100%;
+}
+
+.oppsummeringstrippel {
+    display: flex;
+    justify-content: space-between;
+
+    .oppsummeringsVerdier {
+        display: grid;
+        grid-template-columns: 18em 18em;
+    }
 }
