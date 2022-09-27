@@ -9,7 +9,7 @@ import { Link, useOutletContext } from 'react-router-dom';
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
-import Vedtakstidslinje from '~src/components/su-tidslinje/VedtaksTidslinje';
+import Vedtakstidslinje from '~src/components/vedtakstidslinje/VedtaksTidslinje';
 import { useFeatureToggle } from '~src/lib/featureToggles';
 import { ApiResult, useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
