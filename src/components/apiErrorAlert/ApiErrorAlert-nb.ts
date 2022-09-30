@@ -143,7 +143,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp ektefelle eller samboer i PDL',
     [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp EPS',
     [ApiErrorCode.KUNNE_IKKE_UTBETALE]: 'Kunne ikke utbetale',
-    [ApiErrorCode.KUNNE_IKKE_UTBETALE]: 'Kunne ikke utbetale',
+    [ApiErrorCode.KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET]:
+        'Kryssjekk av utbetalingstidslinje og simulering feilet.',
     [ApiErrorCode.MANGLER_BEGRUNNELSE]: 'Mangler begrunnelse',
     [ApiErrorCode.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL]: 'Mangler beslutning på forhåndsvarsel',
     [ApiErrorCode.MANGLER_BREVVALG]: 'Vennligst velg om det skal sendes brev eller ikke',
@@ -178,6 +179,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING]:
         'Saken har pågående eller behov for fremtidig avkorting. Reguleringen må håndteres gjennom revurdering.',
     [ApiErrorCode.REGULERING_UGYLDIG_TILSTAND]: 'Reguleringen er i ett ugyldigt tilstand',
+    [ApiErrorCode.REKONSTRUERT_UTBETALINGSHISTORIKK_ULIK_ORIGINAL]:
+        'Rekonstruert utbetalingsistorikk er ulik original.',
     [ApiErrorCode.REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV]:
         'Revurderingen er ikke forhåndsvarslet for å vise brev',
     [ApiErrorCode.REVURDERINGEN_ER_ALLEREDE_AVSLUTTET]: 'Revurderingen er allerede avsluttet',
@@ -192,6 +195,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.SISTE_UTBETALING_ER_IKKE_STANS]: 'Feil ved kontroll av simulering',
     [ApiErrorCode.SISTE_VEDTAK_IKKE_STANS]: 'Sending av utbetaling til oppdrag feilet',
     [ApiErrorCode.SPESIFISERT_FRADRAG_SKAL_IKKE_HA_BESKRIVELSE]: 'Et valgt fradragskategori skal ikke spesifiseres',
+    [ApiErrorCode.STANS_FØRER_TIL_FEILUTBETALING]: 'Stans fører til feilutbetaling',
+    [ApiErrorCode.STANS_INNEHOLDER_MÅNEDER_TIL_UTBETALING]: 'Stans inneholder måneder til utbetaling',
     [ApiErrorCode.STANSDATO_IKKE_FØRSTE_I_INNEVÆRENDE_ELLER_NESTE_MÅNED]:
         'Stansdato er ikke første dato i inneværende eller neste måned',
     [ApiErrorCode.STANSET_YTELSE_MÅ_STARTES_FØR_DEN_KAN_REGULERES]:
