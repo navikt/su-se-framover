@@ -5,6 +5,7 @@ import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~src/features/klage/klageActions';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -32,6 +33,7 @@ const AttesterKlage = () => {
     const klage = props.klager.find((k) => k.id === urlParams.klageId);
     const klagensVedtak = props.vedtaker.find((v) => v.id === klage?.vedtakId);
 
+    const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
     const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.iverksattAvvist);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
@@ -79,11 +81,13 @@ const AttesterKlage = () => {
                         klageId: klage.id,
                     },
                     () => {
-                        Routes.navigateToSakIntroWithMessage(
-                            navigate,
-                            formatMessage('notification.avvist'),
-                            props.sakId
-                        );
+                        fetchSak({ sakId: props.sakId }, () => {
+                            Routes.navigateToSakIntroWithMessage(
+                                navigate,
+                                formatMessage('notification.avvist'),
+                                props.sakId
+                            );
+                        });
                     }
                 ),
             status: avvisStatus,

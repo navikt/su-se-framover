@@ -1,27 +1,5 @@
 @import '~/src/styles/variables.less';
 
-.knapper {
-    display: flex;
-    align-items: center;
-}
-
-.reguleringKnapper {
-    display: flex;
-    gap: @spacing-xs;
-}
-
-.avsluttReguleringModal {
-    padding-right: @spacing-l;
-
-    .knapper {
-        display: flex;
-        gap: @spacing-xs;
-        margin-top: @spacing;
-        flex-direction: row;
-        justify-content: center;
-    }
-}
-
 .suksessStatuserContainer {
     display: flex;
     padding-left: 10rem;
@@ -39,10 +17,6 @@
         justify-content: space-between;
         margin-bottom: @spacing;
 
-        .tittel {
-            padding: @spacing-xs 10rem;
-        }
-
         .headerKnapper {
             display: flex;
             padding: @spacing-xs 10rem;
@@ -51,6 +25,20 @@
                 margin-right: @spacing;
             }
         }
+    }
+}
+
+.contentContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 0em 10em;
+}
+
+.behandlingstabellContainer {
+    margin-bottom: @spacing-xl;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-l;
     }
 }
 
@@ -73,85 +61,6 @@
     }
 }
 
-.søknadOgUtbetalingContainer {
-    padding-left: 10rem;
-    padding-right: 10rem;
-    display: flex;
-    flex-direction: column;
-}
-
-.søknadsContainer {
-    margin-bottom: @spacing;
-
-    .søknadsContainerTittel {
-        margin-bottom: @spacing-xs;
-    }
-
-    .søknad {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: @spacing-xxs;
-        padding-top: @spacing-s;
-        padding-bottom: @spacing-s;
-
-        .info {
-            display: flex;
-            width: 100%;
-            flex-flow: row wrap;
-            justify-content: space-between;
-            white-space: pre;
-
-            .tittel {
-                display: flex;
-                flex-direction: row;
-
-                .etikett {
-                    margin-left: @spacing;
-                }
-            }
-
-            .dato {
-                display: flex;
-            }
-
-            .informasjonsTekst {
-                display: flex;
-            }
-
-            .underkjenteAttesteringerContainer {
-                margin-top: @spacing-xs;
-            }
-        }
-    }
-}
-
-.advarsel {
-    margin-right: @spacing;
-}
-
-.startBehandlingKnapp {
-    margin-right: @spacing-xs;
-}
-
-.ikonContainer {
-    display: flex;
-    align-self: flex-start;
-    align-items: center;
-
-    .ikon {
-        margin-right: @spacing-xxs;
-    }
-
-    .ikonTekst {
-        width: 50px;
-    }
-}
-
-.feil {
-    margin-top: @spacing-xs;
-}
-
 .dokumenterLinkpanel {
     background-color: var(--navds-global-color-orange-200);
     width: fit-content;
@@ -164,14 +73,4 @@
 
 .dokumenterLinkIcon {
     margin-right: @spacing-xs;
-}
-
-.avsluttOgStartFortsettKnapperContainer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-}
-
-.utfallTag {
-    margin-top: @spacing-xxs;
 }

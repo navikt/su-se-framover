@@ -112,11 +112,11 @@ export interface Ektefelle {
     inntektOgPensjon: InntektOgPensjon;
 }
 
-interface ForNavDigitalSøknad {
+export interface ForNavDigitalSøknad {
     type: Søknadstype.DigitalSøknad;
     harFullmektigEllerVerge: Nullable<Vergemål>;
 }
-interface ForNavPapirsøknad {
+export interface ForNavPapirsøknad {
     type: Søknadstype.Papirsøknad;
     mottaksdatoForSøknad: string;
     grunnForPapirinnsending: GrunnForPapirinnsending;

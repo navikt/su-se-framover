@@ -25,18 +25,32 @@ export interface UtbetalingsRevurdering<T extends UtbetalingsRevurderingStatus =
     status: T;
 }
 
-export interface StansAvYtelse
-    extends UtbetalingsRevurdering<
-        UtbetalingsRevurderingStatus.SIMULERT_STANS | UtbetalingsRevurderingStatus.IVERKSATT_STANS
-    > {
+export interface StansAvYtelse<
+    T extends UtbetalingsRevurderingStatus =
+        | UtbetalingsRevurderingStatus.SIMULERT_STANS
+        | UtbetalingsRevurderingStatus.IVERKSATT_STANS
+        | UtbetalingsRevurderingStatus.AVSLUTTET_STANS
+> extends UtbetalingsRevurdering<UtbetalingsRevurderingStatus> {
+    status: T;
     simulering: Simulering;
 }
 
-export interface Gjenopptak
-    extends UtbetalingsRevurdering<
-        UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK | UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK
-    > {
+export interface AvsluttetStans extends StansAvYtelse<UtbetalingsRevurderingStatus.AVSLUTTET_STANS> {
+    avsluttetTidspunkt: string;
+}
+
+export interface Gjenopptak<
+    T extends UtbetalingsRevurderingStatus =
+        | UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK
+        | UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK
+        | UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK
+> extends UtbetalingsRevurdering<UtbetalingsRevurderingStatus> {
+    status: T;
     simulering: Simulering;
+}
+
+export interface AvsluttetGjenopptak extends Gjenopptak<UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK> {
+    avsluttetTidspunkt: string;
 }
 
 /**
@@ -112,6 +126,7 @@ export interface UnderkjentRevurdering
 export interface AvsluttetRevurdering extends InformasjonsRevurdering<InformasjonsRevurderingStatus.AVSLUTTET> {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
+    avsluttetTidspunkt: string;
 }
 
 export enum Forhåndsvarseltype {

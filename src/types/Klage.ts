@@ -16,6 +16,7 @@ export interface Klage extends Behandling<KlageStatus> {
     fritekstTilBrev: Nullable<string>;
     klagevedtakshistorikk: VedtattUtfall[];
     avsluttet: AvsluttKlageStatus;
+    avsluttetTidspunkt: Nullable<string>;
 }
 
 export enum AvsluttKlageStatus {

@@ -2,17 +2,34 @@ import { Button } from '@navikt/ds-react';
 import React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
 import OppsummeringAvRevurderingsvedtak from '~src/components/oppsummeringAvRevurdering/OppsummeringAvRevurderingsvedtak';
 import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Sak } from '~src/types/Sak';
 import { VedtakType } from '~src/types/Vedtak';
+import { erKlageFerdigbehandlet } from '~src/utils/klage/klageUtils';
 import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
 import ReguleringVedtaksoppsummering from './reguleringsvedtaksoppsummering/reguleringVedtaksoppsummering';
 import messages from './vedtaksoppsummering-nb';
 import * as styles from './vedtaksoppsummering.module.less';
+
+export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string | undefined) {
+    console.log(klageId);
+    const klageMedKlageinstansvedtak = sak.klager.find((k) => k.id === klageId);
+    if (klageMedKlageinstansvedtak && erKlageFerdigbehandlet(klageMedKlageinstansvedtak)) {
+        const vedtakSomKlagesPå = sak.vedtak.find((v) => v.id === klageMedKlageinstansvedtak.vedtakId)!;
+        return {
+            klage: klageMedKlageinstansvedtak,
+            vedtak: vedtakSomKlagesPå,
+        };
+    }
+
+    return null;
+}
 
 const Vedtaksoppsummering = (props: { vedtakId?: string; ikkeVisTilbakeKnapp?: boolean }) => {
     const contextProps = useOutletContext<AttesteringContext>();
@@ -22,6 +39,12 @@ const Vedtaksoppsummering = (props: { vedtakId?: string; ikkeVisTilbakeKnapp?: b
 
     const vedtakId = props.vedtakId ?? urlParams.vedtakId;
     const vedtak = contextProps.sak.vedtak.find((v) => v.id === vedtakId);
+
+    const klageVedtak = hentKlagevedtakFraKlageinstans(contextProps.sak, vedtakId);
+
+    if (klageVedtak) {
+        return <OppsummeringAvKlage klage={klageVedtak.klage} klagensVedtak={klageVedtak.vedtak} />;
+    }
 
     const Oppsummering = (): JSX.Element => {
         switch (vedtak?.type) {

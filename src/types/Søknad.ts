@@ -10,7 +10,7 @@ export interface Søknad {
     lukket: Nullable<Lukket>;
 }
 
-interface Lukket {
+export interface Lukket {
     tidspunkt: string;
     saksbehandler: Saksbehandler;
     type: LukkSøknadBegrunnelse;

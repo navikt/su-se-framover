@@ -113,6 +113,8 @@ export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
     return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage);
 };
 
+export const erKlageÅpen = (k: Klage) => !erKlageFerdigbehandlet(k) && !erKlageAvsluttet(k);
+
 export const erKlageOmgjort = (
     k: Klage
 ): k is Klage & {
@@ -275,3 +277,41 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
 
 export const hentSisteVedtattUtfall = (vedtak: VedtattUtfall[]) =>
     pipe(vedtak, maxBy(Ord.contramap((v: VedtattUtfall) => v.opprettet)(S.Ord)), toNullable);
+
+export const splitStatusOgResultatFraKlage = (
+    k: Klage
+): {
+    status: 'Opprettet' | 'Vilkårsvurdert' | '-' | 'Til attestering' | 'Oversendt' | 'Iverksatt';
+    resultat: '-' | 'Avvist' | 'Til vurdering';
+} => {
+    switch (k.status) {
+        case KlageStatus.OPPRETTET:
+            return { status: 'Opprettet', resultat: '-' };
+        case KlageStatus.VILKÅRSVURDERT_PÅBEGYNT:
+            return { status: 'Vilkårsvurdert', resultat: '-' };
+        case KlageStatus.VILKÅRSVURDERT_UTFYLT_AVVIST:
+            return { status: 'Vilkårsvurdert', resultat: 'Avvist' };
+        case KlageStatus.VILKÅRSVURDERT_UTFYLT_TIL_VURDERING:
+            return { status: 'Vilkårsvurdert', resultat: 'Til vurdering' };
+        case KlageStatus.VILKÅRSVURDERT_BEKREFTET_AVVIST:
+            return { status: 'Vilkårsvurdert', resultat: 'Avvist' };
+        case KlageStatus.VILKÅRSVURDERT_BEKREFTET_TIL_VURDERING:
+            return { status: 'Vilkårsvurdert', resultat: 'Til vurdering' };
+        case KlageStatus.VURDERT_PÅBEGYNT:
+            return { status: '-', resultat: 'Til vurdering' };
+        case KlageStatus.VURDERT_UTFYLT:
+            return { status: '-', resultat: 'Til vurdering' };
+        case KlageStatus.VURDERT_BEKREFTET:
+            return { status: '-', resultat: 'Til vurdering' };
+        case KlageStatus.AVVIST:
+            return { status: '-', resultat: 'Avvist' };
+        case KlageStatus.TIL_ATTESTERING_AVVIST:
+            return { status: 'Til attestering', resultat: 'Avvist' };
+        case KlageStatus.TIL_ATTESTERING_TIL_VURDERING:
+            return { status: 'Til attestering', resultat: 'Til vurdering' };
+        case KlageStatus.OVERSENDT:
+            return { status: 'Oversendt', resultat: '-' };
+        case KlageStatus.IVERKSATT_AVVIST:
+            return { status: 'Iverksatt', resultat: 'Avvist' };
+    }
+};

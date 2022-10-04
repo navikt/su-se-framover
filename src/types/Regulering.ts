@@ -19,7 +19,7 @@ export interface Regulering {
     simulering: Nullable<Simulering>;
     saksbehandler: string;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-    avsluttet: { begrunnelse: string };
+    avsluttet: { tidspunkt: string };
     årsakForManuell: ÅrsakForManuell[];
     sakstype: Sakstype;
     reguleringsstatus: Reguleringsstatus;

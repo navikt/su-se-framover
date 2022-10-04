@@ -1,0 +1,31 @@
+@import '~/src/styles/variables.less';
+
+.dataCellButtonsContainer {
+    display: flex;
+    gap: @spacing-s;
+
+    > * {
+        width: 9em;
+    }
+}
+
+.dataCellLink {
+    width: 9em;
+}
+
+.avsluttReguleringModal {
+    padding-right: @spacing-l;
+
+    .knapper {
+        display: flex;
+        gap: @spacing-xs;
+        margin-top: @spacing;
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+.knapper {
+    display: flex;
+    align-items: center;
+}
