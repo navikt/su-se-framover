@@ -20,6 +20,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'Informasjon i bosituasjon samsvarer ikke med formue',
     [ApiErrorCode.BOSITUASJONSPERIODER_OVERLAPPER]: 'Periodene i bosituasjonene overlapper',
     [ApiErrorCode.BREVVALG_IKKE_TILLATT]: 'Det er ikke tillatt å velge om brev skal sendes ut eller ikke',
+    [ApiErrorCode.DATO_MÅ_VÆRE_FØRSTE_I_MND]: 'Dato må være den første i måneneden',
     [ApiErrorCode.DELER_BOLIG_MED_ER_IKKE_UTFYLT]: 'Forventet at hvem søker deler bolig med skulle være utfylt',
     [ApiErrorCode.DELVIS_OPPHØR]: 'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     [ApiErrorCode.DEPOSITUM_HØYERE_ENN_INNSKUDD]: 'Depositumsbeløpet er høyere enn innskuddsbeløpet',
@@ -127,7 +128,6 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Kontrollsimuleringen er ulik saksbehandlers simulering',
     [ApiErrorCode.KUN_EN_ADRESSEGRUNN_KAN_VÆRE_UTFYLT]:
         'Flere adresser ble registrert sendt inn. Kun én adresse kan sendes inn',
-    [ApiErrorCode.KUNNE_IKKE_ENDRE_DATO]: 'Kunne ikke endre dato',
     [ApiErrorCode.KUNNE_IKKE_FERDIGSTILLE_REGULERING]: 'Kunne ikke ferdigstille regulering',
     [ApiErrorCode.KUNNE_IKKE_GENERERE_BREV]: 'Kunne ikke generere brev',
     [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND]: 'Siste utbetaling er ikke stans',
