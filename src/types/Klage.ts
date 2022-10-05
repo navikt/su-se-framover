@@ -1,8 +1,11 @@
 import { Nullable } from '~src/lib/types';
 
-import { Behandling } from './Behandling';
+import { Attestering } from './Behandling';
 
-export interface Klage extends Behandling<KlageStatus> {
+export interface Klage {
+    id: string;
+    opprettet: string;
+    status: KlageStatus;
     sakid: string;
     journalpostId: string;
     saksbehandler: string;
@@ -17,6 +20,7 @@ export interface Klage extends Behandling<KlageStatus> {
     klagevedtakshistorikk: VedtattUtfall[];
     avsluttet: AvsluttKlageStatus;
     avsluttetTidspunkt: Nullable<string>;
+    attesteringer: Attestering[];
 }
 
 export enum AvsluttKlageStatus {

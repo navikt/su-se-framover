@@ -1,12 +1,11 @@
 import { Nullable } from '~src/lib/types';
 
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { KlageStatus } from './Klage';
 import { RevurderingStatus } from './Revurdering';
 import { Sakstype } from './Sak';
 import { SøknadsbehandlingStatus } from './Søknadsbehandling';
 
-export type Behandlingsstatus = SøknadsbehandlingStatus | RevurderingStatus | KlageStatus;
+export type Behandlingsstatus = SøknadsbehandlingStatus | RevurderingStatus;
 
 export interface Behandling<Status = Behandlingsstatus> {
     id: string;
