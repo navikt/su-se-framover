@@ -644,7 +644,9 @@ const AccordionItemFormue = (props: {
                 <OppsummeringAvFormueVilkår formue={props.formueFraGrunnlag} visesIVedtak />
                 {props.sidestiltFormue && <OppsummeringAvFormueVilkår formue={props.sidestiltFormue} visesIVedtak />}
                 {props.sidestiltFormueFraSøknad && (
-                    <OppsummeringAvFormue formue={props.sidestiltFormueFraSøknad} visesIVedtak />
+                    <div className={styles.oppsummeringAvSøknadsformueContainer}>
+                        <OppsummeringAvFormue formue={props.sidestiltFormueFraSøknad} visesIVedtak />
+                    </div>
                 )}
             </Accordion.Content>
         </Accordion.Item>

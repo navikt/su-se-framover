@@ -1,5 +1,4 @@
 import { BodyShort, Label } from '@navikt/ds-react';
-import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -14,18 +13,11 @@ const OppsummeringAvInntektOgPensjon = (props: {
         søkers: InntektOgPensjon;
         eps?: Nullable<InntektOgPensjon>;
     };
-    visesIVedtak?: boolean;
-    fullSpace?: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const { søkers, eps } = props.inntektOgPensjon;
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-                [styles.fullSpace]: props.fullSpace,
-            })}
-        >
+        <div>
             <OppsummeringsTrippel
                 label={''}
                 søkersVerdi={formatMessage('formue.heading.søker')}
@@ -72,15 +64,17 @@ const OppsummeringAvInntektOgPensjon = (props: {
                     key={`${ytelse.type} - ${ytelse.valuta} - ${ytelse.beløp}`}
                     label={formatMessage('inntektOgPensjon.ytelserIUtlandet')}
                     søkersVerdi={
-                        <div>
+                        <div className={styles.verdiElement}>
                             <Label>
                                 {formatMessage('inntektOgPensjon.ytelserIUtlandet.type')}: {ytelse.type}
                             </Label>
-                            <Label>
-                                {formatMessage('inntektOgPensjon.ytelserIUtlandet.beløp')}: {ytelse.beløp}
-                            </Label>
+
                             <Label>
                                 {formatMessage('inntektOgPensjon.ytelserIUtlandet.valuta')}: {ytelse.valuta}
+                            </Label>
+
+                            <Label>
+                                {formatMessage('inntektOgPensjon.ytelserIUtlandet.beløp')}: {ytelse.beløp}
                             </Label>
                         </div>
                     }
@@ -93,13 +87,15 @@ const OppsummeringAvInntektOgPensjon = (props: {
                     label={formatMessage('inntektOgPensjon.ytelserIUtlandet')}
                     søkersVerdi={'-'}
                     epsverdi={
-                        <div>
+                        <div className={styles.verdiElement}>
                             <Label>
                                 {formatMessage('inntektOgPensjon.ytelserIUtlandet.type')}: {ytelse.type}
                             </Label>
+
                             <Label>
                                 {formatMessage('inntektOgPensjon.ytelserIUtlandet.beløp')}: {ytelse.beløp}
                             </Label>
+
                             <Label>
                                 {formatMessage('inntektOgPensjon.ytelserIUtlandet.valuta')}: {ytelse.valuta}
                             </Label>
@@ -112,10 +108,11 @@ const OppsummeringAvInntektOgPensjon = (props: {
                     key={`${p.ordning} - ${p.beløp}`}
                     label={formatMessage('inntektOgPensjon.tjenestepensjon')}
                     søkersVerdi={
-                        <div>
+                        <div className={styles.verdiElement}>
                             <Label>
                                 {formatMessage('inntektOgPensjon.tjenestepensjon.ordning')}: {p.ordning}
                             </Label>
+
                             <Label>
                                 {formatMessage('inntektOgPensjon.tjenestepensjon.beløp')}: {p.beløp}
                             </Label>
@@ -130,10 +127,11 @@ const OppsummeringAvInntektOgPensjon = (props: {
                     label={formatMessage('inntektOgPensjon.tjenestepensjon')}
                     søkersVerdi={'-'}
                     epsverdi={
-                        <div>
+                        <div className={styles.verdiElement}>
                             <Label>
                                 {formatMessage('inntektOgPensjon.tjenestepensjon.ordning')}: {p.ordning}
                             </Label>
+
                             <Label>
                                 {formatMessage('inntektOgPensjon.tjenestepensjon.beløp')}: {p.beløp}
                             </Label>
@@ -151,22 +149,15 @@ export const OppsummeringsTrippel = ({
     label,
     søkersVerdi,
     epsverdi,
-    tightSpaced,
 }: {
     label: string;
     søkersVerdi: string | number | JSX.Element;
     epsverdi?: Nullable<string | number | JSX.Element>;
-    tightSpaced?: boolean;
 }) => {
     return (
         <div className={styles.oppsummeringstrippel}>
             <BodyShort>{label}</BodyShort>
-            <div
-                className={classNames({
-                    [styles.tightSpaced]: tightSpaced,
-                    [styles.oppsummeringsVerdier]: !tightSpaced,
-                })}
-            >
+            <div className={styles.oppsummeringsVerdier}>
                 <Label>{søkersVerdi}</Label>
                 <Label>{epsverdi}</Label>
             </div>

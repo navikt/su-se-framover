@@ -67,14 +67,14 @@ const OppsummeringAvFormue = (props: {
                 epsverdi={props.formue.eps ? props.formue.eps.verdipapirBeløp ?? 0 : null}
             />
             <FormueTrippel
-                label={formatMessage('formue.kontanter')}
-                søkersVerdi={props.formue.søkers.kontanterBeløp ?? 0}
-                epsverdi={props.formue.eps ? props.formue.eps?.kontanterBeløp ?? 0 : null}
-            />
-            <FormueTrippel
                 label={formatMessage('formue.skylderNoenSøkerPengerBeløp')}
                 søkersVerdi={props.formue.søkers.skylderNoenMegPengerBeløp ?? 0}
                 epsverdi={props.formue.eps ? props.formue.eps.skylderNoenMegPengerBeløp ?? 0 : null}
+            />
+            <FormueTrippel
+                label={formatMessage('formue.kontanter')}
+                søkersVerdi={props.formue.søkers.kontanterBeløp ?? 0}
+                epsverdi={props.formue.eps ? props.formue.eps?.kontanterBeløp ?? 0 : null}
             />
             <FormueTrippel
                 label={formatMessage('formue.depositumsBeløp')}

@@ -357,7 +357,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 søkers: props.behandling.søknad.søknadInnhold.inntektOgPensjon,
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.inntektOgPensjon,
                             }}
-                            fullSpace
                         />
 
                         {skattemeldingToggle && (
