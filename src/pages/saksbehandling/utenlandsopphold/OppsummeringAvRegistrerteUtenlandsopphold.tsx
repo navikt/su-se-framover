@@ -56,7 +56,7 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
                         {formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.ugyldiggjort')}
                     </Checkbox>
                 </div>
-                <Accordion className={styles.accordion}>
+                <Accordion>
                     {filtrerteUtenlandsopphold.map((it) => (
                         <Accordion.Item key={it.id}>
                             <Accordion.Header>
@@ -101,7 +101,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
     }
 
     return (
-        <Panel border className={styles.registrertUtenlandsoppholdContaner}>
+        <Panel border className={styles.registrertUtenlandsoppholdContainer}>
             <div className={styles.utenlandsoppholdMetadataContainer}>
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.opprettetAv')}

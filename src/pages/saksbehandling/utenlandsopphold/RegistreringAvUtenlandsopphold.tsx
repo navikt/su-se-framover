@@ -4,11 +4,10 @@ import { Delete, Close } from '@navikt/ds-icons';
 import { Button, Heading, Panel, Select, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { ArrayPath, Controller, useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
+import { Controller, useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { PeriodeForm } from '~src/components/formElements/FormElements';
-import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -26,7 +25,7 @@ import styles from './RegistreringAvUtenlandsopphold.module.less';
 export interface RegisteringAvUtenlandsoppholdFormData {
     periode: NullablePeriode<Date>;
     dokumentasjon: Nullable<UtenlandsoppholdDokumentasjon>;
-    journalposter: Array<string | null>;
+    journalposter: Array<{ journalpostId: Nullable<string> }>;
 }
 
 const registeringAvUtenlandsoppholdFormSchema = yup.object<RegisteringAvUtenlandsoppholdFormData>({
@@ -36,15 +35,21 @@ const registeringAvUtenlandsoppholdFormSchema = yup.object<RegisteringAvUtenland
         .oneOf([...Object.values(UtenlandsoppholdDokumentasjon)])
         .nullable()
         .required(),
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - yup er på bærtur igjen
-    journalposter: yup.array(yup.string().required().typeError('Feltet må fylles ut')),
+    journalposter: yup
+        .array<{ journalpostId: Nullable<string> }>(
+            yup
+                .object({
+                    journalpostId: yup.string().required().typeError('Feltet må fylles ut'),
+                })
+                .required()
+        )
+        .required(),
 });
 
 const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.grunnlagFormContainer}>
+        <div className={styles.utenlandsoppholdContainer}>
             <Heading className={styles.heading} size="large">
                 {formatMessage('grunnlagForm.heading')}
             </Heading>
@@ -77,7 +82,11 @@ export const RegistreringAvUtenlandsoppholdForm = (props: {
                 ),
             },
             dokumentasjon: props.endrerRegistrertUtenlandsopphold?.registrertUtenlandsopphold?.dokumentasjon ?? null,
-            journalposter: props.endrerRegistrertUtenlandsopphold?.registrertUtenlandsopphold?.journalposter ?? [],
+            journalposter: props.endrerRegistrertUtenlandsopphold?.registrertUtenlandsopphold?.journalposter
+                ? props.endrerRegistrertUtenlandsopphold?.registrertUtenlandsopphold?.journalposter.map((it) => ({
+                      journalpostId: it,
+                  }))
+                : [],
         },
         resolver: yupResolver(registeringAvUtenlandsoppholdFormSchema),
     });
@@ -103,7 +112,7 @@ export const RegistreringAvUtenlandsoppholdForm = (props: {
                     tilOgMed: values.periode.tilOgMed!.toISOString(),
                 },
                 dokumentasjon: values.dokumentasjon!,
-                journalposter: values.journalposter.map((it) => it!),
+                journalposter: values.journalposter.map((it) => it.journalpostId!),
             });
         }
     };
@@ -149,39 +158,40 @@ export const RegistreringAvUtenlandsoppholdForm = (props: {
                             {antallDagerIUtlandet}
                         </Heading>
                     </div>
-                    <div className={styles.selectOgTextFieldContainer}>
-                        <Controller
-                            control={form.control}
-                            name={'dokumentasjon'}
-                            render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    value={field.value ?? ''}
-                                    label={formatMessage('grunnlagForm.dokumentasjon')}
-                                    error={form.formState.errors.dokumentasjon?.message}
-                                >
-                                    <option value="">
-                                        {formatMessage('grunnlagForm.dokumentasjon.velgTypeDokumentasjon')}
+
+                    <Controller
+                        control={form.control}
+                        name={'dokumentasjon'}
+                        render={({ field }) => (
+                            <Select
+                                className={styles.select}
+                                {...field}
+                                value={field.value ?? ''}
+                                label={formatMessage('grunnlagForm.dokumentasjon')}
+                                error={form.formState.errors.dokumentasjon?.message}
+                            >
+                                <option value="">
+                                    {formatMessage('grunnlagForm.dokumentasjon.velgTypeDokumentasjon')}
+                                </option>
+                                {Object.values(UtenlandsoppholdDokumentasjon).map((v) => (
+                                    <option key={v} value={v}>
+                                        {v}
                                     </option>
-                                    {Object.values(UtenlandsoppholdDokumentasjon).map((v) => (
-                                        <option key={v} value={v}>
-                                            {v}
-                                        </option>
-                                    ))}
-                                </Select>
-                            )}
-                        />
-                        <JournalpostIderInputs form={form} />
-                    </div>
+                                ))}
+                            </Select>
+                        )}
+                    />
+                    <JournalpostIderInputs form={form} />
+
+                    {RemoteData.isFailure(status) && (
+                        <ApiErrorAlert className={styles.apiErrorAlert} error={status.error} />
+                    )}
+                    {endrerRegistrertUtenlandsopphold ? (
+                        <EndrerEksisterendeUtenlandsoppholdButtons />
+                    ) : (
+                        <TilbakeOgRegistrerButtons sakId={props.sakId} />
+                    )}
                 </div>
-                {RemoteData.isFailure(status) && (
-                    <ApiErrorAlert className={styles.apiErrorAlert} error={status.error} />
-                )}
-                {endrerRegistrertUtenlandsopphold ? (
-                    <EndrerEksisterendeUtenlandsoppholdButtons />
-                ) : (
-                    <TilbakeOgRegistrerButtons sakId={props.sakId} />
-                )}
             </Panel>
         </form>
     );
@@ -215,55 +225,62 @@ const EndrerEksisterendeUtenlandsoppholdButtons = () => {
 const JournalpostIderInputs = (props: { form: UseFormReturn<RegisteringAvUtenlandsoppholdFormData> }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const journalpostFieldArray = useFieldArray({
+    const journalposter = useFieldArray({
         control: props.form.control,
-        name: 'journalposter' as ArrayPath<RegisteringAvUtenlandsoppholdFormData>,
+        name: 'journalposter',
     });
 
     return (
-        <div className={styles.journalpostIderInputsContainer}>
-            {journalpostFieldArray.fields.map((el, idx) => (
-                <div key={el.id}>
+        <ul className={styles.journalposterInputsContainer}>
+            {journalposter.fields.map((el, idx) => (
+                <li key={el.id}>
                     <div className={styles.journalpostIdInputMedDelete}>
                         <Controller
                             control={props.form.control}
-                            name={`journalposter.${idx}`}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    autoComplete="off"
-                                    onChange={(e) => {
-                                        props.form.setValue(`journalposter.${idx}`, e.target.value);
-                                    }}
-                                    value={field.value ?? ''}
-                                    label={formatMessage('grunnlagForm.journalpostId')}
-                                />
-                            )}
+                            name={`journalposter.${idx}.journalpostId`}
+                            render={({ field, fieldState }) => {
+                                console.log(fieldState.error);
+                                return (
+                                    <TextField
+                                        {...field}
+                                        autoComplete="off"
+                                        onChange={(e) => {
+                                            props.form.setValue(`journalposter.${idx}`, {
+                                                journalpostId: e.target.value,
+                                            });
+                                        }}
+                                        value={field.value ?? ''}
+                                        label={formatMessage('grunnlagForm.journalpostId')}
+                                        error={fieldState.error?.message}
+                                    />
+                                );
+                            }}
                         />
 
                         <Button
+                            className={styles.fjernJournalpostButton}
                             variant="secondary"
                             type="button"
-                            onClick={() => journalpostFieldArray.remove(idx)}
+                            onClick={() => journalposter.remove(idx)}
                             size="small"
                             aria-label={formatMessage('knapp.fjernJournalpostId')}
                         >
                             <Delete />
                         </Button>
                     </div>
-                    {props.form.formState.errors?.journalposter?.[idx]?.message && (
-                        <SkjemaelementFeilmelding>
-                            {props.form.formState.errors?.journalposter?.[idx]?.message}
-                        </SkjemaelementFeilmelding>
-                    )}
-                </div>
+                </li>
             ))}
-            <Button variant="secondary" type="button" size="small" onClick={() => journalpostFieldArray.append(null)}>
+            <Button
+                variant="secondary"
+                type="button"
+                size="small"
+                onClick={() => journalposter.append({ journalpostId: null })}
+            >
                 {formatMessage(
-                    journalpostFieldArray.fields.length === 0 ? 'knapp.leggtilJournalpostId' : 'knapp.nyJournalpostId'
+                    journalposter.fields.length === 0 ? 'knapp.leggtilJournalpostId' : 'knapp.nyJournalpostId'
                 )}
             </Button>
-        </div>
+        </ul>
     );
 };
 

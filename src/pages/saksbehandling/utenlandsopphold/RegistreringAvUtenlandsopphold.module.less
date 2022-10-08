@@ -17,23 +17,23 @@
 
 .mainContentContainer {
     display: flex;
-    gap: @spacing;
-    margin-left: 10rem;
+    justify-content: space-between;
+    margin: 0 10rem;
+    flex-wrap: wrap;
 }
 
 //-----------------------------------------------------------
-.grunnlagFormContainer {
+.utenlandsoppholdContainer {
     width: 35rem;
-    > :not(:last-child) {
+
+    .heading {
         margin-bottom: @spacing-s;
     }
 }
+
 .avsluttEndringAvUtenlandsoppholdButtonContainer {
     display: flex;
     justify-content: flex-end;
-    button {
-        align-items: center;
-    }
 }
 
 .inputFieldsContainer {
@@ -46,22 +46,15 @@
 .periodeFormMedDagerTeller {
     display: flex;
     gap: @spacing;
+
+    .antallDagerTeller {
+        position: relative;
+        top: 45px;
+    }
 }
 
-.antallDagerTeller {
-    position: relative;
-    top: 45px;
-}
-
-.selectOgTextFieldContainer {
+.select {
     max-width: 60%;
-    display: flex;
-    flex-direction: column;
-    gap: @spacing-s;
-}
-
-.apiErrorAlert {
-    margin-bottom: @spacing-s;
 }
 
 .grunnlagFormButtonsContainer {
@@ -70,19 +63,24 @@
     gap: @spacing;
 }
 
-.journalpostIderInputsContainer {
+.journalposterInputsContainer {
     > :not(:last-child) {
         margin-bottom: @spacing-s;
     }
 }
+
 .journalpostIdInputMedDelete {
     display: flex;
     gap: @spacing-xs;
-    align-items: flex-end;
+
+    .fjernJournalpostButton {
+        height: 40px;
+        position: relative;
+        top: 40px;
+    }
 }
 
 //------------------------------------------------------
-
 .oppsummeringAvRegistrerteUtenlandsoppholdContainer {
     .heading {
         margin-bottom: @spacing-s;
@@ -100,18 +98,13 @@
     gap: @spacing-s;
 }
 
-.accordion {
-    width: 100%;
-}
-
 .accordionHeaderContentContainer {
     display: flex;
     justify-content: space-between;
     width: 45rem;
-    max-width: 100%;
 }
 
-.registrertUtenlandsoppholdContaner {
+.registrertUtenlandsoppholdContainer {
     > :not(:last-child) {
         margin-bottom: @spacing-s;
     }
