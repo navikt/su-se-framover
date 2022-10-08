@@ -3,6 +3,7 @@ import { Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
 
 import { Klage } from './Klage';
 import { Periode } from './Periode';
+import { RegistrertUtenlandsopphold } from './RegistrertUtenlandsopphold';
 import { Regulering } from './Regulering';
 import { Revurdering } from './Revurdering';
 import { Søknad } from './Søknad';
@@ -24,6 +25,7 @@ export interface Sak {
     reguleringer: Regulering[];
     sakstype: Sakstype;
     vedtakPåTidslinje: VedtakPåTidslinje[];
+    utenlandsopphold: RegistrertUtenlandsopphold[];
 }
 
 export enum KanStansesEllerGjenopptas {

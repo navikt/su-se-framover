@@ -11,6 +11,7 @@ export default {
 
     'link.dokumenter': 'Brev sendt fra SU',
     'link.kontrollsamtale': 'Kontrollsamtale',
+    'link.utenlandsopphold': 'Utenlandsopphold',
 
     'åpneBehandlinger.table.tittel': 'Åpne behandlinger',
     'vedtak.table.tittel': 'Vedtak',

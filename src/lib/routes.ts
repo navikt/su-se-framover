@@ -287,3 +287,9 @@ export const kontrollsamtale: Route<{
     absPath: '/saksoversikt/:sakId/kontrollsamtale/',
     createURL: (args) => `/saksoversikt/${args.sakId}/kontrollsamtale/`,
 };
+
+export const utenlandsopphold: Route<{ sakId: string }> = {
+    path: 'utenlandsopphold/',
+    absPath: '/saksoversikt/:sakId/utenlandsopphold',
+    createURL: (args) => `/saksoversikt/${args.sakId}/utenlandsopphold/`,
+};

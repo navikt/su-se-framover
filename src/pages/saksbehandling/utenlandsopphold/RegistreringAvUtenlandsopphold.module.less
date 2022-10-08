@@ -1,0 +1,138 @@
+@import '~/src/styles/variables.less';
+
+.pageContainer {
+    width: 100%;
+}
+
+.headingContainer {
+    border-bottom: 2px solid black;
+    margin-bottom: @spacing-s;
+
+    .utenlandsoppholdHeading {
+        margin-top: @spacing-s;
+        margin-left: 10rem;
+        margin-bottom: @spacing-s;
+    }
+}
+
+.mainContentContainer {
+    display: flex;
+    gap: @spacing;
+    margin-left: 10rem;
+}
+
+//-----------------------------------------------------------
+.grunnlagFormContainer {
+    width: 35rem;
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+.avsluttEndringAvUtenlandsoppholdButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    button {
+        align-items: center;
+    }
+}
+
+.inputFieldsContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+    margin-bottom: @spacing;
+}
+
+.periodeFormMedDagerTeller {
+    display: flex;
+    gap: @spacing;
+}
+
+.antallDagerTeller {
+    position: relative;
+    top: 45px;
+}
+
+.selectOgTextFieldContainer {
+    max-width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+}
+
+.apiErrorAlert {
+    margin-bottom: @spacing-s;
+}
+
+.grunnlagFormButtonsContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: @spacing;
+}
+
+.journalpostIderInputsContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+.journalpostIdInputMedDelete {
+    display: flex;
+    gap: @spacing-xs;
+    align-items: flex-end;
+}
+
+//------------------------------------------------------
+
+.oppsummeringAvRegistrerteUtenlandsoppholdContainer {
+    .heading {
+        margin-bottom: @spacing-s;
+    }
+    .panel {
+        display: flex;
+        gap: @spacing;
+    }
+}
+
+.filterContainer {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+}
+
+.accordion {
+    width: 100%;
+}
+
+.accordionHeaderContentContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 45rem;
+    max-width: 100%;
+}
+
+.registrertUtenlandsoppholdContaner {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
+.utenlandsoppholdMetadataContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+}
+
+.utenlandsoppholdPeriodecontainer {
+    display: grid;
+    grid-template-columns: repeat(2, 25%);
+}
+
+.journalposterContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.endreKnappContainer {
+    display: flex;
+    justify-content: flex-end;
+}

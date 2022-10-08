@@ -47,6 +47,29 @@ export const validerPeriodeTomEtterFom = yup
     })
     .required();
 
+export const validerPeriodeTomEtterFomUtenSisteDagBegrensning = yup
+    .object<NullablePeriode>({
+        fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
+        tilOgMed: yup
+            .date()
+            .required()
+            .typeError('Feltet må fylles ut')
+            .test('etterFom', 'Til-og-med kan ikke være før fra-og-med', function (value) {
+                const fom = this.parent.fraOgMed as Nullable<Date>;
+                if (value && fom) {
+                    return !DateFns.isBefore(value, fom);
+                }
+                return true;
+            })
+            .test('slutten av måned', 'Til og med må være siste dagen i måneden', function (value) {
+                if (value) {
+                    return true;
+                }
+                return false;
+            }),
+    })
+    .required();
+
 export function validateStringAsNonNegativeNumber(name = 'feltet') {
     // Vi ønsker at tom streng skal regnes som at feltet ikke er fylt inn,
     // men yup.number() vil behandle det som et ugyldig tall.

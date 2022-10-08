@@ -29,13 +29,7 @@ export const formatMonthYear = (date: string) =>
         ...formatDateOptions,
         day: undefined,
     });
-
-export const formatYear = (date: string) =>
-    intl.formatDate(date, {
-        ...formatDateOptions,
-        day: undefined,
-        month: undefined,
-    });
+export const formatDayMonthYear = (date: string) => intl.formatDate(date, formatDateOptions);
 
 export type Utlandsdatoer = Array<{ utreisedato: string; innreisedato: string }>;
 
@@ -59,14 +53,6 @@ export const toDateOrNull = (date: string | undefined | null): Date | null => {
     return new Date(date);
 };
 
-export const isValidDayMonthYearFormat = (date: Nullable<string>): boolean => {
-    if (!date) {
-        return false;
-    }
-
-    return DateFns.isValid(DateFns.parse(date, 'dd.MM.yyyy', new Date()));
-};
-
 export const isValidInterval = (fom: Nullable<Date>, tom: Nullable<Date>) => fom && tom && DateFns.isAfter(tom, fom);
 
 export const toStringDateOrNull = (date: Date | null) => {
@@ -78,6 +64,9 @@ export const toStringDateOrNull = (date: Date | null) => {
 // Tipper det ikke blir nødvendig med "overload" for Periode<Date>
 export const formatPeriode = (periode: Periode<string>) =>
     `${formatMonthYear(periode.fraOgMed)} – ${formatMonthYear(periode.tilOgMed)}`;
+
+export const formatPeriodeMedDager = (periode: Periode<string>) =>
+    `${formatDayMonthYear(periode.fraOgMed)} – ${formatDayMonthYear(periode.tilOgMed)}`;
 
 export const toIsoDateOnlyString = (date: Date) => DateFns.format(date, DateFormats.IsoDateOnly);
 

@@ -17,6 +17,7 @@ import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemote
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
+import { RegistrertUtenlandsopphold, RegistrerUtenlandsoppholdRequest } from '~src/types/RegistrertUtenlandsopphold';
 import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
@@ -205,6 +206,18 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
     });
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const registrerUtenlandsopphold = createAsyncThunk<
+    RegistrertUtenlandsopphold,
+    RegistrerUtenlandsoppholdRequest,
+    { rejectValue: ApiError }
+>('sak/registrerUtenlandsopphold', async (arg, thunkApi) => {
+    const res = await sakApi.registrerUtenlandsopphold(arg);
+    if (res.status === 'ok') {
+        return res.data;
     }
     return thunkApi.rejectWithValue(res.error);
 });

@@ -1,3 +1,4 @@
+import { RegistrertUtenlandsopphold, RegistrerUtenlandsoppholdRequest } from '~src/types/RegistrertUtenlandsopphold';
 import { Restans } from '~src/types/Restans';
 import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
 import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
@@ -47,6 +48,19 @@ export async function kallInnTilKontrollsamtale(sakId: string) {
         method: 'POST',
         body: {
             sakId: sakId,
+        },
+    });
+}
+export async function registrerUtenlandsopphold(
+    arg: RegistrerUtenlandsoppholdRequest
+): Promise<ApiClientResult<RegistrertUtenlandsopphold>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/utenlandsopphold`,
+        method: 'POST',
+        body: {
+            periode: arg.periode,
+            dokumentasjon: arg.dokumentasjon,
+            journalpostIder: arg.journalposter,
         },
     });
 }
