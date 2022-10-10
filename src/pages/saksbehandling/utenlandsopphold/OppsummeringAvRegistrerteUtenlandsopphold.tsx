@@ -29,16 +29,13 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     const { formatMessage } = useI18n({ messages });
     const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
     const [tilOgMed, setTilOgMed] = useState<Nullable<Date>>(null);
-    const [visUgyldiggjort, setVisUgyldigjort] = useState(false);
+    const [visAnnullerte, setVisAnnullerte] = useState(false);
 
     const filtrerteUtenlandsopphold = props.registrerteUtenlandsopphold
-        .sort(
-            (a: RegistrertUtenlandsopphold, b: RegistrertUtenlandsopphold) =>
-                Date.parse(a.periode.fraOgMed) - Date.parse(b.periode.fraOgMed)
-        )
+        .sort((a, b) => Date.parse(a.periode.fraOgMed) - Date.parse(b.periode.fraOgMed))
         .filter((it) => (fraOgMed ? new Date(it.periode.fraOgMed) >= fraOgMed : true))
         .filter((it) => (tilOgMed ? new Date(it.periode.tilOgMed) <= tilOgMed : true))
-        .filter((it) => (visUgyldiggjort ? true : it.annullert));
+        .filter((it) => (visAnnullerte ? true : it.annullert));
 
     return (
         <Oppsummeringspanel
@@ -47,49 +44,86 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
             tittel={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.oversiktOverUtenlandsopphold')}
         >
             <div className={styles.oppsummeringContentContainer}>
-                <div className={styles.filterContainer}>
-                    <DatePicker
-                        label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.fraOgMed')}
-                        dateFormat={'dd.MM.yyyy'}
-                        value={fraOgMed}
-                        onChange={(dato) => (dato ? setFraOgMed(DateFns.startOfDay(dato)) : setFraOgMed(dato))}
-                        isClearable
-                    />
-                    <DatePicker
-                        label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.tilOgMed')}
-                        value={tilOgMed}
-                        dateFormat={'dd.MM.yyyy'}
-                        onChange={(dato) => (dato ? setTilOgMed(DateFns.endOfDay(dato)) : setTilOgMed(dato))}
-                        isClearable
-                    />
-                    <Checkbox checked={visUgyldiggjort} onChange={(e) => setVisUgyldigjort(e.target.checked)}>
-                        {formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.annullerte')}
-                    </Checkbox>
-                </div>
+                <Oppsummeringsfiltrering
+                    fraOgMed={{ value: fraOgMed, set: setFraOgMed }}
+                    tilOgMed={{ value: tilOgMed, set: setTilOgMed }}
+                    annullert={{ value: visAnnullerte, set: setVisAnnullerte }}
+                />
                 <Accordion className={styles.accordion}>
                     {filtrerteUtenlandsopphold.map((it) => (
-                        <Accordion.Item key={it.id}>
-                            <Accordion.Header>
-                                <div className={styles.accordionHeaderContentContainer}>
-                                    <Heading size="small">{formatPeriodeMedDager(it.periode)}</Heading>
-                                    <div className={styles.warningOgAntallDagerContainer}>
-                                        {!it.annullert && <WarningIcon width={25} />}
-                                        <Heading size="small">{it.antallDager}</Heading>
-                                    </div>
-                                </div>
-                            </Accordion.Header>
-                            <Accordion.Content>
-                                <OppsummeringAvRegistrertUtenlandsopphold
-                                    sakId={props.sakId}
-                                    registrertUtenlandsopphold={it}
-                                    medEndreKnapp
-                                />
-                            </Accordion.Content>
-                        </Accordion.Item>
+                        <RegistrertUtenlandsoppholdAccordionItem
+                            key={it.id}
+                            sakId={props.sakId}
+                            registrertUtenlandsopphold={it}
+                        />
                     ))}
                 </Accordion>
             </div>
         </Oppsummeringspanel>
+    );
+};
+
+const Oppsummeringsfiltrering = (props: {
+    fraOgMed: {
+        value: Nullable<Date>;
+        set: (date: Nullable<Date>) => void;
+    };
+    tilOgMed: {
+        value: Nullable<Date>;
+        set: (date: Nullable<Date>) => void;
+    };
+    annullert: {
+        value: boolean;
+        set: (b: boolean) => void;
+    };
+}) => {
+    const { formatMessage } = useI18n({ messages });
+    return (
+        <div className={styles.filterContainer}>
+            <DatePicker
+                label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.fraOgMed')}
+                dateFormat={'dd.MM.yyyy'}
+                value={props.fraOgMed.value}
+                onChange={(dato) => (dato ? props.fraOgMed.set(DateFns.startOfDay(dato)) : props.fraOgMed.set(dato))}
+                isClearable
+            />
+            <DatePicker
+                label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.tilOgMed')}
+                value={props.tilOgMed.value}
+                dateFormat={'dd.MM.yyyy'}
+                onChange={(dato) => (dato ? props.tilOgMed.set(DateFns.endOfDay(dato)) : props.tilOgMed.set(dato))}
+                isClearable
+            />
+            <Checkbox checked={props.annullert.value} onChange={(e) => props.annullert.set(e.target.checked)}>
+                {formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.annullerte')}
+            </Checkbox>
+        </div>
+    );
+};
+
+const RegistrertUtenlandsoppholdAccordionItem = (props: {
+    sakId: string;
+    registrertUtenlandsopphold: RegistrertUtenlandsopphold;
+}) => {
+    return (
+        <Accordion.Item>
+            <Accordion.Header>
+                <div className={styles.accordionHeaderContentContainer}>
+                    <Heading size="small">{formatPeriodeMedDager(props.registrertUtenlandsopphold.periode)}</Heading>
+                    <div className={styles.warningOgAntallDagerContainer}>
+                        {!props.registrertUtenlandsopphold.annullert && <WarningIcon width={25} />}
+                        <Heading size="small">{props.registrertUtenlandsopphold.antallDager}</Heading>
+                    </div>
+                </div>
+            </Accordion.Header>
+            <Accordion.Content>
+                <OppsummeringAvRegistrertUtenlandsopphold
+                    sakId={props.sakId}
+                    registrertUtenlandsopphold={props.registrertUtenlandsopphold}
+                    medEndreKnapp
+                />
+            </Accordion.Content>
+        </Accordion.Item>
     );
 };
 
