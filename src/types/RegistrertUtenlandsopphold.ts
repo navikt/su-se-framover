@@ -16,7 +16,7 @@ export interface RegistrertUtenlandsopphold {
     endretTidspunkt: string;
     versjon: number;
     antallDager: number;
-    erGyldig: boolean;
+    annullert: boolean;
 }
 
 export enum UtenlandsoppholdDokumentasjon {

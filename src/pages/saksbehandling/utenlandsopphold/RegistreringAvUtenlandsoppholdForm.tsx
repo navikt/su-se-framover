@@ -124,11 +124,13 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                             className={styles.select}
                             {...field}
                             value={field.value ?? ''}
-                            label={formatMessage('grunnlagForm.dokumentasjon')}
+                            label={formatMessage('registreringAvUtenlandsopphold.form.dokumentasjon.label')}
                             error={form.formState.errors.dokumentasjon?.message}
                         >
                             <option value="">
-                                {formatMessage('grunnlagForm.dokumentasjon.velgTypeDokumentasjon')}
+                                {formatMessage(
+                                    'registreringAvUtenlandsopphold.form.dokumentasjon.defaultValue.velgTypeDokumentasjon'
+                                )}
                             </option>
                             {Object.values(UtenlandsoppholdDokumentasjon).map((v) => (
                                 <option key={v} value={v}>
@@ -171,7 +173,7 @@ const JournalpostIderInputs = (props: { form: UseFormReturn<RegisteringAvUtenlan
                                         });
                                     }}
                                     value={field.value ?? ''}
-                                    label={formatMessage('grunnlagForm.journalpostId')}
+                                    label={formatMessage('registreringAvUtenlandsopphold.form.journalpostId.label')}
                                     error={fieldState.error?.message}
                                 />
                             )}
@@ -183,7 +185,7 @@ const JournalpostIderInputs = (props: { form: UseFormReturn<RegisteringAvUtenlan
                             type="button"
                             onClick={() => journalposter.remove(idx)}
                             size="small"
-                            aria-label={formatMessage('knapp.fjernJournalpostId')}
+                            aria-label={formatMessage('registreringAvUtenlandsopphold.form.button.journalpostId.fjern')}
                         >
                             <Delete />
                         </Button>
@@ -197,7 +199,9 @@ const JournalpostIderInputs = (props: { form: UseFormReturn<RegisteringAvUtenlan
                 onClick={() => journalposter.append({ journalpostId: null })}
             >
                 {formatMessage(
-                    journalposter.fields.length === 0 ? 'knapp.leggtilJournalpostId' : 'knapp.nyJournalpostId'
+                    journalposter.fields.length === 0
+                        ? 'registreringAvUtenlandsopphold.form.button.journalpostId.leggTil'
+                        : 'registreringAvUtenlandsopphold.form.button.journalpostId.ny'
                 )}
             </Button>
         </ul>

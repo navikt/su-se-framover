@@ -25,7 +25,7 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
             <Oppsummeringspanel
                 ikon={Oppsummeringsikon.Blyant}
                 farge={Oppsummeringsfarge.Grønn}
-                tittel={formatMessage('grunnlagForm.heading')}
+                tittel={formatMessage('registreringAvUtenlandsopphold.form.heading')}
             >
                 <RegistreringAvUtenlandsoppholdForm
                     sakId={props.sakId}
@@ -47,10 +47,10 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
                             variant="secondary"
                             href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                         >
-                            {formatMessage('grunnlagForm.button.tilbake')}
+                            {formatMessage('registreringAvUtenlandsopphold.form.button.tilbake')}
                         </LinkAsButton>
                         <Button loading={RemoteData.isPending(status)}>
-                            {formatMessage('grunnlagForm.button.registrer')}
+                            {formatMessage('registreringAvUtenlandsopphold.form.button.registrer')}
                         </Button>
                     </div>
                 </RegistreringAvUtenlandsoppholdForm>

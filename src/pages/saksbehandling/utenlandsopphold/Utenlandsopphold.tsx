@@ -23,7 +23,7 @@ const topkek = [
         endretTidspunkt: '01.01.2022 20:01',
         versjon: 1,
         antallDager: 1,
-        erGyldig: true,
+        annullert: true,
     },
     {
         id: '49e3db0a-9abb-44f3-9063-e3fe4c33a184',
@@ -36,7 +36,7 @@ const topkek = [
         endretTidspunkt: '01.01.2022 20:01',
         versjon: 1,
         antallDager: 1,
-        erGyldig: true,
+        annullert: true,
     },
     {
         id: '5914fcfd-9f8b-48db-ba20-8c48bc0e4d91',
@@ -49,7 +49,7 @@ const topkek = [
         endretTidspunkt: '01.01.2022 20:01',
         versjon: 1,
         antallDager: 1,
-        erGyldig: true,
+        annullert: true,
     },
     {
         id: 'a62a9330-23c5-474c-8b87-b64685d25fa2',
@@ -62,7 +62,7 @@ const topkek = [
         endretTidspunkt: '01.01.2022 20:01',
         versjon: 1,
         antallDager: 1,
-        erGyldig: false,
+        annullert: false,
     },
 ];
 

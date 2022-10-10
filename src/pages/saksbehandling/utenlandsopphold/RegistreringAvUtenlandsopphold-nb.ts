@@ -1,21 +1,24 @@
 export default {
     'page.heading': 'Utenlandsopphold',
 
-    'grunnlagForm.heading': 'Registrering av ny utenlandsopphold',
-    'grunnlagForm.dokumentasjon': 'Dokumentasjon',
-    'grunnlagForm.dokumentasjon.velgTypeDokumentasjon': 'Velg type dokumentasjon',
-    'grunnlagForm.journalpostId': 'Journalpost-id',
+    'registreringAvUtenlandsopphold.form.heading': 'Registrering av ny utenlandsopphold',
+    'registreringAvUtenlandsopphold.form.dokumentasjon.label': 'Dokumentasjon',
+    'registreringAvUtenlandsopphold.form.dokumentasjon.defaultValue.velgTypeDokumentasjon': 'Velg type dokumentasjon',
+    'registreringAvUtenlandsopphold.form.journalpostId.label': 'Journalpost-id',
 
-    'grunnlagForm.button.registrer': 'Registrer',
-    'grunnlagForm.button.tilbake': 'Tilbake',
-    'grunnlagForm.button.uggyldiggjør': 'Ugyldiggjør',
-    'grunnlagForm.button.oppdater': 'Oppdater',
+    'registreringAvUtenlandsopphold.form.button.journalpostId.fjern': 'Fjern journalpostId',
+    'registreringAvUtenlandsopphold.form.button.journalpostId.leggTil': 'Legg til journalpost-id',
+    'registreringAvUtenlandsopphold.form.button.journalpostId.ny': 'Ny journalpostId',
+    'registreringAvUtenlandsopphold.form.button.registrer': 'Registrer',
+    'registreringAvUtenlandsopphold.form.button.tilbake': 'Tilbake',
+    'registreringAvUtenlandsopphold.form.button.annuller': 'Annuller',
+    'registreringAvUtenlandsopphold.form.button.oppdater': 'Oppdater',
 
     'oppsummeringAvRegistrerteUtenlandsopphold.oversiktOverUtenlandsopphold':
         'Oversikt over registrerte utenlandsopphold',
-    'oppsummeringAvRegistrerteUtenlandsopphold.fraOgMed': 'Fra og med',
-    'oppsummeringAvRegistrerteUtenlandsopphold.tilOgMed': 'Til og med',
-    'oppsummeringAvRegistrerteUtenlandsopphold.ugyldiggjort': 'Ugyldiggjort',
+    'oppsummeringAvRegistrerteUtenlandsopphold.filtrering.fraOgMed': 'Fra og med',
+    'oppsummeringAvRegistrerteUtenlandsopphold.filtrering.tilOgMed': 'Til og med',
+    'oppsummeringAvRegistrerteUtenlandsopphold.filtrering.annullerte': 'Annullerte',
 
     'oppsummeringAvRegistrertUtenlandsopphold.opprettetAv': 'Opprettet av',
     'oppsummeringAvRegistrertUtenlandsopphold.opprettetTidspunkt': 'Opprettet tidspunkt',
@@ -26,8 +29,4 @@ export default {
     'oppsummeringAvRegistrertUtenlandsopphold.dokumentasjon': 'Dokumentasjon',
     'oppsummeringAvRegistrertUtenlandsopphold.journalposter': 'Journalposter',
     'oppsummeringAvRegistrertUtenlandsopphold.knapp.endre': 'Endre',
-
-    'knapp.fjernJournalpostId': 'Fjern journalpostId',
-    'knapp.leggtilJournalpostId': 'Legg til journalpost-id',
-    'knapp.nyJournalpostId': 'Ny journalpostId',
 };

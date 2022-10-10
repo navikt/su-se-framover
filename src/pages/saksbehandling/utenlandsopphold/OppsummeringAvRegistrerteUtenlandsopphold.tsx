@@ -38,7 +38,7 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
         )
         .filter((it) => (fraOgMed ? new Date(it.periode.fraOgMed) >= fraOgMed : true))
         .filter((it) => (tilOgMed ? new Date(it.periode.tilOgMed) <= tilOgMed : true))
-        .filter((it) => (visUgyldiggjort ? true : it.erGyldig));
+        .filter((it) => (visUgyldiggjort ? true : it.annullert));
 
     return (
         <Oppsummeringspanel
@@ -49,21 +49,21 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
             <div className={styles.oppsummeringContentContainer}>
                 <div className={styles.filterContainer}>
                     <DatePicker
-                        label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.fraOgMed')}
+                        label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.fraOgMed')}
                         dateFormat={'dd.MM.yyyy'}
                         value={fraOgMed}
                         onChange={(dato) => (dato ? setFraOgMed(DateFns.startOfDay(dato)) : setFraOgMed(dato))}
                         isClearable
                     />
                     <DatePicker
-                        label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.tilOgMed')}
+                        label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.tilOgMed')}
                         value={tilOgMed}
                         dateFormat={'dd.MM.yyyy'}
                         onChange={(dato) => (dato ? setTilOgMed(DateFns.endOfDay(dato)) : setTilOgMed(dato))}
                         isClearable
                     />
                     <Checkbox checked={visUgyldiggjort} onChange={(e) => setVisUgyldigjort(e.target.checked)}>
-                        {formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.ugyldiggjort')}
+                        {formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.annullerte')}
                     </Checkbox>
                 </div>
                 <Accordion className={styles.accordion}>
@@ -73,7 +73,7 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
                                 <div className={styles.accordionHeaderContentContainer}>
                                     <Heading size="small">{formatPeriodeMedDager(it.periode)}</Heading>
                                     <div className={styles.warningOgAntallDagerContainer}>
-                                        {!it.erGyldig && <WarningIcon width={25} />}
+                                        {!it.annullert && <WarningIcon width={25} />}
                                         <Heading size="small">{it.antallDager}</Heading>
                                     </div>
                                 </div>
@@ -145,10 +145,10 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                                 })
                             }
                         >
-                            {formatMessage('grunnlagForm.button.uggyldiggjør')}
+                            {formatMessage('registreringAvUtenlandsopphold.form.button.annuller')}
                         </Button>
                         <Button loading={RemoteData.isPending(oppdaterStatus)}>
-                            {formatMessage('grunnlagForm.button.oppdater')}
+                            {formatMessage('registreringAvUtenlandsopphold.form.button.oppdater')}
                         </Button>
                     </div>
                 </RegistreringAvUtenlandsoppholdForm>
