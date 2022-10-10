@@ -1,6 +1,6 @@
 import {
     OppdaterRegistrertUtenlandsoppholdRequest,
-    RegistrertUtenlandsopphold,
+    RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
     UgyldiggjørRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
@@ -58,35 +58,35 @@ export async function kallInnTilKontrollsamtale(sakId: string) {
 }
 export async function registrerUtenlandsopphold(
     arg: RegistrerUtenlandsoppholdRequest
-): Promise<ApiClientResult<RegistrertUtenlandsopphold>> {
+): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
         url: `/saker/${arg.sakId}/utenlandsopphold`,
         method: 'POST',
         body: {
             periode: arg.periode,
             dokumentasjon: arg.dokumentasjon,
-            journalpostIder: arg.journalposter,
+            journalposter: arg.journalposter,
         },
     });
 }
 
 export async function oppdaterRegistrertUtenlandsopphold(
     arg: OppdaterRegistrertUtenlandsoppholdRequest
-): Promise<ApiClientResult<RegistrertUtenlandsopphold>> {
+): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
         url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,
         method: 'PUT',
         body: {
             periode: arg.periode,
             dokumentasjon: arg.dokumentasjon,
-            journalpostIder: arg.journalposter,
+            journalposter: arg.journalposter,
         },
     });
 }
 
 export async function ugyldiggjørRegistrertUtenlandsopphold(
     arg: UgyldiggjørRegistrertUtenlandsoppholdRequest
-): Promise<ApiClientResult<RegistrertUtenlandsopphold>> {
+): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
         url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,
         method: 'DELETE',

@@ -9,11 +9,11 @@ import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/opps
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { RegistrertUtenlandsopphold } from '~src/types/RegistrertUtenlandsopphold';
-import { formatDate, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
+import { formatDate, formatDateTime, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
 
-import { RegistreringAvUtenlandsoppholdForm } from './RegistreringAvUtenlandsopphold';
 import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
+import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
 
 const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     sakId: string;
@@ -111,7 +111,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                 />
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.opprettetTidspunkt')}
-                    verdi={props.registrertUtenlandsopphold.opprettetTidspunkt}
+                    verdi={formatDateTime(props.registrertUtenlandsopphold.opprettetTidspunkt)}
                     sorteres={OppsummeringsParSortering.Vertikalt}
                 />
                 <OppsummeringPar
@@ -121,7 +121,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                 />
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.endretTidspunkt')}
-                    verdi={props.registrertUtenlandsopphold.endretTidspunkt}
+                    verdi={formatDateTime(props.registrertUtenlandsopphold.endretTidspunkt)}
                     sorteres={OppsummeringsParSortering.Vertikalt}
                 />
             </div>

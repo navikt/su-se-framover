@@ -19,7 +19,7 @@ import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import {
     OppdaterRegistrertUtenlandsoppholdRequest,
-    RegistrertUtenlandsopphold,
+    RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
     UgyldiggjørRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
@@ -216,7 +216,7 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
 });
 
 export const registrerUtenlandsopphold = createAsyncThunk<
-    RegistrertUtenlandsopphold,
+    RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
     { rejectValue: ApiError }
 >('sak/registrerUtenlandsopphold', async (arg, thunkApi) => {
@@ -228,7 +228,7 @@ export const registrerUtenlandsopphold = createAsyncThunk<
 });
 
 export const oppdaterRegistrertUtenlandsopphold = createAsyncThunk<
-    RegistrertUtenlandsopphold,
+    RegistrerteUtenlandsopphold,
     OppdaterRegistrertUtenlandsoppholdRequest,
     { rejectValue: ApiError }
 >('sak/oppdaterRegistrertUtenlandsopphold', async (arg, thunkApi) => {
@@ -240,7 +240,7 @@ export const oppdaterRegistrertUtenlandsopphold = createAsyncThunk<
 });
 
 export const ugyldiggjørRegistrertUtenlandsopphold = createAsyncThunk<
-    RegistrertUtenlandsopphold,
+    RegistrerteUtenlandsopphold,
     UgyldiggjørRegistrertUtenlandsoppholdRequest,
     { rejectValue: ApiError }
 >('sak/ugyldiggjørRegistrertUtenlandsopphold', async (arg, thunkApi) => {
@@ -328,8 +328,8 @@ export default createSlice({
                 RemoteData.map((sak) => ({
                     ...sak,
                     utenlandsopphold: {
-                        ...sak.utenlandsopphold,
-                        utenlandsopphold: [...sak.utenlandsopphold.utenlandsopphold, action.payload],
+                        antallDager: action.payload.antallDager,
+                        utenlandsopphold: action.payload.utenlandsopphold,
                     },
                 }))
             );
@@ -573,17 +573,15 @@ function oppdaterKlageISak(sak: RemoteData.RemoteData<ApiError, Sak>, klage: Kla
 
 function oppdaterUtenlandsoppholdISak(
     sak: RemoteData.RemoteData<ApiError, Sak>,
-    utenlandsopphold: RegistrertUtenlandsopphold
+    utenlandsopphold: RegistrerteUtenlandsopphold
 ) {
     return pipe(
         sak,
         RemoteData.map((s) => ({
             ...s,
             utenlandsopphold: {
-                ...s.utenlandsopphold,
-                utenlandsopphold: s.utenlandsopphold.utenlandsopphold.map((u) =>
-                    u.id === utenlandsopphold.id ? utenlandsopphold : u
-                ),
+                utenlandsopphold: utenlandsopphold.utenlandsopphold,
+                antallDager: utenlandsopphold.antallDager,
             },
         }))
     );
