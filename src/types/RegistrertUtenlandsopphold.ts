@@ -1,5 +1,10 @@
 import { Periode } from './Periode';
 
+export interface RegistrerteUtenlandsopphold {
+    utenlandsopphold: RegistrertUtenlandsopphold[];
+    antallDager: number;
+}
+
 export interface RegistrertUtenlandsopphold {
     id: string;
     periode: Periode<string>;
@@ -24,4 +29,17 @@ export interface RegistrerUtenlandsoppholdRequest {
     periode: Periode<string>;
     journalposter: string[];
     dokumentasjon: UtenlandsoppholdDokumentasjon;
+}
+
+export interface OppdaterRegistrertUtenlandsoppholdRequest {
+    sakId: string;
+    utenlandsoppholdId: string;
+    periode: Periode<string>;
+    journalposter: string[];
+    dokumentasjon: UtenlandsoppholdDokumentasjon;
+}
+
+export interface UgyldiggjørRegistrertUtenlandsoppholdRequest {
+    sakId: string;
+    utenlandsoppholdId: string;
 }

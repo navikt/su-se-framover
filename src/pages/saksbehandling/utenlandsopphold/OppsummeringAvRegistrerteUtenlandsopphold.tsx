@@ -46,10 +46,7 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
                         label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.tilOgMed')}
                         value={tilOgMed}
                         dateFormat={'dd.MM.yyyy'}
-                        onChange={(dato) => {
-                            console.log(dato);
-                            return dato ? setTilOgMed(DateFns.endOfDay(dato)) : setTilOgMed(dato);
-                        }}
+                        onChange={(dato) => (dato ? setTilOgMed(DateFns.endOfDay(dato)) : setTilOgMed(dato))}
                         isClearable
                     />
                     <Checkbox checked={visUgyldiggjort} onChange={(e) => setVisUgyldigjort(e.target.checked)}>

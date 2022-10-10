@@ -40,7 +40,7 @@ function success<TSuccess>(data: TSuccess, statusCode: number): ApiClientResult<
     };
 }
 
-type Method = 'GET' | 'PUT' | 'POST' | 'PATCH';
+type Method = 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE';
 
 export default async function apiClient<TSuccess>(arg: {
     url: string;

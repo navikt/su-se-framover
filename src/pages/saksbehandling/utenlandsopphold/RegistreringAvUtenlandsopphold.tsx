@@ -43,7 +43,8 @@ const registeringAvUtenlandsoppholdFormSchema = yup.object<RegisteringAvUtenland
                 })
                 .required()
         )
-        .required(),
+        .notRequired()
+        .defined(),
 });
 
 const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
@@ -68,6 +69,8 @@ export const RegistreringAvUtenlandsoppholdForm = (props: {
     const { formatMessage } = useI18n({ messages });
     const [antallDagerIUtlandet, setAntallDagerIUtlandet] = useState<number>(0);
     const [status, registrerUtenlandsOpphold] = useAsyncActionCreator(SakSlice.registrerUtenlandsopphold);
+    const [, oppdaterUtenlandsopphold] = useAsyncActionCreator(SakSlice.oppdaterRegistrertUtenlandsopphold);
+    const [, ugyldiggjørUtenlandsopphold] = useAsyncActionCreator(SakSlice.ugyldiggjørRegistrertUtenlandsopphold);
 
     const endrerRegistrertUtenlandsopphold = !!props.endrerRegistrertUtenlandsopphold;
 
@@ -101,9 +104,25 @@ export const RegistreringAvUtenlandsoppholdForm = (props: {
         );
     }, [watch.periode.fraOgMed, watch.periode.tilOgMed]);
 
+    const onUgyldiggjørClick = () => {
+        ugyldiggjørUtenlandsopphold({
+            sakId: props.sakId,
+            utenlandsoppholdId: props.endrerRegistrertUtenlandsopphold!.registrertUtenlandsopphold.id,
+        });
+    };
+
     const onFormSubmit = (values: RegisteringAvUtenlandsoppholdFormData) => {
         if (endrerRegistrertUtenlandsopphold) {
-            console.log('submit endring av registrert utenlandsopphold');
+            oppdaterUtenlandsopphold({
+                sakId: props.sakId,
+                utenlandsoppholdId: props.endrerRegistrertUtenlandsopphold!.registrertUtenlandsopphold.id,
+                periode: {
+                    fraOgMed: values.periode.fraOgMed!.toISOString(),
+                    tilOgMed: values.periode.tilOgMed!.toISOString(),
+                },
+                dokumentasjon: values.dokumentasjon!,
+                journalposter: values.journalposter.map((it) => it.journalpostId!),
+            });
         } else {
             registrerUtenlandsOpphold({
                 sakId: props.sakId,
@@ -187,7 +206,7 @@ export const RegistreringAvUtenlandsoppholdForm = (props: {
                         <ApiErrorAlert className={styles.apiErrorAlert} error={status.error} />
                     )}
                     {endrerRegistrertUtenlandsopphold ? (
-                        <EndrerEksisterendeUtenlandsoppholdButtons />
+                        <EndrerEksisterendeUtenlandsoppholdButtons onUgyldiggjørClick={onUgyldiggjørClick} />
                     ) : (
                         <TilbakeOgRegistrerButtons sakId={props.sakId} />
                     )}
@@ -209,12 +228,12 @@ const TilbakeOgRegistrerButtons = (props: { sakId: string }) => {
     );
 };
 
-const EndrerEksisterendeUtenlandsoppholdButtons = () => {
+const EndrerEksisterendeUtenlandsoppholdButtons = (props: { onUgyldiggjørClick: () => void }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <div className={styles.grunnlagFormButtonsContainer}>
-            <Button variant="danger" type="button" onClick={() => console.log('ugyldiggjør utenlandsopphold')}>
+            <Button variant="danger" type="button" onClick={props.onUgyldiggjørClick}>
                 {formatMessage('grunnlagForm.button.uggyldiggjør')}
             </Button>
             <Button>{formatMessage('grunnlagForm.button.oppdater')}</Button>
@@ -238,23 +257,20 @@ const JournalpostIderInputs = (props: { form: UseFormReturn<RegisteringAvUtenlan
                         <Controller
                             control={props.form.control}
                             name={`journalposter.${idx}.journalpostId`}
-                            render={({ field, fieldState }) => {
-                                console.log(fieldState.error);
-                                return (
-                                    <TextField
-                                        {...field}
-                                        autoComplete="off"
-                                        onChange={(e) => {
-                                            props.form.setValue(`journalposter.${idx}`, {
-                                                journalpostId: e.target.value,
-                                            });
-                                        }}
-                                        value={field.value ?? ''}
-                                        label={formatMessage('grunnlagForm.journalpostId')}
-                                        error={fieldState.error?.message}
-                                    />
-                                );
-                            }}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    {...field}
+                                    autoComplete="off"
+                                    onChange={(e) => {
+                                        props.form.setValue(`journalposter.${idx}`, {
+                                            journalpostId: e.target.value,
+                                        });
+                                    }}
+                                    value={field.value ?? ''}
+                                    label={formatMessage('grunnlagForm.journalpostId')}
+                                    error={fieldState.error?.message}
+                                />
+                            )}
                         />
 
                         <Button

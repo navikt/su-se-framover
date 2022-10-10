@@ -17,7 +17,12 @@ import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemote
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
-import { RegistrertUtenlandsopphold, RegistrerUtenlandsoppholdRequest } from '~src/types/RegistrertUtenlandsopphold';
+import {
+    OppdaterRegistrertUtenlandsoppholdRequest,
+    RegistrertUtenlandsopphold,
+    RegistrerUtenlandsoppholdRequest,
+    UgyldiggjørRegistrertUtenlandsoppholdRequest,
+} from '~src/types/RegistrertUtenlandsopphold';
 import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
@@ -222,6 +227,30 @@ export const registrerUtenlandsopphold = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const oppdaterRegistrertUtenlandsopphold = createAsyncThunk<
+    RegistrertUtenlandsopphold,
+    OppdaterRegistrertUtenlandsoppholdRequest,
+    { rejectValue: ApiError }
+>('sak/oppdaterRegistrertUtenlandsopphold', async (arg, thunkApi) => {
+    const res = await sakApi.oppdaterRegistrertUtenlandsopphold(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const ugyldiggjørRegistrertUtenlandsopphold = createAsyncThunk<
+    RegistrertUtenlandsopphold,
+    UgyldiggjørRegistrertUtenlandsoppholdRequest,
+    { rejectValue: ApiError }
+>('sak/ugyldiggjørRegistrertUtenlandsopphold', async (arg, thunkApi) => {
+    const res = await sakApi.ugyldiggjørRegistrertUtenlandsopphold(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
 }
@@ -291,6 +320,25 @@ export default createSlice({
 
         builder.addCase(avslagManglendeDokSøknad.fulfilled, (state, action) => {
             state.sak = RemoteData.success(action.payload);
+        });
+
+        builder.addCase(registrerUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    utenlandsopphold: {
+                        ...sak.utenlandsopphold,
+                        utenlandsopphold: [...sak.utenlandsopphold.utenlandsopphold, action.payload],
+                    },
+                }))
+            );
+        });
+        builder.addCase(oppdaterRegistrertUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = oppdaterUtenlandsoppholdISak(state.sak, action.payload);
+        });
+        builder.addCase(ugyldiggjørRegistrertUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = oppdaterUtenlandsoppholdISak(state.sak, action.payload);
         });
 
         builder.addCase(revurderingActions.opprettRevurdering.fulfilled, (state, action) => {
@@ -519,6 +567,24 @@ function oppdaterKlageISak(sak: RemoteData.RemoteData<ApiError, Sak>, klage: Kla
         RemoteData.map((s) => ({
             ...s,
             klager: s.klager.map((k) => (k.id === klage.id ? klage : k)),
+        }))
+    );
+}
+
+function oppdaterUtenlandsoppholdISak(
+    sak: RemoteData.RemoteData<ApiError, Sak>,
+    utenlandsopphold: RegistrertUtenlandsopphold
+) {
+    return pipe(
+        sak,
+        RemoteData.map((s) => ({
+            ...s,
+            utenlandsopphold: {
+                ...s.utenlandsopphold,
+                utenlandsopphold: s.utenlandsopphold.utenlandsopphold.map((u) =>
+                    u.id === utenlandsopphold.id ? utenlandsopphold : u
+                ),
+            },
         }))
     );
 }

@@ -1,4 +1,9 @@
-import { RegistrertUtenlandsopphold, RegistrerUtenlandsoppholdRequest } from '~src/types/RegistrertUtenlandsopphold';
+import {
+    OppdaterRegistrertUtenlandsoppholdRequest,
+    RegistrertUtenlandsopphold,
+    RegistrerUtenlandsoppholdRequest,
+    UgyldiggjørRegistrertUtenlandsoppholdRequest,
+} from '~src/types/RegistrertUtenlandsopphold';
 import { Restans } from '~src/types/Restans';
 import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
 import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
@@ -62,6 +67,29 @@ export async function registrerUtenlandsopphold(
             dokumentasjon: arg.dokumentasjon,
             journalpostIder: arg.journalposter,
         },
+    });
+}
+
+export async function oppdaterRegistrertUtenlandsopphold(
+    arg: OppdaterRegistrertUtenlandsoppholdRequest
+): Promise<ApiClientResult<RegistrertUtenlandsopphold>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,
+        method: 'PUT',
+        body: {
+            periode: arg.periode,
+            dokumentasjon: arg.dokumentasjon,
+            journalpostIder: arg.journalposter,
+        },
+    });
+}
+
+export async function ugyldiggjørRegistrertUtenlandsopphold(
+    arg: UgyldiggjørRegistrertUtenlandsoppholdRequest
+): Promise<ApiClientResult<RegistrertUtenlandsopphold>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,
+        method: 'DELETE',
     });
 }
 

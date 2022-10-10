@@ -13,7 +13,7 @@ import styles from './RegistreringAvUtenlandsopphold.module.less';
 
 const topkek = [
     {
-        id: '12',
+        id: '11cfc183-0011-401d-b45c-7843663f691c',
         periode: { fraOgMed: '2022.01.01', tilOgMed: '2022.12.31' },
         dokumentasjon: UtenlandsoppholdDokumentasjon.Dokumentert,
         journalposter: [],
@@ -25,7 +25,7 @@ const topkek = [
         antallDager: 1,
     },
     {
-        id: '34',
+        id: '49e3db0a-9abb-44f3-9063-e3fe4c33a184',
         periode: { fraOgMed: '2023.01.01', tilOgMed: '2023.12.31' },
         dokumentasjon: UtenlandsoppholdDokumentasjon.Sannsynliggjort,
         journalposter: ['123'],
@@ -37,7 +37,7 @@ const topkek = [
         antallDager: 1,
     },
     {
-        id: '45',
+        id: '5914fcfd-9f8b-48db-ba20-8c48bc0e4d91',
         periode: { fraOgMed: '2024.01.01', tilOgMed: '2024.12.31' },
         dokumentasjon: UtenlandsoppholdDokumentasjon.Udokumentert,
         journalposter: ['123', '456', '789'],
