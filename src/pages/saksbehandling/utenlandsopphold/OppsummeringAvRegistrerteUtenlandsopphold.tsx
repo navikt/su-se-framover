@@ -1,4 +1,5 @@
-import { ExternalLink } from '@navikt/ds-icons';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Close, ExternalLink } from '@navikt/ds-icons';
 import { Accordion, Button, Checkbox, Heading, Label, Link, Panel } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useState } from 'react';
@@ -6,10 +7,12 @@ import React, { useState } from 'react';
 import { WarningIcon } from '~src/assets/Icons';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
+import * as SakSlice from '~src/features/saksoversikt/sak.slice';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { RegistrertUtenlandsopphold } from '~src/types/RegistrertUtenlandsopphold';
-import { formatDate, formatDateTime, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
+import { formatDate, formatDateTime, formatPeriodeMedDager, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
@@ -92,16 +95,59 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
     const [endrerRegistrertUtenlandsopphold, setEndrerRegistrertUtenlandsopphold] = useState<boolean>(false);
+    const [oppdaterStatus, oppdaterUtenlandsopphold] = useAsyncActionCreator(
+        SakSlice.oppdaterRegistrertUtenlandsopphold
+    );
+    const [ugyldiggjørStatus, ugyldiggjørUtenlandsopphold] = useAsyncActionCreator(
+        SakSlice.ugyldiggjørRegistrertUtenlandsopphold
+    );
 
     if (endrerRegistrertUtenlandsopphold) {
         return (
-            <RegistreringAvUtenlandsoppholdForm
-                sakId={props.sakId}
-                endrerRegistrertUtenlandsopphold={{
-                    avsluttEndringAvUtenlandsopphold: () => setEndrerRegistrertUtenlandsopphold(false),
-                    registrertUtenlandsopphold: props.registrertUtenlandsopphold,
-                }}
-            />
+            <Panel border>
+                <div className={styles.avsluttEndringAvUtenlandsoppholdButtonContainer}>
+                    <Button variant="tertiary" type="button" onClick={() => setEndrerRegistrertUtenlandsopphold(false)}>
+                        <Close />
+                    </Button>
+                </div>
+
+                <RegistreringAvUtenlandsoppholdForm
+                    sakId={props.sakId}
+                    registrertUtenlandsopphold={props.registrertUtenlandsopphold}
+                    status={oppdaterStatus}
+                    onFormSubmit={(validatedVlaues) =>
+                        oppdaterUtenlandsopphold({
+                            sakId: props.sakId,
+                            utenlandsoppholdId: props.registrertUtenlandsopphold.id,
+                            periode: {
+                                fraOgMed: toIsoDateOnlyString(validatedVlaues.periode.fraOgMed!),
+                                tilOgMed: toIsoDateOnlyString(validatedVlaues.periode.tilOgMed!),
+                            },
+                            dokumentasjon: validatedVlaues.dokumentasjon!,
+                            journalposter: validatedVlaues.journalposter.map((it) => it.journalpostId!),
+                        })
+                    }
+                >
+                    <div className={styles.grunnlagFormButtonsContainer}>
+                        <Button
+                            variant="danger"
+                            type="button"
+                            loading={RemoteData.isPending(ugyldiggjørStatus)}
+                            onClick={() =>
+                                ugyldiggjørUtenlandsopphold({
+                                    sakId: props.sakId,
+                                    utenlandsoppholdId: props.registrertUtenlandsopphold.id,
+                                })
+                            }
+                        >
+                            {formatMessage('grunnlagForm.button.uggyldiggjør')}
+                        </Button>
+                        <Button loading={RemoteData.isPending(oppdaterStatus)}>
+                            {formatMessage('grunnlagForm.button.oppdater')}
+                        </Button>
+                    </div>
+                </RegistreringAvUtenlandsoppholdForm>
+            </Panel>
         );
     }
 
