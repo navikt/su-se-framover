@@ -1,12 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Close, ExternalLink } from '@navikt/ds-icons';
-import { Accordion, Button, Checkbox, Heading, Label, Link, Panel } from '@navikt/ds-react';
+import { Close } from '@navikt/ds-icons';
+import { Accordion, Button, Checkbox, Heading, Label, Panel } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useState } from 'react';
 
 import { WarningIcon } from '~src/assets/Icons';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -37,11 +41,12 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
         .filter((it) => (visUgyldiggjort ? true : it.erGyldig));
 
     return (
-        <div className={styles.oppsummeringAvRegistrerteUtenlandsoppholdContainer}>
-            <Heading className={styles.heading} size="large">
-                {formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.oversiktOverUtenlandsopphold')}
-            </Heading>
-            <Panel border className={styles.panel}>
+        <Oppsummeringspanel
+            ikon={Oppsummeringsikon.Liste}
+            farge={Oppsummeringsfarge.Lilla}
+            tittel={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.oversiktOverUtenlandsopphold')}
+        >
+            <div className={styles.oppsummeringContentContainer}>
                 <div className={styles.filterContainer}>
                     <DatePicker
                         label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.fraOgMed')}
@@ -83,8 +88,8 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
                         </Accordion.Item>
                     ))}
                 </Accordion>
-            </Panel>
-        </div>
+            </div>
+        </Oppsummeringspanel>
     );
 };
 
@@ -128,7 +133,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                         })
                     }
                 >
-                    <div className={styles.grunnlagFormButtonsContainer}>
+                    <div className={styles.buttonsContainer}>
                         <Button
                             variant="danger"
                             type="button"
@@ -197,12 +202,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                     <Label>{formatMessage('oppsummeringAvRegistrertUtenlandsopphold.journalposter')}</Label>
                     <ul className={styles.journalposterContainer}>
                         {props.registrertUtenlandsopphold.journalposter.map((it) => (
-                            <li key={it}>
-                                <Link href="#">
-                                    {it}
-                                    <ExternalLink />
-                                </Link>
-                            </li>
+                            <li key={it}>{it}</li>
                         ))}
                     </ul>
                 </div>

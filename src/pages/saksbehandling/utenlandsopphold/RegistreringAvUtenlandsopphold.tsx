@@ -1,8 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Panel } from '@navikt/ds-react';
+import { Button } from '@navikt/ds-react';
 import React from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -18,10 +22,11 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
     const [status, registrerUtenlandsOpphold] = useAsyncActionCreator(SakSlice.registrerUtenlandsopphold);
     return (
         <div className={styles.utenlandsoppholdContainer}>
-            <Heading className={styles.heading} size="large">
-                {formatMessage('grunnlagForm.heading')}
-            </Heading>
-            <Panel border>
+            <Oppsummeringspanel
+                ikon={Oppsummeringsikon.Blyant}
+                farge={Oppsummeringsfarge.Grønn}
+                tittel={formatMessage('grunnlagForm.heading')}
+            >
                 <RegistreringAvUtenlandsoppholdForm
                     sakId={props.sakId}
                     status={status}
@@ -37,7 +42,7 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
                         })
                     }
                 >
-                    <div className={styles.grunnlagFormButtonsContainer}>
+                    <div className={styles.buttonsContainer}>
                         <LinkAsButton
                             variant="secondary"
                             href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
@@ -49,7 +54,7 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
                         </Button>
                     </div>
                 </RegistreringAvUtenlandsoppholdForm>
-            </Panel>
+            </Oppsummeringspanel>
         </div>
     );
 };

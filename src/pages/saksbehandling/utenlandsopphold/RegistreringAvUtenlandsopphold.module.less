@@ -57,16 +57,17 @@
     max-width: 60%;
 }
 
-.grunnlagFormButtonsContainer {
+.buttonsContainer {
     display: flex;
     justify-content: flex-end;
     gap: @spacing;
 }
 
 .journalposterInputsContainer {
-    > :not(:last-child) {
-        margin-bottom: @spacing-s;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+    align-items: flex-start;
 }
 
 .journalpostIdInputMedDelete {
@@ -74,25 +75,17 @@
     gap: @spacing-xs;
 
     .fjernJournalpostButton {
-        height: 40px;
         position: relative;
-        top: 40px;
+        top: 2.5rem;
+        height: 2.5rem;
     }
 }
 
 //------------------------------------------------------
-.oppsummeringAvRegistrerteUtenlandsoppholdContainer {
-    .heading {
-        margin-bottom: @spacing-s;
-    }
-    .panel {
-        display: flex;
-        gap: @spacing;
-    }
-}
 
-.accordion {
-    min-width: 50rem;
+.oppsummeringContentContainer {
+    display: flex;
+    gap: @spacing;
 }
 
 .filterContainer {
@@ -102,6 +95,10 @@
     gap: @spacing-xs;
     background: var(--navds-global-color-gray-200);
     padding: @spacing-xs @spacing @spacing;
+}
+
+.accordion {
+    min-width: 50rem;
 }
 
 .accordionHeaderContentContainer {

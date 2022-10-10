@@ -86,12 +86,8 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
         );
     }, [watch.periode.fraOgMed, watch.periode.tilOgMed]);
 
-    const onFormSubmit = (values: RegisteringAvUtenlandsoppholdFormData) => {
-        props.onFormSubmit(values);
-    };
-
     return (
-        <form onSubmit={form.handleSubmit(onFormSubmit)}>
+        <form onSubmit={form.handleSubmit((v) => props.onFormSubmit(v))}>
             <div className={styles.inputFieldsContainer}>
                 <div className={styles.periodeFormMedDagerTeller}>
                     <Controller
