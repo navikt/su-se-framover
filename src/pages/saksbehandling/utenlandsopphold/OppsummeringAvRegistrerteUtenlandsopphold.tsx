@@ -25,6 +25,10 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     const [visUgyldiggjort, setVisUgyldigjort] = useState(false);
 
     const filtrerteUtenlandsopphold = props.registrerteUtenlandsopphold
+        .sort(
+            (a: RegistrertUtenlandsopphold, b: RegistrertUtenlandsopphold) =>
+                Date.parse(a.periode.fraOgMed) - Date.parse(b.periode.fraOgMed)
+        )
         .filter((it) => (fraOgMed ? new Date(it.periode.fraOgMed) >= fraOgMed : true))
         .filter((it) => (tilOgMed ? new Date(it.periode.tilOgMed) <= tilOgMed : true))
         .filter((it) => (visUgyldiggjort ? true : it.erGyldig));

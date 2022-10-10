@@ -22,7 +22,7 @@ export interface RegistrertUtenlandsopphold {
 export enum UtenlandsoppholdDokumentasjon {
     Dokumentert = 'Dokumentert',
     Udokumentert = 'Udokumentert',
-    Sannsynliggjort = 'Sannsynligjort',
+    Sannsynliggjort = 'Sannsynliggjort',
 }
 
 export interface RegistrerUtenlandsoppholdRequest {
