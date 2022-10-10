@@ -24,7 +24,7 @@
 
 //-----------------------------------------------------------
 .utenlandsoppholdContainer {
-    width: 35rem;
+    min-width: 35rem;
 
     .heading {
         margin-bottom: @spacing-s;
@@ -91,6 +91,10 @@
     }
 }
 
+.accordion {
+    min-width: 50rem;
+}
+
 .filterContainer {
     width: 30%;
     display: flex;
@@ -101,7 +105,12 @@
 .accordionHeaderContentContainer {
     display: flex;
     justify-content: space-between;
-    width: 45rem;
+    min-width: 45rem;
+
+    .warningOgAntallDagerContainer {
+        display: flex;
+        gap: @spacing-xs;
+    }
 }
 
 .registrertUtenlandsoppholdContainer {

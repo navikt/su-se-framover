@@ -3,6 +3,7 @@ import { Accordion, Button, Checkbox, Heading, Label, Link, Panel } from '@navik
 import * as DateFns from 'date-fns';
 import React, { useState } from 'react';
 
+import { WarningIcon } from '~src/assets/Icons';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import { useI18n } from '~src/lib/i18n';
@@ -26,7 +27,7 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     const filtrerteUtenlandsopphold = props.registrerteUtenlandsopphold
         .filter((it) => (fraOgMed ? new Date(it.periode.fraOgMed) >= fraOgMed : true))
         .filter((it) => (tilOgMed ? new Date(it.periode.tilOgMed) <= tilOgMed : true))
-        .filter(() => (visUgyldiggjort ? true : true));
+        .filter((it) => (visUgyldiggjort ? true : it.erGyldig));
 
     return (
         <div className={styles.oppsummeringAvRegistrerteUtenlandsoppholdContainer}>
@@ -53,13 +54,16 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
                         {formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.ugyldiggjort')}
                     </Checkbox>
                 </div>
-                <Accordion>
+                <Accordion className={styles.accordion}>
                     {filtrerteUtenlandsopphold.map((it) => (
                         <Accordion.Item key={it.id}>
                             <Accordion.Header>
                                 <div className={styles.accordionHeaderContentContainer}>
                                     <Heading size="small">{formatPeriodeMedDager(it.periode)}</Heading>
-                                    <Heading size="small">{it.antallDager}</Heading>
+                                    <div className={styles.warningOgAntallDagerContainer}>
+                                        {!it.erGyldig && <WarningIcon width={25} />}
+                                        <Heading size="small">{it.antallDager}</Heading>
+                                    </div>
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
