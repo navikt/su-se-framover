@@ -1,10 +1,14 @@
-import { BodyShort, Heading, Panel, Table } from '@navikt/ds-react';
+import { BodyShort, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import React from 'react';
 
 import { ErrorIcon } from '~src/assets/Icons';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import SuTabell, { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import {
     getDataCellInfo,
@@ -59,8 +63,11 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
     };
 
     return (
-        <Panel border>
-            <Heading size="medium">{formatMessage('avsluttedeBehandlinger.table.tittel')}</Heading>
+        <Oppsummeringspanel
+            ikon={Oppsummeringsikon.FilError}
+            farge={Oppsummeringsfarge.Lilla}
+            tittel={formatMessage('avsluttedeBehandlinger.table.tittel')}
+        >
             <SuTabell
                 kolonnerConfig={{
                     kolonner: AvsluttedeBehandlingerKolonner,
@@ -122,7 +129,7 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                     </Table.Body>
                 )}
             />
-        </Panel>
+        </Oppsummeringspanel>
     );
 };
 

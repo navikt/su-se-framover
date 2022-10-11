@@ -1,15 +1,20 @@
-import { Button, Heading, Panel } from '@navikt/ds-react';
+import { BodyShort, Button, Heading } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SuccessIcon, WarningIcon } from '~src/assets/Icons';
-import { DateFormats, useI18n } from '~src/lib/i18n';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { KanStansesEllerGjenopptas } from '~src/types/Sak';
 import { compareUtbetalingsperiode, Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
+import { formatMonthYear } from '~src/utils/date/dateUtils';
 
-import messages from './utbetalinger-nb';
+import messages from './sakintro-nb';
 import * as styles from './utbetalinger.module.less';
 
 export const Utbetalinger = (props: {
@@ -17,7 +22,7 @@ export const Utbetalinger = (props: {
     utbetalingsperioder: Utbetalingsperiode[];
     kanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
 }) => {
-    const { formatMessage, formatDate } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
     const { utbetalingsperioder, kanStansesEllerGjenopptas } = props;
 
@@ -26,6 +31,7 @@ export const Utbetalinger = (props: {
     }
 
     const sortertUtbetalingsperioder = [...props.utbetalingsperioder].sort(compareUtbetalingsperiode);
+    const førsteUtbetalingsperiode = new Date(sortertUtbetalingsperioder[0].fraOgMed);
     const sisteUtbetalingsDato = new Date(sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed);
 
     // TODO jah: Vi skal legge til dette per utbetalingslinje i backend, slik at den følger den faktiske implementasjonen
@@ -42,81 +48,81 @@ export const Utbetalinger = (props: {
 
     return (
         <div className={styles.utbetalingContainer}>
-            <Heading level="2" size="medium" spacing>
-                {formatMessage('display.stønadsperioder.tittel')}
-            </Heading>
-            <Panel border>
+            <Oppsummeringspanel
+                ikon={Oppsummeringsikon.Lommebok}
+                farge={Oppsummeringsfarge.Limegrønn}
+                tittel={formatMessage('utbetalinger.heading')}
+            >
                 <div className={styles.stønadsperiodeHeader}>
-                    <Heading level="3" size="small" spacing>
-                        {formatDate(utbetalingsperioder[0].fraOgMed, DateFormats.MONTH_YEAR)} -{' '}
-                        {formatDate(sisteUtbetalingsDato, DateFormats.MONTH_YEAR)}
+                    <Heading level="3" size="small">
+                        {formatMonthYear(førsteUtbetalingsperiode)} - {formatMonthYear(sisteUtbetalingsDato)}
                     </Heading>
-                    {erStønadsperiodeUtløpt || kanGjenopptas ? (
-                        <div className={styles.ikonContainer}>
-                            <WarningIcon className={styles.ikon} />
-                            <p>
-                                {formatMessage(
-                                    kanGjenopptas ? 'display.stønadsperioder.stoppet' : 'display.stønadsperioder.utløpt'
-                                )}
-                            </p>
-                        </div>
-                    ) : (
-                        <div className={styles.ikonContainer}>
-                            <SuccessIcon className={styles.ikon} />
-                            <p> {formatMessage('display.stønadsperioder.aktiv')}</p>
-                        </div>
-                    )}
+                    <div className={styles.ikonContainer}>
+                        {erStønadsperiodeUtløpt || kanGjenopptas ? (
+                            <>
+                                <WarningIcon />
+                                <BodyShort>
+                                    {formatMessage(
+                                        kanGjenopptas
+                                            ? 'utbetalinger.stønadsperiode.stoppet'
+                                            : 'utbetalinger.stønadsperiode.utløpt'
+                                    )}
+                                </BodyShort>
+                            </>
+                        ) : (
+                            <>
+                                <SuccessIcon />
+                                <BodyShort> {formatMessage('utbetalinger.stønadsperiode.aktiv')}</BodyShort>
+                            </>
+                        )}
+                    </div>
                 </div>
-                <div className={styles.utbetalingsperioderContainer}>
+                <div className={styles.utbetalingContentContainer}>
                     <div>
                         <Heading level="4" size="small" spacing>
-                            {formatMessage('display.utbetalingsperiode.tittel')}
+                            {formatMessage('utbetalinger.perioder.tittel')}
                         </Heading>
                         <Utbetalingsperioder utbetalingsperioder={utbetalingsperioder} />
                     </div>
                     <div className={styles.utbetalingKnappContainer}>
-                        {kanGjenopptas ? (
+                        {kanGjenopptas && (
                             <Button
                                 variant="secondary"
                                 size="small"
                                 onClick={() => navigate(Routes.opprettGjenopptaRoute.createURL({ sakId: props.sakId }))}
                             >
-                                {formatMessage('display.utbetalingsperiode.gjenopptaUtbetaling')}
+                                {formatMessage('utbetalinger.stønadsperiode.knapp.gjenopptaUtbetaling')}
                             </Button>
-                        ) : (
-                            kanStanses && (
-                                <Button
-                                    variant="danger"
-                                    size="small"
-                                    onClick={() => navigate(Routes.stansOpprett.createURL({ sakId: props.sakId }))}
-                                >
-                                    {formatMessage('display.utbetalingsperiode.stoppUtbetaling')}
-                                </Button>
-                            )
+                        )}
+                        {kanStanses && (
+                            <Button
+                                variant="danger"
+                                size="small"
+                                onClick={() => navigate(Routes.stansOpprett.createURL({ sakId: props.sakId }))}
+                            >
+                                {formatMessage('utbetalinger.stønadsperiode.knapp.stoppUtbetaling')}
+                            </Button>
                         )}
                     </div>
                 </div>
-            </Panel>
+            </Oppsummeringspanel>
         </div>
     );
 };
 
 const Utbetalingsperioder = (props: { utbetalingsperioder: Utbetalingsperiode[] }) => {
-    const { formatMessage, formatDate } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     return (
         <ol>
             {props.utbetalingsperioder.map((u) => (
-                <li key={`${u.fraOgMed}-${u.tilOgMed}-${u.type}`}>
-                    <div className={styles.utbetalingsperiode}>
-                        <p>
-                            {formatDate(u.fraOgMed, DateFormats.MONTH_YEAR)} -{' '}
-                            {formatDate(u.tilOgMed, DateFormats.MONTH_YEAR)}
-                        </p>
-                        <p>
-                            {u.beløp} {formatMessage('display.utbetalingsperiode.beløp.kr')}
-                        </p>
-                        <p>{formatMessage(u.type)}</p>
-                    </div>
+                <li className={styles.utbetalingsperiode} key={`${u.fraOgMed}-${u.tilOgMed}-${u.type}`}>
+                    <BodyShort>
+                        {formatMonthYear(u.fraOgMed)} - {formatMonthYear(u.tilOgMed)}
+                    </BodyShort>
+                    <BodyShort>
+                        {u.beløp} {formatMessage('utbetalinger.periode.beløp.kr')}
+                    </BodyShort>
+                    <BodyShort>{formatMessage(u.type)}</BodyShort>
                 </li>
             ))}
         </ol>

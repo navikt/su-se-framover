@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Email } from '@navikt/ds-icons';
-import { Button, Heading, Panel, Table } from '@navikt/ds-react';
+import { Button, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
@@ -8,6 +8,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import * as DokumentApi from '~src/api/dokumentApi';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import SuTabell, { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
@@ -78,8 +82,11 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
     };
 
     return (
-        <Panel border>
-            <Heading size="medium">{formatMessage('vedtak.table.tittel')}</Heading>
+        <Oppsummeringspanel
+            ikon={Oppsummeringsikon.Liste}
+            farge={Oppsummeringsfarge.Grønn}
+            tittel={formatMessage('vedtak.table.tittel')}
+        >
             <SuTabell
                 kolonnerConfig={{
                     kolonner: VedtakstabellKolonner,
@@ -175,7 +182,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                     </Table.Body>
                 )}
             />
-        </Panel>
+        </Oppsummeringspanel>
     );
 };
 

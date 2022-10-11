@@ -7,56 +7,28 @@
 .stønadsperiodeHeader {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: @spacing;
+    margin-bottom: @spacing-s;
 }
 
 .ikonContainer {
     display: flex;
     align-items: center;
-
-    .ikon {
-        margin-right: @spacing-xxs;
-    }
+    gap: @spacing-xxs;
 }
 
-.modalContainer {
-    display: flex;
-    flex-direction: column;
-    padding: @spacing-s;
-
-    > :not(:last-child) {
-        margin-bottom: @spacing-s;
-    }
-
-    .modalKnappContainer {
-        align-self: flex-end;
-    }
-}
-
-.utbetalingsperioderContainer {
+.utbetalingContentContainer {
     display: flex;
     justify-content: space-between;
 
     .utbetalingsperiode {
-        display: flex;
-        margin-bottom: @spacing-xs;
-
-        > :not(:last-child) {
-            margin-right: @spacing;
-        }
-
-        :nth-child(2) {
-            width: 60px;
-        }
+        display: grid;
+        grid-template-columns: 130px 70px auto;
+        gap: @spacing;
+        margin-bottom: @spacing-xxs;
     }
 
     .utbetalingKnappContainer {
         display: flex;
         align-items: flex-end;
     }
-}
-
-.utbetalingGjenopptatt {
-    margin-top: @spacing;
 }

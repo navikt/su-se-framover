@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Modal, Panel, Table } from '@navikt/ds-react';
+import { Button, Heading, Modal, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
@@ -9,6 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import SuTabell, { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import {
     getDataCellInfo,
@@ -110,8 +114,11 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
     };
 
     return (
-        <Panel border>
-            <Heading size="medium">{formatMessage('åpneBehandlinger.table.tittel')}</Heading>
+        <Oppsummeringspanel
+            ikon={Oppsummeringsikon.Task}
+            farge={Oppsummeringsfarge.Blå}
+            tittel={formatMessage('åpneBehandlinger.table.tittel')}
+        >
             <SuTabell
                 kolonnerConfig={{
                     kolonner: ÅpneBehandlingerKolonner,
@@ -169,7 +176,7 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                     </Table.Body>
                 )}
             />
-        </Panel>
+        </Oppsummeringspanel>
     );
 };
 

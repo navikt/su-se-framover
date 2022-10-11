@@ -1,4 +1,12 @@
 import { lukketSøknadBegrunnelser } from '~src/typeMappinger/LukketSøknadBegrunnelser';
+import { Utbetalingstype } from '~src/types/Utbetalingsperiode';
+
+const utbetalingsTypeTekstMapper: { [key in Utbetalingstype]: string } = {
+    [Utbetalingstype.NY]: ' ',
+    [Utbetalingstype.OPPHØR]: 'Opphørt',
+    [Utbetalingstype.STANS]: 'Stanset',
+    [Utbetalingstype.GJENOPPTA]: 'Gjenopptatt',
+};
 
 export default {
     'attestering.attester': 'Attester',
@@ -12,6 +20,20 @@ export default {
     'link.dokumenter': 'Brev sendt fra SU',
     'link.kontrollsamtale': 'Kontrollsamtale',
     'link.utenlandsopphold': 'Utenlandsopphold',
+
+    'utbetalinger.heading': 'Stønadsperioder',
+
+    'utbetalinger.stønadsperiode.aktiv': 'Aktiv',
+    'utbetalinger.stønadsperiode.stoppet': 'Stoppet',
+    'utbetalinger.stønadsperiode.utløpt': 'Utløpt',
+    'utbetalinger.stønadsperiode.knapp.gjenopptaUtbetaling': 'Gjenoppta utbetaling',
+    'utbetalinger.stønadsperiode.knapp.stansUtbetaling': 'Stans utbetalinger',
+    'utbetalinger.stønadsperiode.knapp.stoppUtbetaling': 'Stopp utbetaling',
+
+    'utbetalinger.perioder.tittel': 'Utbetalingsperioder',
+    'utbetalinger.periode.beløp.kr': 'kr',
+
+    ...utbetalingsTypeTekstMapper,
 
     'åpneBehandlinger.table.tittel': 'Åpne behandlinger',
     'vedtak.table.tittel': 'Vedtak',

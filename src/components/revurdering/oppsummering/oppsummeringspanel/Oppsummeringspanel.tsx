@@ -1,4 +1,4 @@
-import { Calculator, List, FillForms } from '@navikt/ds-icons';
+import { Calculator, List, FillForms, Task, FileError, Money } from '@navikt/ds-icons';
 import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -9,10 +9,15 @@ export enum Oppsummeringsikon {
     Liste,
     Kalkulator,
     Blyant,
+    Task,
+    FilError,
+    Lommebok,
 }
 export enum Oppsummeringsfarge {
     Lilla,
     Grønn,
+    Blå,
+    Limegrønn,
 }
 
 function fargeklassenavn(farge: Oppsummeringsfarge) {
@@ -21,15 +26,17 @@ function fargeklassenavn(farge: Oppsummeringsfarge) {
             return styles.lilla;
         case Oppsummeringsfarge.Grønn:
             return styles.grønn;
+        case Oppsummeringsfarge.Blå:
+            return styles.blå;
+        case Oppsummeringsfarge.Limegrønn:
+            return styles.limegrønn;
     }
 }
 
 const Ikon = (props: { className?: string; ikon: Oppsummeringsikon }) => {
     const iconProps = {
         className: props.className,
-        style: {
-            fontSize: '1.5rem',
-        },
+        style: { fontSize: '1.5rem' },
         role: 'img',
         focusable: false,
     };
@@ -40,7 +47,13 @@ const Ikon = (props: { className?: string; ikon: Oppsummeringsikon }) => {
         case Oppsummeringsikon.Liste:
             return <List {...iconProps} aria-label="Listeikon" />;
         case Oppsummeringsikon.Blyant:
-            return <FillForms {...iconProps} aria-label="blyantikon" />;
+            return <FillForms {...iconProps} aria-label="Blyantikon" />;
+        case Oppsummeringsikon.Task:
+            return <Task {...iconProps} aria-label="Oppgaveliste" />;
+        case Oppsummeringsikon.FilError:
+            return <FileError {...iconProps} aria-label="Fil-error" />;
+        case Oppsummeringsikon.Lommebok:
+            return <Money {...iconProps} aria-label="Lommebok" />;
     }
 };
 

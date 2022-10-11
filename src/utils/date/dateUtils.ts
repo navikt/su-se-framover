@@ -24,7 +24,7 @@ export const formatDateTime = (time: string) => {
 
 export const formatDate = (date: string) => intl.formatDate(date, formatDateOptions);
 
-export const formatMonthYear = (date: string) =>
+export const formatMonthYear = (date: string | Date) =>
     intl.formatDate(date, {
         ...formatDateOptions,
         day: undefined,
