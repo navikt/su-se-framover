@@ -2,7 +2,7 @@ import {
     OppdaterRegistrertUtenlandsoppholdRequest,
     RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
-    UgyldiggjørRegistrertUtenlandsoppholdRequest,
+    AnnullerRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
 import { Restans } from '~src/types/Restans';
 import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
@@ -84,8 +84,8 @@ export async function oppdaterRegistrertUtenlandsopphold(
     });
 }
 
-export async function ugyldiggjørRegistrertUtenlandsopphold(
-    arg: UgyldiggjørRegistrertUtenlandsoppholdRequest
+export async function annullerRegistrertUtenlandsopphold(
+    arg: AnnullerRegistrertUtenlandsoppholdRequest
 ): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
         url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,

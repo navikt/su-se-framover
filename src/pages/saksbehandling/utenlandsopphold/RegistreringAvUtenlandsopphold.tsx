@@ -11,11 +11,11 @@ import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
 import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
+import { registrerUtenlandsoppholdFormDataTilRegistrerRequest } from './RegistreringAvUtenlandsoppholdFormUtils';
 
 const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
     const { formatMessage } = useI18n({ messages });
@@ -31,15 +31,12 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
                     sakId={props.sakId}
                     status={status}
                     onFormSubmit={(validatedVlaues) =>
-                        registrerUtenlandsOpphold({
-                            sakId: props.sakId,
-                            periode: {
-                                fraOgMed: toIsoDateOnlyString(validatedVlaues.periode.fraOgMed!),
-                                tilOgMed: toIsoDateOnlyString(validatedVlaues.periode.tilOgMed!),
-                            },
-                            dokumentasjon: validatedVlaues.dokumentasjon!,
-                            journalposter: validatedVlaues.journalposter.map((it) => it.journalpostId!),
-                        })
+                        registrerUtenlandsOpphold(
+                            registrerUtenlandsoppholdFormDataTilRegistrerRequest({
+                                sakId: props.sakId,
+                                data: validatedVlaues,
+                            })
+                        )
                     }
                 >
                     <div className={styles.buttonsContainer}>

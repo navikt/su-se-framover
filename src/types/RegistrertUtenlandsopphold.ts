@@ -40,7 +40,7 @@ export interface OppdaterRegistrertUtenlandsoppholdRequest {
     dokumentasjon: UtenlandsoppholdDokumentasjon;
 }
 
-export interface UgyldiggjørRegistrertUtenlandsoppholdRequest {
+export interface AnnullerRegistrertUtenlandsoppholdRequest {
     sakId: string;
     utenlandsoppholdId: string;
 }

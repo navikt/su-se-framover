@@ -3,52 +3,27 @@ import { Delete } from '@navikt/ds-icons';
 import { Button, Heading, Select, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { Controller, useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
+import { Control, Controller, useFieldArray, useForm, UseFormSetValue } from 'react-hook-form';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
-import yup, { validerPeriodeTomEtterFomUtenSisteDagBegrensning } from '~src/lib/validering';
-import { NullablePeriode } from '~src/types/Periode';
 import {
     RegistrerteUtenlandsopphold,
     RegistrertUtenlandsopphold,
     UtenlandsoppholdDokumentasjon,
 } from '~src/types/RegistrertUtenlandsopphold';
-import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
-
-export interface RegisteringAvUtenlandsoppholdFormData {
-    periode: NullablePeriode<Date>;
-    dokumentasjon: Nullable<UtenlandsoppholdDokumentasjon>;
-    journalposter: Array<{ journalpostId: Nullable<string> }>;
-}
-
-const registeringAvUtenlandsoppholdFormSchema = yup.object<RegisteringAvUtenlandsoppholdFormData>({
-    periode: validerPeriodeTomEtterFomUtenSisteDagBegrensning,
-    dokumentasjon: yup
-        .string()
-        .oneOf([...Object.values(UtenlandsoppholdDokumentasjon)])
-        .nullable()
-        .required(),
-    journalposter: yup
-        .array<{ journalpostId: Nullable<string> }>(
-            yup
-                .object({
-                    journalpostId: yup.string().required().typeError('Feltet må fylles ut'),
-                })
-                .required()
-        )
-        .notRequired()
-        .defined(),
-});
+import {
+    RegisteringAvUtenlandsoppholdFormData,
+    registeringAvUtenlandsoppholdFormSchema,
+    registrertUtenlandsoppholdTilFormDataEllerDefault,
+} from './RegistreringAvUtenlandsoppholdFormUtils';
 
 /**
- * Tar inn form-knapper som children. Dette er for å lettere håndtere de ulike APi-kallene på samme
- * formet, og samtidig abstrahere dem ut fra selve formet
+ * Tar inn form-knapper som children. Dette er for å lettere håndtere de ulike APi-kallene på samme formet
  */
 const RegistreringAvUtenlandsoppholdForm = (props: {
     sakId: string;
@@ -60,38 +35,27 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
     const { formatMessage } = useI18n({ messages });
     const [antallDagerIUtlandet, setAntallDagerIUtlandet] = useState<number>(0);
 
-    const form = useForm<RegisteringAvUtenlandsoppholdFormData>({
-        defaultValues: {
-            periode: {
-                fraOgMed: toDateOrNull(props.registrertUtenlandsopphold?.periode.fraOgMed),
-                tilOgMed: toDateOrNull(props?.registrertUtenlandsopphold?.periode.tilOgMed),
-            },
-            dokumentasjon: props?.registrertUtenlandsopphold?.dokumentasjon ?? null,
-            journalposter: props?.registrertUtenlandsopphold?.journalposter
-                ? props?.registrertUtenlandsopphold?.journalposter.map((it) => ({
-                      journalpostId: it,
-                  }))
-                : [],
-        },
+    const { control, handleSubmit, watch, formState, setValue } = useForm<RegisteringAvUtenlandsoppholdFormData>({
+        defaultValues: registrertUtenlandsoppholdTilFormDataEllerDefault(props.registrertUtenlandsopphold),
         resolver: yupResolver(registeringAvUtenlandsoppholdFormSchema),
     });
-    const watch = form.watch();
+    const watched = watch();
 
     useEffect(() => {
         const antallDagerIUtlandetMinusUtreiseOgInnreiseDato =
-            DateFns.differenceInCalendarDays(watch.periode.tilOgMed ?? 0, watch.periode.fraOgMed ?? 0) - 1;
+            DateFns.differenceInCalendarDays(watched.periode.tilOgMed ?? 0, watched.periode.fraOgMed ?? 0) - 1;
 
         setAntallDagerIUtlandet(
             antallDagerIUtlandetMinusUtreiseOgInnreiseDato < 0 ? 0 : antallDagerIUtlandetMinusUtreiseOgInnreiseDato
         );
-    }, [watch.periode.fraOgMed, watch.periode.tilOgMed]);
+    }, [watched.periode.fraOgMed, watched.periode.tilOgMed]);
 
     return (
-        <form onSubmit={form.handleSubmit((v) => props.onFormSubmit(v))}>
+        <form onSubmit={handleSubmit((v) => props.onFormSubmit(v))}>
             <div className={styles.inputFieldsContainer}>
                 <div className={styles.periodeFormMedDagerTeller}>
                     <Controller
-                        control={form.control}
+                        control={control}
                         name={'periode'}
                         render={({ field }) => (
                             <PeriodeForm
@@ -100,13 +64,13 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                                 onChange={field.onChange}
                                 minDate={{
                                     fraOgMed: new Date('01-01-2021'),
-                                    tilOgMed: watch.periode.fraOgMed,
+                                    tilOgMed: watched.periode.fraOgMed,
                                 }}
                                 maxDate={{
                                     fraOgMed: undefined,
                                     tilOgMed: undefined,
                                 }}
-                                error={form.formState.errors.periode}
+                                error={formState.errors.periode}
                                 medDager
                             />
                         )}
@@ -117,15 +81,15 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                 </div>
 
                 <Controller
-                    control={form.control}
+                    control={control}
                     name={'dokumentasjon'}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                         <Select
                             className={styles.select}
                             {...field}
                             value={field.value ?? ''}
                             label={formatMessage('registreringAvUtenlandsopphold.form.dokumentasjon.label')}
-                            error={form.formState.errors.dokumentasjon?.message}
+                            error={fieldState.error?.message}
                         >
                             <option value="">
                                 {formatMessage(
@@ -140,18 +104,21 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                         </Select>
                     )}
                 />
-                <JournalpostIderInputs form={form} />
+                <JournalpostIderInputs control={control} setValue={setValue} />
                 {props.children}
             </div>
         </form>
     );
 };
 
-const JournalpostIderInputs = (props: { form: UseFormReturn<RegisteringAvUtenlandsoppholdFormData> }) => {
+const JournalpostIderInputs = (props: {
+    control: Control<RegisteringAvUtenlandsoppholdFormData>;
+    setValue: UseFormSetValue<RegisteringAvUtenlandsoppholdFormData>;
+}) => {
     const { formatMessage } = useI18n({ messages });
 
     const journalposter = useFieldArray({
-        control: props.form.control,
+        control: props.control,
         name: 'journalposter',
     });
 
@@ -161,14 +128,14 @@ const JournalpostIderInputs = (props: { form: UseFormReturn<RegisteringAvUtenlan
                 <li key={el.id}>
                     <div className={styles.journalpostIdInputMedDelete}>
                         <Controller
-                            control={props.form.control}
+                            control={props.control}
                             name={`journalposter.${idx}.journalpostId`}
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
                                     autoComplete="off"
                                     onChange={(e) => {
-                                        props.form.setValue(`journalposter.${idx}`, {
+                                        props.setValue(`journalposter.${idx}`, {
                                             journalpostId: e.target.value,
                                         });
                                     }}

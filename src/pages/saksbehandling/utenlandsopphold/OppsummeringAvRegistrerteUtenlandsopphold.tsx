@@ -16,20 +16,21 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { RegistrertUtenlandsopphold } from '~src/types/RegistrertUtenlandsopphold';
-import { formatDate, formatDateTime, formatPeriodeMedDager, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
+import { formatDate, formatDateTime, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
 
 import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
 import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
+import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from './RegistreringAvUtenlandsoppholdFormUtils';
 
 const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     sakId: string;
     registrerteUtenlandsopphold: RegistrertUtenlandsopphold[];
 }) => {
     const { formatMessage } = useI18n({ messages });
+    const [visAnnullerte, setVisAnnullerte] = useState(false);
     const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
     const [tilOgMed, setTilOgMed] = useState<Nullable<Date>>(null);
-    const [visAnnullerte, setVisAnnullerte] = useState(false);
 
     const filtrerteUtenlandsopphold = props.registrerteUtenlandsopphold
         .sort((a, b) => Date.parse(a.periode.fraOgMed) - Date.parse(b.periode.fraOgMed))
@@ -64,18 +65,9 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
 };
 
 const Oppsummeringsfiltrering = (props: {
-    fraOgMed: {
-        value: Nullable<Date>;
-        set: (date: Nullable<Date>) => void;
-    };
-    tilOgMed: {
-        value: Nullable<Date>;
-        set: (date: Nullable<Date>) => void;
-    };
-    annullert: {
-        value: boolean;
-        set: (b: boolean) => void;
-    };
+    fraOgMed: { value: Nullable<Date>; set: (date: Nullable<Date>) => void };
+    tilOgMed: { value: Nullable<Date>; set: (date: Nullable<Date>) => void };
+    annullert: { value: boolean; set: (b: boolean) => void };
 }) => {
     const { formatMessage } = useI18n({ messages });
     return (
@@ -138,7 +130,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
         SakSlice.oppdaterRegistrertUtenlandsopphold
     );
     const [ugyldiggjørStatus, ugyldiggjørUtenlandsopphold] = useAsyncActionCreator(
-        SakSlice.ugyldiggjørRegistrertUtenlandsopphold
+        SakSlice.annullerRegistrertUtenlandsopphold
     );
 
     if (endrerRegistrertUtenlandsopphold) {
@@ -155,16 +147,13 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                     registrertUtenlandsopphold={props.registrertUtenlandsopphold}
                     status={oppdaterStatus}
                     onFormSubmit={(validatedVlaues) =>
-                        oppdaterUtenlandsopphold({
-                            sakId: props.sakId,
-                            utenlandsoppholdId: props.registrertUtenlandsopphold.id,
-                            periode: {
-                                fraOgMed: toIsoDateOnlyString(validatedVlaues.periode.fraOgMed!),
-                                tilOgMed: toIsoDateOnlyString(validatedVlaues.periode.tilOgMed!),
-                            },
-                            dokumentasjon: validatedVlaues.dokumentasjon!,
-                            journalposter: validatedVlaues.journalposter.map((it) => it.journalpostId!),
-                        })
+                        oppdaterUtenlandsopphold(
+                            registrerUtenlandsoppholdFormDataTilOppdaterRequest({
+                                sakId: props.sakId,
+                                registrertUtenlandsoppholdId: props.registrertUtenlandsopphold.id,
+                                data: validatedVlaues,
+                            })
+                        )
                     }
                 >
                     <div className={styles.buttonsContainer}>

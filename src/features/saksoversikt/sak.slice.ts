@@ -21,7 +21,7 @@ import {
     OppdaterRegistrertUtenlandsoppholdRequest,
     RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
-    UgyldiggjørRegistrertUtenlandsoppholdRequest,
+    AnnullerRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
 import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
@@ -239,12 +239,12 @@ export const oppdaterRegistrertUtenlandsopphold = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const ugyldiggjørRegistrertUtenlandsopphold = createAsyncThunk<
+export const annullerRegistrertUtenlandsopphold = createAsyncThunk<
     RegistrerteUtenlandsopphold,
-    UgyldiggjørRegistrertUtenlandsoppholdRequest,
+    AnnullerRegistrertUtenlandsoppholdRequest,
     { rejectValue: ApiError }
 >('sak/ugyldiggjørRegistrertUtenlandsopphold', async (arg, thunkApi) => {
-    const res = await sakApi.ugyldiggjørRegistrertUtenlandsopphold(arg);
+    const res = await sakApi.annullerRegistrertUtenlandsopphold(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -337,7 +337,7 @@ export default createSlice({
         builder.addCase(oppdaterRegistrertUtenlandsopphold.fulfilled, (state, action) => {
             state.sak = oppdaterUtenlandsoppholdISak(state.sak, action.payload);
         });
-        builder.addCase(ugyldiggjørRegistrertUtenlandsopphold.fulfilled, (state, action) => {
+        builder.addCase(annullerRegistrertUtenlandsopphold.fulfilled, (state, action) => {
             state.sak = oppdaterUtenlandsoppholdISak(state.sak, action.payload);
         });
 
