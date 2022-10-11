@@ -306,7 +306,6 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
 
     if (erRevurderingTilAttestering(props.r)) {
         if (user.isAttestant && user.navIdent !== props.r.saksbehandler) {
-            console.log('rofl');
             return (
                 <LinkAsButton
                     variant="secondary"

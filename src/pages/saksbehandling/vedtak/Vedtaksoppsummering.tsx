@@ -18,7 +18,6 @@ import messages from './vedtaksoppsummering-nb';
 import * as styles from './vedtaksoppsummering.module.less';
 
 export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string | undefined) {
-    console.log(klageId);
     const klageMedKlageinstansvedtak = sak.klager.find((k) => k.id === klageId);
     if (klageMedKlageinstansvedtak && erKlageFerdigbehandlet(klageMedKlageinstansvedtak)) {
         const vedtakSomKlagesPå = sak.vedtak.find((v) => v.id === klageMedKlageinstansvedtak.vedtakId)!;

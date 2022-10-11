@@ -17,6 +17,12 @@ import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemote
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
+import {
+    OppdaterRegistrertUtenlandsoppholdRequest,
+    RegistrerteUtenlandsopphold,
+    RegistrerUtenlandsoppholdRequest,
+    AnnullerRegistrertUtenlandsoppholdRequest,
+} from '~src/types/RegistrertUtenlandsopphold';
 import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
@@ -209,6 +215,42 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const registrerUtenlandsopphold = createAsyncThunk<
+    RegistrerteUtenlandsopphold,
+    RegistrerUtenlandsoppholdRequest,
+    { rejectValue: ApiError }
+>('sak/registrerUtenlandsopphold', async (arg, thunkApi) => {
+    const res = await sakApi.registrerUtenlandsopphold(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const oppdaterRegistrertUtenlandsopphold = createAsyncThunk<
+    RegistrerteUtenlandsopphold,
+    OppdaterRegistrertUtenlandsoppholdRequest,
+    { rejectValue: ApiError }
+>('sak/oppdaterRegistrertUtenlandsopphold', async (arg, thunkApi) => {
+    const res = await sakApi.oppdaterRegistrertUtenlandsopphold(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const annullerRegistrertUtenlandsopphold = createAsyncThunk<
+    RegistrerteUtenlandsopphold,
+    AnnullerRegistrertUtenlandsoppholdRequest,
+    { rejectValue: ApiError }
+>('sak/ugyldiggjørRegistrertUtenlandsopphold', async (arg, thunkApi) => {
+    const res = await sakApi.annullerRegistrertUtenlandsopphold(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
 }
@@ -278,6 +320,25 @@ export default createSlice({
 
         builder.addCase(avslagManglendeDokSøknad.fulfilled, (state, action) => {
             state.sak = RemoteData.success(action.payload);
+        });
+
+        builder.addCase(registrerUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    utenlandsopphold: {
+                        antallDager: action.payload.antallDager,
+                        utenlandsopphold: action.payload.utenlandsopphold,
+                    },
+                }))
+            );
+        });
+        builder.addCase(oppdaterRegistrertUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = oppdaterUtenlandsoppholdISak(state.sak, action.payload);
+        });
+        builder.addCase(annullerRegistrertUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = oppdaterUtenlandsoppholdISak(state.sak, action.payload);
         });
 
         builder.addCase(revurderingActions.opprettRevurdering.fulfilled, (state, action) => {
@@ -506,6 +567,22 @@ function oppdaterKlageISak(sak: RemoteData.RemoteData<ApiError, Sak>, klage: Kla
         RemoteData.map((s) => ({
             ...s,
             klager: s.klager.map((k) => (k.id === klage.id ? klage : k)),
+        }))
+    );
+}
+
+function oppdaterUtenlandsoppholdISak(
+    sak: RemoteData.RemoteData<ApiError, Sak>,
+    utenlandsopphold: RegistrerteUtenlandsopphold
+) {
+    return pipe(
+        sak,
+        RemoteData.map((s) => ({
+            ...s,
+            utenlandsopphold: {
+                utenlandsopphold: utenlandsopphold.utenlandsopphold,
+                antallDager: utenlandsopphold.antallDager,
+            },
         }))
     );
 }

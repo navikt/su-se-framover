@@ -1,3 +1,9 @@
+import {
+    OppdaterRegistrertUtenlandsoppholdRequest,
+    RegistrerteUtenlandsopphold,
+    RegistrerUtenlandsoppholdRequest,
+    AnnullerRegistrertUtenlandsoppholdRequest,
+} from '~src/types/RegistrertUtenlandsopphold';
 import { Restans } from '~src/types/Restans';
 import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
 import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
@@ -48,6 +54,42 @@ export async function kallInnTilKontrollsamtale(sakId: string) {
         body: {
             sakId: sakId,
         },
+    });
+}
+export async function registrerUtenlandsopphold(
+    arg: RegistrerUtenlandsoppholdRequest
+): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/utenlandsopphold`,
+        method: 'POST',
+        body: {
+            periode: arg.periode,
+            dokumentasjon: arg.dokumentasjon,
+            journalposter: arg.journalposter,
+        },
+    });
+}
+
+export async function oppdaterRegistrertUtenlandsopphold(
+    arg: OppdaterRegistrertUtenlandsoppholdRequest
+): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,
+        method: 'PUT',
+        body: {
+            periode: arg.periode,
+            dokumentasjon: arg.dokumentasjon,
+            journalposter: arg.journalposter,
+        },
+    });
+}
+
+export async function annullerRegistrertUtenlandsopphold(
+    arg: AnnullerRegistrertUtenlandsoppholdRequest
+): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,
+        method: 'DELETE',
     });
 }
 

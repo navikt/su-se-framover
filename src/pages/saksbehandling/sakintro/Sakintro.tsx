@@ -122,12 +122,22 @@ const Sakintro = () => {
                         </NyBehandlingVelger>
                     )}
                     {harUtbetalinger && (
-                        <LinkAsButton
-                            variant="secondary"
-                            href={Routes.kontrollsamtale.createURL({ sakId: props.sak.id })}
-                        >
-                            {formatMessage('link.kontrollsamtale')}
-                        </LinkAsButton>
+                        <>
+                            <LinkAsButton
+                                variant="secondary"
+                                href={Routes.kontrollsamtale.createURL({ sakId: props.sak.id })}
+                            >
+                                {formatMessage('link.kontrollsamtale')}
+                            </LinkAsButton>
+                            {process.env.NODE_ENV === 'development' && (
+                                <LinkAsButton
+                                    variant="secondary"
+                                    href={Routes.utenlandsopphold.createURL({ sakId: props.sak.id })}
+                                >
+                                    {formatMessage('link.utenlandsopphold')}
+                                </LinkAsButton>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

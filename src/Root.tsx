@@ -49,6 +49,7 @@ const RevurderingIntroPage = React.lazy(
 const ManuellReguleringPage = React.lazy(() => import('~src/pages/saksbehandling/regulering/ManuellRegulering'));
 const Stans = React.lazy(() => import('~src/pages/saksbehandling/stans/Stans'));
 const Gjenoppta = React.lazy(() => import('~src/pages/saksbehandling/gjenoppta/Gjenoppta'));
+const Utenlandsopphold = React.lazy(() => import('~src/pages/saksbehandling/utenlandsopphold/Utenlandsopphold'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -115,6 +116,7 @@ const AppRoutes = () => (
             <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />
             <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
             <Route path={routes.manuellRegulering.path} element={<ManuellReguleringPage />} />
+            <Route path={routes.utenlandsopphold.path} element={<Utenlandsopphold />} />
         </Route>
         <Route
             path={routes.saksoversiktIndex.path}

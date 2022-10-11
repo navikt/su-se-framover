@@ -1,4 +1,4 @@
-import { Calculator, List } from '@navikt/ds-icons';
+import { Calculator, List, FillForms } from '@navikt/ds-icons';
 import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -8,6 +8,7 @@ import * as styles from './oppsummeringspanel.module.less';
 export enum Oppsummeringsikon {
     Liste,
     Kalkulator,
+    Blyant,
 }
 export enum Oppsummeringsfarge {
     Lilla,
@@ -38,6 +39,8 @@ const Ikon = (props: { className?: string; ikon: Oppsummeringsikon }) => {
             return <Calculator {...iconProps} aria-label="Kalkulatorikon" />;
         case Oppsummeringsikon.Liste:
             return <List {...iconProps} aria-label="Listeikon" />;
+        case Oppsummeringsikon.Blyant:
+            return <FillForms {...iconProps} aria-label="blyantikon" />;
     }
 };
 
