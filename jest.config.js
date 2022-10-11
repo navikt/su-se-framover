@@ -4,7 +4,6 @@ module.exports = {
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     moduleNameMapper: {
         '^~(.*)$': '<rootDir>/src/$1',
-        'nav-(.*)-style': '<rootDir>/__mocks__/fileMock.js',
         '\\.(css|less|sass|scss)$': '<rootDir>/__mocks__/fileMock.js',
     },
     watchPathIgnorePatterns: ['<rootDir>/dist', '<rootDir>/node_modules'],
