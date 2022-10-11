@@ -34,16 +34,15 @@ enum VedtakstabellKolonner {
     iverksatt_tidspunkt = 'iverksatt-tidspunkt',
 }
 
-const isOversendtKlage = (v: Vedtak | Klage): v is Klage => {
-    return !('periode' in v);
-};
-
 type VedtakEllerOversendtKlage = Vedtak | Klage;
 type VedtakOgOversendteKlager = Array<Vedtak | Klage>;
 
+const isOversendtKlage = (v: Vedtak | Klage): v is Klage => !('periode' in v);
 const isStansGjenopptakRevurdering = (v: VedtakEllerOversendtKlage) => {
     return 'type' in v && (v.type === VedtakType.GJENOPPTAK_AV_YTELSE || v.type === VedtakType.STANS_AV_YTELSE);
 };
+
+const isRegulering = (v: VedtakEllerOversendtKlage): v is Vedtak => 'type' in v;
 
 const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakOgOversendteKlager }) => {
     const { formatMessage } = useI18n({ messages });
@@ -151,7 +150,8 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                         </Link>
                                     </Table.DataCell>
                                     <Table.DataCell>
-                                        {isStansGjenopptakRevurdering(vedtak) ? (
+                                        {isStansGjenopptakRevurdering(vedtak) ||
+                                        (isRegulering(vedtak) && vedtak.type === VedtakType.REGULERING) ? (
                                             '-'
                                         ) : (
                                             <Button
