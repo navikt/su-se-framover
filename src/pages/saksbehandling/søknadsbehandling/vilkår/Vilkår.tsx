@@ -2,6 +2,7 @@ import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import * as Routes from '~src/lib/routes';
 import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspensjon/Alderspensjon';
@@ -9,7 +10,6 @@ import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/famili
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/SøknadsbehandlingUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
 import { createVilkårUrl } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
@@ -28,7 +28,7 @@ import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
 import * as styles from './vilkår.module.less';
 
 const Vilkår = () => {
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const {
         vilkar = Vilkårtype.Virkningstidspunkt,
         sakId,

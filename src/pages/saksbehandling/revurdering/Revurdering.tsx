@@ -9,6 +9,7 @@ import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/Grunnl
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, { Linje, Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
 import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -21,7 +22,6 @@ import {
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
 } from '~src/utils/revurdering/revurderingUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import SkjemaelementFeilmelding from '../../../components/formElements/SkjemaelementFeilmelding';
 import { RevurderingSteg } from '../types';
@@ -44,7 +44,7 @@ const FlyktningPage = React.lazy(() => import('./flyktning/FlyktningPage'));
 const Institusjonsopphold = React.lazy(() => import('./institusjonsopphold/Institusjonsopphold'));
 
 const RevurderingPage = () => {
-    const { sak } = useOutletContext<AttesteringContext>();
+    const { sak } = useOutletContext<SaksoversiktContext>();
     const props = {
         sakId: sak.id,
         utbetalinger: sak.utbetalinger,

@@ -8,6 +8,7 @@ import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
@@ -22,7 +23,6 @@ import {
     erUnderkjent,
     erVilkårsvurderingerVurdertAvslag,
 } from '~src/utils/behandling/SøknadsbehandlingUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import messages from './sendTilAttesteringPage-nb';
@@ -33,7 +33,7 @@ interface FormData {
 }
 
 const SendTilAttesteringPage = () => {
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const { formatMessage } = useI18n({ messages });
 
     const navigate = useNavigate();

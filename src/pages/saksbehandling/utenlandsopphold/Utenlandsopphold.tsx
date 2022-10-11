@@ -2,8 +2,8 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
-import { SaksoversiktContext } from '~src/utils/router/routerUtils';
 
 import OppsummeringAvRegistrerteUtenlandsopphold from './OppsummeringAvRegistrerteUtenlandsopphold';
 import RegistreringAvUtenlandsopphold from './RegistreringAvUtenlandsopphold';

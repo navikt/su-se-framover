@@ -8,6 +8,7 @@ import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
@@ -31,7 +32,6 @@ import {
     hentAvkortingFraRevurdering,
     periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~src/utils/revurdering/revurderingUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import * as SharedStyles from '../sharedStyles.module.less';
 
@@ -39,7 +39,7 @@ import messages from './attesterRevurdering-nb';
 import * as styles from './attesterRevurdering.module.less';
 
 const AttesterRevurdering = () => {
-    const { sak } = useOutletContext<AttesteringContext>();
+    const { sak } = useOutletContext<SaksoversiktContext>();
     const sakId = sak.id;
     const saksnummer = sak.saksnummer;
     const informasjonsRevurderinger = sak.revurderinger.filter(erInformasjonsRevurdering);

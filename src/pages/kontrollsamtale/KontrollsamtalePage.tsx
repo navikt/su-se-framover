@@ -12,18 +12,18 @@ import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Kontrollsamtale } from '~src/types/Kontrollsamtale';
 import { formatDate, toDateOrNull } from '~src/utils/date/dateUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import * as styles from './kontrollsamtalePage.module.less';
 import messages from './message-nb';
 
 const KontrollsamtalePage = () => {
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const sakId = props.sak.id;
     const kanKalleInn = !isEmpty(props.sak.utbetalinger);
     const [nyDatoStatus, settNyDatoPost] = useApiCall(kontrollsamtaleApi.settNyDatoForKontrollsamtale);

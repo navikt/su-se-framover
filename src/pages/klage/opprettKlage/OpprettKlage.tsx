@@ -9,6 +9,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as klageActions from '~src/features/klage/klageActions';
 import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -16,7 +17,6 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import yup from '~src/lib/validering';
 import { KlageSteg } from '~src/pages/saksbehandling/types';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from '../klage-nb';
 
@@ -42,7 +42,7 @@ const schema = yup.object<FormData>({
 });
 
 const OpprettKlage = () => {
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const [opprettKlageStatus, opprettKlage] = useAsyncActionCreator(klageActions.opprettKlage);
     const { handleSubmit, register, control, formState } = useForm<FormData>({
         resolver: yupResolver(schema),

@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -13,7 +14,6 @@ import { saksoversiktValgtSak } from '~src/lib/routes';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './dokumenterPage-nb';
 import * as styles from './dokumenterPage.module.less';
@@ -37,7 +37,7 @@ const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typ
 );
 
 const DokumenterPage = () => {
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
     const navigate = useNavigate();
 

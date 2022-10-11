@@ -5,12 +5,12 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
 import OppsummeringAvRevurderingsvedtak from '~src/components/oppsummeringAvRevurdering/OppsummeringAvRevurderingsvedtak';
 import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Sak } from '~src/types/Sak';
 import { VedtakType } from '~src/types/Vedtak';
 import { erKlageFerdigbehandlet } from '~src/utils/klage/klageUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import Klagevedtaksoppsummering from './klagevedtaksoppsummering/klagevedtaksoppsummering';
 import ReguleringVedtaksoppsummering from './reguleringsvedtaksoppsummering/reguleringVedtaksoppsummering';
@@ -31,7 +31,7 @@ export function hentKlagevedtakFraKlageinstans(sak: Sak, klageId: string | undef
 }
 
 const Vedtaksoppsummering = (props: { vedtakId?: string; ikkeVisTilbakeKnapp?: boolean }) => {
-    const contextProps = useOutletContext<AttesteringContext>();
+    const contextProps = useOutletContext<SaksoversiktContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();

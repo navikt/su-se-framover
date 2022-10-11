@@ -2,9 +2,9 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Route, Routes, useOutletContext } from 'react-router-dom';
 
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
-import { SaksoversiktContext } from '~src/utils/router/routerUtils';
 
 import messages from './gjenoppta-nb';
 import styles from './Gjenoppta.module.less';

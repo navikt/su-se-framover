@@ -6,6 +6,7 @@ import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { Person } from '~src/api/personApi';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -14,7 +15,6 @@ import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { erIverksatt, erTilAttestering } from '~src/utils/behandling/SøknadsbehandlingUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './attesterSøknadsbehandling-nb';
 import * as styles from './attesterSøknadsbehandling.module.less';
@@ -97,7 +97,7 @@ const Attesteringsinnhold = ({
 };
 
 const AttesterSøknadsbehandling = () => {
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.attesterSøknadsbehandling>();
     const { intl } = useI18n({ messages });
 

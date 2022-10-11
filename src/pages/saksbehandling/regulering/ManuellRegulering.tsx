@@ -16,6 +16,7 @@ import {
     FradragFormData,
     FradragInputs,
 } from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -27,7 +28,6 @@ import { ÅrsakForManuell } from '~src/types/Regulering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './manuellRegulering-nb';
 import styles from './manuellRegulering.module.less';
@@ -38,7 +38,7 @@ interface FormData {
 
 const ManuellRegulering = () => {
     const { formatMessage } = useI18n({ messages });
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.manuellRegulering>();
     const regulering = props.sak.reguleringer.find((r) => r.id === urlParams.reguleringId);
     const [gjeldendeGrunnlagsdataOgVilkårsvurderinger, hentGjeldendeGrunnlagsdataOgVilkårsvurderinger] = useApiCall(

@@ -8,6 +8,7 @@ import { FeatureToggle } from '~src/api/featureToggleApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Vedtakstidslinje from '~src/components/vedtakstidslinje/VedtaksTidslinje';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -20,7 +21,6 @@ import { erSøknadsbehandlingÅpen } from '~src/utils/behandling/Søknadsbehandl
 import { erKlageAvsluttet, erKlageÅpen } from '~src/utils/klage/klageUtils';
 import { erReguleringAvsluttet, erReguleringÅpen } from '~src/utils/ReguleringUtils';
 import { erRevurderingAvsluttet, erRevurderingÅpen } from '~src/utils/revurdering/revurderingUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 import { getIverksatteInnvilgedeSøknader, erSøknadLukket, erSøknadÅpen } from '~src/utils/søknad/søknadUtils';
 
 import AvsluttedeBehandlingerTabell from './avsluttedeBehandlingerTabell/AvsluttedeBehandlingerTabell';
@@ -43,7 +43,7 @@ enum NyBehandling {
 }
 
 const Sakintro = () => {
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const { formatMessage } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
 

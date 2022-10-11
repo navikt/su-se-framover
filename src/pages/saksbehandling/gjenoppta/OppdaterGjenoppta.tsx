@@ -9,16 +9,16 @@ import {
     StansGjenopptaFormData,
     stansGjenopptaSchema,
 } from '~src/components/stansGjentopptaForm/StansGjenopptaFormUtils';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { OpprettetRevurderingGrunn, Revurdering } from '~src/types/Revurdering';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import styles from './Gjenoppta.module.less';
 
 const OppdaterGjenoppta = () => {
-    const props = useOutletContext<AttesteringContext>();
+    const props = useOutletContext<SaksoversiktContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.oppdaterGjenopptaRoute>();
 
     const navigate = useNavigate();

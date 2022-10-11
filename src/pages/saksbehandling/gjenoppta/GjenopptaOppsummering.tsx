@@ -7,6 +7,7 @@ import * as revurderingApi from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvUtbetalingsrevurdering from '~src/components/oppsummeringAvRevurdering/oppsummeringAvUtbetalingsrevurdering/OppsummeringAvUtbetalingsrevurdering';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { fetchSak } from '~src/features/saksoversikt/sak.slice';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -15,13 +16,12 @@ import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb
 import { useAppDispatch } from '~src/redux/Store';
 import { UtbetalingsRevurdering, UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
 import { erUtbetalingsrevurdering } from '~src/utils/revurdering/revurderingUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import messages from './gjenoppta-nb';
 import styles from './Gjenoppta.module.less';
 
 const GjenopptaOppsummering = (props: { revurdering?: UtbetalingsRevurdering }) => {
-    const contextProps = useOutletContext<AttesteringContext>();
+    const contextProps = useOutletContext<SaksoversiktContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaOppsummeringRoute>();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const navigate = useNavigate();

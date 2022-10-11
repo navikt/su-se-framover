@@ -2,6 +2,7 @@ import * as DateFns from 'date-fns';
 import React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { opprettRevurdering, oppdaterRevurderingsPeriode } from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
@@ -13,7 +14,6 @@ import {
 } from '~src/types/Revurdering';
 import { compareUtbetalingsperiode } from '~src/types/Utbetalingsperiode';
 import { erInformasjonsRevurdering, finnNesteRevurderingsteg } from '~src/utils/revurdering/revurderingUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
@@ -29,7 +29,7 @@ export interface FormValues {
 
 const RevurderingIntroPage = () => {
     const navigate = useNavigate();
-    const { sak } = useOutletContext<AttesteringContext>();
+    const { sak } = useOutletContext<SaksoversiktContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
     const props = {

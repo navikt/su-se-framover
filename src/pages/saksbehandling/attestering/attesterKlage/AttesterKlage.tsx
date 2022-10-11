@@ -4,6 +4,7 @@ import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as klageActions from '~src/features/klage/klageActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -16,7 +17,6 @@ import {
     erKlageTilAttestering,
     erKlageTilAttesteringAvvist,
 } from '~src/utils/klage/klageUtils';
-import { AttesteringContext } from '~src/utils/router/routerUtils';
 
 import * as sharedStyles from '../sharedStyles.module.less';
 
@@ -24,7 +24,7 @@ import messages from './attesterKlage-nb';
 import * as styles from './attesterKlage.module.less';
 
 const AttesterKlage = () => {
-    const { sak } = useOutletContext<AttesteringContext>();
+    const { sak } = useOutletContext<SaksoversiktContext>();
     const props = { sakId: sak.id, klager: sak.klager, vedtaker: sak.vedtak };
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
