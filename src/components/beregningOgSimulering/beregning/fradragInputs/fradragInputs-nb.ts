@@ -21,6 +21,7 @@ export const velgbareFradragskategoriMessages: { [key in VelgbareFradragskategor
     [VelgbareFradragskategorier.Kapitalinntekt]: 'Kapitalinntekt',
     [VelgbareFradragskategorier.Fosterhjemsgodtgjørelse]: 'Fosterhjemsgodtgjørelse',
     [VelgbareFradragskategorier.Annet]: 'Annet',
+    [VelgbareFradragskategorier.Tiltakspenger]: 'Tiltakspenger',
 };
 
 export const ikkeVelgbareFradragskategoriMessages: { [key in IkkeVelgbareFradragskategorier]: string } = {
