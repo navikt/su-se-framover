@@ -57,6 +57,7 @@ export enum VelgbareFradragskategorier {
     AvtalefestetPensjonPrivat = 'AvtalefestetPensjonPrivat',
 
     Tiltakspenger = 'Tiltakspenger',
+    Ventestønad = 'Ventestønad',
     Sykepenger = 'Sykepenger',
     Gjenlevendepensjon = 'Gjenlevendepensjon',
     Arbeidsinntekt = 'Arbeidsinntekt',
@@ -98,6 +99,7 @@ export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
         case VelgbareFradragskategorier.SupplerendeStønad:
         case VelgbareFradragskategorier.Uføretrygd:
         case VelgbareFradragskategorier.Tiltakspenger:
+        case VelgbareFradragskategorier.Ventestønad:
         case IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold:
             return true;
         case VelgbareFradragskategorier.Annet:
