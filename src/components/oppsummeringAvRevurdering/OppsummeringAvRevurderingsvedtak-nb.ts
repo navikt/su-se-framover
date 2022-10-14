@@ -1,4 +1,4 @@
-import { årsakIdMap } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
 
 export default {
     'oppsummeringAvRevurderingsvedtak.fantIkkeVedtak': 'Fant ikke vedtak for revurdering',
@@ -6,5 +6,5 @@ export default {
     'utbetalingsrevurdering.oppsummeringspanel.tittel': 'Oppsummering',
     'utbetalingsrevurdering.årsak': 'Årsak',
     'utbetalingsrevurdering.begrunnelse': 'Begrunnelse',
-    ...årsakIdMap,
+    ...opprettRevurderingÅrsakTekstMapper,
 };

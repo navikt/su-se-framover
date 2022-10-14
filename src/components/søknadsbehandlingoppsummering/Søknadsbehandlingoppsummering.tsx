@@ -8,6 +8,10 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '../revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 
 import messages from './søknadsbehandling-nb';
@@ -26,37 +30,64 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
     const periode = props.behandling.stønadsperiode?.periode;
 
     return (
-        <div>
-            <SøknadsbehandlingHeader
-                sakId={props.sak.id}
-                behandling={props.behandling}
-                vedtakForBehandling={props.vedtakForBehandling}
-                medBrevutkastknapp={props.medBrevutkastknapp}
-            />
-            <div className={styles.virkningstidspunkt}>
-                <Heading level="2" size="large" spacing>
-                    {`${formatMessage('virkningstidspunkt.tittel')}:
+        <>
+            <div>
+                <Oppsummeringspanel ikon={Oppsummeringsikon.Liste} farge={Oppsummeringsfarge.Lilla} tittel={''}>
+                    <SøknadsbehandlingHeader
+                        sakId={props.sak.id}
+                        behandling={props.behandling}
+                        vedtakForBehandling={props.vedtakForBehandling}
+                        medBrevutkastknapp={props.medBrevutkastknapp}
+                    />
+                    <div className={styles.virkningstidspunkt}>
+                        <Heading level="2" size="large" spacing>
+                            {`${formatMessage('virkningstidspunkt.tittel')}:
                     ${
                         periode ? DateUtils.formatPeriode(periode) : formatMessage('virkningstidspunkt.periode.mangler')
                     }`}
-                </Heading>
-            </div>
+                        </Heading>
+                    </div>
 
-            <div className={styles.sidestiltOppsummeringContainer}>
-                <SidestiltOppsummeringAvVilkårOgGrunnlag
-                    grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
-                    visesSidestiltMed={props.behandling.søknad.søknadInnhold}
+                    <div className={styles.sidestiltOppsummeringContainer}>
+                        <SidestiltOppsummeringAvVilkårOgGrunnlag
+                            grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
+                            visesSidestiltMed={props.behandling.søknad.søknadInnhold}
+                        />
+                    </div>
+                </Oppsummeringspanel>
+            </div>
+            <div>
+                <SøknadsbehandlingHeader
+                    sakId={props.sak.id}
+                    behandling={props.behandling}
+                    vedtakForBehandling={props.vedtakForBehandling}
+                    medBrevutkastknapp={props.medBrevutkastknapp}
                 />
-            </div>
+                <div className={styles.virkningstidspunkt}>
+                    <Heading level="2" size="large" spacing>
+                        {`${formatMessage('virkningstidspunkt.tittel')}:
+                    ${
+                        periode ? DateUtils.formatPeriode(periode) : formatMessage('virkningstidspunkt.periode.mangler')
+                    }`}
+                    </Heading>
+                </div>
 
-            {props.behandling.beregning ? (
-                <Panel border>
-                    <VisBeregningOgSimulering behandling={props.behandling} />
-                </Panel>
-            ) : (
-                <Label>{formatMessage('feilmelding.ikkeGjortEnBeregning')}</Label>
-            )}
-        </div>
+                <div className={styles.sidestiltOppsummeringContainer}>
+                    <SidestiltOppsummeringAvVilkårOgGrunnlag
+                        grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
+                        visesSidestiltMed={props.behandling.søknad.søknadInnhold}
+                    />
+                </div>
+
+                {props.behandling.beregning ? (
+                    <Panel border>
+                        <VisBeregningOgSimulering behandling={props.behandling} />
+                    </Panel>
+                ) : (
+                    <Label>{formatMessage('feilmelding.ikkeGjortEnBeregning')}</Label>
+                )}
+            </div>
+        </>
     );
 };
 

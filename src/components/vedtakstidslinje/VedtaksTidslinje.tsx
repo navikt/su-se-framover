@@ -8,9 +8,10 @@ import '@navikt/helse-frontend-tidslinje/lib/main.css';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import Vedtaksoppsummering from '~src/pages/saksbehandling/vedtak/Vedtaksoppsummering';
 import { VedtakType } from '~src/types/Vedtak';
 import { VedtakPåTidslinje, VedtakPåTidslinjeType } from '~src/types/VedtakPåTidslinje';
+
+import OppsummeringAvVedtak from '../oppsummeringAvVedtak/OppsummeringAvVedtak';
 
 import messages from './VedtaksTidslinje-nb';
 import styles from './vedtaksTidslinje.module.less';
@@ -73,7 +74,7 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
                                 </div>
                             </Button>
                         </div>
-                        <Vedtaksoppsummering vedtakId={vedtakIdPåKlikketPeriode ?? ''} ikkeVisTilbakeKnapp />
+                        {vedtakIdPåKlikketPeriode && <OppsummeringAvVedtak vedtakId={vedtakIdPåKlikketPeriode} />}
                     </div>
                 </Popover.Content>
             </Popover>

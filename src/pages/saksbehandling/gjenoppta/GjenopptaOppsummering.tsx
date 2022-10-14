@@ -6,7 +6,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import * as revurderingApi from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
-import OppsummeringAvUtbetalingsrevurdering from '~src/components/oppsummeringAvRevurdering/oppsummeringAvUtbetalingsrevurdering/OppsummeringAvUtbetalingsrevurdering';
+import OppsummeringAvUtbetalingsrevurdering from '~src/components/oppsummeringAvRevurdering/OppsummeringAvUtbetalingsrevurdering';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { fetchSak } from '~src/features/saksoversikt/sak.slice';
 import { useApiCall } from '~src/lib/hooks';

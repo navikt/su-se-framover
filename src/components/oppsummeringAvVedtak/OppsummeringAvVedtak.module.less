@@ -1,0 +1,58 @@
+@import '~/src/styles/variables.less';
+
+.vedtaksContainer {
+    margin-top: @spacing;
+    width: 100%;
+    max-width: 950px;
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+}
+
+.vedtakOgBehandlingInfoContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: @spacing-xs;
+    margin-bottom: @spacing-xs;
+}
+
+.avkorting {
+    margin-top: @spacing;
+
+    .avkortingContent {
+        margin-left: @spacing-xs;
+
+        .avkortingListe {
+            margin-top: @spacing-xs;
+
+            li {
+                display: flex;
+                flex-direction: row;
+                gap: @spacing-l;
+            }
+        }
+    }
+}
+
+.knappOgApiErrorContainer {
+    margin-bottom: @spacing-s;
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+    .knapp {
+        width: @knappBredde;
+    }
+}
+
+.beregningOgSimuleringsContainer {
+    display: flex;
+    gap: @spacing-xs;
+
+    .column {
+        width: 50%;
+    }
+}
+
+.formkravContainer {
+    margin-bottom: @spacing;
+}

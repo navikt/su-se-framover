@@ -1,4 +1,4 @@
-import { årsakIdMap } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
 
 export default {
     'årsak.label': 'Årsak',
@@ -10,5 +10,5 @@ export default {
 
     'knapp.tilbake': 'Tilbake',
     'knapp.neste': 'Neste',
-    ...årsakIdMap,
+    ...opprettRevurderingÅrsakTekstMapper,
 };

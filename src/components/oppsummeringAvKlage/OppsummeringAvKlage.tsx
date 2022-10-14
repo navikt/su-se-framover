@@ -25,9 +25,7 @@ import oppsummeringMessages from './oppsummeringAvKlage-nb';
 import * as styles from './oppsummeringAvKlage.module.less';
 
 const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
-    const { formatMessage } = useI18n({
-        messages: oppsummeringMessages,
-    });
+    const { formatMessage } = useI18n({ messages: oppsummeringMessages });
 
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
 
@@ -45,7 +43,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
     };
 
     return (
-        <div className={styles.oppsummeringPanelContainer}>
+        <div>
             <Oppsummeringspanel
                 tittel={formatMessage('oppsummering.heading')}
                 farge={Oppsummeringsfarge.Lilla}
@@ -111,7 +109,7 @@ const KlageInfo = (props: { klage: Klage }) => {
     );
 };
 
-const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
+export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({
         messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
     });
@@ -121,7 +119,7 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
             <div className={styles.informasjonsContentContainer}>
                 <OppsummeringPar
                     label={formatMessage('label.vedtak.type')}
-                    verdi={props.klagensVedtak.type}
+                    verdi={formatMessage(props.klagensVedtak.type)}
                     sorteres={OppsummeringsParSortering.Vertikalt}
                 />
                 <OppsummeringPar
@@ -166,7 +164,7 @@ const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
     );
 };
 
-const VurderInfo = (props: { klage: Klage }) => {
+export const VurderInfo = (props: { klage: Klage }) => {
     const { formatMessage } = useI18n({
         messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
     });

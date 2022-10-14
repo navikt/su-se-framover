@@ -35,7 +35,9 @@ const Soknad = React.lazy(() => import('~/src/pages/søknad'));
 const SendTilAttesteringPage = React.lazy(
     () => import('~/src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
 );
-const Vedtaksoppsummering = React.lazy(() => import('~src/pages/saksbehandling/vedtak/Vedtaksoppsummering'));
+const VedtakEllerOversendtKlageOppsummering = React.lazy(
+    () => import('~src/pages/saksbehandling/vedtak/VedtakEllerOversendtKlageOppsummering')
+);
 const AvsluttBehandling = React.lazy(() => import('~/src/pages/saksbehandling/avsluttBehandling/AvsluttBehandling'));
 const Revurdering = React.lazy(() => import('~/src/pages/saksbehandling/revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('~/src/pages/saksbehandling/sakintro/Sakintro'));
@@ -110,7 +112,7 @@ const AppRoutes = () => (
             <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
             <Route path={routes.revurderValgtSak.path} element={<RevurderingIntroPage />} />
             <Route path={routes.revurderValgtRevurdering.path} element={<Revurdering />} />
-            <Route path={routes.vedtaksoppsummering.path} element={<Vedtaksoppsummering />} />
+            <Route path={routes.vedtaksoppsummering.path} element={<VedtakEllerOversendtKlageOppsummering />} />
             <Route path={routes.saksbehandlingSendTilAttestering.path} element={<SendTilAttesteringPage />} />
             <Route path={routes.saksbehandlingVilkårsvurdering.path} element={<Vilkår />} />
             <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />

@@ -6,10 +6,12 @@
     margin-top: @spacing;
     margin-left: 13rem;
     width: 50%;
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
 }
 
 .knappContainer {
     display: flex;
     gap: @spacing;
-    margin-bottom: @spacing-xs;
 }

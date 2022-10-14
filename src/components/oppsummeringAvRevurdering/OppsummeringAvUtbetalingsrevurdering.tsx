@@ -9,8 +9,8 @@ import Oppsummeringspanel, {
 import { useI18n } from '~src/lib/i18n';
 import { UtbetalingsRevurdering } from '~src/types/Revurdering';
 
-import messages from '../OppsummeringAvRevurderingsvedtak-nb';
-import styles from '../OppsummeringAvRevurderingsvedtak.module.less';
+import messages from './OppsummeringAvRevurderingsvedtak-nb';
+import styles from './OppsummeringAvRevurderingsvedtak.module.less';
 
 const OppsummeringAvUtbetalingsrevurdering = (props: { revurdering: UtbetalingsRevurdering }) => {
     const { formatMessage } = useI18n({ messages });
