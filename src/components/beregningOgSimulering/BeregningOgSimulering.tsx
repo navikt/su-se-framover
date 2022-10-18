@@ -1,29 +1,64 @@
-import { Label } from '@navikt/ds-react';
+import { Heading, Panel } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { erBeregnetAvslag } from '~src/utils/behandling/SøknadsbehandlingUtils';
+import { Nullable } from '~src/lib/types';
+import { Beregning } from '~src/types/Beregning';
+import { Simulering } from '~src/types/Simulering';
 
-import messages from './beregning/beregning-nb';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '../revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+
 import VisBeregning from './beregning/VisBeregning';
+import bosSimulering from './BeregningOgSimulering-nb';
 import * as styles from './beregningOgSimulering.module.less';
-import { VisSimulering } from './simulering/simulering';
+import { Utbetalingssimulering } from './simulering/simulering';
 
-const VisBeregningOgSimulering = (props: { behandling: Søknadsbehandling }) => {
-    const { intl } = useI18n({ messages });
-    return props.behandling.beregning ? (
-        <div className={styles.beregningOgSimuleringContainer}>
-            <VisBeregning beregning={props.behandling.beregning} />
-            {!erBeregnetAvslag(props.behandling) && <VisSimulering behandling={props.behandling} />}
-            {props.behandling.beregning.begrunnelse && (
-                <div>
-                    <Label size="small">{intl.formatMessage({ id: 'display.visBeregning.begrunnelse' })}</Label>
-                    <p>{props.behandling.beregning.begrunnelse}</p>
+const BeregningOgSimulering = (props: {
+    beregning: Nullable<Beregning>;
+    simulering: Nullable<Simulering>;
+    childrenOverBeregning?: React.ReactNode;
+    childrenUnderBeregning?: React.ReactNode;
+}) => {
+    const { formatMessage } = useI18n({ messages: bosSimulering });
+    return (
+        <Oppsummeringspanel
+            tittel={formatMessage('heading')}
+            farge={Oppsummeringsfarge.Grønn}
+            ikon={Oppsummeringsikon.Kalkulator}
+        >
+            {props.childrenOverBeregning && props.childrenOverBeregning}
+            <div className={styles.container}>
+                <div className={styles.column}>
+                    <Heading level="3" size="small" spacing>
+                        {formatMessage('heading.beregning')}
+                    </Heading>
+                    <Panel border>
+                        {props.beregning ? (
+                            <VisBeregning beregning={props.beregning} utenTittel />
+                        ) : (
+                            formatMessage('error.ingenBeregning')
+                        )}
+                    </Panel>
                 </div>
-            )}
-        </div>
-    ) : null;
+                <div className={styles.column}>
+                    <Heading level="3" size="small" spacing>
+                        {formatMessage('heading.simulering')}
+                    </Heading>
+                    <Panel border>
+                        {props.simulering ? (
+                            <Utbetalingssimulering simulering={props.simulering} utenTittel />
+                        ) : (
+                            formatMessage('error.ingenSimulering')
+                        )}
+                    </Panel>
+                </div>
+            </div>
+            {props.childrenUnderBeregning && props.childrenUnderBeregning}
+        </Oppsummeringspanel>
+    );
 };
 
-export default VisBeregningOgSimulering;
+export default BeregningOgSimulering;

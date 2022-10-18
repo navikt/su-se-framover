@@ -1,0 +1,22 @@
+@import '~/src/styles/variables.less';
+
+.oppsummeringsContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+}
+
+.headerContainer {
+    margin-bottom: @spacing;
+}
+
+.tilleggsinfoContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: @spacing;
+    margin-bottom: @spacing-s;
+}
+
+.sidestiltOppsummeringContainer {
+    margin-bottom: @spacing;
+}

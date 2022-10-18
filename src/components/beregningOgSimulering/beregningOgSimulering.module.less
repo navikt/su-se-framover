@@ -1,8 +1,10 @@
 @import '~/src/styles/variables.less';
 
-.beregningOgSimuleringContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: @spacing;
-    width: 100%;
+.container {
+    display: flex;
+    gap: @spacing-xs;
+
+    .column {
+        width: 50%;
+    }
 }

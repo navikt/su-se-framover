@@ -95,7 +95,7 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
     const sidestiltMedGrunnlagOgVilkår = sidestiltMedGrunnlagsdataOgVilkårsvurderinger(props.visesSidestiltMed);
 
     return (
-        <div className={styles.pageContainer}>
+        <div>
             <div className={styles.accordionOverskrift}>
                 {sidestiltMedSøknad ? (
                     <Heading size="medium">{formatMessage('accordion.overskrift.fraSaksbehandling')}</Heading>
@@ -291,18 +291,16 @@ const AccordionItemUføre = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.uføreFraGrunnlagsdata?.resultat ?? null} />
-                        {formatMessage('accordion.header.uføre')}
-                    </div>
-                    {harEndretUføre && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.uføreFraGrunnlagsdata?.resultat ?? null} />
+                    {formatMessage('accordion.header.uføre')}
                 </div>
+                {harEndretUføre && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvUførevilkår uførevilkår={props.uføreFraGrunnlagsdata} visesIVedtak />
@@ -328,18 +326,16 @@ const AccordionItemFlyktning = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.flyktningFraGrunnlag?.resultat ?? null} />
-                        {formatMessage('accordion.header.flyktning')}
-                    </div>
-                    {harEndretFlyktning && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.flyktningFraGrunnlag?.resultat ?? null} />
+                    {formatMessage('accordion.header.flyktning')}
                 </div>
+                {harEndretFlyktning && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvFlyktningvilkår flyktning={props.flyktningFraGrunnlag} visesIVedtak />
@@ -366,18 +362,16 @@ const AccordionItemAldersvilkår = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.aldersvilkårFraGrunnlagsdata?.resultat ?? null} />
-                        {formatMessage('accordion.header.alderspensjon')}
-                    </div>
-                    {harEndretAldersvilkår && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.aldersvilkårFraGrunnlagsdata?.resultat ?? null} />
+                    {formatMessage('accordion.header.alderspensjon')}
                 </div>
+                {harEndretAldersvilkår && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvAldersvilkår aldersvilkår={props.aldersvilkårFraGrunnlagsdata} visesIVedtak />
@@ -404,20 +398,16 @@ const AccordionItemFamiliegjenforening = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon
-                            resultat={props.familiegjenforeningFraGrunnlagsdata?.resultat ?? null}
-                        />
-                        {formatMessage('accordion.header.familiegjenforening')}
-                    </div>
-                    {harEndretFamiliegjenforening && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.familiegjenforeningFraGrunnlagsdata?.resultat ?? null} />
+                    {formatMessage('accordion.header.familiegjenforening')}
                 </div>
+                {harEndretFamiliegjenforening && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvFamiliegjenforening
@@ -453,18 +443,16 @@ const AccordionItemLovligOpphold = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.lovligOppholdFraGrunnlag?.resultat ?? null} />
-                        {formatMessage('accordion.header.lovligOpphold')}
-                    </div>
-                    {harEndretLovligOpphold && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.lovligOppholdFraGrunnlag?.resultat ?? null} />
+                    {formatMessage('accordion.header.lovligOpphold')}
                 </div>
+                {harEndretLovligOpphold && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvLovligOppholdvilkår lovligOpphold={props.lovligOppholdFraGrunnlag} visesIVedtak />
@@ -497,18 +485,16 @@ const AccordionItemFastOpphold = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.fastOppholdFraGrunnlag?.resultat ?? null} />
-                        {formatMessage('accordion.header.fastOpphold')}
-                    </div>
-                    {harEndretFastOpphold && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.fastOppholdFraGrunnlag?.resultat ?? null} />
+                    {formatMessage('accordion.header.fastOpphold')}
                 </div>
+                {harEndretFastOpphold && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvFastOppholdvilkår fastOpphold={props.fastOppholdFraGrunnlag} visesIVedtak />
@@ -539,18 +525,16 @@ const AccordionItemInstitusjonsopphold = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.institusjonsoppholdFraGrunnlag?.resultat ?? null} />
-                        {formatMessage('accordion.header.institusjonsopphold')}
-                    </div>
-                    {harEndretInstitusjonsopphold && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.institusjonsoppholdFraGrunnlag?.resultat ?? null} />
+                    {formatMessage('accordion.header.institusjonsopphold')}
                 </div>
+                {harEndretInstitusjonsopphold && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvInstitusjonsoppholdvilkår
@@ -586,18 +570,16 @@ const AccordionItemUtenlandsopphold = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.utenlandsoppholdFraGrunnlag?.status ?? null} />
-                        {formatMessage('accordion.header.utenlandsopphold')}
-                    </div>
-                    {harEndretUtenlandsopphold && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.utenlandsoppholdFraGrunnlag?.status ?? null} />
+                    {formatMessage('accordion.header.utenlandsopphold')}
                 </div>
+                {harEndretUtenlandsopphold && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvUtenlandsopphold utenlandsopphold={props.utenlandsoppholdFraGrunnlag} visesIVedtak />
@@ -627,18 +609,16 @@ const AccordionItemFormue = (props: {
     const harEndretFormue = props.sidestiltFormue && !formueErlik(props.formueFraGrunnlag, props.sidestiltFormue);
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.formueFraGrunnlag.resultat ?? null} />
-                        {formatMessage('accordion.header.formue')}
-                    </div>
-                    {harEndretFormue && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.formueFraGrunnlag.resultat ?? null} />
+                    {formatMessage('accordion.header.formue')}
                 </div>
+                {harEndretFormue && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvFormueVilkår formue={props.formueFraGrunnlag} visesIVedtak />
@@ -665,18 +645,16 @@ const AccordionItemPersonligOppmøte = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>
-                        <VilkårResultatStatusIkon resultat={props.personligOppmøteFraGrunnlag?.resultat ?? null} />
-                        {formatMessage('accordion.header.personligOppmøte')}
-                    </div>
-                    {harEndretPersonligOppmøte && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.personligOppmøteFraGrunnlag?.resultat ?? null} />
+                    {formatMessage('accordion.header.personligOppmøte')}
                 </div>
+                {harEndretPersonligOppmøte && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvPersonligoppmøtevilkår
@@ -706,15 +684,13 @@ const AccordionItemBosituasjon = (props: {
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.bosituasjon')}</div>
-                    {harEndretBosituasjon && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
-                </div>
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.bosituasjon')}</div>
+                {harEndretBosituasjon && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvBosituasjongrunnlag bosituasjon={props.bosituasjonFraGrunnlag} visesIVedtak />
@@ -735,15 +711,13 @@ const AccordionItemFradrag = (props: { fradragFraGrunnlag: Fradrag[]; sidestiltF
 
     return (
         <Accordion.Item>
-            <Accordion.Header>
-                <div className={styles.accordionHeaderContentContainer}>
-                    <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.inntekt')}</div>
-                    {harEndretFradrag && (
-                        <div className={styles.accordionHeaderContent}>
-                            <InformationColored width={'1.2em'} height={'1.2em'} />
-                        </div>
-                    )}
-                </div>
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.inntekt')}</div>
+                {harEndretFradrag && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                    </div>
+                )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvFradrag fradrag={props.fradragFraGrunnlag} visesIVedtak />

@@ -1,8 +1,7 @@
-import { Alert, BodyLong, Heading, Panel } from '@navikt/ds-react';
+import { Alert, BodyLong, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 
-import VisBeregning from '~src/components/beregningOgSimulering/beregning/VisBeregning';
-import { Utbetalingssimulering } from '~src/components/beregningOgSimulering/simulering/simulering';
+import BeregningOgSimulering from '~src/components/beregningOgSimulering/BeregningOgSimulering';
 import simulertUtbetaling from '~src/components/beregningOgSimulering/simulering/simulering-nb';
 import { useI18n } from '~src/lib/i18n';
 import { Oppsummeringsfelt } from '~src/pages/søknad/steg/oppsummering/components/Oppsummeringsfelt';
@@ -16,8 +15,6 @@ import {
     harSimulering,
     hentAvkortingFraRevurdering,
 } from '~src/utils/revurdering/revurderingUtils';
-
-import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
 import messages from './beregningblokk-nb';
 import * as styles from './beregningblokk.module.less';
@@ -53,68 +50,49 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
     }, [revurdering]);
 
     return (
-        <Oppsummeringspanel
-            tittel={formatMessage('heading')}
-            farge={Oppsummeringsfarge.Grønn}
-            ikon={Oppsummeringsikon.Kalkulator}
-        >
-            {alert && (
-                <Alert variant="info" className={styles.alert}>
-                    <Heading level="3" size="small" spacing>
-                        {alert.tittel}
-                    </Heading>
-                    <BodyLong>{alert.tekst}</BodyLong>
-                </Alert>
-            )}
-            <div className={styles.container}>
-                <div className={styles.column}>
-                    <Heading level="3" size="small" spacing>
-                        {formatMessage('heading.beregning')}
-                    </Heading>
-                    <Panel border>
-                        {harBeregninger(revurdering) ? (
-                            <VisBeregning beregning={revurdering.beregning} utenTittel />
-                        ) : (
-                            formatMessage('error.ingenBeregning')
-                        )}
-                    </Panel>
-                </div>
-                <div className={styles.column}>
-                    <Heading level="3" size="small" spacing>
-                        {formatMessage('heading.simulering')}
-                    </Heading>
-                    <Panel border>
-                        {harSimulering(revurdering) ? (
-                            <Utbetalingssimulering simulering={revurdering.simulering} utenTittel />
-                        ) : (
-                            formatMessage('error.ingenSimulering')
-                        )}
-                    </Panel>
-                </div>
-            </div>
-            {simuleringForAvkortingsvarsel && (
-                <div className={styles.avkorting}>
-                    <Heading level="3" size="small" spacing>
-                        {formatMessage('heading.avkorting')}
-                    </Heading>
-                    <div className={styles.avkortingContent}>
-                        <Oppsummeringsfelt
-                            label={formatMessage('avkorting.total')}
-                            verdi={formatCurrency(simuleringForAvkortingsvarsel.totalBruttoYtelse)}
-                        />
-                        <ul className={styles.avkortingListe}>
-                            {simuleringForAvkortingsvarsel.perioder.map((periode) => (
-                                <li key={periode.fraOgMed}>
-                                    <p>{formatPeriode({ fraOgMed: periode.fraOgMed, tilOgMed: periode.tilOgMed })}</p>
-                                    <p>{formatMessage(periode.type)}</p>
-                                    <p>{`${formatCurrency(periode.bruttoYtelse)} ${formatMessage('iMnd')}`}</p>
-                                </li>
-                            ))}
-                        </ul>
+        <BeregningOgSimulering
+            beregning={harBeregninger(revurdering) ? revurdering.beregning : null}
+            simulering={harSimulering(revurdering) ? revurdering.simulering : null}
+            childrenOverBeregning={
+                alert && (
+                    <Alert variant="info" className={styles.alert}>
+                        <Heading level="3" size="small" spacing>
+                            {alert.tittel}
+                        </Heading>
+                        <BodyLong>{alert.tekst}</BodyLong>
+                    </Alert>
+                )
+            }
+            childrenUnderBeregning={
+                simuleringForAvkortingsvarsel && (
+                    <div className={styles.avkorting}>
+                        <Heading level="3" size="small" spacing>
+                            {formatMessage('heading.avkorting')}
+                        </Heading>
+                        <div className={styles.avkortingContent}>
+                            <Oppsummeringsfelt
+                                label={formatMessage('avkorting.total')}
+                                verdi={formatCurrency(simuleringForAvkortingsvarsel.totalBruttoYtelse)}
+                            />
+                            <ul className={styles.avkortingListe}>
+                                {simuleringForAvkortingsvarsel.perioder.map((periode) => (
+                                    <li key={periode.fraOgMed}>
+                                        <p>
+                                            {formatPeriode({
+                                                fraOgMed: periode.fraOgMed,
+                                                tilOgMed: periode.tilOgMed,
+                                            })}
+                                        </p>
+                                        <p>{formatMessage(periode.type)}</p>
+                                        <p>{`${formatCurrency(periode.bruttoYtelse)} ${formatMessage('iMnd')}`}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            )}
-        </Oppsummeringspanel>
+                )
+            }
+        />
     );
 };
 

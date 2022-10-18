@@ -1,7 +1,9 @@
+import { søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper } from '~src/typeMappinger/SøknadsbehandlingStatus';
+
 export default {
-    tittel: 'Vedtak',
+    'oppsummering.søknadsbehandling': 'Oppsummering av søknadsbehandling',
+
     'behandlet.av': 'Saksbehandler',
-    'attestert.av': 'Attestant',
 
     'vurdering.tittel': 'Vurdering',
     'vurdering.innvilgelse': 'Innvilgelse',
@@ -12,16 +14,11 @@ export default {
     'behandling.saksbehandlingStartet': 'Saksbehandling startet',
     'behandling.iverksattDato': 'Iverksatt dato',
 
-    'brev.utkastVedtaksbrev': 'Utkast til vedtaksbrev',
-    'brev.vedtaksbrev': 'Vedtaksbrev',
-
     'feilmelding.ikkeGjortEnBeregning': 'Det er ikke gjort en beregning',
-    'feilmelding.ukjentFeil': 'Ukjent feil',
 
     'knapp.vis': 'Vis brev',
 
     'virkningstidspunkt.tittel': 'Virkningstidspunkt',
-    'virkningstidspunkt.periode.mangler': 'Ukjent',
 
-    'oppsummering.vilkårsvurderinger.tittel': 'Vilkårsvurderinger',
+    ...søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper,
 };

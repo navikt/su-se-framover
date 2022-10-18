@@ -1,11 +1,10 @@
 import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
-import { IntlShape } from 'react-intl';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
-import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
+import OppsummeringAvSøknadsbehandling from '~src/components/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -19,16 +18,22 @@ import { erIverksatt, erTilAttestering } from '~src/utils/behandling/Søknadsbeh
 import messages from './attesterSøknadsbehandling-nb';
 import * as styles from './attesterSøknadsbehandling.module.less';
 
-const Attesteringsinnhold = ({
-    intl,
-    ...props
-}: {
-    behandling: Søknadsbehandling;
-    sak: Sak;
-    søker: Person;
-    intl: IntlShape;
-}) => {
+const AttesterSøknadsbehandling = () => {
+    const props = useOutletContext<SaksoversiktContext>();
+    const urlParams = Routes.useRouteParams<typeof Routes.attesterSøknadsbehandling>();
+    const { formatMessage } = useI18n({ messages });
+
+    const behandling = props.sak.behandlinger.find((x) => x.id === urlParams.behandlingId);
+
+    if (!behandling) {
+        return <Alert variant="error">{formatMessage('feil.fantIkkeBehandling')}</Alert>;
+    }
+    return <Attesteringsinnhold behandling={behandling} sak={props.sak} søker={props.søker} />;
+};
+
+const Attesteringsinnhold = ({ ...props }: { behandling: Søknadsbehandling; sak: Sak; søker: Person }) => {
     const navigate = useNavigate();
+    const { formatMessage } = useI18n({ messages });
     const [iverksettStatus, attesteringIverksett] = useAsyncActionCreator(sakSlice.attesteringIverksett);
     const [underkjennStatus, attesteringUnderkjent] = useAsyncActionCreator(sakSlice.attesteringUnderkjenn);
     const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
@@ -37,17 +42,11 @@ const Attesteringsinnhold = ({
     };
 
     const iverksettCallback = () =>
-        attesteringIverksett(
-            {
-                sakId: props.sak.id,
-                behandlingId: props.behandling.id,
-            },
-            (res) => {
-                fetchSak({ sakId: res.sakId }, () => {
-                    redirectTilSaksoversikt(intl.formatMessage({ id: 'status.iverksatt' }));
-                });
-            }
-        );
+        attesteringIverksett({ sakId: props.sak.id, behandlingId: props.behandling.id }, (res) => {
+            fetchSak({ sakId: res.sakId }, () => {
+                redirectTilSaksoversikt(formatMessage('status.iverksatt'));
+            });
+        });
 
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) =>
         attesteringUnderkjent(
@@ -58,7 +57,7 @@ const Attesteringsinnhold = ({
                 kommentar: kommentar,
             },
             () => {
-                redirectTilSaksoversikt(intl.formatMessage({ id: 'status.sendtTilbake' }));
+                redirectTilSaksoversikt(formatMessage('status.sendtTilbake'));
             }
         );
 
@@ -66,10 +65,8 @@ const Attesteringsinnhold = ({
         return (
             <div>
                 <Alert variant="error">
-                    <p>{intl.formatMessage({ id: 'feil.ikkeKlarForAttestering' })}</p>
-                    <Link to={Routes.saksoversiktIndex.createURL()}>
-                        {intl.formatMessage({ id: 'lenke.saksoversikt' })}
-                    </Link>
+                    <p>{formatMessage('feil.ikkeKlarForAttestering')}</p>
+                    <Link to={Routes.saksoversiktIndex.createURL()}>{formatMessage('lenke.saksoversikt')}</Link>
                 </Alert>
             </div>
         );
@@ -78,35 +75,16 @@ const Attesteringsinnhold = ({
     return (
         <div className={styles.pageContainer}>
             <Heading level="1" size="large" spacing>
-                {intl.formatMessage({ id: 'page.tittel' })}
+                {formatMessage('page.tittel')}
             </Heading>
-            <Søknadsbehandlingoppsummering sak={props.sak} behandling={props.behandling} medBrevutkastknapp />
+            <OppsummeringAvSøknadsbehandling behandling={props.behandling} medBrevutkast={{ sakId: props.sak.id }} />
             <AttesteringsForm
                 sakId={props.sak.id}
-                iverksett={{
-                    fn: iverksettCallback,
-                    status: iverksettStatus,
-                }}
-                underkjenn={{
-                    fn: underkjennCallback,
-                    status: underkjennStatus,
-                }}
+                iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
+                underkjenn={{ fn: underkjennCallback, status: underkjennStatus }}
             />
         </div>
     );
-};
-
-const AttesterSøknadsbehandling = () => {
-    const props = useOutletContext<SaksoversiktContext>();
-    const urlParams = Routes.useRouteParams<typeof Routes.attesterSøknadsbehandling>();
-    const { intl } = useI18n({ messages });
-
-    const behandling = props.sak.behandlinger.find((x) => x.id === urlParams.behandlingId);
-
-    if (!behandling) {
-        return <Alert variant="error">{intl.formatMessage({ id: 'feil.fantIkkeBehandling' })}</Alert>;
-    }
-    return <Attesteringsinnhold behandling={behandling} sak={props.sak} søker={props.søker} intl={intl} />;
 };
 
 export default AttesterSøknadsbehandling;

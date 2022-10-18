@@ -7,7 +7,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
-import Søknadsbehandlingoppsummering from '~src/components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
+import OppsummeringAvSøknadsbehandling from '~src/components/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -96,7 +96,7 @@ const SendTilAttesteringPage = () => {
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
         return (
             <form className={styles.vedtakContainer} onSubmit={form.handleSubmit(handleSubmit)}>
-                <Søknadsbehandlingoppsummering sak={props.sak} behandling={behandling} />
+                <OppsummeringAvSøknadsbehandling behandling={behandling} />
 
                 <div className={styles.fritekstareaOuterContainer}>
                     <div className={styles.fritekstareaContainer}>
