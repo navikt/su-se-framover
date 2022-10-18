@@ -18,27 +18,28 @@ import * as styles from '../beregning/visBeregning.module.less';
 
 import messages from './simulering-nb';
 
-interface Props {
-    behandling: Søknadsbehandling;
-}
+export const VisSimulering = (props: { behandling: Søknadsbehandling }) => {
+    if (!props.behandling.simulering) {
+        return <div>Behandlingen har ingen simulering</div>;
+    }
+    return <Utbetalingssimulering simulering={props.behandling.simulering} />;
+};
 
 export const Utbetalingssimulering = (props: { simulering: Simulering; utenTittel?: boolean }) => {
-    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     return (
         <div className={styles.simuleringsdetaljer}>
             {props.utenTittel && (
                 <Heading level="4" size="medium" spacing>
-                    {intl.formatMessage({ id: 'simulering.tittel' })}
+                    {formatMessage('simulering.tittel')}
                 </Heading>
             )}
             <Label className={classNames(styles.totalt, styles.linje)}>
-                <span>{intl.formatMessage({ id: 'totaltBeløp' })}</span>
+                <span>{formatMessage('totaltBeløp')}</span>
                 <span />
                 <span className={styles.beløp}>
-                    {formatCurrency(props.simulering.totalBruttoYtelse, {
-                        numDecimals: 0,
-                    })}
+                    {formatCurrency(props.simulering.totalBruttoYtelse, { numDecimals: 0 })}
                 </span>
             </Label>
             {pipe(
@@ -52,44 +53,26 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                             DateFns.parseISO(prev.tilOgMed)
                         ) <= 1
                 ),
-                arr.map((gruppe) => {
-                    return pipe(
+                arr.map((gruppe) =>
+                    pipe(
                         combineOptions([arr.head(gruppe), arr.last(gruppe)]),
-                        Option.map(([head, last]) => {
-                            return (
-                                <Label className={styles.linje} key={head.fraOgMed + head.tilOgMed} spacing>
-                                    <span className={styles.periode}>{`${formatMonthYear(
-                                        head.fraOgMed
-                                    )} - ${formatMonthYear(last.tilOgMed)}`}</span>
-                                    <span className={styles.type}>
-                                        {head.type !== SimulertUtbetalingstype.ORDINÆR
-                                            ? intl.formatMessage({ id: head.type })
-                                            : ''}
-                                    </span>
-                                    <span className={styles.beløp}>
-                                        {formatCurrency(head.bruttoYtelse, {
-                                            numDecimals: 0,
-                                        })}{' '}
-                                        {intl.formatMessage({ id: 'iMnd' })}
-                                    </span>
-                                </Label>
-                            );
-                        }),
-                        Option.getOrElse(() => (
-                            <Alert variant="warning">{intl.formatMessage({ id: 'feil.manglerPerioder' })}</Alert>
-                        ))
-                    );
-                })
+                        Option.map(([head, last]) => (
+                            <Label className={styles.linje} key={head.fraOgMed + head.tilOgMed} spacing>
+                                <span className={styles.periode}>{`${formatMonthYear(
+                                    head.fraOgMed
+                                )} - ${formatMonthYear(last.tilOgMed)}`}</span>
+                                <span className={styles.type}>
+                                    {head.type !== SimulertUtbetalingstype.ORDINÆR ? formatMessage(head.type) : ''}
+                                </span>
+                                <span className={styles.beløp}>
+                                    {formatCurrency(head.bruttoYtelse, { numDecimals: 0 })} {formatMessage('iMnd')}
+                                </span>
+                            </Label>
+                        )),
+                        Option.getOrElse(() => <Alert variant="warning">{formatMessage('feil.manglerPerioder')}</Alert>)
+                    )
+                )
             )}
         </div>
     );
-};
-
-export const VisSimulering = (props: Props) => {
-    const { behandling } = props;
-
-    if (!behandling.simulering) {
-        return <div>Behandlingen har ingen simulering</div>;
-    }
-    return <Utbetalingssimulering simulering={behandling.simulering} />;
 };

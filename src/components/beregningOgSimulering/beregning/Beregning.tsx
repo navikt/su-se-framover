@@ -39,6 +39,11 @@ import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/SøknadsbehandlingUtils';
+import {
+    erIGyldigStatusForÅKunneBeregne,
+    fradragFormdataTilFradrag,
+    fradragTilFradragFormData,
+} from '~src/utils/BeregningUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -47,11 +52,6 @@ import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI
 
 import messages from './beregning-nb';
 import * as styles from './beregning.module.less';
-import {
-    erIGyldigStatusForÅKunneBeregne,
-    fradragFormdataTilFradrag,
-    fradragTilFradragFormData,
-} from './beregningUtils';
 import VisBeregning from './VisBeregning';
 
 interface FormData {

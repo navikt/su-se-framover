@@ -9,7 +9,6 @@ import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import fradragMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
-import { fradragTilFradragFormData } from '~src/components/beregningOgSimulering/beregning/beregningUtils';
 import {
     FradragFormData,
     FradragInputs,
@@ -26,6 +25,7 @@ import { useAppDispatch } from '~src/redux/Store';
 import { FradragTilhører, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
+import { fradragTilFradragFormData } from '~src/utils/BeregningUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 

@@ -9,10 +9,6 @@ import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/Grunnl
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import {
-    fradragFormdataTilFradrag,
-    fradragTilFradragFormData,
-} from '~src/components/beregningOgSimulering/beregning/beregningUtils';
-import {
     FradragFormData,
     FradragInputs,
 } from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
@@ -25,6 +21,7 @@ import { Nullable } from '~src/lib/types';
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import { ÅrsakForManuell } from '~src/types/Regulering';
+import { fradragFormdataTilFradrag, fradragTilFradragFormData } from '~src/utils/BeregningUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';

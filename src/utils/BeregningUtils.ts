@@ -5,7 +5,7 @@ import { Periode } from '~src/types/Periode';
 import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { toDateOrNull } from '~src/utils/date/dateUtils';
 
-import { FradragFormData } from './fradragInputs/FradragInputs';
+import { FradragFormData } from '../components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
 
 export const erIGyldigStatusForÅKunneBeregne = (behandling: Søknadsbehandling) =>
     [
