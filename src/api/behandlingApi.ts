@@ -17,13 +17,6 @@ export async function startBehandling(arg: {
     });
 }
 
-export async function hentBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Søknadsbehandling>> {
-    return apiClient({
-        url: `/saker/${sakId}/behandlinger/${behandlingId}`,
-        method: 'GET',
-    });
-}
-
 export async function startBeregning(
     sakId: string,
     behandlingId: string,

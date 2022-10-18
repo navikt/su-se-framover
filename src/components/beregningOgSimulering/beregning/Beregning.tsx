@@ -25,7 +25,7 @@ import OppsummeringAvInntektOgPensjon from '~src/components/oppsummeringAvSøkna
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { useFeatureToggle } from '~src/lib/featureToggles';
 import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -89,8 +89,8 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     const [lagreFradragstatus, lagreFradrag] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFradragsgrunnlag);
-    const [beregningStatus, beregn] = useAsyncActionCreator(sakSlice.startBeregning);
-    const [simuleringStatus, simuler] = useAsyncActionCreator(sakSlice.startSimulering);
+    const [beregningStatus, beregn] = useAsyncActionCreator(SøknadsbehandlingActions.startBeregning);
+    const [simuleringStatus, simuler] = useAsyncActionCreator(SøknadsbehandlingActions.startSimulering);
 
     const initialFormData = useMemo<FormData>(
         () =>

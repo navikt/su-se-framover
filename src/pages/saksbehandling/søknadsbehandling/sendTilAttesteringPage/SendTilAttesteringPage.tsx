@@ -10,7 +10,7 @@ import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvSøknadsbehandling from '~src/components/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -37,7 +37,9 @@ const SendTilAttesteringPage = () => {
     const { formatMessage } = useI18n({ messages });
 
     const navigate = useNavigate();
-    const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(sakSlice.sendTilAttestering);
+    const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
+        SøknadsbehandlingActions.sendTilAttestering
+    );
     const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
     const { behandlingId = '' } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
     const behandling = props.sak.behandlinger.find((x) => x.id === behandlingId);

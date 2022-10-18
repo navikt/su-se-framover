@@ -7,6 +7,7 @@ import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
 import OppsummeringAvSøknadsbehandling from '~src/components/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -34,8 +35,12 @@ const AttesterSøknadsbehandling = () => {
 const Attesteringsinnhold = ({ ...props }: { behandling: Søknadsbehandling; sak: Sak; søker: Person }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    const [iverksettStatus, attesteringIverksett] = useAsyncActionCreator(sakSlice.attesteringIverksett);
-    const [underkjennStatus, attesteringUnderkjent] = useAsyncActionCreator(sakSlice.attesteringUnderkjenn);
+    const [iverksettStatus, attesteringIverksett] = useAsyncActionCreator(
+        SøknadsbehandlingActions.attesteringIverksett
+    );
+    const [underkjennStatus, attesteringUnderkjent] = useAsyncActionCreator(
+        SøknadsbehandlingActions.attesteringUnderkjenn
+    );
     const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const redirectTilSaksoversikt = (message: string) => {
         Routes.navigateToSakIntroWithMessage(navigate, message, props.sak.id);

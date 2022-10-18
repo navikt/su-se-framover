@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { LukkSøknadBodyTypes } from '~src/api/søknadApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import { pickRemoteData } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -33,9 +33,9 @@ import Trukket from './Trukket';
 const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: nb });
-    const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(sakSlice.lukkSøknad);
+    const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(SøknadActions.lukkSøknad);
     const [avslagManglendeDokStatus, avslåPgaManglendeDok, resetAvslagManglendeDokStatus] = useAsyncActionCreator(
-        sakSlice.avslagManglendeDokSøknad
+        SøknadActions.avslagManglendeDokSøknad
     );
 
     const submitStatus = pickRemoteData(søknadLukketStatus, avslagManglendeDokStatus);

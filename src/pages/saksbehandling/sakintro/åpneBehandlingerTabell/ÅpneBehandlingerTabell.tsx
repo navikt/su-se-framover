@@ -25,7 +25,7 @@ import {
     TabellBehandlinger,
 } from '~src/components/tabell/SuTabellUtils';
 import { useUserContext } from '~src/context/userContext';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -186,7 +186,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
     const user = useUserContext();
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    const [behandlingStatus, startBehandling] = useAsyncActionCreator(sakSlice.startBehandling);
+    const [behandlingStatus, startBehandling] = useAsyncActionCreator(SøknadsbehandlingActions.startBehandling);
 
     if (props.b.søknadsbehandling && erSøknadsbehandlingTilAttestering(props.b.søknadsbehandling)) {
         if (user.isAttestant && user.navIdent !== props.b.søknadsbehandling.saksbehandler) {

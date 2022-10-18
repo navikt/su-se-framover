@@ -11,7 +11,7 @@ import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import * as SakSlice from '~src/features/saksoversikt/sak.slice';
+import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { nullableMap, pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -80,7 +80,7 @@ const schema = yup
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
-    const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SakSlice.lagreVirkningstidspunkt);
+    const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
     const søkerState = useAppSelector((state) => state.søker.søker);
     const initialValues = {
         fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),

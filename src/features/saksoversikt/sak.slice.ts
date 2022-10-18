@@ -2,19 +2,16 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
-import * as behandlingApi from '~src/api/behandlingApi';
 import * as dokumentApi from '~src/api/dokumentApi';
 import { Behandlingstype, RevurderingOgFeilmeldinger, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
 import * as sakApi from '~src/api/sakApi';
-import * as søknadApi from '~src/api/søknadApi';
-import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~src/api/søknadApi';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import * as klageActions from '~src/features/klage/klageActions';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
+import * as SøknadActions from '~src/features/søknad/SøknadActions';
+import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { pipe } from '~src/lib/fp';
-import { Nullable } from '~src/lib/types';
-import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import {
@@ -74,143 +71,6 @@ export const hentDokumenter = createAsyncThunk<
     const res = await dokumentApi.hentDokumenter(args);
     if (res.status === 'ok') {
         return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const startBehandling = createAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; søknadId: string },
-    { rejectValue: ApiError }
->('behandling/start', async ({ sakId, søknadId }, thunkApi) => {
-    const res = await behandlingApi.startBehandling({ sakId, søknadId });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreVirkningstidspunkt = createApiCallAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; behandlingId: string; fraOgMed: string; tilOgMed: string }
->('behandling/lagreVirkningstidspunk', behandlingApi.lagreVirkningstidspunkt);
-
-export const fetchBehandling = createAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; behandlingId: string },
-    { rejectValue: ApiError }
->('behandling/fetch', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await behandlingApi.hentBehandling(sakId, behandlingId);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const startBeregning = createAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; behandlingId: string; begrunnelse: Nullable<string> },
-    { rejectValue: ApiError }
->('beregning/start', async ({ sakId, behandlingId, begrunnelse }, thunkApi) => {
-    const res = await behandlingApi.startBeregning(sakId, behandlingId, { begrunnelse });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const startSimulering = createAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; behandlingId: string },
-    { rejectValue: ApiError }
->('simulering/start', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await behandlingApi.simulerBehandling(sakId, behandlingId);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const sendTilAttestering = createAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; behandlingId: string; fritekstTilBrev: string },
-    { rejectValue: ApiError }
->('behandling/tilAttestering', async ({ sakId, behandlingId, fritekstTilBrev }, thunkApi) => {
-    const res = await behandlingApi.sendTilAttestering({ sakId, behandlingId, fritekstTilBrev });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const attesteringIverksett = createAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; behandlingId: string },
-    { rejectValue: ApiError }
->('behandling/iverksett', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await behandlingApi.iverksett({ sakId, behandlingId });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const attesteringUnderkjenn = createAsyncThunk<
-    Søknadsbehandling,
-    { sakId: string; behandlingId: string; grunn: UnderkjennelseGrunn; kommentar: string },
-    { rejectValue: ApiError }
->('behandling/underkjenn', async ({ sakId, behandlingId, grunn, kommentar }, thunkApi) => {
-    const res = await behandlingApi.underkjenn({ sakId, behandlingId, grunn, kommentar });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lukkSøknad = createAsyncThunk<
-    Sak,
-    {
-        søknadId: string;
-        body: LukkSøknadBodyTypes;
-    },
-    { rejectValue: ApiError }
->('soknad/lukkSøknad', async (arg, thunkApi) => {
-    const res = await søknadApi.lukkSøknad(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const avslagManglendeDokSøknad = createAsyncThunk<
-    Sak,
-    {
-        søknadId: string;
-        body: AvslagManglendeDokType;
-    },
-    { rejectValue: ApiError }
->('soknad/avslag', async (arg, thunkApi) => {
-    const res = await søknadApi.avslåSøknadPgaManglendeDokumentasjon(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const hentLukketSøknadBrevutkast = createAsyncThunk<
-    { objectUrl: string },
-    {
-        søknadId: string;
-        body: LukkSøknadBodyTypes;
-    },
-    { rejectValue: ApiError }
->('soknad/hentLukketSøknadBrevutkast', async ({ søknadId, body }, thunkApi) => {
-    const res = await søknadApi.hentLukketSøknadsBrevutkast({
-        søknadId,
-        body,
-    });
-    if (res.status === 'ok') {
-        return { objectUrl: URL.createObjectURL(res.data) };
     }
     return thunkApi.rejectWithValue(res.error);
 });
@@ -280,7 +140,7 @@ export default createSlice({
             },
         });
 
-        builder.addCase(startBehandling.fulfilled, (state, action) => {
+        builder.addCase(SøknadsbehandlingActions.startBehandling.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
@@ -290,35 +150,35 @@ export default createSlice({
             );
         });
 
-        builder.addCase(lagreVirkningstidspunkt.fulfilled, (state, action) => {
+        builder.addCase(SøknadsbehandlingActions.lagreVirkningstidspunkt.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        builder.addCase(startBeregning.fulfilled, (state, action) => {
+        builder.addCase(SøknadsbehandlingActions.startBeregning.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        builder.addCase(startSimulering.fulfilled, (state, action) => {
+        builder.addCase(SøknadsbehandlingActions.startSimulering.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        builder.addCase(attesteringIverksett.fulfilled, (state, action) => {
+        builder.addCase(SøknadsbehandlingActions.attesteringIverksett.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        builder.addCase(attesteringUnderkjenn.fulfilled, (state, action) => {
+        builder.addCase(SøknadsbehandlingActions.attesteringUnderkjenn.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        builder.addCase(sendTilAttestering.fulfilled, (state, action) => {
+        builder.addCase(SøknadsbehandlingActions.sendTilAttestering.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
-        builder.addCase(lukkSøknad.fulfilled, (state, action) => {
+        builder.addCase(SøknadActions.lukkSøknad.fulfilled, (state, action) => {
             state.sak = RemoteData.success(action.payload);
         });
 
-        builder.addCase(avslagManglendeDokSøknad.fulfilled, (state, action) => {
+        builder.addCase(SøknadActions.avslagManglendeDokSøknad.fulfilled, (state, action) => {
             state.sak = RemoteData.success(action.payload);
         });
 
