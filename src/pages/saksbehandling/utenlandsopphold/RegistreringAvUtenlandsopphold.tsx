@@ -17,7 +17,7 @@ import styles from './RegistreringAvUtenlandsopphold.module.less';
 import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
 import { registrerUtenlandsoppholdFormDataTilRegistrerRequest } from './RegistreringAvUtenlandsoppholdFormUtils';
 
-const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
+const RegistreringAvUtenlandsopphold = (props: { sakId: string; saksversjon: number }) => {
     const { formatMessage } = useI18n({ messages });
     const [status, registrerUtenlandsOpphold] = useAsyncActionCreator(SakSlice.registrerUtenlandsopphold);
     return (
@@ -29,12 +29,14 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
             >
                 <RegistreringAvUtenlandsoppholdForm
                     sakId={props.sakId}
+                    saksversjon={props.saksversjon}
                     status={status}
-                    onFormSubmit={(validatedVlaues) =>
+                    onFormSubmit={(validatedValues) =>
                         registrerUtenlandsOpphold(
                             registrerUtenlandsoppholdFormDataTilRegistrerRequest({
                                 sakId: props.sakId,
-                                data: validatedVlaues,
+                                saksversjon: props.saksversjon,
+                                data: validatedValues,
                             })
                         )
                     }

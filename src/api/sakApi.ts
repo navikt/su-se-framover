@@ -66,6 +66,7 @@ export async function registrerUtenlandsopphold(
             periode: arg.periode,
             dokumentasjon: arg.dokumentasjon,
             journalposter: arg.journalposter,
+            saksversjon: arg.saksversjon,
         },
     });
 }
@@ -74,12 +75,13 @@ export async function oppdaterRegistrertUtenlandsopphold(
     arg: OppdaterRegistrertUtenlandsoppholdRequest
 ): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
-        url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,
+        url: `/saker/${arg.sakId}/utenlandsopphold/${arg.oppdatererVersjon}`,
         method: 'PUT',
         body: {
             periode: arg.periode,
             dokumentasjon: arg.dokumentasjon,
             journalposter: arg.journalposter,
+            saksversjon: arg.saksversjon,
         },
     });
 }
@@ -88,8 +90,11 @@ export async function annullerRegistrertUtenlandsopphold(
     arg: AnnullerRegistrertUtenlandsoppholdRequest
 ): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
-        url: `/saker/${arg.sakId}/utenlandsopphold/${arg.utenlandsoppholdId}`,
-        method: 'DELETE',
+        url: `/saker/${arg.sakId}/utenlandsopphold/${arg.annullererVersjon}`,
+        method: 'PATCH',
+        body: {
+            saksversjon: arg.saksversjon,
+        },
     });
 }
 

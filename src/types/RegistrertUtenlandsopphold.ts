@@ -6,7 +6,6 @@ export interface RegistrerteUtenlandsopphold {
 }
 
 export interface RegistrertUtenlandsopphold {
-    id: string;
     periode: Periode<string>;
     journalposter: string[];
     dokumentasjon: UtenlandsoppholdDokumentasjon;
@@ -16,7 +15,7 @@ export interface RegistrertUtenlandsopphold {
     endretTidspunkt: string;
     versjon: number;
     antallDager: number;
-    annullert: boolean;
+    erAnnullert: boolean;
 }
 
 export enum UtenlandsoppholdDokumentasjon {
@@ -30,17 +29,20 @@ export interface RegistrerUtenlandsoppholdRequest {
     periode: Periode<string>;
     journalposter: string[];
     dokumentasjon: UtenlandsoppholdDokumentasjon;
+    saksversjon: number;
 }
 
 export interface OppdaterRegistrertUtenlandsoppholdRequest {
     sakId: string;
-    utenlandsoppholdId: string;
     periode: Periode<string>;
     journalposter: string[];
     dokumentasjon: UtenlandsoppholdDokumentasjon;
+    saksversjon: number;
+    oppdatererVersjon: number;
 }
 
 export interface AnnullerRegistrertUtenlandsoppholdRequest {
     sakId: string;
-    utenlandsoppholdId: string;
+    saksversjon: number;
+    annullererVersjon: number;
 }

@@ -191,6 +191,7 @@ export default createSlice({
                         antallDager: action.payload.antallDager,
                         utenlandsopphold: action.payload.utenlandsopphold,
                     },
+                    versjon: action.payload.utenlandsopphold[action.payload.utenlandsopphold.length - 1].versjon,
                 }))
             );
         });
@@ -439,6 +440,7 @@ function oppdaterUtenlandsoppholdISak(
         sak,
         RemoteData.map((s) => ({
             ...s,
+            versjon: utenlandsopphold.utenlandsopphold[utenlandsopphold.utenlandsopphold.length - 1].versjon,
             utenlandsopphold: {
                 utenlandsopphold: utenlandsopphold.utenlandsopphold,
                 antallDager: utenlandsopphold.antallDager,

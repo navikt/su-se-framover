@@ -22,10 +22,11 @@ const Utenlandsopphold = () => {
                 </Heading>
             </div>
             <div className={styles.mainContentContainer}>
-                <RegistreringAvUtenlandsopphold sakId={sak.id} />
+                <RegistreringAvUtenlandsopphold sakId={sak.id} saksversjon={sak.versjon} />
                 {sak.utenlandsopphold.utenlandsopphold.length > 0 && (
                     <OppsummeringAvRegistrerteUtenlandsopphold
                         sakId={sak.id}
+                        saksversjon={sak.versjon}
                         registrerteUtenlandsopphold={sak.utenlandsopphold.utenlandsopphold}
                     />
                 )}

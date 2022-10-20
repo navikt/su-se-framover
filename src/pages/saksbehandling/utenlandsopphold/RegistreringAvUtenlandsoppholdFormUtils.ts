@@ -34,6 +34,7 @@ export const registrertUtenlandsoppholdTilFormDataEllerDefault = (
 
 export const registrerUtenlandsoppholdFormDataTilRegistrerRequest = (arg: {
     sakId: string;
+    saksversjon: number;
     data: RegisteringAvUtenlandsoppholdFormData;
 }): RegistrerUtenlandsoppholdRequest => ({
     sakId: arg.sakId,
@@ -43,18 +44,21 @@ export const registrerUtenlandsoppholdFormDataTilRegistrerRequest = (arg: {
     },
     dokumentasjon: arg.data.dokumentasjon!,
     journalposter: arg.data.journalposter.map((it) => it.journalpostId!),
+    saksversjon: arg.saksversjon,
 });
 
 export const registrerUtenlandsoppholdFormDataTilOppdaterRequest = (arg: {
     sakId: string;
-    registrertUtenlandsoppholdId: string;
+    saksversjon: number;
+    oppdatererVersjon: number;
     data: RegisteringAvUtenlandsoppholdFormData;
 }): OppdaterRegistrertUtenlandsoppholdRequest => ({
     ...registrerUtenlandsoppholdFormDataTilRegistrerRequest({
         sakId: arg.sakId,
+        saksversjon: arg.saksversjon,
         data: arg.data,
     }),
-    utenlandsoppholdId: arg.registrertUtenlandsoppholdId,
+    oppdatererVersjon: arg.oppdatererVersjon,
 });
 
 export const registeringAvUtenlandsoppholdFormSchema = yup.object<RegisteringAvUtenlandsoppholdFormData>({
