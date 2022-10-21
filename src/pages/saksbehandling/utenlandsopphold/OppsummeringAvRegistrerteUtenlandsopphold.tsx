@@ -5,6 +5,7 @@ import * as DateFns from 'date-fns';
 import React, { useState } from 'react';
 
 import { WarningIcon } from '~src/assets/Icons';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import Oppsummeringspanel, {
@@ -25,6 +26,7 @@ import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from './Registrer
 
 const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     sakId: string;
+    saksversjon: number;
     registrerteUtenlandsopphold: RegistrertUtenlandsopphold[];
 }) => {
     const { formatMessage } = useI18n({ messages });
@@ -33,10 +35,11 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     const [tilOgMed, setTilOgMed] = useState<Nullable<Date>>(null);
 
     const filtrerteUtenlandsopphold = props.registrerteUtenlandsopphold
+        .slice()
         .sort((a, b) => Date.parse(a.periode.fraOgMed) - Date.parse(b.periode.fraOgMed))
         .filter((it) => (fraOgMed ? new Date(it.periode.fraOgMed) >= fraOgMed : true))
         .filter((it) => (tilOgMed ? new Date(it.periode.tilOgMed) <= tilOgMed : true))
-        .filter((it) => (visAnnullerte ? true : it.annullert));
+        .filter((it) => (visAnnullerte ? true : !it.erAnnullert));
 
     return (
         <Oppsummeringspanel
@@ -53,8 +56,9 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
                 <Accordion className={styles.accordion}>
                     {filtrerteUtenlandsopphold.map((it) => (
                         <RegistrertUtenlandsoppholdAccordionItem
-                            key={it.id}
+                            key={it.versjon}
                             sakId={props.sakId}
+                            saksversjon={props.saksversjon}
                             registrertUtenlandsopphold={it}
                         />
                     ))}
@@ -95,6 +99,7 @@ const Oppsummeringsfiltrering = (props: {
 
 const RegistrertUtenlandsoppholdAccordionItem = (props: {
     sakId: string;
+    saksversjon: number;
     registrertUtenlandsopphold: RegistrertUtenlandsopphold;
 }) => {
     return (
@@ -103,7 +108,7 @@ const RegistrertUtenlandsoppholdAccordionItem = (props: {
                 <div className={styles.accordionHeaderContentContainer}>
                     <Heading size="small">{formatPeriodeMedDager(props.registrertUtenlandsopphold.periode)}</Heading>
                     <div className={styles.warningOgAntallDagerContainer}>
-                        {!props.registrertUtenlandsopphold.annullert && <WarningIcon width={25} />}
+                        {props.registrertUtenlandsopphold.erAnnullert && <WarningIcon width={25} />}
                         <Heading size="small">{props.registrertUtenlandsopphold.antallDager}</Heading>
                     </div>
                 </div>
@@ -111,6 +116,7 @@ const RegistrertUtenlandsoppholdAccordionItem = (props: {
             <Accordion.Content>
                 <OppsummeringAvRegistrertUtenlandsopphold
                     sakId={props.sakId}
+                    saksversjon={props.saksversjon}
                     registrertUtenlandsopphold={props.registrertUtenlandsopphold}
                     medEndreKnapp
                 />
@@ -121,6 +127,7 @@ const RegistrertUtenlandsoppholdAccordionItem = (props: {
 
 const OppsummeringAvRegistrertUtenlandsopphold = (props: {
     sakId: string;
+    saksversjon: number;
     registrertUtenlandsopphold: RegistrertUtenlandsopphold;
     medEndreKnapp?: boolean;
 }) => {
@@ -144,14 +151,16 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
 
                 <RegistreringAvUtenlandsoppholdForm
                     sakId={props.sakId}
+                    saksversjon={props.saksversjon}
                     registrertUtenlandsopphold={props.registrertUtenlandsopphold}
                     status={oppdaterStatus}
-                    onFormSubmit={(validatedVlaues) =>
+                    onFormSubmit={(validatedValues) =>
                         oppdaterUtenlandsopphold(
                             registrerUtenlandsoppholdFormDataTilOppdaterRequest({
                                 sakId: props.sakId,
-                                registrertUtenlandsoppholdId: props.registrertUtenlandsopphold.id,
-                                data: validatedVlaues,
+                                saksversjon: props.saksversjon,
+                                oppdatererVersjon: props.registrertUtenlandsopphold.versjon,
+                                data: validatedValues,
                             })
                         )
                     }
@@ -164,7 +173,8 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                             onClick={() =>
                                 ugyldiggjørUtenlandsopphold({
                                     sakId: props.sakId,
-                                    utenlandsoppholdId: props.registrertUtenlandsopphold.id,
+                                    saksversjon: props.saksversjon,
+                                    annullererVersjon: props.registrertUtenlandsopphold.versjon,
                                 })
                             }
                         >
@@ -174,6 +184,8 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                             {formatMessage('registreringAvUtenlandsopphold.form.button.oppdater')}
                         </Button>
                     </div>
+                    {RemoteData.isFailure(oppdaterStatus) && <ApiErrorAlert error={oppdaterStatus.error} />}
+                    {RemoteData.isFailure(ugyldiggjørStatus) && <ApiErrorAlert error={ugyldiggjørStatus.error} />}
                 </RegistreringAvUtenlandsoppholdForm>
             </Panel>
         );

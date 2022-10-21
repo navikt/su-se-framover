@@ -27,6 +27,7 @@ import {
  */
 const RegistreringAvUtenlandsoppholdForm = (props: {
     sakId: string;
+    saksversjon: number;
     registrertUtenlandsopphold?: RegistrertUtenlandsopphold;
     status: ApiResult<RegistrerteUtenlandsopphold>;
     onFormSubmit: (values: RegisteringAvUtenlandsoppholdFormData) => void;

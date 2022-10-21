@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button } from '@navikt/ds-react';
 import React from 'react';
 
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -17,7 +18,7 @@ import styles from './RegistreringAvUtenlandsopphold.module.less';
 import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
 import { registrerUtenlandsoppholdFormDataTilRegistrerRequest } from './RegistreringAvUtenlandsoppholdFormUtils';
 
-const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
+const RegistreringAvUtenlandsopphold = (props: { sakId: string; saksversjon: number }) => {
     const { formatMessage } = useI18n({ messages });
     const [status, registrerUtenlandsOpphold] = useAsyncActionCreator(SakSlice.registrerUtenlandsopphold);
     return (
@@ -29,12 +30,14 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
             >
                 <RegistreringAvUtenlandsoppholdForm
                     sakId={props.sakId}
+                    saksversjon={props.saksversjon}
                     status={status}
-                    onFormSubmit={(validatedVlaues) =>
+                    onFormSubmit={(validatedValues) =>
                         registrerUtenlandsOpphold(
                             registrerUtenlandsoppholdFormDataTilRegistrerRequest({
                                 sakId: props.sakId,
-                                data: validatedVlaues,
+                                saksversjon: props.saksversjon,
+                                data: validatedValues,
                             })
                         )
                     }
@@ -50,6 +53,7 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string }) => {
                             {formatMessage('registreringAvUtenlandsopphold.form.button.registrer')}
                         </Button>
                     </div>
+                    {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                 </RegistreringAvUtenlandsoppholdForm>
             </Oppsummeringspanel>
         </div>

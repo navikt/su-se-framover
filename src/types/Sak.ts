@@ -26,6 +26,7 @@ export interface Sak {
     sakstype: Sakstype;
     vedtakPåTidslinje: VedtakPåTidslinje[];
     utenlandsopphold: RegistrerteUtenlandsopphold;
+    versjon: number;
 }
 
 export enum KanStansesEllerGjenopptas {
