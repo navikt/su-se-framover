@@ -5,6 +5,7 @@ import * as DateFns from 'date-fns';
 import React, { useState } from 'react';
 
 import { WarningIcon } from '~src/assets/Icons';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import Oppsummeringspanel, {
@@ -34,6 +35,7 @@ const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     const [tilOgMed, setTilOgMed] = useState<Nullable<Date>>(null);
 
     const filtrerteUtenlandsopphold = props.registrerteUtenlandsopphold
+        .slice()
         .sort((a, b) => Date.parse(a.periode.fraOgMed) - Date.parse(b.periode.fraOgMed))
         .filter((it) => (fraOgMed ? new Date(it.periode.fraOgMed) >= fraOgMed : true))
         .filter((it) => (tilOgMed ? new Date(it.periode.tilOgMed) <= tilOgMed : true))
@@ -182,6 +184,8 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                             {formatMessage('registreringAvUtenlandsopphold.form.button.oppdater')}
                         </Button>
                     </div>
+                    {RemoteData.isFailure(oppdaterStatus) && <ApiErrorAlert error={oppdaterStatus.error} />}
+                    {RemoteData.isFailure(ugyldiggjørStatus) && <ApiErrorAlert error={ugyldiggjørStatus.error} />}
                 </RegistreringAvUtenlandsoppholdForm>
             </Panel>
         );

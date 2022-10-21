@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button } from '@navikt/ds-react';
 import React from 'react';
 
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -52,6 +53,7 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string; saksversjon: num
                             {formatMessage('registreringAvUtenlandsopphold.form.button.registrer')}
                         </Button>
                     </div>
+                    {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                 </RegistreringAvUtenlandsoppholdForm>
             </Oppsummeringspanel>
         </div>

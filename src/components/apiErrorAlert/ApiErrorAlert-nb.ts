@@ -170,6 +170,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]:
         'Opphør i kombinasjon med andre endringer støttes ikke. Revurdering må gjennomføres i flere steg.',
     [ApiErrorCode.OVERLAPPENDE_VURDERINGSPERIODER]: 'Perioder kan ikke overlappe',
+    [ApiErrorCode.OVERLAPPENDE_PERIODER]: 'Perioder kan ikke overlappe',
     [ApiErrorCode.PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG]:
         'Det er ikke samsvar mellom perioden for vurdering og perioden for grunnlaget',
     [ApiErrorCode.PERIODE_MANGLER]: 'Fradrag mangler periode',
