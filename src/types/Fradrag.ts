@@ -8,7 +8,7 @@ import { eqNullable, Nullable } from '~src/lib/types';
 import { Periode } from './Periode';
 
 export interface Fradrag {
-    periode: Nullable<Periode<string>>;
+    periode: Periode<string>;
     type: Fradragskategori;
     beskrivelse: Nullable<string>;
     beløp: number;

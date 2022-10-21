@@ -2,32 +2,34 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
-import { Controller, FieldErrors, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import fradragMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
-import {
-    FradragFormData,
-    FradragInputs,
-    fradragSchema,
-} from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import FradragForm from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragForm';
+import {
+    FradragFormData,
+    fradragFormdataTilFradrag,
+    fradragSchema,
+    fradragTilFradragFormData,
+} from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { FradragTilhører, IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
+import { IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
-import { fradragTilFradragFormData } from '~src/utils/BeregningUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
+import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
@@ -61,29 +63,9 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
             GrunnlagOgVilkårActions.lagreFradragsgrunnlag({
                 sakId: props.sakId,
                 behandlingId: props.revurdering.id,
-                fradrag: values.fradrag.map((f: FradragFormData) => ({
-                    periode: {
-                        fraOgMed: DateUtils.toIsoDateOnlyString(
-                            f.periode?.fraOgMed ?? DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed)!
-                        ),
-                        tilOgMed: DateUtils.toIsoDateOnlyString(
-                            DateUtils.sluttenAvMåneden(
-                                f.periode?.tilOgMed ?? DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed)!
-                            )
-                        ),
-                    },
-                    beløp: Number.parseInt(f.beløp!, 10),
-                    type: f.kategori!,
-                    beskrivelse: f.kategori === VelgbareFradragskategorier.Annet ? f.spesifisertkategori : null,
-                    utenlandskInntekt: f.fraUtland
-                        ? {
-                              beløpIUtenlandskValuta: Number.parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
-                              valuta: f.utenlandskInntekt.valuta,
-                              kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
-                          }
-                        : null,
-                    tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
-                })),
+                fradrag: values.fradrag.map((f) =>
+                    fradragFormdataTilFradrag(f, lagDatePeriodeAvStringPeriode(props.revurdering.periode))
+                ),
                 behandlingstype: Behandlingstype.Revurdering,
             })
         );
@@ -106,7 +88,12 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
         defaultValues: {
             fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
                 props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag
-            ).map(fradragTilFradragFormData),
+            ).map((f) =>
+                fradragTilFradragFormData(f, {
+                    fraOgMed: DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed),
+                    tilOgMed: DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed),
+                })
+            ),
         },
         resolver: yupResolver(schema),
     });
@@ -125,51 +112,17 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                         </div>
                         <div>
                             <div className={styles.fradragInputsContainer}>
-                                <Controller
-                                    control={form.control}
+                                <FradragForm
                                     name={'fradrag'}
-                                    render={({ field, fieldState }) => (
-                                        <FradragInputs
-                                            harEps={props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.some(
-                                                bosituasjonHarEps
-                                            )}
-                                            feltnavn={field.name}
-                                            fradrag={field.value}
-                                            errors={fieldState.error as FieldErrors | undefined}
-                                            onLeggTilClick={() =>
-                                                field.onChange([
-                                                    ...field.value,
-                                                    {
-                                                        beløp: null,
-                                                        kategori: null,
-                                                        spesifisertkategori: null,
-                                                        fraUtland: false,
-                                                        utenlandskInntekt: {
-                                                            beløpIUtenlandskValuta: '',
-                                                            valuta: '',
-                                                            kurs: '',
-                                                        },
-                                                        periode: null,
-                                                        tilhørerEPS: false,
-                                                    },
-                                                ])
-                                            }
-                                            onFjernClick={(index) =>
-                                                field.onChange(
-                                                    field.value.filter((_: FradragFormData, i: number) => index !== i)
-                                                )
-                                            }
-                                            onFradragChange={(index, value) =>
-                                                field.onChange(
-                                                    field.value.map((input, i) => (index === i ? value : input))
-                                                )
-                                            }
-                                            beregningsDato={{
-                                                fom: new Date(props.revurdering.periode.fraOgMed),
-                                                tom: new Date(props.revurdering.periode.tilOgMed),
-                                            }}
-                                        />
+                                    control={form.control}
+                                    setValue={form.setValue}
+                                    harEPS={props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.some(
+                                        bosituasjonHarEps
                                     )}
+                                    beregningsDato={{
+                                        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+                                        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
+                                    }}
                                 />
                             </div>
                             <Feiloppsummering

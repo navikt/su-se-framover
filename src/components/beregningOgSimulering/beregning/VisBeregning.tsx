@@ -7,7 +7,7 @@ import * as S from 'fp-ts/string';
 import React from 'react';
 
 import messages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
-import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
+import fradragstypeMessages from '~src/components/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';
@@ -93,14 +93,14 @@ const VisBenyttetEpsFradrag = ({
                             verdi: formatCurrency(-f.beløp),
                         },
                         {
-                            label: formatMessage('fradrag.utenlandsk.beløp'),
+                            label: formatMessage('fradrag.utenland.beløpIUtenlandskValuta'),
                             verdi: formatCurrency(f.utenlandskInntekt.beløpIUtenlandskValuta, {
                                 currency: f.utenlandskInntekt.valuta,
                             }),
                             epsUtland: true,
                         },
                         {
-                            label: formatMessage('fradrag.utenlandsk.kurs'),
+                            label: formatMessage('fradrag.utenland.kurs'),
                             verdi: intl.formatNumber(f.utenlandskInntekt.kurs),
                             epsUtland: true,
                         },
@@ -206,7 +206,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                                 }}
                                                 detaljer={[
                                                     {
-                                                        label: formatMessage('fradrag.utenlandsk.beløp'),
+                                                        label: formatMessage('fradrag.utenland.beløpIUtenlandskValuta'),
                                                         verdi: formatCurrency(
                                                             fradrag.utenlandskInntekt.beløpIUtenlandskValuta,
                                                             {
@@ -215,7 +215,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                                         ),
                                                     },
                                                     {
-                                                        label: formatMessage('fradrag.utenlandsk.kurs'),
+                                                        label: formatMessage('fradrag.utenland.kurs'),
                                                         verdi: intl.formatNumber(fradrag.utenlandskInntekt.kurs),
                                                     },
                                                 ]}
@@ -260,7 +260,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                                         verdi: formatCurrency(-f.beløp),
                                                     },
                                                     {
-                                                        label: formatMessage('fradrag.utenlandsk.beløp'),
+                                                        label: formatMessage('fradrag.utenland.beløpIUtenlandskValuta'),
                                                         verdi: formatCurrency(
                                                             f.utenlandskInntekt.beløpIUtenlandskValuta,
                                                             {
@@ -270,7 +270,7 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
                                                         epsUtland: true,
                                                     },
                                                     {
-                                                        label: formatMessage('fradrag.utenlandsk.kurs'),
+                                                        label: formatMessage('fradrag.utenland.kurs'),
                                                         verdi: intl.formatNumber(f.utenlandskInntekt.kurs),
                                                         epsUtland: true,
                                                     },

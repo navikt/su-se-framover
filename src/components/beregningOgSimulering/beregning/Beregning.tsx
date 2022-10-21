@@ -5,24 +5,25 @@ import { getEq } from 'fp-ts/Array';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 import React, { useMemo, useState } from 'react';
-import { Controller, FieldErrors, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { Person } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import {
-    FradragFormData,
-    FradragInputs,
-    fradragSchema,
-    eqFradragFormData,
-} from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
-import fradragstypeMessages from '~src/components/beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import OppsummeringAvSkattegrunnlag from '~src/components/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
 import OppsummeringAvInntektOgPensjon from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import FradragForm from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragForm';
+import {
+    FradragFormData,
+    fradragTilFradragFormData,
+    fradragFormdataTilFradrag,
+    eqFradragFormData,
+    fradragSchema,
+} from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
@@ -34,16 +35,13 @@ import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
-import { Fradrag, FradragTilhører } from '~src/types/Fradrag';
+import { Fradrag } from '~src/types/Fradrag';
+import { NullablePeriode } from '~src/types/Periode';
 import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { kanSimuleres } from '~src/utils/behandling/SøknadsbehandlingUtils';
-import {
-    erIGyldigStatusForÅKunneBeregne,
-    fradragFormdataTilFradrag,
-    fradragTilFradragFormData,
-} from '~src/utils/BeregningUtils';
+import { erIGyldigStatusForÅKunneBeregne } from '~src/utils/BeregningUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -59,47 +57,27 @@ interface FormData {
     begrunnelse: Nullable<string>;
 }
 
-function getInitialValues(fradrag: Fradrag[], begrunnelse?: Nullable<string>): FormData {
-    return {
-        fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) => ({
-            periode: {
-                fraOgMed: DateUtils.toDateOrNull(f.periode?.fraOgMed),
-                tilOgMed: DateUtils.toDateOrNull(f.periode?.tilOgMed),
-            },
-            fraUtland: f.utenlandskInntekt !== null,
-            beløp: f.beløp.toString(),
-            utenlandskInntekt: {
-                beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
-                valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
-                kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
-            },
-            kategori: f.type,
-            spesifisertkategori: f.beskrivelse,
-            tilhørerEPS: f.tilhører === FradragTilhører.EPS,
-        })),
-        begrunnelse: begrunnelse ?? '',
-    };
-}
+const getInitialValues = (
+    fradrag: Fradrag[],
+    beregningsDato: Nullable<NullablePeriode>,
+    begrunnelse?: Nullable<string>
+): FormData => ({
+    fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) =>
+        fradragTilFradragFormData(f, beregningsDato)
+    ),
+    begrunnelse: begrunnelse ?? '',
+});
 
 type Søker = { søker: Person };
 const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
     const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     const [lagreFradragstatus, lagreFradrag] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFradragsgrunnlag);
     const [beregningStatus, beregn] = useAsyncActionCreator(SøknadsbehandlingActions.startBeregning);
     const [simuleringStatus, simuler] = useAsyncActionCreator(SøknadsbehandlingActions.startSimulering);
-
-    const initialFormData = useMemo<FormData>(
-        () =>
-            getInitialValues(
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag,
-                props.behandling.beregning?.begrunnelse
-            ),
-        [props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag]
-    );
 
     const stønadsperiode = useMemo(() => {
         const fom = props.behandling.stønadsperiode?.periode.fraOgMed;
@@ -108,16 +86,26 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
             return null;
         }
         return {
-            fom: DateUtils.parseIsoDateOnly(fom),
-            tom: DateUtils.parseIsoDateOnly(tom),
+            fraOgMed: DateUtils.parseIsoDateOnly(fom),
+            tilOgMed: DateUtils.parseIsoDateOnly(tom),
         };
     }, [props.behandling.stønadsperiode]);
+
+    const initialFormData = useMemo<FormData>(
+        () =>
+            getInitialValues(
+                props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag,
+                stønadsperiode,
+                props.behandling.beregning?.begrunnelse
+            ),
+        [props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag]
+    );
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling) || stønadsperiode === null) {
         return <div>{formatMessage('beregning.behandlingErIkkeFerdig')}</div>;
     }
 
-    const { draft, clearDraft, useDraftFromFormikValues } = useSøknadsbehandlingDraftContextFor<FormData>(
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Beregning,
         (values) => eqBeregningFormData.equals(values, initialFormData)
     );
@@ -128,8 +116,8 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
             behandlingId: props.behandling.id,
             fradrag: values.fradrag.map((f) =>
                 fradragFormdataTilFradrag(f, {
-                    fraOgMed: stønadsperiode.fom!,
-                    tilOgMed: stønadsperiode.tom!,
+                    fraOgMed: stønadsperiode.fraOgMed!,
+                    tilOgMed: stønadsperiode.tilOgMed!,
                 })
             ),
             behandlingstype: Behandlingstype.Søknadsbehandling,
@@ -163,7 +151,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
         }
         if (
             !props.behandling.beregning ||
-            erFradragUlike(props.behandling.beregning?.fradrag, form.getValues('fradrag')) ||
+            erFradragUlike(props.behandling.beregning?.fradrag, form.getValues('fradrag'), stønadsperiode) ||
             props.behandling.beregning.begrunnelse !== form.getValues('begrunnelse')
         ) {
             return setNeedsBeregning(true);
@@ -200,11 +188,13 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
         lagreFradragOgBeregn(values, (b) => {
             clearDraft();
             setNeedsBeregning(false);
-            form.reset(getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse));
+            form.reset(
+                getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, stønadsperiode, b.beregning?.begrunnelse)
+            );
         });
     };
 
-    useDraftFromFormikValues(form.getValues());
+    useDraftFormSubscribe(form.watch);
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -220,47 +210,15 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                             Fradrag
                         </Heading>
                         <div className={styles.container}>
-                            <Controller
-                                control={form.control}
+                            <FradragForm
                                 name={'fradrag'}
-                                render={({ field, fieldState }) => (
-                                    <FradragInputs
-                                        harEps={
-                                            hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)
-                                                .fnr !== null
-                                        }
-                                        feltnavn={field.name}
-                                        fradrag={field.value}
-                                        errors={fieldState.error as FieldErrors | undefined}
-                                        beregningsDato={stønadsperiode}
-                                        onLeggTilClick={() =>
-                                            field.onChange([
-                                                ...field.value,
-                                                {
-                                                    beløp: null,
-                                                    kategori: null,
-                                                    spesifisertkategori: null,
-                                                    fraUtland: false,
-                                                    utenlandskInntekt: {
-                                                        beløpIUtenlandskValuta: '',
-                                                        valuta: '',
-                                                        kurs: '',
-                                                    },
-                                                    periode: null,
-                                                    tilhørerEPS: false,
-                                                },
-                                            ])
-                                        }
-                                        onFjernClick={(index) =>
-                                            field.onChange(
-                                                field.value.filter((_: FradragFormData, i: number) => index !== i)
-                                            )
-                                        }
-                                        onFradragChange={(index, value) =>
-                                            field.onChange(field.value.map((input, i) => (index === i ? value : input)))
-                                        }
-                                    />
-                                )}
+                                control={form.control}
+                                setValue={form.setValue}
+                                beregningsDato={stønadsperiode}
+                                harEPS={
+                                    hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr !==
+                                    null
+                                }
                             />
                         </div>
                         <div className={styles.textareaContainer}>
@@ -375,11 +333,16 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     );
 };
 
-function erFradragUlike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {
+function erFradragUlike(
+    fradrag: Fradrag[] | undefined,
+    formFradrag: FradragFormData[],
+    stønadsperiode: Nullable<NullablePeriode>
+): boolean {
     if (!fradrag) return true;
 
-    const fradragFraDatabase =
-        fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map(fradragTilFradragFormData);
+    const fradragFraDatabase = fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) =>
+        fradragTilFradragFormData(f, stønadsperiode)
+    );
 
     return !getEq(eqFradragFormData).equals(formFradrag, fradragFraDatabase);
 }

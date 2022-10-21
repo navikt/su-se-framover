@@ -6,6 +6,9 @@
 
 .fradragItemContainer {
     margin-bottom: @spacing;
+    > :not(:last-child) {
+        margin-bottom: @spacing-xs;
+    }
 }
 
 .tittelOgSøppelbøtteContainer {
@@ -15,7 +18,6 @@
 
 .fradragTypeOgBelopContainer {
     display: flex;
-    margin-bottom: @spacing-s;
     justify-content: space-between;
     gap: @spacing-xs;
 
@@ -46,27 +48,13 @@
 
 .utlandOgPeriodeContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    grid-auto-flow: column;
+    grid-template-columns: repeat(3, 1fr);
     column-gap: @spacing-xxs;
     align-items: flex-end;
 
-    .label {
-        grid-row-start: 1;
-    }
-
-    .labelAndDescription {
-        margin-bottom: 0.5rem;
-
-        .label {
-            margin-bottom: 0;
-        }
-
-        .description {
-            font-weight: normal;
-            font-size: 0.9rem;
-        }
+    .description {
+        font-weight: normal;
+        font-size: 0.9rem;
     }
 }
 

@@ -9,9 +9,9 @@ import {
 } from '~src/typeMappinger/Vilkårsstatus';
 
 import {
-    ikkeVelgbareFradragskategoriMessages,
     velgbareFradragskategoriMessages,
-} from '../beregningOgSimulering/beregning/fradragInputs/fradragInputs-nb';
+    ikkeVelgbareFradragskategoriMessages,
+} from '../vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 
 export default {
     'uførhet.vilkår.erOppfylt': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',

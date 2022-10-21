@@ -2,16 +2,18 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Loader, TextField } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useEffect } from 'react';
-import { Controller, FieldErrors, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import FradragForm from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
     FradragFormData,
-    FradragInputs,
-} from '~src/components/beregningOgSimulering/beregning/fradragInputs/FradragInputs';
+    fradragFormdataTilFradrag,
+    fradragTilFradragFormData,
+} from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
@@ -21,13 +23,12 @@ import { Nullable } from '~src/lib/types';
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import { ÅrsakForManuell } from '~src/types/Regulering';
-import { fradragFormdataTilFradrag, fradragTilFradragFormData } from '~src/utils/BeregningUtils';
-import * as DateUtils from '~src/utils/date/dateUtils';
-import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
+import { formatPeriode, parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
 import messages from './manuellRegulering-nb';
 import styles from './manuellRegulering.module.less';
+
 interface FormData {
     uføre: Uføregrunnlag[];
     fradrag: FradragFormData[];
@@ -106,7 +107,12 @@ const ManuellRegulering = () => {
                             .filter(filtrerRegulerbarIEU) ?? [],
                     fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
                         data.grunnlagsdataOgVilkårsvurderinger.fradrag
-                    ).map(fradragTilFradragFormData),
+                    ).map((f) =>
+                        fradragTilFradragFormData(f, {
+                            fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
+                            tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
+                        })
+                    ),
                 })
         );
     }, []);
@@ -130,7 +136,7 @@ const ManuellRegulering = () => {
                         <Heading level="1" size="large" className={styles.tittel}>
                             {formatMessage('tittel')}
                         </Heading>
-                        <p>{`${formatMessage('periode')}: ${DateUtils.formatPeriode(regulering.periode)}`}</p>
+                        <p>{`${formatMessage('periode')}: ${formatPeriode(regulering.periode)}`}</p>
 
                         <div className={styles.container}>
                             <div className={styles.regulering}>
@@ -160,7 +166,7 @@ const ManuellRegulering = () => {
                                                                 field.onChange(e.currentTarget.value);
                                                             }}
                                                             label={formatMessage('ieu', {
-                                                                dato: DateUtils.formatPeriode(u.periode),
+                                                                dato: formatPeriode(u.periode),
                                                             })}
                                                         />
                                                     )}
@@ -177,51 +183,15 @@ const ManuellRegulering = () => {
                                     {formatMessage('reguler.fradrag')}
                                 </Heading>
                                 {harRegulerbarFradrag ? (
-                                    <Controller
-                                        control={form.control}
+                                    <FradragForm
                                         name={'fradrag'}
-                                        render={({ field, fieldState }) => (
-                                            <FradragInputs
-                                                harEps={false}
-                                                feltnavn={field.name}
-                                                fradrag={field.value}
-                                                errors={fieldState.error as FieldErrors | undefined}
-                                                onLeggTilClick={() =>
-                                                    field.onChange([
-                                                        ...field.value,
-                                                        {
-                                                            beløp: null,
-                                                            kategori: null,
-                                                            spesifisertkategori: null,
-                                                            fraUtland: false,
-                                                            utenlandskInntekt: {
-                                                                beløpIUtenlandskValuta: '',
-                                                                valuta: '',
-                                                                kurs: '',
-                                                            },
-                                                            periode: null,
-                                                            tilhørerEPS: false,
-                                                        },
-                                                    ])
-                                                }
-                                                onFjernClick={(index) =>
-                                                    field.onChange(
-                                                        field.value.filter(
-                                                            (_: FradragFormData, i: number) => index !== i
-                                                        )
-                                                    )
-                                                }
-                                                onFradragChange={(index, value) =>
-                                                    field.onChange(
-                                                        field.value.map((input, i) => (index === i ? value : input))
-                                                    )
-                                                }
-                                                beregningsDato={{
-                                                    fom: DateUtils.parseIsoDateOnly(regulering.periode.fraOgMed),
-                                                    tom: DateUtils.parseIsoDateOnly(regulering.periode.tilOgMed),
-                                                }}
-                                            />
-                                        )}
+                                        control={form.control}
+                                        setValue={form.setValue}
+                                        beregningsDato={{
+                                            fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
+                                            tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
+                                        }}
+                                        harEPS={false}
                                     />
                                 ) : (
                                     <p>{formatMessage('ingen.fradrag')}.</p>
