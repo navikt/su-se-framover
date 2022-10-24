@@ -67,6 +67,10 @@ export const PeriodeForm = (props: {
     containerClassname?: string;
     value: Nullable<NullablePeriode>;
     name: string;
+    label?: {
+        fraOgMed?: string;
+        tilOgMed?: string;
+    };
     onChange: (periode: NullablePeriode) => void;
     error?: FieldErrors<NullablePeriode>;
     size?: 'S' | 'L';
@@ -93,7 +97,7 @@ export const PeriodeForm = (props: {
                 className={classNames({
                     [styles.dato]: props.size === 'S',
                 })}
-                label={formatMessage('periodeForm.label.fraOgMed')}
+                label={props.label?.fraOgMed ?? formatMessage('periodeForm.label.fraOgMed')}
                 feil={props.error?.fraOgMed?.message}
                 dateFormat={props.medDager ? 'dd.MM.yyyy' : 'MM.yyyy'}
                 showMonthYearPicker={!props.medDager}
@@ -115,7 +119,7 @@ export const PeriodeForm = (props: {
             <DatePicker
                 id={`${props.name}.tilOgMed`}
                 className={props.size === 'S' ? styles.dato : undefined}
-                label={formatMessage('periodeForm.label.tilOgMed')}
+                label={props.label?.tilOgMed ?? formatMessage('periodeForm.label.tilOgMed')}
                 feil={props.error?.tilOgMed?.message}
                 dateFormat={props.medDager ? 'dd.MM.yyyy' : 'MM.yyyy'}
                 showMonthYearPicker={!props.medDager}

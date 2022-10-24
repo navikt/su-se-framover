@@ -69,6 +69,10 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                             <PeriodeForm
                                 value={field.value}
                                 name={field.name}
+                                label={{
+                                    fraOgMed: formatMessage('registreringAvUtenlandsopphold.form.dato.fraOgMed.label'),
+                                    tilOgMed: formatMessage('registreringAvUtenlandsopphold.form.dato.tilOgMed.label'),
+                                }}
                                 onChange={field.onChange}
                                 minDate={{
                                     fraOgMed: new Date('01-01-2021'),
