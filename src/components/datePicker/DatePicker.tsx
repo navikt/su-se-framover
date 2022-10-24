@@ -1,26 +1,30 @@
-import { HelpText, Label, TextField } from '@navikt/ds-react';
+import { HelpText, Label, UNSAFE_MonthPicker, UNSAFE_DatePicker } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
-import ReactDatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import { v4 as uuid } from 'uuid';
 
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 
 import * as styles from './datePicker.module.less';
 
-interface Props extends Omit<ReactDatePickerProps, 'selected' | 'value'> {
-    label: string;
-    value?: Date | null;
-    feil?: string;
-    hjelpetekst?: string;
-}
+const MonthPicker = () => {
+    return (
+        <div>
+            <UNSAFE_MonthPicker />
+        </div>
+    );
+};
 
-const CustomInput = React.forwardRef<HTMLInputElement, { label: string; error?: boolean }>(function C(props, ref) {
-    return <TextField {...props} label={props.label} hideLabel error={props.error} ref={ref} />;
-});
+const DatePicker2 = () => {
+    return (
+        <div>
+            <UNSAFE_DatePicker />
+        </div>
+    );
+};
 
 const DatePicker = (
-    { label, value, feil, id = uuid(), className, hjelpetekst, ...datePickerProps }: Props,
+    { label, value, feil, id = uuid(), className, hjelpetekst, ...datePickerProps },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ref: React.ForwardedRef<any>
 ) => {
@@ -32,15 +36,8 @@ const DatePicker = (
                 </Label>
                 {hjelpetekst && <HelpText>{hjelpetekst}</HelpText>}
             </div>
-            <ReactDatePicker
-                popperClassName={styles.popper}
-                id={id}
-                selected={value}
-                {...datePickerProps}
-                customInput={<CustomInput label={label} error={!!feil} />}
-                popperPlacement="bottom"
-                ref={ref}
-            />
+            <MonthPicker />
+            <DatePicker2 />
             {feil && <SkjemaelementFeilmelding>{feil}</SkjemaelementFeilmelding>}
         </div>
     );
