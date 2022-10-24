@@ -35,8 +35,8 @@ export const useI18n = <T extends Record<string, string>>(args: { messages: T })
     }, [args.messages]);
 
     const formatMessage = React.useCallback<UseI18N<T>['formatMessage']>(
-        <Y>(id: keyof T, values: Record<string, PrimitiveType | FormatXMLElementFn<string, Y>>): Y =>
-            intl.formatMessage({ id: id as string }, values) as Y,
+        (id: keyof T, values: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>): string =>
+            intl.formatMessage({ id: id as string }, values),
         [intl]
     );
 
