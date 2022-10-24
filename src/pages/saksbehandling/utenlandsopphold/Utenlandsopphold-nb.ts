@@ -1,7 +1,7 @@
 export default {
     'page.heading': 'Utenlandsopphold',
 
-    'registreringAvUtenlandsopphold.form.heading': 'Registrering av ny utenlandsopphold',
+    'registreringAvUtenlandsopphold.form.heading': 'Registrering av nytt utenlandsopphold',
     'registreringAvUtenlandsopphold.form.dokumentasjon.label': 'Dokumentasjon',
     'registreringAvUtenlandsopphold.form.dokumentasjon.defaultValue.velgTypeDokumentasjon': 'Velg type dokumentasjon',
     'registreringAvUtenlandsopphold.form.journalpostId.label': 'Journalpost-id',

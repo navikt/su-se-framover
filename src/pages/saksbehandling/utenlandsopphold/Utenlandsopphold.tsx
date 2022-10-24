@@ -7,8 +7,8 @@ import { useI18n } from '~src/lib/i18n';
 
 import OppsummeringAvRegistrerteUtenlandsopphold from './OppsummeringAvRegistrerteUtenlandsopphold';
 import RegistreringAvUtenlandsopphold from './RegistreringAvUtenlandsopphold';
-import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
+import messages from './Utenlandsopphold-nb';
 
 const Utenlandsopphold = () => {
     const { sak } = useOutletContext<SaksoversiktContext>();

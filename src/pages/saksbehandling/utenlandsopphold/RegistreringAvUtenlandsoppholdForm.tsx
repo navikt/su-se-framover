@@ -14,13 +14,13 @@ import {
     UtenlandsoppholdDokumentasjon,
 } from '~src/types/RegistrertUtenlandsopphold';
 
-import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
 import {
     RegisteringAvUtenlandsoppholdFormData,
     registeringAvUtenlandsoppholdFormSchema,
     registrertUtenlandsoppholdTilFormDataEllerDefault,
 } from './RegistreringAvUtenlandsoppholdFormUtils';
+import messages from './Utenlandsopphold-nb';
 
 /**
  * Tar inn form-knapper som children. Dette er for å lettere håndtere de ulike APi-kallene på samme formet
@@ -36,10 +36,12 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
     const { formatMessage } = useI18n({ messages });
     const [antallDagerIUtlandet, setAntallDagerIUtlandet] = useState<number>(0);
 
-    const { control, handleSubmit, watch, formState, setValue } = useForm<RegisteringAvUtenlandsoppholdFormData>({
-        defaultValues: registrertUtenlandsoppholdTilFormDataEllerDefault(props.registrertUtenlandsopphold),
-        resolver: yupResolver(registeringAvUtenlandsoppholdFormSchema),
-    });
+    const { control, handleSubmit, watch, formState, setValue, reset } = useForm<RegisteringAvUtenlandsoppholdFormData>(
+        {
+            defaultValues: registrertUtenlandsoppholdTilFormDataEllerDefault(props.registrertUtenlandsopphold),
+            resolver: yupResolver(registeringAvUtenlandsoppholdFormSchema),
+        }
+    );
     const watched = watch();
 
     useEffect(() => {
@@ -52,7 +54,12 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
     }, [watched.periode.fraOgMed, watched.periode.tilOgMed]);
 
     return (
-        <form onSubmit={handleSubmit((v) => props.onFormSubmit(v))}>
+        <form
+            onSubmit={handleSubmit((v) => {
+                props.onFormSubmit(v);
+                reset();
+            })}
+        >
             <div className={styles.inputFieldsContainer}>
                 <div className={styles.periodeFormMedDagerTeller}>
                     <Controller

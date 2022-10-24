@@ -19,10 +19,10 @@ import { Nullable } from '~src/lib/types';
 import { RegistrertUtenlandsopphold } from '~src/types/RegistrertUtenlandsopphold';
 import { formatDate, formatDateTime, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
 
-import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
 import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
 import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from './RegistreringAvUtenlandsoppholdFormUtils';
+import messages from './Utenlandsopphold-nb';
 
 const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     sakId: string;
@@ -118,7 +118,7 @@ const RegistrertUtenlandsoppholdAccordionItem = (props: {
                     sakId={props.sakId}
                     saksversjon={props.saksversjon}
                     registrertUtenlandsopphold={props.registrertUtenlandsopphold}
-                    medEndreKnapp
+                    medEndreKnapp={!props.registrertUtenlandsopphold.erAnnullert}
                 />
             </Accordion.Content>
         </Accordion.Item>

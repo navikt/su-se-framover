@@ -13,10 +13,10 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 
-import messages from './RegistreringAvUtenlandsopphold-nb';
 import styles from './RegistreringAvUtenlandsopphold.module.less';
 import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
 import { registrerUtenlandsoppholdFormDataTilRegistrerRequest } from './RegistreringAvUtenlandsoppholdFormUtils';
+import messages from './Utenlandsopphold-nb';
 
 const RegistreringAvUtenlandsopphold = (props: { sakId: string; saksversjon: number }) => {
     const { formatMessage } = useI18n({ messages });
