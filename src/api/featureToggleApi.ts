@@ -4,6 +4,7 @@ export enum FeatureToggle {
     Hotjar = 'supstonad.ufore.hotjar',
     Alder = 'supstonad.alder.soknad',
     Skattemelding = 'supstonad.skattemelding',
+    Utenlandsopphold = 'supstonad.utenlandsopphold',
 }
 
 export type FeatureToggles = {
