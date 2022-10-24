@@ -4,12 +4,10 @@ import { isEmpty } from 'fp-ts/lib/Array';
 import React, { useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Vedtakstidslinje from '~src/components/vedtakstidslinje/VedtaksTidslinje';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -60,7 +58,6 @@ const Sakintro = () => {
     const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
 
     const harVedtak = !isEmpty(props.sak.vedtak);
-    const klageToggle = useFeatureToggle(FeatureToggle.Klage);
 
     const avsluttedeRevurderinger = props.sak.revurderinger.filter(erRevurderingAvsluttet);
     const avsluttedeReguleringer = props.sak.reguleringer.filter(erReguleringAvsluttet);
@@ -110,15 +107,13 @@ const Sakintro = () => {
                                     {formatMessage('popover.option.revurder')}
                                 </LinkAsButton>
                             )}
-                            {klageToggle && (
-                                <LinkAsButton
-                                    className={styles.popoverOption}
-                                    variant="tertiary"
-                                    href={nyBehandlingTilRoute(NyBehandling.KLAGE)}
-                                >
-                                    {formatMessage('popover.option.klage')}
-                                </LinkAsButton>
-                            )}
+                            <LinkAsButton
+                                className={styles.popoverOption}
+                                variant="tertiary"
+                                href={nyBehandlingTilRoute(NyBehandling.KLAGE)}
+                            >
+                                {formatMessage('popover.option.klage')}
+                            </LinkAsButton>
                         </NyBehandlingVelger>
                     )}
                     {harUtbetalinger && (
