@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
@@ -58,14 +58,11 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                     name="mottaksdatoForSøknad"
                     render={({ field, fieldState }) => (
                         <DatePicker
-                            {...field}
-                            id={field.name}
-                            value={toDateOrNull(field.value)}
-                            dateFormat="dd/MM/yyyy"
                             label={formatMessage('input.mottaksdato.label')}
-                            feil={fieldState.error?.message}
-                            maxDate={DateFns.endOfDay(new Date())}
+                            value={toDateOrNull(field.value)}
+                            toDate={DateFns.endOfDay(new Date())}
                             onChange={(value) => field.onChange(toStringDateOrNull(value))}
+                            error={fieldState.error?.message}
                         />
                     )}
                 />

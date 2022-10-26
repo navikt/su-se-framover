@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import { startRegulering } from '~src/api/reguleringApi';
 import * as reguleringApi from '~src/api/reguleringApi';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { MonthPicker } from '~src/components/datePicker/DatePicker';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
@@ -46,14 +46,7 @@ const StartGRegulering = () => {
                     )
                 )}
             </GuidePanel>
-
-            <DatePicker
-                label="Velg reguleringsdato"
-                value={startDato}
-                dateFormat="MM/yyyy"
-                showMonthYearPicker
-                onChange={(dato) => setStartDato(dato)}
-            />
+            <MonthPicker label="Velg reguleringsdato" value={startDato} onChange={(dato) => setStartDato(dato)} />
 
             <Button
                 onClick={() => reguler({ startDato: toStringDateOrNull(startDato) ?? '' })}

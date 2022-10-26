@@ -55,7 +55,7 @@ export const toDateOrNull = (date: string | undefined | null): Date | null => {
 
 export const isValidInterval = (fom: Nullable<Date>, tom: Nullable<Date>) => fom && tom && DateFns.isAfter(tom, fom);
 
-export const toStringDateOrNull = (date: Date | null) => {
+export const toStringDateOrNull = (date: Date | null | undefined) => {
     if (!date) return null;
 
     return DateFns.format(date, DateFormats.IsoDateOnly);

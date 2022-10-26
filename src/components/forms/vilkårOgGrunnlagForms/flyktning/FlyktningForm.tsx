@@ -30,8 +30,8 @@ const FlyktningForm = (props: Props) => {
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodeFlyktningMedEllerUtenPeriode}
                     periodeConfig={{
-                        minFraOgMed: props.minOgMaxPeriode.fraOgMed,
-                        maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
+                        minDate: props.minOgMaxPeriode.fraOgMed,
+                        maxDate: props.minOgMaxPeriode.tilOgMed,
                     }}
                     getChild={(nameAndIdx: string) => (
                         <VilkårsResultatRadioGroup

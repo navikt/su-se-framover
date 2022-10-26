@@ -5,7 +5,7 @@ import { ReactDatePickerProps } from 'react-datepicker';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
@@ -31,7 +31,6 @@ interface Reiseperiode {
 const MultiTidsperiodevelger = (props: {
     perioder: Reiseperiode[];
     errors: FieldErrors<Reiseperiode> | undefined;
-    feltnavn: string;
     limitations?: {
         innreise?: Pick<ReactDatePickerProps, 'maxDate' | 'minDate'>;
         utreise?: Pick<ReactDatePickerProps, 'maxDate' | 'minDate'>;
@@ -61,16 +60,12 @@ const MultiTidsperiodevelger = (props: {
                         <div className={styles.reiseItemContainer}>
                             <div>
                                 <DatePicker
-                                    id={`${baseId}.utreisedato`}
-                                    name={'utreisedato'}
-                                    dateFormat="dd.MM.yyyy"
                                     label={formatMessage('utreisedato.label')}
                                     value={toDateOrNull(periode.utreisedato)}
-                                    minDate={props.limitations?.utreise?.minDate}
-                                    maxDate={props.limitations?.utreise?.maxDate}
-                                    feil={errorForLinje?.message}
-                                    autoComplete="off"
-                                    onChange={(value: Date) =>
+                                    fromDate={props.limitations?.utreise?.minDate}
+                                    toDate={props.limitations?.utreise?.maxDate}
+                                    error={errorForLinje?.message}
+                                    onChange={(value) =>
                                         value &&
                                         props.onChange({
                                             index,
@@ -86,13 +81,12 @@ const MultiTidsperiodevelger = (props: {
                                     id={`${baseId}.innreisedato`}
                                     name={'innreisedato'}
                                     feil={errorForLinje?.message}
-                                    autoComplete="off"
                                     dateFormat="dd.MM.yyyy"
                                     label={formatMessage('innreisedato.label')}
                                     value={toDateOrNull(periode.innreisedato)}
-                                    minDate={props.limitations?.innreise?.minDate}
-                                    maxDate={props.limitations?.innreise?.maxDate}
-                                    onChange={(value: Date) =>
+                                    fromDate={props.limitations?.innreise?.minDate}
+                                    toDate={props.limitations?.innreise?.maxDate}
+                                    onChange={(value) =>
                                         value &&
                                         props.onChange({
                                             index,
@@ -188,7 +182,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                     legendForNumber={(x) =>
                                         formatMessage('gruppe.tidligereUtenlandsoppholdX.legend', { x })
                                     }
-                                    feltnavn={field.name}
                                     perioder={field.value}
                                     limitations={{
                                         utreise: { maxDate: new Date() },
@@ -254,7 +247,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                     legendForNumber={(x) =>
                                         formatMessage('gruppe.kommendeUtenlandsoppholdX.legend', { x })
                                     }
-                                    feltnavn={field.name}
                                     perioder={field.value}
                                     limitations={{
                                         utreise: { minDate: new Date() },

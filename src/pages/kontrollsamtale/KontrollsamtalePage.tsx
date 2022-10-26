@@ -10,7 +10,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { ApiError } from '~src/api/apiClient';
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useApiCall } from '~src/lib/hooks';
@@ -65,17 +65,15 @@ const KontrollsamtalePage = () => {
                                 </BodyLong>
                                 <div className={styles.nyDatoContainer}>
                                     <DatePicker
-                                        className={styles.datePicker}
-                                        dateFormat="dd.MM.yyyy"
                                         label={formatMessage('velgDatoTittel')}
-                                        onChange={(dato: Date | null) => settNyDato(dato)}
                                         value={nyDato ?? toDateOrNull(kontrollsamtale?.innkallingsdato)}
-                                        feil={
+                                        fromDate={startOfTomorrow()}
+                                        onChange={settNyDato}
+                                        error={
                                             (nyDato ?? toDateOrNull(kontrollsamtale?.innkallingsdato)) === null
                                                 ? formatMessage('datovalidering')
                                                 : undefined
                                         }
-                                        minDate={startOfTomorrow()}
                                     />
                                     <Button
                                         className={styles.nyDatoButton}

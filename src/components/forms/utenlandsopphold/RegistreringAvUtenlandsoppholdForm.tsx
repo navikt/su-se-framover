@@ -5,7 +5,7 @@ import * as DateFns from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Control, Controller, useFieldArray, useForm, UseFormReset, UseFormSetValue } from 'react-hook-form';
 
-import { PeriodeForm } from '~src/components/formElements/FormElements';
+import { RangePickerDate } from '~src/components/datePicker/DatePicker';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import {
@@ -64,24 +64,14 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                         control={control}
                         name={'periode'}
                         render={({ field }) => (
-                            <PeriodeForm
+                            <RangePickerDate
                                 value={field.value}
-                                name={field.name}
-                                label={{
-                                    fraOgMed: formatMessage('registreringAvUtenlandsopphold.form.dato.fraOgMed.label'),
-                                    tilOgMed: formatMessage('registreringAvUtenlandsopphold.form.dato.tilOgMed.label'),
-                                }}
                                 onChange={field.onChange}
-                                minDate={{
-                                    fraOgMed: new Date('01-01-2021'),
-                                    tilOgMed: watched.periode.fraOgMed,
+                                fromDate={new Date('01-01-2021')}
+                                error={{
+                                    fraOgMed: formState.errors.periode?.fraOgMed?.message,
+                                    tilOgMed: formState.errors.periode?.tilOgMed?.message,
                                 }}
-                                maxDate={{
-                                    fraOgMed: undefined,
-                                    tilOgMed: undefined,
-                                }}
-                                error={formState.errors.periode}
-                                medDager
                             />
                         )}
                     />

@@ -31,8 +31,8 @@ const UtenlandsoppholdForm = (props: Props) => {
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodeUtenlandsoppholdMedEllerUtenPeriode}
                     periodeConfig={{
-                        minFraOgMed: props.minOgMaxPeriode.fraOgMed,
-                        maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
+                        minDate: props.minOgMaxPeriode.fraOgMed,
+                        maxDate: props.minOgMaxPeriode.tilOgMed,
                     }}
                     getChild={(nameAndIdx: string) => (
                         <VilkårsResultatRadioGroup

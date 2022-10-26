@@ -55,13 +55,8 @@ interface RevurderingIntroFormProps {
     tilbakeUrl: string;
     revurdering?: InformasjonsRevurdering;
     periodeConfig: {
-        fraOgMed: {
-            min: Date;
-            max: Date;
-        };
-        tilOgMed: {
-            max: Date;
-        };
+        minDate: Date;
+        maxDate: Date;
     };
     opprettRevurderingStatus: ApiResult<OpprettetRevurdering>;
     oppdaterRevurderingStatus: ApiResult<OpprettetRevurdering>;
@@ -119,17 +114,10 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             name={'periode'}
                             render={({ field }) => (
                                 <PeriodeForm
-                                    name={field.name}
                                     value={field.value}
                                     onChange={field.onChange}
-                                    minDate={{
-                                        fraOgMed: props.periodeConfig.fraOgMed.min,
-                                        tilOgMed: form.watch('periode.fraOgMed'),
-                                    }}
-                                    maxDate={{
-                                        fraOgMed: props.periodeConfig.fraOgMed.max,
-                                        tilOgMed: props.periodeConfig.tilOgMed.max,
-                                    }}
+                                    minDate={props.periodeConfig.minDate}
+                                    maxDate={props.periodeConfig.maxDate}
                                     error={form.formState.errors.periode as FieldErrors<NullablePeriode>}
                                 />
                             )}

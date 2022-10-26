@@ -4,7 +4,7 @@ import React from 'react';
 
 import * as søknadApi from '~src/api/søknadApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import { useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { LukkSøknadBegrunnelse } from '~src/types/Søknad';
@@ -31,14 +31,12 @@ const Trukket = (props: TrukketProps) => {
         <div className={styles.trukketContainer}>
             <div className={styles.datoContainer}>
                 <DatePicker
-                    id={'datoSøkerTrakkSøknad'}
-                    name={'datoSøkerTrakkSøknad'}
-                    feil={props.feilmelding}
-                    value={toDateOrNull(props.datoSøkerTrakkSøknad)}
-                    minDate={toDateOrNull(props.søknadOpprettet)}
-                    maxDate={new Date()}
-                    onChange={(value) => value && props.onDatoSøkerTrakkSøknadChange(toIsoDateOnlyString(value))}
                     label={formatMessage('trekking.datoSøkerTrakkSøknad')}
+                    value={toDateOrNull(props.datoSøkerTrakkSøknad)}
+                    fromDate={toDateOrNull(props.søknadOpprettet)}
+                    toDate={new Date()}
+                    onChange={(value) => value && props.onDatoSøkerTrakkSøknadChange(toIsoDateOnlyString(value))}
+                    error={props.feilmelding}
                 />
             </div>
             <Button

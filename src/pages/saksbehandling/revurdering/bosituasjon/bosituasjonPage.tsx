@@ -102,8 +102,8 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                                 controller={form.control}
                                 appendNyPeriode={nyBosituasjon}
                                 periodeConfig={{
-                                    minFraOgMed: new Date(props.revurdering.periode.fraOgMed),
-                                    maxTilOgMed: new Date(props.revurdering.periode.tilOgMed),
+                                    minDate: new Date(props.revurdering.periode.fraOgMed),
+                                    maxDate: new Date(props.revurdering.periode.tilOgMed),
                                 }}
                                 getChild={(nameAndIdx) => {
                                     const watch = form.watch(nameAndIdx);
