@@ -3,7 +3,7 @@ import { Delete } from '@navikt/ds-icons';
 import { Button, Heading, Select, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { Control, Controller, useFieldArray, useForm, UseFormSetValue } from 'react-hook-form';
+import { Control, Controller, useFieldArray, useForm, UseFormReset, UseFormSetValue } from 'react-hook-form';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { ApiResult } from '~src/lib/hooks';
@@ -30,7 +30,10 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
     saksversjon: number;
     registrertUtenlandsopphold?: RegistrertUtenlandsopphold;
     status: ApiResult<RegistrerteUtenlandsopphold>;
-    onFormSubmit: (values: RegisteringAvUtenlandsoppholdFormData) => void;
+    onFormSubmit: (
+        values: RegisteringAvUtenlandsoppholdFormData,
+        formReset: UseFormReset<RegisteringAvUtenlandsoppholdFormData>
+    ) => void;
     children: React.ReactNode;
 }) => {
     const { formatMessage } = useI18n({ messages });
@@ -56,8 +59,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
     return (
         <form
             onSubmit={handleSubmit((v) => {
-                props.onFormSubmit(v);
-                reset();
+                props.onFormSubmit(v, reset);
             })}
         >
             <div className={styles.inputFieldsContainer}>

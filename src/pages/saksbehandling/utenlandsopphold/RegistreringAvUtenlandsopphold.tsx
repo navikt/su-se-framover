@@ -32,13 +32,14 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string; saksversjon: num
                     sakId={props.sakId}
                     saksversjon={props.saksversjon}
                     status={status}
-                    onFormSubmit={(validatedValues) =>
+                    onFormSubmit={(validatedValues, formReset) =>
                         registrerUtenlandsOpphold(
                             registrerUtenlandsoppholdFormDataTilRegistrerRequest({
                                 sakId: props.sakId,
                                 saksversjon: props.saksversjon,
                                 data: validatedValues,
-                            })
+                            }),
+                            () => formReset()
                         )
                     }
                 >
