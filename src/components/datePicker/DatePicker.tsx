@@ -63,15 +63,15 @@ export const MonthPicker = (props: {
     error?: string;
 }) => {
     const { monthpickerProps, inputProps } = UNSAFE_useMonthpicker({
-        fromDate: props.fromDate ?? undefined,
-        toDate: props.toDate ?? undefined,
+        fromDate: props.fromDate ?? new Date('2021-01-01'),
+        toDate: props.toDate ?? new Date('2023-12-01'),
         onMonthChange: (d) => props.onChange(d ?? null),
         defaultSelected: props.value ?? undefined,
     });
 
     return (
         <div>
-            <UNSAFE_MonthPicker {...monthpickerProps} selected={props.value ?? undefined}>
+            <UNSAFE_MonthPicker {...monthpickerProps} selected={props.value ?? undefined} dropdownCaption>
                 <UNSAFE_MonthPicker.Input {...inputProps} label={props.label} size={props.size} error={props.error} />
             </UNSAFE_MonthPicker>
         </div>

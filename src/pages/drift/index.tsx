@@ -2,7 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Label, Loader, Modal, Select } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
-import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~src/api/apiClient';
 import {
@@ -13,6 +12,7 @@ import {
     grensesnittsavstemming,
     stønadsmottakere,
 } from '~src/api/driftApi';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
@@ -65,13 +65,17 @@ const Drift = () => {
     };
 
     const [grensesnittsavstemmingModalOpen, setGrensesnittsavstemmingModalOpen] = React.useState(false);
-    const [grensesnittsavtemmingFraOgMed, setGrensesnittsavtemmingFraOgMed] = React.useState<Date>(new Date());
-    const [grensesnittsavtemmingTilOgMed, setGrensesnittsavtemmingTilOgMed] = React.useState<Date>(new Date());
+    const [grensesnittsavtemmingFraOgMed, setGrensesnittsavtemmingFraOgMed] = React.useState<Nullable<Date>>(
+        new Date()
+    );
+    const [grensesnittsavtemmingTilOgMed, setGrensesnittsavtemmingTilOgMed] = React.useState<Nullable<Date>>(
+        new Date()
+    );
     const [grensesnittsavstemmingStatus, fetchGrensesnittsavstemming] = useApiCall(grensesnittsavstemming);
     const [grensesnittsavstemmingFagområde, setGrensesnittsavstemmingFagområde] = React.useState<string>('SUUFORE');
 
     const [konsistensavtemmingModalOpen, setKonsistensavtemmingModalOpen] = React.useState(false);
-    const [konsistensavstemmingFraOgMed, setKonsistensavstemmingFraOgMed] = React.useState<Date>(new Date());
+    const [konsistensavstemmingFraOgMed, setKonsistensavstemmingFraOgMed] = React.useState<Nullable<Date>>(new Date());
     const [konsistensavstemmingStatus, fetchKonsistensavstemming] = useApiCall(konsistensavstemming);
     const [konsistensavstemmingFagområde, setKonsistensavstemmingFagområde] = React.useState<string>('SUUFORE');
 
@@ -134,19 +138,19 @@ const Drift = () => {
                         <Modal.Content>
                             <div className={styles.modalContainer}>
                                 <DatePicker
-                                    dateFormat="dd/MM/yyyy"
-                                    selected={grensesnittsavtemmingFraOgMed}
-                                    onChange={(date: Date) => {
+                                    label={''}
+                                    value={grensesnittsavtemmingFraOgMed}
+                                    onChange={(date) => {
                                         setGrensesnittsavtemmingFraOgMed(date);
                                     }}
-                                ></DatePicker>
+                                />
                                 <DatePicker
-                                    dateFormat="dd/MM/yyyy"
-                                    selected={grensesnittsavtemmingTilOgMed}
-                                    onChange={(date: Date) => {
+                                    label={''}
+                                    value={grensesnittsavtemmingTilOgMed}
+                                    onChange={(date) => {
                                         setGrensesnittsavtemmingTilOgMed(date);
                                     }}
-                                ></DatePicker>
+                                />
                                 <Select
                                     label={'Fagområde'}
                                     value={grensesnittsavstemmingFagområde}
@@ -162,8 +166,8 @@ const Drift = () => {
                                     onClick={() => {
                                         settKnappTrykket(Knapp.GRENSESNITTSAVSTEMMING);
                                         fetchGrensesnittsavstemming({
-                                            fraOgMed: toIsoDateOnlyString(grensesnittsavtemmingFraOgMed),
-                                            tilOgMed: toIsoDateOnlyString(grensesnittsavtemmingTilOgMed),
+                                            fraOgMed: toIsoDateOnlyString(grensesnittsavtemmingFraOgMed!),
+                                            tilOgMed: toIsoDateOnlyString(grensesnittsavtemmingTilOgMed!),
                                             fagområde: grensesnittsavstemmingFagområde,
                                         });
                                     }}
@@ -192,12 +196,12 @@ const Drift = () => {
                         <Modal.Content>
                             <div className={styles.modalContainer}>
                                 <DatePicker
-                                    dateFormat="dd/MM/yyyy"
-                                    selected={konsistensavstemmingFraOgMed}
-                                    onChange={(date: Date) => {
+                                    label={''}
+                                    value={konsistensavstemmingFraOgMed}
+                                    onChange={(date) => {
                                         setKonsistensavstemmingFraOgMed(date);
                                     }}
-                                ></DatePicker>
+                                />
                                 <Select
                                     label={'Fagområde'}
                                     value={konsistensavstemmingFagområde}
@@ -213,7 +217,7 @@ const Drift = () => {
                                     onClick={() => {
                                         settKnappTrykket(Knapp.KONSISTENSAVSTEMMING);
                                         fetchKonsistensavstemming({
-                                            fraOgMed: toIsoDateOnlyString(konsistensavstemmingFraOgMed),
+                                            fraOgMed: toIsoDateOnlyString(konsistensavstemmingFraOgMed!),
                                             fagområde: konsistensavstemmingFagområde,
                                         });
                                     }}

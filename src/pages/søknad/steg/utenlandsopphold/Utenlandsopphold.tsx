@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Fieldset } from '@navikt/ds-react';
 import * as React from 'react';
-import { ReactDatePickerProps } from 'react-datepicker';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +11,8 @@ import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadIn
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { kalkulerTotaltAntallDagerIUtlandet, toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
@@ -32,8 +33,14 @@ const MultiTidsperiodevelger = (props: {
     perioder: Reiseperiode[];
     errors: FieldErrors<Reiseperiode> | undefined;
     limitations?: {
-        innreise?: Pick<ReactDatePickerProps, 'maxDate' | 'minDate'>;
-        utreise?: Pick<ReactDatePickerProps, 'maxDate' | 'minDate'>;
+        innreise?: {
+            minDate?: Nullable<Date>;
+            maxDate?: Nullable<Date>;
+        };
+        utreise?: {
+            minDate?: Nullable<Date>;
+            maxDate?: Nullable<Date>;
+        };
     };
     legendForNumber(num: number): string;
     onChange: (element: { index: number; utreisedato: string; innreisedato: string }) => void;
