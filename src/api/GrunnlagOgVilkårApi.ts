@@ -33,6 +33,7 @@ export type VilkårOgGrunnlagApiResult<T extends InformasjonsRevurdering = Infor
 export type RevurderingOgFeilmeldinger<T extends InformasjonsRevurdering = InformasjonsRevurdering> = {
     revurdering: T;
     feilmeldinger: ErrorMessage[];
+    varselmeldinger: ErrorMessage[];
 };
 
 export type BehandlingstypeMedApiRequest<T> = T & { behandlingstype: Behandlingstype };
