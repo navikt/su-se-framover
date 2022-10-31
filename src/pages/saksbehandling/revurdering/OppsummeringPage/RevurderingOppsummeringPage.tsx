@@ -194,7 +194,7 @@ const RevurderingOppsummeringPage = (props: {
                         grunnlagsdataOgVilkårsvurderinger={data.grunnlagsdataOgVilkårsvurderinger}
                     />
                     {RemoteData.isSuccess(beregnOgSimulerStatus) &&
-                        beregnOgSimulerStatus.value.varselmeldinger.length >= 0 && (
+                        beregnOgSimulerStatus.value.varselmeldinger.length > 0 && (
                             <UtfallSomIkkeStøttes
                                 feilmeldinger={beregnOgSimulerStatus.value.varselmeldinger}
                                 infoMelding
