@@ -193,9 +193,13 @@ const RevurderingOppsummeringPage = (props: {
                         revurdering={props.revurdering}
                         grunnlagsdataOgVilkårsvurderinger={data.grunnlagsdataOgVilkårsvurderinger}
                     />
-                    {RemoteData.isSuccess(beregnOgSimulerStatus) && (
-                        <UtfallSomIkkeStøttes feilmeldinger={beregnOgSimulerStatus.value.varselmeldinger} infoMelding />
-                    )}
+                    {RemoteData.isSuccess(beregnOgSimulerStatus) &&
+                        beregnOgSimulerStatus.value.varselmeldinger.length >= 0 && (
+                            <UtfallSomIkkeStøttes
+                                feilmeldinger={beregnOgSimulerStatus.value.varselmeldinger}
+                                infoMelding
+                            />
+                        )}
                     {harSimulering(props.revurdering) &&
                         periodenInneholderTilbakekrevingOgAndreTyper(
                             props.revurdering.simulering,
