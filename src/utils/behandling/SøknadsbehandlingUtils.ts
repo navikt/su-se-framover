@@ -5,6 +5,7 @@ import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknad
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import {
+    erAlleVilkårStartet,
     mapToVilkårsinformasjon,
     vilkårsinformasjonForBeregningssteg,
 } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -95,6 +96,20 @@ export const hentSisteVurdertSaksbehandlingssteg = (behandling: Søknadsbehandli
     const påbegynteSteg = hentSaksbehandlingssteg(behandling).filter((steg) => steg.erStartet);
     return [...påbegynteSteg].pop()?.vilkårtype ?? Vilkårtype.Virkningstidspunkt;
 };
+
+export const kanNavigeresTilOppsummering = (s: Søknadsbehandling) =>
+    s.status === SøknadsbehandlingStatus.UNDERKJENT_AVSLAG ||
+    s.status === SøknadsbehandlingStatus.UNDERKJENT_INNVILGET ||
+    s.status === SøknadsbehandlingStatus.SIMULERT ||
+    s.status === SøknadsbehandlingStatus.BEREGNET_AVSLAG ||
+    (s.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG &&
+        (erSøknadsbehandlingTidligAvslag(s) || erAlleVilkårStartet(s.sakstype, s.grunnlagsdataOgVilkårsvurderinger)));
+
+export const erSøknadsbehandlingTidligAvslag = (s: Søknadsbehandling) =>
+    s.grunnlagsdataOgVilkårsvurderinger.uføre !== null &&
+    s.grunnlagsdataOgVilkårsvurderinger.flyktning !== null &&
+    (s.grunnlagsdataOgVilkårsvurderinger.uføre.resultat === UføreResultat.VilkårIkkeOppfylt ||
+        s.grunnlagsdataOgVilkårsvurderinger.flyktning.resultat === Vilkårstatus.VilkårIkkeOppfylt);
 
 export const splitStatusOgResultatFraSøkandsbehandling = (
     s: Søknadsbehandling

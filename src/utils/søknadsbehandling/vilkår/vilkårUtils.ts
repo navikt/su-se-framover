@@ -237,3 +237,7 @@ const erSatsStartet = (b: Søknadsbehandling) => {
 
     return !!erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger));
 };
+
+export const erAlleVilkårStartet = (sakstype: Sakstype, g: GrunnlagsdataOgVilkårsvurderinger) => {
+    return mapToVilkårsinformasjon(sakstype, g).every((v) => v.erStartet);
+};

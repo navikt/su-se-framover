@@ -37,6 +37,7 @@ import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import {
     erSøknadsbehandlingTilAttestering,
     hentSisteVurdertSaksbehandlingssteg,
+    kanNavigeresTilOppsummering,
 } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { erKlageTilAttestering, hentSisteVurderteSteg } from '~src/utils/klage/klageUtils';
@@ -243,11 +244,18 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
                     <LinkAsButton
                         variant="primary"
                         size="small"
-                        href={Routes.saksbehandlingVilkårsvurdering.createURL({
-                            sakId: props.sakId,
-                            behandlingId: props.b.søknadsbehandling.id,
-                            vilkar: hentSisteVurdertSaksbehandlingssteg(props.b.søknadsbehandling),
-                        })}
+                        href={
+                            kanNavigeresTilOppsummering(props.b.søknadsbehandling)
+                                ? Routes.saksbehandlingsOppsummering.createURL({
+                                      sakId: props.sakId,
+                                      behandlingId: props.b.søknadsbehandling.id,
+                                  })
+                                : Routes.saksbehandlingVilkårsvurdering.createURL({
+                                      sakId: props.sakId,
+                                      behandlingId: props.b.søknadsbehandling.id,
+                                      vilkar: hentSisteVurdertSaksbehandlingssteg(props.b.søknadsbehandling),
+                                  })
+                        }
                     >
                         {formatMessage('datacell.info.knapp.fortsettBehandling')}
                     </LinkAsButton>

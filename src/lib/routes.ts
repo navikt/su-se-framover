@@ -143,6 +143,15 @@ export const saksbehandlingVilkårsvurdering: Route<{
         `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vilkår}/${vilkar}`,
 };
 
+export const saksbehandlingsOppsummering: Route<{
+    sakId: string;
+    behandlingId: string;
+}> = {
+    path: `:behandlingId/vedtak`,
+    absPath: `/saksoversikt/:sakId/:behandlingId/vedtak`,
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/vedtak`,
+};
+
 export const revurderValgtSak: Route<{ sakId: string }> = {
     path: `revurder/`,
     absPath: `/saksoversikt/:sakId/revurder/`,
