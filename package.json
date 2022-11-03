@@ -65,7 +65,7 @@
         "core-js": "^3.25.5",
         "country-data-list": "^1.2.2",
         "date-fns": "^2.29.3",
-        "dayjs": "^1.11.5",
+        "dayjs": "^1.11.6",
         "fp-ts": "^2.13.1",
         "io-ts": "^2.2.19",
         "io-ts-types": "^0.5.19",
