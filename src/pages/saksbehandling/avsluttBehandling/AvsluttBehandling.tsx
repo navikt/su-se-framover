@@ -18,10 +18,11 @@ const AvsluttBehandling = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttBehandling>();
 
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.id);
+    const søknadsbehandling = props.sak.behandlinger.find((s) => s.id === urlParams.id);
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.id);
     const klage = props.sak.klager.find((k) => k.id === urlParams.id);
 
-    if (!søknad && !revurdering && !klage) {
+    if (!søknad && !søknadsbehandling && !revurdering && !klage) {
         return (
             <div>
                 <Alert variant="error">
@@ -42,7 +43,12 @@ const AvsluttBehandling = () => {
                 </Heading>
 
                 <div className={styles.mainContent}>
-                    {søknad && <LukkSøknadOgAvsluttBehandling sakId={props.sak.id} søknad={søknad} />}
+                    {(søknad || søknadsbehandling) && (
+                        <LukkSøknadOgAvsluttBehandling
+                            sakId={props.sak.id}
+                            søknad={(søknad || søknadsbehandling?.søknad)!}
+                        />
+                    )}
                     {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
                     {klage && <AvsluttKlage sakId={props.sak.id} klage={klage} />}
                 </div>
