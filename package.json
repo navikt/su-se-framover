@@ -55,7 +55,7 @@
         "@radix-ui/react-tabs": "^1.0.1",
         "@reduxjs/toolkit": "^1.8.6",
         "@sentry/browser": "^7.17.3",
-        "@sentry/cli": "^2.7.0",
+        "@sentry/cli": "^2.8.1",
         "@types/jest": "^27.5.0",
         "@types/react-collapse": "^5.0.1",
         "@types/react-datepicker": "^4.8.0",
