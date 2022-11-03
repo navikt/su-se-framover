@@ -15,6 +15,7 @@ export default {
     'behandling.iverksattDato': 'Iverksatt dato',
 
     'feilmelding.ikkeGjortEnBeregning': 'Det er ikke gjort en beregning',
+    'feil.fantIkkeSaksbehandlerNavn': 'Fant ikke saksbehandler navn',
 
     'knapp.vis': 'Vis brev',
 

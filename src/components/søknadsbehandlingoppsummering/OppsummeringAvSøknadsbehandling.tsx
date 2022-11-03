@@ -5,7 +5,6 @@ import * as React from 'react';
 
 import * as PdfApi from '~src/api/pdfApi';
 import BeregningOgSimulering from '~src/components/beregningOgSimulering/BeregningOgSimulering';
-import { useUserContext } from '~src/context/userContext';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -28,7 +27,6 @@ const OppsummeringAvSøknadsbehandling = (props: {
     behandling: Søknadsbehandling;
     medBrevutkast?: { sakId: string };
 }) => {
-    const user = useUserContext();
     const { formatMessage } = useI18n({ messages });
     const [hentBrevutkastStatus, hentBrevutkast] = useApiCall(PdfApi.fetchBrevutkastForSøknadsbehandling);
     const underkjenteAttesteringer = props.behandling.attesteringer.filter((att) => att.underkjennelse != null);
@@ -53,7 +51,7 @@ const OppsummeringAvSøknadsbehandling = (props: {
                         />
                         <OppsummeringPar
                             label={formatMessage('behandlet.av')}
-                            verdi={props.behandling.saksbehandler || user.navn}
+                            verdi={props.behandling.saksbehandler ?? formatMessage('feil.fantIkkeSaksbehandlerNavn')}
                             sorteres={OppsummeringsParSortering.Vertikalt}
                         />
                         <OppsummeringPar
