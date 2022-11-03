@@ -151,40 +151,39 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                     <PartialOppsummeringAvKlage v={vedtak} k={vedtaketsBehandling as Klage} />
                 )}
             </Oppsummeringspanel>
-            {(vedtak.beregning || vedtak.simulering) && (
-                <Oppsummeringspanel
-                    ikon={Oppsummeringsikon.Kalkulator}
-                    farge={Oppsummeringsfarge.Grønn}
-                    tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
-                >
-                    <div className={styles.beregningOgSimuleringsContainer}>
-                        <div className={styles.column}>
-                            <Heading level="3" size="small" spacing>
-                                {formatMessage('vedtak.beregning')}
-                            </Heading>
-                            <Panel border>
-                                {vedtak.beregning ? (
-                                    <VisBeregning beregning={vedtak.beregning} utenTittel />
-                                ) : (
-                                    formatMessage('vedtak.beregning.ingen')
-                                )}
-                            </Panel>
-                        </div>
-                        <div className={styles.column}>
-                            <Heading level="3" size="small" spacing>
-                                {formatMessage('vedtak.simulering')}
-                            </Heading>
-                            <Panel border>
-                                {vedtak.simulering ? (
-                                    <Utbetalingssimulering simulering={vedtak.simulering} utenTittel />
-                                ) : (
-                                    formatMessage('vedtak.simulering.ingen')
-                                )}
-                            </Panel>
-                        </div>
+
+            <Oppsummeringspanel
+                ikon={Oppsummeringsikon.Kalkulator}
+                farge={Oppsummeringsfarge.Grønn}
+                tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
+            >
+                <div className={styles.beregningOgSimuleringsContainer}>
+                    <div className={styles.column}>
+                        <Heading level="3" size="small" spacing>
+                            {formatMessage('vedtak.beregning')}
+                        </Heading>
+                        <Panel border>
+                            {vedtak.beregning ? (
+                                <VisBeregning beregning={vedtak.beregning} utenTittel />
+                            ) : (
+                                formatMessage('vedtak.beregning.ingen')
+                            )}
+                        </Panel>
                     </div>
-                </Oppsummeringspanel>
-            )}
+                    <div className={styles.column}>
+                        <Heading level="3" size="small" spacing>
+                            {formatMessage('vedtak.simulering')}
+                        </Heading>
+                        <Panel border>
+                            {vedtak.simulering ? (
+                                <Utbetalingssimulering simulering={vedtak.simulering} utenTittel />
+                            ) : (
+                                formatMessage('vedtak.simulering.ingen')
+                            )}
+                        </Panel>
+                    </div>
+                </div>
+            </Oppsummeringspanel>
         </div>
     );
 };
