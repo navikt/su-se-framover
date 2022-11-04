@@ -2,9 +2,13 @@
 
 .pageContainer {
     margin-left: 7.5vw;
+    > :first-child {
+        margin-top: @spacing;
+    }
 }
 
 .tilbakeKnapp {
+    //override av .navds-button
     margin-top: @spacing !important;
     width: @knappBredde;
 }
