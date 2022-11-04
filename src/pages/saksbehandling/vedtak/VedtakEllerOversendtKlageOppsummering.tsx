@@ -28,7 +28,7 @@ const VedtakEllerOversendtKlageOppsummering = (props: {
     if (klage && erKlageOversendt(klage)) {
         const klagensVedtak = sak.vedtak.find((v) => v.id === klage.vedtakId)!;
         return (
-            <div>
+            <div className={styles.pageContainer}>
                 <OppsummeringAvKlage klage={klage} klagensVedtak={klagensVedtak} />
                 {!props.ikkeVisTilbakeKnapp && (
                     <Button
@@ -50,7 +50,7 @@ const VedtakEllerOversendtKlageOppsummering = (props: {
     }
 
     return (
-        <div>
+        <div className={styles.pageContainer}>
             <OppsummeringAvVedtak vedtak={vedtak} />
             {!props.ikkeVisTilbakeKnapp && (
                 <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={() => navigate(-1)}>

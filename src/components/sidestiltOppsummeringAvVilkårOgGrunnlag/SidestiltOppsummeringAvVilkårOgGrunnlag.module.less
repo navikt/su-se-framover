@@ -1,8 +1,7 @@
 @import '~/src/styles/variables.less';
-
 .accordionOverskrift {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(312px, 1fr));
     padding: @spacing-xs @spacing-xs;
 }
 
@@ -22,12 +21,19 @@
 
 .accordionContent {
     display: grid;
-    grid-template-columns: repeat(auto-fill, max(350px, 47%));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: @spacing;
 
     > :first-child {
         padding-right: @spacing;
         border-right: 1px solid @navBorder;
+    }
+}
+
+@media screen and (max-width: 722px) {
+    .accordionContent > :first-child {
+        padding: 0;
+        border-right: 0;
     }
 }
 

@@ -56,9 +56,7 @@ const Saksoversikt = () => {
                         <>
                             <Personlinje søker={søker} sakInfo={{ sakId: sak.id, saksnummer: sak.saksnummer }} />
                             <div className={styles.container}>
-                                <div className={styles.mainContent}>
-                                    <Outlet context={{ sak, søker }} />
-                                </div>
+                                <Outlet context={{ sak, søker }} />
                             </div>
                         </>
                     )
