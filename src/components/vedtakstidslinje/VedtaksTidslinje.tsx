@@ -30,7 +30,7 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
     });
 
     return (
-        <div>
+        <div className={styles.vedtakstidslinjeContainer}>
             <HelseFrontend.Tidslinje
                 onSelectPeriode={(periode: HelseFrontend.Periode) => {
                     setVedtakIdPåKlikketPeriode(
