@@ -54,7 +54,7 @@
         "@navikt/helse-frontend-tidslinje": "^6.1.8",
         "@radix-ui/react-tabs": "^1.0.1",
         "@reduxjs/toolkit": "^1.8.6",
-        "@sentry/browser": "^7.17.3",
+        "@sentry/browser": "^7.17.4",
         "@sentry/cli": "^2.8.1",
         "@types/jest": "^27.5.0",
         "@types/react-collapse": "^5.0.1",
