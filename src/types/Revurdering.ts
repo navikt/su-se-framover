@@ -13,7 +13,6 @@ export interface Revurdering<T extends RevurderingStatus = RevurderingStatus> ex
     saksbehandler: string;
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
-    forhåndsvarsel: Nullable<Forhåndsvarsel>;
 }
 
 /**
@@ -129,29 +128,6 @@ export interface AvsluttetRevurdering extends InformasjonsRevurdering<Informasjo
     avsluttetTidspunkt: string;
 }
 
-export enum Forhåndsvarseltype {
-    IngenForhåndsvarsel = 'INGEN_FORHÅNDSVARSEL',
-    SkalVarslesSendt = 'SKAL_FORHÅNDSVARSLES_SENDT',
-    SkalVarslesBesluttet = 'SKAL_FORHÅNDSVARSLES_BESLUTTET',
-}
-
-export enum BeslutningEtterForhåndsvarsling {
-    FortsettSammeOpplysninger = 'FORTSETT_MED_SAMME_OPPLYSNINGER',
-    FortsettMedAndreOpplysninger = 'FORTSETT_MED_ANDRE_OPPLYSNINGER',
-}
-
-interface ForhåndsvarselBase<T extends Forhåndsvarseltype = Forhåndsvarseltype> {
-    type: T;
-}
-export type Ingen = ForhåndsvarselBase<Forhåndsvarseltype.IngenForhåndsvarsel>;
-export type Sendt = ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesSendt>;
-export interface Besluttet extends ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesBesluttet> {
-    begrunnelse: string;
-    beslutningEtterForhåndsvarsling: BeslutningEtterForhåndsvarsling;
-}
-
-export type Forhåndsvarsel = Ingen | Sendt | Besluttet;
-
 export type RevurderingStatus = InformasjonsRevurderingStatus | UtbetalingsRevurderingStatus;
 
 export enum InformasjonsRevurderingStatus {
@@ -243,14 +219,6 @@ export enum TilbakekrevingsAvgjørelse {
     IKKE_AVGJORT = 'IKKE_AVGJORT',
     TILBAKEKREV = 'TILBAKEKREV',
     IKKE_TILBAKEKREV = 'IKKE_TILBAKEKREV',
-}
-
-export interface ResultatEtterForhåndsvarselRequest {
-    sakId: string;
-    revurderingId: string;
-    valg: BeslutningEtterForhåndsvarsling;
-    begrunnelse: string;
-    fritekstTilBrev: Nullable<string>;
 }
 
 export interface OpprettRevurderingRequest {

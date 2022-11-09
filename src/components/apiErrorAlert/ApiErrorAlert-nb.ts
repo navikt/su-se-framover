@@ -67,8 +67,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FRADRAG_MANGLER_PERIODE]: 'Fradrag mangler periode',
     [ApiErrorCode.FRADRAG_UGYLDIG_FRADRAGSTYPE]: 'Ugyldig fradragstype',
     [ApiErrorCode.FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE]: 'Fradragsperioden er utenfor bosituasjonsperioden',
-    [ApiErrorCode.FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL]:
-        'Fritekst har blitt fyllt ut, men revurderingen er ikke forhåndsvarslet',
     [ApiErrorCode.FRITEKST_FOR_STATSBORGERSKAP_ER_IKKE_UTFYLT]: 'Fyll ut hvilke land søker har statsborgerskap i',
     [ApiErrorCode.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'G-regulering kan ikke føre til opphør',
     [ApiErrorCode.GENERERER_BREV_FRA_UGYLDIG_TILSTAND]: 'Klagen er i en tilstand der generering av brev ikke støttes',
@@ -80,7 +78,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING]: 'Hele behandlingsperioden må ha vurderinger',
     [ApiErrorCode.VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING]:
         'Vedtak mangler i en eller flere måneder av valgt revurderingsperiode.',
-    [ApiErrorCode.IKKE_FORHÅNDSVARSLET]: 'Kan ikke beslutte forhåndsvarsel. Revurderingen er ikke forhåndsvarslet',
     [ApiErrorCode.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
     [ApiErrorCode.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS]:
         'Ikke lov med formue for EPS hvis søker ikke har EPS',
@@ -146,7 +143,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET]:
         'Kryssjekk av utbetalingstidslinje og simulering feilet.',
     [ApiErrorCode.MANGLER_BEGRUNNELSE]: 'Mangler begrunnelse',
-    [ApiErrorCode.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL]: 'Mangler beslutning på forhåndsvarsel',
     [ApiErrorCode.MANGLER_BREVVALG]: 'Vennligst velg om det skal sendes brev eller ikke',
     [ApiErrorCode.MANGLER_ID]: 'Parameter for id mangler',
     [ApiErrorCode.MANGLER_IDTYPE]: 'Parameter for idType mangler',

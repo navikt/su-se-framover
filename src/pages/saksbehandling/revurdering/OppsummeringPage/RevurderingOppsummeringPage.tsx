@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { ErrorMessage } from '~src/api/apiClient';
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as pdfApi from '~src/api/pdfApi';
-import { BeregnOgSimuler, Forhåndsvarselhandling } from '~src/api/revurderingApi';
+import { BeregnOgSimuler } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
@@ -20,7 +20,6 @@ import { useApiCall, useAsyncActionCreator, useAsyncActionCreatorWithArgsTransfo
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
-import { VelgForhåndsvarselForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
 import {
     getOppsummeringsformState,
     hentBrevsending,
@@ -48,7 +47,6 @@ import {
 import { VisDokumenter } from '../../dokumenter/DokumenterPage';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
-import ResultatEtterForhåndsvarselform from './forhåndsvarsel/ResultatEtterForhåndsvarsel';
 import { SendTilAttesteringForm } from './oppsummeringPageForms/OppsummeringPageForms';
 import messages from './revurderingOppsummeringPage-nb';
 import * as styles from './revurderingOppsummeringPage.module.less';
@@ -56,7 +54,6 @@ import * as styles from './revurderingOppsummeringPage.module.less';
 const OppsummeringshandlingForm = (props: {
     sakId: string;
     forrigeUrl: string;
-    førsteRevurderingstegUrl: string;
     revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering;
     feilmeldinger: ErrorMessage[];
     varselmeldinger: ErrorMessage[];
@@ -124,21 +121,6 @@ const OppsummeringshandlingForm = (props: {
                     sakId={props.sakId}
                 />
             )}
-            {oppsummeringsformState === OppsummeringState.FORHÅNDSVARSLING && ( //TODO eliminer
-                <VelgForhåndsvarselForm
-                    sakId={props.sakId}
-                    revurdering={props.revurdering}
-                    tilbake={{ url: props.forrigeUrl, visModal: false }}
-                />
-            )}
-            {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && ( //TODO eliminer
-                <ResultatEtterForhåndsvarselform
-                    sakId={props.sakId}
-                    revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
-                    førsteRevurderingstegUrl={props.førsteRevurderingstegUrl}
-                />
-            )}
         </div>
     );
 };
@@ -164,7 +146,6 @@ const VisOgLagDokumenterRevurdering = (props: { sakId: string; revurderingId: st
         (args: { fritekst: string }) => ({
             sakId: props.sakId,
             revurderingId: props.revurderingId,
-            forhåndsvarselhandling: Forhåndsvarselhandling.Forhåndsvarsle,
             fritekstTilBrev: args.fritekst,
         }),
         () => {
@@ -313,7 +294,6 @@ const RevurderingOppsummeringPage = (props: {
                         <OppsummeringshandlingForm
                             sakId={props.sakId}
                             forrigeUrl={props.forrigeUrl}
-                            førsteRevurderingstegUrl={props.førsteRevurderingstegUrl}
                             revurdering={props.revurdering}
                             feilmeldinger={beregning.feilmeldinger}
                             varselmeldinger={beregning.varselmeldinger}

@@ -19,10 +19,8 @@ export const avsluttRevurderingSchema = (erRevurderingForhåndsvarslet: boolean)
             .nullable()
             .defined()
             .test('Fritekst må fylles ut', 'Fritekst for brev må fylles ut', function (value) {
-                if (erRevurderingForhåndsvarslet) {
-                    if (this.parent.brevvalgForForhåndsvarsel === Brevvalg.SKAL_SENDE_BREV_MED_FRITEKST) {
-                        return value !== null;
-                    }
+                if (this.parent.brevvalgForForhåndsvarsel === Brevvalg.SKAL_SENDE_BREV_MED_FRITEKST) {
+                    return value !== null;
                 }
                 return true;
             }),

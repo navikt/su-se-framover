@@ -13,7 +13,6 @@ import {
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
     OpprettRevurderingRequest,
-    ResultatEtterForhåndsvarselRequest,
     Revurdering,
     RevurderingTilAttestering,
     SimulertRevurdering,
@@ -166,22 +165,15 @@ export async function beregnOgSimuler(
     });
 }
 
-export enum Forhåndsvarselhandling {
-    IngenForhåndsvarsel = 'INGEN_FORHÅNDSVARSEL',
-    Forhåndsvarsle = 'FORHÅNDSVARSLE',
-}
-
 export async function lagreForhåndsvarsel(
     sakId: string,
     revurderingId: string,
-    forhåndsvarselhandling: Forhåndsvarselhandling,
     fritekstTilBrev: string
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsel`,
         method: 'POST',
         body: {
-            forhåndsvarselhandling,
             fritekst: fritekstTilBrev,
         },
     });
@@ -237,20 +229,6 @@ export async function iverksett(sakId: string, revurderingId: string): Promise<A
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/iverksett`,
         method: 'POST',
-    });
-}
-
-export async function fortsettEtterForhåndsvarsel(
-    args: ResultatEtterForhåndsvarselRequest
-): Promise<ApiClientResult<SimulertRevurdering | RevurderingTilAttestering>> {
-    return apiClient({
-        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/fortsettEtterForhåndsvarsel`,
-        method: 'POST',
-        body: {
-            begrunnelse: args.begrunnelse,
-            valg: args.valg,
-            fritekstTilBrev: args.fritekstTilBrev,
-        },
     });
 }
 

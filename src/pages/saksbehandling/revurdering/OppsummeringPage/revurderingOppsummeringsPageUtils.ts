@@ -1,47 +1,33 @@
 import { BeregnetIngenEndring, Revurdering, SimulertRevurdering, UnderkjentRevurdering } from '~src/types/Revurdering';
 import {
-    erForhåndsvarslingBesluttet,
+    erBeregnetIngenEndring,
     erGregulering,
-    erIngenForhåndsvarsel,
-    erRevurderingForhåndsvarslet,
     erRevurderingTilbakekrevingIkkeAvgjort,
     erRevurderingTilbakekrevingsbehandling,
-    erRevurderingUnderkjent,
-    skalAttesteres,
 } from '~src/utils/revurdering/revurderingUtils';
 
 export const hentBrevsending = (revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering) => {
-    if (
-        erForhåndsvarslingBesluttet(revurdering) ||
-        erIngenForhåndsvarsel(revurdering) ||
-        erRevurderingUnderkjent(revurdering)
-    ) {
-        return 'alltidSende';
-    } else if (erGregulering(revurdering.årsak)) {
+    if (erGregulering(revurdering.årsak)) {
         return 'aldriSende';
-    } else {
+    } else if (erBeregnetIngenEndring(revurdering)) {
         return 'kanVelge';
+    } else {
+        return 'alltidSende';
     }
 };
 
 export enum OppsummeringState {
     ATTESTERING = 'ATTESTERING',
     TILBAKEKREVING = 'TILBAKEKREVING',
-    FORHÅNDSVARSLING = 'FORHÅNDSVARSLING',
-    ER_FORHÅNDSVARSLET = 'ER_FORHÅNDSVARSLET',
 }
 
 export const getOppsummeringsformState = (revurdering: Revurdering): OppsummeringState => {
     const visTilbakekrevingForm =
         (erRevurderingTilbakekrevingsbehandling(revurdering) && erRevurderingTilbakekrevingIkkeAvgjort(revurdering)) ||
-        (erRevurderingTilbakekrevingsbehandling(revurdering) &&
-            revurdering.tilbakekrevingsbehandling !== null &&
-            revurdering.forhåndsvarsel === null);
+        (erRevurderingTilbakekrevingsbehandling(revurdering) && revurdering.tilbakekrevingsbehandling !== null);
 
     if (visTilbakekrevingForm) return OppsummeringState.TILBAKEKREVING;
-    if (skalAttesteres(revurdering)) return OppsummeringState.ATTESTERING;
-    if (!erRevurderingForhåndsvarslet(revurdering)) return OppsummeringState.FORHÅNDSVARSLING;
-    return OppsummeringState.ER_FORHÅNDSVARSLET;
+    return OppsummeringState.ATTESTERING;
 };
 
 export const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
