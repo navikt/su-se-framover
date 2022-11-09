@@ -136,6 +136,11 @@ const Sakintro = () => {
                             {formatMessage('link.utenlandsopphold')}
                         </LinkAsButton>
                     )}
+                    {true && (
+                        <LinkAsButton variant="secondary" href={Routes.brevPage.createURL({ sakId: props.sak.id })}>
+                            {formatMessage('link.brev')}
+                        </LinkAsButton>
+                    )}
                 </div>
             </div>
 

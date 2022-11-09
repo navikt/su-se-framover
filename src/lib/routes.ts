@@ -302,3 +302,9 @@ export const utenlandsopphold: Route<{ sakId: string }> = {
     absPath: '/saksoversikt/:sakId/utenlandsopphold',
     createURL: (args) => `/saksoversikt/${args.sakId}/utenlandsopphold/`,
 };
+
+export const brevPage: Route<{ sakId: string }> = {
+    path: 'brev/',
+    absPath: '/saksoversikt/:sakId/brev',
+    createURL: (args) => `/saksoversikt/${args.sakId}/brev/`,
+};

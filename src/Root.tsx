@@ -6,6 +6,7 @@ import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-
 import { FeatureToggleProvider } from '~src/lib/featureToggles';
 import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 
+import BrevPage from './components/brevPage/BrevPage';
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import WithDocTitle from './components/WithDocTitle';
 import * as routes from './lib/routes';
@@ -119,6 +120,7 @@ const AppRoutes = () => (
             <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
             <Route path={routes.manuellRegulering.path} element={<ManuellReguleringPage />} />
             <Route path={routes.utenlandsopphold.path} element={<Utenlandsopphold />} />
+            <Route path={routes.brevPage.path} element={<BrevPage />} />
         </Route>
         <Route
             path={routes.saksoversiktIndex.path}

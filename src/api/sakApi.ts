@@ -1,3 +1,4 @@
+import { Dokument, OpprettDokumentBody } from '~src/types/dokument/Dokument';
 import {
     OppdaterRegistrertUtenlandsoppholdRequest,
     RegistrerteUtenlandsopphold,
@@ -102,5 +103,29 @@ export async function hentSkattemelding({ fnr }: { fnr: string }): Promise<ApiCl
     return apiClient({
         url: `/skatt/${fnr}`,
         method: 'GET',
+    });
+}
+
+export async function lagreOgSendFritekstDokument(arg: OpprettDokumentBody): Promise<ApiClientResult<Dokument>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/fritekstDokument/lagreOgSend`,
+        method: 'POST',
+        body: {
+            tittel: arg.tittel,
+            fritekst: arg.fritekst,
+        },
+    });
+}
+
+export async function opprettFritekstDokument(arg: OpprettDokumentBody): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/fritekstDokument`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        body: {
+            tittel: arg.tittel,
+            fritekst: arg.fritekst,
+        },
+        bodyTransformer: (res) => res.blob(),
     });
 }

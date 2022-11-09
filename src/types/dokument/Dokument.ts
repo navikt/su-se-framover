@@ -14,3 +14,9 @@ export enum DokumentIdType {
     Revurdering = 'REVURDERING',
     Klage = 'KLAGE',
 }
+
+export interface OpprettDokumentBody {
+    sakId: string;
+    tittel: string;
+    fritekst: string;
+}
