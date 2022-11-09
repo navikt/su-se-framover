@@ -1,14 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button } from '@navikt/ds-react';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorMessage } from '~src/api/apiClient';
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
-import { BeregnOgSimuler } from '~src/api/revurderingApi';
+import * as pdfApi from '~src/api/pdfApi';
+import { BeregnOgSimuler, Forhåndsvarselhandling } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
+import { BrevInput } from '~src/components/brevInput/BrevInput';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
@@ -16,6 +19,7 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
 import { VelgForhåndsvarselForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/forhåndsvarsel/ForhåndsvarselForm';
 import {
     getOppsummeringsformState,
@@ -23,6 +27,7 @@ import {
     OppsummeringState,
 } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { TilbakekrevingForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { DokumentIdType } from '~src/types/dokument/Dokument';
 import {
     BeregnetIngenEndring,
     InformasjonsRevurdering,
@@ -40,6 +45,7 @@ import {
     periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~src/utils/revurdering/revurderingUtils';
 
+import { VisDokumenter } from '../../dokumenter/DokumenterPage';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import ResultatEtterForhåndsvarselform from './forhåndsvarsel/ResultatEtterForhåndsvarsel';
@@ -100,6 +106,7 @@ const OppsummeringshandlingForm = (props: {
                     <UtfallSomIkkeStøttes feilmeldinger={props.feilmeldinger} />
                 </div>
             )}
+            <VisOgLagDokumenterRevurdering revurderingId={props.revurdering.id} sakId={props.sakId} />
             {oppsummeringsformState === OppsummeringState.ATTESTERING && (
                 <SendTilAttesteringForm
                     sakid={props.sakId}
@@ -117,14 +124,14 @@ const OppsummeringshandlingForm = (props: {
                     sakId={props.sakId}
                 />
             )}
-            {oppsummeringsformState === OppsummeringState.FORHÅNDSVARSLING && (
+            {oppsummeringsformState === OppsummeringState.FORHÅNDSVARSLING && ( //TODO eliminer
                 <VelgForhåndsvarselForm
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     tilbake={{ url: props.forrigeUrl, visModal: false }}
                 />
             )}
-            {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && (
+            {oppsummeringsformState === OppsummeringState.ER_FORHÅNDSVARSLET && ( //TODO eliminer
                 <ResultatEtterForhåndsvarselform
                     sakId={props.sakId}
                     revurdering={props.revurdering}
@@ -133,6 +140,98 @@ const OppsummeringshandlingForm = (props: {
                 />
             )}
         </div>
+    );
+};
+
+export type NyttDokumentRevurderingFormData = {
+    lagNy: boolean;
+    fritekst: Nullable<string>;
+};
+
+const VisOgLagDokumenterRevurdering = (props: { sakId: string; revurderingId: string }) => {
+    const { formatMessage } = useI18n({ messages: { ...messages } }); //TODO legg til tekster
+
+    const navigate = useNavigate();
+
+    const form = useForm<NyttDokumentRevurderingFormData>({
+        defaultValues: {
+            lagNy: false, //TODO default tekster opphør + tilbakekreving kanskje bare la saksbehandler velge fra dropdown ellerno for å redusere knytning mot revurdering?
+        }, //TODO noe validering?
+    });
+
+    const [lagreForhåndsvarselState, lagreForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
+        RevurderingActions.lagreForhåndsvarsel,
+        (args: { fritekst: string }) => ({
+            sakId: props.sakId,
+            revurderingId: props.revurderingId,
+            forhåndsvarselhandling: Forhåndsvarselhandling.Forhåndsvarsle,
+            fritekstTilBrev: args.fritekst,
+        }),
+        () => {
+            Routes.navigateToSakIntroWithMessage(navigate, 'sendt forhåndsvarsel', props.sakId);
+            return;
+        }
+    );
+
+    formatMessage('beregner.label'); //fjern
+
+    const skalLageNy = form.watch('lagNy');
+    const isLoading = RemoteData.isPending(lagreForhåndsvarselState);
+
+    //TODO styling
+    return (
+        <>
+            <div>
+                <VisDokumenter id={props.revurderingId} idType={DokumentIdType.Revurdering} />
+                <Button
+                    variant="secondary"
+                    onClick={() => {
+                        form.setValue('lagNy', !form.getValues('lagNy'));
+                    }}
+                    type="button"
+                >
+                    {skalLageNy ? 'angre' : 'lag nytt forhåndsvarsel'}
+                </Button>
+                {skalLageNy && (
+                    <Controller
+                        control={form.control}
+                        name="fritekst"
+                        render={({ field, fieldState }) => (
+                            <BrevInput
+                                knappLabel={'forhåndsvis'}
+                                placeholder={'placeholder'}
+                                tittel={'tittel'}
+                                onVisBrevClick={() =>
+                                    pdfApi.fetchBrevutkastForForhåndsvarsel(
+                                        props.sakId,
+                                        props.revurderingId,
+                                        field.value ?? ''
+                                    )
+                                }
+                                tekst={field.value ?? ''}
+                                onChange={field.onChange}
+                                feil={fieldState.error}
+                            />
+                        )}
+                    />
+                )}
+                {
+                    skalLageNy && (
+                        <Button
+                            variant="secondary"
+                            onClick={() => {
+                                form.setValue('lagNy', !form.getValues('lagNy'));
+                                lagreForhåndsvarsel({ fritekst: form.getValues('fritekst') ?? '' });
+                            }}
+                            type="button"
+                            loading={isLoading}
+                        >
+                            {'send forhåndsvarsel og avslutt til saksoversikt'}
+                        </Button>
+                    ) //TODO tilby knapp for bare lagring + refresh av dokumentoversikt?
+                }
+            </div>
+        </>
     );
 };
 
