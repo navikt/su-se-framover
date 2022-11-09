@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox } from '@navikt/ds-react';
+import { Alert, Checkbox } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -90,6 +90,9 @@ export const SendTilAttesteringForm = (props: {
             )}
             className={styles.form}
         >
+            {erRevurderingTilbakekreving(props.revurdering) && (
+                <Alert variant={'warning'}>{formatMessage('tilbakereving.alert.brutto.netto')}</Alert>
+            )}
             {props.brevsending === 'kanVelge' && (
                 <Controller
                     control={form.control}

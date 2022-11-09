@@ -5,7 +5,7 @@ export default {
     'loader.henterBrev': 'Henter brev...',
 
     'feil.ukjent': 'Ukjent feil',
-    'feil.ingenBrev': 'Fant ingen brev sendt fra SU på denne saken',
+    'feil.ingenBrev': 'Fant ingen brev',
 
     'knapp.tilbake': 'Tilbake',
 };

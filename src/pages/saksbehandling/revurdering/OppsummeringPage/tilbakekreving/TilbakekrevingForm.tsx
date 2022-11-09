@@ -70,6 +70,7 @@ export const TilbakekrevingForm = (props: {
                     <InformationFilled color="#368DA8" width="24px" height="24px" />
                     <BodyLong>{formatMessage('undertittel')}</BodyLong>
                 </div>
+
                 <Controller
                     control={form.control}
                     name="avgjørelse"

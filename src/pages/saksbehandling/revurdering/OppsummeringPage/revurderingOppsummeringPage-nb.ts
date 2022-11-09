@@ -5,6 +5,14 @@ export default {
 
     'feil.revurderingIUgyldigTilstand': 'Kan ikke vise oppsummering. Revurderingen er ikke ferdig.',
 
+    'accordion.forhåndsvarsling': 'Forhåndsvarsling',
+    'forhåndsvarsel.sendt': 'Forhåndsvarsel sendt',
+    'forhåndsvarsel.sendte': 'Sendte forhåndsvarsel',
+    'forhåndsvarsel.ny': 'Ny forhåndsvarsel',
+    'forhåndsvarsel.angre': 'Angre',
+    'forhåndsvarsel.sendOgAvslutt': 'Send og fortsett til saksoversikt',
+    'forhåndsvarsel.fritekst.input': 'Fritekst',
+
     'notification.sendtTilAttestering': 'Revurderingen er sendt til attestering',
     'notification.avsluttetRevurdering': 'Revurderingen har blitt avsluttet',
     'tilbakekreving.alert':

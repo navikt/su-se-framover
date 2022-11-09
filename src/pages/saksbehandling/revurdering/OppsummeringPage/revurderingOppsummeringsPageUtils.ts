@@ -23,9 +23,7 @@ export enum OppsummeringState {
 
 export const getOppsummeringsformState = (revurdering: Revurdering): OppsummeringState => {
     const visTilbakekrevingForm =
-        (erRevurderingTilbakekrevingsbehandling(revurdering) && erRevurderingTilbakekrevingIkkeAvgjort(revurdering)) ||
-        (erRevurderingTilbakekrevingsbehandling(revurdering) && revurdering.tilbakekrevingsbehandling !== null);
-
+        erRevurderingTilbakekrevingsbehandling(revurdering) && erRevurderingTilbakekrevingIkkeAvgjort(revurdering);
     if (visTilbakekrevingForm) return OppsummeringState.TILBAKEKREVING;
     return OppsummeringState.ATTESTERING;
 };

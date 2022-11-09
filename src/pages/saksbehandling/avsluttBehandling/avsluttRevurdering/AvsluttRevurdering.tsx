@@ -28,13 +28,11 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
 
     const [avsluttRevurderingStatus, avsluttRevurderingAction] = useAsyncActionCreator(avsluttRevurdering);
 
-    const [status, hent] = useApiCall(hentDokumenter);
+    const [, hent] = useApiCall(hentDokumenter);
 
     React.useEffect(() => {
         hent({ id: props.revurdering.id, idType: DokumentIdType.Revurdering });
     }, []);
-
-    console.log(status); //TODO fix
 
     const erForhåndsvarslet = hent.length > 0;
 

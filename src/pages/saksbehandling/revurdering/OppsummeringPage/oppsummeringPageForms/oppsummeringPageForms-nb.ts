@@ -14,6 +14,9 @@ export default {
     'sendTilAttestering.skalFøreTilBrev': 'Send vedtaksbrev til bruker',
     'notification.sendtTilAttestering': 'Revurderingen er sendt til attestering',
 
+    'tilbakereving.alert.brutto.netto':
+        'Forhåndsvisningen av brev viser brutto tilbakekreving. Brevet oppdateres med netto tilbakekreving før det sendes til bruker.',
+
     'tilbakekreving.forhåndstekst':
         'Beløpet du skylder før skatt er _____ kroner, som er hele det feilutbetalte beløpet. Beløpet du skal betale tilbake etter at skatten er trukket fra er _____ kroner.\n' +
         '\n' +

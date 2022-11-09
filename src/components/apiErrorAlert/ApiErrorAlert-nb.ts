@@ -4,7 +4,6 @@ import { ApiErrorCode } from './apiErrorCode';
  * Prøv å legg ting inn i alfabetisk rekkefølge
  */
 const messages: { [key in ApiErrorCode]: string } = {
-    [ApiErrorCode.ALLEREDE_FORHÅNDSVARSLET]: 'Revurderingen er allerede blitt forhåndsvarslet',
     [ApiErrorCode.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]: 'Kan ikke attestere egen saksbehandling',
     [ApiErrorCode.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',
     [ApiErrorCode.AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG]:
