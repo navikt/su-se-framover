@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Control, Controller, useForm, UseFormWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,13 +28,15 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
 
     const [avsluttRevurderingStatus, avsluttRevurderingAction] = useAsyncActionCreator(avsluttRevurdering);
 
-    const [, hent] = useApiCall(hentDokumenter);
+    const [hentStatus, hent] = useApiCall(hentDokumenter);
 
     React.useEffect(() => {
         hent({ id: props.revurdering.id, idType: DokumentIdType.Revurdering });
     }, []);
 
-    const erForhåndsvarslet = hent.length > 0;
+    const erForhåndsvarslet = useMemo(() => {
+        return RemoteData.isSuccess(hentStatus) && hentStatus.value.length > 0;
+    }, [hentStatus]);
 
     const { control, watch, handleSubmit } = useForm<AvsluttRevurderingFormData>({
         defaultValues: { fritekst: null, begrunnelse: null },

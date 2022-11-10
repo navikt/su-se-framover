@@ -31,8 +31,7 @@ export const avsluttRevurderingSchema = (erRevurderingForhåndsvarslet: boolean)
                     return value !== null;
                 }
                 return true;
-            })
-            .nullable()
-            .defined(),
+            }),
+
         begrunnelse: yup.string().required().typeError('Feltet må fylles ut'),
     });
