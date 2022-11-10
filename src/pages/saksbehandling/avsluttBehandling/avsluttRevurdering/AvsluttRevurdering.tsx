@@ -47,7 +47,8 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 begrunnelse: data.begrunnelse!,
-                fritekst: null,
+                fritekst:
+                    data.brevvalgForForhåndsvarsel === Brevvalg.SKAL_SENDE_BREV_MED_FRITEKST ? data.fritekst : null,
                 brevvalg: data.brevvalgForForhåndsvarsel,
             },
             () => {
