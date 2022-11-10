@@ -5,6 +5,7 @@ export enum FeatureToggle {
     Alder = 'supstonad.alder.soknad',
     Skattemelding = 'supstonad.skattemelding',
     Utenlandsopphold = 'supstonad.utenlandsopphold',
+    FritekstBrevPåSak = 'supstonad.sak.brev',
 }
 
 export type FeatureToggles = {

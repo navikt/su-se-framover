@@ -94,6 +94,7 @@ const Sakintro = () => {
     const alleÅpneBehandlinger = [...åpneRevurderinger, ...åpneReguleringer, ...åpneSøknader, ...åpneKlager];
 
     const utenlandsoppholdToggle = useFeatureToggle(FeatureToggle.Utenlandsopphold);
+    const FritekstBrevPåSakToggle = useFeatureToggle(FeatureToggle.FritekstBrevPåSak);
 
     return (
         <div className={styles.sakintroContainer}>
@@ -136,7 +137,7 @@ const Sakintro = () => {
                             {formatMessage('link.utenlandsopphold')}
                         </LinkAsButton>
                     )}
-                    {true && (
+                    {FritekstBrevPåSakToggle && (
                         <LinkAsButton variant="secondary" href={Routes.brevPage.createURL({ sakId: props.sak.id })}>
                             {formatMessage('link.brev')}
                         </LinkAsButton>
