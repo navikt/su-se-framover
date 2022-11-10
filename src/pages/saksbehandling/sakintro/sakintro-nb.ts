@@ -20,6 +20,7 @@ export default {
     'link.dokumenter': 'Brev sendt fra SU',
     'link.kontrollsamtale': 'Kontrollsamtale',
     'link.utenlandsopphold': 'Utenlandsopphold',
+    'link.brev': 'Opprett nytt fritekstbrev',
 
     'utbetalinger.heading': 'Stønadsperioder',
 
