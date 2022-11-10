@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { WarningColored } from '@navikt/ds-icons';
-import { Accordion, Alert, BodyShort, Button, Heading } from '@navikt/ds-react';
+import { Accordion, Alert, Button, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -109,13 +108,12 @@ const OppsummeringshandlingForm = (props: {
 
             {oppsummeringsformState === OppsummeringState.ATTESTERING && (
                 <div className={styles.forhåndsvarselOgAttesteringContainer}>
-                    <Accordion>
+                    <Accordion className={styles.accordion}>
                         <Accordion.Item>
                             <Accordion.Header className={styles.accordionHeader}>
-                                <BodyShort>{formatMessage('accordion.forhåndsvarsling')}</BodyShort>
-                                <div className={styles.accordionHeaderContent}>
-                                    <WarningColored width={'1.2em'} height={'1.2em'} />
-                                </div>
+                                <Heading level="3" size="medium">
+                                    {formatMessage('accordion.forhåndsvarsling')}
+                                </Heading>
                             </Accordion.Header>
                             <Accordion.Content>
                                 <VisOgLagDokumenterRevurdering
@@ -183,7 +181,7 @@ const VisOgLagDokumenterRevurdering = (props: { sakId: string; revurderingId: st
     return (
         <form onSubmit={form.handleSubmit(handleSubmit)}>
             <div className={styles.visDokumenterContainer}>
-                <Heading level="5" size={'medium'}>
+                <Heading level="5" size={'small'}>
                     {formatMessage('forhåndsvarsel.sendte')}
                 </Heading>
                 <VisDokumenter id={props.revurderingId} idType={DokumentIdType.Revurdering} />
@@ -214,7 +212,7 @@ const VisOgLagDokumenterRevurdering = (props: { sakId: string; revurderingId: st
                             />
                         )}
                     />
-                    <div className={styles.forhådsnvarselKnapperContainer}>
+                    <div className={styles.forhåndsvarselKnapperContainer}>
                         <Button variant="secondary" onClick={() => setVilOppretteNyForhåndsvarsel(false)} type="button">
                             {formatMessage('forhåndsvarsel.angre')}
                         </Button>
@@ -222,6 +220,9 @@ const VisOgLagDokumenterRevurdering = (props: { sakId: string; revurderingId: st
                             {formatMessage('forhåndsvarsel.sendOgAvslutt')}
                         </Button>
                     </div>
+                    {RemoteData.isFailure(lagreForhåndsvarselState) && (
+                        <ApiErrorAlert error={lagreForhåndsvarselState.error} />
+                    )}
                 </>
             )}
         </form>

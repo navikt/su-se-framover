@@ -8,7 +8,7 @@ export default {
     'accordion.forhåndsvarsling': 'Forhåndsvarsling',
     'forhåndsvarsel.sendt': 'Forhåndsvarsel sendt',
     'forhåndsvarsel.sendte': 'Sendte forhåndsvarsel',
-    'forhåndsvarsel.ny': 'Ny forhåndsvarsel',
+    'forhåndsvarsel.ny': 'Opprett nytt forhåndsvarsel',
     'forhåndsvarsel.angre': 'Angre',
     'forhåndsvarsel.sendOgAvslutt': 'Send og fortsett til saksoversikt',
     'forhåndsvarsel.fritekst.input': 'Fritekst',

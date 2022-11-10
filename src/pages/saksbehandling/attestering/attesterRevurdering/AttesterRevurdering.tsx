@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
+import { Accordion, Alert, Button, Heading, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -18,6 +18,7 @@ import * as Routes from '~src/lib/routes';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { DokumentIdType } from '~src/types/dokument/Dokument';
 import {
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
@@ -33,6 +34,7 @@ import {
     periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~src/utils/revurdering/revurderingUtils';
 
+import { VisDokumenter } from '../../dokumenter/DokumenterPage';
 import * as SharedStyles from '../sharedStyles.module.less';
 
 import messages from './attesterRevurdering-nb';
@@ -118,7 +120,7 @@ const AttesterRevurdering = () => {
             () => <Loader />,
             (err) => <ApiErrorAlert error={err} />,
             (gjeldendeData) => (
-                <div>
+                <div className={styles.attesteringContainer}>
                     <Heading level="1" size="large" className={SharedStyles.tittel}>
                         {formatMessage('page.tittel')}
                     </Heading>
@@ -128,7 +130,19 @@ const AttesterRevurdering = () => {
                             grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     </div>
-                    {warnings.length === 0 &&
+                    <Accordion className={styles.accordion}>
+                        <Accordion.Item>
+                            <Accordion.Header className={styles.accordionHeader}>
+                                <Heading level="3" size="medium">
+                                    {formatMessage('accordion.forhåndsvarsling')}
+                                </Heading>
+                            </Accordion.Header>
+                            <Accordion.Content>
+                                <VisDokumenter id={revurdering.id} idType={DokumentIdType.Revurdering} />
+                            </Accordion.Content>
+                        </Accordion.Item>
+                    </Accordion>
+                    {warnings.length > 0 &&
                         warnings.map((w) => (
                             <div key={w} className={styles.opphørsadvarsel}>
                                 <Alert variant="warning">{formatMessage(w)}</Alert>
