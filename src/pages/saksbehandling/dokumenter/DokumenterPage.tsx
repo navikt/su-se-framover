@@ -38,83 +38,15 @@ const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typ
 
 const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
-    const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
     const navigate = useNavigate();
-
     const { formatMessage } = useI18n({ messages });
-
-    React.useEffect(() => {
-        fetchDokumenter({
-            id: props.sak.id,
-            idType: DokumentIdType.Sak,
-        });
-    }, [props.sak.id]);
-
-    const handleDokumentClick = (dokument: Dokument) => {
-        window.open(URL.createObjectURL(getBlob(dokument)));
-    };
 
     return (
         <div className={styles.outerContainer}>
             <div className={styles.container}>
                 <Header saksnummer={props.sak.saksnummer} formatMessage={formatMessage} />
                 <div className={styles.contentContainer}>
-                    {pipe(
-                        dokumenterState,
-                        RemoteData.fold3(
-                            () => (
-                                <div className={styles.loaderContainer}>
-                                    <Loader size="large" title={formatMessage('loader.henterBrev')} />
-                                </div>
-                            ),
-                            (err) => (
-                                <Alert variant="error">{err?.body?.message ?? formatMessage('feil.ukjent')}</Alert>
-                            ),
-                            (dokumenter) =>
-                                dokumenter.length === 0 ? (
-                                    <Alert variant="info">{formatMessage('feil.ingenBrev')}</Alert>
-                                ) : (
-                                    <ol className={styles.dokumentliste}>
-                                        {dokumenter.map((d) => (
-                                            <li key={d.id}>
-                                                <LinkPanel
-                                                    href="#"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        handleDokumentClick(d);
-                                                    }}
-                                                    border
-                                                >
-                                                    <div className={styles.dokument}>
-                                                        <FileContent className={styles.dokumentikon} />
-                                                        <div>
-                                                            <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
-                                                            <LinkPanel.Description
-                                                                className={styles.linkPanelBeskrivelse}
-                                                            >
-                                                                {DateUtils.formatDateTime(d.opprettet)}
-                                                                <Tag
-                                                                    variant={d.journalført ? 'success' : 'error'}
-                                                                    size="small"
-                                                                >
-                                                                    {d.journalført ? 'Journalført' : 'Ikke journalført'}
-                                                                </Tag>
-                                                                <Tag
-                                                                    variant={d.brevErBestilt ? 'success' : 'error'}
-                                                                    size="small"
-                                                                >
-                                                                    {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
-                                                                </Tag>
-                                                            </LinkPanel.Description>
-                                                        </div>
-                                                    </div>
-                                                </LinkPanel>
-                                            </li>
-                                        ))}
-                                    </ol>
-                                )
-                        )
-                    )}
+                    <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
                     <Button
                         className={styles.tilbakeknapp}
                         variant="secondary"
@@ -126,6 +58,77 @@ const DokumenterPage = () => {
                 </div>
             </div>
         </div>
+    );
+};
+
+export const VisDokumenter = (props: { id: string; idType: DokumentIdType }) => {
+    const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
+
+    const { formatMessage } = useI18n({ messages });
+
+    React.useEffect(() => {
+        fetchDokumenter({
+            id: props.id,
+            idType: props.idType,
+        });
+    }, [props.id]);
+
+    const handleDokumentClick = (dokument: Dokument) => {
+        window.open(URL.createObjectURL(getBlob(dokument)));
+    };
+
+    return (
+        <>
+            {pipe(
+                dokumenterState,
+                RemoteData.fold3(
+                    () => (
+                        <div className={styles.loaderContainer}>
+                            <Loader size="large" title={formatMessage('loader.henterBrev')} />
+                        </div>
+                    ),
+                    (err) => <Alert variant="error">{err?.body?.message ?? formatMessage('feil.ukjent')}</Alert>,
+                    (dokumenter) =>
+                        dokumenter.length === 0 ? (
+                            <Alert variant="info">{formatMessage('feil.ingenBrev')}</Alert>
+                        ) : (
+                            <ol className={styles.dokumentliste}>
+                                {dokumenter.map((d) => (
+                                    <li key={d.id}>
+                                        <LinkPanel
+                                            href="#"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleDokumentClick(d);
+                                            }}
+                                            border
+                                        >
+                                            <div className={styles.dokument}>
+                                                <FileContent className={styles.dokumentikon} />
+                                                <div>
+                                                    <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
+                                                    <LinkPanel.Description className={styles.linkPanelBeskrivelse}>
+                                                        {DateUtils.formatDateTime(d.opprettet)}
+                                                        <Tag variant={d.journalført ? 'success' : 'error'} size="small">
+                                                            {d.journalført ? 'Journalført' : 'Ikke journalført'}
+                                                        </Tag>
+                                                        <Tag
+                                                            variant={d.brevErBestilt ? 'success' : 'error'}
+                                                            size="small"
+                                                        >
+                                                            {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
+                                                        </Tag>
+                                                    </LinkPanel.Description>
+                                                </div>
+                                            </div>
+                                        </LinkPanel>
+                                    </li>
+                                ))}
+                            </ol>
+                        )
+                )
+            )}
+        </>
     );
 };
 

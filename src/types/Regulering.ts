@@ -37,7 +37,6 @@ export interface ReguleringOversiktsstatus {
 }
 
 export enum ReguleringMerknad {
-    VenterPåSvarFraForhåndsvarsel = 'VenterPåSvarFraForhåndsvarsel',
     Fosterhjemsgodtgjørelse = 'Fosterhjemsgodtgjørelse',
 }
 

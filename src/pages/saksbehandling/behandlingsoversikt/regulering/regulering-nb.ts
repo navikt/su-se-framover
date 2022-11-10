@@ -2,7 +2,6 @@ import { ReguleringMerknad } from '~src/types/Regulering';
 
 const merknadstekst = {
     [ReguleringMerknad.Fosterhjemsgodtgjørelse]: 'Har fosterhjemsgodtgjørelse',
-    [ReguleringMerknad.VenterPåSvarFraForhåndsvarsel]: 'Sendt ut forhåndsvarsel',
 };
 
 export default {

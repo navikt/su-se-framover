@@ -7,7 +7,6 @@ import {
     AvsluttetStans,
     BeregnetIngenEndring,
     BeregnetInnvilget,
-    Forhåndsvarseltype,
     Gjenopptak,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
@@ -64,20 +63,6 @@ export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering 
     r.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT ||
     r.status === UtbetalingsRevurderingStatus.SIMULERT_STANS ||
     r.status === UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK;
-
-export const erRevurderingForhåndsvarslet = (r: Revurdering) =>
-    erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r) || erIngenForhåndsvarsel(r);
-
-export const erForhåndsvarselSendtEllerBesluttet = (r: Revurdering) =>
-    erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r);
-
-export const erForhåndsvarselSendt = (r: Revurdering) => r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesSendt;
-
-export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
-    r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
-
-export const erIngenForhåndsvarsel = (r: Revurdering) =>
-    r.forhåndsvarsel?.type === Forhåndsvarseltype.IngenForhåndsvarsel;
 
 export const erRevurderingIngenEndring = (
     r: Revurdering
@@ -139,11 +124,7 @@ export const erRevurderingÅpen = (r: Revurdering) =>
     erRevurderingUnderkjent(r);
 
 export const skalAttesteres = (r: Revurdering): boolean =>
-    erGregulering(r.årsak) ||
-    erBeregnetIngenEndring(r) ||
-    erRevurderingUnderkjent(r) ||
-    erForhåndsvarslingBesluttet(r) ||
-    erIngenForhåndsvarsel(r);
+    erGregulering(r.årsak) || erBeregnetIngenEndring(r) || erRevurderingUnderkjent(r);
 
 export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: Beregning } {
     return 'beregning' in r;

@@ -3,6 +3,8 @@ export default {
     'feil.ikkeTilAttestering': 'Revurderingen er ikke til attestering.',
     'feil.klarteIkkeHenteBrev': 'Klarte ikke hente brevet.',
 
+    'accordion.forhåndsvarsling': 'Forhåndsvarsel',
+
     'info.opphør': 'Denne revurderingen fører til opphør for bruker',
     'info.opphør.og.avkorting':
         'Denne revurderingen fører til opphør og avkorting. Avkorting skjer automatisk når bruker får ny stønadsperiode.',

@@ -5,15 +5,16 @@ import React from 'react';
 import { Control, Controller, useForm, UseFormWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { hentDokumenter } from '~src/api/dokumentApi';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import { avsluttRevurdering } from '~src/features/revurdering/revurderingActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Revurdering } from '~src/types/Revurdering';
-import { erForhåndsvarselSendtEllerBesluttet } from '~src/utils/revurdering/revurderingUtils';
 
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
@@ -27,9 +28,17 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
 
     const [avsluttRevurderingStatus, avsluttRevurderingAction] = useAsyncActionCreator(avsluttRevurdering);
 
+    const [, hent] = useApiCall(hentDokumenter);
+
+    React.useEffect(() => {
+        hent({ id: props.revurdering.id, idType: DokumentIdType.Revurdering });
+    }, []);
+
+    const erForhåndsvarslet = hent.length > 0;
+
     const { control, watch, handleSubmit } = useForm<AvsluttRevurderingFormData>({
-        defaultValues: { fritekst: null, begrunnelse: null, brevvalgForForhåndsvarsel: null },
-        resolver: yupResolver(avsluttRevurderingSchema(erForhåndsvarselSendtEllerBesluttet(props.revurdering))),
+        defaultValues: { fritekst: null, begrunnelse: null },
+        resolver: yupResolver(avsluttRevurderingSchema(erForhåndsvarslet)),
     });
 
     const avsluttRevurderingSubmitHandler = (data: AvsluttRevurderingFormData) => {
@@ -38,8 +47,7 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 begrunnelse: data.begrunnelse!,
-                fritekst:
-                    data.brevvalgForForhåndsvarsel === Brevvalg.SKAL_SENDE_BREV_MED_FRITEKST ? data.fritekst : null,
+                fritekst: null,
                 brevvalg: data.brevvalgForForhåndsvarsel,
             },
             () => {
@@ -51,7 +59,7 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
 
     return (
         <form onSubmit={handleSubmit(avsluttRevurderingSubmitHandler)}>
-            {erForhåndsvarselSendtEllerBesluttet(props.revurdering) && (
+            {erForhåndsvarslet && (
                 <ForhåndsvarsletRevurderingForm
                     sakId={props.sakId}
                     revurderingId={props.revurdering.id}
