@@ -99,7 +99,6 @@ const SendTilAttesteringPage = () => {
         return (
             <form className={styles.vedtakContainer} onSubmit={form.handleSubmit(handleSubmit)}>
                 <OppsummeringAvSøknadsbehandling behandling={behandling} />
-
                 <div className={styles.fritekstareaOuterContainer}>
                     <div className={styles.fritekstareaContainer}>
                         <Controller
@@ -143,6 +142,7 @@ const SendTilAttesteringPage = () => {
                         {RemoteData.isPending(sendTilAttesteringStatus) && <Loader />}
                     </Button>
                 </div>
+
                 {RemoteData.isFailure(sendTilAttesteringStatus) && (
                     <ApiErrorAlert error={sendTilAttesteringStatus.error} />
                 )}
