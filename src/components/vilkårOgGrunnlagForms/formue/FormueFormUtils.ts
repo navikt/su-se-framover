@@ -231,9 +231,7 @@ const getInitialVerdierFraGrunnlagEllerSøknad = (
     verdiIkkePrimærbolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
     verdiEiendommer: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
     verdiKjøretøy: verdier?.verdiKjøretøy?.toString() ?? (søknadsFormue?.kjøretøy?.length ? '' : 0).toString(),
-    innskudd: (
-        verdier?.innskudd ?? (søknadsFormue?.innskuddsBeløp ?? 0) + (søknadsFormue?.depositumsBeløp ?? 0)
-    ).toString(),
+    innskudd: (verdier?.innskudd ?? søknadsFormue?.innskuddsBeløp ?? 0).toString(),
     verdipapir: (verdier?.verdipapir ?? søknadsFormue?.verdipapirBeløp ?? 0).toString(),
     pengerSkyldt: (verdier?.pengerSkyldt ?? søknadsFormue?.skylderNoenMegPengerBeløp ?? 0).toString(),
     kontanter: (verdier?.kontanter ?? søknadsFormue?.kontanterBeløp ?? 0).toString(),
