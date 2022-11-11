@@ -128,7 +128,7 @@ const AttesterKlage = () => {
         );
 
     return (
-        <div>
+        <div className={styles.pageContainer}>
             <Heading level="1" size="large" className={sharedStyles.tittel}>
                 {formatMessage('page.tittel')}
             </Heading>
