@@ -284,7 +284,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         <BooleanRadioGroup
                             legend={
                                 form.watch('harDepositumskonto')
-                                    ? formatMessage('innskudd.pengerPåKontoEkskludertDepositum')
+                                    ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
                                     : formatMessage('innskudd.label')
                             }
                             error={fieldState.error?.message}

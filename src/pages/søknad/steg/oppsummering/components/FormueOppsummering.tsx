@@ -99,7 +99,7 @@ export const FormueOppsummering = ({
             <Oppsummeringsfelt
                 label={
                     formue.harDepositumskonto
-                        ? formatMessage('innskudd.pengerPåKontoEkskludertDepositum')
+                        ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
                         : formatMessage('innskudd.label')
                 }
                 verdi={formue.harInnskuddPåKonto ? 'Ja' : formue.harInnskuddPåKonto === false ? 'Nei' : 'Ubesvart'}
