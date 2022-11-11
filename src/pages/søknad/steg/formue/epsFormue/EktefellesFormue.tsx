@@ -276,7 +276,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             {...field}
                             legend={
                                 form.watch('harDepositumskonto')
-                                    ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
+                                    ? formatMessage('innskudd.pengerPåKontoEkskludertDepositum')
                                     : formatMessage('innskudd.label')
                             }
                             error={fieldState.error?.message}

@@ -19,7 +19,7 @@ export default {
     'kjøretøy.label': 'Eier ektefelle/samboer bil, campingvogn eller andre kjøretøy?',
 
     'innskudd.label': 'Har ektefelle/samboer penger på konto?',
-    'innskudd.pengerPåKontoInkludertDepositum': 'Har ektefelle/samboer penger på konto (inkludert depositumskonto)?',
+    'innskudd.pengerPåKontoEkskludertDepositum': 'Har ektefelle/samboer penger på konto (ekskludert depositumskonto)?',
     'innskudd.beløp': 'Hvor mye penger er det på konto?',
 
     'verdipapir.label': 'Har ektefelle/samboer aksjer, aksjefond eller verdipapir?',

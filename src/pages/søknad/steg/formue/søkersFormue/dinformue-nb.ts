@@ -19,7 +19,7 @@ export default {
     'kjøretøy.label': 'Eier du bil, campingvogn eller andre kjøretøy?',
 
     'innskudd.label': 'Har du penger på konto?',
-    'innskudd.pengerPåKontoInkludertDepositum': 'Har du penger på konto (inkludert depositumskonto)?',
+    'innskudd.pengerPåKontoEkskludertDepositum': 'Har du penger på konto (ekskludert depositumskonto)?',
     'innskudd.beløp': 'Hvor mye penger er det på konto?',
 
     'verdipapir.label': 'Har du aksjer, aksjefond eller verdipapir?',
