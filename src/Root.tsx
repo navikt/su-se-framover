@@ -113,6 +113,7 @@ const AppRoutes = () => (
             <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
             <Route path={routes.revurderValgtSak.path} element={<RevurderingIntroPage />} />
             <Route path={routes.revurderValgtRevurdering.path} element={<Revurdering />} />
+            <Route path={routes.revurderingSeksjonSteg.path} element={<Revurdering />} />
             <Route path={routes.vedtaksoppsummering.path} element={<VedtakEllerOversendtKlageOppsummering />} />
             <Route path={routes.saksbehandlingSendTilAttestering.path} element={<SendTilAttesteringPage />} />
             <Route path={routes.saksbehandlingVilkårsvurdering.path} element={<Vilkår />} />

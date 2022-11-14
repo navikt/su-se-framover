@@ -3,6 +3,7 @@ import { NavigateFunction, useParams } from 'react-router-dom';
 import * as Routes from '~src/lib/routes';
 import { KlageSteg, RevurderingSteg, SaksbehandlingMenyvalg } from '~src/pages/saksbehandling/types';
 import { Søknadssteg } from '~src/pages/søknad/types';
+import { RevurderingSeksjoner, RevurderingSeksjonSteg } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
@@ -162,6 +163,18 @@ export const revurderValgtRevurdering: Route<{ sakId: string; steg: RevurderingS
     path: `revurdering/:revurderingId/:steg/`,
     absPath: `/saksoversikt/:sakId/revurdering/:revurderingId/:steg/`,
     createURL: ({ sakId, steg, revurderingId }) => `/saksoversikt/${sakId}/revurdering/${revurderingId}/${steg}`,
+};
+
+export const revurderingSeksjonSteg: Route<{
+    sakId: string;
+    revurderingId: string;
+    seksjon: RevurderingSeksjoner;
+    steg: RevurderingSeksjonSteg;
+}> = {
+    path: `revurdering/:revurderingId/:seksjon/:steg/`,
+    absPath: `/saksoversikt/:sakId/revurdering/:revurderingId/:seksjon/:steg/`,
+    createURL: ({ sakId, revurderingId, seksjon, steg }) =>
+        `/saksoversikt/${sakId}/revurdering/${revurderingId}/${seksjon}/${steg}`,
 };
 
 //---------------Dokumenter-------------------------

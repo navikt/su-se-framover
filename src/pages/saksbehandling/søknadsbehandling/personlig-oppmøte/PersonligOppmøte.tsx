@@ -101,10 +101,9 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                     <PersonligOppmøteForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
-                        onFormSubmit={save}
+                        onFormSubmit={(values) => save(values, onSuccess)}
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
-                        onSuccess={onSuccess}
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
                         {...props}

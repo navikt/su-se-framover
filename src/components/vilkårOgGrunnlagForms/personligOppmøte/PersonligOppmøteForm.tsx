@@ -8,7 +8,6 @@ import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
@@ -22,7 +21,6 @@ import {
 interface Props extends VilkårFormProps<PersonligOppmøteVilkårFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
-    onSuccess?: (res: Søknadsbehandling) => void;
     children?: React.ReactNode;
 }
 
@@ -92,9 +90,11 @@ const PersonligOppmøteForm = (props: Props) => {
                     {...props}
                 />
                 {props.children}
-                {RemoteData.isSuccess(props.savingState) && 'feilmeldinger' in props.savingState.value && (
-                    <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />
-                )}
+                {RemoteData.isSuccess(props.savingState) &&
+                    'feilmeldinger' in props.savingState.value &&
+                    props.savingState.value.feilmeldinger.length > 0 && (
+                        <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />
+                    )}
             </>
         </FormWrapper>
     );

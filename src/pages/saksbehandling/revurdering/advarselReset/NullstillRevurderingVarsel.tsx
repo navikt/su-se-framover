@@ -7,7 +7,7 @@ import { useI18n } from '~src/lib/i18n';
 import messages from './nullstillRevurderingVarsel-nb';
 import styles from './nullstillRevurderingVarsel.module.less';
 
-const NullstillRevurderingVarsel = (props: { isOpen: boolean; onClose: () => void; tilbakeUrl: string }) => {
+const NullstillRevurderingVarsel = (props: { isOpen: boolean; onClose: () => void; førsteStegUrl: string }) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });
     return (
         <Modal open={props.isOpen} onClose={props.onClose}>
@@ -23,7 +23,7 @@ const NullstillRevurderingVarsel = (props: { isOpen: boolean; onClose: () => voi
                     <Button variant="tertiary" type="button" onClick={props.onClose}>
                         {formatMessage('knapp.avbryt')}
                     </Button>
-                    <LinkAsButton variant="danger" href={props.tilbakeUrl}>
+                    <LinkAsButton variant="danger" href={props.førsteStegUrl}>
                         {formatMessage('knapp.gåTilbake')}
                     </LinkAsButton>
                 </div>

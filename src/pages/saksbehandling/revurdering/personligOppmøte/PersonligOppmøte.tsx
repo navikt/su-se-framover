@@ -32,7 +32,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
         ),
     });
 
-    const lagrePersonligOppmøte = (values: PersonligOppmøteVilkårFormData, onSuccess: () => void) =>
+    const lagrePersonligOppmøte = (values: PersonligOppmøteVilkårFormData, onSuccess?: () => void) =>
         lagre(
             {
                 ...personligOppmøteFormDataTilRequest({
@@ -44,7 +44,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
             },
             (res) => {
                 if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                    onSuccess?.();
                 }
             }
         );
@@ -61,7 +61,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                     <PersonligOppmøteForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={lagrePersonligOppmøte}
+                        onFormSubmit={(values) => lagrePersonligOppmøte(values, props.onSuccessOverride)}
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}
