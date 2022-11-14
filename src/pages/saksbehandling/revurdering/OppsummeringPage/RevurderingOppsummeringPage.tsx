@@ -241,10 +241,10 @@ const RevurderingOppsummeringPage = (props: {
 
     const beregningStatus = harBeregninger(props.revurdering)
         ? RemoteData.success<never, BeregnOgSimuler>({
-            revurdering: props.revurdering as SimulertRevurdering,
-            feilmeldinger: [],
-            varselmeldinger: [],
-        })
+              revurdering: props.revurdering as SimulertRevurdering,
+              feilmeldinger: [],
+              varselmeldinger: [],
+          })
         : beregnOgSimulerStatus;
 
     React.useEffect(() => {
@@ -299,8 +299,8 @@ const RevurderingOppsummeringPage = (props: {
                             ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
 
                         {erRevurderingSimulert(props.revurdering) ||
-                            erBeregnetIngenEndring(props.revurdering) ||
-                            erRevurderingUnderkjent(props.revurdering) ? (
+                        erBeregnetIngenEndring(props.revurdering) ||
+                        erRevurderingUnderkjent(props.revurdering) ? (
                             <OppsummeringshandlingForm
                                 sakId={props.sakId}
                                 forrigeUrl={props.forrigeUrl}

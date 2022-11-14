@@ -1,17 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Checkbox } from '@navikt/ds-react';
+import { Alert } from '@navikt/ds-react';
 import * as React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
-import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '~src/components/brevInput/BrevInput';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import yup from '~src/lib/validering';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
-import { InformasjonsRevurdering, Valg } from '~src/types/Revurdering';
+import { InformasjonsRevurdering } from '~src/types/Revurdering';
 import {
     erRevurderingOpphørPgaManglendeDokumentasjon,
     erRevurderingTilbakekreving,
@@ -22,19 +20,6 @@ import { BrevvalgForm } from '../brevvalg/BrevvalgForm';
 
 import messages from './oppsummeringPageForms-nb';
 import * as styles from './oppsummeringPageForms.module.less';
-
-type brevutsendingstype = 'aldriSende' | 'alltidSende' | 'kanVelge';
-
-const getBrevutsending = (brevutsending: brevutsendingstype, value: boolean) => {
-    switch (brevutsending) {
-        case 'aldriSende':
-            return false;
-        case 'alltidSende':
-            return true;
-        case 'kanVelge':
-            return value;
-    }
-};
 
 export const SendTilAttesteringForm = (props: {
     sakid: string;
@@ -55,10 +40,10 @@ export const SendTilAttesteringForm = (props: {
             vedtaksbrevtekst: harFritekst
                 ? props.revurdering.fritekstTilBrev
                 : tilbakekreving
-                    ? formatMessage('tilbakekreving.forhåndstekst')
-                    : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
-                        ? formatMessage('opplysningsplikt.forhåndstekst')
-                        : ''
+                ? formatMessage('tilbakekreving.forhåndstekst')
+                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                ? formatMessage('opplysningsplikt.forhåndstekst')
+                : '',
         },
         resolver: yupResolver(
             yup.object<FormData>({
@@ -85,16 +70,7 @@ export const SendTilAttesteringForm = (props: {
             )}
             className={styles.form}
         >
-            {erRevurderingTilbakekreving(props.revurdering) && (
-                <Alert variant={'warning'}>{formatMessage('tilbakereving.alert.brutto.netto')}</Alert>
-            )}
-            {true && (
-                <BrevvalgForm
-                    sakId={props.sakid}
-                    revurdering={props.revurdering}
-                    forrigeUrl={props.forrigeUrl}
-                />
-            )}
+            {true && <BrevvalgForm sakId={props.sakid} revurdering={props.revurdering} forrigeUrl={props.forrigeUrl} />}
 
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
             <Navigasjonsknapper

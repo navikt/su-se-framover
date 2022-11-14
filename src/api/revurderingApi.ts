@@ -185,7 +185,7 @@ export async function lagreBrevvalg(
     revurderingId: string,
     valg: Valg,
     fritekst: Nullable<string>,
-    begrunnelse: Nullable<string>,
+    begrunnelse: Nullable<string>
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/brevvalg`,
@@ -193,7 +193,7 @@ export async function lagreBrevvalg(
         body: {
             valg: valg,
             fritekst: fritekst,
-            begrunnelse: begrunnelse
+            begrunnelse: begrunnelse,
         },
     });
 }

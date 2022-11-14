@@ -157,13 +157,16 @@ export const lagreBrevvalg = createAsyncThunk<
         begrunnelse: Nullable<string>;
     },
     { rejectValue: ApiError }
->('revurdering/brevvalg', async ({ sakId, revurderingId, valg: valg, fritekst: fritekst, begrunnelse: begrunnelse }, thunkApi) => {
-    const res = await revurderingApi.lagreBrevvalg(sakId, revurderingId, valg, fritekst, begrunnelse);
-    if (res.status === 'ok') {
-        return res.data;
+>(
+    'revurdering/brevvalg',
+    async ({ sakId, revurderingId, valg: valg, fritekst: fritekst, begrunnelse: begrunnelse }, thunkApi) => {
+        const res = await revurderingApi.lagreBrevvalg(sakId, revurderingId, valg, fritekst, begrunnelse);
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
 
 export const lagreTilbakekrevingsbehandling = createAsyncThunk<
     SimulertRevurdering,

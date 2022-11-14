@@ -1,23 +1,26 @@
-import { Button, Checkbox, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert, Checkbox, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { BrevInput } from '~src/components/brevInput/BrevInput';
-import { ApiResult, useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
-import { useI18n } from '~src/lib/i18n';
 
-import { Nullable } from '~src/lib/types';
-import { InformasjonsRevurdering, SimulertRevurdering, Valg } from '~src/types/Revurdering';
-import oppsummeringPageFormsMessages from '../oppsummeringPageForms/oppsummeringPageForms-nb';
-import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import * as pdfApi from '~src/api/pdfApi';
-import * as RemoteData from '@devexperts/remote-data-ts';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { BrevInput } from '~src/components/brevInput/BrevInput';
+import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
+import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
+import { InformasjonsRevurdering, SimulertRevurdering, Valg } from '~src/types/Revurdering';
+import {
+    erRevurderingOpphørPgaManglendeDokumentasjon,
+    erRevurderingTilbakekreving,
+} from '~src/utils/revurdering/revurderingUtils';
+
+import oppsummeringPageFormsMessages from '../oppsummeringPageForms/oppsummeringPageForms-nb';
 
 import messages from './brevvalgForm-nb';
 import * as styles from './brevvalgForm.module.less';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { erRevurderingOpphørPgaManglendeDokumentasjon, erRevurderingTilbakekreving } from '~src/utils/revurdering/revurderingUtils';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 
 export type BrevvalgFormData = {
     valg: Valg;
@@ -26,56 +29,49 @@ export type BrevvalgFormData = {
     begrunnelse: Nullable<string>;
 };
 
-export const BrevvalgForm = (props: {
-    sakId: string;
-    revurdering: InformasjonsRevurdering;
-    forrigeUrl: string;
-}) => {
+export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRevurdering; forrigeUrl: string }) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...oppsummeringPageFormsMessages } });
 
-    const [lagreBrevvalgState, lagreBrevvalg] = useAsyncActionCreatorWithArgsTransformer(
-        RevurderingActions.lagreBrevvalg,
-        (args: {
-            valg: Valg;
-            fritekst: Nullable<string>;
-            begrunnelse: Nullable<string>;
-        }) => ({
+    const [lagreBrevvalgState, lagreBrevvalg] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
+
+    const handleSubmit = async () => {
+        await lagreBrevvalg({
             sakId: props.sakId,
             revurderingId: props.revurdering.id,
-            valg: args.valg,
-            fritekst: args.fritekst,
-            begrunnelse: args.begrunnelse,
-        }),
-    );
-
-    const handleSubmit = () => {
-        lagreBrevvalg(
-            {
-                valg: form.getValues('valg'),
-                fritekst: form.getValues('fritekst'),
-                begrunnelse: form.getValues('begrunnelse'),
-            },
-        );
+            valg: form.getValues('valg'),
+            fritekst: form.getValues('fritekst'),
+            begrunnelse: form.getValues('begrunnelse'),
+        });
     };
 
     const form = useForm<BrevvalgFormData>({
         defaultValues: {
             valg: props.revurdering.brevvalg.valg,
-            fritekst: props.revurdering.brevvalg.fritekst ? props.revurdering.brevvalg.fritekst : erRevurderingTilbakekreving(props.revurdering) ? formatMessage('tilbakekreving.forhåndstekst') : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering) ? formatMessage('opplysningsplikt.forhåndstekst') : null,
-            begrunnValg: props.revurdering.brevvalg.begrunnelse && props.revurdering.brevvalg.begrunnelse.length > 0 ? true : false,
+            fritekst: props.revurdering.brevvalg.fritekst
+                ? props.revurdering.brevvalg.fritekst
+                : erRevurderingTilbakekreving(props.revurdering)
+                ? formatMessage('tilbakekreving.forhåndstekst')
+                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                ? formatMessage('opplysningsplikt.forhåndstekst')
+                : null,
+            begrunnValg:
+                props.revurdering.brevvalg.begrunnelse && props.revurdering.brevvalg.begrunnelse.length > 0
+                    ? true
+                    : false,
             begrunnelse: props.revurdering.brevvalg.begrunnelse,
         },
     });
 
-    const valg = form.watch('valg')
-    const begrunnValg = form.watch('begrunnValg')
+    const valg = form.watch('valg');
+    const begrunnValg = form.watch('begrunnValg');
 
-    const isLoading = RemoteData.isPending(lagreBrevvalgState)
+    const isLoading = RemoteData.isPending(lagreBrevvalgState);
 
     return (
-        <div
-            className={styles.form}
-        >
+        <div className={styles.form}>
+            {erRevurderingTilbakekreving(props.revurdering) && (
+                <Alert variant={'warning'}>{formatMessage('tilbakereving.alert.brutto.netto')}</Alert>
+            )}
             <Controller
                 control={form.control}
                 name="valg"
@@ -95,9 +91,7 @@ export const BrevvalgForm = (props: {
                     </RadioGroup>
                 )}
             />
-            {valg === Valg.IKKE_SEND && (
-                form.setValue('fritekst', null)
-            )}
+            {valg === Valg.IKKE_SEND && form.setValue('fritekst', null)}
             {valg === Valg.SEND && (
                 <Controller
                     control={form.control}
@@ -107,13 +101,14 @@ export const BrevvalgForm = (props: {
                             knappLabel={formatMessage('knapp.seBrev')}
                             placeholder={formatMessage('brevInput.innhold.placeholder')}
                             tittel={formatMessage('brevtekst')}
-                            onVisBrevClick={() =>
-                                pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                            onVisBrevClick={async () => {
+                                await handleSubmit();
+                                return pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                     sakId: props.sakId,
                                     revurderingId: props.revurdering.id,
                                     fritekst: field.value,
-                                })
-                            }
+                                });
+                            }}
                             tekst={field.value}
                             onChange={field.onChange}
                             feil={fieldState.error}
@@ -121,8 +116,7 @@ export const BrevvalgForm = (props: {
                         />
                     )}
                 />
-            )
-            }
+            )}
             <Controller
                 control={form.control}
                 name={'begrunnValg'}
@@ -132,26 +126,28 @@ export const BrevvalgForm = (props: {
                         name={field.name}
                         checked={field.value}
                         onChange={() => {
-                            form.setValue('begrunnValg', !field.value)
-                            form.setValue('begrunnelse', null)
+                            form.setValue('begrunnValg', !field.value);
+                            form.setValue('begrunnelse', null);
                         }}
                     >
                         {formatMessage('begrunnelse.vil.begrunne')}
                     </Checkbox>
                 )}
             />
-            {begrunnValg && <Controller
-                control={form.control}
-                name={"begrunnelse"}
-                render={({ field, fieldState }) => (
-                    <Textarea
-                        {...field}
-                        label={formatMessage('begrunnelse')}
-                        value={field.value ?? ''}
-                        error={fieldState.error?.message}
-                    />
-                )}
-            />}
+            {begrunnValg && (
+                <Controller
+                    control={form.control}
+                    name={'begrunnelse'}
+                    render={({ field, fieldState }) => (
+                        <Textarea
+                            {...field}
+                            label={formatMessage('begrunnelse')}
+                            value={field.value ?? ''}
+                            error={fieldState.error?.message}
+                        />
+                    )}
+                />
+            )}
             {RemoteData.isFailure(lagreBrevvalgState) && <ApiErrorAlert error={lagreBrevvalgState.error} />}
 
             <Navigasjonsknapper
@@ -164,9 +160,8 @@ export const BrevvalgForm = (props: {
     );
 };
 
-function forhåndsvisningTillatt(
-    defaultValg: Valg,
-    lagreState: ApiResult<SimulertRevurdering>
-): boolean {
-    return defaultValg === Valg.SEND || RemoteData.isSuccess(lagreState) && lagreState.value.brevvalg.valg === Valg.SEND
+function forhåndsvisningTillatt(defaultValg: Valg, lagreState: ApiResult<SimulertRevurdering>): boolean {
+    return (
+        defaultValg === Valg.SEND || (RemoteData.isSuccess(lagreState) && lagreState.value.brevvalg.valg === Valg.SEND)
+    );
 }
