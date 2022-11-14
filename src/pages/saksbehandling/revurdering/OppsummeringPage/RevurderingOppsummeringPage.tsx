@@ -18,7 +18,7 @@ import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { pipe } from '~src/lib/fp';
-import { useApiCall, useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -48,7 +48,7 @@ import {
 import { VisDokumenter } from '../../dokumenter/DokumenterPage';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
-import { SendTilAttesteringForm } from './oppsummeringPageForms/OppsummeringPageForms';
+import { BrevvalgForm } from './brevvalg/BrevvalgForm';
 import messages from './revurderingOppsummeringPage-nb';
 import * as styles from './revurderingOppsummeringPage.module.less';
 
@@ -59,32 +59,8 @@ const OppsummeringshandlingForm = (props: {
     feilmeldinger: ErrorMessage[];
     varselmeldinger: ErrorMessage[];
 }) => {
-    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...messages, ...apiErrorMessages } });
     const feilRef = React.useRef<HTMLDivElement>(null);
-
-    const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
-        RevurderingActions.sendRevurderingTilAttestering,
-        (args: { vedtaksbrevtekst: string; skalFøreTilBrevutsending: boolean }) => {
-            if (props.feilmeldinger.length > 0) {
-                feilRef.current?.focus();
-                return;
-            }
-            return {
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                fritekstTilBrev: args.vedtaksbrevtekst,
-                skalFøreTilBrevutsending: args.skalFøreTilBrevutsending,
-            };
-        },
-        () => {
-            Routes.navigateToSakIntroWithMessage(
-                navigate,
-                formatMessage('notification.sendtTilAttestering'),
-                props.sakId
-            );
-        }
-    );
 
     const oppsummeringsformState = getOppsummeringsformState(props.revurdering);
 
@@ -122,14 +98,7 @@ const OppsummeringshandlingForm = (props: {
                             </Accordion.Content>
                         </Accordion.Item>
                     </Accordion>
-
-                    <SendTilAttesteringForm
-                        sakid={props.sakId}
-                        revurdering={props.revurdering}
-                        forrigeUrl={props.forrigeUrl}
-                        submitStatus={sendTilAttesteringState}
-                        onSubmit={sendTilAttestering}
-                    />
+                    <BrevvalgForm sakId={props.sakId} revurdering={props.revurdering} forrigeUrl={props.forrigeUrl} />
                 </div>
             )}
             {oppsummeringsformState === OppsummeringState.TILBAKEKREVING && (

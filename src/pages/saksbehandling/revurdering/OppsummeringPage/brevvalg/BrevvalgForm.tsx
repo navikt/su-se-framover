@@ -1,23 +1,27 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Checkbox, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
-import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
-import { InformasjonsRevurdering, SimulertRevurdering, Valg } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, Valg } from '~src/types/Revurdering';
 import {
     erRevurderingOpphørPgaManglendeDokumentasjon,
     erRevurderingTilbakekreving,
 } from '~src/utils/revurdering/revurderingUtils';
 
-import oppsummeringPageFormsMessages from '../oppsummeringPageForms/oppsummeringPageForms-nb';
+import { UNDERSCORE_REGEX } from '../revurderingOppsummeringsPageUtils';
 
 import messages from './brevvalgForm-nb';
 import * as styles from './brevvalgForm.module.less';
@@ -29,12 +33,33 @@ export type BrevvalgFormData = {
     begrunnelse: Nullable<string>;
 };
 
+const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
+    yup.object<BrevvalgFormData>({
+        valg: yup.string().oneOf(Object.values(Valg)).required(),
+        fritekst: yup
+            .string()
+            .defined()
+            .nullable()
+            .matches(
+                UNDERSCORE_REGEX,
+                erRevurderingOpphørPgaManglendeDokumentasjon(revurdering)
+                    ? 'Du må erstatte _____ med informasjon'
+                    : 'Du må erstatte _____ med tall'
+            ),
+        begrunnValg: yup.boolean(),
+        begrunnelse: yup.string().nullable().defined(),
+    });
+
 export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRevurdering; forrigeUrl: string }) => {
-    const { formatMessage } = useI18n({ messages: { ...messages, ...oppsummeringPageFormsMessages } });
+    const navigate = useNavigate();
+    const { formatMessage } = useI18n({ messages });
 
     const [lagreBrevvalgState, lagreBrevvalg] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
+    const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
+        RevurderingActions.sendRevurderingTilAttestering
+    );
 
-    const handleSubmit = async () => {
+    const lagreOgSeBrev = async () => {
         await lagreBrevvalg({
             sakId: props.sakId,
             revurderingId: props.revurdering.id,
@@ -42,6 +67,35 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
             fritekst: form.getValues('fritekst'),
             begrunnelse: form.getValues('begrunnelse'),
         });
+    };
+
+    const handleSubmit = (values: BrevvalgFormData) => {
+        lagreBrevvalg(
+            {
+                sakId: props.sakId,
+                revurderingId: props.revurdering.id,
+                valg: values.valg,
+                fritekst: values.fritekst,
+                begrunnelse: values.begrunnelse,
+            },
+            () => {
+                sendtilAttestering(
+                    {
+                        sakId: props.sakId,
+                        revurderingId: props.revurdering.id,
+                        fritekstTilBrev: 'TODO',
+                        skalFøreTilBrevutsending: true,
+                    },
+                    () => {
+                        Routes.navigateToSakIntroWithMessage(
+                            navigate,
+                            formatMessage('notification.sendtTilAttestering'),
+                            props.sakId
+                        );
+                    }
+                );
+            }
+        );
     };
 
     const form = useForm<BrevvalgFormData>({
@@ -60,6 +114,7 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
                     : false,
             begrunnelse: props.revurdering.brevvalg.begrunnelse,
         },
+        resolver: yupResolver(brevvalgSchema(props.revurdering)),
     });
 
     const valg = form.watch('valg');
@@ -68,7 +123,7 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
     const isLoading = RemoteData.isPending(lagreBrevvalgState);
 
     return (
-        <div className={styles.form}>
+        <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
             {erRevurderingTilbakekreving(props.revurdering) && (
                 <Alert variant={'warning'}>{formatMessage('tilbakereving.alert.brutto.netto')}</Alert>
             )}
@@ -102,7 +157,7 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
                             placeholder={formatMessage('brevInput.innhold.placeholder')}
                             tittel={formatMessage('brevtekst')}
                             onVisBrevClick={async () => {
-                                await handleSubmit();
+                                await lagreOgSeBrev();
                                 return pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                     sakId: props.sakId,
                                     revurderingId: props.revurdering.id,
@@ -112,7 +167,6 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
                             tekst={field.value}
                             onChange={field.onChange}
                             feil={fieldState.error}
-                            forhåndsvisningEnabled={forhåndsvisningTillatt(valg, lagreBrevvalgState)}
                         />
                     )}
                 />
@@ -149,19 +203,13 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
                 />
             )}
             {RemoteData.isFailure(lagreBrevvalgState) && <ApiErrorAlert error={lagreBrevvalgState.error} />}
+            {RemoteData.isFailure(sendTilAttesteringStatus) && <ApiErrorAlert error={sendTilAttesteringStatus.error} />}
 
             <Navigasjonsknapper
-                nesteKnappTekst={'Lagre brevvalg'}
-                onNesteClick={() => handleSubmit()}
+                nesteKnappTekst={'send til attestering'}
                 tilbake={{ url: props.forrigeUrl }}
                 loading={isLoading}
             />
-        </div>
+        </form>
     );
 };
-
-function forhåndsvisningTillatt(defaultValg: Valg, lagreState: ApiResult<SimulertRevurdering>): boolean {
-    return (
-        defaultValg === Valg.SEND || (RemoteData.isSuccess(lagreState) && lagreState.value.brevvalg.valg === Valg.SEND)
-    );
-}

@@ -1,4 +1,4 @@
-import { Calculator, List, FillForms, Task, FileError, Money } from '@navikt/ds-icons';
+import { Calculator, List, FillForms, Task, FileError, Money, Email } from '@navikt/ds-icons';
 import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -12,6 +12,7 @@ export enum Oppsummeringsikon {
     Task,
     FilError,
     Lommebok,
+    Email,
 }
 export enum Oppsummeringsfarge {
     Lilla,
@@ -49,11 +50,13 @@ const Ikon = (props: { className?: string; ikon: Oppsummeringsikon }) => {
         case Oppsummeringsikon.Blyant:
             return <FillForms {...iconProps} aria-label="Blyantikon" />;
         case Oppsummeringsikon.Task:
-            return <Task {...iconProps} aria-label="Oppgaveliste" />;
+            return <Task {...iconProps} aria-label="Oppgaveliste-ikon" />;
         case Oppsummeringsikon.FilError:
-            return <FileError {...iconProps} aria-label="Fil-error" />;
+            return <FileError {...iconProps} aria-label="Fil-error-ikon" />;
         case Oppsummeringsikon.Lommebok:
-            return <Money {...iconProps} aria-label="Lommebok" />;
+            return <Money {...iconProps} aria-label="Lommebok-ikon" />;
+        case Oppsummeringsikon.Email:
+            return <Email {...iconProps} aria-label="brev-ikon" />;
     }
 };
 

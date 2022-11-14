@@ -7,7 +7,12 @@ import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/Grunnl
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
+import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -23,9 +28,9 @@ import {
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
     TilbakekrevingsAvgjørelse,
+    Valg,
 } from '~src/types/Revurdering';
 import {
-    erGregulering,
     erInformasjonsRevurdering,
     erRevurderingTilAttestering,
     erRevurderingTilbakekrevingsbehandling,
@@ -130,35 +135,57 @@ const AttesterRevurdering = () => {
                             grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     </div>
-                    <Accordion className={styles.accordion}>
-                        <Accordion.Item>
-                            <Accordion.Header className={styles.accordionHeader}>
-                                <Heading level="3" size="medium">
-                                    {formatMessage('accordion.forhåndsvarsling')}
-                                </Heading>
-                            </Accordion.Header>
-                            <Accordion.Content>
-                                <VisDokumenter id={revurdering.id} idType={DokumentIdType.Revurdering} />
-                            </Accordion.Content>
-                        </Accordion.Item>
-                    </Accordion>
+
                     {warnings.length > 0 &&
                         warnings.map((w) => (
                             <div key={w} className={styles.opphørsadvarsel}>
                                 <Alert variant="warning">{formatMessage(w)}</Alert>
                             </div>
                         ))}
-                    {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
-                        <Button
-                            variant="secondary"
-                            className={styles.brevButton}
-                            type="button"
-                            onClick={handleShowBrevClick}
-                        >
-                            {formatMessage('knapp.brev')}
-                            {RemoteData.isPending(hentPdfStatus) && <Loader />}
-                        </Button>
-                    )}
+                    <Oppsummeringspanel
+                        ikon={Oppsummeringsikon.Email}
+                        farge={Oppsummeringsfarge.Limegrønn}
+                        tittel={formatMessage('oppsummeringspanel.forhåndsvarselOgVedtaksbrev')}
+                    >
+                        <div className={styles.brevvalgContainer}>
+                            <OppsummeringPar
+                                label={formatMessage('brevvalg.skalSendeBrev')}
+                                verdi={formatMessage(revurdering.brevvalg.valg)}
+                                sorteres={OppsummeringsParSortering.Vertikalt}
+                            />
+                            {revurdering.brevvalg.begrunnelse && (
+                                <OppsummeringPar
+                                    label={formatMessage('brevvalg.begrunnelse')}
+                                    verdi={revurdering.brevvalg.begrunnelse}
+                                    sorteres={OppsummeringsParSortering.Vertikalt}
+                                />
+                            )}
+                            {revurdering.brevvalg.valg === Valg.SEND && (
+                                <Button
+                                    variant="secondary"
+                                    className={styles.brevButton}
+                                    type="button"
+                                    onClick={handleShowBrevClick}
+                                >
+                                    {formatMessage('knapp.brev')}
+                                    {RemoteData.isPending(hentPdfStatus) && <Loader />}
+                                </Button>
+                            )}
+                        </div>
+                        <Accordion className={styles.accordion}>
+                            <Accordion.Item>
+                                <Accordion.Header className={styles.accordionHeader}>
+                                    <Heading level="3" size="medium">
+                                        {formatMessage('accordion.forhåndsvarsling')}
+                                    </Heading>
+                                </Accordion.Header>
+                                <Accordion.Content>
+                                    <VisDokumenter id={revurdering.id} idType={DokumentIdType.Revurdering} />
+                                </Accordion.Content>
+                            </Accordion.Item>
+                        </Accordion>
+                    </Oppsummeringspanel>
+
                     {RemoteData.isFailure(hentPdfStatus) && (
                         <Alert variant="error" className={styles.brevFeil}>
                             {formatMessage('feil.klarteIkkeHenteBrev')}
