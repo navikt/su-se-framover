@@ -26,9 +26,9 @@ export interface UtbetalingsRevurdering<T extends UtbetalingsRevurderingStatus =
 
 export interface StansAvYtelse<
     T extends UtbetalingsRevurderingStatus =
-        | UtbetalingsRevurderingStatus.SIMULERT_STANS
-        | UtbetalingsRevurderingStatus.IVERKSATT_STANS
-        | UtbetalingsRevurderingStatus.AVSLUTTET_STANS
+    | UtbetalingsRevurderingStatus.SIMULERT_STANS
+    | UtbetalingsRevurderingStatus.IVERKSATT_STANS
+    | UtbetalingsRevurderingStatus.AVSLUTTET_STANS
 > extends UtbetalingsRevurdering<UtbetalingsRevurderingStatus> {
     status: T;
     simulering: Simulering;
@@ -40,9 +40,9 @@ export interface AvsluttetStans extends StansAvYtelse<UtbetalingsRevurderingStat
 
 export interface Gjenopptak<
     T extends UtbetalingsRevurderingStatus =
-        | UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK
-        | UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK
-        | UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK
+    | UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK
+    | UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK
+    | UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK
 > extends UtbetalingsRevurdering<UtbetalingsRevurderingStatus> {
     status: T;
     simulering: Simulering;
@@ -61,6 +61,7 @@ export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus
     status: T;
     fritekstTilBrev: string;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
+    brevvalg: BrevvalgRevurdering
 }
 
 export type OpprettetRevurdering = InformasjonsRevurdering<InformasjonsRevurderingStatus.OPPRETTET>;
@@ -234,4 +235,15 @@ export interface OpprettRevurderingRequest {
 
 export interface OppdaterRevurderingRequest extends OpprettRevurderingRequest {
     revurderingId: string;
+}
+
+export interface BrevvalgRevurdering {
+    valg: Valg;
+    fritekst: Nullable<string>;
+    begrunnelse: Nullable<string>;
+}
+export enum Valg {
+    SEND = 'SEND',
+    IKKE_SEND = 'IKKE_SEND',
+    IKKE_VALGT = "IKKE_VALGT",
 }

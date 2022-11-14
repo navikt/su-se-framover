@@ -18,6 +18,7 @@ import {
     SimulertRevurdering,
     StansAvYtelse,
     UnderkjentRevurdering,
+    Valg,
 } from '~src/types/Revurdering';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
@@ -175,6 +176,24 @@ export async function lagreForhåndsvarsel(
         method: 'POST',
         body: {
             fritekst: fritekstTilBrev,
+        },
+    });
+}
+
+export async function lagreBrevvalg(
+    sakId: string,
+    revurderingId: string,
+    valg: Valg,
+    fritekst: Nullable<string>,
+    begrunnelse: Nullable<string>,
+): Promise<ApiClientResult<SimulertRevurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/brevvalg`,
+        method: 'POST',
+        body: {
+            valg: valg,
+            fritekst: fritekst,
+            begrunnelse: begrunnelse
         },
     });
 }

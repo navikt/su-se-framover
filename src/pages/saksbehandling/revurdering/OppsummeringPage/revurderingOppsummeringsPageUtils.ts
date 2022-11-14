@@ -1,20 +1,8 @@
-import { BeregnetIngenEndring, Revurdering, SimulertRevurdering, UnderkjentRevurdering } from '~src/types/Revurdering';
+import { Revurdering } from '~src/types/Revurdering';
 import {
-    erBeregnetIngenEndring,
-    erGregulering,
     erRevurderingTilbakekrevingIkkeAvgjort,
     erRevurderingTilbakekrevingsbehandling,
 } from '~src/utils/revurdering/revurderingUtils';
-
-export const hentBrevsending = (revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering) => {
-    if (erGregulering(revurdering.årsak)) {
-        return 'aldriSende';
-    } else if (erBeregnetIngenEndring(revurdering)) {
-        return 'kanVelge';
-    } else {
-        return 'alltidSende';
-    }
-};
 
 export enum OppsummeringState {
     ATTESTERING = 'ATTESTERING',

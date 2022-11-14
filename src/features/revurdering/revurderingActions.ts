@@ -19,6 +19,7 @@ import {
     SimulertRevurdering,
     StansAvYtelse,
     UnderkjentRevurdering,
+    Valg,
 } from '~src/types/Revurdering';
 
 export const opprettRevurdering = createAsyncThunk<
@@ -140,6 +141,24 @@ export const lagreForhåndsvarsel = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/forhandsvarsle', async ({ sakId, revurderingId, fritekstTilBrev }, thunkApi) => {
     const res = await revurderingApi.lagreForhåndsvarsel(sakId, revurderingId, fritekstTilBrev);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreBrevvalg = createAsyncThunk<
+    SimulertRevurdering,
+    {
+        sakId: string;
+        revurderingId: string;
+        valg: Valg;
+        fritekst: Nullable<string>;
+        begrunnelse: Nullable<string>;
+    },
+    { rejectValue: ApiError }
+>('revurdering/brevvalg', async ({ sakId, revurderingId, valg: valg, fritekst: fritekst, begrunnelse: begrunnelse }, thunkApi) => {
+    const res = await revurderingApi.lagreBrevvalg(sakId, revurderingId, valg, fritekst, begrunnelse);
     if (res.status === 'ok') {
         return res.data;
     }

@@ -25,7 +25,6 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import {
     getOppsummeringsformState,
-    hentBrevsending,
     OppsummeringState,
 } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
 import { TilbakekrevingForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
@@ -128,7 +127,6 @@ const OppsummeringshandlingForm = (props: {
                         sakid={props.sakId}
                         revurdering={props.revurdering}
                         forrigeUrl={props.forrigeUrl}
-                        brevsending={hentBrevsending(props.revurdering)}
                         submitStatus={sendTilAttesteringState}
                         onSubmit={sendTilAttestering}
                     />
@@ -243,10 +241,10 @@ const RevurderingOppsummeringPage = (props: {
 
     const beregningStatus = harBeregninger(props.revurdering)
         ? RemoteData.success<never, BeregnOgSimuler>({
-              revurdering: props.revurdering as SimulertRevurdering,
-              feilmeldinger: [],
-              varselmeldinger: [],
-          })
+            revurdering: props.revurdering as SimulertRevurdering,
+            feilmeldinger: [],
+            varselmeldinger: [],
+        })
         : beregnOgSimulerStatus;
 
     React.useEffect(() => {
@@ -301,8 +299,8 @@ const RevurderingOppsummeringPage = (props: {
                             ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
 
                         {erRevurderingSimulert(props.revurdering) ||
-                        erBeregnetIngenEndring(props.revurdering) ||
-                        erRevurderingUnderkjent(props.revurdering) ? (
+                            erBeregnetIngenEndring(props.revurdering) ||
+                            erRevurderingUnderkjent(props.revurdering) ? (
                             <OppsummeringshandlingForm
                                 sakId={props.sakId}
                                 forrigeUrl={props.forrigeUrl}

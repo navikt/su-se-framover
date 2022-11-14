@@ -11,13 +11,14 @@ import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import yup from '~src/lib/validering';
 import { UNDERSCORE_REGEX } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/revurderingOppsummeringsPageUtils';
-import { InformasjonsRevurdering } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, Valg } from '~src/types/Revurdering';
 import {
     erRevurderingOpphørPgaManglendeDokumentasjon,
     erRevurderingTilbakekreving,
 } from '~src/utils/revurdering/revurderingUtils';
 
 import { Navigasjonsknapper } from '../../../bunnknapper/Navigasjonsknapper';
+import { BrevvalgForm } from '../brevvalg/BrevvalgForm';
 
 import messages from './oppsummeringPageForms-nb';
 import * as styles from './oppsummeringPageForms.module.less';
@@ -40,13 +41,11 @@ export const SendTilAttesteringForm = (props: {
     revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
-    brevsending: brevutsendingstype;
     onSubmit(args: { vedtaksbrevtekst: string; skalFøreTilBrevutsending: boolean }): void;
 }) => {
     const { formatMessage } = useI18n({ messages });
     interface FormData {
         vedtaksbrevtekst: string;
-        skalFøreTilBrevutsending: boolean;
     }
     const harFritekst = props.revurdering.fritekstTilBrev.length > 0;
     const tilbakekreving = erRevurderingTilbakekreving(props.revurdering);
@@ -56,15 +55,13 @@ export const SendTilAttesteringForm = (props: {
             vedtaksbrevtekst: harFritekst
                 ? props.revurdering.fritekstTilBrev
                 : tilbakekreving
-                ? formatMessage('tilbakekreving.forhåndstekst')
-                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
-                ? formatMessage('opplysningsplikt.forhåndstekst')
-                : '',
-            skalFøreTilBrevutsending: props.brevsending === 'alltidSende' || harFritekst,
+                    ? formatMessage('tilbakekreving.forhåndstekst')
+                    : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                        ? formatMessage('opplysningsplikt.forhåndstekst')
+                        : ''
         },
         resolver: yupResolver(
             yup.object<FormData>({
-                skalFøreTilBrevutsending: yup.boolean(),
                 vedtaksbrevtekst: yup
                     .string()
                     .defined()
@@ -78,14 +75,12 @@ export const SendTilAttesteringForm = (props: {
         ),
     });
 
-    const skalFøreTilBrevutsending = form.watch('skalFøreTilBrevutsending');
-
     return (
         <form
-            onSubmit={form.handleSubmit(({ vedtaksbrevtekst, skalFøreTilBrevutsending }) =>
+            onSubmit={form.handleSubmit(({ vedtaksbrevtekst }) =>
                 props.onSubmit({
                     vedtaksbrevtekst: vedtaksbrevtekst,
-                    skalFøreTilBrevutsending: getBrevutsending(props.brevsending, skalFøreTilBrevutsending),
+                    skalFøreTilBrevutsending: true, //TODO fjern rester
                 })
             )}
             className={styles.form}
@@ -93,51 +88,15 @@ export const SendTilAttesteringForm = (props: {
             {erRevurderingTilbakekreving(props.revurdering) && (
                 <Alert variant={'warning'}>{formatMessage('tilbakereving.alert.brutto.netto')}</Alert>
             )}
-            {props.brevsending === 'kanVelge' && (
-                <Controller
-                    control={form.control}
-                    name="skalFøreTilBrevutsending"
-                    render={(
-                        { field } //TODO tilhører egentlig ikke denne pr, rydd opp når det er mulig å velge brev for alle revurderinger - disabler inntil videre
-                    ) => (
-                        <Checkbox
-                            name="skalFøreTilBrevutsending"
-                            checked={field.value}
-                            onChange={field.onChange}
-                            disabled={true}
-                        >
-                            {formatMessage('sendTilAttestering.skalFøreTilBrev')}
-                        </Checkbox>
-                    )}
-                />
-            )}
-
-            {skalFøreTilBrevutsending && (
-                <Controller
-                    control={form.control}
-                    name="vedtaksbrevtekst"
-                    render={({ field, fieldState }) => (
-                        <BrevInput
-                            placeholder={formatMessage('brevInput.innhold.placeholder')}
-                            knappLabel={formatMessage('knapp.seBrev')}
-                            tittel={formatMessage('brevInput.tekstTilVedtaksbrev.tittel')}
-                            onVisBrevClick={() =>
-                                pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
-                                    sakId: props.sakid,
-                                    revurderingId: props.revurdering.id,
-                                    fritekst: field.value,
-                                })
-                            }
-                            tekst={field.value ?? ''}
-                            onChange={field.onChange}
-                            feil={fieldState.error}
-                        />
-                    )}
+            {true && (
+                <BrevvalgForm
+                    sakId={props.sakid}
+                    revurdering={props.revurdering}
+                    forrigeUrl={props.forrigeUrl}
                 />
             )}
 
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
-
             <Navigasjonsknapper
                 nesteKnappTekst={formatMessage('sendTilAttestering.button.label')}
                 tilbake={{ url: props.forrigeUrl }}

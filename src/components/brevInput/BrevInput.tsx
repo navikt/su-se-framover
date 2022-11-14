@@ -19,6 +19,7 @@ export interface BrevInputProps {
     knappLabel?: string;
     placeholder?: string;
     feil?: FieldError;
+    forhåndsvisningEnabled: boolean;
 }
 
 export function BrevInput(props: BrevInputProps) {
@@ -61,6 +62,7 @@ export function BrevInput(props: BrevInputProps) {
                     className={styles.seBrevButton}
                     loading={RemoteData.isPending(hentBrevStatus)}
                     onClick={onHentBrev}
+                    disabled={!props.forhåndsvisningEnabled}
                 >
                     {props.knappLabel ?? formatMessage('knapp.seBrev')}
                 </Button>
