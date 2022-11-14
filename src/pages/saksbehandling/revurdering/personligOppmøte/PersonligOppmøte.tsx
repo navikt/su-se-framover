@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
@@ -22,6 +23,7 @@ import { RevurderingStegProps } from '~src/types/Revurdering';
 import messages from './personligOppmøte-nb';
 
 export function PersonligOppmøte(props: RevurderingStegProps) {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
@@ -61,7 +63,12 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                     <PersonligOppmøteForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={(values) => lagrePersonligOppmøte(values, props.onSuccessOverride)}
+                        onFormSubmit={(values) =>
+                            lagrePersonligOppmøte(
+                                values,
+                                props.onSuccessOverride ? () => props.onSuccessOverride : () => navigate(props.nesteUrl)
+                            )
+                        }
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}

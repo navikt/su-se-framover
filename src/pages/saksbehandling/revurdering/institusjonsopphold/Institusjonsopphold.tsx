@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
@@ -23,6 +24,7 @@ import RevurderingsperiodeHeader from '../revurderingsperiodeheader/Revurderings
 import messages from './institusjonsopphold-nb';
 
 const Institusjonsopphold = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
 
@@ -55,6 +57,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
         tilOgMed: new Date(props.revurdering.periode.tilOgMed),
     };
 
+    console.log(props.onSuccessOverride);
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
@@ -62,7 +65,14 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                     <InstitusjonsoppholdForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={lagreInstitusjonsopphold}
+                        onFormSubmit={(values) =>
+                            lagreInstitusjonsopphold(
+                                values,
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        }
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         onTilbakeClickOverride={props.onTilbakeClickOverride}
