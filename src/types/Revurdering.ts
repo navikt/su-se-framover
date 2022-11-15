@@ -59,7 +59,6 @@ export interface AvsluttetGjenopptak extends Gjenopptak<UtbetalingsRevurderingSt
 export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus = InformasjonsRevurderingStatus>
     extends Revurdering<InformasjonsRevurderingStatus> {
     status: T;
-    fritekstTilBrev: string;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
     brevvalg: BrevvalgRevurdering;
 }
@@ -95,7 +94,6 @@ export interface RevurderingTilAttestering
         InformasjonsRevurderingStatus.TIL_ATTESTERING_INNVILGET | InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT
     > {
     beregning: Beregning;
-    skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
@@ -106,7 +104,6 @@ export interface IverksattRevurdering
         InformasjonsRevurderingStatus.IVERKSATT_INNVILGET | InformasjonsRevurderingStatus.IVERKSATT_OPPHØRT
     > {
     beregning: Beregning;
-    skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
@@ -117,7 +114,6 @@ export interface UnderkjentRevurdering
         InformasjonsRevurderingStatus.UNDERKJENT_INNVILGET | InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT
     > {
     beregning: Beregning;
-    skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;

@@ -29,7 +29,7 @@ import {
 import { Simulering, SimulertUtbetalingstype } from '~src/types/Simulering';
 
 export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
-    return 'fritekstTilBrev' in r && 'informasjonSomRevurderes' in r;
+    return 'informasjonSomRevurderes' in r;
 };
 
 export const erUtbetalingsrevurdering = (r: Revurdering): r is UtbetalingsRevurdering =>

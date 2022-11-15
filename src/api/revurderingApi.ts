@@ -214,17 +214,11 @@ export async function lagreTilbakekrevingsbehandling(
 
 export async function sendTilAttestering(
     sakId: string,
-    revurderingId: string,
-    fritekstTilBrev: string,
-    skalFøreTilBrevutsending?: boolean
+    revurderingId: string
 ): Promise<ApiClientResult<RevurderingTilAttestering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',
-        body: {
-            fritekstTilBrev,
-            skalFøreTilBrevutsending: skalFøreTilBrevutsending,
-        },
     });
 }
 

@@ -83,8 +83,6 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
                     {
                         sakId: props.sakId,
                         revurderingId: props.revurdering.id,
-                        fritekstTilBrev: 'TODO',
-                        skalFøreTilBrevutsending: true,
                     },
                     () => {
                         Routes.navigateToSakIntroWithMessage(
