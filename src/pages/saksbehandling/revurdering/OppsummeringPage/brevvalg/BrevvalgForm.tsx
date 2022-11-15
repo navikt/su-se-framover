@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { ApiError } from '~src/api/apiClient';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
@@ -15,7 +16,8 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
-import { InformasjonsRevurdering, Valg } from '~src/types/Revurdering';
+import { useAppDispatch } from '~src/redux/Store';
+import { Revurdering, InformasjonsRevurdering, Valg } from '~src/types/Revurdering';
 import {
     erRevurderingOpphørPgaManglendeDokumentasjon,
     erRevurderingTilbakekreving,
@@ -52,33 +54,42 @@ const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
 
 export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRevurdering; forrigeUrl: string }) => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages });
 
-    const [lagreBrevvalgState, lagreBrevvalg] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
+    const [lagreStatus, setLagreStatus] = React.useState<RemoteData.RemoteData<ApiError, Revurdering>>(
+        RemoteData.initial
+    );
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
         RevurderingActions.sendRevurderingTilAttestering
     );
 
-    const lagreOgSeBrev = async () => {
-        await lagreBrevvalg({
-            sakId: props.sakId,
-            revurderingId: props.revurdering.id,
-            valg: form.getValues('valg'),
-            fritekst: form.getValues('fritekst'),
-            begrunnelse: form.getValues('begrunnelse'),
-        });
-    };
-
-    const handleSubmit = (values: BrevvalgFormData) => {
-        lagreBrevvalg(
-            {
+    //Vi gjør dispatching litt på gamle måten fordi vi må chaine se-brev kallet bare hvis det dispatchen er OK
+    const dispatchLagBrev = async (values: BrevvalgFormData) => {
+        const res = await dispatch(
+            RevurderingActions.lagreBrevvalg({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 valg: values.valg,
                 fritekst: values.fritekst,
                 begrunnelse: values.begrunnelse,
-            },
-            () => {
+            })
+        );
+
+        if (RevurderingActions.lagreBrevvalg.fulfilled.match(res)) {
+            setLagreStatus(RemoteData.success(res.payload));
+            return 'ok';
+        }
+        if (RevurderingActions.lagreBrevvalg.rejected.match(res)) {
+            setLagreStatus(RemoteData.failure(res.payload!));
+            return 'error';
+        }
+        throw new Error('uhåndtert case av api kall utfall ved brevvalgForm');
+    };
+
+    const handleSubmit = (values: BrevvalgFormData) => {
+        dispatchLagBrev(values).then((res) => {
+            if (res === 'ok') {
                 sendtilAttestering(
                     {
                         sakId: props.sakId,
@@ -93,7 +104,7 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
                     }
                 );
             }
-        );
+        });
     };
 
     const form = useForm<BrevvalgFormData>({
@@ -118,7 +129,7 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
     const valg = form.watch('valg');
     const begrunnValg = form.watch('begrunnValg');
 
-    const isLoading = RemoteData.isPending(lagreBrevvalgState);
+    const isLoading = RemoteData.isPending(lagreStatus);
 
     return (
         <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
@@ -155,11 +166,14 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
                             placeholder={formatMessage('brevInput.innhold.placeholder')}
                             tittel={formatMessage('brevtekst')}
                             onVisBrevClick={async () => {
-                                await lagreOgSeBrev();
-                                return pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
-                                    sakId: props.sakId,
-                                    revurderingId: props.revurdering.id,
-                                    fritekst: field.value,
+                                return await dispatchLagBrev(form.getValues()).then((res) => {
+                                    return res === 'ok'
+                                        ? pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                                              sakId: props.sakId,
+                                              revurderingId: props.revurdering.id,
+                                              fritekst: field.value,
+                                          })
+                                        : undefined;
                                 });
                             }}
                             tekst={field.value}
@@ -200,7 +214,7 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
                     )}
                 />
             )}
-            {RemoteData.isFailure(lagreBrevvalgState) && <ApiErrorAlert error={lagreBrevvalgState.error} />}
+            {RemoteData.isFailure(lagreStatus) && <ApiErrorAlert error={lagreStatus.error} />}
             {RemoteData.isFailure(sendTilAttesteringStatus) && <ApiErrorAlert error={sendTilAttesteringStatus.error} />}
 
             <Navigasjonsknapper
