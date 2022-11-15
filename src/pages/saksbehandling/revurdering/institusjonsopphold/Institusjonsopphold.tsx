@@ -57,7 +57,6 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
         tilOgMed: new Date(props.revurdering.periode.tilOgMed),
     };
 
-    console.log(props.onSuccessOverride);
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{

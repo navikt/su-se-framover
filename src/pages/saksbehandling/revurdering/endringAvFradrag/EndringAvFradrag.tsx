@@ -102,7 +102,16 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form onSubmit={form.handleSubmit((values) => save(values, () => navigate(props.nesteUrl)))}>
+                    <form
+                        onSubmit={form.handleSubmit((values) =>
+                            save(
+                                values,
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        )}
+                    >
                         <div>
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
                                 (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold

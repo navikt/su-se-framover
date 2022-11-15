@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -30,6 +31,7 @@ import {
 } from './bosituasjonPageUtils';
 
 const BosituasjonPage = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
@@ -69,7 +71,19 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <FormWrapper form={form} save={lagreBosituasjon} savingState={status} {...props}>
+                    <FormWrapper
+                        form={form}
+                        save={(values) =>
+                            lagreBosituasjon(
+                                values,
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        }
+                        savingState={status}
+                        {...props}
+                    >
                         <>
                             <MultiPeriodeVelger
                                 name={'bosituasjoner'}

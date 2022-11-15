@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
@@ -25,6 +26,7 @@ import messages from './formue-nb';
 import * as styles from './formue.module.less';
 
 const Formue = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
 
@@ -57,7 +59,14 @@ const Formue = (props: RevurderingStegProps) => {
                     <FormueForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.revurdering.periode)}
-                        onFormSubmit={lagreFormuegrunnlaget}
+                        onFormSubmit={(values) =>
+                            lagreFormuegrunnlaget(
+                                values,
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        }
                         savingState={lagreFormuegrunnlagStatus}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         formuegrenser={props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser}

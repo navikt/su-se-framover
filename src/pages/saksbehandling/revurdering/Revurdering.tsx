@@ -217,10 +217,11 @@ const RevurderingGrunnlagOgVilkårSteg = (props: {
         });
 
     const erSisteStegAvGrunnlagOgVilkårMenIkkeAltErVurdert =
-        seksjonIdx === 1 && idx === props.seksjoner[1].linjer.length - 1;
-    Object.entries(props.informasjonsRevurdering.informasjonSomRevurderes).some(
-        (v) => v[1] === Vurderingstatus.IkkeVurdert
-    );
+        seksjonIdx === 1 &&
+        idx === props.seksjoner[1].linjer.length - 1 &&
+        Object.entries(props.informasjonsRevurdering.informasjonSomRevurderes).some(
+            (v) => v[1] === Vurderingstatus.IkkeVurdert
+        );
 
     return pipe(
         props.grunnlagsdataOgVilkårsvurderinger,

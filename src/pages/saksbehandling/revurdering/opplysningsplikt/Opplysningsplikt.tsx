@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -19,6 +20,7 @@ import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/u
 
 import messages from './opplysningsplikt-nb';
 const Opplysningsplikt = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreOpplysningsplikt);
 
@@ -72,7 +74,14 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                     <OpplysningspliktForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={handleSubmit}
+                        onFormSubmit={(values) =>
+                            handleSubmit(
+                                values,
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        }
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}

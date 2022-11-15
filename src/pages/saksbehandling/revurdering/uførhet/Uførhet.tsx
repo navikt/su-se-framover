@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
@@ -24,7 +25,9 @@ import { erGregulering } from '~src/utils/revurdering/revurderingUtils';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
 import messages from './uførhet-nb';
+
 const Uførhet = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     const form = useForm<UførhetFormData>({
@@ -68,7 +71,14 @@ const Uførhet = (props: RevurderingStegProps) => {
             {{
                 left: (
                     <UførhetForm
-                        onFormSubmit={handleSave}
+                        onFormSubmit={(values) =>
+                            handleSave(
+                                values,
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        }
                         form={form}
                         savingState={status}
                         minOgMaxPeriode={{

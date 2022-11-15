@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
@@ -23,6 +24,7 @@ import { RevurderingStegProps } from '~src/types/Revurdering';
 import messages from './utenlandsopphold-nb';
 
 const Utenlandsopphold = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...messages, ...stegmessages, ...revurderingmessages } });
 
     const form = useForm<UtenlandsoppholdVilkårFormData>({
@@ -63,7 +65,14 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                     <UtenlandsoppholdForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={handleSubmit}
+                        onFormSubmit={(values) =>
+                            handleSubmit(
+                                values,
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        }
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}

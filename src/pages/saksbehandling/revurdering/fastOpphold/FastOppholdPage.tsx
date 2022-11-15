@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
@@ -22,6 +23,7 @@ import { RevurderingStegProps } from '~src/types/Revurdering';
 import messages from './fastOpphold-nb';
 
 export function FastOppholdPage(props: RevurderingStegProps) {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
 
@@ -61,7 +63,14 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                     <FastOppholdForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={lagreFastOpphold}
+                        onFormSubmit={(values) =>
+                            lagreFastOpphold(
+                                values,
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        }
                         savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}

@@ -66,7 +66,9 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                         onFormSubmit={(values) =>
                             lagrePersonligOppmøte(
                                 values,
-                                props.onSuccessOverride ? () => props.onSuccessOverride : () => navigate(props.nesteUrl)
+                                props.onSuccessOverride
+                                    ? () => props.onSuccessOverride!()
+                                    : () => navigate(props.nesteUrl)
                             )
                         }
                         savingState={status}
