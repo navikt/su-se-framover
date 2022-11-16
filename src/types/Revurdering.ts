@@ -200,8 +200,8 @@ export enum RevurderingGrunnlagOgVilkårSeksjonSteg {
 }
 
 export enum RevurderingOppsummeringSeksjonSteg {
-    Tilbakekreving = 'tilbakekreving',
     Forhåndsvarsel = 'forhåndsvarsel',
+    Tilbakekreving = 'tilbakekreving',
     SendTilAttestering = 'sendTilAttestering',
 }
 
@@ -229,7 +229,7 @@ export interface RevurderingStegProps {
     revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     onTilbakeClickOverride?: () => void;
-    onSuccessOverride?: () => void;
+    onSuccessOverride?: (r: InformasjonsRevurdering) => void;
     forrigeUrl: string;
     nesteUrl: string;
     avsluttUrl: string;

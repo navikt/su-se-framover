@@ -18,7 +18,7 @@ import { lagrePersonligOppmøteVilkår } from '~src/features/grunnlagsdataOgVilk
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 
 import messages from './personligOppmøte-nb';
 
@@ -34,7 +34,10 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
         ),
     });
 
-    const lagrePersonligOppmøte = (values: PersonligOppmøteVilkårFormData, onSuccess?: () => void) =>
+    const lagrePersonligOppmøte = (
+        values: PersonligOppmøteVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) =>
         lagre(
             {
                 ...personligOppmøteFormDataTilRequest({
@@ -45,8 +48,9 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess?.();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -67,7 +71,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                             lagrePersonligOppmøte(
                                 values,
                                 props.onSuccessOverride
-                                    ? () => props.onSuccessOverride!()
+                                    ? (r) => props.onSuccessOverride!(r)
                                     : () => navigate(props.nesteUrl)
                             )
                         }

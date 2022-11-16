@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Loader, Modal } from '@navikt/ds-react';
 import React from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -41,7 +41,7 @@ const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlan
 const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
 const BosituasjonPage = React.lazy(() => import('./bosituasjon/bosituasjonPage'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
-//const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
+const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 const Opplysningsplikt = React.lazy(() => import('./opplysningsplikt/Opplysningsplikt'));
 const Oppholdstillatelse = React.lazy(() => import('./oppholdstillatelse/LovligOpphold'));
@@ -138,7 +138,11 @@ const RevurderingPage = () => {
                         aktiveSteg={urlParams.steg!}
                         listeElementer={framdriftsindikatorSeksjoner}
                     />
-                    <p>lol</p>
+                    <RevurderingOppsummeringPage
+                        sakId={props.sakId}
+                        forrigeUrl={framdriftsindikatorSeksjoner[1].linjer.at(-1)!.url}
+                        revurdering={påbegyntRevurdering}
+                    />
                 </div>
             )}
         </div>
@@ -186,6 +190,7 @@ const RevurderingGrunnlagOgVilkårSteg = (props: {
         grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     }>;
 }) => {
+    const navigate = useNavigate();
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [navigererTilOppsummeringMedVilkårIkkeVurdert, setNavigererTilOppsummeringMedVilkårIkkeVurdert] =
         React.useState<boolean>(false);
@@ -223,6 +228,20 @@ const RevurderingGrunnlagOgVilkårSteg = (props: {
             (v) => v[1] === Vurderingstatus.IkkeVurdert
         );
 
+    const kanOppdatertRevurderingNavigeresTilOppsummering = (r: InformasjonsRevurdering) => {
+        if (
+            seksjonIdx === 1 &&
+            idx === props.seksjoner[1].linjer.length - 1 &&
+            Object.entries(r.informasjonSomRevurderes).some((v) => v[1] === Vurderingstatus.IkkeVurdert)
+        ) {
+            setNavigererTilOppsummeringMedVilkårIkkeVurdert(true);
+        } else {
+            const oppsummeringsseksjonForOppdatertRevurdering = lagOppsummeringSeksjon({ sakId: props.sakId, r: r });
+            console.log(oppsummeringsseksjonForOppdatertRevurdering);
+            navigate(oppsummeringsseksjonForOppdatertRevurdering.linjer[0].url);
+        }
+    };
+
     return pipe(
         props.grunnlagsdataOgVilkårsvurderinger,
         RemoteData.fold(
@@ -241,7 +260,7 @@ const RevurderingGrunnlagOgVilkårSteg = (props: {
                     nesteUrl: nesteUrl,
                     onTilbakeClickOverride: erFørsteGrunnlagOgVilkårSteg ? () => setModalOpen(true) : undefined,
                     onSuccessOverride: erSisteStegAvGrunnlagOgVilkårMenIkkeAltErVurdert
-                        ? () => setNavigererTilOppsummeringMedVilkårIkkeVurdert(true)
+                        ? (r: InformasjonsRevurdering) => kanOppdatertRevurderingNavigeresTilOppsummering(r)
                         : undefined,
                     avsluttUrl: routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
                     grunnlagsdataOgVilkårsvurderinger: gjeldendeData.grunnlagsdataOgVilkårsvurderinger,

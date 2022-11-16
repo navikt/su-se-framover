@@ -18,7 +18,7 @@ import { lagreFlyktningVilkår } from '~src/features/grunnlagsdataOgVilkårsvurd
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 
 import messages from './flyktning-nb';
 
@@ -32,7 +32,10 @@ export function FlyktningPage(props: RevurderingStegProps) {
         defaultValues: flyktningVilkårTilFormDataEllerNy(props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning),
     });
 
-    const lagreFlyktning = (values: FlyktningVilkårFormData, onSuccess: () => void) =>
+    const lagreFlyktning = (
+        values: FlyktningVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) =>
         lagre(
             {
                 ...flyktningFormDataTilRequest({
@@ -43,8 +46,9 @@ export function FlyktningPage(props: RevurderingStegProps) {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -64,7 +68,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
                             lagreFlyktning(
                                 values,
                                 props.onSuccessOverride
-                                    ? () => props.onSuccessOverride!()
+                                    ? (r) => props.onSuccessOverride!(r)
                                     : () => navigate(props.nesteUrl)
                             )
                         }

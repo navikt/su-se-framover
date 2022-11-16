@@ -17,7 +17,7 @@ import {
 import { lagreFormuegrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
@@ -38,15 +38,19 @@ const Formue = (props: RevurderingStegProps) => {
         resolver: yupResolver(formueFormSchema),
     });
 
-    const lagreFormuegrunnlaget = (data: FormueVilkårFormData, onSuccess: () => void) => {
+    const lagreFormuegrunnlaget = (
+        data: FormueVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) => {
         lagreFormuegrunnlagAction(
             {
                 ...formueVilkårFormTilRequest(props.sakId, props.revurdering.id, data),
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -63,7 +67,7 @@ const Formue = (props: RevurderingStegProps) => {
                             lagreFormuegrunnlaget(
                                 values,
                                 props.onSuccessOverride
-                                    ? () => props.onSuccessOverride!()
+                                    ? (r) => props.onSuccessOverride!(r)
                                     : () => navigate(props.nesteUrl)
                             )
                         }

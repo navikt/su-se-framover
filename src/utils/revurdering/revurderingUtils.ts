@@ -429,12 +429,13 @@ export const lagGrunnlagOgVilkårSeksjon = (arg: { sakId: string; r: Informasjon
 };
 
 export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevurdering }): Seksjon => {
-    const kanNavigereTilForhåndsvarselOgSendTilAttestering =
-        erRevurderingTilbakekrevingsbehandling(arg.r) && erRevurderingTilbakekrevingIkkeAvgjort(arg.r)
-            ? false
-            : erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r)
-            ? true
-            : false;
+    const kanNavigereTilForhåndsvarselOgSendTilAttestering = Object.entries(arg.r).some(
+        (v) => v[1] === Vurderingstatus.IkkeVurdert
+    )
+        ? false
+        : erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r)
+        ? true
+        : false;
 
     const defaultLinjer = [
         {
@@ -465,6 +466,7 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
 
     const faktiskeLinjer = erRevurderingTilbakekrevingsbehandlingOgKanAvgjøres(arg.r)
         ? [
+              defaultLinjer[0],
               {
                   id: RevurderingOppsummeringSeksjonSteg.Tilbakekreving,
                   status: Linjestatus.Ingenting,
@@ -475,9 +477,9 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
                       seksjon: RevurderingSeksjoner.Oppsummering,
                       steg: RevurderingOppsummeringSeksjonSteg.Tilbakekreving,
                   }),
-                  erKlikkbar: true,
+                  erKlikkbar: kanNavigereTilForhåndsvarselOgSendTilAttestering,
               },
-              ...defaultLinjer,
+              defaultLinjer[1],
           ]
         : defaultLinjer;
 

@@ -4,6 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import OpplysningspliktForm from '~src/components/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktForm';
@@ -15,7 +16,7 @@ import { lagreOpplysningsplikt } from '~src/features/grunnlagsdataOgVilkårsvurd
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import messages from './opplysningsplikt-nb';
@@ -46,7 +47,10 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
         },
     });
 
-    const handleSubmit = async (form: OpplysningspliktVilkårFormData, onSuccess: () => void) => {
+    const handleSubmit = async (
+        form: OpplysningspliktVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) => {
         lagre(
             {
                 behandlingId: props.revurdering.id,
@@ -60,8 +64,9 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                 })),
             },
             (res) => {
-                if (res.feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -78,7 +83,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                             handleSubmit(
                                 values,
                                 props.onSuccessOverride
-                                    ? () => props.onSuccessOverride!()
+                                    ? (r) => props.onSuccessOverride!(r)
                                     : () => navigate(props.nesteUrl)
                             )
                         }

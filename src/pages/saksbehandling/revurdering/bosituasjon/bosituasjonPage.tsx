@@ -14,7 +14,7 @@ import { lagreBosituasjonsgrunnlag } from '~src/features/grunnlagsdataOgVilkårs
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import sharedMessages from '../revurdering-nb';
@@ -45,7 +45,10 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
         resolver: yupResolver(bosituasjonFormSchema),
     });
 
-    const lagreBosituasjon = (data: BosituasjonFormData, onSuccess: () => void) =>
+    const lagreBosituasjon = (
+        data: BosituasjonFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) =>
         lagre(
             {
                 sakId: props.sakId,
@@ -62,7 +65,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
             },
             (res) => {
                 if (res.feilmeldinger.length === 0) {
-                    onSuccess();
+                    onSuccess(res.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -77,7 +80,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                             lagreBosituasjon(
                                 values,
                                 props.onSuccessOverride
-                                    ? () => props.onSuccessOverride!()
+                                    ? (r) => props.onSuccessOverride!(r)
                                     : () => navigate(props.nesteUrl)
                             )
                         }

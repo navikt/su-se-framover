@@ -17,7 +17,7 @@ import {
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
@@ -40,7 +40,10 @@ const LovligOpphold = (props: RevurderingStegProps) => {
         ),
     });
 
-    const lagreLovligOpphold = (data: LovligOppholdVilkårFormData, onSuccess: () => void) => {
+    const lagreLovligOpphold = (
+        data: LovligOppholdVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) => {
         lagre(
             {
                 ...lovligOppholdFormDataTilRequest({
@@ -51,8 +54,9 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -69,7 +73,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                             lagreLovligOpphold(
                                 values,
                                 props.onSuccessOverride
-                                    ? () => props.onSuccessOverride!()
+                                    ? (r) => props.onSuccessOverride!(r)
                                     : () => navigate(props.nesteUrl)
                             )
                         }

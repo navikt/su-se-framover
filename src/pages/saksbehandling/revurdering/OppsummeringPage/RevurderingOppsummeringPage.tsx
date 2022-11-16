@@ -197,7 +197,6 @@ const VisOgLagDokumenterRevurdering = (props: { sakId: string; revurderingId: st
 const RevurderingOppsummeringPage = (props: {
     sakId: string;
     forrigeUrl: string;
-    førsteRevurderingstegUrl: string;
     revurdering: InformasjonsRevurdering;
 }) => {
     const navigate = useNavigate();

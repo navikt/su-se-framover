@@ -18,7 +18,7 @@ import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårs
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { erGregulering } from '~src/utils/revurdering/revurderingUtils';
 
@@ -41,7 +41,7 @@ const Uførhet = (props: RevurderingStegProps) => {
 
     const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreUføregrunnlag);
 
-    const handleSave = (values: UførhetFormData, onSuccess: () => void) =>
+    const handleSave = (values: UførhetFormData, onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void) =>
         lagre(
             {
                 sakId: props.sakId,
@@ -60,8 +60,9 @@ const Uførhet = (props: RevurderingStegProps) => {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -75,7 +76,7 @@ const Uførhet = (props: RevurderingStegProps) => {
                             handleSave(
                                 values,
                                 props.onSuccessOverride
-                                    ? () => props.onSuccessOverride!()
+                                    ? (r) => props.onSuccessOverride!(r)
                                     : () => navigate(props.nesteUrl)
                             )
                         }

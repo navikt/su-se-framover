@@ -90,11 +90,9 @@ const PersonligOppmøteForm = (props: Props) => {
                     {...props}
                 />
                 {props.children}
-                {RemoteData.isSuccess(props.savingState) &&
-                    'feilmeldinger' in props.savingState.value &&
-                    props.savingState.value.feilmeldinger.length > 0 && (
-                        <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />
-                    )}
+                {RemoteData.isSuccess(props.savingState) && 'feilmeldinger' in props.savingState.value && (
+                    <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />
+                )}
             </>
         </FormWrapper>
     );

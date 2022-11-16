@@ -17,7 +17,7 @@ import {
 import { lagreInstitusjonsoppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
@@ -35,7 +35,10 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
         ),
     });
 
-    const lagreInstitusjonsopphold = (values: InstitusjonsoppholdVilkårFormData, onSuccess: () => void) =>
+    const lagreInstitusjonsopphold = (
+        values: InstitusjonsoppholdVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) =>
         lagre(
             {
                 ...institusjonsoppholdFormDataTilRequest({
@@ -46,8 +49,10 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                console.log(props.nesteUrl);
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -68,7 +73,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                             lagreInstitusjonsopphold(
                                 values,
                                 props.onSuccessOverride
-                                    ? () => props.onSuccessOverride!()
+                                    ? (r) => props.onSuccessOverride!(r)
                                     : () => navigate(props.nesteUrl)
                             )
                         }
