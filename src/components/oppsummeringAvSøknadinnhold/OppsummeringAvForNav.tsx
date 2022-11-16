@@ -22,7 +22,7 @@ const OppsummeringAvForNav = (props: { forNav: ForNav; visesIVedtak?: boolean })
                 <>
                     <OppsummeringPar
                         label={formatMessage('forNav.digitalSøknad.harSøkerMøttPersonlig')}
-                        verdi={formatMessage(`bool.${props.forNav.harFullmektigEllerVerge !== null}`)}
+                        verdi={formatMessage(`bool.${props.forNav.harFullmektigEllerVerge === null}`)}
                     />
                     <OppsummeringPar
                         label={formatMessage('forNav.digitalSøknad.harSøkerFullmektigEllerVerge')}
