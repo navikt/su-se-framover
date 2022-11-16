@@ -33,6 +33,7 @@ import SkjemaelementFeilmelding from '../../../components/formElements/Skjemaele
 
 import NullstillRevurderingVarsel from './advarselReset/NullstillRevurderingVarsel';
 import Formue from './formue/Formue';
+import { NyRevurderingsOppsummeringPage } from './OppsummeringPage/RevurderingOppsummeringPage';
 import { PersonligOppmøte } from './personligOppmøte/PersonligOppmøte';
 import sharedMessages, { stegmessages } from './revurdering-nb';
 import * as styles from './revurdering.module.less';
@@ -41,7 +42,7 @@ const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlan
 const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
 const BosituasjonPage = React.lazy(() => import('./bosituasjon/bosituasjonPage'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
-const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
+//const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 const Opplysningsplikt = React.lazy(() => import('./opplysningsplikt/Opplysningsplikt'));
 const Oppholdstillatelse = React.lazy(() => import('./oppholdstillatelse/LovligOpphold'));
@@ -138,10 +139,11 @@ const RevurderingPage = () => {
                         aktiveSteg={urlParams.steg!}
                         listeElementer={framdriftsindikatorSeksjoner}
                     />
-                    <RevurderingOppsummeringPage
+                    <NyRevurderingsOppsummeringPage
                         sakId={props.sakId}
-                        forrigeUrl={framdriftsindikatorSeksjoner[1].linjer.at(-1)!.url}
                         revurdering={påbegyntRevurdering}
+                        aktivSeksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
+                        seksjoner={framdriftsindikatorSeksjoner}
                     />
                 </div>
             )}
@@ -236,9 +238,7 @@ const RevurderingGrunnlagOgVilkårSteg = (props: {
         ) {
             setNavigererTilOppsummeringMedVilkårIkkeVurdert(true);
         } else {
-            const oppsummeringsseksjonForOppdatertRevurdering = lagOppsummeringSeksjon({ sakId: props.sakId, r: r });
-            console.log(oppsummeringsseksjonForOppdatertRevurdering);
-            navigate(oppsummeringsseksjonForOppdatertRevurdering.linjer[0].url);
+            navigate(oppsummeringsseksjon.linjer[0].url);
         }
     };
 

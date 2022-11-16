@@ -26,6 +26,7 @@ interface Props<T extends FieldValues, U> {
     nesteUrl: string;
     children: ReactElement;
     nesteKnappTekst?: string;
+    fortsettSenereKnappTekst?: string;
     className?: string;
 }
 
@@ -62,6 +63,7 @@ export const FormWrapper = <T extends FieldValues, U extends Søknadsbehandling>
                 )}
                 loading={RemoteData.isPending(props.savingState)}
                 nesteKnappTekst={props.nesteKnappTekst}
+                fortsettSenereKnappTekst={props.fortsettSenereKnappTekst}
             />
         </form>
     );

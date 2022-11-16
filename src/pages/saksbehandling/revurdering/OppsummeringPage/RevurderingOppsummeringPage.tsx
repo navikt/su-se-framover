@@ -14,6 +14,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import apiErrorMessages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
+import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
@@ -32,6 +33,9 @@ import { DokumentIdType } from '~src/types/dokument/Dokument';
 import {
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
+    RevurderingOppsummeringSeksjonSteg,
+    RevurderingSeksjoner,
+    RevurderingSeksjonSteg,
     SimulertRevurdering,
     UnderkjentRevurdering,
 } from '~src/types/Revurdering';
@@ -49,6 +53,83 @@ import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøtte
 import { BrevvalgForm } from './brevvalg/BrevvalgForm';
 import messages from './revurderingOppsummeringPage-nb';
 import * as styles from './revurderingOppsummeringPage.module.less';
+import ForhåndsvarselForm from './underforms/ForhåndsvarselForm';
+import SendTilAttesteringNy from './underforms/SendTilAttestering';
+import TilbakekrevingFormNy from './underforms/TilbakekrevingForm';
+
+export const NyRevurderingsOppsummeringPage = (props: {
+    sakId: string;
+    revurdering: InformasjonsRevurdering;
+    aktivSeksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSeksjonSteg };
+    seksjoner: Seksjon[];
+}) => {
+    const navigate = useNavigate();
+    const { formatMessage } = useI18n({ messages });
+    const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
+    const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
+
+    const beregningStatus = harBeregninger(props.revurdering)
+        ? RemoteData.success<never, BeregnOgSimuler>({
+              revurdering: props.revurdering as SimulertRevurdering,
+              feilmeldinger: [],
+              varselmeldinger: [],
+          })
+        : beregnOgSimulerStatus;
+
+    React.useEffect(() => {
+        if (RemoteData.isInitial(beregningStatus)) {
+            beregnOgSimuler({
+                sakId: props.sakId,
+                periode: props.revurdering.periode,
+                revurderingId: props.revurdering.id,
+            });
+        }
+
+        if (RemoteData.isInitial(gjeldendeData)) {
+            hentGjeldendeData({
+                sakId: props.sakId,
+                fraOgMed: props.revurdering.periode.fraOgMed,
+                tilOgMed: props.revurdering.periode.tilOgMed,
+            });
+        }
+    }, [props.revurdering.id]);
+
+    return pipe(
+        RemoteData.combine(beregningStatus, gjeldendeData),
+        RemoteData.fold(
+            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
+            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
+            (err) => (
+                <div className={styles.content}>
+                    <ApiErrorAlert error={err} />
+                    <Button variant="secondary" onClick={() => navigate(props.seksjoner[1].linjer.at(-1)!.url)}>
+                        {formatMessage('knapp.tilbake')}
+                    </Button>
+                </div>
+            ),
+            ([beregnOgSimulerData, gjeldendeGrunnlagOgVilkårData]) => (
+                <div className={styles.pageContainer}>
+                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSeksjonSteg.Forhåndsvarsel && (
+                        <ForhåndsvarselForm
+                            sakId={props.sakId}
+                            forrigeUrl={props.seksjoner[1].linjer.at(-1)!.url}
+                            nesteUrl={props.seksjoner[2].linjer[1]!.url}
+                            revurdering={beregnOgSimulerData.revurdering}
+                            avsluttUrl={''}
+                            gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
+                        />
+                    )}
+                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSeksjonSteg.Tilbakekreving && (
+                        <TilbakekrevingFormNy />
+                    )}
+                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSeksjonSteg.SendTilAttestering && (
+                        <SendTilAttesteringNy forrigeUrl={props.seksjoner[1].linjer.at(-2)!.url} />
+                    )}
+                </div>
+            )
+        )
+    );
+};
 
 const OppsummeringshandlingForm = (props: {
     sakId: string;

@@ -16,6 +16,7 @@ export const Navigasjonsknapper = ({
     onLagreOgFortsettSenereClick?: () => void;
     nesteKnappTekst?: string;
     onNesteClick?: () => void;
+    fortsettSenereKnappTekst?: string;
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
@@ -44,7 +45,7 @@ export const Navigasjonsknapper = ({
                         type="button"
                         loading={knappTrykket === 'avslutt' && props.loading}
                     >
-                        {formatMessage('knapp.lagreOgfortsettSenere')}
+                        {props.fortsettSenereKnappTekst ?? formatMessage('knapp.lagreOgfortsettSenere')}
                     </Button>
                 ) : (
                     <Tilbake />

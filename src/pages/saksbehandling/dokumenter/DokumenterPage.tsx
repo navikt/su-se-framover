@@ -61,7 +61,7 @@ const DokumenterPage = () => {
     );
 };
 
-export const VisDokumenter = (props: { id: string; idType: DokumentIdType }) => {
+export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingenBrevTekst?: string }) => {
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
 
     const { formatMessage } = useI18n({ messages });
@@ -77,58 +77,51 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType }) => 
         window.open(URL.createObjectURL(getBlob(dokument)));
     };
 
-    return (
-        <>
-            {pipe(
-                dokumenterState,
-                RemoteData.fold3(
-                    () => (
-                        <div className={styles.loaderContainer}>
-                            <Loader size="large" title={formatMessage('loader.henterBrev')} />
-                        </div>
-                    ),
-                    (err) => <Alert variant="error">{err?.body?.message ?? formatMessage('feil.ukjent')}</Alert>,
-                    (dokumenter) =>
-                        dokumenter.length === 0 ? (
-                            <Alert variant="info">{formatMessage('feil.ingenBrev')}</Alert>
-                        ) : (
-                            <ol className={styles.dokumentliste}>
-                                {dokumenter.map((d) => (
-                                    <li key={d.id}>
-                                        <LinkPanel
-                                            href="#"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                handleDokumentClick(d);
-                                            }}
-                                            border
-                                        >
-                                            <div className={styles.dokument}>
-                                                <FileContent className={styles.dokumentikon} />
-                                                <div>
-                                                    <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
-                                                    <LinkPanel.Description className={styles.linkPanelBeskrivelse}>
-                                                        {DateUtils.formatDateTime(d.opprettet)}
-                                                        <Tag variant={d.journalført ? 'success' : 'error'} size="small">
-                                                            {d.journalført ? 'Journalført' : 'Ikke journalført'}
-                                                        </Tag>
-                                                        <Tag
-                                                            variant={d.brevErBestilt ? 'success' : 'error'}
-                                                            size="small"
-                                                        >
-                                                            {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
-                                                        </Tag>
-                                                    </LinkPanel.Description>
-                                                </div>
-                                            </div>
-                                        </LinkPanel>
-                                    </li>
-                                ))}
-                            </ol>
-                        )
+    return pipe(
+        dokumenterState,
+        RemoteData.fold3(
+            () => (
+                <div className={styles.loaderContainer}>
+                    <Loader size="large" title={formatMessage('loader.henterBrev')} />
+                </div>
+            ),
+            (err) => <Alert variant="error">{err?.body?.message ?? formatMessage('feil.ukjent')}</Alert>,
+            (dokumenter) =>
+                dokumenter.length === 0 ? (
+                    <Alert variant="info">{props.ingenBrevTekst ?? formatMessage('feil.ingenBrev')}</Alert>
+                ) : (
+                    <ol className={styles.dokumentliste}>
+                        {dokumenter.map((d) => (
+                            <li key={d.id}>
+                                <LinkPanel
+                                    href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleDokumentClick(d);
+                                    }}
+                                    border
+                                >
+                                    <div className={styles.dokument}>
+                                        <FileContent className={styles.dokumentikon} />
+                                        <div>
+                                            <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
+                                            <LinkPanel.Description className={styles.linkPanelBeskrivelse}>
+                                                {DateUtils.formatDateTime(d.opprettet)}
+                                                <Tag variant={d.journalført ? 'success' : 'error'} size="small">
+                                                    {d.journalført ? 'Journalført' : 'Ikke journalført'}
+                                                </Tag>
+                                                <Tag variant={d.brevErBestilt ? 'success' : 'error'} size="small">
+                                                    {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
+                                                </Tag>
+                                            </LinkPanel.Description>
+                                        </div>
+                                    </div>
+                                </LinkPanel>
+                            </li>
+                        ))}
+                    </ol>
                 )
-            )}
-        </>
+        )
     );
 };
 
