@@ -59,8 +59,8 @@ export interface AvsluttetGjenopptak extends Gjenopptak<UtbetalingsRevurderingSt
 export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus = InformasjonsRevurderingStatus>
     extends Revurdering<InformasjonsRevurderingStatus> {
     status: T;
-    fritekstTilBrev: string;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
+    brevvalg: BrevvalgRevurdering;
 }
 
 export type OpprettetRevurdering = InformasjonsRevurdering<InformasjonsRevurderingStatus.OPPRETTET>;
@@ -94,7 +94,6 @@ export interface RevurderingTilAttestering
         InformasjonsRevurderingStatus.TIL_ATTESTERING_INNVILGET | InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT
     > {
     beregning: Beregning;
-    skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
@@ -105,7 +104,6 @@ export interface IverksattRevurdering
         InformasjonsRevurderingStatus.IVERKSATT_INNVILGET | InformasjonsRevurderingStatus.IVERKSATT_OPPHØRT
     > {
     beregning: Beregning;
-    skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
@@ -116,7 +114,6 @@ export interface UnderkjentRevurdering
         InformasjonsRevurderingStatus.UNDERKJENT_INNVILGET | InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT
     > {
     beregning: Beregning;
-    skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
     simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
@@ -234,4 +231,15 @@ export interface OpprettRevurderingRequest {
 
 export interface OppdaterRevurderingRequest extends OpprettRevurderingRequest {
     revurderingId: string;
+}
+
+export interface BrevvalgRevurdering {
+    valg: Valg;
+    fritekst: Nullable<string>;
+    begrunnelse: Nullable<string>;
+}
+export enum Valg {
+    SEND = 'SEND',
+    IKKE_SEND = 'IKKE_SEND',
+    IKKE_VALGT = 'IKKE_VALGT',
 }

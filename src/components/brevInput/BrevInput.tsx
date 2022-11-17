@@ -13,7 +13,7 @@ import * as styles from './brevInput.module.less';
 
 export interface BrevInputProps {
     tekst: Nullable<string>;
-    onVisBrevClick: () => Promise<ApiClientResult<Blob>>;
+    onVisBrevClick: () => Promise<ApiClientResult<Blob> | undefined>;
     onChange: (e: React.ChangeEvent<unknown>) => void;
     tittel?: string;
     knappLabel?: string;
@@ -33,11 +33,18 @@ export function BrevInput(props: BrevInputProps) {
         setHentBrevStatus(RemoteData.pending);
         const response = await props.onVisBrevClick();
 
-        if (response.status === 'ok') {
+        //siden det er nå mulig å chaine api kall før se-brev, så sjekker vi at det første kallet i parenten gikk ok
+        //stort sett så vil vi ikke vise brevutkast hvis vi ikke fikk lagret brevet etc.
+        if (!response) {
+            setHentBrevStatus(RemoteData.initial);
+            return;
+        }
+
+        if (response?.status === 'ok') {
             setHentBrevStatus(RemoteData.success(null));
             window.open(URL.createObjectURL(response.data));
         } else {
-            setHentBrevStatus(RemoteData.failure(response.error));
+            setHentBrevStatus(RemoteData.failure(response?.error));
         }
     };
 
