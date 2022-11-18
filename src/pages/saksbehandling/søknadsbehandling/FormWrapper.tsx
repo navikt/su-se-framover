@@ -41,11 +41,11 @@ export const FormWrapper = <T extends FieldValues, U extends Søknadsbehandling>
     return (
         <form
             className={props.className ?? ''}
-            onSubmit={form.handleSubmit((values) =>
-                props.save(values, (res) => {
+            onSubmit={form.handleSubmit((values) => {
+                return props.save(values, (res) => {
                     props.onSuccess && res ? props.onSuccess(res) : navigate(props.nesteUrl);
-                })
-            )}
+                });
+            })}
         >
             <div className={styles.containerElement}>{props.children}</div>
             <Feiloppsummering

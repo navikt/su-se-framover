@@ -115,15 +115,23 @@ export const NyRevurderingsOppsummeringPage = (props: {
                             forrigeUrl={props.seksjoner[1].linjer.at(-1)!.url}
                             nesteUrl={props.seksjoner[2].linjer[1]!.url}
                             revurdering={beregnOgSimulerData.revurdering}
-                            avsluttUrl={''}
                             gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     )}
                     {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSeksjonSteg.Tilbakekreving && (
-                        <TilbakekrevingFormNy />
+                        <TilbakekrevingFormNy
+                            sakId={props.sakId}
+                            revurdering={props.revurdering}
+                            gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
+                        />
                     )}
                     {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSeksjonSteg.SendTilAttestering && (
-                        <SendTilAttesteringNy forrigeUrl={props.seksjoner[1].linjer.at(-2)!.url} />
+                        <SendTilAttesteringNy
+                            sakId={props.sakId}
+                            revurdering={props.revurdering}
+                            gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
+                            forrigeUrl={props.seksjoner[1].linjer.at(-2)!.url}
+                        />
                     )}
                 </div>
             )

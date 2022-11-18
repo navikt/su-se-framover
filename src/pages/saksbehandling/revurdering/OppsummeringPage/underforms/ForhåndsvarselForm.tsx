@@ -44,7 +44,6 @@ const ForhåndsvarselForm = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
-    avsluttUrl: string;
     nesteUrl: string;
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
@@ -85,7 +84,7 @@ const ForhåndsvarselForm = (props: {
                         form={form}
                         savingState={lagreForhåndsvarselStatus}
                         save={handleSubmit}
-                        avsluttUrl={props.avsluttUrl}
+                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                         forrigeUrl={props.forrigeUrl}
                         nesteUrl={props.nesteUrl}
                         nesteKnappTekst={

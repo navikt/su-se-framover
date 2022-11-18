@@ -222,7 +222,7 @@ export const finnNesteRevurderingsteg = (
         ? { seksjon: RevurderingSeksjoner.GrunnlagOgVilkår, steg: førsteIkkeVurderteSteg }
         : {
               seksjon: RevurderingSeksjoner.Oppsummering,
-              steg: RevurderingOppsummeringSeksjonSteg.Tilbakekreving,
+              steg: RevurderingOppsummeringSeksjonSteg.Forhåndsvarsel,
           };
 };
 
