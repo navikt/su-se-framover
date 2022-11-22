@@ -2,6 +2,10 @@ import { Linjestatus, Seksjon } from '~src/components/framdriftsindikator/Framdr
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { Beregning } from '~src/types/Beregning';
+import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
+import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import {
     AvsluttetGjenopptak,
     AvsluttetRevurdering,
@@ -31,7 +35,7 @@ import {
     Vurderingstatus,
 } from '~src/types/Revurdering';
 import { Simulering } from '~src/types/Simulering';
-
+import { Vilkårstatus } from '~src/types/Vilkår';
 export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
     return 'informasjonSomRevurderes' in r;
 };
@@ -306,79 +310,124 @@ const informasjonSomRevurderesTilGrunnlagOgVilkårToSteg = (r: InformasjonsRevur
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.Bosituasjon:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.Bosituasjon,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status: Linjestatus.Uavklart,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.Bosituasjon,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.EndringAvFradrag:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.EndringAvFradrag,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status: Linjestatus.Uavklart,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.fradrag,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.EndringAvFradrag,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.FastOpphold:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.FastOpphold,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat === Vilkårstatus.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat ===
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.fastOpphold,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.FastOpphold,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.Flyktning:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.Flyktning,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat === Vilkårstatus.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat ===
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.flyktning,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.Flyktning,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.Formue:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.Formue,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.formue.resultat === FormueStatus.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.formue.resultat === FormueStatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.formue,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.Formue,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.Institusjonsopphold:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.Institusjonsopphold,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.resultat ===
+                            Vilkårstatus.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.resultat ===
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.Institusjonsopphold,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.Oppholdstillatelse:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.Oppholdstillatelse,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat === Vilkårstatus.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat ===
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.lovligOpphold,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.Oppholdstillatelse,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.Opplysningsplikt:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.Opplysningsplikt,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status: !r.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt?.vurderinger
+                            ? Linjestatus.Ingenting
+                            : r.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt.vurderinger.some(
+                                  (o) => o.beskrivelse === OpplysningspliktBeksrivelse.UtilstrekkeligDokumentasjon
+                              )
+                            ? Linjestatus.IkkeOk
+                            : Linjestatus.Ok,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.Opplysningsplikt,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.PersonligOppmøte:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.PersonligOppmøte,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.personligOppmøte?.resultat ===
+                            Vilkårstatus.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.personligOppmøte?.resultat ===
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.personligOppmøte,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.PersonligOppmøte,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.Uførhet:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.Uførhet,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat ===
+                                  UføreResultat.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.uføre,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.Uførhet,
                     };
                 case RevurderingGrunnlagOgVilkårSeksjonSteg.Utenlandsopphold:
                     return {
                         somRevurderes: RevurderingGrunnlagOgVilkårSeksjonSteg.Utenlandsopphold,
-                        erVurdert: r.informasjonSomRevurderes[revurderingstegTilInformasjonSomRevurderes(v)],
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
+                            Utenlandsoppholdstatus.SkalHoldeSegINorge
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
+                                  Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold,
-                        steg: RevurderingGrunnlagOgVilkårSeksjonSteg.Utenlandsopphold,
                     };
             }
         });
@@ -414,13 +463,13 @@ export const lagGrunnlagOgVilkårSeksjon = (arg: { sakId: string; r: Informasjon
         linjer: informasjonSomRevurderesOgGrunnlagOgVilkår.map((v) => {
             return {
                 id: v.somRevurderes,
-                status: v.erVurdert === Vurderingstatus.Vurdert ? Linjestatus.Ok : Linjestatus.Ingenting,
+                status: v.status,
                 label: v.somRevurderes,
                 url: Routes.revurderingSeksjonSteg.createURL({
                     sakId: arg.sakId,
                     revurderingId: arg.r.id,
                     seksjon: RevurderingSeksjoner.GrunnlagOgVilkår,
-                    steg: v.steg,
+                    steg: v.somRevurderes,
                 }),
                 erKlikkbar: true,
             };
@@ -499,7 +548,5 @@ const hentSeksjoner = (arg: { sakId: string; r: InformasjonsRevurdering }) => {
 };
 
 export const revurderingTilFramdriftsindikatorSeksjoner = (arg: { sakId: string; r: InformasjonsRevurdering }) => {
-    const seksjoner = hentSeksjoner(arg);
-
-    return seksjoner;
+    return hentSeksjoner(arg);
 };
