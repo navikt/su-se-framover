@@ -37,11 +37,15 @@ export const AlderspensjonForm = (props: Props) => {
     return (
         <FormWrapper
             form={form}
-            save={props.save}
-            savingState={props.savingState}
-            avsluttUrl={props.avsluttUrl}
-            forrigeUrl={props.forrigeUrl}
-            nesteUrl={props.nesteUrl}
+            neste={{
+                onClick: props.save,
+                savingState: props.savingState,
+                url: props.nesteUrl,
+            }}
+            tilbake={{
+                url: props.forrigeUrl,
+            }}
+            {...props}
         >
             <>
                 <Controller

@@ -79,21 +79,27 @@ const TilbakekrevingForm = (props: {
                     <FormWrapper
                         className={styles.stickyDiv}
                         form={form}
-                        savingState={lagreTilbakekrevingsbehandlingState}
-                        save={handleSubmit}
-                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
-                        forrigeUrl={Routes.revurderingSeksjonSteg.createURL({
-                            sakId: props.sakId,
-                            revurderingId: props.revurdering.id,
-                            seksjon: RevurderingSeksjoner.Oppsummering,
-                            steg: RevurderingOppsummeringSeksjonSteg.Forhåndsvarsel,
-                        })}
-                        nesteUrl={Routes.revurderingSeksjonSteg.createURL({
-                            sakId: props.sakId,
-                            revurderingId: props.revurdering.id,
-                            seksjon: RevurderingSeksjoner.Oppsummering,
-                            steg: RevurderingOppsummeringSeksjonSteg.SendTilAttestering,
-                        })}
+                        neste={{
+                            savingState: lagreTilbakekrevingsbehandlingState,
+                            onClick: handleSubmit,
+                            url: Routes.revurderingSeksjonSteg.createURL({
+                                sakId: props.sakId,
+                                revurderingId: props.revurdering.id,
+                                seksjon: RevurderingSeksjoner.Oppsummering,
+                                steg: RevurderingOppsummeringSeksjonSteg.SendTilAttestering,
+                            }),
+                        }}
+                        tilbake={{
+                            url: Routes.revurderingSeksjonSteg.createURL({
+                                sakId: props.sakId,
+                                revurderingId: props.revurdering.id,
+                                seksjon: RevurderingSeksjoner.Oppsummering,
+                                steg: RevurderingOppsummeringSeksjonSteg.Forhåndsvarsel,
+                            }),
+                        }}
+                        fortsettSenere={{
+                            url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                        }}
                     >
                         <div className={styles.form}>
                             <Heading size="small" level="5" spacing className={styles.heading}>

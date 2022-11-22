@@ -31,7 +31,7 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
-import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
+import Navigasjonsknapper from '../../bunnknapper/Navigasjonsknapper';
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -148,15 +148,17 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
                             )}
                             <Navigasjonsknapper
+                                neste={{
+                                    loading: RemoteData.isPending(savingState),
+                                }}
                                 tilbake={
                                     props.onTilbakeClickOverride
-                                        ? { onTilbakeClick: props.onTilbakeClickOverride }
+                                        ? { onClick: props.onTilbakeClickOverride }
                                         : { url: props.forrigeUrl }
                                 }
-                                onLagreOgFortsettSenereClick={() =>
-                                    save(form.getValues(), () => navigate(props.avsluttUrl))
-                                }
-                                loading={RemoteData.isPending(savingState)}
+                                fortsettSenere={{
+                                    onClick: () => save(form.getValues(), () => navigate(props.avsluttUrl)),
+                                }}
                             />
                         </div>
                     </form>

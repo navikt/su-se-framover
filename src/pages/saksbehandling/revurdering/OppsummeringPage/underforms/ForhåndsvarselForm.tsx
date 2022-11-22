@@ -82,17 +82,21 @@ const ForhåndsvarselForm = (props: {
                     <FormWrapper
                         className={styles.stickyDiv}
                         form={form}
-                        savingState={lagreForhåndsvarselStatus}
-                        save={handleSubmit}
-                        avsluttUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={props.nesteUrl}
-                        nesteKnappTekst={
-                            watch.oppretterNyttForhåndsvarsel
+                        neste={{
+                            savingState: lagreForhåndsvarselStatus,
+                            onClick: handleSubmit,
+                            url: props.nesteUrl,
+                            tekst: watch.oppretterNyttForhåndsvarsel
                                 ? formatMessage('forhåndsvarsel.neste.sendOgNaviger')
-                                : undefined
-                        }
-                        fortsettSenereKnappTekst={formatMessage('forhåndsvarsel.fortsettSenere')}
+                                : undefined,
+                        }}
+                        tilbake={{
+                            url: props.forrigeUrl,
+                        }}
+                        fortsettSenere={{
+                            url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                            tekst: formatMessage('forhåndsvarsel.fortsettSenere'),
+                        }}
                     >
                         <div>
                             <div className={styles.formElementsContainer}>

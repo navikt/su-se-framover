@@ -24,7 +24,7 @@ const LovligOppholdForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <FormWrapper save={props.onFormSubmit} {...props}>
+        <FormWrapper {...props}>
             <>
                 <MultiPeriodeVelger
                     name="lovligOpphold"
@@ -46,8 +46,8 @@ const LovligOppholdForm = (props: Props) => {
                     )}
                     {...props}
                 />
-                {RemoteData.isSuccess(props.savingState) && 'feilmeldinger' in props.savingState.value && (
-                    <UtfallSomIkkeStøttes feilmeldinger={props.savingState.value.feilmeldinger} />
+                {RemoteData.isSuccess(props.neste.savingState) && 'feilmeldinger' in props.neste.savingState.value && (
+                    <UtfallSomIkkeStøttes feilmeldinger={props.neste.savingState.value.feilmeldinger} />
                 )}
             </>
         </FormWrapper>

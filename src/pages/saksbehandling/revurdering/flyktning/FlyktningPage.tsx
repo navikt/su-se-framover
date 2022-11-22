@@ -64,15 +64,24 @@ export function FlyktningPage(props: RevurderingStegProps) {
                     <FlyktningForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={(values) =>
-                            lagreFlyktning(
-                                values,
-                                props.onSuccessOverride
-                                    ? (r) => props.onSuccessOverride!(r)
-                                    : () => navigate(props.nesteUrl)
-                            )
-                        }
-                        savingState={status}
+                        neste={{
+                            savingState: status,
+                            url: props.nesteUrl,
+                            onClick: (values) =>
+                                lagreFlyktning(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}
                     />

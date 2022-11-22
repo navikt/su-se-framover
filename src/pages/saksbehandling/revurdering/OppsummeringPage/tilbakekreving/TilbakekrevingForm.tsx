@@ -10,7 +10,7 @@ import * as RevurderingActions from '~src/features/revurdering/revurderingAction
 import { useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import yup from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
+import Navigasjonsknapper from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { InformasjonsRevurdering, TilbakekrevingsAvgjørelse } from '~src/types/Revurdering';
 import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
 
@@ -22,7 +22,7 @@ export type TilbakekrevingsbehandlingFormData = {
 };
 
 export const TilbakekrevingForm = (props: {
-    forrige: { url: string; visModal: boolean };
+    forrigeUrl: string;
     revurdering: InformasjonsRevurdering;
     sakId: string;
 }) => {
@@ -61,47 +61,43 @@ export const TilbakekrevingForm = (props: {
     });
 
     return (
-        <>
-            <form onSubmit={form.handleSubmit(lagreTilbakekrevingsbehandling)} className={styles.form}>
-                <Heading size="small" level="5" spacing className={styles.heading}>
-                    {formatMessage('tittel')}
-                </Heading>
-                <div className={styles.undertittel}>
-                    <InformationFilled color="#368DA8" width="24px" height="24px" />
-                    <BodyLong>{formatMessage('undertittel')}</BodyLong>
-                </div>
+        <form onSubmit={form.handleSubmit(lagreTilbakekrevingsbehandling)} className={styles.form}>
+            <Heading size="small" level="5" spacing className={styles.heading}>
+                {formatMessage('tittel')}
+            </Heading>
+            <div className={styles.undertittel}>
+                <InformationFilled color="#368DA8" width="24px" height="24px" />
+                <BodyLong>{formatMessage('undertittel')}</BodyLong>
+            </div>
 
-                <Controller
-                    control={form.control}
-                    name="avgjørelse"
-                    render={({ field, fieldState }) => (
-                        <RadioGroup
-                            legend={formatMessage('aktsomhetstittel')}
-                            error={fieldState.error?.message}
-                            {...field}
-                        >
-                            <Radio id={field.name} ref={field.ref} value={TilbakekrevingsAvgjørelse.TILBAKEKREV}>
-                                {formatMessage('aktsomhetJa')}
-                            </Radio>
-                            <Radio value={TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV}>
-                                {formatMessage('aktsomhetNei')}
-                            </Radio>
-                        </RadioGroup>
-                    )}
-                />
-                {form.watch('avgjørelse') === TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV && (
-                    <Alert variant={'info'}>{formatMessage('ingenTilbakekreving')}</Alert>
+            <Controller
+                control={form.control}
+                name="avgjørelse"
+                render={({ field, fieldState }) => (
+                    <RadioGroup legend={formatMessage('aktsomhetstittel')} error={fieldState.error?.message} {...field}>
+                        <Radio id={field.name} ref={field.ref} value={TilbakekrevingsAvgjørelse.TILBAKEKREV}>
+                            {formatMessage('aktsomhetJa')}
+                        </Radio>
+                        <Radio value={TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV}>
+                            {formatMessage('aktsomhetNei')}
+                        </Radio>
+                    </RadioGroup>
                 )}
-                {RemoteData.isFailure(lagreTilbakekrevingsbehandlingState) && (
-                    <ApiErrorAlert error={lagreTilbakekrevingsbehandlingState.error} />
-                )}
+            />
+            {form.watch('avgjørelse') === TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV && (
+                <Alert variant={'info'}>{formatMessage('ingenTilbakekreving')}</Alert>
+            )}
+            {RemoteData.isFailure(lagreTilbakekrevingsbehandlingState) && (
+                <ApiErrorAlert error={lagreTilbakekrevingsbehandlingState.error} />
+            )}
 
-                <Navigasjonsknapper
-                    nesteKnappTekst={formatMessage('neste')}
-                    tilbake={props.forrige}
-                    loading={RemoteData.isPending(lagreTilbakekrevingsbehandlingState)}
-                />
-            </form>
-        </>
+            <Navigasjonsknapper
+                neste={{
+                    tekst: formatMessage('neste'),
+                    loading: RemoteData.isPending(lagreTilbakekrevingsbehandlingState),
+                }}
+                tilbake={{ url: props.forrigeUrl }}
+            />
+        </form>
     );
 };

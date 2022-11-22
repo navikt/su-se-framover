@@ -64,7 +64,17 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
             {{
                 left: (
                     <UførhetForm
-                        onFormSubmit={handleSave}
+                        neste={{
+                            onClick: handleSave,
+                            url: props.nesteUrl,
+                            savingState: status,
+                        }}
+                        tilbake={{
+                            url: props.forrigeUrl,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         minOgMaxPeriode={{
                             fraOgMed: DateUtils.parseNonNullableIsoDateOnly(
                                 props.behandling.stønadsperiode!.periode.fraOgMed
@@ -74,9 +84,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                             ),
                         }}
                         form={form}
-                        savingState={status}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
-                        {...props}
                     />
                 ),
                 right: (

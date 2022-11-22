@@ -67,15 +67,24 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                     <PersonligOppmøteForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={(values) =>
-                            lagrePersonligOppmøte(
-                                values,
-                                props.onSuccessOverride
-                                    ? (r) => props.onSuccessOverride!(r)
-                                    : () => navigate(props.nesteUrl)
-                            )
-                        }
-                        savingState={status}
+                        neste={{
+                            url: props.nesteUrl,
+                            savingState: status,
+                            onClick: (values) =>
+                                lagrePersonligOppmøte(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}
                     />

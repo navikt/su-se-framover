@@ -23,8 +23,7 @@ export default {
     'brevvalg.skal.det.sendes.brev': 'Skal det sendes vedtaksbrev til bruker?',
     'brevvalg.lagre': 'Lagre',
     neste: 'Neste',
-
-    'navigasjonsknapp.nesteTekst.sendTilAttestering': 'Send til attestering',
+    'knapp.fortsettSenere': 'Fortsett senere',
 
     'tilbakereving.alert.brutto.netto':
         'Forhåndsvisningen av brev viser brutto tilbakekreving. Brevet oppdateres med netto tilbakekreving før det sendes til bruker.',

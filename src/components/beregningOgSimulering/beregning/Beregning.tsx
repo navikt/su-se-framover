@@ -33,7 +33,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
+import Navigasjonsknapper from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { NullablePeriode } from '~src/types/Periode';
@@ -290,19 +290,22 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         )}
                         <Navigasjonsknapper
                             tilbake={{ url: props.forrigeUrl }}
-                            onNesteClick={() => handleNesteClick()}
-                            loading={
-                                RemoteData.isPending(lagreFradragstatus) ||
-                                RemoteData.isPending(beregningStatus) ||
-                                RemoteData.isPending(simuleringStatus)
-                            }
-                            onLagreOgFortsettSenereClick={async () => {
-                                const validForm = await form.trigger().then(() => form.formState.isValid);
-                                if (validForm) {
-                                    lagreFradragOgBeregn(form.getValues(), () => {
-                                        navigate(props.avsluttUrl);
-                                    });
-                                }
+                            neste={{
+                                loading:
+                                    RemoteData.isPending(lagreFradragstatus) ||
+                                    RemoteData.isPending(beregningStatus) ||
+                                    RemoteData.isPending(simuleringStatus),
+                                onClick: () => handleNesteClick(),
+                            }}
+                            fortsettSenere={{
+                                onClick: async () => {
+                                    const validForm = await form.trigger().then(() => form.formState.isValid);
+                                    if (validForm) {
+                                        lagreFradragOgBeregn(form.getValues(), () => {
+                                            navigate(props.avsluttUrl);
+                                        });
+                                    }
+                                },
                             }}
                         />
                     </form>

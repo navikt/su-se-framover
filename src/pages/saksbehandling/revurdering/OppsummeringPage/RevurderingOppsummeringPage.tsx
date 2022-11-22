@@ -189,11 +189,7 @@ const OppsummeringshandlingForm = (props: {
                 </div>
             )}
             {oppsummeringsformState === OppsummeringState.TILBAKEKREVING && (
-                <TilbakekrevingForm
-                    revurdering={props.revurdering}
-                    forrige={{ url: props.forrigeUrl, visModal: false }}
-                    sakId={props.sakId}
-                />
+                <TilbakekrevingForm revurdering={props.revurdering} forrigeUrl={props.forrigeUrl} sakId={props.sakId} />
             )}
         </div>
     );

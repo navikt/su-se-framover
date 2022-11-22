@@ -4,8 +4,7 @@ import { Accordion, BodyShort, Button, Checkbox, Label, Loader, TextField } from
 import React, { useEffect, useMemo, useState } from 'react';
 import { Control, Controller, UseFormTrigger, useWatch } from 'react-hook-form';
 
-import { ApiError } from '~src/api/apiClient';
-import { RevurderingOgFeilmeldinger, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
+import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as PersonApi from '~src/api/personApi';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import { Personkort } from '~src/components/personkort/Personkort';
@@ -19,17 +18,15 @@ import {
     bosituasjonPåDato,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Formuegrenser } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import messages from '../VilkårOgGrunnlagForms-nb';
-import { VilkårFormProps, VilkårFormSaveState } from '../VilkårOgGrunnlagFormUtils';
+import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
 import styles from './formueForm.module.less';
 import {
     FormueVilkårFormData,
     nyFormuegrunnlagMedEllerUtenPeriode,
-    FormueFormDataer,
     verdierId,
     erFormueVilkårOppfylt,
     regnUtFormuegrunnlagVerdier,
@@ -37,12 +34,7 @@ import {
     lagTomFormuegrunnlagVerdier,
 } from './FormueFormUtils';
 
-//Omitter savingState, slik at vi kan override den
-interface Props extends Omit<VilkårFormProps<FormueVilkårFormData>, 'savingState' | 'onFormSubmit'> {
-    onFormSubmit<T extends FormueFormDataer>(values: T, onSuccess: () => void): void;
-    savingState:
-        | VilkårFormSaveState
-        | RemoteData.RemoteData<ApiError | undefined, [VilkårOgGrunnlagApiResult, Søknadsbehandling]>;
+interface Props extends VilkårFormProps<FormueVilkårFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
     formuegrenser: Formuegrenser[];
@@ -52,7 +44,7 @@ interface Props extends Omit<VilkårFormProps<FormueVilkårFormData>, 'savingSta
 const FormueForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <FormWrapper save={props.onFormSubmit} {...props}>
+        <FormWrapper {...props}>
             <>
                 <MultiPeriodeVelger
                     name="formue"
@@ -96,15 +88,15 @@ const FormueForm = (props: Props) => {
                 {/* Fordi formue ved søkadsbehandling skal være så spesiell, blir vanskelig å gjøre formet generisk. */}
                 {/* Vi vet dermed hva retur typene på Api-kallene ved revurdering er alltid, og dermed bare gjør et kasting helvete */}
                 {props.søknadsbehandlingEllerRevurdering === 'Revurdering' &&
-                    RemoteData.isSuccess(props.savingState as ApiResult<RevurderingOgFeilmeldinger>) &&
+                    RemoteData.isSuccess(props.neste.savingState as ApiResult<RevurderingOgFeilmeldinger>) &&
                     'feilmeldinger' in
-                        (props.savingState as unknown as RemoteSuccess<ApiResult<RevurderingOgFeilmeldinger>>)
+                        (props.neste.savingState as unknown as RemoteSuccess<ApiResult<RevurderingOgFeilmeldinger>>)
                             .value && (
                         <UtfallSomIkkeStøttes
                             feilmeldinger={
                                 (
                                     (
-                                        props.savingState as unknown as RemoteSuccess<
+                                        props.neste.savingState as unknown as RemoteSuccess<
                                             ApiResult<RevurderingOgFeilmeldinger>
                                         >
                                     ).value as unknown as RevurderingOgFeilmeldinger

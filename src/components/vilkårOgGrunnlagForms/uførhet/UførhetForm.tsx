@@ -16,19 +16,11 @@ import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
 import * as styles from './/uførhet.module.less';
 
-export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: VilkårFormProps<UførhetFormData>) => {
+export const UførhetForm = ({ form, ...props }: VilkårFormProps<UførhetFormData>) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <FormWrapper
-            form={form}
-            save={onFormSubmit}
-            savingState={savingState}
-            avsluttUrl={props.avsluttUrl}
-            forrigeUrl={props.forrigeUrl}
-            nesteUrl={props.nesteUrl}
-            onTilbakeClickOverride={props.onTilbakeClickOverride}
-        >
+        <FormWrapper form={form} {...props}>
             <>
                 <MultiPeriodeVelger
                     name={'grunnlag'}
@@ -87,8 +79,8 @@ export const UførhetForm = ({ form, onFormSubmit, savingState, ...props }: Vilk
                         </div>
                     )}
                 />
-                {RemoteData.isSuccess(savingState) && 'feilmeldinger' in savingState.value && (
-                    <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
+                {RemoteData.isSuccess(props.neste.savingState) && 'feilmeldinger' in props.neste.savingState.value && (
+                    <UtfallSomIkkeStøttes feilmeldinger={props.neste.savingState.value.feilmeldinger} />
                 )}
             </>
         </FormWrapper>

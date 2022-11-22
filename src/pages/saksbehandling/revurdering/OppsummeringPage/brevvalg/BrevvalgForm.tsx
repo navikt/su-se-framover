@@ -15,7 +15,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
+import Navigasjonsknapper from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import { useAppDispatch } from '~src/redux/Store';
 import { Revurdering, InformasjonsRevurdering, Valg } from '~src/types/Revurdering';
 import {
@@ -218,9 +218,11 @@ export const BrevvalgForm = (props: { sakId: string; revurdering: InformasjonsRe
             {RemoteData.isFailure(sendTilAttesteringStatus) && <ApiErrorAlert error={sendTilAttesteringStatus.error} />}
 
             <Navigasjonsknapper
-                nesteKnappTekst={'send til attestering'}
+                neste={{
+                    tekst: formatMessage('navigasjonsknapp.nesteTekst.sendTilAttestering'),
+                    loading: isLoading,
+                }}
                 tilbake={{ url: props.forrigeUrl }}
-                loading={isLoading}
             />
         </form>
     );

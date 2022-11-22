@@ -69,15 +69,24 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                     <LovligOppholdForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={(values) =>
-                            lagreLovligOpphold(
-                                values,
-                                props.onSuccessOverride
-                                    ? (r) => props.onSuccessOverride!(r)
-                                    : () => navigate(props.nesteUrl)
-                            )
-                        }
-                        savingState={status}
+                        neste={{
+                            savingState: status,
+                            url: props.nesteUrl,
+                            onClick: (values) =>
+                                lagreLovligOpphold(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         onTilbakeClickOverride={props.onTilbakeClickOverride}
                         {...props}

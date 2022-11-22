@@ -9,7 +9,7 @@ import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering'
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
+import Navigasjonsknapper from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import stegSharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
@@ -17,33 +17,41 @@ import * as styles from './søknadsbehandlingWrapper.module.less';
 
 interface Props<T extends FieldValues, U> {
     form: UseFormReturn<T>;
-    save: (values: T, onSuccess: (res?: U) => void) => void;
-    savingState: ApiResult<unknown>;
-    onSuccess?: (res: U) => void;
-    avsluttUrl: string;
-    forrigeUrl: string;
-    onTilbakeClickOverride?: () => void;
-    nesteUrl: string;
     children: ReactElement;
-    nesteKnappTekst?: string;
-    fortsettSenereKnappTekst?: string;
     className?: string;
+    neste: {
+        url?: string;
+        tekst?: string;
+        onClick: (values: T, onSuccess: (res?: U) => void) => void;
+        savingState: ApiResult<unknown>;
+        onSuccess?: (res: U) => void;
+    };
+    tilbake?: {
+        url?: string;
+        onClick?: () => void;
+    };
+    fortsettSenere?: {
+        loading?: boolean;
+        tekst?: string;
+        url: string;
+    };
 }
 
 export const FormWrapper = <T extends FieldValues, U extends Søknadsbehandling>({ form, ...props }: Props<T, U>) => {
     const { formatMessage } = useI18n({ messages: stegSharedI18n });
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-    const tilbake = props.onTilbakeClickOverride
-        ? { onTilbakeClick: props.onTilbakeClickOverride }
-        : { url: props.forrigeUrl };
 
     return (
         <form
             className={props.className ?? ''}
             onSubmit={form.handleSubmit((values) => {
-                return props.save(values, (res) => {
-                    props.onSuccess && res ? props.onSuccess(res) : navigate(props.nesteUrl);
+                return props.neste.onClick(values, (res) => {
+                    props.neste.onSuccess && res
+                        ? props.neste.onSuccess(res)
+                        : props.neste?.url
+                        ? navigate(props.neste.url)
+                        : undefined;
                 });
             })}
         >
@@ -55,15 +63,23 @@ export const FormWrapper = <T extends FieldValues, U extends Søknadsbehandling>
                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                 ref={feiloppsummeringRef}
             />
-            {RemoteData.isFailure(props.savingState) && <ApiErrorAlert error={props.savingState.error} />}
+            {RemoteData.isFailure(props.neste.savingState) && <ApiErrorAlert error={props.neste.savingState.error} />}
             <Navigasjonsknapper
-                tilbake={tilbake}
-                onLagreOgFortsettSenereClick={form.handleSubmit((values) =>
-                    props.save(values, () => navigate(props.avsluttUrl))
-                )}
-                loading={RemoteData.isPending(props.savingState)}
-                nesteKnappTekst={props.nesteKnappTekst}
-                fortsettSenereKnappTekst={props.fortsettSenereKnappTekst}
+                neste={{
+                    loading: RemoteData.isPending(props.neste.savingState),
+                    tekst: props.neste?.tekst,
+                }}
+                tilbake={props.tilbake}
+                fortsettSenere={
+                    props.fortsettSenere
+                        ? {
+                              onClick: form.handleSubmit((values) =>
+                                  props.neste.onClick(values, () => navigate(props.fortsettSenere!.url))
+                              ),
+                              tekst: props.fortsettSenere?.tekst,
+                          }
+                        : undefined
+                }
             />
         </form>
     );

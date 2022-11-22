@@ -67,16 +67,25 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                     <FastOppholdForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={(values) =>
-                            lagreFastOpphold(
-                                values,
-                                props.onSuccessOverride
-                                    ? (r) => props.onSuccessOverride!(r)
-                                    : () => navigate(props.nesteUrl)
-                            )
-                        }
-                        savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
+                        neste={{
+                            savingState: status,
+                            url: props.nesteUrl,
+                            onClick: (values) =>
+                                lagreFastOpphold(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         {...props}
                     />
                 ),

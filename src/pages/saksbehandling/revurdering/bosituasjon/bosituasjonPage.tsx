@@ -76,15 +76,24 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                 left: (
                     <FormWrapper
                         form={form}
-                        save={(values) =>
-                            lagreBosituasjon(
-                                values,
-                                props.onSuccessOverride
-                                    ? (r) => props.onSuccessOverride!(r)
-                                    : () => navigate(props.nesteUrl)
-                            )
-                        }
-                        savingState={status}
+                        neste={{
+                            url: props.nesteUrl,
+                            savingState: status,
+                            onClick: (values) =>
+                                lagreBosituasjon(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         {...props}
                     >
                         <>

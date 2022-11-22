@@ -63,15 +63,24 @@ const Formue = (props: RevurderingStegProps) => {
                     <FormueForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.revurdering.periode)}
-                        onFormSubmit={(values) =>
-                            lagreFormuegrunnlaget(
-                                values,
-                                props.onSuccessOverride
-                                    ? (r) => props.onSuccessOverride!(r)
-                                    : () => navigate(props.nesteUrl)
-                            )
-                        }
-                        savingState={lagreFormuegrunnlagStatus}
+                        neste={{
+                            onClick: (values) =>
+                                lagreFormuegrunnlaget(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                            url: props.nesteUrl,
+                            savingState: lagreFormuegrunnlagStatus,
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         formuegrenser={props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser}
                         bosituasjonsgrunnlag={props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon}

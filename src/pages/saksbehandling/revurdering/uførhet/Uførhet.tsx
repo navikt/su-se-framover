@@ -72,16 +72,25 @@ const Uførhet = (props: RevurderingStegProps) => {
             {{
                 left: (
                     <UførhetForm
-                        onFormSubmit={(values) =>
-                            handleSave(
-                                values,
-                                props.onSuccessOverride
-                                    ? (r) => props.onSuccessOverride!(r)
-                                    : () => navigate(props.nesteUrl)
-                            )
-                        }
                         form={form}
-                        savingState={status}
+                        neste={{
+                            onClick: (values) =>
+                                handleSave(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                            savingState: status,
+                            url: props.nesteUrl,
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         minOgMaxPeriode={{
                             fraOgMed: DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.fraOgMed),
                             tilOgMed: DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.tilOgMed),
