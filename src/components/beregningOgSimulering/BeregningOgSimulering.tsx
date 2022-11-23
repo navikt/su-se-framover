@@ -6,6 +6,7 @@ import { Nullable } from '~src/lib/types';
 import { Beregning } from '~src/types/Beregning';
 import { Simulering } from '~src/types/Simulering';
 
+import { OppsummeringPar, OppsummeringsParSortering } from '../oppsummeringspar/Oppsummeringsverdi';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -56,6 +57,15 @@ const BeregningOgSimulering = (props: {
                     </Panel>
                 </div>
             </div>
+            {props.beregning?.begrunnelse && (
+                <div className={styles.begrunnelseContainer}>
+                    <OppsummeringPar
+                        label={formatMessage('beregning.begrunnelse')}
+                        verdi={props.beregning.begrunnelse}
+                        sorteres={OppsummeringsParSortering.Vertikalt}
+                    />
+                </div>
+            )}
             {props.childrenUnderBeregning && props.childrenUnderBeregning}
         </Oppsummeringspanel>
     );

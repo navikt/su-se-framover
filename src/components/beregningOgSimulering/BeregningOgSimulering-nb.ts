@@ -4,6 +4,8 @@ export default {
     'heading.beregning': 'Beregning',
     'heading.simulering': 'Simulering',
 
+    'beregning.begrunnelse': 'Begrunnelse',
+
     'error.ingenBeregning': 'Ingen beregning',
     'error.ingenSimulering': 'Ingen simulering',
 };
