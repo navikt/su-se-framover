@@ -58,6 +58,7 @@ const BeregningOgSimulering = (props: {
                     </Panel>
                 </div>
             </div>
+
             {props.beregning?.begrunnelse && (
                 <div className={styles.begrunnelseContainer}>
                     <OppsummeringPar
@@ -67,6 +68,7 @@ const BeregningOgSimulering = (props: {
                     />
                 </div>
             )}
+
             {props.childrenUnderBeregning && props.childrenUnderBeregning}
         </Oppsummeringspanel>
     );
