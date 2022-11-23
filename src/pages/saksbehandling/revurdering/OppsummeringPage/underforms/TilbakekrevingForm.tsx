@@ -24,7 +24,7 @@ import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/r
 import messages from './tilbakekrevingForm-nb';
 import * as styles from './tilbakekrevingForm.module.less';
 
-interface TilbakekrevingsbehandlingFormData {
+export interface TilbakekrevingsbehandlingFormData {
     avgjørelse: TilbakekrevingsAvgjørelse;
 }
 

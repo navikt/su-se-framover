@@ -1,4 +1,5 @@
 import { Heading, Panel } from '@navikt/ds-react';
+import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -21,6 +22,7 @@ const BeregningOgSimulering = (props: {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
     tittel?: string;
+    kompakt?: boolean;
     childrenOverBeregning?: React.ReactNode;
     childrenUnderBeregning?: React.ReactNode;
 }) => {
@@ -32,7 +34,12 @@ const BeregningOgSimulering = (props: {
             ikon={Oppsummeringsikon.Kalkulator}
         >
             {props.childrenOverBeregning && props.childrenOverBeregning}
-            <div className={styles.container}>
+            <div
+                className={classNames({
+                    [styles.container]: true,
+                    [styles.kompakt]: props.kompakt,
+                })}
+            >
                 <div className={styles.column}>
                     <Heading level="3" size="small" spacing>
                         {formatMessage('heading.beregning')}
@@ -58,7 +65,6 @@ const BeregningOgSimulering = (props: {
                     </Panel>
                 </div>
             </div>
-
             {props.beregning?.begrunnelse && (
                 <div className={styles.begrunnelseContainer}>
                     <OppsummeringPar
@@ -68,7 +74,6 @@ const BeregningOgSimulering = (props: {
                     />
                 </div>
             )}
-
             {props.childrenUnderBeregning && props.childrenUnderBeregning}
         </Oppsummeringspanel>
     );

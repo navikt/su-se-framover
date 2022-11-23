@@ -26,8 +26,6 @@ import {
     erRevurderingTilbakekreving,
 } from '~src/utils/revurdering/revurderingUtils';
 
-import { UNDERSCORE_REGEX } from '../revurderingOppsummeringsPageUtils';
-
 import messages from './SendTilAttestering-nb';
 import styles from './SendTilAttestering.module.less';
 
@@ -38,6 +36,7 @@ export interface BrevvalgFormData {
     begrunnelse: Nullable<string>;
 }
 
+export const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
 const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
     yup.object<BrevvalgFormData>({
         valg: yup.string().oneOf(Object.values(Valg)).required(),

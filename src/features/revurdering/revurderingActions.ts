@@ -4,7 +4,7 @@ import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import * as revurderingApi from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
-import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
+import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/underforms/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Periode } from '~src/types/Periode';
 import {

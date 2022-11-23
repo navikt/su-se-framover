@@ -19,6 +19,7 @@ import {
     OpprettetRevurdering,
     OpprettetRevurderingGrunn,
     Revurdering,
+    RevurderingBeregnOgSimulerSeksjonSteg,
     RevurderingGrunnlagOgVilkårSeksjonSteg,
     RevurderingOpprettelseSeksjonSteg,
     RevurderingOppsummeringSeksjonSteg,
@@ -477,6 +478,27 @@ export const lagGrunnlagOgVilkårSeksjon = (arg: { sakId: string; r: Informasjon
     };
 };
 
+export const lagBeregnOgSimulerSeksjon = (arg: { sakId: string; r: InformasjonsRevurdering }): Seksjon => {
+    return {
+        id: RevurderingSeksjoner.BeregningOgSimulering,
+        tittel: 'Beregning & Simulering',
+        linjer: [
+            {
+                id: RevurderingBeregnOgSimulerSeksjonSteg.BeregnOgSimuler,
+                status: Linjestatus.Ok,
+                label: 'Beregning & simulering',
+                url: Routes.revurderingSeksjonSteg.createURL({
+                    sakId: arg.sakId,
+                    revurderingId: arg.r.id,
+                    seksjon: RevurderingSeksjoner.BeregningOgSimulering,
+                    steg: RevurderingBeregnOgSimulerSeksjonSteg.BeregnOgSimuler,
+                }),
+                erKlikkbar: true,
+            },
+        ],
+    };
+};
+
 export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevurdering }): Seksjon => {
     const kanNavigereTilForhåndsvarselOgSendTilAttestering = Object.entries(arg.r).some(
         (v) => v[1] === Vurderingstatus.IkkeVurdert
@@ -542,9 +564,10 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
 const hentSeksjoner = (arg: { sakId: string; r: InformasjonsRevurdering }) => {
     const opprettelseSeaksjon = lagOpprettelsesSeksjon(arg);
     const grunnlagOgVilkårSeksjon = lagGrunnlagOgVilkårSeksjon(arg);
+    const beregnOgSimulerSeksjon = lagBeregnOgSimulerSeksjon(arg);
     const oppsummeringSeksjon = lagOppsummeringSeksjon(arg);
 
-    return [opprettelseSeaksjon, grunnlagOgVilkårSeksjon, oppsummeringSeksjon];
+    return [opprettelseSeaksjon, grunnlagOgVilkårSeksjon, beregnOgSimulerSeksjon, oppsummeringSeksjon];
 };
 
 export const revurderingTilFramdriftsindikatorSeksjoner = (arg: { sakId: string; r: InformasjonsRevurdering }) => {

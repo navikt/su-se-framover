@@ -32,8 +32,8 @@ import {
 import SkjemaelementFeilmelding from '../../../components/formElements/SkjemaelementFeilmelding';
 
 import NullstillRevurderingVarsel from './advarselReset/NullstillRevurderingVarsel';
+import RevurderingBeregnOgSimuler from './beregnOgSimuler/RevurderingBeregnOgSimuler';
 import Formue from './formue/Formue';
-import { NyRevurderingsOppsummeringPage } from './OppsummeringPage/RevurderingOppsummeringPage';
 import { PersonligOppmøte } from './personligOppmøte/PersonligOppmøte';
 import sharedMessages, { stegmessages } from './revurdering-nb';
 import * as styles from './revurdering.module.less';
@@ -42,7 +42,7 @@ const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlan
 const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
 const BosituasjonPage = React.lazy(() => import('./bosituasjon/bosituasjonPage'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
-//const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
+const NyRevurderingsOppsummeringPage = React.lazy(() => import('./OppsummeringPage/NyRevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 const Opplysningsplikt = React.lazy(() => import('./opplysningsplikt/Opplysningsplikt'));
 const Oppholdstillatelse = React.lazy(() => import('./oppholdstillatelse/LovligOpphold'));
@@ -113,7 +113,6 @@ const RevurderingPage = () => {
                 {formatMessage('revurdering.tittel')}
             </Heading>
             {urlParams.steg === RevurderingOpprettelseSeksjonSteg.Periode && <RevurderingIntroPage />}
-
             {urlParams.seksjon === RevurderingSeksjoner.GrunnlagOgVilkår && (
                 <div className={styles.framdriftsindikatorOgInnholdContainer}>
                     <FramdriftsIndikatorRevurdering
@@ -128,6 +127,21 @@ const RevurderingPage = () => {
                         sakId={props.sakId}
                         informasjonsRevurdering={påbegyntRevurdering}
                         grunnlagsdataOgVilkårsvurderinger={gjeldendeData}
+                    />
+                </div>
+            )}
+            {urlParams.seksjon === RevurderingSeksjoner.BeregningOgSimulering && (
+                <div className={styles.framdriftsindikatorOgInnholdContainer}>
+                    <FramdriftsIndikatorRevurdering
+                        sakId={props.sakId}
+                        revurderingId={påbegyntRevurdering.id}
+                        aktiveSteg={urlParams.steg!}
+                        listeElementer={framdriftsindikatorSeksjoner}
+                    />
+                    <RevurderingBeregnOgSimuler
+                        seksjoner={framdriftsindikatorSeksjoner}
+                        sakId={props.sakId}
+                        informasjonsRevurdering={påbegyntRevurdering}
                     />
                 </div>
             )}
