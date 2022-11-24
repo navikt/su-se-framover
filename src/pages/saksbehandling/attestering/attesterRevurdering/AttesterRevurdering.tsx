@@ -154,11 +154,13 @@ const AttesterRevurdering = () => {
                                 sorteres={OppsummeringsParSortering.Vertikalt}
                             />
                             {revurdering.brevvalg.begrunnelse && (
-                                <OppsummeringPar
-                                    label={formatMessage('brevvalg.begrunnelse')}
-                                    verdi={revurdering.brevvalg.begrunnelse}
-                                    sorteres={OppsummeringsParSortering.Vertikalt}
-                                />
+                                <div className={styles.begrunnelseContainer}>
+                                    <OppsummeringPar
+                                        label={formatMessage('brevvalg.begrunnelse')}
+                                        verdi={revurdering.brevvalg.begrunnelse}
+                                        sorteres={OppsummeringsParSortering.Vertikalt}
+                                    />
+                                </div>
                             )}
                             {revurdering.brevvalg.valg === Valg.SEND && (
                                 <Button
