@@ -62,10 +62,6 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                         tittel: formatMessage('label.årsak'),
                         verdi: formatMessage(props.revurdering.årsak),
                     },
-                    {
-                        tittel: formatMessage('label.begrunnelse'),
-                        verdi: props.revurdering.begrunnelse,
-                    },
                 ].map((item) => (
                     <div key={item.tittel}>
                         <OppsummeringPar
@@ -75,6 +71,13 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                         />
                     </div>
                 ))}
+            </div>
+            <div className={styles.begrunnelseContainer}>
+                <OppsummeringPar
+                    label={formatMessage('label.begrunnelse')}
+                    verdi={props.revurdering.begrunnelse}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
             </div>
             <div>
                 {erRevurderingTilbakekrevingsbehandlingMedAvgjørelse(props.revurdering) && (
