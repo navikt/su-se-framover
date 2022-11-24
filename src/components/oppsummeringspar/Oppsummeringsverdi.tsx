@@ -28,7 +28,9 @@ export const OppsummeringPar = ({
         return (
             <div className={classNames(styles.oppsummeringspar2, className)}>
                 <Label size={textSomSmall ? 'small' : undefined}>{label}</Label>
-                <BodyShort size={textSomSmall ? 'small' : undefined}>{verdi ?? ''}</BodyShort>
+                <BodyShort className={styles.verdi} size={textSomSmall ? 'small' : undefined}>
+                    {verdi ?? ''}
+                </BodyShort>
             </div>
         );
     }
@@ -37,7 +39,9 @@ export const OppsummeringPar = ({
             <BodyShort size={textSomSmall ? 'small' : undefined} className={styles.label}>
                 {label}
             </BodyShort>
-            <Label size={textSomSmall ? 'small' : undefined}>{verdi ?? ''}</Label>
+            <Label className={styles.verdi} size={textSomSmall ? 'small' : undefined}>
+                {verdi ?? ''}
+            </Label>
         </div>
     );
 };
