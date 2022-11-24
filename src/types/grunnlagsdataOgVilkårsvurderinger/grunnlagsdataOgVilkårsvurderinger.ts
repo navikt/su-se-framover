@@ -31,6 +31,10 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
 }
 
 export const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
+export const trimIdAndOpprettetFromList = <T>(obj: T[]) =>
+    (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj).map((obj) =>
+        harOpprettetTidspunkt(obj) ? trimOpprettetFromObject(obj) : obj
+    );
 
 export const trimIdFromObject = <T>(obj: T) => {
     if (harId(obj)) {
@@ -41,5 +45,16 @@ export const trimIdFromObject = <T>(obj: T) => {
     return obj;
 };
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export const trimOpprettetFromObject = <T>(obj: T) => {
+    if (harOpprettetTidspunkt(obj)) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { opprettet, ...rest } = obj;
+        return rest;
+    }
+    return obj;
+};
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const harId = (obj: any): obj is { id: string } => (obj ? 'id' in obj : false);
+const harOpprettetTidspunkt = (obj: any): obj is { opprettet: string } => (obj ? 'opprettet' in obj : false);
+/* eslint-enable @typescript-eslint/no-explicit-any */

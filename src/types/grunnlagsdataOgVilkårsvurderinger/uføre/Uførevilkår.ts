@@ -1,9 +1,14 @@
+import { pipe } from 'fp-ts/lib/function';
 import isEqual from 'lodash.isequal';
 
 import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
 
-import { trimIdFromList, trimIdFromObject } from '../grunnlagsdataOgVilkårsvurderinger';
+import {
+    trimIdAndOpprettetFromList,
+    trimIdFromObject,
+    trimOpprettetFromObject,
+} from '../grunnlagsdataOgVilkårsvurderinger';
 
 import { Uføregrunnlag } from './Uføregrunnlag';
 
@@ -43,19 +48,19 @@ export interface UføreVurderingsperiodeRequest {
 export const uføreErlik = (ny: Nullable<UføreVilkår>, gammel: Nullable<UføreVilkår>) => {
     const trimmedNy = {
         ...ny,
-        vurderinger: trimIdFromList(
+        vurderinger: trimIdAndOpprettetFromList(
             (ny?.vurderinger ?? []).map((vurdering) => ({
                 ...vurdering,
-                grunnlag: trimIdFromObject(vurdering.grunnlag),
+                grunnlag: pipe(vurdering.grunnlag, trimIdFromObject, trimOpprettetFromObject),
             }))
         ),
     };
     const trimmedGammel = {
         ...gammel,
-        vurderinger: trimIdFromList(
+        vurderinger: trimIdAndOpprettetFromList(
             (gammel?.vurderinger ?? []).map((vurdering) => ({
                 ...vurdering,
-                grunnlag: trimIdFromObject(vurdering.grunnlag),
+                grunnlag: pipe(vurdering.grunnlag, trimIdFromObject, trimOpprettetFromObject),
             }))
         ),
     };
