@@ -20,13 +20,14 @@ import { Utbetalingssimulering } from './simulering/simulering';
 const BeregningOgSimulering = (props: {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
+    tittel?: string;
     childrenOverBeregning?: React.ReactNode;
     childrenUnderBeregning?: React.ReactNode;
 }) => {
     const { formatMessage } = useI18n({ messages: bosSimulering });
     return (
         <Oppsummeringspanel
-            tittel={formatMessage('heading')}
+            tittel={props.tittel ?? formatMessage('heading')}
             farge={Oppsummeringsfarge.Grønn}
             ikon={Oppsummeringsikon.Kalkulator}
         >

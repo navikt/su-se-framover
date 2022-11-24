@@ -1,13 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Button, Heading, Loader, Panel } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import * as DokumentApi from '~src/api/dokumentApi';
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import VisBeregning from '~src/components/beregningOgSimulering/beregning/VisBeregning';
-import { Utbetalingssimulering } from '~src/components/beregningOgSimulering/simulering/simulering';
 import { FormkravInfo } from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
 import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import Oppsummeringspanel, {
@@ -39,6 +37,8 @@ import {
 } from '~src/utils/revurdering/revurderingUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 import { getVedtaketsbehandling, getVedtakstype, harVedtaketBrevSomSendesUt } from '~src/utils/VedtakUtils';
+
+import BeregningOgSimulering from '../beregningOgSimulering/BeregningOgSimulering';
 
 import messages from './OppsummeringAvVedtak-nb';
 import * as styles from './OppsummeringAvVedtak.module.less';
@@ -152,38 +152,11 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                 )}
             </Oppsummeringspanel>
 
-            <Oppsummeringspanel
-                ikon={Oppsummeringsikon.Kalkulator}
-                farge={Oppsummeringsfarge.Grønn}
+            <BeregningOgSimulering
                 tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
-            >
-                <div className={styles.beregningOgSimuleringsContainer}>
-                    <div className={styles.column}>
-                        <Heading level="3" size="small" spacing>
-                            {formatMessage('vedtak.beregning')}
-                        </Heading>
-                        <Panel border>
-                            {vedtak.beregning ? (
-                                <VisBeregning beregning={vedtak.beregning} utenTittel />
-                            ) : (
-                                formatMessage('vedtak.beregning.ingen')
-                            )}
-                        </Panel>
-                    </div>
-                    <div className={styles.column}>
-                        <Heading level="3" size="small" spacing>
-                            {formatMessage('vedtak.simulering')}
-                        </Heading>
-                        <Panel border>
-                            {vedtak.simulering ? (
-                                <Utbetalingssimulering simulering={vedtak.simulering} utenTittel />
-                            ) : (
-                                formatMessage('vedtak.simulering.ingen')
-                            )}
-                        </Panel>
-                    </div>
-                </div>
-            </Oppsummeringspanel>
+                beregning={vedtak.beregning}
+                simulering={vedtak.simulering}
+            />
         </div>
     );
 };
