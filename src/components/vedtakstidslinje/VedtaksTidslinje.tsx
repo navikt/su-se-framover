@@ -90,8 +90,6 @@ const vedtaktypeTilPeriodeStyle = (v: VedtakPåTidslinjeType) => {
             return classNames(styles.endringPeriode, styles.endringIkon);
         case VedtakType.GJENOPPTAK_AV_YTELSE:
             return classNames(styles.gjenopptakAvYtelsePeriode, styles.gjenopptakAvYtelseIkon);
-        case VedtakType.INGEN_ENDRING:
-            return classNames(styles.ingenEndringPeriode, styles.ingenEndringIkon);
         case VedtakType.OPPHØR:
             return classNames(styles.opphørPeriode, styles.opphørIkon);
         case VedtakType.REGULERING:

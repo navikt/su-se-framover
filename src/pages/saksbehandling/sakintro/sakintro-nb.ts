@@ -75,7 +75,6 @@ export default {
     'datacell.resultat.Til vurdering': 'Til vurdering',
     'datacell.resultat.Opphør': 'Opphør',
     'datacell.resultat.Endring': 'Endring',
-    'datacell.resultat.Ingen endring': 'Ingen endring',
 
     'datacell.info.knapp.startBehandling': 'Start behandling',
     'datacell.info.knapp.fortsettBehandling': 'Fortsett behandling',
@@ -90,7 +89,6 @@ export default {
     'datacell.vedtakstype.AVSLAG': 'Søknad',
     'datacell.vedtakstype.ENDRING': 'Revurdering',
     'datacell.vedtakstype.REGULERING': 'Regulering',
-    'datacell.vedtakstype.INGEN_ENDRING': 'Revurdering',
     'datacell.vedtakstype.OPPHØR': 'Revurdering',
     'datacell.vedtakstype.STANS_AV_YTELSE': 'Stans',
     'datacell.vedtakstype.GJENOPPTAK_AV_YTELSE': 'Gjenopptak',
@@ -101,7 +99,6 @@ export default {
     'datacell.resultat.AVSLAG': 'Avslått',
     'datacell.resultat.ENDRING': 'Endring',
     'datacell.resultat.REGULERING': 'Regulering',
-    'datacell.resultat.INGEN_ENDRING': 'Ingen endring',
     'datacell.resultat.OPPHØR': 'Opphør',
     'datacell.resultat.STANS_AV_YTELSE': '-',
     'datacell.resultat.GJENOPPTAK_AV_YTELSE': '-',

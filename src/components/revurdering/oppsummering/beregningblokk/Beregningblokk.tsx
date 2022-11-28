@@ -8,13 +8,7 @@ import { Oppsummeringsfelt } from '~src/pages/søknad/steg/oppsummering/componen
 import { InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
 import { formatPeriode } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
-import {
-    erGregulering,
-    erRevurderingIngenEndring,
-    harBeregninger,
-    harSimulering,
-    hentAvkortingFraRevurdering,
-} from '~src/utils/revurdering/revurderingUtils';
+import { harBeregninger, harSimulering, hentAvkortingFraRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './beregningblokk-nb';
 import * as styles from './beregningblokk.module.less';
@@ -24,17 +18,6 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
     const simuleringForAvkortingsvarsel = hentAvkortingFraRevurdering(revurdering);
 
     const alert = React.useMemo(() => {
-        if (erRevurderingIngenEndring(revurdering)) {
-            return erGregulering(revurdering.årsak)
-                ? {
-                      tittel: formatMessage('revurdering.ingenEndring.gregulering.tittel'),
-                      tekst: formatMessage('revurdering.gregulering.ingenEndring'),
-                  }
-                : {
-                      tittel: formatMessage('revurdering.ingenEndring.tittel'),
-                      tekst: formatMessage('revurdering.ingenEndring'),
-                  };
-        }
         if (revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT) {
             return simuleringForAvkortingsvarsel
                 ? {
