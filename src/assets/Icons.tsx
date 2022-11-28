@@ -8,35 +8,19 @@ interface Props {
 }
 
 export const SuccessIcon = (props: Props) => (
-    <SuccessFilled
-        className={props.className}
-        fontSize={props.width ?? iconWidth}
-        color="var(--navds-semantic-color-feedback-success-icon)"
-    />
+    <SuccessFilled className={props.className} fontSize={props.width ?? iconWidth} color="var(--a-surface-success)" />
 );
 
 export const ErrorIcon = (props: Props) => (
-    <ErrorFilled
-        className={props.className}
-        fontSize={props.width ?? iconWidth}
-        color="var(--navds-semantic-color-feedback-danger-icon)"
-    />
+    <ErrorFilled className={props.className} fontSize={props.width ?? iconWidth} color="var(--a-surface-danger)" />
 );
 
 export const WarningIcon = (props: Props) => (
-    <WarningFilled
-        className={props.className}
-        fontSize={props.width ?? iconWidth}
-        color="var(--navds-semantic-color-feedback-warning-icon)"
-    />
+    <WarningFilled className={props.className} fontSize={props.width ?? iconWidth} color="var(--a-surface-warning)" />
 );
 
 export const InformationIcon = (props: Props) => (
-    <InformationFilled
-        className={props.className}
-        fontSize={props.width ?? iconWidth}
-        color="var(--navds-semantic-color-feedback-info-icon)"
-    />
+    <InformationFilled className={props.className} fontSize={props.width ?? iconWidth} color="var(--a-surface-info)" />
 );
 
 export const KjønnAnnet = () => (
