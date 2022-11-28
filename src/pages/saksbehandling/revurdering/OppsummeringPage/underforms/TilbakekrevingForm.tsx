@@ -15,7 +15,7 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     InformasjonsRevurdering,
-    RevurderingOppsummeringSeksjonSteg,
+    RevurderingOppsummeringSteg,
     RevurderingSeksjoner,
     TilbakekrevingsAvgjørelse,
 } from '~src/types/Revurdering';
@@ -86,7 +86,7 @@ const TilbakekrevingForm = (props: {
                                 sakId: props.sakId,
                                 revurderingId: props.revurdering.id,
                                 seksjon: RevurderingSeksjoner.Oppsummering,
-                                steg: RevurderingOppsummeringSeksjonSteg.SendTilAttestering,
+                                steg: RevurderingOppsummeringSteg.SendTilAttestering,
                             }),
                         }}
                         tilbake={{
@@ -94,7 +94,7 @@ const TilbakekrevingForm = (props: {
                                 sakId: props.sakId,
                                 revurderingId: props.revurdering.id,
                                 seksjon: RevurderingSeksjoner.Oppsummering,
-                                steg: RevurderingOppsummeringSeksjonSteg.Forhåndsvarsel,
+                                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
                             }),
                         }}
                         fortsettSenere={{

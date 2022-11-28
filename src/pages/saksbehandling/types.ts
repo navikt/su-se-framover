@@ -8,22 +8,6 @@ export enum SaksbehandlingMenyvalg {
     Oppsummering = 'oppsummering',
 }
 
-export enum RevurderingSteg {
-    Periode = 'periode',
-    EndringAvFradrag = 'endringAvFradrag',
-    Uførhet = 'ufore',
-    Bosituasjon = 'bosituasjon',
-    Formue = 'formue',
-    Utenlandsopphold = 'utenlandsopphold',
-    Opplysningsplikt = 'opplysningsplikt',
-    Oppsummering = 'oppsummering',
-    Oppholdstillatelse = 'Oppholdstillatelse',
-    Flyktning = 'flyktning',
-    FastOpphold = 'fastOpphold',
-    PersonligOppmøte = 'personligOppmøte',
-    Institusjonsopphold = 'institusjonsopphold',
-}
-
 export enum KlageSteg {
     Formkrav = 'formkrav',
     Vurdering = 'vurdering',

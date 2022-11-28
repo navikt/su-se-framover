@@ -9,24 +9,27 @@ import Framdriftsindikator, { Seksjon } from '~src/components/framdriftsindikato
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
-import { ApiResult, useApiCall } from '~src/lib/hooks';
+import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     InformasjonsRevurdering,
-    RevurderingGrunnlagOgVilkårSeksjonSteg,
-    RevurderingOpprettelseSeksjonSteg,
-    RevurderingOppsummeringSeksjonSteg,
+    RevurderingVilkårSteg,
+    RevurderingOpprettelseSteg,
+    RevurderingOppsummeringSteg,
     RevurderingSeksjoner,
-    RevurderingSeksjonSteg,
+    RevurderingSteg,
     Vurderingstatus,
+    RevurderingGrunnlagSteg,
 } from '~src/types/Revurdering';
 import {
     erInformasjonsRevurdering,
+    lagVilkårSeksjon,
     lagOpprettelsesSeksjon,
     lagOppsummeringSeksjon,
     revurderingTilFramdriftsindikatorSeksjoner,
+    lagGrunnlagsSeksjon,
 } from '~src/utils/revurdering/revurderingUtils';
 
 import SkjemaelementFeilmelding from '../../../components/formElements/SkjemaelementFeilmelding';
@@ -35,7 +38,7 @@ import NullstillRevurderingVarsel from './advarselReset/NullstillRevurderingVars
 import RevurderingBeregnOgSimuler from './beregnOgSimuler/RevurderingBeregnOgSimuler';
 import Formue from './formue/Formue';
 import { PersonligOppmøte } from './personligOppmøte/PersonligOppmøte';
-import sharedMessages, { stegmessages } from './revurdering-nb';
+import sharedMessages from './revurdering-nb';
 import * as styles from './revurdering.module.less';
 
 const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
@@ -57,21 +60,10 @@ const RevurderingPage = () => {
         utbetalinger: sak.utbetalinger,
         informasjonsRevurderinger: sak.revurderinger.filter(erInformasjonsRevurdering),
     };
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...stegmessages } });
+    const { formatMessage } = useI18n({ messages: sharedMessages });
     const urlParams = routes.useRouteParams<typeof routes.revurderingSeksjonSteg>();
 
     const påbegyntRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
-
-    const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
-    React.useEffect(() => {
-        if ((RemoteData.isInitial(gjeldendeData) || RemoteData.isSuccess(gjeldendeData)) && påbegyntRevurdering) {
-            hentGjeldendeData({
-                sakId: props.sakId,
-                fraOgMed: påbegyntRevurdering.periode.fraOgMed,
-                tilOgMed: påbegyntRevurdering.periode.tilOgMed,
-            });
-        }
-    }, [påbegyntRevurdering?.periode.fraOgMed, påbegyntRevurdering?.periode.tilOgMed]);
 
     if (props.utbetalinger.length === 0) {
         return (
@@ -112,8 +104,9 @@ const RevurderingPage = () => {
             <Heading level="1" size="large" className={styles.tittel}>
                 {formatMessage('revurdering.tittel')}
             </Heading>
-            {urlParams.steg === RevurderingOpprettelseSeksjonSteg.Periode && <RevurderingIntroPage />}
-            {urlParams.seksjon === RevurderingSeksjoner.GrunnlagOgVilkår && (
+            {urlParams.steg === RevurderingOpprettelseSteg.Periode && <RevurderingIntroPage />}
+            {(urlParams.seksjon === RevurderingSeksjoner.Vilkår ||
+                urlParams.seksjon === RevurderingSeksjoner.Grunnlag) && (
                 <div className={styles.framdriftsindikatorOgInnholdContainer}>
                     <FramdriftsIndikatorRevurdering
                         sakId={props.sakId}
@@ -121,12 +114,11 @@ const RevurderingPage = () => {
                         aktiveSteg={urlParams.steg!}
                         listeElementer={framdriftsindikatorSeksjoner}
                     />
-                    <RevurderingGrunnlagOgVilkårSteg
+                    <GrunnlagOgVilkårWrapper
                         seksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
                         seksjoner={framdriftsindikatorSeksjoner}
                         sakId={props.sakId}
                         informasjonsRevurdering={påbegyntRevurdering}
-                        grunnlagsdataOgVilkårsvurderinger={gjeldendeData}
                     />
                 </div>
             )}
@@ -168,7 +160,7 @@ const RevurderingPage = () => {
 const FramdriftsIndikatorRevurdering = (props: {
     sakId: string;
     revurderingId: string;
-    aktiveSteg: RevurderingSeksjonSteg;
+    aktiveSteg: RevurderingSteg;
     listeElementer: Seksjon[];
 }) => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
@@ -178,7 +170,7 @@ const FramdriftsIndikatorRevurdering = (props: {
                 aktivId={props.aktiveSteg}
                 elementer={props.listeElementer}
                 overrideFørsteLinjeOnClick={(v) =>
-                    v === RevurderingOpprettelseSeksjonSteg.Periode ? setModalOpen(true) : undefined
+                    v === RevurderingOpprettelseSteg.Periode ? setModalOpen(true) : undefined
                 }
             />
             {modalOpen && (
@@ -189,7 +181,7 @@ const FramdriftsIndikatorRevurdering = (props: {
                         sakId: props.sakId,
                         revurderingId: props.revurderingId,
                         seksjon: RevurderingSeksjoner.Opprettelse,
-                        steg: RevurderingOpprettelseSeksjonSteg.Periode,
+                        steg: RevurderingOpprettelseSteg.Periode,
                     })}
                 />
             )}
@@ -197,23 +189,64 @@ const FramdriftsIndikatorRevurdering = (props: {
     );
 };
 
-const RevurderingGrunnlagOgVilkårSteg = (props: {
-    seksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSeksjonSteg };
+const GrunnlagOgVilkårWrapper = (props: {
+    seksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSteg };
     seksjoner: Seksjon[];
     sakId: string;
     informasjonsRevurdering: InformasjonsRevurdering;
-    grunnlagsdataOgVilkårsvurderinger: ApiResult<{
-        grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-    }>;
 }) => {
-    const navigate = useNavigate();
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-    const [navigererTilOppsummeringMedVilkårIkkeVurdert, setNavigererTilOppsummeringMedVilkårIkkeVurdert] =
-        React.useState<boolean>(false);
+    const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
+    React.useEffect(() => {
+        if (RemoteData.isInitial(gjeldendeData) || RemoteData.isSuccess(gjeldendeData)) {
+            hentGjeldendeData({
+                sakId: props.sakId,
+                fraOgMed: props.informasjonsRevurdering.periode.fraOgMed,
+                tilOgMed: props.informasjonsRevurdering.periode.tilOgMed,
+            });
+        }
+    }, [props.informasjonsRevurdering.periode.fraOgMed, props.informasjonsRevurdering.periode.tilOgMed]);
 
+    return pipe(
+        gjeldendeData,
+        RemoteData.fold(
+            () => <Loader />,
+            () => <Loader />,
+            (error) => (
+                <div className={styles.fullsideSpinnerFeilmeldingContainer}>
+                    <ApiErrorAlert error={error} />
+                </div>
+            ),
+            (gjeldendeData) => (
+                <>
+                    {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Grunnlag && (
+                        <GrunnlagSteg
+                            {...props}
+                            gjeldendeGrunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
+                        />
+                    )}
+                    {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Vilkår && (
+                        <VilkårSteg
+                            {...props}
+                            gjeldendeGrunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
+                        />
+                    )}
+                </>
+            )
+        )
+    );
+};
+
+const GrunnlagSteg = (props: {
+    seksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSteg };
+    seksjoner: Seksjon[];
+    sakId: string;
+    informasjonsRevurdering: InformasjonsRevurdering;
+    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
+    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const seksjonIdx = props.seksjoner.findIndex((s) => s.id === props.seksjonOgSteg.seksjon);
     const idx = props.seksjoner[seksjonIdx].linjer.findIndex((l) => l.id === props.seksjonOgSteg.steg);
-    const erFørsteGrunnlagOgVilkårSteg = seksjonIdx === 1 && idx === 0;
+    const erFørsteGrunnlagSteg = seksjonIdx === 1 && idx === 0;
 
     const opprettelsesSeksjon = lagOpprettelsesSeksjon({ sakId: props.sakId, r: props.informasjonsRevurdering });
     const forrigeUrl =
@@ -223,7 +256,85 @@ const RevurderingGrunnlagOgVilkårSteg = (props: {
             sakId: props.sakId,
             revurderingId: props.informasjonsRevurdering.id,
             seksjon: opprettelsesSeksjon.id as RevurderingSeksjoner.Opprettelse,
-            steg: opprettelsesSeksjon.linjer[0].id as RevurderingOpprettelseSeksjonSteg,
+            steg: opprettelsesSeksjon.linjer[0].id as RevurderingOpprettelseSteg,
+        });
+
+    const vilkårSeksjon = lagVilkårSeksjon({ sakId: props.sakId, r: props.informasjonsRevurdering });
+    const nesteUrl =
+        props.seksjoner[seksjonIdx].linjer[idx + 1]?.url ??
+        props.seksjoner[seksjonIdx + 1]?.linjer[0]?.url ??
+        routes.revurderingSeksjonSteg.createURL({
+            sakId: props.sakId,
+            revurderingId: props.informasjonsRevurdering.id,
+            seksjon: vilkårSeksjon.id as RevurderingSeksjoner.Vilkår,
+            steg: vilkårSeksjon.linjer[0].id as RevurderingVilkårSteg,
+        });
+
+    const stegProps = {
+        sakId: props.sakId,
+        revurdering: props.informasjonsRevurdering,
+        forrigeUrl: forrigeUrl,
+        nesteUrl: nesteUrl,
+        onTilbakeClickOverride: erFørsteGrunnlagSteg ? () => setModalOpen(true) : undefined,
+        avsluttUrl: routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+        grunnlagsdataOgVilkårsvurderinger: props.gjeldendeGrunnlagsdataOgVilkårsvurderinger,
+    };
+
+    return (
+        <div className={styles.sideMedFramdriftsindikatorContainer}>
+            {modalOpen && (
+                <NullstillRevurderingVarsel
+                    isOpen={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                    førsteStegUrl={routes.revurderingSeksjonSteg.createURL({
+                        sakId: props.sakId,
+                        revurderingId: props.informasjonsRevurdering.id,
+                        seksjon: RevurderingSeksjoner.Opprettelse,
+                        steg: RevurderingOpprettelseSteg.Periode,
+                    })}
+                />
+            )}
+            {props.seksjonOgSteg.steg === RevurderingGrunnlagSteg.Bosituasjon && <BosituasjonPage {...stegProps} />}
+
+            {props.seksjonOgSteg.steg === RevurderingGrunnlagSteg.EndringAvFradrag && (
+                <EndringAvFradrag {...stegProps} />
+            )}
+        </div>
+    );
+};
+
+const VilkårSteg = (props: {
+    seksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSteg };
+    seksjoner: Seksjon[];
+    sakId: string;
+    informasjonsRevurdering: InformasjonsRevurdering;
+    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
+    const navigate = useNavigate();
+    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [navigererTilOppsummeringMedVilkårIkkeVurdert, setNavigererTilOppsummeringMedVilkårIkkeVurdert] =
+        React.useState<boolean>(false);
+
+    const seksjonIdx = props.seksjoner.findIndex((s) => s.id === props.seksjonOgSteg.seksjon);
+    const idx = props.seksjoner[seksjonIdx].linjer.findIndex((l) => l.id === props.seksjonOgSteg.steg);
+
+    const grunnlagSeksjon = lagGrunnlagsSeksjon({ sakId: props.sakId, r: props.informasjonsRevurdering });
+    const erFørsteVilkårStegOgRevurdererIkkeGrunnlag =
+        seksjonIdx === 2 && idx === 0 && grunnlagSeksjon.linjer.length === 0;
+    const forrigeUrl =
+        props.seksjoner[seksjonIdx].linjer[idx - 1]?.url ??
+        props.seksjoner[seksjonIdx - 1].linjer[props.seksjoner[seksjonIdx - 1].linjer.length - 1]?.url ??
+        routes.revurderingSeksjonSteg.createURL({
+            sakId: props.sakId,
+            revurderingId: props.informasjonsRevurdering.id,
+            seksjon:
+                grunnlagSeksjon.linjer.length > 0
+                    ? (grunnlagSeksjon.id as RevurderingSeksjoner.Grunnlag)
+                    : RevurderingSeksjoner.Opprettelse,
+            steg:
+                grunnlagSeksjon.linjer.length > 0
+                    ? (grunnlagSeksjon.linjer[0].id as RevurderingGrunnlagSteg)
+                    : RevurderingOpprettelseSteg.Periode,
         });
 
     const oppsummeringsseksjon = lagOppsummeringSeksjon({ sakId: props.sakId, r: props.informasjonsRevurdering });
@@ -234,12 +345,12 @@ const RevurderingGrunnlagOgVilkårSteg = (props: {
             sakId: props.sakId,
             revurderingId: props.informasjonsRevurdering.id,
             seksjon: oppsummeringsseksjon.id as RevurderingSeksjoner.Oppsummering,
-            steg: oppsummeringsseksjon.linjer[0].id as RevurderingOppsummeringSeksjonSteg,
+            steg: oppsummeringsseksjon.linjer[0].id as RevurderingOppsummeringSteg,
         });
 
-    const erSisteStegAvGrunnlagOgVilkårMenIkkeAltErVurdert =
-        seksjonIdx === 1 &&
-        idx === props.seksjoner[1].linjer.length - 1 &&
+    const erSisteVilkårStegMenIkkeAltErVurdert =
+        seksjonIdx === 2 &&
+        idx === props.seksjoner[2].linjer.length - 1 &&
         Object.entries(props.informasjonsRevurdering.informasjonSomRevurderes).some(
             (v) => v[1] === Vurderingstatus.IkkeVurdert
         );
@@ -256,87 +367,55 @@ const RevurderingGrunnlagOgVilkårSteg = (props: {
         }
     };
 
-    return pipe(
-        props.grunnlagsdataOgVilkårsvurderinger,
-        RemoteData.fold(
-            () => <Loader />,
-            () => <Loader />,
-            (error) => (
-                <div className={styles.fullsideSpinnerFeilmeldingContainer}>
-                    <ApiErrorAlert error={error} />
-                </div>
-            ),
-            (gjeldendeData) => {
-                const stegProps = {
-                    sakId: props.sakId,
-                    revurdering: props.informasjonsRevurdering,
-                    forrigeUrl: forrigeUrl,
-                    nesteUrl: nesteUrl,
-                    onTilbakeClickOverride: erFørsteGrunnlagOgVilkårSteg ? () => setModalOpen(true) : undefined,
-                    onSuccessOverride: erSisteStegAvGrunnlagOgVilkårMenIkkeAltErVurdert
-                        ? (r: InformasjonsRevurdering) => kanOppdatertRevurderingNavigeresTilOppsummering(r)
-                        : undefined,
-                    avsluttUrl: routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
-                    grunnlagsdataOgVilkårsvurderinger: gjeldendeData.grunnlagsdataOgVilkårsvurderinger,
-                };
+    const stegProps = {
+        sakId: props.sakId,
+        revurdering: props.informasjonsRevurdering,
+        forrigeUrl: forrigeUrl,
+        nesteUrl: nesteUrl,
+        onTilbakeClickOverride: erFørsteVilkårStegOgRevurdererIkkeGrunnlag ? () => setModalOpen(true) : undefined,
+        onSuccessOverride: erSisteVilkårStegMenIkkeAltErVurdert
+            ? (r: InformasjonsRevurdering) => kanOppdatertRevurderingNavigeresTilOppsummering(r)
+            : undefined,
+        avsluttUrl: routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+        grunnlagsdataOgVilkårsvurderinger: props.gjeldendeGrunnlagsdataOgVilkårsvurderinger,
+    };
 
-                return (
-                    <div className={styles.sideMedFramdriftsindikatorContainer}>
-                        {modalOpen && (
-                            <NullstillRevurderingVarsel
-                                isOpen={modalOpen}
-                                onClose={() => setModalOpen(false)}
-                                førsteStegUrl={routes.revurderingSeksjonSteg.createURL({
-                                    sakId: props.sakId,
-                                    revurderingId: props.informasjonsRevurdering.id,
-                                    seksjon: RevurderingSeksjoner.Opprettelse,
-                                    steg: RevurderingOpprettelseSeksjonSteg.Periode,
-                                })}
-                            />
-                        )}
-                        {navigererTilOppsummeringMedVilkårIkkeVurdert && (
-                            <BasicModal
-                                isOpen={navigererTilOppsummeringMedVilkårIkkeVurdert}
-                                onClose={() => setNavigererTilOppsummeringMedVilkårIkkeVurdert(false)}
-                            />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.Uførhet && (
-                            <Uførhet {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.Bosituasjon && (
-                            <BosituasjonPage {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.Flyktning && (
-                            <FlyktningPage {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.FastOpphold && (
-                            <FastOppholdPage {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.Formue && (
-                            <Formue {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.EndringAvFradrag && (
-                            <EndringAvFradrag {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.Utenlandsopphold && (
-                            <UtenlandsoppholdPage {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.Opplysningsplikt && (
-                            <Opplysningsplikt {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.Oppholdstillatelse && (
-                            <Oppholdstillatelse {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.PersonligOppmøte && (
-                            <PersonligOppmøte {...stegProps} />
-                        )}
-                        {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSeksjonSteg.Institusjonsopphold && (
-                            <Institusjonsopphold {...stegProps} />
-                        )}
-                    </div>
-                );
-            }
-        )
+    return (
+        <div className={styles.sideMedFramdriftsindikatorContainer}>
+            {modalOpen && (
+                <NullstillRevurderingVarsel
+                    isOpen={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                    førsteStegUrl={routes.revurderingSeksjonSteg.createURL({
+                        sakId: props.sakId,
+                        revurderingId: props.informasjonsRevurdering.id,
+                        seksjon: RevurderingSeksjoner.Opprettelse,
+                        steg: RevurderingOpprettelseSteg.Periode,
+                    })}
+                />
+            )}
+            {navigererTilOppsummeringMedVilkårIkkeVurdert && (
+                <BasicModal
+                    isOpen={navigererTilOppsummeringMedVilkårIkkeVurdert}
+                    onClose={() => setNavigererTilOppsummeringMedVilkårIkkeVurdert(false)}
+                />
+            )}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.Uførhet && <Uførhet {...stegProps} />}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.Flyktning && <FlyktningPage {...stegProps} />}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.FastOpphold && <FastOppholdPage {...stegProps} />}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.Formue && <Formue {...stegProps} />}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.Utenlandsopphold && (
+                <UtenlandsoppholdPage {...stegProps} />
+            )}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.Opplysningsplikt && <Opplysningsplikt {...stegProps} />}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.Oppholdstillatelse && (
+                <Oppholdstillatelse {...stegProps} />
+            )}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.PersonligOppmøte && <PersonligOppmøte {...stegProps} />}
+            {props.seksjonOgSteg.steg === RevurderingVilkårSteg.Institusjonsopphold && (
+                <Institusjonsopphold {...stegProps} />
+            )}
+        </div>
     );
 };
 

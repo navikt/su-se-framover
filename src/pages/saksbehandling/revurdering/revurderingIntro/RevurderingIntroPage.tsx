@@ -12,10 +12,14 @@ import {
     OpprettetRevurderingGrunn,
     Revurdering,
     RevurderingSeksjoner,
-    RevurderingSeksjonSteg,
+    RevurderingSteg,
 } from '~src/types/Revurdering';
 import { compareUtbetalingsperiode } from '~src/types/Utbetalingsperiode';
-import { erInformasjonsRevurdering, lagGrunnlagOgVilkårSeksjon } from '~src/utils/revurdering/revurderingUtils';
+import {
+    erInformasjonsRevurdering,
+    lagGrunnlagsSeksjon,
+    lagVilkårSeksjon,
+} from '~src/utils/revurdering/revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
@@ -64,10 +68,18 @@ const RevurderingIntroPage = () => {
               );
 
     const navigateLocal = (revurdering: Revurdering, goTo: 'neste' | 'avbryt') => {
-        const nesteSeksjonOgStegLinjer = lagGrunnlagOgVilkårSeksjon({
+        const grunnlagSeksjoner = lagGrunnlagsSeksjon({
             sakId: props.sakId,
             r: revurdering as InformasjonsRevurdering,
         });
+        const vilkårSeksjoner = lagVilkårSeksjon({
+            sakId: props.sakId,
+            r: revurdering as InformasjonsRevurdering,
+        });
+
+        const revurdererGrunnlag = grunnlagSeksjoner.linjer.length > 0;
+
+        const nesteSeksjonOgStegLinjer = revurdererGrunnlag ? grunnlagSeksjoner : vilkårSeksjoner;
 
         navigate(
             goTo === 'avbryt'
@@ -76,7 +88,7 @@ const RevurderingIntroPage = () => {
                       sakId: props.sakId,
                       revurderingId: revurdering.id,
                       seksjon: nesteSeksjonOgStegLinjer.id as RevurderingSeksjoner,
-                      steg: nesteSeksjonOgStegLinjer.linjer[0].id as RevurderingSeksjonSteg,
+                      steg: nesteSeksjonOgStegLinjer.linjer[0].id as RevurderingSteg,
                   })
         );
     };

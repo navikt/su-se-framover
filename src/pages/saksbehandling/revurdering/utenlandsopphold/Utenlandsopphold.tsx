@@ -17,7 +17,7 @@ import {
 import { lagreUtenlandsopphold } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import revurderingmessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 
@@ -25,7 +25,7 @@ import messages from './utenlandsopphold-nb';
 
 const Utenlandsopphold = (props: RevurderingStegProps) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages: { ...messages, ...stegmessages, ...revurderingmessages } });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...revurderingmessages } });
 
     const form = useForm<UtenlandsoppholdVilkårFormData>({
         resolver: yupResolver(utenlandsoppholdFormSchema),

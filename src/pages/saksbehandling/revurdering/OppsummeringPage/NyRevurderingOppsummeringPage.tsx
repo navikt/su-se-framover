@@ -12,9 +12,9 @@ import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import {
     InformasjonsRevurdering,
-    RevurderingOppsummeringSeksjonSteg,
+    RevurderingOppsummeringSteg,
     RevurderingSeksjoner,
-    RevurderingSeksjonSteg,
+    RevurderingSteg,
 } from '~src/types/Revurdering';
 
 import messages from './NyRevurderingOppsummeringPage-nb';
@@ -26,7 +26,7 @@ import TilbakekrevingFormNy from './underforms/TilbakekrevingForm';
 const NyRevurderingsOppsummeringPage = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
-    aktivSeksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSeksjonSteg };
+    aktivSeksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSteg };
     seksjoner: Seksjon[];
 }) => {
     const navigate = useNavigate();
@@ -59,23 +59,23 @@ const NyRevurderingsOppsummeringPage = (props: {
             ),
             (gjeldendeGrunnlagOgVilkårData) => (
                 <div className={styles.pageContainer}>
-                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSeksjonSteg.Forhåndsvarsel && (
+                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.Forhåndsvarsel && (
                         <ForhåndsvarselForm
                             sakId={props.sakId}
-                            forrigeUrl={props.seksjoner[2].linjer.at(-1)!.url}
-                            nesteUrl={props.seksjoner[3].linjer[1]!.url}
+                            forrigeUrl={props.seksjoner[3].linjer.at(-1)!.url}
+                            nesteUrl={props.seksjoner[4].linjer[1]!.url}
                             revurdering={props.revurdering}
                             gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     )}
-                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSeksjonSteg.Tilbakekreving && (
+                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.Tilbakekreving && (
                         <TilbakekrevingFormNy
                             sakId={props.sakId}
                             revurdering={props.revurdering}
                             gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     )}
-                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSeksjonSteg.SendTilAttestering && (
+                    {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.SendTilAttestering && (
                         <SendTilAttesteringNy
                             sakId={props.sakId}
                             revurdering={props.revurdering}

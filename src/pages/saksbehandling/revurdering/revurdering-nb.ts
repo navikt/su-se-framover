@@ -1,21 +1,4 @@
-import { RevurderingSteg } from '~src/pages/saksbehandling/types';
 import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
-
-export const stegmessages: { [key in RevurderingSteg]: string } = {
-    [RevurderingSteg.Periode]: 'Periode',
-    [RevurderingSteg.Uførhet]: 'Uførhet',
-    [RevurderingSteg.Bosituasjon]: 'Bosituasjon',
-    [RevurderingSteg.EndringAvFradrag]: 'Inntekt',
-    [RevurderingSteg.Formue]: 'Formue',
-    [RevurderingSteg.Utenlandsopphold]: 'Utenlandsopphold',
-    [RevurderingSteg.Opplysningsplikt]: 'Opplysningsplikt',
-    [RevurderingSteg.Oppholdstillatelse]: 'Oppholdstillatelse',
-    [RevurderingSteg.Oppsummering]: 'Oppsummering',
-    [RevurderingSteg.Flyktning]: 'Flyktningsstatus',
-    [RevurderingSteg.FastOpphold]: 'Opphold i Norge',
-    [RevurderingSteg.PersonligOppmøte]: 'Personlig oppmøte',
-    [RevurderingSteg.Institusjonsopphold]: 'Institusjonsopphold',
-};
 
 export default {
     'revurdering.årsak': 'Årsak for revurdering',

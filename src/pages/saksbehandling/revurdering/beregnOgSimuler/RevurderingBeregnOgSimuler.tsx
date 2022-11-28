@@ -16,7 +16,7 @@ import * as Routes from '~src/lib/routes';
 import {
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
-    RevurderingOppsummeringSeksjonSteg,
+    RevurderingOppsummeringSteg,
     RevurderingSeksjoner,
     SimulertRevurdering,
 } from '~src/types/Revurdering';
@@ -44,7 +44,7 @@ const RevurderingBeregnOgSimuler = (props: {
         sakId: props.sakId,
         revurderingId: props.informasjonsRevurdering.id,
         seksjon: RevurderingSeksjoner.Oppsummering,
-        steg: RevurderingOppsummeringSeksjonSteg.Forhåndsvarsel,
+        steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
     });
 
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);

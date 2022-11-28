@@ -172,25 +172,30 @@ export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
 
 export enum RevurderingSeksjoner {
     Opprettelse = 'OpprettelseAvRevurdering',
-    GrunnlagOgVilkår = 'GrunnlagOgVilkår',
+    Grunnlag = 'Grunnlag',
+    Vilkår = 'Vilkår',
     BeregningOgSimulering = 'BeregningOgSimulering',
     Oppsummering = 'Oppsummering',
 }
 
-export type RevurderingSeksjonSteg =
-    | RevurderingOpprettelseSeksjonSteg
-    | RevurderingGrunnlagOgVilkårSeksjonSteg
-    | RevurderingBeregnOgSimulerSeksjonSteg
-    | RevurderingOppsummeringSeksjonSteg;
+export type RevurderingSteg =
+    | RevurderingOpprettelseSteg
+    | RevurderingGrunnlagSteg
+    | RevurderingVilkårSteg
+    | RevurderingBeregnOgSimulerSteg
+    | RevurderingOppsummeringSteg;
 
-export enum RevurderingOpprettelseSeksjonSteg {
+export enum RevurderingOpprettelseSteg {
     Periode = 'periode',
 }
 
-export enum RevurderingGrunnlagOgVilkårSeksjonSteg {
+export enum RevurderingGrunnlagSteg {
     EndringAvFradrag = 'endringAvFradrag',
-    Uførhet = 'ufore',
     Bosituasjon = 'bosituasjon',
+}
+
+export enum RevurderingVilkårSteg {
+    Uførhet = 'ufore',
     Formue = 'formue',
     Utenlandsopphold = 'utenlandsopphold',
     Opplysningsplikt = 'opplysningsplikt',
@@ -201,11 +206,11 @@ export enum RevurderingGrunnlagOgVilkårSeksjonSteg {
     Institusjonsopphold = 'institusjonsopphold',
 }
 
-export enum RevurderingBeregnOgSimulerSeksjonSteg {
+export enum RevurderingBeregnOgSimulerSteg {
     BeregnOgSimuler = 'beregnOgSimuler',
 }
 
-export enum RevurderingOppsummeringSeksjonSteg {
+export enum RevurderingOppsummeringSteg {
     Forhåndsvarsel = 'forhåndsvarsel',
     Tilbakekreving = 'tilbakekreving',
     SendTilAttestering = 'sendTilAttestering',
