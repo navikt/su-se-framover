@@ -48,7 +48,7 @@
         "@hookform/resolvers": "^2.9.10",
         "@navikt/ds-css": "^2.0.5",
         "@navikt/ds-css-internal": "^2.0.0",
-        "@navikt/ds-icons": "^1.5.4",
+        "@navikt/ds-icons": "^2.0.5",
         "@navikt/ds-react": "^2.0.5",
         "@navikt/ds-react-internal": "^2.0.5",
         "@navikt/helse-frontend-tidslinje": "^6.1.8",
