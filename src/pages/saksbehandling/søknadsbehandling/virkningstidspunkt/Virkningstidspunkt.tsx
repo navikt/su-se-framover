@@ -142,7 +142,8 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                 name="fraOgMed"
                                                 render={({ field, fieldState }) => (
                                                     <DatePicker
-                                                        {...field}
+                                                        name={field.name}
+                                                        value={field.value}
                                                         onChange={(date) => {
                                                             field.onChange(date);
                                                             if (form.watch('tilOgMed') === null && date !== null) {
@@ -170,7 +171,9 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                 name="tilOgMed"
                                                 render={({ field, fieldState }) => (
                                                     <DatePicker
-                                                        {...field}
+                                                        name={field.name}
+                                                        onChange={field.onChange}
+                                                        value={field.value}
                                                         className={styles.dato}
                                                         id="tilOgMed"
                                                         label={formatMessage('datovelger.tom.label')}

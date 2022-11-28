@@ -92,7 +92,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 name={'datoForInnleggelse'}
                                 render={({ field, fieldState }) => (
                                     <Datepicker
-                                        {...field}
                                         id={field.name}
                                         onChange={(val) => field.onChange(val ? toIsoDateOnlyString(val) : null)}
                                         dateFormat="dd.MM.yyyy"
@@ -110,7 +109,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                     name={'datoForUtskrivelse'}
                                     render={({ field, fieldState }) => (
                                         <Datepicker
-                                            {...field}
                                             id={field.name}
                                             onChange={(val) => field.onChange(val ? toIsoDateOnlyString(val) : null)}
                                             dateFormat="dd.MM.yyyy"
