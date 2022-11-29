@@ -80,7 +80,7 @@ const NyRevurderingsOppsummeringPage = (props: {
                             sakId={props.sakId}
                             revurdering={props.revurdering}
                             gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
-                            forrigeUrl={props.seksjoner[1].linjer.at(-2)!.url}
+                            forrigeUrl={props.seksjoner[4].linjer.at(-2)!.url}
                         />
                     )}
                 </div>

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Loader, Modal } from '@navikt/ds-react';
+import { Alert, Heading, Loader } from '@navikt/ds-react';
 import React from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -17,17 +17,14 @@ import {
     InformasjonsRevurdering,
     RevurderingVilkårSteg,
     RevurderingOpprettelseSteg,
-    RevurderingOppsummeringSteg,
     RevurderingSeksjoner,
     RevurderingSteg,
-    Vurderingstatus,
     RevurderingGrunnlagSteg,
 } from '~src/types/Revurdering';
 import {
     erInformasjonsRevurdering,
     lagVilkårSeksjon,
     lagOpprettelsesSeksjon,
-    lagOppsummeringSeksjon,
     revurderingTilFramdriftsindikatorSeksjoner,
     lagGrunnlagsSeksjon,
 } from '~src/utils/revurdering/revurderingUtils';
@@ -310,10 +307,7 @@ const VilkårSteg = (props: {
     informasjonsRevurdering: InformasjonsRevurdering;
     gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const navigate = useNavigate();
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-    const [navigererTilOppsummeringMedVilkårIkkeVurdert, setNavigererTilOppsummeringMedVilkårIkkeVurdert] =
-        React.useState<boolean>(false);
 
     const seksjonIdx = props.seksjoner.findIndex((s) => s.id === props.seksjonOgSteg.seksjon);
     const idx = props.seksjoner[seksjonIdx].linjer.findIndex((l) => l.id === props.seksjonOgSteg.steg);
@@ -321,61 +315,15 @@ const VilkårSteg = (props: {
     const grunnlagSeksjon = lagGrunnlagsSeksjon({ sakId: props.sakId, r: props.informasjonsRevurdering });
     const erFørsteVilkårStegOgRevurdererIkkeGrunnlag =
         seksjonIdx === 2 && idx === 0 && grunnlagSeksjon.linjer.length === 0;
-    const forrigeUrl =
-        props.seksjoner[seksjonIdx].linjer[idx - 1]?.url ??
-        props.seksjoner[seksjonIdx - 1].linjer[props.seksjoner[seksjonIdx - 1].linjer.length - 1]?.url ??
-        routes.revurderingSeksjonSteg.createURL({
-            sakId: props.sakId,
-            revurderingId: props.informasjonsRevurdering.id,
-            seksjon:
-                grunnlagSeksjon.linjer.length > 0
-                    ? (grunnlagSeksjon.id as RevurderingSeksjoner.Grunnlag)
-                    : RevurderingSeksjoner.Opprettelse,
-            steg:
-                grunnlagSeksjon.linjer.length > 0
-                    ? (grunnlagSeksjon.linjer[0].id as RevurderingGrunnlagSteg)
-                    : RevurderingOpprettelseSteg.Periode,
-        });
-
-    const oppsummeringsseksjon = lagOppsummeringSeksjon({ sakId: props.sakId, r: props.informasjonsRevurdering });
-    const nesteUrl =
-        props.seksjoner[seksjonIdx].linjer[idx + 1]?.url ??
-        props.seksjoner[seksjonIdx + 1]?.linjer[0]?.url ??
-        routes.revurderingSeksjonSteg.createURL({
-            sakId: props.sakId,
-            revurderingId: props.informasjonsRevurdering.id,
-            seksjon: oppsummeringsseksjon.id as RevurderingSeksjoner.Oppsummering,
-            steg: oppsummeringsseksjon.linjer[0].id as RevurderingOppsummeringSteg,
-        });
-
-    const erSisteVilkårStegMenIkkeAltErVurdert =
-        seksjonIdx === 2 &&
-        idx === props.seksjoner[2].linjer.length - 1 &&
-        Object.entries(props.informasjonsRevurdering.informasjonSomRevurderes).some(
-            (v) => v[1] === Vurderingstatus.IkkeVurdert
-        );
-
-    const kanOppdatertRevurderingNavigeresTilOppsummering = (r: InformasjonsRevurdering) => {
-        if (
-            seksjonIdx === 1 &&
-            idx === props.seksjoner[1].linjer.length - 1 &&
-            Object.entries(r.informasjonSomRevurderes).some((v) => v[1] === Vurderingstatus.IkkeVurdert)
-        ) {
-            setNavigererTilOppsummeringMedVilkårIkkeVurdert(true);
-        } else {
-            navigate(oppsummeringsseksjon.linjer[0].url);
-        }
-    };
 
     const stegProps = {
         sakId: props.sakId,
         revurdering: props.informasjonsRevurdering,
-        forrigeUrl: forrigeUrl,
-        nesteUrl: nesteUrl,
+        forrigeUrl:
+            props.seksjoner[seksjonIdx].linjer[idx - 1]?.url ??
+            props.seksjoner[seksjonIdx - 1].linjer[props.seksjoner[seksjonIdx - 1].linjer.length - 1]?.url,
+        nesteUrl: props.seksjoner[seksjonIdx].linjer[idx + 1]?.url ?? props.seksjoner[seksjonIdx + 1]?.linjer[0]?.url,
         onTilbakeClickOverride: erFørsteVilkårStegOgRevurdererIkkeGrunnlag ? () => setModalOpen(true) : undefined,
-        onSuccessOverride: erSisteVilkårStegMenIkkeAltErVurdert
-            ? (r: InformasjonsRevurdering) => kanOppdatertRevurderingNavigeresTilOppsummering(r)
-            : undefined,
         avsluttUrl: routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
         grunnlagsdataOgVilkårsvurderinger: props.gjeldendeGrunnlagsdataOgVilkårsvurderinger,
     };
@@ -392,12 +340,6 @@ const VilkårSteg = (props: {
                         seksjon: RevurderingSeksjoner.Opprettelse,
                         steg: RevurderingOpprettelseSteg.Periode,
                     })}
-                />
-            )}
-            {navigererTilOppsummeringMedVilkårIkkeVurdert && (
-                <BasicModal
-                    isOpen={navigererTilOppsummeringMedVilkårIkkeVurdert}
-                    onClose={() => setNavigererTilOppsummeringMedVilkårIkkeVurdert(false)}
                 />
             )}
             {props.seksjonOgSteg.steg === RevurderingVilkårSteg.Uførhet && <Uførhet {...stegProps} />}
@@ -420,23 +362,3 @@ const VilkårSteg = (props: {
 };
 
 export default RevurderingPage;
-
-const BasicModal = (props: { isOpen: boolean; onClose: () => void }) => {
-    return (
-        <Modal open={props.isOpen} onClose={props.onClose}>
-            <div className={styles.modalContainer}>
-                <Heading level="2" size="medium" className={styles.modalTittel}>
-                    tittel
-                </Heading>
-                <div>
-                    <p>lawl</p>
-                </div>
-                <div className={styles.modalKnappContainer}>
-                    <Button variant="tertiary" type="button" onClick={props.onClose}>
-                        ok
-                    </Button>
-                </div>
-            </div>
-        </Modal>
-    );
-};

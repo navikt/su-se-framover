@@ -40,12 +40,6 @@ const RevurderingBeregnOgSimuler = (props: {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const forrigeUrl = props.seksjoner[1].linjer.at(-1)?.url;
-    const nesteUrl = Routes.revurderingSeksjonSteg.createURL({
-        sakId: props.sakId,
-        revurderingId: props.informasjonsRevurdering.id,
-        seksjon: RevurderingSeksjoner.Oppsummering,
-        steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
-    });
 
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
 
@@ -59,18 +53,11 @@ const RevurderingBeregnOgSimuler = (props: {
 
     React.useEffect(() => {
         if (RemoteData.isInitial(beregningStatus)) {
-            beregnOgSimuler(
-                {
-                    sakId: props.sakId,
-                    periode: props.informasjonsRevurdering.periode,
-                    revurderingId: props.informasjonsRevurdering.id,
-                },
-                (rev) => {
-                    if (rev.feilmeldinger.length === 0 && rev.varselmeldinger.length === 0) {
-                        navigate(nesteUrl);
-                    }
-                }
-            );
+            beregnOgSimuler({
+                sakId: props.sakId,
+                periode: props.informasjonsRevurdering.periode,
+                revurderingId: props.informasjonsRevurdering.id,
+            });
         }
     }, [props.informasjonsRevurdering.id]);
 
@@ -120,7 +107,17 @@ const RevurderingBeregnOgSimuler = (props: {
                             </Button>
 
                             <Navigasjonsknapper
-                                neste={{ onClick: () => navigate(nesteUrl) }}
+                                neste={{
+                                    onClick: () =>
+                                        navigate(
+                                            Routes.revurderingSeksjonSteg.createURL({
+                                                sakId: props.sakId,
+                                                revurderingId: props.informasjonsRevurdering.id,
+                                                seksjon: RevurderingSeksjoner.Oppsummering,
+                                                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+                                            })
+                                        ),
+                                }}
                                 tilbake={{ url: forrigeUrl }}
                             />
                         </div>

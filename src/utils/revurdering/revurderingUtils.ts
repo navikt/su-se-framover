@@ -129,13 +129,15 @@ export function harSimulering(r: Revurdering): r is Revurdering & { simulering: 
 
 export const erRevurderingTilbakekrevingsbehandling = (
     r: Revurdering
-): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling> } =>
-    erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r;
+): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Tilbakekrevingsbehandling } =>
+    erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r && r['tilbakekrevingsbehandling'] !== null;
 
 export const erRevurderingTilbakekrevingsbehandlingOgKanAvgjøres = (
     r: Revurdering
 ): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Tilbakekrevingsbehandling } => {
-    return erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r && r['tilbakekrevingsbehandling'] !== null;
+    return (
+        erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r && erRevurderingTilbakekrevingIkkeAvgjort(r)
+    );
 };
 
 export const erRevurderingTilbakekreving = (
@@ -144,7 +146,7 @@ export const erRevurderingTilbakekreving = (
     tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.TILBAKEKREV };
 } =>
     erRevurderingTilbakekrevingsbehandling(r) &&
-    r.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV;
+    r.tilbakekrevingsbehandling.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV;
 
 export const erRevurderingTilbakekrevingIkkeAvgjort = (
     r: Revurdering
@@ -557,10 +559,10 @@ export const lagBeregnOgSimulerSeksjon = (arg: { sakId: string; r: InformasjonsR
 };
 
 export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevurdering }): Seksjon => {
-    const kanNavigereTilForhåndsvarselOgSendTilAttestering = Object.entries(arg.r).some(
-        (v) => v[1] === Vurderingstatus.IkkeVurdert
-    )
-        ? false
+    const kanSendeTilAttestering = erRevurderingTilbakekrevingsbehandling(arg.r)
+        ? erRevurderingTilbakekrevingAvgjort(arg.r)
+            ? true
+            : false
         : erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r)
         ? true
         : false;
@@ -568,7 +570,8 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
     const defaultLinjer = [
         {
             id: RevurderingOppsummeringSteg.Forhåndsvarsel,
-            status: Linjestatus.Ingenting,
+            status:
+                erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r) ? Linjestatus.Ok : Linjestatus.Ingenting,
             label: 'Forhåndsvarsel',
             url: Routes.revurderingSeksjonSteg.createURL({
                 sakId: arg.sakId,
@@ -576,7 +579,7 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
                 seksjon: RevurderingSeksjoner.Oppsummering,
                 steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
             }),
-            erKlikkbar: kanNavigereTilForhåndsvarselOgSendTilAttestering,
+            erKlikkbar: erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r),
         },
         {
             id: RevurderingOppsummeringSteg.SendTilAttestering,
@@ -588,16 +591,16 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
                 seksjon: RevurderingSeksjoner.Oppsummering,
                 steg: RevurderingOppsummeringSteg.SendTilAttestering,
             }),
-            erKlikkbar: kanNavigereTilForhåndsvarselOgSendTilAttestering,
+            erKlikkbar: kanSendeTilAttestering,
         },
     ];
 
-    const faktiskeLinjer = erRevurderingTilbakekrevingsbehandlingOgKanAvgjøres(arg.r)
+    const faktiskeLinjer = erRevurderingTilbakekrevingsbehandling(arg.r)
         ? [
               defaultLinjer[0],
               {
                   id: RevurderingOppsummeringSteg.Tilbakekreving,
-                  status: Linjestatus.Ingenting,
+                  status: erRevurderingTilbakekrevingAvgjort(arg.r) ? Linjestatus.Ok : Linjestatus.Ingenting,
                   label: 'Tilbakekreving',
                   url: Routes.revurderingSeksjonSteg.createURL({
                       sakId: arg.sakId,
@@ -605,7 +608,7 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
                       seksjon: RevurderingSeksjoner.Oppsummering,
                       steg: RevurderingOppsummeringSteg.Tilbakekreving,
                   }),
-                  erKlikkbar: kanNavigereTilForhåndsvarselOgSendTilAttestering,
+                  erKlikkbar: erRevurderingTilbakekrevingsbehandling(arg.r),
               },
               defaultLinjer[1],
           ]
