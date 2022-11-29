@@ -152,7 +152,7 @@ const SendTilAttestering = (props: {
             {{
                 left: (
                     <FormWrapper
-                        className={styles.stickyDiv}
+                        className={styles.formContainer}
                         form={form}
                         neste={{
                             savingState: sendTilAttesteringStatus,

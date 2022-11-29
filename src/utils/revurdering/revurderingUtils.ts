@@ -132,14 +132,6 @@ export const erRevurderingTilbakekrevingsbehandling = (
 ): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Tilbakekrevingsbehandling } =>
     erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r && r['tilbakekrevingsbehandling'] !== null;
 
-export const erRevurderingTilbakekrevingsbehandlingOgKanAvgjøres = (
-    r: Revurdering
-): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Tilbakekrevingsbehandling } => {
-    return (
-        erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r && erRevurderingTilbakekrevingIkkeAvgjort(r)
-    );
-};
-
 export const erRevurderingTilbakekreving = (
     r: Revurdering
 ): r is InformasjonsRevurdering & {

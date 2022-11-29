@@ -80,7 +80,7 @@ const ForhåndsvarselForm = (props: {
             {{
                 left: (
                     <FormWrapper
-                        className={styles.stickyDiv}
+                        className={styles.formContainer}
                         form={form}
                         neste={{
                             savingState: lagreForhåndsvarselStatus,
@@ -90,49 +90,45 @@ const ForhåndsvarselForm = (props: {
                                 ? formatMessage('forhåndsvarsel.neste.sendOgNaviger')
                                 : undefined,
                         }}
-                        tilbake={{
-                            url: props.forrigeUrl,
-                        }}
+                        tilbake={{ url: props.forrigeUrl }}
                         fortsettSenere={{
                             url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
                             tekst: formatMessage('forhåndsvarsel.fortsettSenere'),
                         }}
                     >
                         <div>
-                            <div className={styles.formElementsContainer}>
+                            <Controller
+                                name={'oppretterNyttForhåndsvarsel'}
+                                control={form.control}
+                                render={({ field }) => (
+                                    <RadioGroup legend={formatMessage('forhåndsvarsel.skalSendes')} {...field}>
+                                        <Radio value={true}>{formatMessage('forhåndsvarsel.skalSende.ja')}</Radio>
+                                        <Radio value={false}>{formatMessage('forhåndsvarsel.skalSende.nei')}</Radio>
+                                    </RadioGroup>
+                                )}
+                            />
+
+                            {watch.oppretterNyttForhåndsvarsel && (
                                 <Controller
-                                    name={'oppretterNyttForhåndsvarsel'}
+                                    name={'fritekst'}
                                     control={form.control}
-                                    render={({ field }) => (
-                                        <RadioGroup legend={formatMessage('forhåndsvarsel.skalSendes')} {...field}>
-                                            <Radio value={true}>{formatMessage('forhåndsvarsel.skalSende.ja')}</Radio>
-                                            <Radio value={false}>{formatMessage('forhåndsvarsel.skalSende.nei')}</Radio>
-                                        </RadioGroup>
+                                    render={({ field, fieldState }) => (
+                                        <BrevInput
+                                            tittel={formatMessage('forhåndsvarsel.fritekst.label')}
+                                            onVisBrevClick={() =>
+                                                PdfApi.fetchBrevutkastForForhåndsvarsel(
+                                                    props.sakId,
+                                                    props.revurdering.id,
+                                                    field.value ?? ''
+                                                )
+                                            }
+                                            tekst={field.value ?? ''}
+                                            {...field}
+                                            feil={fieldState.error}
+                                        />
                                     )}
                                 />
-
-                                {watch.oppretterNyttForhåndsvarsel && (
-                                    <Controller
-                                        name={'fritekst'}
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <BrevInput
-                                                tittel={formatMessage('forhåndsvarsel.fritekst.label')}
-                                                onVisBrevClick={() =>
-                                                    PdfApi.fetchBrevutkastForForhåndsvarsel(
-                                                        props.sakId,
-                                                        props.revurdering.id,
-                                                        field.value ?? ''
-                                                    )
-                                                }
-                                                tekst={field.value ?? ''}
-                                                {...field}
-                                                feil={fieldState.error}
-                                            />
-                                        )}
-                                    />
-                                )}
-                            </div>
+                            )}
 
                             <VisDokumenter
                                 id={props.revurdering.id}

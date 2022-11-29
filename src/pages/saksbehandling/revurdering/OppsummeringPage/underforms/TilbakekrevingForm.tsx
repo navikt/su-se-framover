@@ -77,7 +77,7 @@ const TilbakekrevingForm = (props: {
             {{
                 left: (
                     <FormWrapper
-                        className={styles.stickyDiv}
+                        className={styles.formContainer}
                         form={form}
                         neste={{
                             savingState: lagreTilbakekrevingsbehandlingState,
@@ -102,7 +102,7 @@ const TilbakekrevingForm = (props: {
                         }}
                     >
                         <div className={styles.form}>
-                            <Heading size="small" level="5" spacing className={styles.heading}>
+                            <Heading size="small" level="5" spacing>
                                 {formatMessage('tittel')}
                             </Heading>
                             <div className={styles.undertittel}>
