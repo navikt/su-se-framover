@@ -43,7 +43,10 @@ export const BooleanRadioGroup: React.ForwardRefExoticComponent<
 });
 BooleanRadioGroup.displayName = 'BooleanRadioGroup';
 
-export const CollapsableFormElementDescription = (props: { title: string; children: React.ReactNode }) => {
+export const CollapsableFormElementDescription = (props: {
+    title: string | JSX.Element;
+    children: React.ReactNode;
+}) => {
     const [visMer, setVisMer] = useState(false);
 
     return (
