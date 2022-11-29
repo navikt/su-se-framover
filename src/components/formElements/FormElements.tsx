@@ -46,18 +46,13 @@ BooleanRadioGroup.displayName = 'BooleanRadioGroup';
 export const CollapsableFormElementDescription = (props: {
     title: string | JSX.Element;
     children: React.ReactNode;
+    className?: string;
 }) => {
     const [visMer, setVisMer] = useState(false);
 
     return (
-        <div className={styles.hjelpetekstContainer}>
-            <button
-                className={styles.hjelpetekstKnapp}
-                onClick={(e) => {
-                    e.preventDefault();
-                    setVisMer(!visMer);
-                }}
-            >
+        <div className={props.className}>
+            <button className={styles.hjelpetekstKnapp} type="button" onClick={() => setVisMer(!visMer)}>
                 {props.title}
                 {visMer ? <CollapseFilled /> : <ExpandFilled />}
             </button>

@@ -1,0 +1,52 @@
+@import '~/src/styles/variables.less';
+
+.simuleringsHeader {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.linje {
+    margin-bottom: @spacing-s;
+}
+
+.linjeTittel {
+    display: grid;
+    grid-template-columns: 2fr minmax(min-content, 1fr) 2fr;
+    column-gap: @spacing;
+    width: 100%;
+}
+
+.totalt {
+    margin-bottom: @spacing;
+}
+
+.grupertSimulering {
+    margin-bottom: @spacing;
+}
+
+.simuleringsdetaljerContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 1rem;
+}
+
+.detalje {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.periode,
+.type,
+.beløp {
+    display: flex;
+    align-items: center;
+}
+
+.beløp,
+.type {
+    justify-content: flex-end;
+}
+
+.detaljerKnapp {
+    padding: 0;
+}
