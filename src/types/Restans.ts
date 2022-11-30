@@ -23,7 +23,6 @@ export enum RestansStatus {
     INNVILGET = 'INNVILGET',
     OPPHØR = 'OPPHØR',
     AVSLAG = 'AVSLAG',
-    INGEN_ENDRING = 'INGEN_ENDRING',
     STANS = 'STANS',
     GJENOPPTAK = 'GJENOPPTAK',
     OVERSENDT = 'OVERSENDT',

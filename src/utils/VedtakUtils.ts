@@ -14,8 +14,6 @@ export const getVedtakstype = (v: Vedtak) => {
             return 'revurdering';
         case VedtakType.GJENOPPTAK_AV_YTELSE:
             return 'gjenopptak';
-        case VedtakType.INGEN_ENDRING:
-            return 'revurdering';
         case VedtakType.OPPHØR:
             return 'revurdering';
         case VedtakType.REGULERING:
@@ -36,7 +34,6 @@ export const harVedtaketBrevSomSendesUt = (v: Vedtak) => {
         case VedtakType.AVSLAG:
         case VedtakType.AVVIST_KLAGE:
         case VedtakType.ENDRING:
-        case VedtakType.INGEN_ENDRING:
         case VedtakType.OPPHØR:
         case VedtakType.SØKNAD:
             return true;
@@ -52,7 +49,6 @@ export const getVedtaketsbehandling = (v: Vedtak, sak: Sak): Behandling | Regule
             return sak.reguleringer.find((r) => r.id === v.behandlingId)!;
         case VedtakType.ENDRING:
         case VedtakType.GJENOPPTAK_AV_YTELSE:
-        case VedtakType.INGEN_ENDRING:
         case VedtakType.OPPHØR:
         case VedtakType.STANS_AV_YTELSE:
             return sak.revurderinger.find((r) => r.id === v.behandlingId)!;

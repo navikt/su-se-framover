@@ -27,7 +27,6 @@ export type RestansStatusFilter = {
 export type RestansResultatFilter = {
     [RestansStatus.OPPHØR]: boolean;
     [RestansStatus.AVSLAG]: boolean;
-    [RestansStatus.INGEN_ENDRING]: boolean;
     [RestansStatus.INNVILGET]: boolean;
     [RestansStatus.STANS]: boolean;
     [RestansStatus.GJENOPPTAK]: boolean;

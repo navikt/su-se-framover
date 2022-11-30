@@ -30,14 +30,12 @@ import {
 import { TilbakekrevingForm } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import {
-    BeregnetIngenEndring,
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
     SimulertRevurdering,
     UnderkjentRevurdering,
 } from '~src/types/Revurdering';
 import {
-    erBeregnetIngenEndring,
     erRevurderingSimulert,
     erRevurderingUnderkjent,
     harBeregninger,
@@ -55,7 +53,7 @@ import * as styles from './revurderingOppsummeringPage.module.less';
 const OppsummeringshandlingForm = (props: {
     sakId: string;
     forrigeUrl: string;
-    revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering;
+    revurdering: SimulertRevurdering | UnderkjentRevurdering;
     feilmeldinger: ErrorMessage[];
     varselmeldinger: ErrorMessage[];
 }) => {
@@ -267,9 +265,7 @@ const RevurderingOppsummeringPage = (props: {
                                 props.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT
                             ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
 
-                        {erRevurderingSimulert(props.revurdering) ||
-                        erBeregnetIngenEndring(props.revurdering) ||
-                        erRevurderingUnderkjent(props.revurdering) ? (
+                        {erRevurderingSimulert(props.revurdering) || erRevurderingUnderkjent(props.revurdering) ? (
                             <OppsummeringshandlingForm
                                 sakId={props.sakId}
                                 forrigeUrl={props.forrigeUrl}

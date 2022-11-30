@@ -43,7 +43,6 @@ export const FerdigeBehandlinger = () => {
     const [resultat, setResultat] = useState<RestansResultatFilter>({
         [RestansStatus.OPPHØR]: false,
         [RestansStatus.AVSLAG]: false,
-        [RestansStatus.INGEN_ENDRING]: false,
         [RestansStatus.INNVILGET]: false,
         [RestansStatus.STANS]: false,
         [RestansStatus.GJENOPPTAK]: false,

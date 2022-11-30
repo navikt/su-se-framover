@@ -119,11 +119,6 @@ const Oppsummeringsblokk = (props: {
 
 function statusTilTekst(status: RevurderingStatus, formatMessage: MessageFormatter<typeof messages>): string {
     switch (status) {
-        case InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING:
-        case InformasjonsRevurderingStatus.TIL_ATTESTERING_INGEN_ENDRING:
-        case InformasjonsRevurderingStatus.UNDERKJENT_INGEN_ENDRING:
-        case InformasjonsRevurderingStatus.IVERKSATT_INGEN_ENDRING:
-            return formatMessage('vurdering.ingenEndring');
         case InformasjonsRevurderingStatus.SIMULERT_OPPHØRT:
         case InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT:
         case InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT:
