@@ -34,10 +34,7 @@ export interface AvslagBeregningVedtak extends AvslagVedtak {
     beregning: Beregning;
 }
 
-export type EndringIYtelseVedtakTyper = Exclude<
-    VedtakType,
-    VedtakType.AVSLAG | VedtakType.AVVIST_KLAGE | VedtakType.INGEN_ENDRING
->;
+export type EndringIYtelseVedtakTyper = Exclude<VedtakType, VedtakType.AVSLAG | VedtakType.AVVIST_KLAGE>;
 
 export interface EndringIYtelseVedtak<T extends EndringIYtelseVedtakTyper = EndringIYtelseVedtakTyper>
     extends Vedtak<T> {
@@ -55,13 +52,6 @@ export interface EndringIYtelseMedBeregningVedtak extends EndringIYtelseVedtak<E
     beregning: Beregning;
 }
 
-export interface IngenEndringIYtelseVedtak extends Vedtak<VedtakType.INGEN_ENDRING> {
-    periode: Periode<string>;
-    beregning: Beregning;
-    simulering: null;
-    utbetalingId: null;
-}
-
 export interface KlageVedtak extends Vedtak<VedtakType.AVVIST_KLAGE> {
     periode: null;
     beregning: null;
@@ -74,7 +64,6 @@ export enum VedtakType {
     AVSLAG = 'AVSLAG',
     ENDRING = 'ENDRING',
     REGULERING = 'REGULERING',
-    INGEN_ENDRING = 'INGEN_ENDRING',
     OPPHØR = 'OPPHØR',
     STANS_AV_YTELSE = 'STANS_AV_YTELSE',
     GJENOPPTAK_AV_YTELSE = 'GJENOPPTAK_AV_YTELSE',

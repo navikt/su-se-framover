@@ -5,7 +5,6 @@ import {
     AvsluttetGjenopptak,
     AvsluttetRevurdering,
     AvsluttetStans,
-    BeregnetIngenEndring,
     BeregnetInnvilget,
     Gjenopptak,
     InformasjonSomRevurderes,
@@ -51,11 +50,7 @@ export const hentAvkortingFraRevurdering = (r: Revurdering): Nullable<Simulering
         ? r.simuleringForAvkortingsvarsel
         : null;
 
-export const erBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
-    r.status === InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING;
-
-export const erRevurderingBeregnet = (r: Revurdering): r is BeregnetIngenEndring | BeregnetInnvilget =>
-    r.status === InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING ||
+export const erRevurderingBeregnet = (r: Revurdering): r is BeregnetInnvilget =>
     r.status === InformasjonsRevurderingStatus.BEREGNET_INNVILGET;
 
 export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
@@ -64,28 +59,17 @@ export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering 
     r.status === UtbetalingsRevurderingStatus.SIMULERT_STANS ||
     r.status === UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK;
 
-export const erRevurderingIngenEndring = (
-    r: Revurdering
-): r is BeregnetIngenEndring | UnderkjentRevurdering | IverksattRevurdering | RevurderingTilAttestering =>
-    r.status === InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING ||
-    r.status === InformasjonsRevurderingStatus.UNDERKJENT_INGEN_ENDRING ||
-    r.status === InformasjonsRevurderingStatus.IVERKSATT_INGEN_ENDRING ||
-    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_INGEN_ENDRING;
-
 export const erRevurderingTilAttestering = (r: Revurdering): r is RevurderingTilAttestering =>
     r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_INNVILGET ||
-    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT ||
-    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_INGEN_ENDRING;
+    r.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT;
 
 export const erRevurderingIverksatt = (r: Revurdering): r is IverksattRevurdering =>
     r.status === InformasjonsRevurderingStatus.IVERKSATT_INNVILGET ||
-    r.status === InformasjonsRevurderingStatus.IVERKSATT_OPPHØRT ||
-    r.status === InformasjonsRevurderingStatus.IVERKSATT_INGEN_ENDRING;
+    r.status === InformasjonsRevurderingStatus.IVERKSATT_OPPHØRT;
 
 export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurdering =>
     r.status === InformasjonsRevurderingStatus.UNDERKJENT_INNVILGET ||
-    r.status === InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT ||
-    r.status === InformasjonsRevurderingStatus.UNDERKJENT_INGEN_ENDRING;
+    r.status === InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT;
 
 export const erRevurderingStans = (r: Revurdering): r is StansAvYtelse =>
     r.status === UtbetalingsRevurderingStatus.SIMULERT_STANS ||
@@ -123,8 +107,7 @@ export const erRevurderingÅpen = (r: Revurdering) =>
     erRevurderingTilAttestering(r) ||
     erRevurderingUnderkjent(r);
 
-export const skalAttesteres = (r: Revurdering): boolean =>
-    erGregulering(r.årsak) || erBeregnetIngenEndring(r) || erRevurderingUnderkjent(r);
+export const skalAttesteres = (r: Revurdering): boolean => erGregulering(r.årsak) || erRevurderingUnderkjent(r);
 
 export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: Beregning } {
     return 'beregning' in r;
@@ -257,13 +240,11 @@ export const splitStatusOgResultatFraRevurdering = (
         | 'Underkjent'
         | 'Iverksatt'
         | 'Avsluttet';
-    resultat: '-' | 'Opphør' | 'Endring' | 'Ingen endring';
+    resultat: '-' | 'Opphør' | 'Endring';
 } => {
     switch (r.status) {
         case InformasjonsRevurderingStatus.OPPRETTET:
             return { status: 'Opprettet', resultat: '-' };
-        case InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING:
-            return { status: 'Beregnet', resultat: 'Ingen endring' };
         case InformasjonsRevurderingStatus.BEREGNET_INNVILGET:
             return { status: 'Beregnet', resultat: 'Endring' };
 
@@ -276,15 +257,11 @@ export const splitStatusOgResultatFraRevurdering = (
         case InformasjonsRevurderingStatus.SIMULERT_OPPHØRT:
             return { status: 'Simulert', resultat: 'Opphør' };
 
-        case InformasjonsRevurderingStatus.TIL_ATTESTERING_INGEN_ENDRING:
-            return { status: 'Til attestering', resultat: 'Ingen endring' };
         case InformasjonsRevurderingStatus.TIL_ATTESTERING_INNVILGET:
             return { status: 'Til attestering', resultat: 'Endring' };
         case InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT:
             return { status: 'Til attestering', resultat: 'Opphør' };
 
-        case InformasjonsRevurderingStatus.UNDERKJENT_INGEN_ENDRING:
-            return { status: 'Underkjent', resultat: 'Ingen endring' };
         case InformasjonsRevurderingStatus.UNDERKJENT_INNVILGET:
             return { status: 'Underkjent', resultat: 'Endring' };
         case InformasjonsRevurderingStatus.UNDERKJENT_OPPHØRT:
@@ -294,8 +271,6 @@ export const splitStatusOgResultatFraRevurdering = (
             return { status: 'Iverksatt', resultat: '-' };
         case UtbetalingsRevurderingStatus.IVERKSATT_STANS:
             return { status: 'Iverksatt', resultat: '-' };
-        case InformasjonsRevurderingStatus.IVERKSATT_INGEN_ENDRING:
-            return { status: 'Iverksatt', resultat: 'Ingen endring' };
         case InformasjonsRevurderingStatus.IVERKSATT_INNVILGET:
             return { status: 'Iverksatt', resultat: 'Endring' };
         case InformasjonsRevurderingStatus.IVERKSATT_OPPHØRT:

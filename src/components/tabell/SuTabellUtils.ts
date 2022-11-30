@@ -37,15 +37,7 @@ export type DatacellStatus =
     | 'Avsluttet'
     | 'Oversendt';
 
-export type DataCellResultat =
-    | '-'
-    | 'Avslag'
-    | 'Innvilget'
-    | 'Avvist'
-    | 'Til vurdering'
-    | 'Opphør'
-    | 'Endring'
-    | 'Ingen endring';
+export type DataCellResultat = '-' | 'Avslag' | 'Innvilget' | 'Avvist' | 'Til vurdering' | 'Opphør' | 'Endring';
 
 export interface DataCellInfo {
     type: 'søknad' | 'regulering' | 'revurdering' | 'klage' | 'stans' | 'gjenopptak';

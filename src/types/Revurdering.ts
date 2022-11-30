@@ -53,7 +53,7 @@ export interface AvsluttetGjenopptak extends Gjenopptak<UtbetalingsRevurderingSt
 }
 
 /**
- * Dette gjelder revurdering av Grunnlagsdata, vilkårssett, og potensielt utbetaling (endring fører til utbetaling. ingen endring fører ikke til utbetaling)
+ * Dette gjelder revurdering av Grunnlagsdata, vilkårssett, og potensielt utbetaling (endring fører til utbetaling)
  * eksempler som ikke inngår, stans og gjenoppta av utbetaling, siden dem kun endrer utbetaling
  */
 export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus = InformasjonsRevurderingStatus>
@@ -71,11 +71,6 @@ export type SimuleringForAvkortingsvarsel = {
 };
 
 export interface BeregnetInnvilget extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INNVILGET> {
-    beregning: Beregning;
-}
-
-export interface BeregnetIngenEndring
-    extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INGEN_ENDRING> {
     beregning: Beregning;
 }
 
@@ -130,20 +125,16 @@ export type RevurderingStatus = InformasjonsRevurderingStatus | UtbetalingsRevur
 export enum InformasjonsRevurderingStatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
-    BEREGNET_INGEN_ENDRING = 'BEREGNET_INGEN_ENDRING',
     SIMULERT_OPPHØRT = 'SIMULERT_OPPHØRT',
     SIMULERT_INNVILGET = 'SIMULERT_INNVILGET',
 
     TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
     TIL_ATTESTERING_OPPHØRT = 'TIL_ATTESTERING_OPPHØRT',
-    TIL_ATTESTERING_INGEN_ENDRING = 'TIL_ATTESTERING_INGEN_ENDRING',
     IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
     IVERKSATT_OPPHØRT = 'IVERKSATT_OPPHØRT',
-    IVERKSATT_INGEN_ENDRING = 'IVERKSATT_INGEN_ENDRING',
 
     UNDERKJENT_INNVILGET = 'UNDERKJENT_INNVILGET',
     UNDERKJENT_OPPHØRT = 'UNDERKJENT_OPPHØRT',
-    UNDERKJENT_INGEN_ENDRING = 'UNDERKJENT_INGEN_ENDRING',
     AVSLUTTET = 'AVSLUTTET',
 }
 

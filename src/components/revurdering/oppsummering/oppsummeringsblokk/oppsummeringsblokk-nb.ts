@@ -9,7 +9,6 @@ export default {
     'label.årsak': 'Årsak for revurdering',
     'label.begrunnelse': 'Revurderingsbegrunnelse',
 
-    'vurdering.ingenEndring': 'Ingen endring',
     'vurdering.opphør': 'Opphør',
     'vurdering.endring': 'Endring',
     'vurdering.ukjent': 'Ukjent',

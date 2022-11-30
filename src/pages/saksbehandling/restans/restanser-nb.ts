@@ -8,7 +8,6 @@ export const restansTypeMessages: { [key in RestansType]: string } = {
 };
 
 export const restansStatus: { [key in RestansStatus]: string } = {
-    [RestansStatus.INGEN_ENDRING]: 'Ingen endring',
     [RestansStatus.AVSLAG]: 'Avslått',
     [RestansStatus.INNVILGET]: 'Innvilget',
     [RestansStatus.OPPHØR]: 'Opphørt',
