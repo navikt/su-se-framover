@@ -1,6 +1,7 @@
 import { Nullable } from '~src/lib/types';
 
 import apiClient, { ApiClientResult } from './apiClient';
+import { AvslagManglendeDokType } from './søknadApi';
 
 export async function fetchBrevutkastForSøknadsbehandling(args: {
     sakId: string;
@@ -89,6 +90,18 @@ export async function hentBrevutkastForKlage(arg: { sakId: string; klageId: stri
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/brevutkast`,
         method: 'POST',
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
+export async function brevutkastForAvslagPgaManglendeDokumentasjon(arg: {
+    søknadId: string;
+    body: AvslagManglendeDokType;
+}): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/soknad/${arg.søknadId}/avslag/brevutkast`,
+        method: 'POST',
+        body: arg.body,
         bodyTransformer: (res) => res.blob(),
     });
 }

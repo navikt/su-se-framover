@@ -14,7 +14,7 @@ import * as styles from './brevInput.module.less';
 export interface BrevInputProps {
     tekst: Nullable<string>;
     onVisBrevClick: () => Promise<ApiClientResult<Blob> | undefined>;
-    onChange: (e: React.ChangeEvent<unknown>) => void;
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     tittel?: string;
     knappLabel?: string;
     placeholder?: string;
