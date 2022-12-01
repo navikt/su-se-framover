@@ -263,11 +263,12 @@ const Drift = () => {
                             <SøknadTabellDrift søknadResponse={fixSøknaderResponse.value} />
                         </div>
                     )}
-                    {knappTrykket === Knapp.KONSISTENSAVSTEMMING && RemoteData.isSuccess(konsistensavstemmingStatus) && (
-                        <Alert className={styles.alert} variant="success">
-                            <p>{JSON.stringify(konsistensavstemmingStatus.value)}</p>
-                        </Alert>
-                    )}
+                    {knappTrykket === Knapp.KONSISTENSAVSTEMMING &&
+                        RemoteData.isSuccess(konsistensavstemmingStatus) && (
+                            <Alert className={styles.alert} variant="success">
+                                <p>{JSON.stringify(konsistensavstemmingStatus.value)}</p>
+                            </Alert>
+                        )}
                 </div>
                 {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
             </div>
