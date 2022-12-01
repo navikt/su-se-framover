@@ -57,12 +57,8 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
                                 label={formatMessage('avkorting.total')}
                                 verdi={formatCurrency(
                                     simuleringForAvkortingsvarsel.perioder
-                                        .map((p) => {
-                                            return p.kontooppstilling.debetFeilkonto;
-                                        })
-                                        .reduce((total, curr) => {
-                                            return (total += curr);
-                                        })
+                                        .map((p) => p.kontooppstilling.debetFeilkonto)
+                                        .reduce((total, curr) => (total += curr))
                                 )}
                             />
                             <ul className={styles.avkortingListe}>

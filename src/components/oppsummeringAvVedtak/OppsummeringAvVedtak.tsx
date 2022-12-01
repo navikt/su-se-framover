@@ -240,6 +240,7 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                     )
                 )
             )}
+
             {avkortingsInfo && (
                 <div className={styles.avkorting}>
                     <Heading level="3" size="small" spacing>
@@ -248,7 +249,11 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                     <div className={styles.avkortingContent}>
                         <OppsummeringPar
                             label={formatMessage('simulering.avkorting.total')}
-                            verdi={formatCurrency(avkortingsInfo.totalBruttoYtelse)}
+                            verdi={formatCurrency(
+                                avkortingsInfo.perioder
+                                    .map((p) => p.kontooppstilling.debetFeilkonto)
+                                    .reduce((total, curr) => (total += curr))
+                            )}
                         />
                         <ul className={styles.avkortingListe}>
                             {avkortingsInfo.perioder.map((periode) => (
@@ -256,9 +261,8 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                                     <BodyShort>
                                         {formatPeriode({ fraOgMed: periode.fraOgMed, tilOgMed: periode.tilOgMed })}
                                     </BodyShort>
-                                    <BodyShort>{formatMessage(periode.type)}</BodyShort>
                                     <BodyShort>
-                                        {`${formatCurrency(periode.bruttoYtelse)} ${formatMessage(
+                                        {`${formatCurrency(periode.kontooppstilling.debetFeilkonto)} ${formatMessage(
                                             'simulering.avkorting.ytelse.imåned'
                                         )}`}
                                     </BodyShort>
