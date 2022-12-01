@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Heading, Loader } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
+import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
@@ -192,6 +193,7 @@ const GrunnlagOgVilkårWrapper = (props: {
     sakId: string;
     informasjonsRevurdering: InformasjonsRevurdering;
 }) => {
+    const { formatMessage } = useI18n({ messages: sharedMessages });
     const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
     React.useEffect(() => {
         if (RemoteData.isInitial(gjeldendeData) || RemoteData.isSuccess(gjeldendeData)) {
@@ -205,9 +207,13 @@ const GrunnlagOgVilkårWrapper = (props: {
 
     return pipe(
         gjeldendeData,
-        RemoteData.fold(
-            () => <Loader />,
-            () => <Loader />,
+        RemoteData.fold3(
+            () => (
+                <SpinnerMedTekst
+                    className={styles.spinner}
+                    text={formatMessage('grunnlagOgvilkår.henterGjeldendeData')}
+                />
+            ),
             (error) => (
                 <div className={styles.fullsideSpinnerFeilmeldingContainer}>
                     <ApiErrorAlert error={error} />
