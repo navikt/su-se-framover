@@ -6,14 +6,18 @@ export interface Simulering {
 export interface SimulertPeriode {
     fraOgMed: string;
     tilOgMed: string;
-    bruttoYtelse: number;
-    type: SimulertUtbetalingstype;
+    kontooppstilling: Kontooversikt;
 }
 
-export enum SimulertUtbetalingstype {
-    ETTERBETALING = 'ETTERBETALING',
-    FEILUTBETALING = 'FEILUTBETALING',
-    ORDINÆR = 'ORDINÆR',
-    UENDRET = 'UENDRET',
-    INGEN_UTBETALING = 'INGEN_UTBETALING',
+export interface Kontooversikt {
+    simulertUtbetaling: number;
+    debetYtelse: number;
+    kreditYtelse: number;
+    debetFeilkonto: number;
+    kreditFeilkonto: number;
+    debetMotpostFeilkonto: number;
+    kreditMotpostFeilkonto: number;
+    sumYtelse: number;
+    sumFeilkonto: number;
+    sumMotpostFeilkonto: number;
 }

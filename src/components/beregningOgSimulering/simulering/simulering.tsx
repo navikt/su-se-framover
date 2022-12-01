@@ -1,3 +1,4 @@
+import { WarningColored } from '@navikt/ds-icons';
 import { Alert, Button, Heading, Label, Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
@@ -9,7 +10,7 @@ import sharedMessages from '~src/components/beregningOgSimulering/beregning/bere
 import { CollapsableFormElementDescription } from '~src/components/formElements/FormElements';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
-import { Simulering, SimulertUtbetalingstype } from '~src/types/Simulering';
+import { Simulering } from '~src/types/Simulering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { groupWhile } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
@@ -47,7 +48,6 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
             )}
             <Label className={classNames(styles.totalt, styles.linjeTittel)}>
                 <span>{formatMessage('totaltBeløp')}</span>
-                <span />
                 <span className={styles.beløp}>
                     {formatCurrency(props.simulering.totalBruttoYtelse, { numDecimals: 0 })}
                 </span>
@@ -57,8 +57,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                     props.simulering.perioder,
                     groupWhile(
                         (curr, prev) =>
-                            curr.bruttoYtelse === prev.bruttoYtelse &&
-                            curr.type === prev.type &&
+                            curr.kontooppstilling.sumYtelse === prev.kontooppstilling.sumYtelse &&
                             DateFns.differenceInCalendarMonths(
                                 DateFns.parseISO(curr.fraOgMed),
                                 DateFns.parseISO(prev.tilOgMed)
@@ -68,15 +67,13 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                         pipe(
                             combineOptions([arr.head(gruppe), arr.last(gruppe)]),
                             Option.map(([head, last]) => (
-                                <Label className={styles.linjeTittel} key={head.fraOgMed + head.tilOgMed}>
+                                <Label className={styles.linjeTittel} key={head.fraOgMed + head.tilOgMed} spacing>
                                     <span className={styles.periode}>{`${formatMonthYear(
                                         head.fraOgMed
                                     )} - ${formatMonthYear(last.tilOgMed)}`}</span>
-                                    <span className={styles.type}>
-                                        {head.type !== SimulertUtbetalingstype.ORDINÆR ? formatMessage(head.type) : ''}
-                                    </span>
                                     <span className={styles.beløp}>
-                                        {formatCurrency(head.bruttoYtelse, { numDecimals: 0 })} {formatMessage('iMnd')}
+                                        {formatCurrency(head.kontooppstilling.sumYtelse, { numDecimals: 0 })}{' '}
+                                        {formatMessage('iMnd')}
                                     </span>
                                 </Label>
                             )),
@@ -120,7 +117,7 @@ const SimuleringsDetaljerModal = (props: { simulering: Simulering; open: boolean
                     {props.simulering.perioder.map((periode) => (
                         <li key={`${periode.fraOgMed} - ${periode.tilOgMed}`}>
                             <CollapsableFormElementDescription
-                                className={styles.linje}
+                                className={styles.linjeDetaljer}
                                 title={
                                     <div className={styles.linjeTittel}>
                                         <Label className={styles.periode}>
@@ -128,15 +125,14 @@ const SimuleringsDetaljerModal = (props: { simulering: Simulering; open: boolean
                                                 periode.tilOgMed
                                             )}`}
                                         </Label>
-                                        <Label className={styles.type}>
-                                            {periode.type !== SimulertUtbetalingstype.ORDINÆR
-                                                ? formatMessage(periode.type)
-                                                : ''}
-                                        </Label>
                                         <Label className={styles.beløp}>
-                                            {formatCurrency(periode.bruttoYtelse, { numDecimals: 0 })}{' '}
+                                            {formatCurrency(periode.kontooppstilling.sumYtelse, { numDecimals: 0 })}{' '}
                                             {formatMessage('iMnd')}
                                         </Label>
+                                        {(periode.kontooppstilling.sumFeilkonto !== 0 ||
+                                            periode.kontooppstilling.sumMotpostFeilkonto !== 0) && (
+                                            <WarningColored></WarningColored>
+                                        )}
                                     </div>
                                 }
                             >
@@ -144,34 +140,34 @@ const SimuleringsDetaljerModal = (props: { simulering: Simulering; open: boolean
                                     <div>
                                         <Label>Ytelse</Label>
                                         <div className={styles.detalje}>
-                                            <p>plus</p>
-                                            <p>beløp</p>
-                                            <p>minus</p>
-                                            <p>beløp</p>
-                                            <p>sum</p>
-                                            <p>beløp</p>
+                                            <p>Debet</p>
+                                            <p>{periode.kontooppstilling.debetYtelse}</p>
+                                            <p>Kredit</p>
+                                            <p>{periode.kontooppstilling.kreditYtelse}</p>
+                                            <p>Sum</p>
+                                            <p>{periode.kontooppstilling.sumYtelse}</p>
                                         </div>
                                     </div>
                                     <div>
                                         <Label>Feilkonto</Label>
                                         <div className={styles.detalje}>
-                                            <p>plus</p>
-                                            <p>beløp</p>
-                                            <p>minus</p>
-                                            <p>beløp</p>
-                                            <p>sum</p>
-                                            <p>beløp</p>
+                                            <p>Debet</p>
+                                            <p>{periode.kontooppstilling.debetFeilkonto}</p>
+                                            <p>Kredit</p>
+                                            <p>{periode.kontooppstilling.kreditFeilkonto}</p>
+                                            <p>Sum</p>
+                                            <p>{periode.kontooppstilling.sumFeilkonto}</p>
                                         </div>
                                     </div>
                                     <div>
                                         <Label>Motpostering for feilkonto</Label>
                                         <div className={styles.detalje}>
-                                            <p>plus</p>
-                                            <p>beløp</p>
-                                            <p>minus</p>
-                                            <p>beløp</p>
-                                            <p>sum</p>
-                                            <p>beløp</p>
+                                            <p>Debet</p>
+                                            <p>{periode.kontooppstilling.debetMotpostFeilkonto}</p>
+                                            <p>Kredit</p>
+                                            <p>{periode.kontooppstilling.kreditMotpostFeilkonto}</p>
+                                            <p>Sum</p>
+                                            <p>{periode.kontooppstilling.sumMotpostFeilkonto}</p>
                                         </div>
                                     </div>
                                 </div>

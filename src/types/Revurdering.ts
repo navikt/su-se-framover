@@ -68,6 +68,7 @@ export type OpprettetRevurdering = InformasjonsRevurdering<InformasjonsRevurderi
 export type SimuleringForAvkortingsvarsel = {
     perioder: SimulertPeriode[];
     totalBruttoYtelse: number;
+    nyPerioder: SimulertPeriode[];
 };
 
 export interface BeregnetInnvilget extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INNVILGET> {

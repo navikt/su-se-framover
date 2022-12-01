@@ -5,15 +5,33 @@
     justify-content: flex-start;
 }
 
-.linje {
+.linjeDetaljer {
     margin-bottom: @spacing-s;
+}
+
+.linjeTittelDetaljer {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    column-gap: @spacing;
+    width: 100%;
 }
 
 .linjeTittel {
     display: grid;
-    grid-template-columns: 2fr minmax(min-content, 1fr) 2fr;
+    grid-template-columns: 3fr 2fr;
     column-gap: @spacing;
     width: 100%;
+}
+
+.linje {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: @spacing-xxs;
+    margin-bottom: @spacing-s;
+
+    :last-child {
+        text-align: end;
+    }
 }
 
 .totalt {
