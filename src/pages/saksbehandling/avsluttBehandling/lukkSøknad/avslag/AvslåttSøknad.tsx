@@ -1,29 +1,34 @@
-import { Textarea } from '@navikt/ds-react';
 import React from 'react';
+import { FieldError } from 'react-hook-form';
 
-import { useI18n } from '~src/lib/i18n';
+import * as PdfApi from '~src/api/pdfApi';
+import { BrevInput } from '~src/components/brevInput/BrevInput';
 import { Nullable } from '~src/lib/types';
 
-import nb from './avslåttSøknad-nb';
 import * as styles from './avslåttSøknad.module.less';
 
 interface Props {
+    søknadId: string;
     fritekstValue: Nullable<string>;
-    fritekstError?: string;
+    fritekstError?: FieldError;
     onFritekstChange: (value: string) => void;
 }
 
 const AvslåttSøknad = (props: Props) => {
-    const { formatMessage } = useI18n({ messages: nb });
-
     return (
         <div className={styles.container}>
-            <Textarea
-                className={styles.textArea}
-                label={formatMessage('display.avvist.fritekst')}
-                value={props.fritekstValue ?? ''}
-                error={props.fritekstError}
+            <BrevInput
+                tekst={props.fritekstValue ?? ''}
+                onVisBrevClick={() =>
+                    PdfApi.brevutkastForAvslagPgaManglendeDokumentasjon({
+                        søknadId: props.søknadId,
+                        body: {
+                            fritekst: props.fritekstValue ?? '',
+                        },
+                    })
+                }
                 onChange={(e) => props.onFritekstChange(e.target.value)}
+                feil={props.fritekstError}
             />
         </div>
     );

@@ -159,8 +159,9 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                     name="manglendeDok.fritekst"
                     render={({ field, fieldState }) => (
                         <AvslåttSøknad
+                            søknadId={props.søknad.id}
                             fritekstValue={field.value}
-                            fritekstError={fieldState.error?.message}
+                            fritekstError={fieldState.error}
                             onFritekstChange={field.onChange}
                         />
                     )}
