@@ -203,7 +203,7 @@ const KontooversiktInformasjon = (props: {
                         ? props.kontooversikt.kreditFeilkonto
                         : props.type === 'motpostering'
                         ? props.kontooversikt.kreditMotpostFeilkonto
-                        : 'Ukjent debet type'}
+                        : 'Ukjent kredit type'}
                 </BodyShort>
                 <BodyShort>{formatMessage('kontooversikt.info.sum')}</BodyShort>
                 <BodyShort className={styles.beløp}>
@@ -213,7 +213,7 @@ const KontooversiktInformasjon = (props: {
                         ? props.kontooversikt.sumFeilkonto
                         : props.type === 'motpostering'
                         ? props.kontooversikt.sumMotpostFeilkonto
-                        : 'Ukjent debet type'}
+                        : 'Ukjent sum type'}
                 </BodyShort>
             </div>
         </div>
