@@ -1,12 +1,11 @@
 import { WarningColored } from '@navikt/ds-icons';
-import { Alert, BodyShort, Button, Heading, Label, Modal } from '@navikt/ds-react';
+import { Accordion, Alert, BodyShort, Button, Heading, Label, Modal } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import React, { useState } from 'react';
 
 import sharedMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
-import { CollapsableFormElementDescription } from '~src/components/formElements/FormElements';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Kontooversikt, Simulering, SimulertPeriode } from '~src/types/Simulering';
@@ -129,22 +128,22 @@ const GruppertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) => 
     );
 };
 
-const DetaljertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) => (
-    <ul>
-        {props.perioder.map((periode) => (
-            <li key={`${periode.fraOgMed} - ${periode.tilOgMed}`}>
-                <DetaljertSimuleringsperiode periode={periode} />
-            </li>
-        ))}
-    </ul>
-);
+const DetaljertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) => {
+    return (
+        <Accordion className={styles.accordion}>
+            {props.perioder.map((periode) => (
+                <DetaljertSimuleringsperiode periode={periode} key={`${periode.fraOgMed} - ${periode.tilOgMed}`} />
+            ))}
+        </Accordion>
+    );
+};
 
 const DetaljertSimuleringsperiode = (props: { periode: SimulertPeriode }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <CollapsableFormElementDescription
-            title={
-                <div className={styles.collapsableTittel}>
+        <Accordion.Item>
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.periodeOgSum}>
                     <Label>
                         {`${formatMonthYear(props.periode.fraOgMed)} - ${formatMonthYear(props.periode.tilOgMed)}`}
                     </Label>
@@ -153,16 +152,15 @@ const DetaljertSimuleringsperiode = (props: { periode: SimulertPeriode }) => {
                         {formatMessage('iMnd')}
                     </Label>
                 </div>
-            }
-            elementerEtterTittel={
-                props.periode.kontooppstilling.sumFeilkonto !== 0 ||
+                {props.periode.kontooppstilling.sumFeilkonto !== 0 ||
                 props.periode.kontooppstilling.sumMotpostFeilkonto !== 0 ? (
                     <WarningColored />
-                ) : undefined
-            }
-        >
-            <KontooversiktSimuleringsperiode kontooversikt={props.periode.kontooppstilling} />
-        </CollapsableFormElementDescription>
+                ) : undefined}
+            </Accordion.Header>
+            <Accordion.Content>
+                <KontooversiktSimuleringsperiode kontooversikt={props.periode.kontooppstilling} />
+            </Accordion.Content>
+        </Accordion.Item>
     );
 };
 

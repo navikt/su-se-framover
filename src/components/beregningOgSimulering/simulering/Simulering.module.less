@@ -16,14 +16,23 @@
     margin-bottom: @spacing-s;
 }
 
-.collapsableTittel {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    width: 100%;
-    margin-bottom: @spacing-xxs;
+.accordion {
+    width: 800px;
+}
 
+.accordionHeader {
+    background-color: var(--a-bg-subtle);
+    margin-bottom: @spacing-xxs;
     > :first-child {
-        text-align: start;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .periodeOgSum {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-right: @spacing;
     }
 }
 

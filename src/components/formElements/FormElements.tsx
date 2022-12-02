@@ -48,12 +48,17 @@ export const CollapsableFormElementDescription = (props: {
     elementerEtterTittel?: JSX.Element;
     children: React.ReactNode;
     className?: string;
+    knappClass?: string;
 }) => {
     const [visMer, setVisMer] = useState(false);
 
     return (
         <div className={props.className}>
-            <button className={styles.hjelpetekstKnapp} type="button" onClick={() => setVisMer(!visMer)}>
+            <button
+                className={classNames(styles.hjelpetekstKnapp, props.knappClass)}
+                type="button"
+                onClick={() => setVisMer(!visMer)}
+            >
                 {props.title}
                 {visMer ? <CollapseFilled /> : <ExpandFilled />}
                 {props.elementerEtterTittel}
