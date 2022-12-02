@@ -1,70 +1,45 @@
 @import '~/src/styles/variables.less';
 
-.simuleringsHeader {
-    display: flex;
-    justify-content: flex-start;
+.detaljerKnapp {
+    padding: 0;
 }
 
-.linjeDetaljer {
+.bruttoYtelseContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: @spacing;
+}
+
+.gruppertSimuleringsperioder {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     margin-bottom: @spacing-s;
 }
 
-.linjeTittelDetaljer {
+.collapsableTittel {
     display: grid;
-    grid-template-columns: 2fr 2fr;
-    column-gap: @spacing;
+    grid-template-columns: repeat(2, 1fr);
     width: 100%;
-}
+    margin-bottom: @spacing-xxs;
 
-.linjeTittel {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    column-gap: @spacing;
-    width: 100%;
-}
-
-.linje {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    column-gap: @spacing-xxs;
-    margin-bottom: @spacing-s;
-
-    :last-child {
-        text-align: end;
+    > :first-child {
+        text-align: start;
     }
 }
 
-.totalt {
-    margin-bottom: @spacing;
-}
-
-.grupertSimulering {
-    margin-bottom: @spacing;
-}
-
-.simuleringsdetaljerContainer {
+.kontooversiktContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: @spacing;
     padding: 0 1rem;
+    margin-bottom: @spacing-s;
 }
 
-.detalje {
+.kontooversiktInfo {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
 }
 
-.periode,
-.type,
 .beløp {
-    display: flex;
-    align-items: center;
-}
-
-.beløp,
-.type {
-    justify-content: flex-end;
-}
-
-.detaljerKnapp {
-    padding: 0;
+    text-align: end;
 }
