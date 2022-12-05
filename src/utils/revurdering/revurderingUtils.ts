@@ -480,6 +480,16 @@ export const lagOpprettelsesSeksjon = (arg: { sakId: string; r: InformasjonsRevu
     };
 };
 
+//TODO: i18n
+const revurderingGrunnlagStegTilFormattedTittel = (steg: RevurderingGrunnlagSteg) => {
+    switch (steg) {
+        case RevurderingGrunnlagSteg.Bosituasjon:
+            return 'Bosituasjon';
+        case RevurderingGrunnlagSteg.EndringAvFradrag:
+            return 'Inntekt';
+    }
+};
+
 export const lagGrunnlagsSeksjon = (arg: { sakId: string; r: InformasjonsRevurdering }): Seksjon => {
     const informasjonSomRevurderesOgGrunnlag = informasjonSomRevurderesTilGrunnlagSteg(arg.r);
 
@@ -490,7 +500,7 @@ export const lagGrunnlagsSeksjon = (arg: { sakId: string; r: InformasjonsRevurde
             return {
                 id: g.somRevurderes,
                 status: g.status,
-                label: g.somRevurderes,
+                label: revurderingGrunnlagStegTilFormattedTittel(g.somRevurderes),
                 url: Routes.revurderingSeksjonSteg.createURL({
                     sakId: arg.sakId,
                     revurderingId: arg.r.id,
@@ -503,6 +513,30 @@ export const lagGrunnlagsSeksjon = (arg: { sakId: string; r: InformasjonsRevurde
     };
 };
 
+//TODO: i18n
+const revurderingVilkårStegTilFormattedTittel = (steg: RevurderingVilkårSteg) => {
+    switch (steg) {
+        case RevurderingVilkårSteg.FastOpphold:
+            return 'Opphold i Norge';
+        case RevurderingVilkårSteg.Flyktning:
+            return 'Flyktingsstatus';
+        case RevurderingVilkårSteg.Formue:
+            return 'Formue';
+        case RevurderingVilkårSteg.Institusjonsopphold:
+            return 'Institusjonsopphold';
+        case RevurderingVilkårSteg.Oppholdstillatelse:
+            return 'Oppholdstillatelse';
+        case RevurderingVilkårSteg.Opplysningsplikt:
+            return 'Opplysningsplikt';
+        case RevurderingVilkårSteg.PersonligOppmøte:
+            return 'Personlig oppmøte';
+        case RevurderingVilkårSteg.Uførhet:
+            return 'Uførhet';
+        case RevurderingVilkårSteg.Utenlandsopphold:
+            return 'Utenlandsopphold';
+    }
+};
+
 export const lagVilkårSeksjon = (arg: { sakId: string; r: InformasjonsRevurdering }): Seksjon => {
     const informasjonSomRevurderesOgVilkår = informasjonSomRevurderesTilVilkårSteg(arg.r);
 
@@ -513,7 +547,7 @@ export const lagVilkårSeksjon = (arg: { sakId: string; r: InformasjonsRevurderi
             return {
                 id: v.somRevurderes,
                 status: v.status,
-                label: v.somRevurderes,
+                label: revurderingVilkårStegTilFormattedTittel(v.somRevurderes),
                 url: Routes.revurderingSeksjonSteg.createURL({
                     sakId: arg.sakId,
                     revurderingId: arg.r.id,
@@ -576,7 +610,7 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
         {
             id: RevurderingOppsummeringSteg.SendTilAttestering,
             status: Linjestatus.Ingenting,
-            label: 'SendTilAttestering',
+            label: 'Send til attestering',
             url: Routes.revurderingSeksjonSteg.createURL({
                 sakId: arg.sakId,
                 revurderingId: arg.r.id,
