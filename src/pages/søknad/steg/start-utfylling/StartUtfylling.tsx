@@ -164,7 +164,9 @@ const StartUtfylling = () => {
                                         }}
                                     >
                                         {steg.map((s) => (
-                                            <Stepper.Step key={s.step}> </Stepper.Step>
+                                            <Stepper.Step key={s.step} as="button">
+                                                {' '}
+                                            </Stepper.Step>
                                         ))}
                                     </Stepper>
                                 </div>
