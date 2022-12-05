@@ -249,20 +249,16 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                     <div className={styles.avkortingContent}>
                         <OppsummeringPar
                             label={formatMessage('simulering.avkorting.total')}
-                            verdi={formatCurrency(
-                                avkortingsInfo.perioder
-                                    .map((p) => p.kontooppstilling.debetFeilkonto)
-                                    .reduce((total, curr) => (total += curr))
-                            )}
+                            verdi={formatCurrency(avkortingsInfo.totalOppsummering.sumFeilutbetaling)}
                         />
                         <ul className={styles.avkortingListe}>
-                            {avkortingsInfo.perioder.map((periode) => (
+                            {avkortingsInfo.periodeOppsummering.map((periode) => (
                                 <li key={periode.fraOgMed}>
                                     <BodyShort>
                                         {formatPeriode({ fraOgMed: periode.fraOgMed, tilOgMed: periode.tilOgMed })}
                                     </BodyShort>
                                     <BodyShort>
-                                        {`${formatCurrency(periode.kontooppstilling.debetFeilkonto)} ${formatMessage(
+                                        {`${formatCurrency(periode.sumFeilutbetaling)} ${formatMessage(
                                             'simulering.avkorting.ytelse.imåned'
                                         )}`}
                                     </BodyShort>

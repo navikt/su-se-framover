@@ -214,10 +214,10 @@ export const finnNesteRevurderingsteg = (
 };
 
 export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simulering, erOpphør: boolean) =>
-    simulering.perioder.some((periode) => periode.kontooppstilling.debetFeilkonto > 0) &&
+    simulering.periodeOppsummering.some((periode) => periode.sumFeilutbetaling > 0) &&
     (erOpphør ||
-        !simulering.perioder.every(
-            (periode) => periode.kontooppstilling.debetFeilkonto > 0 || periode.kontooppstilling.sumYtelse == 0
+        !simulering.periodeOppsummering.every(
+            (periode) => periode.sumFeilutbetaling > 0 || periode.sumTilUtbetaling == 0
         ));
 
 export const erRevurderingOpphørPgaManglendeDokumentasjon = (r: Revurdering) =>

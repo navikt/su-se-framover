@@ -4,7 +4,7 @@ import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Periode } from './Periode';
-import { Simulering, SimulertPeriode } from './Simulering';
+import { SimuleringsperiodeOppsummering, Simulering } from './Simulering';
 
 //Dette er feltene som deles av backends 'abstrakte' revurdering. Hadde vært fint å skille på dem litt mer, både bak og fram
 export interface Revurdering<T extends RevurderingStatus = RevurderingStatus> extends Behandling<RevurderingStatus> {
@@ -66,9 +66,8 @@ export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus
 export type OpprettetRevurdering = InformasjonsRevurdering<InformasjonsRevurderingStatus.OPPRETTET>;
 
 export type SimuleringForAvkortingsvarsel = {
-    perioder: SimulertPeriode[];
-    totalBruttoYtelse: number;
-    nyPerioder: SimulertPeriode[];
+    totalOppsummering: SimuleringsperiodeOppsummering;
+    periodeOppsummering: SimuleringsperiodeOppsummering[];
 };
 
 export interface BeregnetInnvilget extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INNVILGET> {

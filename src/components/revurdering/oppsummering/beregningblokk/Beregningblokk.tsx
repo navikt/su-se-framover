@@ -56,13 +56,11 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
                             <Oppsummeringsfelt
                                 label={formatMessage('avkorting.total')}
                                 verdi={formatCurrency(
-                                    simuleringForAvkortingsvarsel.perioder
-                                        .map((p) => p.kontooppstilling.debetFeilkonto)
-                                        .reduce((total, curr) => (total += curr))
+                                    simuleringForAvkortingsvarsel.totalOppsummering.sumFeilutbetaling
                                 )}
                             />
                             <ul className={styles.avkortingListe}>
-                                {simuleringForAvkortingsvarsel.perioder.map((periode) => (
+                                {simuleringForAvkortingsvarsel.periodeOppsummering.map((periode) => (
                                     <li key={periode.fraOgMed}>
                                         <p>
                                             {formatPeriode({
@@ -70,9 +68,7 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
                                                 tilOgMed: periode.tilOgMed,
                                             })}
                                         </p>
-                                        <p>{`${formatCurrency(periode.kontooppstilling.debetFeilkonto)} ${formatMessage(
-                                            'iMnd'
-                                        )}`}</p>
+                                        <p>{`${formatCurrency(periode.sumFeilutbetaling)} ${formatMessage('iMnd')}`}</p>
                                     </li>
                                 ))}
                             </ul>

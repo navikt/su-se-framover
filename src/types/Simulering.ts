@@ -1,23 +1,16 @@
 export interface Simulering {
-    totalBruttoYtelse: number;
-    perioder: SimulertPeriode[];
+    totalOppsummering: SimuleringsperiodeOppsummering;
+    periodeOppsummering: SimuleringsperiodeOppsummering[];
 }
 
-export interface SimulertPeriode {
+export interface SimuleringsperiodeOppsummering {
     fraOgMed: string;
     tilOgMed: string;
-    kontooppstilling: Kontooversikt;
-}
-
-export interface Kontooversikt {
-    simulertUtbetaling: number;
-    debetYtelse: number;
-    kreditYtelse: number;
-    debetFeilkonto: number;
-    kreditFeilkonto: number;
-    debetMotpostFeilkonto: number;
-    kreditMotpostFeilkonto: number;
-    sumYtelse: number;
-    sumFeilkonto: number;
-    sumMotpostFeilkonto: number;
+    sumTilUtbetaling: number;
+    sumEtterbetaling: number;
+    sumFramtidigUtbetaling: number;
+    sumTotalUtbetaling: number;
+    sumTidligereUtbetalt: number;
+    sumFeilutbetaling: number;
+    sumReduksjonFeilkonto: number;
 }

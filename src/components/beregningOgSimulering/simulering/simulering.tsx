@@ -1,14 +1,15 @@
 import { WarningColored } from '@navikt/ds-icons';
-import { Accordion, Alert, BodyShort, Button, Heading, Label, Modal } from '@navikt/ds-react';
+import { Accordion, Alert, Button, Heading, Label, Modal } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import React, { useState } from 'react';
 
 import sharedMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
+import { OppsummeringPar } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
-import { Kontooversikt, Simulering, SimulertPeriode } from '~src/types/Simulering';
+import { SimuleringsperiodeOppsummering, Simulering } from '~src/types/Simulering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { groupWhile } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
@@ -56,16 +57,9 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
 };
 
 const SimulertePerioderMedTotalBruttoYtelse = (props: { simulering: Simulering; detaljert?: boolean }) => {
-    const { formatMessage } = useI18n({ messages: messages });
     return (
         <div>
-            <div className={styles.bruttoYtelseContainer}>
-                <Label>{formatMessage('totaltBeløp')}</Label>
-                <Label className={styles.beløp}>
-                    {formatCurrency(props.simulering.totalBruttoYtelse, { numDecimals: 0 })}
-                </Label>
-            </div>
-            <SimulertePerioder perioder={props.simulering.perioder} detaljert={props.detaljert} />
+            <SimulertePerioder perioder={props.simulering.periodeOppsummering} detaljert={props.detaljert} />
         </div>
     );
 };
@@ -76,15 +70,19 @@ const SimuleringsDetaljerModal = (props: { simulering: Simulering; open: boolean
         <Modal open={props.open} onClose={() => props.close()}>
             <Modal.Content>
                 <Heading spacing level="2" size="medium">
-                    {formatMessage('modal.heading')}
+                    {formatMessage('modal.heading.periode')}
                 </Heading>
                 <SimulertePerioderMedTotalBruttoYtelse simulering={props.simulering} detaljert />
+                <Heading spacing level="2" size="medium">
+                    {formatMessage('modal.heading.total')}
+                </Heading>
+                <DetaljertSimuleringsperioder perioder={[props.simulering.totalOppsummering]} />
             </Modal.Content>
         </Modal>
     );
 };
 
-const SimulertePerioder = (props: { perioder: SimulertPeriode[]; detaljert?: boolean }) => {
+const SimulertePerioder = (props: { perioder: SimuleringsperiodeOppsummering[]; detaljert?: boolean }) => {
     return props.detaljert ? (
         <DetaljertSimuleringsperioder perioder={props.perioder} />
     ) : (
@@ -92,7 +90,7 @@ const SimulertePerioder = (props: { perioder: SimulertPeriode[]; detaljert?: boo
     );
 };
 
-const GruppertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) => {
+const GruppertSimuleringsperioder = (props: { perioder: SimuleringsperiodeOppsummering[] }) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div>
@@ -100,7 +98,7 @@ const GruppertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) => 
                 props.perioder,
                 groupWhile(
                     (curr, prev) =>
-                        curr.kontooppstilling.sumYtelse === prev.kontooppstilling.sumYtelse &&
+                        curr.sumTilUtbetaling === prev.sumTilUtbetaling &&
                         DateFns.differenceInCalendarMonths(
                             DateFns.parseISO(curr.fraOgMed),
                             DateFns.parseISO(prev.tilOgMed)
@@ -115,8 +113,7 @@ const GruppertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) => 
                                     {`${formatMonthYear(first.fraOgMed)} - ${formatMonthYear(last.tilOgMed)}`}
                                 </Label>
                                 <Label className={styles.beløp}>
-                                    {formatCurrency(first.kontooppstilling.sumYtelse, { numDecimals: 0 })}{' '}
-                                    {formatMessage('iMnd')}
+                                    {formatCurrency(first.sumTilUtbetaling, { numDecimals: 0 })} {formatMessage('iMnd')}
                                 </Label>
                             </div>
                         )),
@@ -128,7 +125,7 @@ const GruppertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) => 
     );
 };
 
-const DetaljertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) => {
+const DetaljertSimuleringsperioder = (props: { perioder: SimuleringsperiodeOppsummering[] }) => {
     return (
         <Accordion className={styles.accordion}>
             {props.perioder.map((periode) => (
@@ -138,8 +135,7 @@ const DetaljertSimuleringsperioder = (props: { perioder: SimulertPeriode[] }) =>
     );
 };
 
-const DetaljertSimuleringsperiode = (props: { periode: SimulertPeriode }) => {
-    const { formatMessage } = useI18n({ messages });
+const DetaljertSimuleringsperiode = (props: { periode: SimuleringsperiodeOppsummering }) => {
     return (
         <Accordion.Item>
             <Accordion.Header className={styles.accordionHeader}>
@@ -148,72 +144,63 @@ const DetaljertSimuleringsperiode = (props: { periode: SimulertPeriode }) => {
                         {`${formatMonthYear(props.periode.fraOgMed)} - ${formatMonthYear(props.periode.tilOgMed)}`}
                     </Label>
                     <Label className={styles.beløp}>
-                        {formatCurrency(props.periode.kontooppstilling.sumYtelse, { numDecimals: 0 })}{' '}
-                        {formatMessage('iMnd')}
+                        {formatCurrency(props.periode.sumTilUtbetaling, { numDecimals: 0 })}
                     </Label>
                 </div>
-                {props.periode.kontooppstilling.sumFeilkonto !== 0 ||
-                props.periode.kontooppstilling.sumMotpostFeilkonto !== 0 ? (
+                {props.periode.sumFeilutbetaling !== 0 || props.periode.sumReduksjonFeilkonto !== 0 ? (
                     <WarningColored />
                 ) : undefined}
             </Accordion.Header>
             <Accordion.Content>
-                <KontooversiktSimuleringsperiode kontooversikt={props.periode.kontooppstilling} />
+                <PeriodeOppsummering oppsummering={props.periode} />
             </Accordion.Content>
         </Accordion.Item>
     );
 };
 
-const KontooversiktSimuleringsperiode = (props: { kontooversikt: Kontooversikt }) => {
+const PeriodeOppsummering = (props: { oppsummering: SimuleringsperiodeOppsummering }) => {
     return (
         <div className={styles.kontooversiktContainer}>
-            <KontooversiktInformasjon kontooversikt={props.kontooversikt} type={'ytelse'} />
-            <KontooversiktInformasjon kontooversikt={props.kontooversikt} type={'feilkonto'} />
-            <KontooversiktInformasjon kontooversikt={props.kontooversikt} type={'motpostering'} />
+            <OppsummeringYtelse oppsummering={props.oppsummering} />
+            <OppsummeringFeilkonto oppsummering={props.oppsummering} />
         </div>
     );
 };
 
-const KontooversiktInformasjon = (props: {
-    kontooversikt: Kontooversikt;
-    type: 'ytelse' | 'feilkonto' | 'motpostering';
-}) => {
-    const { formatMessage } = useI18n({ messages });
+const OppsummeringYtelse = (props: { oppsummering: SimuleringsperiodeOppsummering }) => {
+    return (
+        <div className={styles.ytelseOppsummering}>
+            <Heading size="small" level="1">
+                Ytelse
+            </Heading>
+            <OppsummeringPar label={'Utbetaling'} verdi={props.oppsummering.sumTotalUtbetaling} />
+            <OppsummeringPar label={'Tidligere utbetalt'} verdi={-props.oppsummering.sumTidligereUtbetalt} />
+            <hr></hr>
+            <OppsummeringPar label={'Til utbetaling'} verdi={props.oppsummering.sumTilUtbetaling} />
+            <OppsummeringPar
+                textSomSmall={true}
+                className={styles.tilUtbetalingDetaljering}
+                label={'Etterbetaling'}
+                verdi={props.oppsummering.sumEtterbetaling}
+            />
+            <OppsummeringPar
+                textSomSmall={true}
+                className={styles.tilUtbetalingDetaljering}
+                label={'Fremtidig utbetaling'}
+                verdi={props.oppsummering.sumFramtidigUtbetaling}
+            />
+        </div>
+    );
+};
+
+const OppsummeringFeilkonto = (props: { oppsummering: SimuleringsperiodeOppsummering }) => {
     return (
         <div>
-            <Label>{formatMessage(`kontooversikt.tittel.${props.type}`)}</Label>
-            <div className={styles.kontooversiktInfo}>
-                <BodyShort>{formatMessage('kontooversikt.info.debet')}</BodyShort>
-                <BodyShort className={styles.beløp}>
-                    {props.type === 'ytelse'
-                        ? props.kontooversikt.debetYtelse
-                        : props.type === 'feilkonto'
-                        ? props.kontooversikt.debetFeilkonto
-                        : props.type === 'motpostering'
-                        ? props.kontooversikt.debetMotpostFeilkonto
-                        : 'Ukjent debet type'}
-                </BodyShort>
-                <BodyShort>{formatMessage('kontooversikt.info.kredit')}</BodyShort>
-                <BodyShort className={styles.beløp}>
-                    {props.type === 'ytelse'
-                        ? props.kontooversikt.kreditYtelse
-                        : props.type === 'feilkonto'
-                        ? props.kontooversikt.kreditFeilkonto
-                        : props.type === 'motpostering'
-                        ? props.kontooversikt.kreditMotpostFeilkonto
-                        : 'Ukjent kredit type'}
-                </BodyShort>
-                <BodyShort>{formatMessage('kontooversikt.info.sum')}</BodyShort>
-                <BodyShort className={styles.beløp}>
-                    {props.type === 'ytelse'
-                        ? props.kontooversikt.sumYtelse
-                        : props.type === 'feilkonto'
-                        ? props.kontooversikt.sumFeilkonto
-                        : props.type === 'motpostering'
-                        ? props.kontooversikt.sumMotpostFeilkonto
-                        : 'Ukjent sum type'}
-                </BodyShort>
-            </div>
+            <Heading size="small" level="1">
+                Feilkonto
+            </Heading>
+            <OppsummeringPar label={'Feilutbetaling'} verdi={props.oppsummering.sumFeilutbetaling} />
+            <OppsummeringPar label={'Reduksjon feilkonto'} verdi={-props.oppsummering.sumReduksjonFeilkonto} />
         </div>
     );
 };
