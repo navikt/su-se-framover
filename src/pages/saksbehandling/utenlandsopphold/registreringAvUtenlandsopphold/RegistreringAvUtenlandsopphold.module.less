@@ -1,0 +1,55 @@
+@import '~/src/styles/variables.less';
+
+.utenlandsoppholdContainer {
+    width: 35rem;
+}
+
+.avsluttEndringAvUtenlandsoppholdButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.inputFieldsContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+    margin-bottom: @spacing;
+}
+
+.periodeFormMedDagerTeller {
+    display: flex;
+    gap: @spacing;
+
+    .antallDagerTeller {
+        position: relative;
+        top: 45px;
+    }
+}
+
+.select {
+    max-width: 60%;
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: @spacing;
+}
+
+.journalposterInputsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+    align-items: flex-start;
+}
+
+.journalpostIdInputMedDelete {
+    display: flex;
+    gap: @spacing-xs;
+
+    .fjernJournalpostButton {
+        position: relative;
+        top: 2.5rem;
+        height: 2.5rem;
+    }
+}

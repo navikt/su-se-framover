@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Close } from '@navikt/ds-icons';
 import { Accordion, Button, Checkbox, Heading, Label, Panel } from '@navikt/ds-react';
+import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import React, { useState } from 'react';
 
@@ -16,13 +17,14 @@ import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { RegistrertUtenlandsopphold } from '~src/types/RegistrertUtenlandsopphold';
+import { RegistrertUtenlandsopphold, UtenlandsoppholdDokumentasjon } from '~src/types/RegistrertUtenlandsopphold';
 import { formatDate, formatDateTime, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
 
-import styles from './RegistreringAvUtenlandsopphold.module.less';
-import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
-import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from './RegistreringAvUtenlandsoppholdFormUtils';
-import messages from './Utenlandsopphold-nb';
+import RegistreringAvUtenlandsoppholdForm from '../registreringAvUtenlandsopphold/RegistreringAvUtenlandsoppholdForm';
+import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from '../registreringAvUtenlandsopphold/RegistreringAvUtenlandsoppholdFormUtils';
+import messages from '../Utenlandsopphold-nb';
+
+import styles from './OppsummeringAvRegistrerteUtenlandsopphold.module.less';
 
 const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     sakId: string;
@@ -104,7 +106,17 @@ const RegistrertUtenlandsoppholdAccordionItem = (props: {
 }) => {
     return (
         <Accordion.Item>
-            <Accordion.Header>
+            <Accordion.Header
+                className={classNames({
+                    [styles.grønn]:
+                        props.registrertUtenlandsopphold.dokumentasjon === UtenlandsoppholdDokumentasjon.Dokumentert,
+                    [styles.gul]:
+                        props.registrertUtenlandsopphold.dokumentasjon ===
+                        UtenlandsoppholdDokumentasjon.Sannsynliggjort,
+                    [styles.rød]:
+                        props.registrertUtenlandsopphold.dokumentasjon === UtenlandsoppholdDokumentasjon.Udokumentert,
+                })}
+            >
                 <div className={styles.accordionHeaderContentContainer}>
                     <Heading size="small">{formatPeriodeMedDager(props.registrertUtenlandsopphold.periode)}</Heading>
                     <div className={styles.warningOgAntallDagerContainer}>

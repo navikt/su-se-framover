@@ -14,13 +14,14 @@ import {
     UtenlandsoppholdDokumentasjon,
 } from '~src/types/RegistrertUtenlandsopphold';
 
+import messages from '../Utenlandsopphold-nb';
+
 import styles from './RegistreringAvUtenlandsopphold.module.less';
 import {
     RegisteringAvUtenlandsoppholdFormData,
     registeringAvUtenlandsoppholdFormSchema,
     registrertUtenlandsoppholdTilFormDataEllerDefault,
 } from './RegistreringAvUtenlandsoppholdFormUtils';
-import messages from './Utenlandsopphold-nb';
 
 /**
  * Tar inn form-knapper som children. Dette er for å lettere håndtere de ulike APi-kallene på samme formet
