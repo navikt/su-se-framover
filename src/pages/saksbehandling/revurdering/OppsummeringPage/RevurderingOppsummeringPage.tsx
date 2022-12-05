@@ -17,13 +17,13 @@ import {
     RevurderingSteg,
 } from '~src/types/Revurdering';
 
-import messages from './NyRevurderingOppsummeringPage-nb';
-import * as styles from './NyRevurderingOppsummeringPage.module.less';
-import ForhåndsvarselForm from './underforms/ForhåndsvarselForm';
-import SendTilAttesteringNy from './underforms/SendTilAttestering';
-import TilbakekrevingFormNy from './underforms/TilbakekrevingForm';
+import ForhåndsvarselForm from './forhåndsvarsel/ForhåndsvarselForm';
+import messages from './RevurderingOppsummeringPage-nb';
+import * as styles from './RevurderingOppsummeringPage.module.less';
+import SendTilAttestering from './sendTilAttestering/SendTilAttestering';
+import TilbakekrevingForm from './tilbakekreving/TilbakekrevingForm';
 
-const NyRevurderingsOppsummeringPage = (props: {
+const RevurderingOppsummeringPage = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
     aktivSeksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSteg };
@@ -69,14 +69,14 @@ const NyRevurderingsOppsummeringPage = (props: {
                         />
                     )}
                     {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.Tilbakekreving && (
-                        <TilbakekrevingFormNy
+                        <TilbakekrevingForm
                             sakId={props.sakId}
                             revurdering={props.revurdering}
                             gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
                         />
                     )}
                     {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.SendTilAttestering && (
-                        <SendTilAttesteringNy
+                        <SendTilAttestering
                             sakId={props.sakId}
                             revurdering={props.revurdering}
                             gjeldendeGrunnlagOgVilkår={gjeldendeGrunnlagOgVilkårData.grunnlagsdataOgVilkårsvurderinger}
@@ -89,4 +89,4 @@ const NyRevurderingsOppsummeringPage = (props: {
     );
 };
 
-export default NyRevurderingsOppsummeringPage;
+export default RevurderingOppsummeringPage;

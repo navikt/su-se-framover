@@ -43,7 +43,7 @@ const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlan
 const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
 const BosituasjonPage = React.lazy(() => import('./bosituasjon/bosituasjonPage'));
 const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
-const NyRevurderingsOppsummeringPage = React.lazy(() => import('./OppsummeringPage/NyRevurderingOppsummeringPage'));
+const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 const Opplysningsplikt = React.lazy(() => import('./opplysningsplikt/Opplysningsplikt'));
 const Oppholdstillatelse = React.lazy(() => import('./oppholdstillatelse/LovligOpphold'));
@@ -143,7 +143,7 @@ const RevurderingPage = () => {
                         aktiveSteg={urlParams.steg!}
                         listeElementer={framdriftsindikatorSeksjoner}
                     />
-                    <NyRevurderingsOppsummeringPage
+                    <RevurderingOppsummeringPage
                         sakId={props.sakId}
                         revurdering={påbegyntRevurdering}
                         aktivSeksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
@@ -196,7 +196,7 @@ const GrunnlagOgVilkårWrapper = (props: {
     const { formatMessage } = useI18n({ messages: sharedMessages });
     const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
     React.useEffect(() => {
-        if (RemoteData.isInitial(gjeldendeData) || RemoteData.isSuccess(gjeldendeData)) {
+        if (RemoteData.isInitial(gjeldendeData)) {
             hentGjeldendeData({
                 sakId: props.sakId,
                 fraOgMed: props.informasjonsRevurdering.periode.fraOgMed,
