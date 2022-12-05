@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Heading } from '@navikt/ds-react';
+import { Alert, Button, Heading } from '@navikt/ds-react';
 import React from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -92,66 +92,105 @@ const RevurderingPage = () => {
         return <Alert variant="error">{formatMessage('feil.fantIkkeRevurdering')}</Alert>;
     }
 
-    const framdriftsindikatorSeksjoner = revurderingTilFramdriftsindikatorSeksjoner({
-        sakId: props.sakId,
-        r: påbegyntRevurdering,
-    });
-
     return (
         <div className={styles.pageContainer}>
             <Heading level="1" size="large" className={styles.tittel}>
                 {formatMessage('revurdering.tittel')}
             </Heading>
-            {urlParams.steg === RevurderingOpprettelseSteg.Periode && <RevurderingIntroPage />}
-            {(urlParams.seksjon === RevurderingSeksjoner.Vilkår ||
-                urlParams.seksjon === RevurderingSeksjoner.Grunnlag) && (
-                <div className={styles.framdriftsindikatorOgInnholdContainer}>
-                    <FramdriftsIndikatorRevurdering
-                        sakId={props.sakId}
-                        revurderingId={påbegyntRevurdering.id}
-                        aktiveSteg={urlParams.steg!}
-                        listeElementer={framdriftsindikatorSeksjoner}
-                    />
-                    <GrunnlagOgVilkårWrapper
-                        seksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
-                        seksjoner={framdriftsindikatorSeksjoner}
-                        sakId={props.sakId}
-                        informasjonsRevurdering={påbegyntRevurdering}
-                    />
-                </div>
-            )}
-            {urlParams.seksjon === RevurderingSeksjoner.BeregningOgSimulering && (
-                <div className={styles.framdriftsindikatorOgInnholdContainer}>
-                    <FramdriftsIndikatorRevurdering
-                        sakId={props.sakId}
-                        revurderingId={påbegyntRevurdering.id}
-                        aktiveSteg={urlParams.steg!}
-                        listeElementer={framdriftsindikatorSeksjoner}
-                    />
-                    <RevurderingBeregnOgSimuler
-                        seksjoner={framdriftsindikatorSeksjoner}
-                        sakId={props.sakId}
-                        informasjonsRevurdering={påbegyntRevurdering}
-                    />
-                </div>
-            )}
-            {urlParams.seksjon === RevurderingSeksjoner.Oppsummering && (
-                <div className={styles.framdriftsindikatorOgInnholdContainer}>
-                    <FramdriftsIndikatorRevurdering
-                        sakId={props.sakId}
-                        revurderingId={påbegyntRevurdering.id}
-                        aktiveSteg={urlParams.steg!}
-                        listeElementer={framdriftsindikatorSeksjoner}
-                    />
-                    <RevurderingOppsummeringPage
-                        sakId={props.sakId}
-                        revurdering={påbegyntRevurdering}
-                        aktivSeksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
-                        seksjoner={framdriftsindikatorSeksjoner}
-                    />
-                </div>
+            {urlParams.seksjon === RevurderingSeksjoner.Opprettelse && <RevurderingIntroPage />}
+            {urlParams.seksjon !== RevurderingSeksjoner.Opprettelse && (
+                <RevurderingSeksjonerWrapper
+                    sakId={sak.id}
+                    revurdering={påbegyntRevurdering}
+                    seksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
+                />
             )}
         </div>
+    );
+};
+
+const RevurderingSeksjonerWrapper = (props: {
+    sakId: string;
+    revurdering: InformasjonsRevurdering;
+    seksjonOgSteg: {
+        seksjon: RevurderingSeksjoner;
+        steg: RevurderingSteg;
+    };
+}) => {
+    const navigate = useNavigate();
+    const { formatMessage } = useI18n({ messages: sharedMessages });
+    const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
+
+    React.useEffect(() => {
+        if (RemoteData.isInitial(gjeldendeData)) {
+            hentGjeldendeData({
+                sakId: props.sakId,
+                fraOgMed: props.revurdering.periode.fraOgMed,
+                tilOgMed: props.revurdering.periode.tilOgMed,
+            });
+        }
+    }, [props.revurdering.id]);
+
+    const seksjoner = revurderingTilFramdriftsindikatorSeksjoner({ sakId: props.sakId, r: props.revurdering });
+
+    return pipe(
+        gjeldendeData,
+        RemoteData.fold(
+            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
+            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
+            (err) => (
+                <div className={styles.content}>
+                    <ApiErrorAlert error={err} />
+                    <Button variant="secondary" onClick={() => navigate(seksjoner[0].linjer.at(-1)!.url)}>
+                        {formatMessage('knapp.tilbake')}
+                    </Button>
+                </div>
+            ),
+            (res) => (
+                <div className={styles.framdriftsindikatorOgInnholdContainer}>
+                    <FramdriftsIndikatorRevurdering
+                        sakId={props.sakId}
+                        revurderingId={props.revurdering.id}
+                        aktiveSteg={props.seksjonOgSteg.steg}
+                        listeElementer={seksjoner}
+                    />
+                    {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Grunnlag && (
+                        <GrunnlagSteg
+                            seksjonOgSteg={props.seksjonOgSteg}
+                            seksjoner={seksjoner}
+                            sakId={props.sakId}
+                            informasjonsRevurdering={props.revurdering}
+                            gjeldendeGrunnlagsdataOgVilkårsvurderinger={res.grunnlagsdataOgVilkårsvurderinger}
+                        />
+                    )}
+                    {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Vilkår && (
+                        <VilkårSteg
+                            seksjonOgSteg={props.seksjonOgSteg}
+                            seksjoner={seksjoner}
+                            sakId={props.sakId}
+                            informasjonsRevurdering={props.revurdering}
+                            gjeldendeGrunnlagsdataOgVilkårsvurderinger={res.grunnlagsdataOgVilkårsvurderinger}
+                        />
+                    )}
+                    {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.BeregningOgSimulering && (
+                        <RevurderingBeregnOgSimuler
+                            seksjoner={seksjoner}
+                            sakId={props.sakId}
+                            informasjonsRevurdering={props.revurdering}
+                        />
+                    )}
+                    {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Oppsummering && (
+                        <RevurderingOppsummeringPage
+                            sakId={props.sakId}
+                            revurdering={props.revurdering}
+                            aktivSeksjonOgSteg={props.seksjonOgSteg}
+                            seksjoner={seksjoner}
+                            gjeldendeGrunnlagOgVilkår={res.grunnlagsdataOgVilkårsvurderinger}
+                        />
+                    )}
+                </div>
+            )
+        )
     );
 };
 
@@ -184,58 +223,6 @@ const FramdriftsIndikatorRevurdering = (props: {
                 />
             )}
         </div>
-    );
-};
-
-const GrunnlagOgVilkårWrapper = (props: {
-    seksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSteg };
-    seksjoner: Seksjon[];
-    sakId: string;
-    informasjonsRevurdering: InformasjonsRevurdering;
-}) => {
-    const { formatMessage } = useI18n({ messages: sharedMessages });
-    const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
-    React.useEffect(() => {
-        if (RemoteData.isInitial(gjeldendeData)) {
-            hentGjeldendeData({
-                sakId: props.sakId,
-                fraOgMed: props.informasjonsRevurdering.periode.fraOgMed,
-                tilOgMed: props.informasjonsRevurdering.periode.tilOgMed,
-            });
-        }
-    }, [props.informasjonsRevurdering.periode.fraOgMed, props.informasjonsRevurdering.periode.tilOgMed]);
-
-    return pipe(
-        gjeldendeData,
-        RemoteData.fold3(
-            () => (
-                <SpinnerMedTekst
-                    className={styles.spinner}
-                    text={formatMessage('grunnlagOgvilkår.henterGjeldendeData')}
-                />
-            ),
-            (error) => (
-                <div className={styles.fullsideSpinnerFeilmeldingContainer}>
-                    <ApiErrorAlert error={error} />
-                </div>
-            ),
-            (gjeldendeData) => (
-                <>
-                    {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Grunnlag && (
-                        <GrunnlagSteg
-                            {...props}
-                            gjeldendeGrunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                        />
-                    )}
-                    {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Vilkår && (
-                        <VilkårSteg
-                            {...props}
-                            gjeldendeGrunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
-                        />
-                    )}
-                </>
-            )
-        )
     );
 };
 

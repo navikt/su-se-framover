@@ -14,6 +14,7 @@ export default {
     'knapp.neste': 'Neste',
     'knapp.sendTilAttestering': 'Send til attestering',
     'knapp.seBrev': 'Se brev',
+    'knapp.tilbake': 'Tilbake',
 
     'periode.overskrift': 'Periode',
     'revurdering.tittel': 'Revurdering',
