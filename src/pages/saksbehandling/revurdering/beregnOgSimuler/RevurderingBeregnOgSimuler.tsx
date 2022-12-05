@@ -39,7 +39,7 @@ const RevurderingBeregnOgSimuler = (props: {
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    const forrigeUrl = props.seksjoner[1].linjer.at(-1)?.url;
+    const forrigeUrl = props.seksjoner[2].linjer.at(-1)?.url;
 
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
 
