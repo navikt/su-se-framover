@@ -1,4 +1,3 @@
-import { simulertUtbetaling } from '~src/components/beregningOgSimulering/simulering/simulering-nb';
 import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
 import { reguleringstypeTekstMapper } from '~src/typeMappinger/ReguleringstypeMapper';
 import { vedtakMessages } from '~src/typeMappinger/VedtakTypeMapper';
@@ -25,8 +24,6 @@ export default {
     'simulering.avkorting': 'Avkorting',
     'simulering.avkorting.total': 'Totalt avkortingsbeløp',
     'simulering.avkorting.ytelse.imåned': 'i mnd',
-
-    ...simulertUtbetaling,
 
     'behandling.resultat': 'Resultat',
 

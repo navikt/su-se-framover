@@ -25,7 +25,7 @@ import {
     UtbetalingsRevurderingStatus,
     Vurderingstatus,
 } from '~src/types/Revurdering';
-import { Simulering, SimulertUtbetalingstype } from '~src/types/Simulering';
+import { Simulering } from '~src/types/Simulering';
 
 export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
     return 'informasjonSomRevurderes' in r;
@@ -214,13 +214,10 @@ export const finnNesteRevurderingsteg = (
 };
 
 export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simulering, erOpphør: boolean) =>
-    simulering.perioder.some((periode) => periode.type === SimulertUtbetalingstype.FEILUTBETALING) &&
+    simulering.periodeOppsummering.some((periode) => periode.sumFeilutbetaling > 0) &&
     (erOpphør ||
-        !simulering.perioder.every(
-            (periode) =>
-                periode.type === SimulertUtbetalingstype.FEILUTBETALING ||
-                periode.type === SimulertUtbetalingstype.INGEN_UTBETALING ||
-                periode.type === SimulertUtbetalingstype.UENDRET
+        !simulering.periodeOppsummering.every(
+            (periode) => periode.sumFeilutbetaling > 0 || periode.sumTilUtbetaling == 0
         ));
 
 export const erRevurderingOpphørPgaManglendeDokumentasjon = (r: Revurdering) =>

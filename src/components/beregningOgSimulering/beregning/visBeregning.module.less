@@ -68,31 +68,3 @@
         text-align: right;
     }
 }
-
-.simuleringsdetaljer {
-    .totalt {
-        margin-bottom: @spacing;
-    }
-
-    .linje {
-        display: grid;
-        grid-template-columns: 2fr minmax(min-content, 1fr) 2fr;
-        column-gap: @spacing;
-
-        &:not(:last-child) {
-            margin-bottom: @spacing-s;
-        }
-
-        .periode,
-        .type,
-        .beløp {
-            display: flex;
-            align-items: center;
-        }
-
-        .beløp,
-        .type {
-            justify-content: flex-end;
-        }
-    }
-}

@@ -43,20 +43,25 @@ export const BooleanRadioGroup: React.ForwardRefExoticComponent<
 });
 BooleanRadioGroup.displayName = 'BooleanRadioGroup';
 
-export const CollapsableFormElementDescription = (props: { title: string; children: React.ReactNode }) => {
+export const CollapsableFormElementDescription = (props: {
+    title: string | JSX.Element;
+    elementerEtterTittel?: JSX.Element;
+    children: React.ReactNode;
+    className?: string;
+    knappClass?: string;
+}) => {
     const [visMer, setVisMer] = useState(false);
 
     return (
-        <div className={styles.hjelpetekstContainer}>
+        <div className={props.className}>
             <button
-                className={styles.hjelpetekstKnapp}
-                onClick={(e) => {
-                    e.preventDefault();
-                    setVisMer(!visMer);
-                }}
+                className={classNames(styles.hjelpetekstKnapp, props.knappClass)}
+                type="button"
+                onClick={() => setVisMer(!visMer)}
             >
                 {props.title}
                 {visMer ? <CollapseFilled /> : <ExpandFilled />}
+                {props.elementerEtterTittel}
             </button>
             <Collapse isOpened={visMer}>{props.children}</Collapse>
         </div>

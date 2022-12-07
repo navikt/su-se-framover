@@ -1,0 +1,49 @@
+@import '~/src/styles/variables.less';
+
+.detaljerKnapp {
+    padding: 0;
+}
+
+.gruppertSimuleringsperioder {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: @spacing-s;
+}
+
+.accordion {
+    width: 800px;
+}
+
+.accordionHeader {
+    background-color: var(--a-bg-subtle);
+    margin-bottom: @spacing-xxs;
+
+    > :first-child {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .periodeOgSum {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-right: @spacing;
+    }
+}
+
+.kontooversiktContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: @spacing;
+    padding: 0 1rem;
+    margin-bottom: @spacing-s;
+}
+
+.beløp {
+    text-align: end;
+}
+
+.tilUtbetalingDetaljering {
+    margin-left: @spacing-xs;
+}

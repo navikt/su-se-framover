@@ -1,19 +1,16 @@
 export interface Simulering {
-    totalBruttoYtelse: number;
-    perioder: SimulertPeriode[];
+    totalOppsummering: SimuleringsperiodeOppsummering;
+    periodeOppsummering: SimuleringsperiodeOppsummering[];
 }
 
-export interface SimulertPeriode {
+export interface SimuleringsperiodeOppsummering {
     fraOgMed: string;
     tilOgMed: string;
-    bruttoYtelse: number;
-    type: SimulertUtbetalingstype;
-}
-
-export enum SimulertUtbetalingstype {
-    ETTERBETALING = 'ETTERBETALING',
-    FEILUTBETALING = 'FEILUTBETALING',
-    ORDINÆR = 'ORDINÆR',
-    UENDRET = 'UENDRET',
-    INGEN_UTBETALING = 'INGEN_UTBETALING',
+    sumTilUtbetaling: number;
+    sumEtterbetaling: number;
+    sumFramtidigUtbetaling: number;
+    sumTotalUtbetaling: number;
+    sumTidligereUtbetalt: number;
+    sumFeilutbetaling: number;
+    sumReduksjonFeilkonto: number;
 }
