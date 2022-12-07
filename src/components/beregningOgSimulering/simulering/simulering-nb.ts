@@ -6,10 +6,9 @@ export default {
     'modal.heading.total': 'Simuleringsdetaljer for alle perioder',
 
     'feil.manglerPerioder': 'En feil skjedde. Simuleringen mangler perioder.',
-
+    'feil.ingenSimulering': 'Behandlingen har ingen simulering',
     'kontooversikt.tittel.ytelse': 'Ytelse',
     'kontooversikt.tittel.feilkonto': 'Feilkonto',
-    'kontooversikt.tittel.motpostering': 'Motpostering for feilkonto',
     'kontooversikt.info.totalUtbetaling': 'Totalt utbetalt',
     'kontooversikt.info.tidligereUtbetalt': 'Tidligere utbetalt',
     'kontooversikt.info.tilUtbetaling': 'Til utbetaling',

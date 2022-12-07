@@ -19,8 +19,9 @@ import messages from './simulering-nb';
 import * as styles from './Simulering.module.less';
 
 export const VisSimulering = (props: { behandling: Søknadsbehandling }) => {
+    const { formatMessage } = useI18n({ messages });
     if (!props.behandling.simulering) {
-        return <div>Behandlingen har ingen simulering</div>;
+        return <div>{formatMessage('feil.ingenSimulering')}</div>;
     }
     return <Utbetalingssimulering simulering={props.behandling.simulering} />;
 };
@@ -168,10 +169,11 @@ const PeriodeOppsummering = (props: { oppsummering: SimuleringsperiodeOppsummeri
 };
 
 const OppsummeringYtelse = (props: { oppsummering: SimuleringsperiodeOppsummering }) => {
+    const { formatMessage } = useI18n({ messages });
     return (
         <div className={styles.ytelseOppsummering}>
             <Heading size="small" level="1">
-                Ytelse
+                {formatMessage('kontooversikt.tittel.ytelse')}
             </Heading>
             <OppsummeringPar label={'Utbetaling'} verdi={props.oppsummering.sumTotalUtbetaling} />
             <OppsummeringPar label={'Tidligere utbetalt'} verdi={-props.oppsummering.sumTidligereUtbetalt} />
@@ -194,10 +196,11 @@ const OppsummeringYtelse = (props: { oppsummering: SimuleringsperiodeOppsummerin
 };
 
 const OppsummeringFeilkonto = (props: { oppsummering: SimuleringsperiodeOppsummering }) => {
+    const { formatMessage } = useI18n({ messages });
     return (
         <div>
             <Heading size="small" level="1">
-                Feilkonto
+                {formatMessage('kontooversikt.tittel.feilkonto')}
             </Heading>
             <OppsummeringPar label={'Feilutbetaling'} verdi={props.oppsummering.sumFeilutbetaling} />
             <OppsummeringPar label={'Reduksjon feilkonto'} verdi={-props.oppsummering.sumReduksjonFeilkonto} />
