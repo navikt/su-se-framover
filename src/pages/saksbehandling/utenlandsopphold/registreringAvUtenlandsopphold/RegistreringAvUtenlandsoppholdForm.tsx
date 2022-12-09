@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Button, Heading, Select, TextField } from '@navikt/ds-react';
+import { Button, Heading, Select, Textarea, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Control, Controller, useFieldArray, useForm, UseFormReset, UseFormSetValue } from 'react-hook-form';
@@ -58,11 +58,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
     }, [watched.periode.fraOgMed, watched.periode.tilOgMed]);
 
     return (
-        <form
-            onSubmit={handleSubmit((v) => {
-                props.onFormSubmit(v, reset);
-            })}
-        >
+        <form onSubmit={handleSubmit((v) => props.onFormSubmit(v, reset))}>
             <div className={styles.inputFieldsContainer}>
                 <div className={styles.periodeFormMedDagerTeller}>
                     <Controller
@@ -120,6 +116,20 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                     )}
                 />
                 <JournalpostIderInputs control={control} setValue={setValue} />
+                <Controller
+                    control={control}
+                    name="begrunnelse"
+                    render={({ field, fieldState }) => (
+                        <>
+                            <Textarea
+                                label={formatMessage('registreringAvUtenlandsopphold.form.begrunnelse.label')}
+                                value={field.value ?? ''}
+                                onChange={field.onChange}
+                                error={fieldState.error?.message}
+                            />
+                        </>
+                    )}
+                />
                 {props.children}
             </div>
         </form>
