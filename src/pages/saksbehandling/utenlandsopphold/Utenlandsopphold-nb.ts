@@ -31,5 +31,6 @@ export default {
     'oppsummeringAvRegistrertUtenlandsopphold.tilOgMed': 'Til og med',
     'oppsummeringAvRegistrertUtenlandsopphold.dokumentasjon': 'Dokumentasjon',
     'oppsummeringAvRegistrertUtenlandsopphold.journalposter': 'Journalposter',
+    'oppsummeringAvRegistrertUtenlandsopphold.begrunnelse': 'Begrunnelse',
     'oppsummeringAvRegistrertUtenlandsopphold.knapp.endre': 'Endre',
 };

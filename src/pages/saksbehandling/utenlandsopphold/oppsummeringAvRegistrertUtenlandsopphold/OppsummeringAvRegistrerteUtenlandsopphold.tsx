@@ -108,6 +108,7 @@ const RegistrertUtenlandsoppholdAccordionItem = (props: {
         <Accordion.Item>
             <Accordion.Header
                 className={classNames({
+                    [styles.accordionHeader]: true,
                     [styles.grønn]:
                         props.registrertUtenlandsopphold.dokumentasjon === UtenlandsoppholdDokumentasjon.Dokumentert,
                     [styles.gul]:
@@ -117,12 +118,10 @@ const RegistrertUtenlandsoppholdAccordionItem = (props: {
                         props.registrertUtenlandsopphold.dokumentasjon === UtenlandsoppholdDokumentasjon.Udokumentert,
                 })}
             >
-                <div className={styles.accordionHeaderContentContainer}>
-                    <Heading size="small">{formatPeriodeMedDager(props.registrertUtenlandsopphold.periode)}</Heading>
-                    <div className={styles.warningOgAntallDagerContainer}>
-                        {props.registrertUtenlandsopphold.erAnnullert && <WarningIcon width={25} />}
-                        <Heading size="small">{props.registrertUtenlandsopphold.antallDager}</Heading>
-                    </div>
+                <Heading size="small">{formatPeriodeMedDager(props.registrertUtenlandsopphold.periode)}</Heading>
+                <div className={styles.warningOgAntallDagerContainer}>
+                    {props.registrertUtenlandsopphold.erAnnullert && <WarningIcon width={25} />}
+                    <Heading size="small">{props.registrertUtenlandsopphold.antallDager}</Heading>
                 </div>
             </Accordion.Header>
             <Accordion.Content>
@@ -239,20 +238,29 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                     sorteres={OppsummeringsParSortering.Vertikalt}
                 />
             </div>
-            <OppsummeringPar
-                label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.dokumentasjon')}
-                verdi={props.registrertUtenlandsopphold.dokumentasjon}
-                sorteres={OppsummeringsParSortering.Vertikalt}
-            />
-            {props.registrertUtenlandsopphold.journalposter.length > 0 && (
-                <div>
-                    <Label>{formatMessage('oppsummeringAvRegistrertUtenlandsopphold.journalposter')}</Label>
-                    <ul className={styles.journalposterContainer}>
-                        {props.registrertUtenlandsopphold.journalposter.map((it) => (
-                            <li key={it}>{it}</li>
-                        ))}
-                    </ul>
-                </div>
+            <div className={styles.utenlandsoppholdPeriodecontainer}>
+                <OppsummeringPar
+                    label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.dokumentasjon')}
+                    verdi={props.registrertUtenlandsopphold.dokumentasjon}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
+                {props.registrertUtenlandsopphold.journalposter.length > 0 && (
+                    <div>
+                        <Label>{formatMessage('oppsummeringAvRegistrertUtenlandsopphold.journalposter')}</Label>
+                        <ul className={styles.journalposterContainer}>
+                            {props.registrertUtenlandsopphold.journalposter.map((it) => (
+                                <li key={it}>{it}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+            {props.registrertUtenlandsopphold.begrunnelse && (
+                <OppsummeringPar
+                    label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.begrunnelse')}
+                    verdi={props.registrertUtenlandsopphold.begrunnelse}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
             )}
             {props.medEndreKnapp && (
                 <div className={styles.endreKnappContainer}>

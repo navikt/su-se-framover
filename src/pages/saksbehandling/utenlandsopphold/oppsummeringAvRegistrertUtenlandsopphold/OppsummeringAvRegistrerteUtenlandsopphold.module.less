@@ -16,17 +16,20 @@
 
 .accordion {
     min-width: 50rem;
+    max-width: 50rem;
 }
 
-.accordionHeaderContentContainer {
-    display: flex;
-    justify-content: space-between;
-    min-width: 45rem;
-
-    .warningOgAntallDagerContainer {
+.accordionHeader {
+    > :first-child {
+        width: 100%;
         display: flex;
-        gap: @spacing-xs;
+        justify-content: space-between;
     }
+}
+
+.warningOgAntallDagerContainer {
+    display: flex;
+    gap: @spacing-xs;
 }
 
 //hacker inn !important da vi vil mest sannsynlig vise fargen selv om den er åpen

@@ -68,6 +68,7 @@ export async function registrerUtenlandsopphold(
             dokumentasjon: arg.dokumentasjon,
             journalposter: arg.journalposter,
             saksversjon: arg.saksversjon,
+            begrunnelse: arg.begrunnelse,
         },
     });
 }
@@ -83,6 +84,7 @@ export async function oppdaterRegistrertUtenlandsopphold(
             dokumentasjon: arg.dokumentasjon,
             journalposter: arg.journalposter,
             saksversjon: arg.saksversjon,
+            begrunnelse: arg.begrunnelse,
         },
     });
 }
