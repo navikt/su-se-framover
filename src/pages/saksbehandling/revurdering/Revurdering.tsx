@@ -222,6 +222,7 @@ const GrunnlagOgVilkårSteg = (props: {
     informasjonsRevurdering: InformasjonsRevurdering;
     gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
+    const navigate = useNavigate();
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [navigererTilOppsummeringMedVilkårIkkeVurdert, setNavigererTilOppsummeringMedVilkårIkkeVurdert] =
         React.useState<boolean>(false);
@@ -238,6 +239,18 @@ const GrunnlagOgVilkårSteg = (props: {
             (v) => v[1] === Vurderingstatus.IkkeVurdert
         );
 
+    const kanOppdatertRevurderingNavigeresTilOppsummering = (r: InformasjonsRevurdering) => {
+        if (
+            seksjonIdx === 1 &&
+            idx === props.seksjoner[1].linjer.length - 1 &&
+            Object.entries(r.informasjonSomRevurderes).some((v) => v[1] === Vurderingstatus.IkkeVurdert)
+        ) {
+            setNavigererTilOppsummeringMedVilkårIkkeVurdert(true);
+        } else {
+            navigate(props.seksjoner[2].linjer[0].url);
+        }
+    };
+
     const stegProps = {
         sakId: props.sakId,
         revurdering: props.informasjonsRevurdering,
@@ -247,7 +260,7 @@ const GrunnlagOgVilkårSteg = (props: {
         nesteUrl: props.seksjoner[seksjonIdx].linjer[idx + 1]?.url ?? props.seksjoner[seksjonIdx + 1]?.linjer[0]?.url,
         onTilbakeClickOverride: erFørsteSteg ? () => setModalOpen(true) : undefined,
         onSuccessOverride: erSisteStegAvGrunnlagOgVilkårMenIkkeAltErVurdert
-            ? () => setNavigererTilOppsummeringMedVilkårIkkeVurdert(true)
+            ? (r: InformasjonsRevurdering) => kanOppdatertRevurderingNavigeresTilOppsummering(r)
             : undefined,
         avsluttUrl: routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
         grunnlagsdataOgVilkårsvurderinger: props.gjeldendeGrunnlagsdataOgVilkårsvurderinger,
