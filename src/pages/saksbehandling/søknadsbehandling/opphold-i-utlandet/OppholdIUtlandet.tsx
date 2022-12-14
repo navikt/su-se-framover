@@ -77,8 +77,17 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                     <UtenlandsoppholdForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
-                        onFormSubmit={handleSave}
-                        savingState={status}
+                        neste={{
+                            onClick: handleSave,
+                            url: props.nesteUrl,
+                            savingState: status,
+                        }}
+                        tilbake={{
+                            url: props.forrigeUrl,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode

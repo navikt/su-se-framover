@@ -15,6 +15,10 @@ import * as styles from './utfallSomIkkeStøttes.module.less';
 const UtfallSomIkkeStøttes = (props: { feilmeldinger: ErrorMessage[]; infoMelding?: boolean }) => {
     const { formatMessage } = useI18n({ messages });
 
+    if (props.feilmeldinger.length === 0) {
+        return <></>;
+    }
+
     return (
         <Alert variant={props.infoMelding ? 'info' : 'error'} className={styles.alertstripe}>
             <ul>

@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
@@ -17,11 +18,12 @@ import { lagreFlyktningVilkår } from '~src/features/grunnlagsdataOgVilkårsvurd
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 
 import messages from './flyktning-nb';
 
 export function FlyktningPage(props: RevurderingStegProps) {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
 
@@ -30,7 +32,10 @@ export function FlyktningPage(props: RevurderingStegProps) {
         defaultValues: flyktningVilkårTilFormDataEllerNy(props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning),
     });
 
-    const lagreFlyktning = (values: FlyktningVilkårFormData, onSuccess: () => void) =>
+    const lagreFlyktning = (
+        values: FlyktningVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) =>
         lagre(
             {
                 ...flyktningFormDataTilRequest({
@@ -41,8 +46,9 @@ export function FlyktningPage(props: RevurderingStegProps) {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -58,8 +64,24 @@ export function FlyktningPage(props: RevurderingStegProps) {
                     <FlyktningForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={lagreFlyktning}
-                        savingState={status}
+                        neste={{
+                            savingState: status,
+                            url: props.nesteUrl,
+                            onClick: (values) =>
+                                lagreFlyktning(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}
                     />

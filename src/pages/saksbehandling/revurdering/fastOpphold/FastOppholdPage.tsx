@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
@@ -17,11 +18,12 @@ import { lagreFastOppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvu
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 
 import messages from './fastOpphold-nb';
 
 export function FastOppholdPage(props: RevurderingStegProps) {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
 
@@ -32,7 +34,10 @@ export function FastOppholdPage(props: RevurderingStegProps) {
         ),
     });
 
-    const lagreFastOpphold = (values: FastOppholdVilkårFormData, onSuccess: () => void) =>
+    const lagreFastOpphold = (
+        values: FastOppholdVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) =>
         lagre(
             {
                 ...fastOppholdFormDataTilRequest({
@@ -43,8 +48,9 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -61,9 +67,25 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                     <FastOppholdForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={lagreFastOpphold}
-                        savingState={status}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
+                        neste={{
+                            savingState: status,
+                            url: props.nesteUrl,
+                            onClick: (values) =>
+                                lagreFastOpphold(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         {...props}
                     />
                 ),

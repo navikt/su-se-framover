@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvUførevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
@@ -17,14 +18,16 @@ import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårs
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { erGregulering } from '~src/utils/revurdering/revurderingUtils';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
 import messages from './uførhet-nb';
+
 const Uførhet = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
     const form = useForm<UførhetFormData>({
@@ -38,7 +41,7 @@ const Uførhet = (props: RevurderingStegProps) => {
 
     const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreUføregrunnlag);
 
-    const handleSave = (values: UførhetFormData, onSuccess: () => void) =>
+    const handleSave = (values: UførhetFormData, onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void) =>
         lagre(
             {
                 sakId: props.sakId,
@@ -57,8 +60,9 @@ const Uførhet = (props: RevurderingStegProps) => {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -68,9 +72,25 @@ const Uførhet = (props: RevurderingStegProps) => {
             {{
                 left: (
                     <UførhetForm
-                        onFormSubmit={handleSave}
                         form={form}
-                        savingState={status}
+                        neste={{
+                            onClick: (values) =>
+                                handleSave(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                            savingState: status,
+                            url: props.nesteUrl,
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         minOgMaxPeriode={{
                             fraOgMed: DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.fraOgMed),
                             tilOgMed: DateUtils.parseNonNullableIsoDateOnly(props.revurdering.periode.tilOgMed),

@@ -1,4 +1,5 @@
 export default {
+    'tilbakekreving.tittel': 'Tilbakekreving',
     tittel: 'Vilkårsvurdering §13',
     undertittel:
         'Dette er kun foreløpig vurdering. Hvis utfallet blir tilbakekreving vil brukeren\n' +

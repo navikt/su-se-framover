@@ -245,11 +245,17 @@ const SatsForm = (props: SatsProps) => {
                 left: (
                     <FormWrapper
                         form={form}
-                        save={handleSave}
-                        savingState={status}
-                        avsluttUrl={props.avsluttUrl}
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={props.nesteUrl}
+                        neste={{
+                            onClick: handleSave,
+                            url: props.nesteUrl,
+                            savingState: status,
+                        }}
+                        tilbake={{
+                            url: props.forrigeUrl,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                     >
                         <>
                             {eps && (

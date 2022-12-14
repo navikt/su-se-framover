@@ -9,11 +9,21 @@ export type VilkårFormSaveState = ApiResult<VilkårOgGrunnlagApiResult>;
 export interface VilkårFormProps<FormData extends FieldValues> {
     form: UseFormReturn<FormData>;
     minOgMaxPeriode: Periode;
-    forrigeUrl: string;
-    nesteUrl: string;
-    avsluttUrl: string;
-    onFormSubmit: (values: FormData, onSuccess: () => void) => void;
-    savingState: VilkårFormSaveState;
     søknadsbehandlingEllerRevurdering: 'Søknadsbehandling' | 'Revurdering';
-    onTilbakeClickOverride?: () => void;
+    neste: {
+        url: string;
+        savingState: VilkårFormSaveState;
+        onClick: (values: FormData, onSuccess: () => void) => void;
+    };
+
+    tilbake: {
+        url?: string;
+        onClick?: () => void;
+    };
+
+    fortsettSenere?: {
+        loading?: boolean;
+        tekst?: string;
+        url: string;
+    };
 }

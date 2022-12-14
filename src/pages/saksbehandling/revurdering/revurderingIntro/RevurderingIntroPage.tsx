@@ -11,9 +11,11 @@ import {
     InformasjonsRevurdering,
     OpprettetRevurderingGrunn,
     Revurdering,
+    RevurderingSeksjoner,
+    RevurderingSteg,
 } from '~src/types/Revurdering';
 import { compareUtbetalingsperiode } from '~src/types/Utbetalingsperiode';
-import { erInformasjonsRevurdering, finnNesteRevurderingsteg } from '~src/utils/revurdering/revurderingUtils';
+import { erInformasjonsRevurdering, lagVilkårOgGrunnlagSeksjon } from '~src/utils/revurdering/revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
@@ -30,7 +32,7 @@ export interface FormValues {
 const RevurderingIntroPage = () => {
     const navigate = useNavigate();
     const { sak } = useOutletContext<SaksoversiktContext>();
-    const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
+    const urlParams = Routes.useRouteParams<typeof Routes.revurderingSeksjonSteg>();
 
     const props = {
         sakId: sak.id,
@@ -62,13 +64,19 @@ const RevurderingIntroPage = () => {
               );
 
     const navigateLocal = (revurdering: Revurdering, goTo: 'neste' | 'avbryt') => {
+        const grunnlagOgVilkårSeksjoner = lagVilkårOgGrunnlagSeksjon({
+            sakId: props.sakId,
+            r: revurdering as InformasjonsRevurdering,
+        });
+
         navigate(
             goTo === 'avbryt'
                 ? forrigeUrl
-                : Routes.revurderValgtRevurdering.createURL({
+                : Routes.revurderingSeksjonSteg.createURL({
                       sakId: props.sakId,
                       revurderingId: revurdering.id,
-                      steg: finnNesteRevurderingsteg((revurdering as InformasjonsRevurdering).informasjonSomRevurderes),
+                      seksjon: grunnlagOgVilkårSeksjoner.id as RevurderingSeksjoner,
+                      steg: grunnlagOgVilkårSeksjoner.linjer[0].id as RevurderingSteg,
                   })
         );
     };

@@ -26,12 +26,12 @@ import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb
 import { useAppDispatch } from '~src/redux/Store';
 import { IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
-import { Navigasjonsknapper } from '../../bunnknapper/Navigasjonsknapper';
+import Navigasjonsknapper from '../../bunnknapper/Navigasjonsknapper';
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -53,7 +53,10 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
         RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
     >(RemoteData.initial);
 
-    const save = async (values: EndringAvFradragFormData, onSuccess: () => void) => {
+    const save = async (
+        values: EndringAvFradragFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) => {
         if (RemoteData.isPending(savingState)) {
             return;
         }
@@ -74,7 +77,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
             const castedPayload = res.payload as RevurderingOgFeilmeldinger;
             setSavingState(RemoteData.success(castedPayload));
             if (castedPayload.feilmeldinger.length === 0) {
-                onSuccess();
+                onSuccess(castedPayload.revurdering, props.nesteUrl);
             }
         } else if (GrunnlagOgVilkårActions.lagreFradragsgrunnlag.rejected.match(res)) {
             setSavingState(RemoteData.failure(res.payload!));
@@ -102,7 +105,16 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form onSubmit={form.handleSubmit((values) => save(values, () => navigate(props.nesteUrl)))}>
+                    <form
+                        onSubmit={form.handleSubmit((values) =>
+                            save(
+                                values,
+                                props.onSuccessOverride
+                                    ? (r) => props.onSuccessOverride!(r)
+                                    : () => navigate(props.nesteUrl)
+                            )
+                        )}
+                    >
                         <div>
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
                                 (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold
@@ -136,15 +148,17 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
                             )}
                             <Navigasjonsknapper
+                                neste={{
+                                    loading: RemoteData.isPending(savingState),
+                                }}
                                 tilbake={
                                     props.onTilbakeClickOverride
-                                        ? { onTilbakeClick: props.onTilbakeClickOverride }
+                                        ? { onClick: props.onTilbakeClickOverride }
                                         : { url: props.forrigeUrl }
                                 }
-                                onLagreOgFortsettSenereClick={() =>
-                                    save(form.getValues(), () => navigate(props.avsluttUrl))
-                                }
-                                loading={RemoteData.isPending(savingState)}
+                                fortsettSenere={{
+                                    onClick: () => save(form.getValues(), () => navigate(props.avsluttUrl)),
+                                }}
                             />
                         </div>
                     </form>

@@ -49,7 +49,7 @@ const Statusikon = (props: { status: Linjestatus }) => {
     return <span className={classNames(styles.icon, className)}>{Ikon && <Ikon />}</span>;
 };
 
-const Linjevisning = (props: { aktivId: string; linje: Linje }) => {
+const Linjevisning = (props: { aktivId: string; linje: Linje; onClickId?: (id: string) => void }) => {
     const innmat = (
         <div className={styles.linje}>
             <Statusikon status={props.linje.status} />
@@ -63,7 +63,18 @@ const Linjevisning = (props: { aktivId: string; linje: Linje }) => {
     return (
         <li>
             {props.linje.erKlikkbar ? (
-                <Link to={props.linje.url} className={styles.link}>
+                <Link
+                    to={props.linje.url}
+                    onClick={
+                        props.onClickId
+                            ? (e) => {
+                                  e.preventDefault();
+                                  props.onClickId!(props.linje.id);
+                              }
+                            : undefined
+                    }
+                    className={styles.link}
+                >
                     {innmat}
                 </Link>
             ) : (
@@ -73,21 +84,43 @@ const Linjevisning = (props: { aktivId: string; linje: Linje }) => {
     );
 };
 
-const Framdriftsindikator = (props: { elementer: Array<Linje | Seksjon>; aktivId: string }) => {
+const Framdriftsindikator = (props: {
+    elementer: Array<Linje | Seksjon>;
+    aktivId: string;
+    overrideFørsteLinjeOnClick?: (id: string) => void;
+}) => {
     return (
         <ol className={styles.container}>
-            {props.elementer.map((e) =>
+            {props.elementer.map((e, seksjonIdx) =>
                 erSeksjon(e) ? (
                     <li key={e.id}>
                         <Label spacing>{e.tittel}</Label>
                         <ol>
-                            {e.linjer.map((l) => (
-                                <Linjevisning key={l.id} aktivId={props.aktivId} linje={l} />
+                            {e.linjer.map((l, linjeIdx) => (
+                                <Linjevisning
+                                    key={l.id}
+                                    aktivId={props.aktivId}
+                                    linje={l}
+                                    onClickId={
+                                        seksjonIdx === 0 && linjeIdx === 0 && props.overrideFørsteLinjeOnClick
+                                            ? (id) => props.overrideFørsteLinjeOnClick!(id)
+                                            : undefined
+                                    }
+                                />
                             ))}
                         </ol>
                     </li>
                 ) : (
-                    <Linjevisning key={e.id} aktivId={props.aktivId} linje={e} />
+                    <Linjevisning
+                        key={e.id}
+                        aktivId={props.aktivId}
+                        linje={e}
+                        onClickId={
+                            seksjonIdx === 0 && props.overrideFørsteLinjeOnClick
+                                ? (id) => props.overrideFørsteLinjeOnClick!(id)
+                                : undefined
+                        }
+                    />
                 )
             )}
         </ol>

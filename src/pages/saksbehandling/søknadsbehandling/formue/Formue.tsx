@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
+import { pipe } from 'fp-ts/lib/function';
 import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
-import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
+import { Behandlingstype, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
 import * as personApi from '~src/api/personApi';
 import OppsummeringAvSkattegrunnlag from '~src/components/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
 import OppsummeringAvFormue from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
@@ -23,7 +24,7 @@ import {
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useFeatureToggle } from '~src/lib/featureToggles';
-import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import {
@@ -124,10 +125,27 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }
                         <FormueForm
                             form={form as unknown as UseFormReturn<FormueVilkårFormData>}
                             minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
-                            onFormSubmit={
-                                handleSave as (values: FormueFormDataer, onSuccess: () => void) => Promise<void>
-                            }
-                            savingState={combinedLagringsstatus}
+                            neste={{
+                                onClick: handleSave as (
+                                    values: FormueFormDataer,
+                                    onSuccess: () => void
+                                ) => Promise<void>,
+                                url: props.nesteUrl,
+                                savingState: pipe(
+                                    combinedLagringsstatus,
+                                    RemoteData.fold3(
+                                        () => RemoteData.pending,
+                                        (err) => RemoteData.failure(err),
+                                        (res) => RemoteData.success(res)
+                                    )
+                                ) as ApiResult<VilkårOgGrunnlagApiResult>,
+                            }}
+                            fortsettSenere={{
+                                url: props.avsluttUrl,
+                            }}
+                            tilbake={{
+                                url: props.forrigeUrl,
+                            }}
                             søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                             begrensTilEnPeriode
                             skalIkkeKunneVelgePeriode

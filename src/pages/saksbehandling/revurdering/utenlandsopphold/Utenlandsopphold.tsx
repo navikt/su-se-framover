@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
@@ -16,14 +17,15 @@ import {
 import { lagreUtenlandsopphold } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import revurderingmessages, { stegmessages } from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import revurderingmessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 
 import messages from './utenlandsopphold-nb';
 
 const Utenlandsopphold = (props: RevurderingStegProps) => {
-    const { formatMessage } = useI18n({ messages: { ...messages, ...stegmessages, ...revurderingmessages } });
+    const navigate = useNavigate();
+    const { formatMessage } = useI18n({ messages: { ...messages, ...revurderingmessages } });
 
     const form = useForm<UtenlandsoppholdVilkårFormData>({
         resolver: yupResolver(utenlandsoppholdFormSchema),
@@ -33,7 +35,10 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
     });
     const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
 
-    const handleSubmit = async (values: UtenlandsoppholdVilkårFormData, onSuccess: () => void) => {
+    const handleSubmit = async (
+        values: UtenlandsoppholdVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) => {
         lagre(
             {
                 ...utenlandsoppholdFormDataTilRequest({
@@ -44,8 +49,9 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -63,8 +69,24 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                     <UtenlandsoppholdForm
                         form={form}
                         minOgMaxPeriode={revurderingsperiode}
-                        onFormSubmit={handleSubmit}
-                        savingState={status}
+                        neste={{
+                            onClick: (values) =>
+                                handleSubmit(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                            savingState: status,
+                            url: props.nesteUrl,
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         {...props}
                     />

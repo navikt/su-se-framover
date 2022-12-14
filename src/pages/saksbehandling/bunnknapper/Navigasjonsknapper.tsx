@@ -7,15 +7,25 @@ import { useI18n } from '~src/lib/i18n';
 import messages from './navigasjonsknapper-nb';
 import * as styles from './navigasjonsknapper.module.less';
 
-export const Navigasjonsknapper = ({
-    onLagreOgFortsettSenereClick,
-    ...props
-}: {
-    tilbake: { url: string } | { onTilbakeClick: () => void };
-    loading?: boolean;
-    onLagreOgFortsettSenereClick?: () => void;
-    nesteKnappTekst?: string;
-    onNesteClick?: () => void;
+/**
+ * Navigering til url tar alltid presedens over onClick hvis begge er supplert.
+ * Bruk heller bare et av verdiene istedenfor
+ */
+const Navigasjonsknapper = (props: {
+    neste: {
+        loading?: boolean;
+        tekst?: string;
+        onClick?: () => void;
+    };
+    tilbake?: {
+        url?: string;
+        onClick?: () => void;
+    };
+    fortsettSenere?: {
+        loading?: boolean;
+        onClick?: () => void;
+        tekst?: string;
+    };
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
@@ -28,23 +38,25 @@ export const Navigasjonsknapper = ({
                 {formatMessage('knapp.tilbake')}
             </Button>
         );
-        return tilbakeknapp(() => ('url' in tilbake ? navigate(tilbake.url) : tilbake.onTilbakeClick()));
+        return tilbakeknapp(() =>
+            tilbake?.url ? navigate(tilbake.url) : tilbake?.onClick ? tilbake.onClick() : () => void 0
+        );
     };
 
     return (
         <div>
             <div className={styles.navigationButtonContainer}>
-                {onLagreOgFortsettSenereClick ? (
+                {props.fortsettSenere ? (
                     <Button
                         variant="secondary"
                         onClick={() => {
                             setKnappTrykket('avslutt');
-                            onLagreOgFortsettSenereClick();
+                            props.fortsettSenere!.onClick!();
                         }}
                         type="button"
-                        loading={knappTrykket === 'avslutt' && props.loading}
+                        loading={props.fortsettSenere?.loading ?? (knappTrykket === 'avslutt' && props.neste.loading)}
                     >
-                        {formatMessage('knapp.lagreOgfortsettSenere')}
+                        {props.fortsettSenere?.tekst ?? formatMessage('knapp.lagreOgfortsettSenere')}
                     </Button>
                 ) : (
                     <Tilbake />
@@ -52,15 +64,17 @@ export const Navigasjonsknapper = ({
                 <Button
                     onClick={() => {
                         setKnappTrykket('neste');
-                        props.onNesteClick?.();
+                        props.neste.onClick?.();
                     }}
-                    type={props.onNesteClick ? 'button' : 'submit'}
-                    loading={knappTrykket === 'neste' && props.loading}
+                    type={props.neste.onClick ? 'button' : 'submit'}
+                    loading={knappTrykket === 'neste' && props.neste.loading}
                 >
-                    {props.nesteKnappTekst ? props.nesteKnappTekst : formatMessage('knapp.neste')}
+                    {props.neste.tekst ? props.neste.tekst : formatMessage('knapp.neste')}
                 </Button>
             </div>
-            <div className={styles.navigationButtonContainer}>{onLagreOgFortsettSenereClick && <Tilbake />}</div>
+            <div className={styles.navigationButtonContainer}>{props.fortsettSenere && <Tilbake />}</div>
         </div>
     );
 };
+
+export default Navigasjonsknapper;

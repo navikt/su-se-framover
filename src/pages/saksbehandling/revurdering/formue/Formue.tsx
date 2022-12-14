@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
@@ -16,7 +17,7 @@ import {
 import { lagreFormuegrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
@@ -25,6 +26,7 @@ import messages from './formue-nb';
 import * as styles from './formue.module.less';
 
 const Formue = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
 
@@ -36,15 +38,19 @@ const Formue = (props: RevurderingStegProps) => {
         resolver: yupResolver(formueFormSchema),
     });
 
-    const lagreFormuegrunnlaget = (data: FormueVilkårFormData, onSuccess: () => void) => {
+    const lagreFormuegrunnlaget = (
+        data: FormueVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) => {
         lagreFormuegrunnlagAction(
             {
                 ...formueVilkårFormTilRequest(props.sakId, props.revurdering.id, data),
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
-                    onSuccess();
+                const castedRes = res as RevurderingOgFeilmeldinger;
+                if (castedRes.feilmeldinger.length === 0) {
+                    onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -57,8 +63,24 @@ const Formue = (props: RevurderingStegProps) => {
                     <FormueForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.revurdering.periode)}
-                        onFormSubmit={lagreFormuegrunnlaget}
-                        savingState={lagreFormuegrunnlagStatus}
+                        neste={{
+                            onClick: (values) =>
+                                lagreFormuegrunnlaget(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                            url: props.nesteUrl,
+                            savingState: lagreFormuegrunnlagStatus,
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         formuegrenser={props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser}
                         bosituasjonsgrunnlag={props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon}

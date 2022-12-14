@@ -72,8 +72,17 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                     <LovligOppholdForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
-                        onFormSubmit={save}
-                        savingState={status}
+                        neste={{
+                            onClick: save,
+                            url: props.nesteUrl,
+                            savingState: status,
+                        }}
+                        tilbake={{
+                            url: props.forrigeUrl,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode

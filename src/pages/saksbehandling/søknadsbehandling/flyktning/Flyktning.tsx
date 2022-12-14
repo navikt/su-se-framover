@@ -86,14 +86,22 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                     <FlyktningForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
-                        onFormSubmit={save}
-                        savingState={status}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                         nesteknappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
                         {...props}
-                        nesteUrl={vilGiTidligAvslag ? vedtakUrl : props.nesteUrl}
+                        neste={{
+                            onClick: save,
+                            savingState: status,
+                            url: vilGiTidligAvslag ? vedtakUrl : props.nesteUrl,
+                        }}
+                        tilbake={{
+                            url: props.forrigeUrl,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                     >
                         {vilGiTidligAvslag && (
                             <Alert className={styles.avslagAdvarsel} variant="info">

@@ -18,7 +18,7 @@ import {
     UtbetalingsRevurderingStatus,
 } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { erRevurderingTilbakekrevingsbehandlingMedAvgjørelse } from '~src/utils/revurdering/revurderingUtils';
+import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
@@ -72,15 +72,8 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                     </div>
                 ))}
             </div>
-            <div className={styles.begrunnelseContainer}>
-                <OppsummeringPar
-                    label={formatMessage('label.begrunnelse')}
-                    verdi={props.revurdering.begrunnelse}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
-                />
-            </div>
             <div>
-                {erRevurderingTilbakekrevingsbehandlingMedAvgjørelse(props.revurdering) && (
+                {erRevurderingTilbakekrevingsbehandling(props.revurdering) && (
                     <OppsummeringPar
                         label={formatMessage('tilbakekreving.skalTilbakekreves')}
                         verdi={formatMessage(
@@ -89,6 +82,13 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                         sorteres={OppsummeringsParSortering.Vertikalt}
                     />
                 )}
+            </div>
+            <div className={styles.begrunnelseContainer}>
+                <OppsummeringPar
+                    label={formatMessage('label.begrunnelse')}
+                    verdi={props.revurdering.begrunnelse}
+                    sorteres={OppsummeringsParSortering.Vertikalt}
+                />
             </div>
             <UnderkjenteAttesteringer attesteringer={props.revurdering.attesteringer} />
         </div>

@@ -44,13 +44,11 @@ import { erKlageTilAttestering, hentSisteVurderteSteg } from '~src/utils/klage/k
 import {
     erInformasjonsRevurdering,
     erRevurderingGjenopptak,
-    erRevurderingSimulert,
     erRevurderingStans,
     erRevurderingTilAttestering,
     finnNesteRevurderingsteg,
 } from '~src/utils/revurdering/revurderingUtils';
 
-import { RevurderingSteg } from '../../types';
 import messages from '../sakintro-nb';
 
 import styles from './ÅpneBehandlingerTabell.module.less';
@@ -353,11 +351,10 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
                 <LinkAsButton
                     variant="primary"
                     size="small"
-                    href={Routes.revurderValgtRevurdering.createURL({
+                    href={Routes.revurderingSeksjonSteg.createURL({
                         sakId: props.sakId,
-                        steg: erRevurderingSimulert(props.r)
-                            ? RevurderingSteg.Oppsummering
-                            : finnNesteRevurderingsteg(props.r.informasjonSomRevurderes),
+                        seksjon: finnNesteRevurderingsteg(props.r.informasjonSomRevurderes).seksjon,
+                        steg: finnNesteRevurderingsteg(props.r.informasjonSomRevurderes).steg,
                         revurderingId: props.r.id,
                     })}
                 >

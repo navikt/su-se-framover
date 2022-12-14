@@ -125,11 +125,17 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                 left: (
                                     <FormWrapper
                                         form={form}
-                                        save={save}
-                                        savingState={status}
-                                        avsluttUrl={props.avsluttUrl}
-                                        forrigeUrl={props.forrigeUrl}
-                                        nesteUrl={props.nesteUrl}
+                                        neste={{
+                                            onClick: save,
+                                            url: props.nesteUrl,
+                                            savingState: status,
+                                        }}
+                                        tilbake={{
+                                            url: props.forrigeUrl,
+                                        }}
+                                        fortsettSenere={{
+                                            url: props.avsluttUrl,
+                                        }}
                                     >
                                         <>
                                             {er67EllerEldre(søker.alder) && (

@@ -1,42 +1,68 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InformationFilled } from '@navikt/ds-icons';
-import { Alert, BodyLong, Heading, Radio, RadioGroup } from '@navikt/ds-react';
-import * as React from 'react';
+import { Heading, BodyLong, RadioGroup, Radio, Alert } from '@navikt/ds-react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
-import { useAsyncActionCreatorWithArgsTransformer } from '~src/lib/hooks';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
 import yup from '~src/lib/validering';
-import { Navigasjonsknapper } from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
-import { InformasjonsRevurdering, TilbakekrevingsAvgjørelse } from '~src/types/Revurdering';
+import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import {
+    InformasjonsRevurdering,
+    RevurderingBeregnOgSimulerSteg,
+    RevurderingOppsummeringSteg,
+    RevurderingSeksjoner,
+    TilbakekrevingsAvgjørelse,
+} from '~src/types/Revurdering';
 import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './tilbakekrevingForm-nb';
 import * as styles from './tilbakekrevingForm.module.less';
 
-export type TilbakekrevingsbehandlingFormData = {
+export interface TilbakekrevingsbehandlingFormData {
     avgjørelse: TilbakekrevingsAvgjørelse;
-};
+}
 
-export const TilbakekrevingForm = (props: {
-    forrige: { url: string; visModal: boolean };
-    revurdering: InformasjonsRevurdering;
+const tilbakekrevingsSchema = yup
+    .object<TilbakekrevingsbehandlingFormData>({
+        avgjørelse: yup
+            .mixed()
+            .required()
+            .defined()
+            .oneOf(
+                [TilbakekrevingsAvgjørelse.TILBAKEKREV, TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV],
+                'Aktsomhet må vurderes ved tilbakekreving'
+            ),
+    })
+    .required();
+
+const TilbakekrevingForm = (props: {
     sakId: string;
+    revurdering: InformasjonsRevurdering;
+    gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const [lagreTilbakekrevingsbehandlingState, lagreTilbakekrevingsbehandling] =
-        useAsyncActionCreatorWithArgsTransformer(
-            RevurderingActions.lagreTilbakekrevingsbehandling,
-            (behandling: TilbakekrevingsbehandlingFormData) => ({
+    const { formatMessage } = useI18n({ messages });
+
+    const [lagreTilbakekrevingsbehandlingState, lagreTilbakekrevingsbehandling] = useAsyncActionCreator(
+        RevurderingActions.lagreTilbakekrevingsbehandling
+    );
+
+    const handleSubmit = (values: TilbakekrevingsbehandlingFormData, onSuccess: () => void) => {
+        lagreTilbakekrevingsbehandling(
+            {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                tilbakekrevingsbehandling: behandling,
-            })
+                tilbakekrevingsbehandling: values,
+            },
+            () => onSuccess()
         );
-
-    const { formatMessage } = useI18n({ messages });
+    };
 
     const form = useForm<TilbakekrevingsbehandlingFormData>({
         defaultValues: {
@@ -44,64 +70,84 @@ export const TilbakekrevingForm = (props: {
                 ? props.revurdering.tilbakekrevingsbehandling?.avgjørelse
                 : TilbakekrevingsAvgjørelse.IKKE_AVGJORT,
         },
-        resolver: yupResolver(
-            yup
-                .object<TilbakekrevingsbehandlingFormData>({
-                    avgjørelse: yup
-                        .mixed()
-                        .required()
-                        .defined()
-                        .oneOf(
-                            [TilbakekrevingsAvgjørelse.TILBAKEKREV, TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV],
-                            'Aktsomhet må vurderes ved tilbakekreving'
-                        ),
-                })
-                .required()
-        ),
+        resolver: yupResolver(tilbakekrevingsSchema),
     });
 
     return (
-        <>
-            <form onSubmit={form.handleSubmit(lagreTilbakekrevingsbehandling)} className={styles.form}>
-                <Heading size="small" level="5" spacing className={styles.heading}>
-                    {formatMessage('tittel')}
-                </Heading>
-                <div className={styles.undertittel}>
-                    <InformationFilled color="#368DA8" width="24px" height="24px" />
-                    <BodyLong>{formatMessage('undertittel')}</BodyLong>
-                </div>
+        <ToKolonner tittel={formatMessage('tilbakekreving.tittel')}>
+            {{
+                left: (
+                    <FormWrapper
+                        className={styles.formContainer}
+                        form={form}
+                        neste={{
+                            savingState: lagreTilbakekrevingsbehandlingState,
+                            onClick: handleSubmit,
+                            url: Routes.revurderingSeksjonSteg.createURL({
+                                sakId: props.sakId,
+                                revurderingId: props.revurdering.id,
+                                seksjon: RevurderingSeksjoner.Oppsummering,
+                                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+                            }),
+                        }}
+                        tilbake={{
+                            url: Routes.revurderingSeksjonSteg.createURL({
+                                sakId: props.sakId,
+                                revurderingId: props.revurdering.id,
+                                seksjon: RevurderingSeksjoner.BeregningOgSimulering,
+                                steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
+                            }),
+                        }}
+                        fortsettSenere={{
+                            url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                        }}
+                    >
+                        <div className={styles.form}>
+                            <Heading size="small" level="5" spacing>
+                                {formatMessage('tittel')}
+                            </Heading>
+                            <div className={styles.undertittel}>
+                                <InformationFilled color="#368DA8" width="24px" height="24px" />
+                                <BodyLong>{formatMessage('undertittel')}</BodyLong>
+                            </div>
 
-                <Controller
-                    control={form.control}
-                    name="avgjørelse"
-                    render={({ field, fieldState }) => (
-                        <RadioGroup
-                            legend={formatMessage('aktsomhetstittel')}
-                            error={fieldState.error?.message}
-                            {...field}
-                        >
-                            <Radio id={field.name} ref={field.ref} value={TilbakekrevingsAvgjørelse.TILBAKEKREV}>
-                                {formatMessage('aktsomhetJa')}
-                            </Radio>
-                            <Radio value={TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV}>
-                                {formatMessage('aktsomhetNei')}
-                            </Radio>
-                        </RadioGroup>
-                    )}
-                />
-                {form.watch('avgjørelse') === TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV && (
-                    <Alert variant={'info'}>{formatMessage('ingenTilbakekreving')}</Alert>
-                )}
-                {RemoteData.isFailure(lagreTilbakekrevingsbehandlingState) && (
-                    <ApiErrorAlert error={lagreTilbakekrevingsbehandlingState.error} />
-                )}
-
-                <Navigasjonsknapper
-                    nesteKnappTekst={formatMessage('neste')}
-                    tilbake={props.forrige}
-                    loading={RemoteData.isPending(lagreTilbakekrevingsbehandlingState)}
-                />
-            </form>
-        </>
+                            <Controller
+                                control={form.control}
+                                name="avgjørelse"
+                                render={({ field, fieldState }) => (
+                                    <RadioGroup
+                                        legend={formatMessage('aktsomhetstittel')}
+                                        error={fieldState.error?.message}
+                                        {...field}
+                                    >
+                                        <Radio
+                                            id={field.name}
+                                            ref={field.ref}
+                                            value={TilbakekrevingsAvgjørelse.TILBAKEKREV}
+                                        >
+                                            {formatMessage('aktsomhetJa')}
+                                        </Radio>
+                                        <Radio value={TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV}>
+                                            {formatMessage('aktsomhetNei')}
+                                        </Radio>
+                                    </RadioGroup>
+                                )}
+                            />
+                            {form.watch('avgjørelse') === TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV && (
+                                <Alert variant={'info'}>{formatMessage('ingenTilbakekreving')}</Alert>
+                            )}
+                        </div>
+                    </FormWrapper>
+                ),
+                right: (
+                    <OppsummeringAvInformasjonsrevurdering
+                        revurdering={props.revurdering}
+                        grunnlagsdataOgVilkårsvurderinger={props.gjeldendeGrunnlagOgVilkår}
+                    />
+                ),
+            }}
+        </ToKolonner>
     );
 };
+
+export default TilbakekrevingForm;

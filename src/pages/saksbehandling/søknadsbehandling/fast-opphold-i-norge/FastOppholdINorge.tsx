@@ -76,8 +76,17 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                     <FastOppholdForm
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
-                        onFormSubmit={handleSave}
-                        savingState={status}
+                        neste={{
+                            onClick: handleSave,
+                            savingState: status,
+                            url: props.nesteUrl,
+                        }}
+                        tilbake={{
+                            url: props.forrigeUrl,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode

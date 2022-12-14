@@ -170,6 +170,47 @@ export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
         ].includes(x)
 );
 
+export enum RevurderingSeksjoner {
+    Opprettelse = 'OpprettelseAvRevurdering',
+    GrunnlagOgVilkår = 'GrunnlagOgVilkår',
+    BeregningOgSimulering = 'BeregningOgSimulering',
+    Oppsummering = 'Oppsummering',
+}
+
+export type RevurderingSteg =
+    | RevurderingOpprettelseSteg
+    | RevurderingGrunnlagOgVilkårSteg
+    | RevurderingBeregnOgSimulerSteg
+    | RevurderingOppsummeringSteg;
+
+export enum RevurderingOpprettelseSteg {
+    Periode = 'periode',
+}
+
+export enum RevurderingGrunnlagOgVilkårSteg {
+    Uførhet = 'ufore',
+    Formue = 'formue',
+    Utenlandsopphold = 'utenlandsopphold',
+    Opplysningsplikt = 'opplysningsplikt',
+    Oppholdstillatelse = 'Oppholdstillatelse',
+    Flyktning = 'flyktning',
+    FastOpphold = 'fastOpphold',
+    PersonligOppmøte = 'personligOppmøte',
+    Institusjonsopphold = 'institusjonsopphold',
+    EndringAvFradrag = 'endringAvFradrag',
+    Bosituasjon = 'bosituasjon',
+}
+
+export enum RevurderingBeregnOgSimulerSteg {
+    BeregnOgSimuler = 'beregnOgSimuler',
+}
+
+export enum RevurderingOppsummeringSteg {
+    Forhåndsvarsel = 'forhåndsvarsel',
+    Tilbakekreving = 'tilbakekreving',
+    SendTilAttestering = 'sendTilAttestering',
+}
+
 export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',
     Inntekt = 'Inntekt',
@@ -194,6 +235,7 @@ export interface RevurderingStegProps {
     revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     onTilbakeClickOverride?: () => void;
+    onSuccessOverride?: (r: InformasjonsRevurdering) => void;
     forrigeUrl: string;
     nesteUrl: string;
     avsluttUrl: string;

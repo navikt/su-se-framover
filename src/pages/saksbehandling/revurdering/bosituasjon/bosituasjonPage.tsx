@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -13,7 +14,7 @@ import { lagreBosituasjonsgrunnlag } from '~src/features/grunnlagsdataOgVilkårs
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import { RevurderingStegProps } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import sharedMessages from '../revurdering-nb';
@@ -30,6 +31,7 @@ import {
 } from './bosituasjonPageUtils';
 
 const BosituasjonPage = (props: RevurderingStegProps) => {
+    const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
@@ -43,7 +45,10 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
         resolver: yupResolver(bosituasjonFormSchema),
     });
 
-    const lagreBosituasjon = (data: BosituasjonFormData, onSuccess: () => void) =>
+    const lagreBosituasjon = (
+        data: BosituasjonFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+    ) =>
         lagre(
             {
                 sakId: props.sakId,
@@ -60,7 +65,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
             },
             (res) => {
                 if (res.feilmeldinger.length === 0) {
-                    onSuccess();
+                    onSuccess(res.revurdering, props.nesteUrl);
                 }
             }
         );
@@ -69,7 +74,28 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <FormWrapper form={form} save={lagreBosituasjon} savingState={status} {...props}>
+                    <FormWrapper
+                        form={form}
+                        neste={{
+                            url: props.nesteUrl,
+                            savingState: status,
+                            onClick: (values) =>
+                                lagreBosituasjon(
+                                    values,
+                                    props.onSuccessOverride
+                                        ? (r) => props.onSuccessOverride!(r)
+                                        : () => navigate(props.nesteUrl)
+                                ),
+                        }}
+                        tilbake={{
+                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
+                            onClick: props.onTilbakeClickOverride,
+                        }}
+                        fortsettSenere={{
+                            url: props.avsluttUrl,
+                        }}
+                        {...props}
+                    >
                         <>
                             <MultiPeriodeVelger
                                 name={'bosituasjoner'}
