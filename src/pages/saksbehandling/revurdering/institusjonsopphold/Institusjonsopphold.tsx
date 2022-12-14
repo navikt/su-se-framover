@@ -49,7 +49,6 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                 behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                console.log(props.nesteUrl);
                 const castedRes = res as RevurderingOgFeilmeldinger;
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);

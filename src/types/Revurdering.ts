@@ -172,16 +172,14 @@ export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
 
 export enum RevurderingSeksjoner {
     Opprettelse = 'OpprettelseAvRevurdering',
-    Grunnlag = 'Grunnlag',
-    Vilkår = 'Vilkår',
+    GrunnlagOgVilkår = 'GrunnlagOgVilkår',
     BeregningOgSimulering = 'BeregningOgSimulering',
     Oppsummering = 'Oppsummering',
 }
 
 export type RevurderingSteg =
     | RevurderingOpprettelseSteg
-    | RevurderingGrunnlagSteg
-    | RevurderingVilkårSteg
+    | RevurderingGrunnlagOgVilkårSteg
     | RevurderingBeregnOgSimulerSteg
     | RevurderingOppsummeringSteg;
 
@@ -189,12 +187,7 @@ export enum RevurderingOpprettelseSteg {
     Periode = 'periode',
 }
 
-export enum RevurderingGrunnlagSteg {
-    EndringAvFradrag = 'endringAvFradrag',
-    Bosituasjon = 'bosituasjon',
-}
-
-export enum RevurderingVilkårSteg {
+export enum RevurderingGrunnlagOgVilkårSteg {
     Uførhet = 'ufore',
     Formue = 'formue',
     Utenlandsopphold = 'utenlandsopphold',
@@ -204,6 +197,8 @@ export enum RevurderingVilkårSteg {
     FastOpphold = 'fastOpphold',
     PersonligOppmøte = 'personligOppmøte',
     Institusjonsopphold = 'institusjonsopphold',
+    EndringAvFradrag = 'endringAvFradrag',
+    Bosituasjon = 'bosituasjon',
 }
 
 export enum RevurderingBeregnOgSimulerSteg {

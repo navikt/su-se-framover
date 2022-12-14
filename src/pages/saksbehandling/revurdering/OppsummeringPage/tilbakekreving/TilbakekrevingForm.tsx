@@ -15,6 +15,7 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     InformasjonsRevurdering,
+    RevurderingBeregnOgSimulerSteg,
     RevurderingOppsummeringSteg,
     RevurderingSeksjoner,
     TilbakekrevingsAvgjørelse,
@@ -86,15 +87,15 @@ const TilbakekrevingForm = (props: {
                                 sakId: props.sakId,
                                 revurderingId: props.revurdering.id,
                                 seksjon: RevurderingSeksjoner.Oppsummering,
-                                steg: RevurderingOppsummeringSteg.SendTilAttestering,
+                                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
                             }),
                         }}
                         tilbake={{
                             url: Routes.revurderingSeksjonSteg.createURL({
                                 sakId: props.sakId,
                                 revurderingId: props.revurdering.id,
-                                seksjon: RevurderingSeksjoner.Oppsummering,
-                                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+                                seksjon: RevurderingSeksjoner.BeregningOgSimulering,
+                                steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
                             }),
                         }}
                         fortsettSenere={{

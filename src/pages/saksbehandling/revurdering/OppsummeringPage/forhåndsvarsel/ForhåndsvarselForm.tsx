@@ -18,7 +18,7 @@ import { VisDokumenter } from '~src/pages/saksbehandling/dokumenter/DokumenterPa
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InformasjonsRevurdering } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, RevurderingOppsummeringSteg, RevurderingSeksjoner } from '~src/types/Revurdering';
 
 import messages from './ForhåndsvarselForm-nb';
 import styles from './ForhåndsvarselForm.module.less';
@@ -44,7 +44,6 @@ const ForhåndsvarselForm = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
-    nesteUrl: string;
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const navigate = useNavigate();
@@ -60,9 +59,16 @@ const ForhåndsvarselForm = (props: {
         RevurderingActions.lagreForhåndsvarsel
     );
 
+    const nesteUrl = Routes.revurderingSeksjonSteg.createURL({
+        sakId: props.sakId,
+        revurderingId: props.revurdering.id,
+        seksjon: RevurderingSeksjoner.Oppsummering,
+        steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+    });
+
     const handleSubmit = (values: ForhåndsvarselFormData) => {
         if (!values.oppretterNyttForhåndsvarsel) {
-            navigate(props.nesteUrl);
+            navigate(nesteUrl);
         } else {
             lagreForhåndsvarsel(
                 {
@@ -85,7 +91,7 @@ const ForhåndsvarselForm = (props: {
                         neste={{
                             savingState: lagreForhåndsvarselStatus,
                             onClick: handleSubmit,
-                            url: props.nesteUrl,
+                            url: nesteUrl,
                             tekst: watch.oppretterNyttForhåndsvarsel
                                 ? formatMessage('forhåndsvarsel.neste.sendOgNaviger')
                                 : undefined,

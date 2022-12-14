@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
+import * as Routes from '~src/lib/routes';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     InformasjonsRevurdering,
@@ -8,6 +9,7 @@ import {
     RevurderingSeksjoner,
     RevurderingSteg,
 } from '~src/types/Revurdering';
+import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
 
 import ForhåndsvarselForm from './forhåndsvarsel/ForhåndsvarselForm';
 import * as styles from './RevurderingOppsummeringPage.module.less';
@@ -23,18 +25,26 @@ const RevurderingOppsummeringPage = (props: {
 }) => {
     return (
         <div className={styles.pageContainer}>
-            {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.Forhåndsvarsel && (
-                <ForhåndsvarselForm
+            {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.Tilbakekreving && (
+                <TilbakekrevingForm
                     sakId={props.sakId}
-                    forrigeUrl={props.seksjoner[3].linjer.at(-1)!.url}
-                    nesteUrl={props.seksjoner[4].linjer[1]!.url}
                     revurdering={props.revurdering}
                     gjeldendeGrunnlagOgVilkår={props.gjeldendeGrunnlagOgVilkår}
                 />
             )}
-            {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.Tilbakekreving && (
-                <TilbakekrevingForm
+            {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.Forhåndsvarsel && (
+                <ForhåndsvarselForm
                     sakId={props.sakId}
+                    forrigeUrl={
+                        erRevurderingTilbakekrevingsbehandling(props.revurdering)
+                            ? Routes.revurderingSeksjonSteg.createURL({
+                                  sakId: props.sakId,
+                                  revurderingId: props.revurdering.id,
+                                  seksjon: RevurderingSeksjoner.Oppsummering,
+                                  steg: RevurderingOppsummeringSteg.Tilbakekreving,
+                              })
+                            : props.seksjoner[2].linjer.at(-1)!.url
+                    }
                     revurdering={props.revurdering}
                     gjeldendeGrunnlagOgVilkår={props.gjeldendeGrunnlagOgVilkår}
                 />
@@ -44,7 +54,6 @@ const RevurderingOppsummeringPage = (props: {
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     gjeldendeGrunnlagOgVilkår={props.gjeldendeGrunnlagOgVilkår}
-                    forrigeUrl={props.seksjoner[4].linjer.at(-2)!.url}
                 />
             )}
         </div>

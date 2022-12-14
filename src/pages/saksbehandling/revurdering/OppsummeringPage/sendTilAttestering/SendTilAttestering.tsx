@@ -20,7 +20,13 @@ import yup from '~src/lib/validering';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppDispatch } from '~src/redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { InformasjonsRevurdering, Revurdering, Valg } from '~src/types/Revurdering';
+import {
+    InformasjonsRevurdering,
+    Revurdering,
+    RevurderingOppsummeringSteg,
+    RevurderingSeksjoner,
+    Valg,
+} from '~src/types/Revurdering';
 import {
     erRevurderingOpphørPgaManglendeDokumentasjon,
     erRevurderingTilbakekreving,
@@ -64,7 +70,6 @@ const SendTilAttestering = (props: {
     sakId: string;
     revurdering: InformasjonsRevurdering;
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
-    forrigeUrl: string;
 }) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -159,7 +164,14 @@ const SendTilAttestering = (props: {
                             onClick: handleSubmit,
                             tekst: formatMessage('sendTilAttestering.button.label'),
                         }}
-                        tilbake={{ url: props.forrigeUrl }}
+                        tilbake={{
+                            url: Routes.revurderingSeksjonSteg.createURL({
+                                sakId: props.sakId,
+                                revurderingId: props.revurdering.id,
+                                seksjon: RevurderingSeksjoner.Oppsummering,
+                                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+                            }),
+                        }}
                         fortsettSenere={{
                             url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
                             tekst: formatMessage('knapp.fortsettSenere'),

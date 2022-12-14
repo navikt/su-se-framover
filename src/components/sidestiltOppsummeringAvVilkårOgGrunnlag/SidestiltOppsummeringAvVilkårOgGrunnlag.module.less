@@ -1,7 +1,7 @@
 @import '~/src/styles/variables.less';
 .accordionOverskrift {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(312px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     padding: @spacing-xs @spacing-xs;
 }
 
@@ -21,7 +21,7 @@
 
 .accordionContent {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: @spacing;
 
     > :first-child {

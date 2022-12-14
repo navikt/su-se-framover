@@ -21,6 +21,7 @@ import {
     SimulertRevurdering,
 } from '~src/types/Revurdering';
 import {
+    erRevurderingTilbakekrevingsbehandling,
     harBeregninger,
     harSimulering,
     periodenInneholderTilbakekrevingOgAndreTyper,
@@ -39,7 +40,7 @@ const RevurderingBeregnOgSimuler = (props: {
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    const forrigeUrl = props.seksjoner[2].linjer.at(-1)?.url;
+    const forrigeUrl = props.seksjoner[1].linjer.at(-1)?.url;
 
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
 
@@ -60,6 +61,24 @@ const RevurderingBeregnOgSimuler = (props: {
             });
         }
     }, [props.informasjonsRevurdering.id]);
+
+    const getNesteUrl = (beregnetOgSimulertRevurdering: InformasjonsRevurdering) => {
+        if (erRevurderingTilbakekrevingsbehandling(beregnetOgSimulertRevurdering)) {
+            return Routes.revurderingSeksjonSteg.createURL({
+                sakId: props.sakId,
+                revurderingId: props.informasjonsRevurdering.id,
+                seksjon: RevurderingSeksjoner.Oppsummering,
+                steg: RevurderingOppsummeringSteg.Tilbakekreving,
+            });
+        } else {
+            return Routes.revurderingSeksjonSteg.createURL({
+                sakId: props.sakId,
+                revurderingId: props.informasjonsRevurdering.id,
+                seksjon: RevurderingSeksjoner.Oppsummering,
+                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+            });
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -110,12 +129,11 @@ const RevurderingBeregnOgSimuler = (props: {
                                 neste={{
                                     onClick: () =>
                                         navigate(
-                                            Routes.revurderingSeksjonSteg.createURL({
-                                                sakId: props.sakId,
-                                                revurderingId: props.informasjonsRevurdering.id,
-                                                seksjon: RevurderingSeksjoner.Oppsummering,
-                                                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
-                                            })
+                                            getNesteUrl(
+                                                RemoteData.isSuccess(beregnOgSimulerStatus)
+                                                    ? beregnOgSimulerStatus.value.revurdering
+                                                    : props.informasjonsRevurdering
+                                            )
                                         ),
                                 }}
                                 tilbake={{ url: forrigeUrl }}

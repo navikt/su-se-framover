@@ -1,3 +1,4 @@
+import { InformasjonSomRevurderesTextMapper } from '~src/typeMappinger/InformasjonSomRevurderesTextMapper';
 import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
 
 export default {
@@ -28,4 +29,9 @@ export default {
     'feil.g_regulering_kan_ikke_føre_til_opphør': 'G-regulering kan ikke føre til opphør',
 
     'grunnlagOgvilkår.henterGjeldendeData': 'Henter gjeldende data...',
+
+    'modal.tittel': 'Alle steg må vurderes',
+    'modal.måVurdereAlleSteg': 'Før du kan gå videre, må du vurdere følgende vilkår',
+
+    ...InformasjonSomRevurderesTextMapper,
 };
