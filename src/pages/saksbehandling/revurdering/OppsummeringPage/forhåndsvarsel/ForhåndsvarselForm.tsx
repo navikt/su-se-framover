@@ -63,7 +63,7 @@ const ForhåndsvarselForm = (props: {
         sakId: props.sakId,
         revurderingId: props.revurdering.id,
         seksjon: RevurderingSeksjoner.Oppsummering,
-        steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+        steg: RevurderingOppsummeringSteg.SendTilAttestering,
     });
 
     const handleSubmit = (values: ForhåndsvarselFormData) => {
