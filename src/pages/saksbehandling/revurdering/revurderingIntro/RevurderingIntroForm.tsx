@@ -82,7 +82,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                     : null,
                 tilOgMed: props.revurdering?.periode.tilOgMed
                     ? DateFns.parseISO(props.revurdering.periode.tilOgMed)
-                    : props.periodeConfig.tilOgMed.max,
+                    : null,
             },
             årsak: getInitialÅrsak(props.revurdering?.årsak),
             begrunnelse: props.revurdering?.begrunnelse ?? null,
