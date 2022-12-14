@@ -7,6 +7,7 @@ export default {
     'registreringAvUtenlandsopphold.form.dokumentasjon.label': 'Dokumentasjon',
     'registreringAvUtenlandsopphold.form.dokumentasjon.defaultValue.velgTypeDokumentasjon': 'Velg type dokumentasjon',
     'registreringAvUtenlandsopphold.form.journalpostId.label': 'Journalpost-id',
+    'registreringAvUtenlandsopphold.form.begrunnelse.label': 'Begrunnelse',
 
     'registreringAvUtenlandsopphold.form.button.journalpostId.fjern': 'Fjern journalpostId',
     'registreringAvUtenlandsopphold.form.button.journalpostId.leggTil': 'Legg til journalpost-id',
@@ -30,5 +31,6 @@ export default {
     'oppsummeringAvRegistrertUtenlandsopphold.tilOgMed': 'Til og med',
     'oppsummeringAvRegistrertUtenlandsopphold.dokumentasjon': 'Dokumentasjon',
     'oppsummeringAvRegistrertUtenlandsopphold.journalposter': 'Journalposter',
+    'oppsummeringAvRegistrertUtenlandsopphold.begrunnelse': 'Begrunnelse',
     'oppsummeringAvRegistrertUtenlandsopphold.knapp.endre': 'Endre',
 };

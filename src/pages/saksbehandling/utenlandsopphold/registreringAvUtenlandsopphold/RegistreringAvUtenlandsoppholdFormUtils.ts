@@ -13,6 +13,7 @@ export interface RegisteringAvUtenlandsoppholdFormData {
     periode: NullablePeriode<Date>;
     dokumentasjon: Nullable<UtenlandsoppholdDokumentasjon>;
     journalposter: Array<{ journalpostId: Nullable<string> }>;
+    begrunnelse: Nullable<string>;
 }
 
 export const registrertUtenlandsoppholdTilFormDataEllerDefault = (
@@ -29,6 +30,7 @@ export const registrertUtenlandsoppholdTilFormDataEllerDefault = (
                   journalpostId: it,
               }))
             : [],
+        begrunnelse: registrertUtenlandsopphold?.begrunnelse || null,
     };
 };
 
@@ -45,6 +47,7 @@ export const registrerUtenlandsoppholdFormDataTilRegistrerRequest = (arg: {
     dokumentasjon: arg.data.dokumentasjon!,
     journalposter: arg.data.journalposter.map((it) => it.journalpostId!),
     saksversjon: arg.saksversjon,
+    begrunnelse: arg.data.begrunnelse,
 });
 
 export const registrerUtenlandsoppholdFormDataTilOppdaterRequest = (arg: {
@@ -78,4 +81,5 @@ export const registeringAvUtenlandsoppholdFormSchema = yup.object<RegisteringAvU
         )
         .notRequired()
         .defined(),
+    begrunnelse: yup.string().nullable().defined(),
 });

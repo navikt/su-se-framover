@@ -1,3 +1,5 @@
+import { Nullable } from '~src/lib/types';
+
 import { Periode } from './Periode';
 
 export interface RegistrerteUtenlandsopphold {
@@ -16,6 +18,7 @@ export interface RegistrertUtenlandsopphold {
     versjon: number;
     antallDager: number;
     erAnnullert: boolean;
+    begrunnelse: Nullable<string>;
 }
 
 export enum UtenlandsoppholdDokumentasjon {
@@ -30,6 +33,7 @@ export interface RegistrerUtenlandsoppholdRequest {
     journalposter: string[];
     dokumentasjon: UtenlandsoppholdDokumentasjon;
     saksversjon: number;
+    begrunnelse: Nullable<string>;
 }
 
 export interface OppdaterRegistrertUtenlandsoppholdRequest {
@@ -39,6 +43,7 @@ export interface OppdaterRegistrertUtenlandsoppholdRequest {
     dokumentasjon: UtenlandsoppholdDokumentasjon;
     saksversjon: number;
     oppdatererVersjon: number;
+    begrunnelse: Nullable<string>;
 }
 
 export interface AnnullerRegistrertUtenlandsoppholdRequest {

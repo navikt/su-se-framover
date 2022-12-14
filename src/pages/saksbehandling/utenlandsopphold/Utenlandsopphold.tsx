@@ -5,10 +5,10 @@ import { useOutletContext } from 'react-router-dom';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 
-import OppsummeringAvRegistrerteUtenlandsopphold from './OppsummeringAvRegistrerteUtenlandsopphold';
-import RegistreringAvUtenlandsopphold from './RegistreringAvUtenlandsopphold';
-import styles from './RegistreringAvUtenlandsopphold.module.less';
+import OppsummeringAvRegistrerteUtenlandsopphold from './oppsummeringAvRegistrertUtenlandsopphold/OppsummeringAvRegistrerteUtenlandsopphold';
+import RegistreringAvUtenlandsopphold from './registreringAvUtenlandsopphold/RegistreringAvUtenlandsopphold';
 import messages from './Utenlandsopphold-nb';
+import styles from './Utenlandsopphold.module.less';
 
 const Utenlandsopphold = () => {
     const { sak } = useOutletContext<SaksoversiktContext>();

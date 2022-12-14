@@ -1,0 +1,78 @@
+@import '~/src/styles/variables.less';
+
+.oppsummeringContentContainer {
+    display: flex;
+    gap: @spacing;
+}
+
+.filterContainer {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+    background: var(--a-gray-200);
+    padding: @spacing-xs @spacing @spacing;
+}
+
+.accordion {
+    min-width: 50rem;
+    max-width: 50rem;
+}
+
+.accordionHeader {
+    > :first-child {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.warningOgAntallDagerContainer {
+    display: flex;
+    gap: @spacing-xs;
+}
+
+//hacker inn !important da vi vil mest sannsynlig vise fargen selv om den er åpen
+.grønn {
+    background-color: var(--a-green-100) !important;
+}
+
+.gul {
+    background-color: var(--a-orange-100) !important;
+}
+
+.rød {
+    background-color: var(--a-red-100) !important;
+}
+
+.registrertUtenlandsoppholdContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
+.utenlandsoppholdMetadataContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+}
+
+.utenlandsoppholdPeriodecontainer {
+    display: grid;
+    grid-template-columns: repeat(2, 25%);
+}
+
+.journalposterContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.endreKnappContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: @spacing;
+}
