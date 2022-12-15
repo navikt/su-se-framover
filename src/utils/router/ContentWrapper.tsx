@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { ErrorCode } from '~src/api/apiClient';
 import { LOGIN_URL } from '~src/api/authUrl';
 import { FeatureToggle } from '~src/api/featureToggleApi';
-import Header from '~src/components/header/Header';
+import SuHeader from '~src/components/header/SuHeader';
 import { UserProvider } from '~src/context/userContext';
 import * as meSlice from '~src/features/me/me.slice';
 import { useFeatureToggle } from '~src/lib/featureToggles';
@@ -36,7 +36,7 @@ export const ContentWrapper: React.FC = (props) => {
             <a href="#main-content" className="sr-only sr-only-focusable">
                 Hopp til innhold
             </a>
-            <Header
+            <SuHeader
                 user={pipe(
                     loggedInUser,
                     RemoteData.getOrElse<unknown, LoggedInUser | null>(() => null)

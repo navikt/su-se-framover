@@ -6,7 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { LoggedInUser, Rolle } from '~src/types/LoggedInUser';
 
-import messages from './header-nb';
+import messages from './SuHeader-nb';
 
 interface Props {
     user: LoggedInUser | null;
@@ -23,9 +23,7 @@ const SuHeader = (props: Props) => {
             <div style={{ display: 'flex' }}>
                 <Header.Title href="/">{formatMessage('title')}</Header.Title>
                 {isLocal && <Header.Title href="/saksoversikt">Til saksoversikt (local)</Header.Title>}
-                {isLocal && (
-                    <Header.Title href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Dev tools (local)</Header.Title>
-                )}
+                {isLocal && <Header.Title href={Routes.devTools.createURL()}>Dev tools (local)</Header.Title>}
             </div>
             {props.user && (
                 <div style={{ display: 'flex' }}>

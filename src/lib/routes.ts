@@ -31,6 +31,12 @@ export const drift: Route<never> = {
     createURL: () => '/drift/',
 };
 
+export const devTools: Route<never> = {
+    path: '/devTools/',
+    absPath: '/devTools/',
+    createURL: () => '/devTools/',
+};
+
 //-------------Søknad--------------------------------
 export const soknad: Route<never> = {
     path: '/soknad/*',
