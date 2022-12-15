@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Button, Heading, Modal, TextField } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Modal, Radio, RadioGroup, TextField } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import { Nullable } from '~src/lib/types';
 import styles from './DevTools.module.less';
 const DevToolsPage = () => {
     const [nySøknadModalÅpen, setNySøknadModalÅpen] = useState<boolean>(false);
+    const [nyIverksattSøknadsbehandlingModalÅpen, setNyIverksattSøknadsbehandlingModalÅpen] = useState<boolean>(false);
 
     return (
         <div className={styles.pageContainer}>
@@ -21,10 +22,23 @@ const DevToolsPage = () => {
                 <Button variant="secondary" type="button" onClick={() => setNySøknadModalÅpen(true)}>
                     Ny søknad
                 </Button>
+                <Button
+                    variant="secondary"
+                    type="button"
+                    onClick={() => setNyIverksattSøknadsbehandlingModalÅpen(true)}
+                >
+                    Ny iverksatt søknadsbehandling
+                </Button>
             </div>
 
             {nySøknadModalÅpen && (
                 <NySøknadModal åpen={nySøknadModalÅpen} onClose={() => setNySøknadModalÅpen(false)} />
+            )}
+            {nyIverksattSøknadsbehandlingModalÅpen && (
+                <NyIverksattSøknadsbehandlingModal
+                    åpen={nySøknadModalÅpen}
+                    onClose={() => setNySøknadModalÅpen(false)}
+                />
             )}
         </div>
     );
@@ -69,6 +83,58 @@ const NySøknadModal = (props: { åpen: boolean; onClose: () => void }) => {
                     </Button>
                 </form>
                 {RemoteData.isFailure(nySøknadStatus) && <ApiErrorAlert error={nySøknadStatus.error} />}
+            </Modal.Content>
+        </Modal>
+    );
+};
+
+const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: () => void }) => {
+    const [lagNyIverksattSøknadsbehandlingStatus, lagNyIverksattSøknadsbehandling] = useAsyncActionCreator(
+        DeveloperActions.sendUføresøknad
+    );
+    const navigate = useNavigate();
+    const [fnr, setFnr] = useState<Nullable<string>>(null);
+    const [typeSøknadsbehandling, setTypeSøknadsbehandling] = useState<Nullable<'avslag' | 'innvilget'>>(null);
+
+    console.log(typeSøknadsbehandling, setTypeSøknadsbehandling);
+
+    return (
+        <Modal open={props.åpen} onClose={props.onClose}>
+            <Modal.Content>
+                <Heading size="medium" spacing>
+                    Ny iverksatt søknadsbehandling
+                </Heading>
+
+                <form className={styles.nySøknadForm}>
+                    <RadioGroup legend={'Velg type søknadsbehandling'}>
+                        <Radio value={'avslag'}>Avslag</Radio>
+                        <Radio value={'innvilget'}>Innvilget</Radio>
+                    </RadioGroup>
+
+                    <TextField
+                        label={'Skriv inn fødselsnummer'}
+                        onChange={(e) => setFnr(e.target.value)}
+                        description={
+                            <div>
+                                <BodyShort>Lager ny sak dersom det ikke eksisterer en fra før</BodyShort>
+                                <BodyShort>
+                                    Ved lokal utvikling blir det satt et tilfeldig (mest sannsynlig ugyldig fnr) dersom
+                                    det ikke blir sendt med fnr
+                                </BodyShort>
+                            </div>
+                        }
+                    />
+
+                    <Button
+                        type="button"
+                        loading={RemoteData.isPending(lagNyIverksattSøknadsbehandlingStatus)}
+                        onClick={() =>
+                            lagNyIverksattSøknadsbehandling({ fnr: fnr }, (res) => {
+                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.søknad.sakId }));
+                            })
+                        }
+                    ></Button>
+                </form>
             </Modal.Content>
         </Modal>
     );
