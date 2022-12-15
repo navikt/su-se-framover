@@ -263,6 +263,8 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Vurdering av vilkår må ha samme resultat for hele behandlingsperioden',
     [ApiErrorCode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
         'Vurdering av vilkår må gjøres innenfor behandlingsperioden',
+    [ApiErrorCode.ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_SØKNADSBEHANDLING]:
+        'Åpent kravgrunnlag må håndteres før ny søknadsbehandling',
     [ApiErrorCode.VURDERINGSPERIODER_MANGLER]: 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
     [ApiErrorCode.ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER]:
         'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',

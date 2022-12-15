@@ -5,7 +5,7 @@ import BeregningOgSimulering from '~src/components/beregningOgSimulering/Beregni
 import simulertUtbetaling from '~src/components/beregningOgSimulering/simulering/simulering-nb';
 import { useI18n } from '~src/lib/i18n';
 import { Oppsummeringsfelt } from '~src/pages/søknad/steg/oppsummering/components/Oppsummeringsfelt';
-import { InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurdering';
+import { InformasjonsRevurderingStatus, Revurdering, SimuleringForAvkortingsvarsel } from '~src/types/Revurdering';
 import { formatPeriode } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { harBeregninger, harSimulering, hentAvkortingFraRevurdering } from '~src/utils/revurdering/revurderingUtils';
@@ -47,36 +47,39 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
                 )
             }
             childrenUnderBeregning={
-                simuleringForAvkortingsvarsel && (
-                    <div className={styles.avkorting}>
-                        <Heading level="3" size="small" spacing>
-                            {formatMessage('heading.avkorting')}
-                        </Heading>
-                        <div className={styles.avkortingContent}>
-                            <Oppsummeringsfelt
-                                label={formatMessage('avkorting.total')}
-                                verdi={formatCurrency(
-                                    simuleringForAvkortingsvarsel.totalOppsummering.sumFeilutbetaling
-                                )}
-                            />
-                            <ul className={styles.avkortingListe}>
-                                {simuleringForAvkortingsvarsel.periodeOppsummering.map((periode) => (
-                                    <li key={periode.fraOgMed}>
-                                        <p>
-                                            {formatPeriode({
-                                                fraOgMed: periode.fraOgMed,
-                                                tilOgMed: periode.tilOgMed,
-                                            })}
-                                        </p>
-                                        <p>{`${formatCurrency(periode.sumFeilutbetaling)} ${formatMessage('iMnd')}`}</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                )
+                simuleringForAvkortingsvarsel && <AvkortingRevurdering avkorting={simuleringForAvkortingsvarsel} />
             }
         />
+    );
+};
+
+export const AvkortingRevurdering = (props: { avkorting: SimuleringForAvkortingsvarsel }) => {
+    const { formatMessage } = useI18n({ messages: { ...messages, ...simulertUtbetaling } });
+    return (
+        <div className={styles.avkorting}>
+            <Heading level="3" size="small" spacing>
+                {formatMessage('heading.avkorting')}
+            </Heading>
+            <div className={styles.avkortingContent}>
+                <Oppsummeringsfelt
+                    label={formatMessage('avkorting.total')}
+                    verdi={formatCurrency(props.avkorting.totalOppsummering.sumFeilutbetaling)}
+                />
+                <ul className={styles.avkortingListe}>
+                    {props.avkorting.periodeOppsummering.map((periode) => (
+                        <li key={periode.fraOgMed}>
+                            <p>
+                                {formatPeriode({
+                                    fraOgMed: periode.fraOgMed,
+                                    tilOgMed: periode.tilOgMed,
+                                })}
+                            </p>
+                            <p>{`${formatCurrency(periode.sumFeilutbetaling)} ${formatMessage('iMnd')}`}</p>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
     );
 };
 

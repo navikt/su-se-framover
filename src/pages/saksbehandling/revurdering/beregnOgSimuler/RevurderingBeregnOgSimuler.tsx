@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { BeregnOgSimuler } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import BeregningOgSimulering from '~src/components/beregningOgSimulering/BeregningOgSimulering';
 import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
+import Beregningblokk from '~src/components/revurdering/oppsummering/beregningblokk/Beregningblokk';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -101,11 +101,7 @@ const RevurderingBeregnOgSimuler = (props: {
                                     res.revurdering.simulering,
                                     res.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT
                                 ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
-                            <BeregningOgSimulering
-                                beregning={res.revurdering.beregning}
-                                simulering={res.revurdering.simulering}
-                                kompakt
-                            />
+                            <Beregningblokk revurdering={res.revurdering} />
                             {res.feilmeldinger.length > 0 && <UtfallSomIkkeStøttes feilmeldinger={res.feilmeldinger} />}
                             {res.varselmeldinger.length > 0 && (
                                 <UtfallSomIkkeStøttes feilmeldinger={res.varselmeldinger} infoMelding />

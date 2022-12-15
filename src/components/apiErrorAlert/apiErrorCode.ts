@@ -204,6 +204,7 @@ export enum ApiErrorCode {
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
     VURDERINGSPERIODER_MANGLER = 'vurderingsperioder_mangler',
+    ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_SØKNADSBEHANDLING = 'åpent_kravgrunnlag_må_håndteres_før_ny_søknadsbehandling',
     ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER = 'åpen_revurdering_gjenopptak_eksisterer',
     ÅPEN_REVURDERING_STANS_EKSISTERER = 'åpen_revurdering_stans_eksisterer',
     INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'inget_skattegrunnlag_for_gitt_fnr_og_år',
