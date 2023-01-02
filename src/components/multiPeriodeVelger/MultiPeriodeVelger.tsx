@@ -9,7 +9,6 @@ import {
     FieldErrors,
     FieldValues,
     Path,
-    UnPackAsyncDefaultValues,
     useFieldArray,
     useWatch,
 } from 'react-hook-form';
@@ -44,11 +43,11 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
     const { formatMessage } = useI18n({ messages });
 
     const { fields, append, remove, update } = useFieldArray({
-        name: props.name as ArrayPath<UnPackAsyncDefaultValues<T>>,
+        name: props.name as ArrayPath<T>,
         control: props.controller,
     });
 
-    const watch = useWatch({ name: props.name as Path<UnPackAsyncDefaultValues<T>>, control: props.controller });
+    const watch = useWatch({ name: props.name as Path<T>, control: props.controller });
 
     return (
         <div className={props.className}>
@@ -58,7 +57,7 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                     const periodeInput = (
                         <Controller
                             control={props.controller}
-                            name={`${props.name}.${idx}.periode` as Path<UnPackAsyncDefaultValues<T>>}
+                            name={`${props.name}.${idx}.periode` as Path<T>}
                             render={({ field, fieldState }) => (
                                 <PeriodeForm
                                     name={`${props.name}.${idx}.periode`}
