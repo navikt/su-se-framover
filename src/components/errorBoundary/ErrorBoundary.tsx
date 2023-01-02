@@ -7,8 +7,12 @@ import SkjemaelementFeilmelding from '../formElements/SkjemaelementFeilmelding';
 
 import * as styles from './errorBoundary.module.less';
 
-class ErrorBoundary extends React.Component<unknown, { hasError: boolean; error?: Error; eventId?: string }> {
-    constructor(props: unknown) {
+interface Props {
+    children: React.ReactNode;
+}
+
+class ErrorBoundary extends React.Component<Props, { hasError: boolean; error?: Error; eventId?: string }> {
+    constructor(props: Props) {
         super(props);
         this.state = { hasError: false };
     }

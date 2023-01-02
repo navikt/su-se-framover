@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import * as styles from '~src/root.module.less';
 import { LoggedInUser } from '~src/types/LoggedInUser';
 
-export const ContentWrapper: React.FC = (props) => {
+export const ContentWrapper = (props: { children: React.ReactNode }) => {
     const loggedInUser = useAppSelector((s) => s.me.me);
 
     const dispatch = useAppDispatch();
