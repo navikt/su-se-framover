@@ -36,8 +36,8 @@ const DevToolsPage = () => {
             )}
             {nyIverksattSøknadsbehandlingModalÅpen && (
                 <NyIverksattSøknadsbehandlingModal
-                    åpen={nySøknadModalÅpen}
-                    onClose={() => setNySøknadModalÅpen(false)}
+                    åpen={nyIverksattSøknadsbehandlingModalÅpen}
+                    onClose={() => setNyIverksattSøknadsbehandlingModalÅpen(false)}
                 />
             )}
         </div>
@@ -90,13 +90,11 @@ const NySøknadModal = (props: { åpen: boolean; onClose: () => void }) => {
 
 const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: () => void }) => {
     const [lagNyIverksattSøknadsbehandlingStatus, lagNyIverksattSøknadsbehandling] = useAsyncActionCreator(
-        DeveloperActions.sendUføresøknad
+        DeveloperActions.sendIverksattSøknadsbehandling
     );
     const navigate = useNavigate();
     const [fnr, setFnr] = useState<Nullable<string>>(null);
     const [typeSøknadsbehandling, setTypeSøknadsbehandling] = useState<Nullable<'avslag' | 'innvilget'>>(null);
-
-    console.log(typeSøknadsbehandling, setTypeSøknadsbehandling);
 
     return (
         <Modal open={props.åpen} onClose={props.onClose}>
@@ -106,7 +104,7 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
                 </Heading>
 
                 <form className={styles.nySøknadForm}>
-                    <RadioGroup legend={'Velg type søknadsbehandling'}>
+                    <RadioGroup legend={'Velg type søknadsbehandling'} onChange={(e) => setTypeSøknadsbehandling(e)}>
                         <Radio value={'avslag'}>Avslag</Radio>
                         <Radio value={'innvilget'}>Innvilget</Radio>
                     </RadioGroup>
@@ -129,12 +127,17 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
                         type="button"
                         loading={RemoteData.isPending(lagNyIverksattSøknadsbehandlingStatus)}
                         onClick={() =>
-                            lagNyIverksattSøknadsbehandling({ fnr: fnr }, (res) => {
+                            lagNyIverksattSøknadsbehandling({ fnr: fnr, resultat: typeSøknadsbehandling! }, (res) => {
                                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.søknad.sakId }));
                             })
                         }
-                    ></Button>
+                    >
+                        Send inn
+                    </Button>
                 </form>
+                {RemoteData.isFailure(lagNyIverksattSøknadsbehandlingStatus) && (
+                    <ApiErrorAlert error={lagNyIverksattSøknadsbehandlingStatus.error} />
+                )}
             </Modal.Content>
         </Modal>
     );
