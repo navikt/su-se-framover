@@ -20,10 +20,17 @@ export const sendUføresøknad = createAsyncThunk<
 
 export const sendIverksattSøknadsbehandling = createAsyncThunk<
     Søknadsbehandling,
-    { fnr: Nullable<string>; resultat: 'avslag' | 'innvilget' },
+    {
+        fnr: Nullable<string>;
+        resultat: 'avslag' | 'innvilget';
+        stønadsperiode: {
+            fraOgMed: string;
+            tilOgMed: string;
+        };
+    },
     { rejectValue: ApiError }
->('innsending/fetch', async ({ fnr, resultat }, thunkApi) => {
-    const res = await DeveloperApi.sendIverksattSøknadsbehandling(fnr, resultat);
+>('innsending/fetch', async ({ fnr, resultat, stønadsperiode }, thunkApi) => {
+    const res = await DeveloperApi.sendIverksattSøknadsbehandling(fnr, resultat, stønadsperiode);
     if (res.status === 'ok') {
         return res.data;
     }

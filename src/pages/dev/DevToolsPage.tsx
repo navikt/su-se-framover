@@ -1,15 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Button, Heading, Modal, Radio, RadioGroup, TextField } from '@navikt/ds-react';
+import * as DateFns from 'date-fns';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { PeriodeForm } from '~src/components/formElements/FormElements';
 import * as DeveloperActions from '~src/features/DeveloperActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 
 import styles from './DevTools.module.less';
+
 const DevToolsPage = () => {
     const [nySøknadModalÅpen, setNySøknadModalÅpen] = useState<boolean>(false);
     const [nyIverksattSøknadsbehandlingModalÅpen, setNyIverksattSøknadsbehandlingModalÅpen] = useState<boolean>(false);
@@ -94,7 +97,11 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
     );
     const navigate = useNavigate();
     const [fnr, setFnr] = useState<Nullable<string>>(null);
-    const [typeSøknadsbehandling, setTypeSøknadsbehandling] = useState<Nullable<'avslag' | 'innvilget'>>(null);
+    const [stønadsperiode, setStønadsperiode] = useState<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
+        fraOgMed: new Date('01-01-2021'),
+        tilOgMed: new Date('12-31-2021'),
+    });
+    const [typeSøknadsbehandling, setTypeSøknadsbehandling] = useState<'avslag' | 'innvilget'>('innvilget');
 
     return (
         <Modal open={props.åpen} onClose={props.onClose}>
@@ -104,10 +111,28 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
                 </Heading>
 
                 <form className={styles.nySøknadForm}>
-                    <RadioGroup legend={'Velg type søknadsbehandling'} onChange={(e) => setTypeSøknadsbehandling(e)}>
+                    <RadioGroup
+                        legend={'Velg type søknadsbehandling'}
+                        onChange={(e) => setTypeSøknadsbehandling(e)}
+                        value={typeSøknadsbehandling}
+                    >
                         <Radio value={'avslag'}>Avslag</Radio>
                         <Radio value={'innvilget'}>Innvilget</Radio>
                     </RadioGroup>
+
+                    <PeriodeForm
+                        value={stønadsperiode}
+                        name={'stønadsperiode'}
+                        onChange={setStønadsperiode}
+                        minDate={{
+                            fraOgMed: new Date('01-01-2021'),
+                            tilOgMed: undefined,
+                        }}
+                        maxDate={{
+                            fraOgMed: undefined,
+                            tilOgMed: undefined,
+                        }}
+                    />
 
                     <TextField
                         label={'Skriv inn fødselsnummer'}
@@ -126,11 +151,25 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
                     <Button
                         type="button"
                         loading={RemoteData.isPending(lagNyIverksattSøknadsbehandlingStatus)}
-                        onClick={() =>
-                            lagNyIverksattSøknadsbehandling({ fnr: fnr, resultat: typeSøknadsbehandling! }, (res) => {
-                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.søknad.sakId }));
-                            })
-                        }
+                        onClick={() => {
+                            return lagNyIverksattSøknadsbehandling(
+                                {
+                                    fnr: fnr,
+                                    resultat: typeSøknadsbehandling,
+                                    stønadsperiode: {
+                                        fraOgMed: DateFns.formatISO(stønadsperiode.fraOgMed!, {
+                                            representation: 'date',
+                                        }),
+                                        tilOgMed: DateFns.formatISO(DateFns.endOfMonth(stønadsperiode.tilOgMed!), {
+                                            representation: 'date',
+                                        }),
+                                    },
+                                },
+                                (res) => {
+                                    navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.søknad.sakId }));
+                                }
+                            );
+                        }}
                     >
                         Send inn
                     </Button>

@@ -16,7 +16,11 @@ export async function sendUføresøknad(fnr: Nullable<string>): Promise<ApiClien
 
 export async function sendIverksattSøknadsbehandling(
     fnr: Nullable<string>,
-    resultat: 'avslag' | 'innvilget'
+    resultat: 'avslag' | 'innvilget',
+    stønadsperiode: {
+        fraOgMed: string;
+        tilOgMed: string;
+    }
 ): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: '/søknadsbehandling/dev/ny/iverksatt',
@@ -24,6 +28,8 @@ export async function sendIverksattSøknadsbehandling(
         body: {
             fnr: fnr,
             resultat: resultat,
+            fraOgMed: stønadsperiode.fraOgMed,
+            tilOgMed: stønadsperiode.tilOgMed,
         },
     });
 }
