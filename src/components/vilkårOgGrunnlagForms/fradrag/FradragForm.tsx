@@ -37,7 +37,7 @@ interface Props<T extends FieldValues> {
 const FradragForm = <T extends FieldValues>(props: Props<T>) => {
     const { formatMessage } = useI18n({ messages });
 
-    const watch = useWatch({ control: props.control });
+    const watch = useWatch({ name: props.name as Path<UnPackAsyncDefaultValues<T>>, control: props.control });
     const { fields, append, remove, update } = useFieldArray({
         name: props.name as ArrayPath<UnPackAsyncDefaultValues<T>>,
         control: props.control,
@@ -48,6 +48,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
             <ul>
                 {fields.map((el, idx) => {
                     const watchedFradrag = watch[idx];
+                    console.log(watchedFradrag);
                     const partialFradragNavn = `${props.name}.${idx}` as `fradrag.${number}`;
 
                     return (
@@ -169,7 +170,10 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                                 className={styles.checkbox}
                                                 name={field.name}
                                                 checked={field.value}
-                                                onChange={field.onChange}
+                                                onChange={(e) => {
+                                                    console.log(e.target.checked);
+                                                    field.onChange(e.target.checked);
+                                                }}
                                             >
                                                 {formatMessage('fradrag.delerAvPeriode')}
                                             </Checkbox>
