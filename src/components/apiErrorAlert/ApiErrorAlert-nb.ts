@@ -67,6 +67,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FRADRAG_UGYLDIG_FRADRAGSTYPE]: 'Ugyldig fradragstype',
     [ApiErrorCode.FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE]: 'Fradragsperioden er utenfor bosituasjonsperioden',
     [ApiErrorCode.FRITEKST_FOR_STATSBORGERSKAP_ER_IKKE_UTFYLT]: 'Fyll ut hvilke land søker har statsborgerskap i',
+    [ApiErrorCode.GJENOPPTAK_FØRER_TIL_FEILUTBETALING]: 'Gjenopptak fører til feilutbetaling',
     [ApiErrorCode.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'G-regulering kan ikke føre til opphør',
     [ApiErrorCode.GENERERER_BREV_FRA_UGYLDIG_TILSTAND]: 'Klagen er i en tilstand der generering av brev ikke støttes',
     [ApiErrorCode.HAR_ALLEREDE_EN_AKTIV_BEHANDLING]:

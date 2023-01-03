@@ -54,6 +54,7 @@ export enum ApiErrorCode {
     FRADRAG_UGYLDIG_FRADRAGSTYPE = 'fradrag_ugyldig_fradragstype',
     FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE = 'fradragsperiode_utenfor_bosituasjonperiode',
     FRITEKST_FOR_STATSBORGERSKAP_ER_IKKE_UTFYLT = 'fritekst_for_statsborgerskap_er_ikke_utfylt',
+    GJENOPPTAK_FØRER_TIL_FEILUTBETALING = 'gjenopptak_fører_til_feilutbetaling',
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     GENERERER_BREV_FRA_UGYLDIG_TILSTAND = 'genererer_brev_fra_ugyldig_tilstand',
     HAR_ALLEREDE_EN_AKTIV_BEHANDLING = 'har_allerede_en_aktiv_behandling',
