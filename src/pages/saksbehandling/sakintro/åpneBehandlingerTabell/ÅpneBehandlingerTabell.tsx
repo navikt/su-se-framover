@@ -353,8 +353,8 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
                     size="small"
                     href={Routes.revurderingSeksjonSteg.createURL({
                         sakId: props.sakId,
-                        seksjon: finnNesteRevurderingsteg(props.r.informasjonSomRevurderes).seksjon,
-                        steg: finnNesteRevurderingsteg(props.r.informasjonSomRevurderes).steg,
+                        seksjon: finnNesteRevurderingsteg(props.r).seksjon,
+                        steg: finnNesteRevurderingsteg(props.r).steg,
                         revurderingId: props.r.id,
                     })}
                 >

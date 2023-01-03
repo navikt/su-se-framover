@@ -37,6 +37,7 @@ import {
 } from '~src/types/Revurdering';
 import { Simulering } from '~src/types/Simulering';
 import { Vilkårstatus } from '~src/types/Vilkår';
+
 export const erInformasjonsRevurdering = (r: Revurdering): r is InformasjonsRevurdering => {
     return 'informasjonSomRevurderes' in r;
 };
@@ -205,24 +206,27 @@ export const grunnlagOgVilkårStegTilInformasjonSomRevurderes = (
     }
 };
 
-export const finnNesteRevurderingsteg = (
-    informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>
-) => {
-    const keys = Object.keys(informasjonSomRevurderes);
+export const finnNesteRevurderingsteg = (r: InformasjonsRevurdering) => {
+    const keys = Object.keys(r.informasjonSomRevurderes);
     if (keys.length === 0) {
         return { seksjon: RevurderingSeksjoner.Opprettelse, steg: RevurderingOpprettelseSteg.Periode };
     }
 
-    const førsteIkkeVurderteSteg = revurderingGrunnlagOgVilkårRekkefølge.find((r) => {
-        const i = grunnlagOgVilkårStegTilInformasjonSomRevurderes(r);
-        return i && informasjonSomRevurderes[i] === Vurderingstatus.IkkeVurdert;
+    const førsteIkkeVurderteSteg = revurderingGrunnlagOgVilkårRekkefølge.find((grunnlagOgVilkår) => {
+        const i = grunnlagOgVilkårStegTilInformasjonSomRevurderes(grunnlagOgVilkår);
+        return i && r.informasjonSomRevurderes[i] === Vurderingstatus.IkkeVurdert;
     });
 
     return førsteIkkeVurderteSteg
         ? { seksjon: RevurderingSeksjoner.GrunnlagOgVilkår, steg: førsteIkkeVurderteSteg }
-        : {
+        : erRevurderingSimulert(r)
+        ? {
               seksjon: RevurderingSeksjoner.Oppsummering,
               steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+          }
+        : {
+              seksjon: RevurderingSeksjoner.BeregningOgSimulering,
+              steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
           };
 };
 
