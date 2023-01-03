@@ -20,7 +20,7 @@ function setup() {
             defaultConfig: '@parcel/config-default',
             shouldAutoInstall: false,
             shouldDisableCache: true,
-            logLevel: 'verbose',
+            logLevel: 'info',
             env: process.env,
             serveOptions: {
                 port: 1234,

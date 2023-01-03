@@ -1,8 +1,9 @@
 import { Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
+import { PropsWithChildren } from 'react';
 
-interface SkjemaelementFeilmeldingProps {
+interface SkjemaelementFeilmeldingProps extends PropsWithChildren {
     className?: string;
     children: React.ReactNode;
 }

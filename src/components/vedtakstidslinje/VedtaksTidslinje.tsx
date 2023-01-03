@@ -1,10 +1,7 @@
 import { Collapse } from '@navikt/ds-icons';
 import { Button, Popover } from '@navikt/ds-react';
-import * as HelseFrontend from '@navikt/helse-frontend-tidslinje';
 import classNames from 'classnames';
 import React, { useRef, useState } from 'react';
-
-import '@navikt/helse-frontend-tidslinje/lib/main.css';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
@@ -12,6 +9,8 @@ import { VedtakType } from '~src/types/Vedtak';
 import { VedtakPåTidslinje, VedtakPåTidslinjeType } from '~src/types/VedtakPåTidslinje';
 
 import OppsummeringAvVedtak from '../oppsummeringAvVedtak/OppsummeringAvVedtak';
+import { Tidslinje } from '../tidslinje/Tidslinje';
+import { Periode as TidslinjePeriode } from '../tidslinje/types.external';
 
 import messages from './VedtaksTidslinje-nb';
 import styles from './vedtaksTidslinje.module.less';
@@ -31,8 +30,8 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
 
     return (
         <div className={styles.vedtakstidslinjeContainer}>
-            <HelseFrontend.Tidslinje
-                onSelectPeriode={(periode: HelseFrontend.Periode) => {
+            <Tidslinje
+                onSelectPeriode={(periode: TidslinjePeriode) => {
                     setVedtakIdPåKlikketPeriode(
                         sorterteVedtaker.find((vPåLinje) => vPåLinje.vedtakId === periode.id)?.vedtakId ?? null
                     );
