@@ -4,6 +4,7 @@ import * as React from 'react';
 
 interface SkjemaelementFeilmeldingProps {
     className?: string;
+    children: React.ReactNode;
 }
 
 const SkjemaelementFeilmelding: React.FC<SkjemaelementFeilmeldingProps> = ({ className, children }) => {

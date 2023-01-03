@@ -196,7 +196,7 @@ const Sakintro = () => {
     );
 };
 
-const NyBehandlingVelger: React.FC = (props) => {
+const NyBehandlingVelger = (props: { children: React.ReactNode }) => {
     const { formatMessage } = useI18n({ messages });
     const [anchorEl, setAnchorEl] = useState<Nullable<HTMLElement>>(null);
 

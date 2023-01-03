@@ -6,6 +6,7 @@ import * as styles from './søknadSpørsmålsgruppe.module.less';
 
 type SøknadSpørsmålsgruppeProps = {
     className?: string;
+    children: React.ReactNode;
 } & (
     | {
           legend: string;

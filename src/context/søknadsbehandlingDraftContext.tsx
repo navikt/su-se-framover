@@ -20,7 +20,7 @@ const Context = createContext<SøknadsbehandlingDraftContext>({
     },
 });
 
-export const SøknadsbehandlingDraftProvider: React.FC = (props) => {
+export const SøknadsbehandlingDraftProvider = (props: { children: React.ReactNode }) => {
     const [value, setValue] = useState(initialDraft);
     return <Context.Provider value={{ value, setValue }}>{props.children}</Context.Provider>;
 };
