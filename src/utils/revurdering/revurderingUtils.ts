@@ -219,7 +219,7 @@ export const finnNesteRevurderingsteg = (r: InformasjonsRevurdering) => {
 
     return førsteIkkeVurderteSteg
         ? { seksjon: RevurderingSeksjoner.GrunnlagOgVilkår, steg: førsteIkkeVurderteSteg }
-        : erRevurderingSimulert(r)
+        : erRevurderingSimulert(r) || erRevurderingUnderkjent(r)
         ? erRevurderingTilbakekrevingsbehandling(r)
             ? erRevurderingTilbakekrevingIkkeAvgjort(r)
                 ? {
