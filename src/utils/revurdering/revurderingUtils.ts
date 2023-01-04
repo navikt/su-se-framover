@@ -217,21 +217,6 @@ export const finnNesteRevurderingsteg = (r: InformasjonsRevurdering) => {
         return i && r.informasjonSomRevurderes[i] === Vurderingstatus.IkkeVurdert;
     });
 
-    /*
-        return førsteIkkeVurderteSteg
-        ? { seksjon: RevurderingSeksjoner.GrunnlagOgVilkår, steg: førsteIkkeVurderteSteg }
-        : erRevurderingSimulert(r)
-        ? {
-              seksjon: RevurderingSeksjoner.Oppsummering,
-              steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
-          }
-        : {
-              seksjon: RevurderingSeksjoner.BeregningOgSimulering,
-              steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
-          };
-                
-    */
-
     return førsteIkkeVurderteSteg
         ? { seksjon: RevurderingSeksjoner.GrunnlagOgVilkår, steg: førsteIkkeVurderteSteg }
         : erRevurderingSimulert(r)
