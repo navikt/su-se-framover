@@ -8,7 +8,6 @@ import {
     Controller,
     FieldValues,
     Path,
-    UnPackAsyncDefaultValues,
     useFieldArray,
     UseFormSetValue,
     useWatch,
@@ -39,7 +38,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
 
     const watch = useWatch({ name: props.name as Path<UnPackAsyncDefaultValues<T>>, control: props.control });
     const { fields, append, remove, update } = useFieldArray({
-        name: props.name as ArrayPath<UnPackAsyncDefaultValues<T>>,
+        name: props.name as ArrayPath<T>,
         control: props.control,
     });
 
@@ -66,7 +65,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                     <div className={styles.fradragTypeOgBelopInputs}>
                                         <Controller
                                             control={props.control}
-                                            name={`${partialFradragNavn}.kategori` as Path<UnPackAsyncDefaultValues<T>>}
+                                            name={`${partialFradragNavn}.kategori` as Path<T>}
                                             render={({ field, fieldState }) => (
                                                 <Select
                                                     label={formatMessage('fradrag.type')}
@@ -95,7 +94,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                         />
                                         <Controller
                                             control={props.control}
-                                            name={`${partialFradragNavn}.beløp` as Path<UnPackAsyncDefaultValues<T>>}
+                                            name={`${partialFradragNavn}.beløp` as Path<T>}
                                             render={({ field, fieldState }) => (
                                                 <InputWithFollowText
                                                     tittel={formatMessage('fradrag.beløp')}
@@ -114,11 +113,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                     <div className={styles.spesifiserFradragsTypeContainer}>
                                         <Controller
                                             control={props.control}
-                                            name={
-                                                `${partialFradragNavn}.spesifisertkategori` as Path<
-                                                    UnPackAsyncDefaultValues<T>
-                                                >
-                                            }
+                                            name={`${partialFradragNavn}.spesifisertkategori` as Path<T>}
                                             render={({ field, fieldState }) => (
                                                 <TextField
                                                     label={formatMessage('fradrag.type.spesifiserFradrag')}
@@ -134,9 +129,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                     {(props.harEPS || watchedFradrag?.tilhørerEPS) && (
                                         <Controller
                                             control={props.control}
-                                            name={
-                                                `${partialFradragNavn}.tilhørerEPS` as Path<UnPackAsyncDefaultValues<T>>
-                                            }
+                                            name={`${partialFradragNavn}.tilhørerEPS` as Path<T>}
                                             render={({ field }) => (
                                                 <Checkbox
                                                     className={styles.checkbox}
@@ -151,7 +144,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                     )}
                                     <Controller
                                         control={props.control}
-                                        name={`${partialFradragNavn}.fraUtland` as Path<UnPackAsyncDefaultValues<T>>}
+                                        name={`${partialFradragNavn}.fraUtland` as Path<T>}
                                         render={({ field }) => (
                                             <Checkbox checked={!!field.value} className={styles.checkbox} {...field}>
                                                 {formatMessage('fradrag.checkbox.fraUtland')}
@@ -160,11 +153,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                     />
                                     <Controller
                                         control={props.control}
-                                        name={
-                                            `${partialFradragNavn}.visDelerAvPeriode` as Path<
-                                                UnPackAsyncDefaultValues<T>
-                                            >
-                                        }
+                                        name={`${partialFradragNavn}.visDelerAvPeriode` as Path<T>}
                                         render={({ field }) => (
                                             <Checkbox
                                                 className={styles.checkbox}
@@ -190,7 +179,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                 {watchedFradrag?.visDelerAvPeriode && (
                                     <Controller
                                         control={props.control}
-                                        name={`${partialFradragNavn}.periode` as Path<UnPackAsyncDefaultValues<T>>}
+                                        name={`${partialFradragNavn}.periode` as Path<T>}
                                         render={({ field }) => (
                                             <PeriodeForm
                                                 name={`${partialFradragNavn}.periode`}
@@ -239,7 +228,7 @@ interface InntektFraUtlandProps<T extends FieldValues> {
 export const InntektFraUtland = <T extends FieldValues>(props: InntektFraUtlandProps<T>) => {
     const { formatMessage } = useI18n({ messages });
     const splitName = props.name.split('.');
-    const fradragName = `${splitName[0]}.${splitName[1]}` as Path<UnPackAsyncDefaultValues<T>>;
+    const fradragName = `${splitName[0]}.${splitName[1]}` as Path<T>;
     const fradrag = useWatch({ name: fradragName, control: props.controller });
 
     const onFradragChange = (arg: { kurs: string; beløp: string }) => {
@@ -260,7 +249,7 @@ export const InntektFraUtland = <T extends FieldValues>(props: InntektFraUtlandP
         <div className={styles.utlandOgPeriodeContainer}>
             <Controller
                 control={props.controller}
-                name={`${props.name}.beløpIUtenlandskValuta` as Path<UnPackAsyncDefaultValues<T>>}
+                name={`${props.name}.beløpIUtenlandskValuta` as Path<T>}
                 render={({ field, fieldState }) => (
                     <TextField
                         label={formatMessage('fradrag.utenland.beløpIUtenlandskValuta')}
@@ -278,7 +267,7 @@ export const InntektFraUtland = <T extends FieldValues>(props: InntektFraUtlandP
             />
             <Controller
                 control={props.controller}
-                name={`${props.name}.valuta` as Path<UnPackAsyncDefaultValues<T>>}
+                name={`${props.name}.valuta` as Path<T>}
                 render={({ field, fieldState }) => (
                     <Select
                         label={formatMessage('fradrag.utenland.valuta')}
@@ -299,7 +288,7 @@ export const InntektFraUtland = <T extends FieldValues>(props: InntektFraUtlandP
             />
             <Controller
                 control={props.controller}
-                name={`${props.name}.kurs` as Path<UnPackAsyncDefaultValues<T>>}
+                name={`${props.name}.kurs` as Path<T>}
                 render={({ field, fieldState }) => (
                     <TextField
                         label={

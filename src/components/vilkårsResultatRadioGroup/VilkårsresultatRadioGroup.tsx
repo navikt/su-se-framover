@@ -1,6 +1,6 @@
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
-import { Control, Controller, FieldValues, Path, UnPackAsyncDefaultValues } from 'react-hook-form';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
 import { Vilkårstatus } from '~src/types/Vilkår';
@@ -26,7 +26,7 @@ const VilkårsResultatRadioGroup = <T extends FieldValues>(props: Props<T>) => {
         <div className={props.className}>
             <Controller
                 control={props.controller}
-                name={props.name as Path<UnPackAsyncDefaultValues<T>>}
+                name={props.name as Path<T>}
                 render={({ field, fieldState }) => (
                     <RadioGroup {...field} legend={props.legend} error={fieldState.error?.message}>
                         <Radio
