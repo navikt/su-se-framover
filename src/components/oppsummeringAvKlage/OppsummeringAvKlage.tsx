@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Label, Heading, Button } from '@navikt/ds-react';
+import { BodyShort, Label, Heading, Button, Tag } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -128,7 +128,6 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     sorteres={OppsummeringsParSortering.Vertikalt}
                 />
             </div>
-
             <div className={styles.informasjonsContentContainer}>
                 <OppsummeringPar
                     label={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
@@ -150,6 +149,14 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     verdi={props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet)}
                     sorteres={OppsummeringsParSortering.Vertikalt}
                 />
+            </div>
+
+            <div className={styles.klagevedtakshistorikkContainer}>
+                {props.klage.klagevedtakshistorikk.map((vedtattUtfall) => (
+                    <Tag key={vedtattUtfall.opprettet} variant="info">
+                        {vedtattUtfall.utfall} - {DateUtils.formatDateTime(vedtattUtfall.opprettet)}
+                    </Tag>
+                ))}
             </div>
 
             {props.klage.begrunnelse && (
