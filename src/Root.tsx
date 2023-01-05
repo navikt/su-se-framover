@@ -27,6 +27,7 @@ const Inngang = React.lazy(() => import('~src/pages/søknad/steg/inngang/Inngang
 const Søknadsvelger = React.lazy(() => import('~src/pages/søknad/Søknadsvelger'));
 const StartUtfylling = React.lazy(() => import('~src/pages/søknad/steg/start-utfylling/StartUtfylling'));
 const Drift = React.lazy(() => import('~/src/pages/drift'));
+const DevTools = React.lazy(() => import('~/src/pages/dev/DevToolsPage'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));
 const Behandlingsoversikt = React.lazy(
@@ -84,6 +85,7 @@ const Root = () => (
 const AppRoutes = () => (
     <Routes>
         <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
+        <Route path={routes.devTools.path} element={<DevTools />} />
         <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Outlet} />}>
             <Route index element={<Søknadsvelger />} />
             <Route path={routes.soknadtema.path} element={<Soknad />}>
