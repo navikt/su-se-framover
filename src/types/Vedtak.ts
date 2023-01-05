@@ -18,6 +18,7 @@ export interface Vedtak<T extends VedtakType = VedtakType> {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
     utbetalingId: Nullable<string>;
+    harDokument: boolean;
 }
 
 export interface AvslagVedtak extends Vedtak<VedtakType.AVSLAG> {

@@ -25,21 +25,6 @@ export const getVedtakstype = (v: Vedtak) => {
     }
 };
 
-export const harVedtaketBrevSomSendesUt = (v: Vedtak) => {
-    switch (v.type) {
-        case VedtakType.GJENOPPTAK_AV_YTELSE:
-        case VedtakType.REGULERING:
-        case VedtakType.STANS_AV_YTELSE:
-            return false;
-        case VedtakType.AVSLAG:
-        case VedtakType.AVVIST_KLAGE:
-        case VedtakType.ENDRING:
-        case VedtakType.OPPHØR:
-        case VedtakType.SØKNAD:
-            return true;
-    }
-};
-
 export const getVedtaketsbehandling = (v: Vedtak, sak: Sak): Behandling | Regulering | Klage => {
     switch (v.type) {
         case VedtakType.SØKNAD:

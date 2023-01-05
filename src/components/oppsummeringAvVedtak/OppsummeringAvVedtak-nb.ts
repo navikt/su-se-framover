@@ -18,6 +18,8 @@ export default {
     'vedtak.beregning': 'Beregning',
     'vedtak.beregning.ingen': 'Ingen beregning',
 
+    'vedtak.brev.ingenBrevSendt': 'Brev er ikke sendt ut i forbindelse med revurderingen',
+
     'vedtak.simulering': 'Simulering',
     'vedtak.simulering.ingen': 'Ingen simulering',
 

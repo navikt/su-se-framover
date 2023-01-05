@@ -19,7 +19,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, KlageStatus } from '~src/types/Klage';
-import { Vedtak, VedtakType } from '~src/types/Vedtak';
+import { Vedtak } from '~src/types/Vedtak';
 import { formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 
@@ -38,11 +38,6 @@ type VedtakEllerOversendtKlage = Vedtak | Klage;
 type VedtakOgOversendteKlager = Array<Vedtak | Klage>;
 
 const isOversendtKlage = (v: Vedtak | Klage): v is Klage => !('periode' in v);
-const isStansGjenopptakRevurdering = (v: VedtakEllerOversendtKlage) => {
-    return 'type' in v && (v.type === VedtakType.GJENOPPTAK_AV_YTELSE || v.type === VedtakType.STANS_AV_YTELSE);
-};
-
-const isRegulering = (v: VedtakEllerOversendtKlage): v is Vedtak => 'type' in v;
 
 const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakOgOversendteKlager }) => {
     const { formatMessage } = useI18n({ messages });
@@ -132,11 +127,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                             : formatMessage(`datacell.resultat.${vedtak.type}`)}
                                     </Table.DataCell>
                                     <Table.DataCell>
-                                        {isOversendtKlage(vedtak)
-                                            ? '-'
-                                            : vedtak.periode
-                                            ? formatPeriode(vedtak.periode)
-                                            : '-'}
+                                        {'periode' in vedtak && vedtak.periode ? formatPeriode(vedtak.periode) : '-'}
                                     </Table.DataCell>
                                     <Table.DataCell>{formatDateTime(vedtak.opprettet)}</Table.DataCell>
                                     <Table.DataCell>
@@ -150,10 +141,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                         </Link>
                                     </Table.DataCell>
                                     <Table.DataCell>
-                                        {isStansGjenopptakRevurdering(vedtak) ||
-                                        (isRegulering(vedtak) && vedtak.type === VedtakType.REGULERING) ? (
-                                            '-'
-                                        ) : (
+                                        {isOversendtKlage(vedtak) || vedtak.harDokument ? (
                                             <Button
                                                 className={styles.seBrevButton}
                                                 variant="secondary"
@@ -174,6 +162,8 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                             >
                                                 <Email />
                                             </Button>
+                                        ) : (
+                                            '-'
                                         )}
                                     </Table.DataCell>
                                 </Table.Row>

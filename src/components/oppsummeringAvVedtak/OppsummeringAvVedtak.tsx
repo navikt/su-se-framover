@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Button, Heading, Loader } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Label, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ import {
     splitStatusOgResultatFraRevurdering,
 } from '~src/utils/revurdering/revurderingUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
-import { getVedtaketsbehandling, getVedtakstype, harVedtaketBrevSomSendesUt } from '~src/utils/VedtakUtils';
+import { getVedtaketsbehandling, getVedtakstype } from '~src/utils/VedtakUtils';
 
 import BeregningOgSimulering from '../beregningOgSimulering/BeregningOgSimulering';
 
@@ -109,7 +109,7 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                         />
                     )}
                 </div>
-                {harVedtaketBrevSomSendesUt(vedtak) && (
+                {vedtak.harDokument ? (
                     <div className={styles.knappOgApiErrorContainer}>
                         <Button
                             className={styles.knapp}
@@ -127,6 +127,8 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                             <ApiErrorAlert error={hentDokumenterStatus.error} />
                         )}
                     </div>
+                ) : (
+                    <Label>{formatMessage('vedtak.brev.ingenBrevSendt')}</Label>
                 )}
             </Oppsummeringspanel>
             <Oppsummeringspanel
