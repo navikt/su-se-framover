@@ -14,7 +14,7 @@ const OppsummeringAvOpplysningspliktvilkår = (props: { opplysningspliktVilkår:
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <ul>
                 {props.opplysningspliktVilkår?.vurderinger?.map((o) => (
                     <li key={`${o.beskrivelse} - ${o.periode.fraOgMed}`} className={styles.grunnlagsListe}>

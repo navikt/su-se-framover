@@ -14,7 +14,7 @@ const OppsummeringAvAldersvilkår = (props: { aldersvilkår: Nullable<Aldersvilk
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <OppsummeringPar
                 className={styles.oppsummeringAvResultat}
                 label={formatMessage('vilkår.resultat')}

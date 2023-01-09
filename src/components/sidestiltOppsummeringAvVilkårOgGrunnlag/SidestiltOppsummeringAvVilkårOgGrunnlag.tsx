@@ -111,7 +111,7 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                     <Heading size="medium">{formatMessage('accordion.overskrift.fraSøknad')}</Heading>
                 )}
             </div>
-            <Accordion>
+            <Accordion className={styles.accordion}>
                 {props.grunnlagsdataOgVilkårsvurderinger.uføre && (
                     <AccordionItemUføre
                         uføreFraGrunnlagsdata={props.grunnlagsdataOgVilkårsvurderinger.uføre}

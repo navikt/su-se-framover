@@ -21,7 +21,7 @@ const OppsummeringAvFradrag = (props: { fradrag: Fradrag[] }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <ul className={styles.oppsummeringsContainer}>
+        <ul>
             {pipe(
                 props.fradrag,
                 groupByEq(

@@ -18,7 +18,7 @@ const OppsummeringAvUtenlandsopphold = (props: { utenlandsopphold: Nullable<Uten
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <OppsummeringPar
                 className={classNames(styles.oppsummeringAvResultat)}
                 label={formatMessage('vilkår.resultat')}

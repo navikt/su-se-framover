@@ -7,7 +7,6 @@ import { Formue } from '~src/types/Søknadinnhold';
 import { FormueTrippel } from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
-import styles from './OppsummeringAvSøknadinnhold.module.less';
 
 const OppsummeringAvFormue = (props: {
     formue: {
@@ -18,7 +17,7 @@ const OppsummeringAvFormue = (props: {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <FormueTrippel
                 label={''}
                 søkersVerdi={formatMessage('formue.heading.søker')}

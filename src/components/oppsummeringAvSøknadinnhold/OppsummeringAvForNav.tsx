@@ -7,12 +7,11 @@ import { formatDate } from '~src/utils/date/dateUtils';
 import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
-import styles from './OppsummeringAvSøknadinnhold.module.less';
 
 const OppsummeringAvForNav = (props: { forNav: ForNav }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             {props.forNav.type === Søknadstype.DigitalSøknad && (
                 <>
                     <OppsummeringPar

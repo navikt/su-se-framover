@@ -13,7 +13,7 @@ const OppsummeringAvBosituasjongrunnlag = (props: { bosituasjon: Bosituasjon[] }
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <ul>
                 {props.bosituasjon.length === 0 ? (
                     <OppsummeringPar

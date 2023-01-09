@@ -7,12 +7,11 @@ import { Boforhold } from '~src/types/Søknadinnhold';
 import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
-import styles from './OppsummeringAvSøknadinnhold.module.less';
 
 const OppsummeringAvBoforhold = (props: { boforhold: Boforhold }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <OppsummeringPar
                 label={formatMessage('boforhold.delerBoligMedNoenOver18år')}
                 verdi={formatMessage(`bool.${props.boforhold.delerBoligMedVoksne}`)}

@@ -9,12 +9,11 @@ import { formatAdresse } from '~src/utils/format/formatUtils';
 import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
-import styles from './OppsummeringAvSøknadinnhold.module.less';
 
 const OppsummeringAvOpphold = (props: { oppholdstillatelse: Oppholdstillatelse; visAdresse?: Boforhold }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <OppsummeringPar
                 label={formatMessage('opphold.erNorskStatsborger')}
                 verdi={formatMessage(`bool.${props.oppholdstillatelse.erNorskStatsborger}`)}

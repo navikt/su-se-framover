@@ -18,7 +18,7 @@ const OppsummeringAvUførevilkår = (props: { uførevilkår: Nullable<UføreVilk
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <OppsummeringPar
                 className={styles.oppsummeringAvResultat}
                 label={formatMessage('vilkår.resultat')}

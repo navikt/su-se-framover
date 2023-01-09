@@ -6,12 +6,11 @@ import { Alderspensjon } from '~src/types/Søknadinnhold';
 import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
-import styles from './OppsummeringAvSøknadinnhold.module.less';
 
 const OppsummeringAvAlderspensjon = (props: { alderspensjon: Alderspensjon }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <OppsummeringPar
                 label={formatMessage('alderspensjon.søktOmAlderspensjon')}
                 verdi={formatMessage(`bool.${props.alderspensjon.harSøktAlderspensjon}`)}
