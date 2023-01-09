@@ -19,11 +19,7 @@ const OppsummeringAvFormueVilkår = (props: { formue: FormueVilkår; visesIVedta
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <div className={styles.oppsummeringsContainer}>
             <ul>
                 {props.formue.vurderinger.length === 0 ? (
                     <OppsummeringPar

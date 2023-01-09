@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -10,14 +9,10 @@ import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import messages from './OppsummeringAvSøknadinnhold-nb';
 import styles from './OppsummeringAvSøknadinnhold.module.less';
 
-const OppsummeringAvUtenlandsopphold = (props: { utenlandsopphold: Utenlandsopphold; visesIVedtak?: boolean }) => {
+const OppsummeringAvUtenlandsopphold = (props: { utenlandsopphold: Utenlandsopphold }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <div className={styles.oppsummeringsContainer}>
             <OppsummeringPar
                 label={formatMessage('utenlandsOpphold.antallDagerSiste90')}
                 verdi={kalkulerTotaltAntallDagerIUtlandet(props.utenlandsopphold.registrertePerioder).toString()}

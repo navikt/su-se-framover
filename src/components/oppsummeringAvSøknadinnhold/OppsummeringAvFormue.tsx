@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -15,16 +14,11 @@ const OppsummeringAvFormue = (props: {
         søkers: Formue;
         eps?: Nullable<Formue>;
     };
-    visesIVedtak?: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <div className={styles.oppsummeringsContainer}>
             <FormueTrippel
                 label={''}
                 søkersVerdi={formatMessage('formue.heading.søker')}

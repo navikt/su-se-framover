@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 
 import { DelerBoligMed } from '~src/features/søknad/types';
@@ -10,14 +9,10 @@ import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import messages from './OppsummeringAvSøknadinnhold-nb';
 import styles from './OppsummeringAvSøknadinnhold.module.less';
 
-const OppsummeringAvBoforhold = (props: { boforhold: Boforhold; visesIVedtak?: boolean }) => {
+const OppsummeringAvBoforhold = (props: { boforhold: Boforhold }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <div className={styles.oppsummeringsContainer}>
             <OppsummeringPar
                 label={formatMessage('boforhold.delerBoligMedNoenOver18år')}
                 verdi={formatMessage(`bool.${props.boforhold.delerBoligMedVoksne}`)}

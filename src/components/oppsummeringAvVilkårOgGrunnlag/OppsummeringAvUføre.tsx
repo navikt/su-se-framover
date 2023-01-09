@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -15,17 +14,13 @@ import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
-const OppsummeringAvUførevilkår = (props: { uførevilkår: Nullable<UføreVilkår>; visesIVedtak?: boolean }) => {
+const OppsummeringAvUførevilkår = (props: { uførevilkår: Nullable<UføreVilkår> }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <div className={styles.oppsummeringsContainer}>
             <OppsummeringPar
-                className={classNames(styles.oppsummeringAvResultat)}
+                className={styles.oppsummeringAvResultat}
                 label={formatMessage('vilkår.resultat')}
                 verdi={formatMessage(props.uførevilkår?.resultat ?? 'vilkår.ikkeVurdert')}
             />

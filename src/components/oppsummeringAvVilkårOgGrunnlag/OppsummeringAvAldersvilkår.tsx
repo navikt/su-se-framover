@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -11,17 +10,13 @@ import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
-const OppsummeringAvAldersvilkår = (props: { aldersvilkår: Nullable<Aldersvilkår>; visesIVedtak?: boolean }) => {
+const OppsummeringAvAldersvilkår = (props: { aldersvilkår: Nullable<Aldersvilkår> }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <div className={styles.oppsummeringsContainer}>
             <OppsummeringPar
-                className={classNames(styles.oppsummeringAvResultat)}
+                className={styles.oppsummeringAvResultat}
                 label={formatMessage('vilkår.resultat')}
                 //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore - liten clash mellom resultatstyper som deleer 'vilkårOppfylt' etc som gjør at typingen ikke forstår det helt. Dette er i realiteten ikke et problem

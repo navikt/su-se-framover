@@ -157,6 +157,7 @@ export const OppsummeringsTrippel = ({
     return (
         <div className={styles.oppsummeringstrippel}>
             <BodyShort>{label}</BodyShort>
+
             <div className={styles.oppsummeringsVerdier}>
                 <Label>{søkersVerdi}</Label>
                 <Label>{epsverdi}</Label>

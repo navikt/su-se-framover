@@ -14,14 +14,11 @@ import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
-const OppsummeringAvUtenlandsopphold = (props: {
-    utenlandsopphold: Nullable<UtenlandsoppholdVilkår>;
-    visesIVedtak?: boolean;
-}) => {
+const OppsummeringAvUtenlandsopphold = (props: { utenlandsopphold: Nullable<UtenlandsoppholdVilkår> }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div className={classNames({ [styles.oppsummeringsContainer]: !props.visesIVedtak })}>
+        <div className={styles.oppsummeringsContainer}>
             <OppsummeringPar
                 className={classNames(styles.oppsummeringAvResultat)}
                 label={formatMessage('vilkår.resultat')}

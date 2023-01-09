@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -9,14 +8,10 @@ import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import messages from './OppsummeringAvSøknadinnhold-nb';
 import styles from './OppsummeringAvSøknadinnhold.module.less';
 
-const OppsummeringAvUføre = (props: { uføre: Uførevedtak; visesIVedtak?: boolean }) => {
+const OppsummeringAvUføre = (props: { uføre: Uførevedtak }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <div className={styles.oppsummeringsContainer}>
             <OppsummeringPar
                 label={formatMessage('uføre.vedtakOmUføretrygd')}
                 verdi={formatMessage(`bool.${props.uføre.harUførevedtak}`)}

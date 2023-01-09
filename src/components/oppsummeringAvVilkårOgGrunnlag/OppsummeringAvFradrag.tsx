@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import * as A from 'fp-ts/Array';
 import * as Eq from 'fp-ts/Eq';
 import * as O from 'fp-ts/Option';
@@ -18,15 +17,11 @@ import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
-const OppsummeringAvFradrag = (props: { fradrag: Fradrag[]; visesIVedtak?: boolean }) => {
+const OppsummeringAvFradrag = (props: { fradrag: Fradrag[] }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <ul
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <ul className={styles.oppsummeringsContainer}>
             {pipe(
                 props.fradrag,
                 groupByEq(

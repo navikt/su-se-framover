@@ -1,16 +1,17 @@
 @import '~/src/styles/variables.less';
 
 .oppsummeringsContainer {
-    max-width: 60%;
+    display: grid;
+    grid-template-columns: minmax(400px, 30vw);
 }
 
 .oppsummeringstrippel {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 
     .oppsummeringsVerdier {
         display: grid;
-        grid-template-columns: 18em 18em;
+        grid-template-columns: 1fr 1fr;
     }
 }
 

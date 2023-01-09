@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
@@ -11,18 +10,11 @@ import { OppsummeringPar } from '../oppsummeringspar/Oppsummeringsverdi';
 import messages from './OppsummeringAvSøknadinnhold-nb';
 import styles from './OppsummeringAvSøknadinnhold.module.less';
 
-const OppsummeringAvInnlagtPåInstitusjon = (props: {
-    innlagtPåInstitusjon: Nullable<InnlagtPåInstitusjon>;
-    visesIVedtak?: boolean;
-}) => {
+const OppsummeringAvInnlagtPåInstitusjon = (props: { innlagtPåInstitusjon: Nullable<InnlagtPåInstitusjon> }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div
-            className={classNames({
-                [styles.oppsummeringsContainer]: !props.visesIVedtak,
-            })}
-        >
+        <div className={styles.oppsummeringsContainer}>
             <OppsummeringPar
                 label={formatMessage('boforhold.innlagtPåInstitusjon.harDuVærtInnlagtSiste3Måneder')}
                 verdi={formatMessage(`bool.${props.innlagtPåInstitusjon !== null}`)}
