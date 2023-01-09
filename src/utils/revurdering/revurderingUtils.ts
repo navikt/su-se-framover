@@ -178,7 +178,7 @@ export const revurderingGrunnlagOgVilkårRekkefølge = [
 ] as const;
 
 export const grunnlagOgVilkårStegTilInformasjonSomRevurderes = (
-    i: typeof revurderingGrunnlagOgVilkårRekkefølge[number]
+    i: (typeof revurderingGrunnlagOgVilkårRekkefølge)[number]
 ): InformasjonSomRevurderes => {
     switch (i) {
         case RevurderingGrunnlagOgVilkårSteg.Bosituasjon:
