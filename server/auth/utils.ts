@@ -48,8 +48,6 @@ export async function getOrRefreshOnBehalfOfToken(
         tokenSets[Config.auth.suSeBakoverUri] = refreshedOnBehalfOfToken;
         return refreshedOnBehalfOfToken;
     }
-
-    log.debug('getOrRefreshOnBehalfOfToken: using cached on-behalf-of token');
     return tokenSets[Config.auth.suSeBakoverUri];
 }
 

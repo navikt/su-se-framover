@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { FieldValues, UseFormWatch } from 'react-hook-form';
 
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
@@ -20,7 +20,7 @@ const Context = createContext<SøknadsbehandlingDraftContext>({
     },
 });
 
-export const SøknadsbehandlingDraftProvider = (props: { children: React.ReactNode }) => {
+export const SøknadsbehandlingDraftProvider: React.FC<PropsWithChildren> = (props) => {
     const [value, setValue] = useState(initialDraft);
     return <Context.Provider value={{ value, setValue }}>{props.children}</Context.Provider>;
 };

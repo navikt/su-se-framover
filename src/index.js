@@ -1,7 +1,7 @@
 import { Modal } from '@navikt/ds-react';
 import * as Sentry from '@sentry/browser';
 import * as React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import polyfill from './polyfills';
 import Root from './Root';
@@ -18,14 +18,16 @@ polyfill().then(() => {
             autoSessionTracking: false,
         });
     }
+    const container = document.getElementById('root');
+    Modal.setAppElement(container);
 
-    Modal.setAppElement(document.getElementById('root'));
-
-    render(<Root />, document.getElementById('root'));
+    const root = createRoot(container);
+    root.render(<Root />);
 });
 
 /* eslint-disable no-undef */
 if (module.hot) {
+    // https://parceljs.org/features/development#hot-reloading
     module.hot.accept();
 }
 /* eslint-enable */

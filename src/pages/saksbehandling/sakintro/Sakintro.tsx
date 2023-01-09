@@ -1,7 +1,7 @@
 import { Collapse, Expand } from '@navikt/ds-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
@@ -196,7 +196,7 @@ const Sakintro = () => {
     );
 };
 
-const NyBehandlingVelger = (props: { children: React.ReactNode }) => {
+const NyBehandlingVelger: React.FC<PropsWithChildren> = (props) => {
     const { formatMessage } = useI18n({ messages });
     const [anchorEl, setAnchorEl] = useState<Nullable<HTMLElement>>(null);
 

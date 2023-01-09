@@ -23,7 +23,7 @@ export const useFeatureToggle = (feature: FeatureToggle): boolean => {
     );
 };
 
-export const FeatureToggleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const FeatureToggleProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [data, setData] = React.useState<RemoteData.RemoteData<ApiError, FeatureToggles>>(RemoteData.initial);
 
     const fetchToggles = React.useCallback(async () => {
