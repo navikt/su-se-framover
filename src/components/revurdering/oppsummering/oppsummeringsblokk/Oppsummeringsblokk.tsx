@@ -3,7 +3,7 @@ import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import * as React from 'react';
 
-import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { pipe, maxBy } from '~src/lib/fp';
@@ -64,11 +64,7 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                     },
                 ].map((item) => (
                     <div key={item.tittel}>
-                        <OppsummeringPar
-                            label={item.tittel}
-                            verdi={item.verdi}
-                            sorteres={OppsummeringsParSortering.Vertikalt}
-                        />
+                        <OppsummeringPar label={item.tittel} verdi={item.verdi} retning={'vertikal'} />
                     </div>
                 ))}
             </div>
@@ -79,7 +75,7 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                         verdi={formatMessage(
                             `tilbakekreving.resultat.tilJaNei.${props.revurdering.tilbakekrevingsbehandling.avgjørelse}`
                         )}
-                        sorteres={OppsummeringsParSortering.Vertikalt}
+                        retning={'vertikal'}
                     />
                 )}
             </div>
@@ -87,7 +83,7 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                 <OppsummeringPar
                     label={formatMessage('label.begrunnelse')}
                     verdi={props.revurdering.begrunnelse}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
             </div>
             <UnderkjenteAttesteringer attesteringer={props.revurdering.attesteringer} />

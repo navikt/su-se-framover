@@ -12,7 +12,7 @@ import { formatDate, formatPeriode } from '~src/utils/date/dateUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
 import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
-import { OppsummeringPar, OppsummeringsParSortering } from '../oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '../oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -47,27 +47,27 @@ const OppsummeringAvSøknadsbehandling = (props: {
                         <OppsummeringPar
                             label={formatMessage('vurdering.tittel')}
                             verdi={formatMessage(props.behandling.status)}
-                            sorteres={OppsummeringsParSortering.Vertikalt}
+                            retning={'vertikal'}
                         />
                         <OppsummeringPar
                             label={formatMessage('behandlet.av')}
                             verdi={props.behandling.saksbehandler ?? formatMessage('feil.fantIkkeSaksbehandlerNavn')}
-                            sorteres={OppsummeringsParSortering.Vertikalt}
+                            retning={'vertikal'}
                         />
                         <OppsummeringPar
                             label={formatMessage('behandling.søknadsdato')}
                             verdi={søknadMottatt(props.behandling.søknad)}
-                            sorteres={OppsummeringsParSortering.Vertikalt}
+                            retning={'vertikal'}
                         />
                         <OppsummeringPar
                             label={formatMessage('behandling.saksbehandlingStartet')}
                             verdi={formatDate(props.behandling.opprettet)}
-                            sorteres={OppsummeringsParSortering.Vertikalt}
+                            retning={'vertikal'}
                         />
                         <OppsummeringPar
                             label={formatMessage('virkningstidspunkt.tittel')}
                             verdi={formatPeriode(props.behandling.stønadsperiode!.periode)}
-                            sorteres={OppsummeringsParSortering.Vertikalt}
+                            retning={'vertikal'}
                         />
                     </div>
                     {underkjenteAttesteringer.length > 0 && (

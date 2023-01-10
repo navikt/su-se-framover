@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import { WarningIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
-import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -208,41 +208,41 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.opprettetAv')}
                     verdi={props.registrertUtenlandsopphold.opprettetAv}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.opprettetTidspunkt')}
                     verdi={formatDateTime(props.registrertUtenlandsopphold.opprettetTidspunkt)}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.endretAv')}
                     verdi={props.registrertUtenlandsopphold.endretAv}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.endretTidspunkt')}
                     verdi={formatDateTime(props.registrertUtenlandsopphold.endretTidspunkt)}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
             </div>
             <div className={styles.utenlandsoppholdPeriodecontainer}>
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.fraOgMed')}
                     verdi={formatDate(props.registrertUtenlandsopphold.periode.fraOgMed)}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.tilOgMed')}
                     verdi={formatDate(props.registrertUtenlandsopphold.periode.tilOgMed)}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
             </div>
             <div className={styles.utenlandsoppholdPeriodecontainer}>
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.dokumentasjon')}
                     verdi={props.registrertUtenlandsopphold.dokumentasjon}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
                 {props.registrertUtenlandsopphold.journalposter.length > 0 && (
                     <div>
@@ -259,7 +259,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                 <OppsummeringPar
                     label={formatMessage('oppsummeringAvRegistrertUtenlandsopphold.begrunnelse')}
                     verdi={props.registrertUtenlandsopphold.begrunnelse}
-                    sorteres={OppsummeringsParSortering.Vertikalt}
+                    retning={'vertikal'}
                 />
             )}
             {props.medEndreKnapp && (

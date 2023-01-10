@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchPerson, Person } from '~src/api/personApi';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
-import OppsummeringAvBoforhold from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
+import OppsummeringAvBoforhold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
 import { Personkort } from '~src/components/personkort/Personkort';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';

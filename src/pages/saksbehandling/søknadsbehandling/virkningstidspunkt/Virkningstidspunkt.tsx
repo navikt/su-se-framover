@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import DatePicker from '~src/components/datePicker/DatePicker';
-import { OppsummeringPar } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';

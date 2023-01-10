@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
+import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import InstitusjonsoppholdForm from '~src/components/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdForm';
 import {

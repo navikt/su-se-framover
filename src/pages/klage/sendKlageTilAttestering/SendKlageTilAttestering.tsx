@@ -4,7 +4,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
+import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~src/features/klage/klageActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

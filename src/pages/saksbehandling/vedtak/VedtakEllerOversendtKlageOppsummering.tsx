@@ -2,8 +2,8 @@ import { Alert, Button } from '@navikt/ds-react';
 import React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
-import OppsummeringAvVedtak from '~src/components/oppsummeringAvVedtak/OppsummeringAvVedtak';
+import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
+import OppsummeringAvVedtak from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';

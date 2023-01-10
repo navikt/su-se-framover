@@ -13,8 +13,8 @@ import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { Person } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import OppsummeringAvSkattegrunnlag from '~src/components/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
-import OppsummeringAvInntektOgPensjon from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
+import OppsummeringAvSkattegrunnlag from '~src/components/oppsummering/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
+import OppsummeringAvInntektOgPensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import FradragForm from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {

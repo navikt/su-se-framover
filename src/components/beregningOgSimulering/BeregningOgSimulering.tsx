@@ -7,7 +7,7 @@ import { Nullable } from '~src/lib/types';
 import { Beregning } from '~src/types/Beregning';
 import { Simulering } from '~src/types/Simulering';
 
-import { OppsummeringPar, OppsummeringsParSortering } from '../oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '../oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -70,7 +70,7 @@ const BeregningOgSimulering = (props: {
                     <OppsummeringPar
                         label={formatMessage('beregning.begrunnelse')}
                         verdi={props.beregning.begrunnelse}
-                        sorteres={OppsummeringsParSortering.Vertikalt}
+                        retning={'vertikal'}
                     />
                 </div>
             )}

@@ -4,7 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvUtenlandsopphold from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvUtenlandsopphold';
+import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUtenlandsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import UtenlandsoppholdForm from '~src/components/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdForm';
 import {

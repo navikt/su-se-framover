@@ -8,7 +8,7 @@ import { Nullable } from '~src/lib/types';
 import { VedtakType } from '~src/types/Vedtak';
 import { VedtakPåTidslinje, VedtakPåTidslinjeType } from '~src/types/VedtakPåTidslinje';
 
-import OppsummeringAvVedtak from '../oppsummeringAvVedtak/OppsummeringAvVedtak';
+import OppsummeringAvVedtak from '../oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak';
 import { Tidslinje } from '../tidslinje/Tidslinje';
 import { Periode as TidslinjePeriode } from '../tidslinje/types.external';
 

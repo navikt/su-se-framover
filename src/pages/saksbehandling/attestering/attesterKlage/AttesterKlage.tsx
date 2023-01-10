@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
-import OppsummeringAvKlage from '~src/components/oppsummeringAvKlage/OppsummeringAvKlage';
+import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as klageActions from '~src/features/klage/klageActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';

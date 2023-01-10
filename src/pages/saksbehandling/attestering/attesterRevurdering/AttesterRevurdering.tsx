@@ -7,7 +7,7 @@ import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/Grunnl
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
-import { OppsummeringPar, OppsummeringsParSortering } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -151,14 +151,14 @@ const AttesterRevurdering = () => {
                             <OppsummeringPar
                                 label={formatMessage('brevvalg.skalSendeBrev')}
                                 verdi={formatMessage(revurdering.brevvalg.valg)}
-                                sorteres={OppsummeringsParSortering.Vertikalt}
+                                retning={'vertikal'}
                             />
                             {revurdering.brevvalg.begrunnelse && (
                                 <div className={styles.begrunnelseContainer}>
                                     <OppsummeringPar
                                         label={formatMessage('brevvalg.begrunnelse')}
                                         verdi={revurdering.brevvalg.begrunnelse}
-                                        sorteres={OppsummeringsParSortering.Vertikalt}
+                                        retning={'vertikal'}
                                     />
                                 </div>
                             )}

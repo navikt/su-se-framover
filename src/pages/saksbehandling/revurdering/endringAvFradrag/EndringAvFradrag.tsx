@@ -10,7 +10,7 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import fradragMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import OppsummeringAvFradrag from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
+import OppsummeringAvFradrag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import FradragForm from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {

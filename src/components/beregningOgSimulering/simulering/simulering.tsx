@@ -6,7 +6,7 @@ import * as Option from 'fp-ts/Option';
 import React, { useState } from 'react';
 
 import sharedMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
-import { OppsummeringPar } from '~src/components/oppsummeringspar/Oppsummeringsverdi';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { SimuleringsperiodeOppsummering, Simulering } from '~src/types/Simulering';

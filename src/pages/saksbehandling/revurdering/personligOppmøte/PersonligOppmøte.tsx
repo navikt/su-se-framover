@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
+import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import PersonligOppmøteForm from '~src/components/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteForm';
 import {

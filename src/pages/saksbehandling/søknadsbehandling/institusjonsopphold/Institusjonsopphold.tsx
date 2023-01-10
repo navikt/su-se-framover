@@ -4,7 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvInnlagtPåInstitusjon from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon';
+import OppsummeringAvInnlagtPåInstitusjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import InstitusjonsoppholdForm from '~src/components/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdForm';
 import {

@@ -1,7 +1,7 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
-import OppsummeringAvAlderspensjon from '~src/components/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
+import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

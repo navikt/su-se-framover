@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
+import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import OpplysningspliktForm from '~src/components/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktForm';
 import {
