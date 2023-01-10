@@ -37,14 +37,14 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                     {formatMessage('simulering.tittel')}
                 </Heading>
             )}
-            <SimulertePerioderMedTotalBruttoYtelse simulering={props.simulering} />
+            <SimulertePerioder perioder={props.simulering.periodeOppsummering} />
             <Button
                 className={styles.detaljerKnapp}
                 variant="tertiary"
                 type="button"
                 onClick={() => setModalÅpen(true)}
             >
-                Se detaljer
+                {formatMessage('knapp.seDetaljer')}
             </Button>
             {modalÅpen && (
                 <SimuleringsDetaljerModal
@@ -57,27 +57,21 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
     );
 };
 
-const SimulertePerioderMedTotalBruttoYtelse = (props: { simulering: Simulering; detaljert?: boolean }) => {
-    return (
-        <div>
-            <SimulertePerioder perioder={props.simulering.periodeOppsummering} detaljert={props.detaljert} />
-        </div>
-    );
-};
-
 const SimuleringsDetaljerModal = (props: { simulering: Simulering; open: boolean; close: () => void }) => {
     const { formatMessage } = useI18n({ messages: messages });
     return (
         <Modal open={props.open} onClose={() => props.close()}>
             <Modal.Content>
+                <div className={styles.detaljertSimuleringsPeriodeModalContainer}>
+                    <Heading spacing level="2" size="medium">
+                        {formatMessage('modal.heading.total')}
+                    </Heading>
+                    <DetaljertSimuleringsperioder perioder={[props.simulering.totalOppsummering]} />
+                </div>
                 <Heading spacing level="2" size="medium">
                     {formatMessage('modal.heading.periode')}
                 </Heading>
-                <SimulertePerioderMedTotalBruttoYtelse simulering={props.simulering} detaljert />
-                <Heading spacing level="2" size="medium">
-                    {formatMessage('modal.heading.total')}
-                </Heading>
-                <DetaljertSimuleringsperioder perioder={[props.simulering.totalOppsummering]} />
+                <SimulertePerioder perioder={props.simulering.periodeOppsummering} detaljert />
             </Modal.Content>
         </Modal>
     );
@@ -175,20 +169,29 @@ const OppsummeringYtelse = (props: { oppsummering: SimuleringsperiodeOppsummerin
             <Heading size="small" level="1">
                 {formatMessage('kontooversikt.tittel.ytelse')}
             </Heading>
-            <OppsummeringPar label={'Utbetaling'} verdi={props.oppsummering.sumTotalUtbetaling} />
-            <OppsummeringPar label={'Tidligere utbetalt'} verdi={-props.oppsummering.sumTidligereUtbetalt} />
+            <OppsummeringPar
+                label={formatMessage('kontooversikt.info.utbetaling')}
+                verdi={props.oppsummering.sumTotalUtbetaling}
+            />
+            <OppsummeringPar
+                label={formatMessage('kontooversikt.info.tidligereUtbetalt')}
+                verdi={-props.oppsummering.sumTidligereUtbetalt}
+            />
             <hr></hr>
-            <OppsummeringPar label={'Til utbetaling'} verdi={props.oppsummering.sumTilUtbetaling} />
+            <OppsummeringPar
+                label={formatMessage('kontooversikt.info.tilUtbetaling')}
+                verdi={props.oppsummering.sumTilUtbetaling}
+            />
             <OppsummeringPar
                 textSomSmall={true}
                 className={styles.tilUtbetalingDetaljering}
-                label={'Etterbetaling'}
+                label={formatMessage('kontooversikt.info.etterbetaling')}
                 verdi={props.oppsummering.sumEtterbetaling}
             />
             <OppsummeringPar
                 textSomSmall={true}
                 className={styles.tilUtbetalingDetaljering}
-                label={'Fremtidig utbetaling'}
+                label={formatMessage('kontooversikt.info.fremtidigUtbetaling')}
                 verdi={props.oppsummering.sumFramtidigUtbetaling}
             />
         </div>
@@ -202,8 +205,14 @@ const OppsummeringFeilkonto = (props: { oppsummering: SimuleringsperiodeOppsumme
             <Heading size="small" level="1">
                 {formatMessage('kontooversikt.tittel.feilkonto')}
             </Heading>
-            <OppsummeringPar label={'Feilutbetaling'} verdi={props.oppsummering.sumFeilutbetaling} />
-            <OppsummeringPar label={'Reduksjon feilkonto'} verdi={-props.oppsummering.sumReduksjonFeilkonto} />
+            <OppsummeringPar
+                label={formatMessage('kontooversikt.info.feilutbetaling')}
+                verdi={props.oppsummering.sumFeilutbetaling}
+            />
+            <OppsummeringPar
+                label={formatMessage('kontooversikt.info.reduksjonFeilkonto')}
+                verdi={-props.oppsummering.sumReduksjonFeilkonto}
+            />
         </div>
     );
 };

@@ -33,7 +33,8 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
             <Tidslinje
                 onSelectPeriode={(periode: TidslinjePeriode) => {
                     setVedtakIdPåKlikketPeriode(
-                        sorterteVedtaker.find((vPåLinje) => vPåLinje.vedtakId === periode.id)?.vedtakId ?? null
+                        sorterteVedtaker.find((vPåLinje) => vPåLinje.vedtakId === periode.id?.split(' ')[1])
+                            ?.vedtakId ?? null
                     );
                 }}
                 pins={[{ date: new Date() }]}
@@ -42,7 +43,8 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
                 rader={[
                     sorterteVedtaker.map((vedtakPåTidslinje) => ({
                         fom: new Date(vedtakPåTidslinje.periode.fraOgMed),
-                        id: vedtakPåTidslinje.vedtakId,
+                        //kan eksisitere samme vedtak over flere perioder, noe som fører til at vedtaksId ikke er unik på linjen
+                        id: `${vedtakPåTidslinje.periode.fraOgMed} ${vedtakPåTidslinje.vedtakId}`,
                         status: 'suksess',
                         className: vedtaktypeTilPeriodeStyle(vedtakPåTidslinje.vedtakType),
                         tom: new Date(vedtakPåTidslinje.periode.tilOgMed),
@@ -53,9 +55,7 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
             <div ref={divRef} />
             <Popover
                 open={!!vedtakIdPåKlikketPeriode}
-                onClose={() => {
-                    setVedtakIdPåKlikketPeriode(null);
-                }}
+                onClose={() => void 0}
                 anchorEl={divRef.current}
                 placement="bottom"
                 arrow={false}
@@ -66,7 +66,10 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
                             <Button
                                 type="button"
                                 variant={'tertiary'}
-                                onClick={() => setVedtakIdPåKlikketPeriode(null)}
+                                onClick={() => {
+                                    console.log('closed');
+                                    setVedtakIdPåKlikketPeriode(null);
+                                }}
                             >
                                 <div className={styles.lukkKnappTekst}>
                                     {formatMessage('oppsummering.lukk')} <Collapse />
