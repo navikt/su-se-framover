@@ -16,9 +16,9 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '../../revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import SidestiltOppsummeringAvVilkårOgGrunnlag from '../../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import UnderkjenteAttesteringer from '../../underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
+import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 
 import messages from './OppsummeringAvSøknadsbehandling-nb';
 import * as styles from './OppsummeringAvSøknadsbehandling.module.less';

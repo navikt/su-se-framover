@@ -4,7 +4,7 @@ import * as S from 'fp-ts/string';
 import * as React from 'react';
 
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
-import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
+import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { pipe, maxBy } from '~src/lib/fp';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
