@@ -7,7 +7,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
-import OppsummeringAvSøknadsbehandling from '~src/components/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
+import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';

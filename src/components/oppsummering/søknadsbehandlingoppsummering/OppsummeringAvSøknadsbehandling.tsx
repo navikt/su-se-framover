@@ -11,14 +11,14 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { formatDate, formatPeriode } from '~src/utils/date/dateUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
-import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
-import { OppsummeringPar } from '../oppsummering/oppsummeringpar/OppsummeringPar';
+import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '../revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
-import UnderkjenteAttesteringer from '../underkjenteAttesteringer/UnderkjenteAttesteringer';
+} from '../../revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import SidestiltOppsummeringAvVilkårOgGrunnlag from '../../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
+import UnderkjenteAttesteringer from '../../underkjenteAttesteringer/UnderkjenteAttesteringer';
+import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './OppsummeringAvSøknadsbehandling-nb';
 import * as styles from './OppsummeringAvSøknadsbehandling.module.less';

@@ -4,7 +4,7 @@ import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
 import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
-import OppsummeringAvSøknadsbehandling from '~src/components/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
+import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
