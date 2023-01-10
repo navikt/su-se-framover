@@ -18,7 +18,7 @@ interface Props {
 export const OppsummeringPar = ({ label, verdi, className = '', textSomSmall, retning = 'horisontal' }: Props) => {
     if (retning === 'vertikal') {
         return (
-            <div className={classNames(styles.oppsummeringspar2, className)}>
+            <div className={classNames(styles.vertikalt, className)}>
                 <Label size={textSomSmall ? 'small' : undefined}>{label}</Label>
                 <BodyShort className={styles.verdi} size={textSomSmall ? 'small' : undefined}>
                     {verdi ?? ''}
@@ -28,9 +28,7 @@ export const OppsummeringPar = ({ label, verdi, className = '', textSomSmall, re
     }
     return (
         <div className={classNames(styles.oppsummeringspar, className)}>
-            <BodyShort size={textSomSmall ? 'small' : undefined} className={styles.label}>
-                {label}
-            </BodyShort>
+            <BodyShort size={textSomSmall ? 'small' : undefined}>{label}</BodyShort>
             <Label className={styles.verdi} size={textSomSmall ? 'small' : undefined}>
                 {verdi ?? ''}
             </Label>

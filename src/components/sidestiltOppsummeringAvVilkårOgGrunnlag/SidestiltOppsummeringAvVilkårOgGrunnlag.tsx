@@ -290,7 +290,7 @@ const AccordionItemUføre = (props: {
         props.sidestiltUførevilkår && !uføreErlik(props.uføreFraGrunnlagsdata, props.sidestiltUførevilkår);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.uføreFraGrunnlagsdata?.resultat ?? null} />
@@ -506,7 +506,7 @@ const AccordionItemInstitusjonsopphold = (props: {
         !institusjonsoppholdErLik(props.institusjonsoppholdFraGrunnlag, props.sidestiltInstitusjonsopphold);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.institusjonsoppholdFraGrunnlag?.resultat ?? null} />
@@ -544,7 +544,7 @@ const AccordionItemUtenlandsopphold = (props: {
         !utenlandsoppholdErlik(props.utenlandsoppholdFraGrunnlag, props.sidestiltUtenlandsopphold);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.utenlandsoppholdFraGrunnlag?.status ?? null} />

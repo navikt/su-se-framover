@@ -159,7 +159,6 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                                 name={field.name}
                                                 checked={field.value}
                                                 onChange={(e) => {
-                                                    console.log(e.target.checked);
                                                     field.onChange(e.target.checked);
                                                 }}
                                             >

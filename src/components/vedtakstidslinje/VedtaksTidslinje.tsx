@@ -55,7 +55,7 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
             <div ref={divRef} />
             <Popover
                 open={!!vedtakIdPåKlikketPeriode}
-                onClose={() => void 0}
+                onClose={() => setVedtakIdPåKlikketPeriode(null)}
                 anchorEl={divRef.current}
                 placement="bottom"
                 arrow={false}
@@ -67,7 +67,6 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
                                 type="button"
                                 variant={'tertiary'}
                                 onClick={() => {
-                                    console.log('closed');
                                     setVedtakIdPåKlikketPeriode(null);
                                 }}
                             >

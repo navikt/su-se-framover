@@ -1,14 +1,19 @@
 @import '~/src/styles/variables.less';
 
-//se om vi kan slippe å eksplisitt sette bredden
-.accordion {
-    width: 800px;
-}
-
 .accordionOverskrift {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     padding: @spacing-xs @spacing-xs;
+}
+
+/**
+ * overrider inline div styling for at accordion skal få bruke bredden som åpen state
+ * Desom dette fjernes, vil accordion bredden endres for hver gang man åpner / lukker den
+ */
+.accordionItem {
+    > :last-child > div {
+        display: block !important;
+    }
 }
 
 .accordionHeader {
@@ -33,13 +38,6 @@
     > :first-child {
         padding-right: @spacing;
         border-right: 1px solid @navBorder;
-    }
-}
-
-@media screen and (max-width: 722px) {
-    .accordionContent > :first-child {
-        padding: 0;
-        border-right: 0;
     }
 }
 
