@@ -16,7 +16,7 @@ interface Props {
  * default retning er horisontal
  */
 export const OppsummeringPar = ({ label, verdi, className = '', textSomSmall, retning = 'horisontal' }: Props) => {
-    if (retning === 'horisontal') {
+    if (retning === 'vertikal') {
         return (
             <div className={classNames(styles.oppsummeringspar2, className)}>
                 <Label size={textSomSmall ? 'small' : undefined}>{label}</Label>
