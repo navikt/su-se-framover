@@ -1,7 +1,7 @@
 import {
     FormuegrunnlagVerdierFormData,
     regnUtFormuegrunnlagVerdier,
-} from '~src/components/vilkårOgGrunnlagForms/formue/FormueFormUtils';
+} from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { FormuegrunnlagVerdier } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 
 describe('kalkulation for formue', () => {

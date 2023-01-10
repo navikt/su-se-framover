@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Controller } from 'react-hook-form';
 
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
-import { UførhetFormData, lagTomUføreperiode } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
 import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
@@ -14,7 +13,8 @@ import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uf
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import * as styles from './/uførhet.module.less';
+import * as styles from './uførhet.module.less';
+import { UførhetFormData, lagTomUføreperiode } from './UførhetFormUtils';
 
 export const UførhetForm = ({ form, ...props }: VilkårFormProps<UførhetFormData>) => {
     const { formatMessage } = useI18n({ messages });

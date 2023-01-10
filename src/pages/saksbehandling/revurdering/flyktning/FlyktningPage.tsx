@@ -5,15 +5,15 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
-import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import FlyktningForm from '~src/components/vilkårOgGrunnlagForms/flyktning/FlyktningForm';
+import FlyktningForm from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningForm';
 import {
     FlyktningVilkårFormData,
     flyktningFormSchema,
     flyktningFormDataTilRequest,
     flyktningVilkårTilFormDataEllerNy,
-} from '~src/components/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
+} from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
+import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreFlyktningVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

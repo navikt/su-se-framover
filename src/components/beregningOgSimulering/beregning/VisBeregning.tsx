@@ -7,7 +7,7 @@ import * as S from 'fp-ts/string';
 import React from 'react';
 
 import messages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
-import fradragstypeMessages from '~src/components/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
+import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';

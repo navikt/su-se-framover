@@ -8,12 +8,12 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import FradragForm from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragForm';
+import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
     FradragFormData,
     fradragFormdataTilFradrag,
     fradragTilFradragFormData,
-} from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
+} from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';

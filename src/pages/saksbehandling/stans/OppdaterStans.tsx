@@ -3,12 +3,12 @@ import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import StansGjenopptaForm from '~src/components/stansGjentopptaForm/StansGjenopptaForm';
+import StansGjenopptaForm from '~src/components/forms/stansGjentopptaForm/StansGjenopptaForm';
 import {
     StansFormData,
     StansGjenopptaFormData,
     stansGjenopptaSchema,
-} from '~src/components/stansGjentopptaForm/StansGjenopptaFormUtils';
+} from '~src/components/forms/stansGjentopptaForm/StansGjenopptaFormUtils';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

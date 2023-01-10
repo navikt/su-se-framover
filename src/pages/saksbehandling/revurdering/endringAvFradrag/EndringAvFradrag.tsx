@@ -10,15 +10,15 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import fradragMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import OppsummeringAvFradrag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
-import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import FradragForm from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragForm';
+import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
     FradragFormData,
     fradragFormdataTilFradrag,
     fradragSchema,
     fradragTilFradragFormData,
-} from '~src/components/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
+} from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
+import OppsummeringAvFradrag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';

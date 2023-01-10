@@ -5,15 +5,15 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvUførevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
-import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { UførhetForm } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetForm';
+import { UførhetForm } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
     UførhetFormData,
     lagTomUføreperiode,
     vurderingsperiodeTilFormData,
-} from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
-import { uførhetSchema } from '~src/components/vilkårOgGrunnlagForms/uførhet/validation';
+} from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
+import { uførhetSchema } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/validation';
+import OppsummeringAvUførevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

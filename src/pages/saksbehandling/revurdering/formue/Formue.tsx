@@ -5,15 +5,15 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
-import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import FormueForm from '~src/components/vilkårOgGrunnlagForms/formue/FormueForm';
+import FormueForm from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueForm';
 import {
     FormueVilkårFormData,
     formueVilkårTilFormData,
     formueFormSchema,
     formueVilkårFormTilRequest,
-} from '~src/components/vilkårOgGrunnlagForms/formue/FormueFormUtils';
+} from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
+import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreFormuegrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

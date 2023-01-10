@@ -5,13 +5,13 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
-import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
-import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import OpplysningspliktForm from '~src/components/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktForm';
+import OpplysningspliktForm from '~src/components/forms/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktForm';
 import {
     opplysningspliktFormSchema,
     OpplysningspliktVilkårFormData,
-} from '~src/components/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktFormUtils';
+} from '~src/components/forms/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktFormUtils';
+import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { lagreOpplysningsplikt } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

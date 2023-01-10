@@ -8,11 +8,8 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
 import * as personApi from '~src/api/personApi';
-import OppsummeringAvSkattegrunnlag from '~src/components/oppsummering/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
-import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
-import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import BosituasjonFormIntegrertMedFormue from '~src/components/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormIntegrertMedFormue';
-import FormueForm from '~src/components/vilkårOgGrunnlagForms/formue/FormueForm';
+import BosituasjonFormIntegrertMedFormue from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormIntegrertMedFormue';
+import FormueForm from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueForm';
 import {
     FormueVilkårFormData,
     FormueVilkårOgDelvisBosituasjonFormData,
@@ -20,7 +17,10 @@ import {
     formueFormSchema,
     getInitialFormueVilkårOgDelvisBosituasjon,
     formueVilkårFormTilRequest,
-} from '~src/components/vilkårOgGrunnlagForms/formue/FormueFormUtils';
+} from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
+import OppsummeringAvSkattegrunnlag from '~src/components/oppsummering/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
+import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
+import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useFeatureToggle } from '~src/lib/featureToggles';

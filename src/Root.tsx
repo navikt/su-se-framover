@@ -6,10 +6,10 @@ import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-
 import { FeatureToggleProvider } from '~src/lib/featureToggles';
 import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 
-import BrevPage from './components/brevPage/BrevPage';
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import WithDocTitle from './components/WithDocTitle';
 import * as routes from './lib/routes';
+import BrevPage from './pages/saksbehandling/brev/BrevPage';
 import Store from './redux/Store';
 import './externalStyles';
 import { ContentWrapper } from './utils/router/ContentWrapper';

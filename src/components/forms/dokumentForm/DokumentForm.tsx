@@ -6,6 +6,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as SakApi from '~src/api/sakApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { BrevInput } from '~src/components/brevInput/BrevInput';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -13,16 +16,8 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
-import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '../brevInput/BrevInput';
-import LinkAsButton from '../linkAsButton/LinkAsButton';
-
-import messages from './BrevPage-nb';
-import styles from './BrevPage.module.less';
-
-const BrevPage = () => {
-    return <DokumentForm />;
-};
+import messages from './DokumentForm-nb';
+import styles from './DokumentForm.module.less';
 
 interface DokumentFormData {
     tittel: Nullable<string>;
@@ -106,4 +101,4 @@ const DokumentForm = () => {
     );
 };
 
-export default BrevPage;
+export default DokumentForm;

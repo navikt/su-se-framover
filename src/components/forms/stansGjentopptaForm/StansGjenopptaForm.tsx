@@ -9,8 +9,8 @@ import { useI18n } from '~src/lib/i18n';
 import { getDateErrorMessage } from '~src/lib/validering';
 import { Gjenopptak, OpprettetRevurderingGrunn, StansAvYtelse } from '~src/types/Revurdering';
 
-import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
-import DatePicker from '../datePicker/DatePicker';
+import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
+import DatePicker from '../../datePicker/DatePicker';
 
 import messages from './StansGjenopptaForm-nb';
 import styles from './StansGjenopptaForm.module.less';

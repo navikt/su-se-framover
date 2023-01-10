@@ -1,7 +1,7 @@
 import {
     ikkeVelgbareFradragskategoriMessages,
     velgbareFradragskategoriMessages,
-} from '~src/components/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
+} from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import { personligOppmøteÅrsakTekster } from '~src/typeMappinger/PersonligOppmøteÅrsak';
 import {
     aldersresultatMessages,

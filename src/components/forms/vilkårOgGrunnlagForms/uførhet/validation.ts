@@ -1,11 +1,12 @@
 import * as DateFns from 'date-fns';
 
-import { UførhetFormData, UføreperiodeFormData } from '~src/components/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { NullablePeriode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
+
+import { UføreperiodeFormData, UførhetFormData } from './UførhetFormUtils';
 
 const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
     yup.object<UføreperiodeFormData>({
