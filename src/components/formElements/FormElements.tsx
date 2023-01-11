@@ -1,9 +1,7 @@
-import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { endOfMonth, startOfMonth } from 'date-fns';
-import React, { forwardRef, useState } from 'react';
-import { Collapse } from 'react-collapse';
+import React, { forwardRef } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
@@ -42,31 +40,6 @@ export const BooleanRadioGroup: React.ForwardRefExoticComponent<
     );
 });
 BooleanRadioGroup.displayName = 'BooleanRadioGroup';
-
-export const CollapsableFormElementDescription = (props: {
-    title: string | JSX.Element;
-    elementerEtterTittel?: JSX.Element;
-    children: React.ReactNode;
-    className?: string;
-    knappClass?: string;
-}) => {
-    const [visMer, setVisMer] = useState(false);
-
-    return (
-        <div className={props.className}>
-            <button
-                className={classNames(styles.hjelpetekstKnapp, props.knappClass)}
-                type="button"
-                onClick={() => setVisMer(!visMer)}
-            >
-                {props.title}
-                {visMer ? <CollapseFilled /> : <ExpandFilled />}
-                {props.elementerEtterTittel}
-            </button>
-            <Collapse isOpened={visMer}>{props.children}</Collapse>
-        </div>
-    );
-};
 
 export const PeriodeForm = (props: {
     containerClassname?: string;

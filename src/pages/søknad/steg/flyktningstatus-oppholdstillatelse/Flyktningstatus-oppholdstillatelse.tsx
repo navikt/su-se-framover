@@ -1,11 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Radio, RadioGroup, TextField } from '@navikt/ds-react';
+import { Alert, Radio, RadioGroup, ReadMore, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
-import { BooleanRadioGroup, CollapsableFormElementDescription } from '~src/components/formElements/FormElements';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { TypeOppholdstillatelse } from '~src/features/søknad/types';
@@ -53,11 +53,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         <BooleanRadioGroup
                             legend={formatMessage('flyktning.label')}
                             description={
-                                <CollapsableFormElementDescription
-                                    title={formatMessage('flyktning.hjelpetekst.tittel')}
-                                >
+                                <ReadMore size="small" header={formatMessage('flyktning.hjelpetekst.tittel')}>
                                     {formatMessage('flyktning.hjelpetekst.body')}
-                                </CollapsableFormElementDescription>
+                                </ReadMore>
                             }
                             error={fieldState.error?.message}
                             {...field}
