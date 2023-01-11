@@ -1,8 +1,11 @@
 export enum ApiErrorCode {
+    //A
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
     ATTESTANT_SAMME_SOM_SAKSBEHANDLER = 'attestant_samme_som_saksbehandler',
     AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG = 'avkorting_er_ufullstendig',
     AVSTEMMING_FEILET = 'avstemming_feilet',
+
+    //B
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
     BELØPSENDRING_MINDRE_ENN_TI_PROSENT = 'beløpsendring_mindre_enn_ti_prosent',
     BEREGNING_FEILET = 'beregning_feilet',
@@ -11,14 +14,20 @@ export enum ApiErrorCode {
     BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE = 'bosituasjon_samsvarer_ikke_med_formue',
     BOSITUASJONSPERIODER_OVERLAPPER = 'bosituasjonsperioder_overlapper',
     BREVVALG_IKKE_TILLATT = 'brevvalg_ikke_tillatt',
+
+    //D
     DATO_MÅ_VÆRE_FØRSTE_I_MND = 'dato_må_være_første_i_mnd',
     DELER_BOLIG_MED_ER_IKKE_UTFYLT = 'deler_bolig_med_er_ikke_utfylt',
     DELVIS_OPPHØR = 'delvis_opphør',
     DEPOSITUM_HØYERE_ENN_INNSKUDD = 'depositum_høyere_enn_innskudd',
+
+    //E
     EKTEFELLE_PARTNER_SAMBOER_ER_IKKE_UTFYLT = 'ektefelle_partner_samboer_er_ikke_utfylt',
     EPS_ALDER_ER_NULL = 'eps_alder_er_null',
     EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES = 'eps_formue_med_flere_perioder_må_revurderes',
     ER_BESLUTTET = 'forhåndsvarslingen_er_allerede_besluttet',
+
+    //F
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
     FANT_IKKE_GJELDENDE_STØNADSPERIODE = 'fant_ikke_gjeldende_stønadsperiode',
@@ -54,14 +63,19 @@ export enum ApiErrorCode {
     FRADRAG_UGYLDIG_FRADRAGSTYPE = 'fradrag_ugyldig_fradragstype',
     FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE = 'fradragsperiode_utenfor_bosituasjonperiode',
     FRITEKST_FOR_STATSBORGERSKAP_ER_IKKE_UTFYLT = 'fritekst_for_statsborgerskap_er_ikke_utfylt',
-    GJENOPPTAK_FØRER_TIL_FEILUTBETALING = 'gjenopptak_fører_til_feilutbetaling',
+
+    //G
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     GENERERER_BREV_FRA_UGYLDIG_TILSTAND = 'genererer_brev_fra_ugyldig_tilstand',
+    GJENOPPTAK_FØRER_TIL_FEILUTBETALING = 'gjenopptak_fører_til_feilutbetaling',
+
+    //H
     HAR_ALLEREDE_EN_AKTIV_BEHANDLING = 'har_allerede_en_aktiv_behandling',
     HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING = 'har_allerede_en_åpen_søknadsbehandling',
     HAR_IKKE_EKTEFELLE = 'har_ikke_ektefelle',
     HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING = 'hele_behandlingsperioden_må_ha_vurderinger',
-    VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING = 'vedtak_mangler_i_en_eller_flere_måneder_av_revurderingsperiode',
+
+    //I
     IKKE_GYLDIG_FØDSELSNUMMER = 'ikke_gyldig_fødselsnummer',
     IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS = 'ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
     IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN = 'ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
@@ -73,12 +87,17 @@ export enum ApiErrorCode {
     INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE = 'ingen_formue_eps_for_bosituasjonsperiode',
     INGEN_FORMUE_FOR_BOSITUASJONSPERIODE = 'ingen_formue_for_bosituasjonsperiode',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
+    INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'inget_skattegrunnlag_for_gitt_fnr_og_år',
     INNSENDING_AV_SØKNAD_IKKE_TILLATT = 'innsending_av_søknad_ikke_tillatt',
     IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
+
+    //J
     JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT = 'journalpost_er_ikke_et_innkommende_dokument',
     JOURNALPOST_ER_IKKE_FERDIGSTILT = 'journalpost_er_ikke_ferdigstilt',
     JOURNALPOST_IKKE_KNYTTET_TIL_SAK = 'journalpost_ikke_knyttet_til_sak',
     JOURNALPOST_TEMA_ER_IKKE_SUP = 'journalpost_tema_er_ikke_sup',
+
+    //K
     KAN_IKKE_AVVISE_KLAGE_SOM_HAR_VÆRT_OVERSENDT = 'kan_ikke_avvise_klage_som_har_vært_oversendt',
     KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER = 'kan_ikke_gjenoppta_opphørte_utbetalinger',
     KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
@@ -90,6 +109,7 @@ export enum ApiErrorCode {
     KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER = 'kan_ikke_stanse_opphørte_utbetalinger',
     KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD = 'kan_ikke_velge_både_omgjør_og_oppretthold',
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
+    KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET = 'kryssjekk_utbetalingstidslinjer_simulering_feilet',
     KUN_EN_ADRESSEGRUNN_KAN_VÆRE_UTFYLT = 'kun_en_adressegrunn_kan_være_utfylt',
     KUNNE_IKKE_FERDIGSTILLE_REGULERING = 'kunne_ikke_ferdigstille_regulering',
     KUNNE_IKKE_GENERERE_BREV = 'kunne_ikke_generere_brev',
@@ -105,7 +125,8 @@ export enum ApiErrorCode {
     KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_STANS = 'kunne_ikke_opprette_revurdering_for_stans',
     KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
-    KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET = 'kryssjekk_utbetalingstidslinjer_simulering_feilet',
+
+    //M
     MANGLER_BEGRUNNELSE = 'mangler_begrunnelse',
     MANGLER_BREVVALG = 'mangler_brevvalg',
     MANGLER_ID = 'mangler_id',
@@ -114,8 +135,12 @@ export enum ApiErrorCode {
     MÅ_HA_BOSITUASJON_FØR_FRADRAG = 'må_ha_bosituasjon_før_fradrag',
     MÅ_VELGE_INFORMASJON_SOM_REVURDERES = 'må_velge_informasjon_som_revurderes',
     MÅ_VURDERE_HELE_PERIODEN = 'må_vurdere_hele_perioden',
+
+    //N
     NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET = 'navneoppslag_feilet',
     NEI_ER_IKKE_STØTTET = 'nei_er_ikke_støttet',
+
+    //O
     OPPDATERING_AV_STØNADSPERIODE = 'oppdatering_av_stønadsperiode',
     OPPDRAG_STENGT_ELLER_NEDE = 'simulering_feilet_oppdrag_stengt_eller_nede',
     OPPDRAGET_FINNES_IKKE = 'simulering_feilet_oppdraget_finnes_ikke',
@@ -125,9 +150,14 @@ export enum ApiErrorCode {
     OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE = 'opphør_ikke_tidligste_dato',
     OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',
     OVERLAPPENDE_PERIODER = 'overlappende_perioder',
+    OVERLAPPENDE_STØNADSPERIODE = 'overlappende_stønadsperiode',
     OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
+
+    //P
     PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG = 'periode_for_grunnlag_og_vurdering_er_forskjellig',
     PERIODE_MANGLER = 'periode_mangler',
+
+    //R
     PERSONEN_HAR_INGEN_SAK = 'fant_ikke_sak_for_person',
     REGULERING_AVVENTER_KRAVGRUNNLAG = 'regulering_avventer_kravgrunnlag',
     REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING = 'regulering_har_pågående_eller_behov_for_avkorting',
@@ -139,11 +169,14 @@ export enum ApiErrorCode {
     REVURDERINGER_ER_TIL_ATTESTERING = 'revurdering_er_til_attestering',
     REVURDERINGSÅRSAK_UGYLDIG_BEGRUNNELSE = 'revurderingsårsak_ugyldig_begrunnelse',
     REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK = 'revurderingsårsak_ugyldig_årsak',
+
+    //S
     SAKSNUMMER_IKKE_GYLDIG = 'saksnummer_ikke_gyldig',
     SENERE_STØNADSPERIODE_EKSISTERER = 'senere_stønadsperioder_eksisterer',
     SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
     SISTE_UTBETALING_ER_IKKE_STANS = 'siste_utbetaling_er_ikke_stans',
     SISTE_VEDTAK_IKKE_STANS = 'siste_vedtak_ikke_stans',
+    SKATTEGRUNNLAGET_FINNES_IKKE_LENGER = 'skattegrunnlaget_finnes_ikke_lenger',
     SPESIFISERT_FRADRAG_SKAL_IKKE_HA_BESKRIVELSE = 'spesifisert_fradrag_skal_ikke_ha_beskrivelse',
     STANS_FØRER_TIL_FEILUTBETALING = 'stans_fører_til_feilutbetaling',
     STANS_INNEHOLDER_MÅNEDER_TIL_UTBETALING = 'stans_inneholder_måneder_til_utbetaling',
@@ -157,9 +190,13 @@ export enum ApiErrorCode {
     SØKNAD_ER_LUKKET = 'søknad_er_lukket',
     SØKNAD_HAR_BEHANDLING = 'søknad_har_behandling',
     SØKNAD_MANGLER_OPPGAVE = 'søknad_mangler_oppgave',
+
+    //T
     TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST = 'teknisk_feil_ved_henting_av_journalpost',
     TJENESTEN_ER_IKKE_TILGJENGELIG = 'tjeneste_ikke_tilgjengelig',
     TYPE_OPPHOLDSTILLATELSE_ER_IKKE_UTFYLT = 'type_oppholdstillatelse_er_ikke_utfylt',
+
+    //U
     UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE = 'uføregrad_må_være_mellom_en_og_hundre',
     UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER = 'uføregrad_og_forventet_inntekt_mangler',
     UGYLDIG_BEREGNINGSGRUNNLAG = 'ugyldig_beregningsgrunnlag',
@@ -200,14 +237,18 @@ export enum ApiErrorCode {
     UTENLANDSK_INNTEKT_NEGATIVT_BELØP = 'utenlandsk_inntekt_negativt_beløp',
     UTENLANDSOPPHOLD_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'utenlandsopphold_som_fører_til_opphør_må_revurderes',
     UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE = 'utestående_avkorting_må_revurderes_eller_avkortes_i_ny_periode',
+
+    //V
+    VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING = 'vedtak_mangler_i_en_eller_flere_måneder_av_revurderingsperiode',
     VERDIER_KAN_IKKE_VÆRE_NEGATIV = 'verdier_kan_ikke_være_negativ',
     VILKÅR_KUN_RELEVANT_FOR_ALDER = 'vilkår_kun_relevant_for_alder',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
     VURDERINGSPERIODER_MANGLER = 'vurderingsperioder_mangler',
-    ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_SØKNADSBEHANDLING = 'åpent_kravgrunnlag_må_håndteres_før_ny_søknadsbehandling',
+
+    //Å
     ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER = 'åpen_revurdering_gjenopptak_eksisterer',
     ÅPEN_REVURDERING_STANS_EKSISTERER = 'åpen_revurdering_stans_eksisterer',
-    INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'inget_skattegrunnlag_for_gitt_fnr_og_år',
-    SKATTEGRUNNLAGET_FINNES_IKKE_LENGER = 'skattegrunnlaget_finnes_ikke_lenger',
+    ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_REVURDERING = 'åpent_kravgrunnlag_må_håndteres_før_ny_revurdering',
+    ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_SØKNADSBEHANDLING = 'åpent_kravgrunnlag_må_håndteres_før_ny_søknadsbehandling',
 }

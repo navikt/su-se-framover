@@ -1,14 +1,14 @@
 import { ApiErrorCode } from './apiErrorCode';
 
-/**
- * Prøv å legg ting inn i alfabetisk rekkefølge
- */
 const messages: { [key in ApiErrorCode]: string } = {
+    //A
     [ApiErrorCode.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]: 'Kan ikke attestere egen saksbehandling',
     [ApiErrorCode.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',
     [ApiErrorCode.AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG]:
         'Tilgjengelig restbeløp etter fradrag er for lavt til å kunne gjennomføre avkorting innenfor valgt stønadsperiode. Delvis avkorting på tvers av stønadsperioder støttes ikke.',
     [ApiErrorCode.AVSTEMMING_FEILET]: 'Avstemming feilet',
+
+    //B
     [ApiErrorCode.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM]: 'Kan ikke sende in tom begrunnelse',
     [ApiErrorCode.BELØPSENDRING_MINDRE_ENN_TI_PROSENT]:
         'Beløpsendring i forhold til gjeldende utbetaling er mindre enn 10%',
@@ -19,15 +19,21 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.BOSITUASJON_SAMSVARER_IKKE_MED_FORMUE]: 'Informasjon i bosituasjon samsvarer ikke med formue',
     [ApiErrorCode.BOSITUASJONSPERIODER_OVERLAPPER]: 'Periodene i bosituasjonene overlapper',
     [ApiErrorCode.BREVVALG_IKKE_TILLATT]: 'Det er ikke tillatt å velge om brev skal sendes ut eller ikke',
+
+    //D
     [ApiErrorCode.DATO_MÅ_VÆRE_FØRSTE_I_MND]: 'Dato må være den første i måneden',
     [ApiErrorCode.DELER_BOLIG_MED_ER_IKKE_UTFYLT]: 'Forventet at hvem søker deler bolig med skulle være utfylt',
     [ApiErrorCode.DELVIS_OPPHØR]: 'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     [ApiErrorCode.DEPOSITUM_HØYERE_ENN_INNSKUDD]: 'Depositumsbeløpet er høyere enn innskuddsbeløpet',
+
+    //E
     [ApiErrorCode.EKTEFELLE_PARTNER_SAMBOER_ER_IKKE_UTFYLT]: 'Ektefelle/Partner/Samboer ved bosituasjon må være utfylt',
     [ApiErrorCode.EPS_ALDER_ER_NULL]: 'Alder til EPS er Null',
     [ApiErrorCode.EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES]:
         'Formue må revurderes siden det finnes EPS formue og flere bosituasjonsperioder',
     [ApiErrorCode.ER_BESLUTTET]: 'Revurderingen er allerede besluttet',
+
+    //F
     [ApiErrorCode.FANT_IKKE_AKTØR_ID]: 'Fant ikke AktørID',
     [ApiErrorCode.FANT_IKKE_BEHANDLING]: 'Fant ikke behandlingen',
     [ApiErrorCode.FANT_IKKE_GJELDENDE_STØNADSPERIODE]:
@@ -67,17 +73,21 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FRADRAG_UGYLDIG_FRADRAGSTYPE]: 'Ugyldig fradragstype',
     [ApiErrorCode.FRADRAGSPERIODE_UTENFOR_BOSITUASJONPERIODE]: 'Fradragsperioden er utenfor bosituasjonsperioden',
     [ApiErrorCode.FRITEKST_FOR_STATSBORGERSKAP_ER_IKKE_UTFYLT]: 'Fyll ut hvilke land søker har statsborgerskap i',
-    [ApiErrorCode.GJENOPPTAK_FØRER_TIL_FEILUTBETALING]: 'Gjenopptak fører til feilutbetaling',
+
+    //G
     [ApiErrorCode.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'G-regulering kan ikke føre til opphør',
     [ApiErrorCode.GENERERER_BREV_FRA_UGYLDIG_TILSTAND]: 'Klagen er i en tilstand der generering av brev ikke støttes',
+    [ApiErrorCode.GJENOPPTAK_FØRER_TIL_FEILUTBETALING]: 'Gjenopptak fører til feilutbetaling',
+
+    //H
     [ApiErrorCode.HAR_ALLEREDE_EN_AKTIV_BEHANDLING]:
         'Det finnes allerede en åpen behandling. Du må fullføre denne før du kan starte en annen',
     [ApiErrorCode.HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING]:
         'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
     [ApiErrorCode.HAR_IKKE_EKTEFELLE]: 'Har ikke ektefelle',
     [ApiErrorCode.HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING]: 'Hele behandlingsperioden må ha vurderinger',
-    [ApiErrorCode.VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING]:
-        'Vedtak mangler i en eller flere måneder av valgt revurderingsperiode.',
+
+    //I
     [ApiErrorCode.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
     [ApiErrorCode.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS]:
         'Ikke lov med formue for EPS hvis søker ikke har EPS',
@@ -95,16 +105,22 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.INGEN_FORMUE_FOR_BOSITUASJONSPERIODE]:
         'Formue mangler for en eller flere perioder hvor det eksisterer bosituasjon.',
     [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
+    [ApiErrorCode.INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
+        'Ingen summert skattegrunnlag funnet på oppgitt personidentifikator og inntektsår',
     [ApiErrorCode.INNSENDING_AV_SØKNAD_IKKE_TILLATT]: 'Innsending av søknad er ikke tillatt',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
         'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
         'Iverksetting av stans som fører til feilutbetaling støttes ikke',
+
+    //J
     [ApiErrorCode.JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT]:
         'Den journalførte klagen må være et journalført, innkommende dokument',
     [ApiErrorCode.JOURNALPOST_ER_IKKE_FERDIGSTILT]: 'Journalposten til klagen er ikke ferdigstilt',
     [ApiErrorCode.JOURNALPOST_IKKE_KNYTTET_TIL_SAK]: 'Journalposten er ikke knyttet til denne saken',
     [ApiErrorCode.JOURNALPOST_TEMA_ER_IKKE_SUP]: 'Tema for journalposten er ikke SUP',
+
+    //K
     [ApiErrorCode.KAN_IKKE_AVVISE_KLAGE_SOM_HAR_VÆRT_OVERSENDT]: 'Kan ikke avvise en klage som har vært oversendt',
     [ApiErrorCode.KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER]:
         'Kan ikke opprette revurdering for gjenopptak av ytelse, siste vedtak er ikke en stans',
@@ -123,6 +139,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD]: 'Kan ikke velge både omgjør og oppretthold',
     [ApiErrorCode.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
         'Kontrollsimuleringen er ulik saksbehandlers simulering',
+    [ApiErrorCode.KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET]:
+        'Kryssjekk av utbetalingstidslinje og simulering feilet.',
     [ApiErrorCode.KUN_EN_ADRESSEGRUNN_KAN_VÆRE_UTFYLT]:
         'Flere adresser ble registrert sendt inn. Kun én adresse kan sendes inn',
     [ApiErrorCode.KUNNE_IKKE_FERDIGSTILLE_REGULERING]: 'Kunne ikke ferdigstille regulering',
@@ -140,8 +158,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp ektefelle eller samboer i PDL',
     [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp EPS',
     [ApiErrorCode.KUNNE_IKKE_UTBETALE]: 'Kunne ikke utbetale',
-    [ApiErrorCode.KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET]:
-        'Kryssjekk av utbetalingstidslinje og simulering feilet.',
+
+    //M
     [ApiErrorCode.MANGLER_BEGRUNNELSE]: 'Mangler begrunnelse',
     [ApiErrorCode.MANGLER_BREVVALG]: 'Vennligst velg om det skal sendes brev eller ikke',
     [ApiErrorCode.MANGLER_ID]: 'Parameter for id mangler',
@@ -150,9 +168,13 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.MÅ_HA_BOSITUASJON_FØR_FRADRAG]: 'Bosituasjon må legges inn før fradrag',
     [ApiErrorCode.MÅ_VELGE_INFORMASJON_SOM_REVURDERES]: 'Må velge hva som skal revurderes',
     [ApiErrorCode.MÅ_VURDERE_HELE_PERIODEN]: 'Hele perioden må vurderes',
+
+    //N
     [ApiErrorCode.NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET]:
         'Kunne ikke hente navn for saksbehandler eller attestant',
     [ApiErrorCode.NEI_ER_IKKE_STØTTET]: 'Det er ikke støtte for å svare "nei"',
+
+    //O
     [ApiErrorCode.OPPDATERING_AV_STØNADSPERIODE]: 'Feil ved oppdatering av stønadsperiode',
     [ApiErrorCode.OPPDRAG_STENGT_ELLER_NEDE]:
         'Simulering feilet. Oppdrag/UR er stengt eller nede. Prøv på nytt eller prøv igjen i Oppdrags åpningstid',
@@ -165,12 +187,18 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Opphørsdato er ikke lik fra-dato for revurderingsperioden. Revurdering må gjennomføres i flere steg.',
     [ApiErrorCode.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]:
         'Opphør i kombinasjon med andre endringer støttes ikke. Revurdering må gjennomføres i flere steg.',
-    [ApiErrorCode.OVERLAPPENDE_VURDERINGSPERIODER]: 'Perioder kan ikke overlappe',
     [ApiErrorCode.OVERLAPPENDE_PERIODER]: 'Perioder kan ikke overlappe',
+    [ApiErrorCode.OVERLAPPENDE_STØNADSPERIODE]:
+        'Overlapper med eksisterende stønadsperiode. Dersom man vil legge en ny stønadsperiode over en eksisterende, må man opphøre den eksisterende. Den kan ikke ha vært utbetalt, eller ført til avkorting.',
+    [ApiErrorCode.OVERLAPPENDE_VURDERINGSPERIODER]: 'Perioder kan ikke overlappe',
+
+    //P
     [ApiErrorCode.PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG]:
         'Det er ikke samsvar mellom perioden for vurdering og perioden for grunnlaget',
     [ApiErrorCode.PERIODE_MANGLER]: 'Fradrag mangler periode',
     [ApiErrorCode.PERSONEN_HAR_INGEN_SAK]: 'Personen har ingen sak',
+
+    //R
     [ApiErrorCode.REGULERING_AVVENTER_KRAVGRUNNLAG]:
         'Saken avventer kravgrunnlag. Regulering kan kjøres når vi fått svar fra oppdrag.',
     [ApiErrorCode.REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING]:
@@ -185,12 +213,15 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.REVURDERINGER_ER_TIL_ATTESTERING]: 'Revurderingen er til attestering',
     [ApiErrorCode.REVURDERINGSÅRSAK_UGYLDIG_BEGRUNNELSE]: 'Ugyldig begrunnelse for revurdering',
     [ApiErrorCode.REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK]: 'Ugyldig årsak for revurdering',
+
+    //S
     [ApiErrorCode.SAKSNUMMER_IKKE_GYLDIG]: 'Saksnummer er ikke gyldig',
     [ApiErrorCode.SENERE_STØNADSPERIODE_EKSISTERER]: 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
     [ApiErrorCode.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]:
         'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     [ApiErrorCode.SISTE_UTBETALING_ER_IKKE_STANS]: 'Feil ved kontroll av simulering',
     [ApiErrorCode.SISTE_VEDTAK_IKKE_STANS]: 'Sending av utbetaling til oppdrag feilet',
+    [ApiErrorCode.SKATTEGRUNNLAGET_FINNES_IKKE_LENGER]: 'Skattegrunnlag finnes ikke lenger',
     [ApiErrorCode.SPESIFISERT_FRADRAG_SKAL_IKKE_HA_BESKRIVELSE]: 'Et valgt fradragskategori skal ikke spesifiseres',
     [ApiErrorCode.STANS_FØRER_TIL_FEILUTBETALING]: 'Stans fører til feilutbetaling',
     [ApiErrorCode.STANS_INNEHOLDER_MÅNEDER_TIL_UTBETALING]: 'Stans inneholder måneder til utbetaling',
@@ -208,10 +239,14 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.SØKNAD_ER_LUKKET]: 'Søknad er lukket',
     [ApiErrorCode.SØKNAD_HAR_BEHANDLING]: 'Søknad har allerede en behandling',
     [ApiErrorCode.SØKNAD_MANGLER_OPPGAVE]: 'Søknad mangler oppgave',
+
+    //T
     [ApiErrorCode.TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST]:
         'Teknisk feil ved henting av journalpost fra sak og arkivfasade (forvaltes av Team Dokumentløsninger)',
     [ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG]: 'Klarte ikke kontakte tjenesten',
     [ApiErrorCode.TYPE_OPPHOLDSTILLATELSE_ER_IKKE_UTFYLT]: 'Type oppholdstillatelse er ikke utfylt',
+
+    //U
     [ApiErrorCode.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'Uføregraden må være mellom 1 og 100',
     [ApiErrorCode.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'Uføregrad og/eller forventet inntekt mangler',
     [ApiErrorCode.UGYLDIG_BEREGNINGSGRUNNLAG]: 'Ugyldig beregningsgrunnlag',
@@ -258,21 +293,26 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Utenlandsopphold som fører til opphør må revurderes',
     [ApiErrorCode.UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE]:
         'Saken inneholder en utestående avkorting som enten må håndteres i ny stønadsperiode eller revurderes i sin helhet. Håndter i ny periode eller utvid revurderingsperioden til å inkludere perioden for avkortingen.',
+
+    //V
+    [ApiErrorCode.VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING]:
+        'Vedtak mangler i en eller flere måneder av valgt revurderingsperiode.',
     [ApiErrorCode.VERDIER_KAN_IKKE_VÆRE_NEGATIV]: 'Kan ikke sende inn negative verdier',
     [ApiErrorCode.VILKÅR_KUN_RELEVANT_FOR_ALDER]: 'Dette vilkåret er kun tilgjengelig for alderssøknader',
     [ApiErrorCode.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]:
         'Vurdering av vilkår må ha samme resultat for hele behandlingsperioden',
     [ApiErrorCode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
         'Vurdering av vilkår må gjøres innenfor behandlingsperioden',
-    [ApiErrorCode.ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_SØKNADSBEHANDLING]:
-        'Åpent kravgrunnlag må håndteres før ny søknadsbehandling',
     [ApiErrorCode.VURDERINGSPERIODER_MANGLER]: 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
+
+    //Å
     [ApiErrorCode.ÅPEN_REVURDERING_GJENOPPTAK_EKSISTERER]:
         'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
     [ApiErrorCode.ÅPEN_REVURDERING_STANS_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
-    [ApiErrorCode.INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
-        '	Ingen summert skattegrunnlag funnet på oppgitt personidentifikator og inntektsår',
-    [ApiErrorCode.SKATTEGRUNNLAGET_FINNES_IKKE_LENGER]: 'Skattegrunnlag finnes ikke lenger',
+    [ApiErrorCode.ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_REVURDERING]:
+        'Åpent kravgrunnlag må håndteres før ny revurdering',
+    [ApiErrorCode.ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_SØKNADSBEHANDLING]:
+        'Åpent kravgrunnlag må håndteres før ny søknadsbehandling',
 };
 export default messages;
 
