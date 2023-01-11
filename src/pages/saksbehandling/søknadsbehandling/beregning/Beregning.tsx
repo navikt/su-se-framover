@@ -21,6 +21,7 @@ import {
     eqFradragFormData,
     fradragSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
+import OppsummeringAvBeregning from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning';
 import OppsummeringAvSkattegrunnlag from '~src/components/oppsummering/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
 import OppsummeringAvInntektOgPensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -46,11 +47,10 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
-import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
+import sharedI18n from '../sharedI18n-nb';
 
 import messages from './beregning-nb';
 import * as styles from './beregning.module.less';
-import VisBeregning from './VisBeregning';
 
 interface FormData {
     fradrag: FradragFormData[];
@@ -243,7 +243,9 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 ${DateUtils.formatMonthYear(props.behandling.beregning.tilOgMed)}`}
                         </Heading>
                         <div className={styles.beregningsContainer}>
-                            {props.behandling.beregning && <VisBeregning beregning={props.behandling.beregning} />}
+                            {props.behandling.beregning && (
+                                <OppsummeringAvBeregning beregning={props.behandling.beregning} />
+                            )}
                             <Feiloppsummering
                                 tittel={formatMessage('feiloppsummering.title')}
                                 className={styles.feiloppsummering}

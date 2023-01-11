@@ -1,13 +1,13 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
+import { FamilieforeningForm } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningForm';
+import { FamilieforeningFormData } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningFormUtils';
 import OppsummeringAvOppholdstillatelseAlder from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOppholdstillatelseAlder';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { FamilieforeningForm } from '~src/pages/saksbehandling/steg/familieforening/FamilieforeningForm';
-import { FormData } from '~src/pages/saksbehandling/steg/familieforening/types';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 
 import sharedMessages from '../sharedI18n-nb';
@@ -22,7 +22,7 @@ const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: S
         GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag
     );
 
-    const handleSave = (values: FormData, onSuccess: () => void) =>
+    const handleSave = (values: FamilieforeningFormData, onSuccess: () => void) =>
         lagreFamilieforeninggrunnlag(
             {
                 sakId: props.sakId,

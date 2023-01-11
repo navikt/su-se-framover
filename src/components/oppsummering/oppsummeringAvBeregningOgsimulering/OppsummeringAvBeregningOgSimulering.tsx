@@ -2,23 +2,23 @@ import { Heading, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Beregning } from '~src/types/Beregning';
 import { Simulering } from '~src/types/Simulering';
 
-import { OppsummeringPar } from '../oppsummering/oppsummeringpar/OppsummeringPar';
-import Oppsummeringspanel, {
-    Oppsummeringsfarge,
-    Oppsummeringsikon,
-} from '../revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
-import VisBeregning from './beregning/VisBeregning';
-import bosSimulering from './BeregningOgSimulering-nb';
-import * as styles from './beregningOgSimulering.module.less';
-import { Utbetalingssimulering } from './simulering/simulering';
+import OppsummeringAvBeregning from './oppsummeringAvBeregning/OppsummeringAvBeregning';
+import messages from './OppsummeringAvBeregningOgSimulering-nb';
+import * as styles from './OppsummeringAvBeregningOgSimulering.module.less';
+import { Utbetalingssimulering } from './oppsummeringAvSimulering/OppsummeringAvSimulering';
 
-const BeregningOgSimulering = (props: {
+const OppsummeringAvBeregningOgSimulering = (props: {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
     tittel?: string;
@@ -26,7 +26,7 @@ const BeregningOgSimulering = (props: {
     childrenOverBeregning?: React.ReactNode;
     childrenUnderBeregning?: React.ReactNode;
 }) => {
-    const { formatMessage } = useI18n({ messages: bosSimulering });
+    const { formatMessage } = useI18n({ messages });
     return (
         <Oppsummeringspanel
             tittel={props.tittel ?? formatMessage('heading')}
@@ -46,7 +46,7 @@ const BeregningOgSimulering = (props: {
                     </Heading>
                     <Panel border>
                         {props.beregning ? (
-                            <VisBeregning beregning={props.beregning} utenTittel />
+                            <OppsummeringAvBeregning beregning={props.beregning} utenTittel />
                         ) : (
                             formatMessage('error.ingenBeregning')
                         )}
@@ -79,4 +79,4 @@ const BeregningOgSimulering = (props: {
     );
 };
 
-export default BeregningOgSimulering;
+export default OppsummeringAvBeregningOgSimulering;

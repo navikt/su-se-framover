@@ -14,9 +14,8 @@ import {
     UtenlandsoppholdDokumentasjon,
 } from '~src/types/RegistrertUtenlandsopphold';
 
-import messages from '../Utenlandsopphold-nb';
-
-import styles from './RegistreringAvUtenlandsopphold.module.less';
+import messages from './RegistreringAvUtenlandsoppholdForm-nb';
+import styles from './RegistreringAvUtenlandsoppholdForm.module.less';
 import {
     RegisteringAvUtenlandsoppholdFormData,
     registeringAvUtenlandsoppholdFormSchema,

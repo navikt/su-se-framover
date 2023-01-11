@@ -11,7 +11,7 @@ import * as DokumentApi from '~src/api/dokumentApi';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import SuTabell, { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';

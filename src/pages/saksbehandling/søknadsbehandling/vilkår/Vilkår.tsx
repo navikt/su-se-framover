@@ -1,11 +1,11 @@
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import Beregning from '~src/components/beregningOgSimulering/beregning/Beregning';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import * as Routes from '~src/lib/routes';
 import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspensjon/Alderspensjon';
+import Beregning from '~src/pages/saksbehandling/søknadsbehandling/beregning/Beregning';
 import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/familieforening/Familieforening';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';

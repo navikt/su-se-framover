@@ -8,7 +8,7 @@ import { BeregnOgSimuler } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
-import Beregningblokk from '~src/components/revurdering/oppsummering/beregningblokk/Beregningblokk';
+import Beregningblokk from '~src/components/oppsummering/oppsummeringAvRevurdering/beregningblokk/Beregningblokk';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

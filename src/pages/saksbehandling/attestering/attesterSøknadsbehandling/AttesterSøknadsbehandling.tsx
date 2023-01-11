@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Person } from '~src/api/personApi';
-import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
+import { AttesteringsForm } from '~src/components/forms/attesteringForm/AttesteringsForm';
 import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';

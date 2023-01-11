@@ -2,10 +2,10 @@ import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
+import OppsummeringAvRegistrerteUtenlandsopphold from '~src/components/oppsummering/utenlandsopphold/OppsummeringAvRegistrerteUtenlandsopphold';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 
-import OppsummeringAvRegistrerteUtenlandsopphold from './oppsummeringAvRegistrertUtenlandsopphold/OppsummeringAvRegistrerteUtenlandsopphold';
 import RegistreringAvUtenlandsopphold from './registreringAvUtenlandsopphold/RegistreringAvUtenlandsopphold';
 import messages from './Utenlandsopphold-nb';
 import styles from './Utenlandsopphold.module.less';

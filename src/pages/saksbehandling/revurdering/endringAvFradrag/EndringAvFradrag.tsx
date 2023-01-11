@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import fradragMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
@@ -23,6 +22,7 @@ import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårs
 import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import fradragMessages from '~src/pages/saksbehandling/søknadsbehandling/beregning/beregning-nb';
 import { useAppDispatch } from '~src/redux/Store';
 import { IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';

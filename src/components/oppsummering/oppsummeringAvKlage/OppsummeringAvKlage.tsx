@@ -9,7 +9,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import { useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Klage, KlageStatus, KlageVurderingType } from '~src/types/Klage';

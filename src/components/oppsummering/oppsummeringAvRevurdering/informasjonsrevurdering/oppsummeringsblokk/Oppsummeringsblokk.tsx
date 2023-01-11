@@ -20,7 +20,10 @@ import {
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
 
-import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '../../../../oppsummeringspanel/Oppsummeringspanel';
 
 import messages from './oppsummeringsblokk-nb';
 import * as styles from './oppsummeringsblokk.module.less';

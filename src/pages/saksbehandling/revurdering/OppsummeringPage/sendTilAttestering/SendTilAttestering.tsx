@@ -9,7 +9,7 @@ import { ApiError } from '~src/api/apiClient';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
-import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
+import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

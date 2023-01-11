@@ -4,7 +4,7 @@ import { Heading, BodyLong, RadioGroup, Radio, Alert } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
+import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

@@ -5,20 +5,20 @@ import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import React, { useState } from 'react';
 
-import sharedMessages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
+import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/beregning/beregning-nb';
 import { SimuleringsperiodeOppsummering, Simulering } from '~src/types/Simulering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { groupWhile } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
-import messages from './simulering-nb';
-import * as styles from './Simulering.module.less';
+import messages from './OppsummeringAvSimulering-nb';
+import * as styles from './OppsummeringAvSimulering.module.less';
 
-export const VisSimulering = (props: { behandling: Søknadsbehandling }) => {
+export const OppsummeringAvSimulering = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
     if (!props.behandling.simulering) {
         return <div>{formatMessage('feil.ingenSimulering')}</div>;

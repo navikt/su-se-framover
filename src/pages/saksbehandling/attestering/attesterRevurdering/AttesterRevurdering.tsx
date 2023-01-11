@@ -6,13 +6,13 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
+import { AttesteringsForm } from '~src/components/forms/attesteringForm/AttesteringsForm';
+import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
-import OppsummeringAvInformasjonsrevurdering from '~src/components/revurdering/oppsummering/OppsummeringAvInformasjonsrevurdering';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';

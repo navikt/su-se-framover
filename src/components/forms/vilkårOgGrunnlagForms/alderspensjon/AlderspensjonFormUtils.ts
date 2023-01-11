@@ -5,13 +5,13 @@ import {
     PensjonsOpplysningerUtvidetSvar,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 
-export interface FormData {
+export interface AlderspensjonFormData {
     folketrygd: Nullable<PensjonsOpplysningerSvar>;
     andreNorske: Nullable<PensjonsOpplysningerUtvidetSvar>;
     utenlandske: Nullable<PensjonsOpplysningerUtvidetSvar>;
 }
 
-export const schema = yup.object<FormData>({
+export const alderspensjonSchema = yup.object<AlderspensjonFormData>({
     folketrygd: yup
         .mixed()
         .defined()
@@ -19,7 +19,6 @@ export const schema = yup.object<FormData>({
             [PensjonsOpplysningerUtvidetSvar.JA, PensjonsOpplysningerUtvidetSvar.NEI],
             'Du må velge om bruker har vedtak om alderspensjon'
         ),
-
     andreNorske: yup
         .mixed()
         .defined()
@@ -31,7 +30,6 @@ export const schema = yup.object<FormData>({
             ],
             'Du må velge om bruker har søkt andre norske pensjonstrygder'
         ),
-
     utenlandske: yup
         .mixed()
         .defined()

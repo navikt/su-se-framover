@@ -6,9 +6,9 @@ import { Control, Controller, UseFormTrigger, useWatch } from 'react-hook-form';
 
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as PersonApi from '~src/api/personApi';
+import Formuestatus from '~src/components/formuestatus/Formuestatus';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import { Personkort } from '~src/components/personkort/Personkort';
-import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
 import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';

@@ -6,7 +6,6 @@ import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import React from 'react';
 
-import messages from '~src/components/beregningOgSimulering/beregning/beregning-nb';
 import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
@@ -17,7 +16,8 @@ import { groupBy, groupByEq } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
-import * as styles from './visBeregning.module.less';
+import messages from './OppsummeringAvBeregning-nb';
+import * as styles from './OppsummeringAvBeregning.module.less';
 
 const getFradragsnøkkel = (f: Fradrag) =>
     [f.type, f.utenlandskInntekt?.kurs ?? '', f.utenlandskInntekt?.valuta ?? '', f.tilhører].join('-');
@@ -115,7 +115,7 @@ const VisBenyttetEpsFradrag = ({
     );
 };
 
-const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; beregning: Beregning }) => {
+const OppsummeringAvBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; beregning: Beregning }) => {
     const { formatMessage, intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
 
     return (
@@ -291,4 +291,4 @@ const VisBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; 
         </div>
     );
 };
-export default VisBeregning;
+export default OppsummeringAvBeregning;

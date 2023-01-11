@@ -2,11 +2,11 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { Vilkårstatus } from '~src/types/Vilkår';
 
-export interface FormData {
+export interface FamilieforeningFormData {
     familieforening: Nullable<Vilkårstatus>;
 }
 
-export const schema = yup.object<FormData>({
+export const familieforeningSchema = yup.object<FamilieforeningFormData>({
     familieforening: yup
         .mixed()
         .defined()

@@ -5,28 +5,29 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import messages from '~src/pages/saksbehandling/steg/familieforening/familieforening-nb';
-import { FormData, schema } from '~src/pages/saksbehandling/steg/familieforening/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 
+import messages from './familieforening-nb';
+import { FamilieforeningFormData, familieforeningSchema } from './FamilieforeningFormUtils';
+
 interface Props extends VilkårsvurderingBaseProps {
-    save: (values: FormData, onSuccess: () => void) => void;
+    save: (values: FamilieforeningFormData, onSuccess: () => void) => void;
     savingState: ApiResult<Søknadsbehandling>;
     avsluttUrl: string;
 }
 
 export const FamilieforeningForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
-    const form = useForm<FormData>({
+    const form = useForm<FamilieforeningFormData>({
         defaultValues: {
             familieforening:
                 props.behandling.grunnlagsdataOgVilkårsvurderinger.familiegjenforening?.vurderinger[0]?.resultat ??
                 null,
         },
-        resolver: yupResolver(schema),
+        resolver: yupResolver(familieforeningSchema),
     });
 
     return (

@@ -2,7 +2,7 @@ import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
-import { AttesteringsForm } from '~src/components/attestering/AttesteringsForm';
+import AttesteringsForm from '~src/components/forms/attesteringForm/AttesteringsForm';
 import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as klageActions from '~src/features/klage/klageActions';

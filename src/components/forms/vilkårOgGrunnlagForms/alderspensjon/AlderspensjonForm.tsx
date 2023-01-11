@@ -3,23 +3,26 @@ import { Radio, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import messages from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/alderspensjon-nb';
+import {
+    AlderspensjonFormData,
+    alderspensjonSchema,
+} from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import messages from '~src/pages/saksbehandling/steg/alderspensjon/alderspensjon-nb';
-import { FormData, schema } from '~src/pages/saksbehandling/steg/alderspensjon/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 interface Props extends VilkårsvurderingBaseProps {
-    save: (values: FormData, onSuccess: () => void) => void;
+    save: (values: AlderspensjonFormData, onSuccess: () => void) => void;
     savingState: ApiResult<Søknadsbehandling>;
 }
 
 export const AlderspensjonForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
-    const form = useForm<FormData>({
+    const form = useForm<AlderspensjonFormData>({
         defaultValues: {
             folketrygd:
                 props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
@@ -31,7 +34,7 @@ export const AlderspensjonForm = (props: Props) => {
                 props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
                     .utenlandske ?? null,
         },
-        resolver: yupResolver(schema),
+        resolver: yupResolver(alderspensjonSchema),
     });
 
     return (

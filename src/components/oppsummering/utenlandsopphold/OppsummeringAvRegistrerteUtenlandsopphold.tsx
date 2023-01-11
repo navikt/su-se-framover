@@ -8,11 +8,13 @@ import React, { useState } from 'react';
 import { WarningIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~src/components/datePicker/DatePicker';
+import RegistreringAvUtenlandsoppholdForm from '~src/components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdForm';
+import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from '~src/components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdFormUtils';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -20,10 +22,7 @@ import { Nullable } from '~src/lib/types';
 import { RegistrertUtenlandsopphold, UtenlandsoppholdDokumentasjon } from '~src/types/RegistrertUtenlandsopphold';
 import { formatDate, formatDateTime, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
 
-import RegistreringAvUtenlandsoppholdForm from '../registreringAvUtenlandsopphold/RegistreringAvUtenlandsoppholdForm';
-import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from '../registreringAvUtenlandsopphold/RegistreringAvUtenlandsoppholdFormUtils';
-import messages from '../Utenlandsopphold-nb';
-
+import messages from './OppsummeringAvRegistrerteUtenlandsopphold-nb';
 import styles from './OppsummeringAvRegistrerteUtenlandsopphold.module.less';
 
 const OppsummeringAvRegistrerteUtenlandsopphold = (props: {

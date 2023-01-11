@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import * as PdfApi from '~src/api/pdfApi';
-import BeregningOgSimulering from '~src/components/beregningOgSimulering/BeregningOgSimulering';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -12,11 +11,9 @@ import { formatDate, formatPeriode } from '~src/utils/date/dateUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
-import Oppsummeringspanel, {
-    Oppsummeringsfarge,
-    Oppsummeringsikon,
-} from '../../revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../../oppsummeringspanel/Oppsummeringspanel';
 import UnderkjenteAttesteringer from '../../underkjenteAttesteringer/UnderkjenteAttesteringer';
+import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 
@@ -83,7 +80,10 @@ const OppsummeringAvSøknadsbehandling = (props: {
                 </div>
             </Oppsummeringspanel>
 
-            <BeregningOgSimulering beregning={props.behandling.beregning} simulering={props.behandling.simulering} />
+            <OppsummeringAvBeregningOgSimulering
+                beregning={props.behandling.beregning}
+                simulering={props.behandling.simulering}
+            />
             {props.medBrevutkast && (
                 <>
                     <Button

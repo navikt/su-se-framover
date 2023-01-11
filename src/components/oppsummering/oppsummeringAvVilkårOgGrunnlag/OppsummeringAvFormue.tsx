@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import React from 'react';
 
 import { regnUtFormuegrunnlagVerdier } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
-import Formuestatus from '~src/components/revurdering/formuestatus/Formuestatus';
+import Formuestatus from '~src/components/formuestatus/Formuestatus';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';

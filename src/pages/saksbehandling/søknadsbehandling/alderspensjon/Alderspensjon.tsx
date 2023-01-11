@@ -1,13 +1,13 @@
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
+import { AlderspensjonForm } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonForm';
+import { AlderspensjonFormData } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
 import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { AlderspensjonForm } from '~src/pages/saksbehandling/steg/alderspensjon/AlderspensjonForm';
-import { FormData } from '~src/pages/saksbehandling/steg/alderspensjon/types';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 
 import sharedMessages from '../sharedI18n-nb';
@@ -21,7 +21,7 @@ const Alderspensjon = (props: VilkårsvurderingBaseProps) => {
         GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag
     );
 
-    const handleSave = (values: FormData, onSuccess: () => void) =>
+    const handleSave = (values: AlderspensjonFormData, onSuccess: () => void) =>
         lagreAlderspensjongrunnlag(
             {
                 sakId: props.sakId,

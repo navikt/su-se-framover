@@ -6,14 +6,13 @@ import { useOutletContext } from 'react-router-dom';
 import * as DokumentApi from '~src/api/dokumentApi';
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import BeregningOgSimulering from '~src/components/beregningOgSimulering/BeregningOgSimulering';
 import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
@@ -38,6 +37,8 @@ import {
 } from '~src/utils/revurdering/revurderingUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 import { getVedtaketsbehandling, getVedtakstype } from '~src/utils/VedtakUtils';
+
+import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 
 import messages from './OppsummeringAvVedtak-nb';
 import * as styles from './OppsummeringAvVedtak.module.less';
@@ -153,7 +154,7 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                 )}
             </Oppsummeringspanel>
 
-            <BeregningOgSimulering
+            <OppsummeringAvBeregningOgSimulering
                 tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
                 beregning={vedtak.beregning}
                 simulering={vedtak.simulering}

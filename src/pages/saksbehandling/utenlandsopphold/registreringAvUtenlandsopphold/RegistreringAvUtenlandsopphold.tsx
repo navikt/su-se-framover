@@ -3,21 +3,21 @@ import { Button } from '@navikt/ds-react';
 import React from 'react';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { registrerUtenlandsoppholdFormDataTilRegistrerRequest } from '~src/components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdFormUtils';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 
+import RegistreringAvUtenlandsoppholdForm from '../../../../components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdForm';
 import messages from '../Utenlandsopphold-nb';
 
 import styles from './RegistreringAvUtenlandsopphold.module.less';
-import RegistreringAvUtenlandsoppholdForm from './RegistreringAvUtenlandsoppholdForm';
-import { registrerUtenlandsoppholdFormDataTilRegistrerRequest } from './RegistreringAvUtenlandsoppholdFormUtils';
 
 const RegistreringAvUtenlandsopphold = (props: { sakId: string; saksversjon: number }) => {
     const { formatMessage } = useI18n({ messages });

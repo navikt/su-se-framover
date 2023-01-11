@@ -12,7 +12,7 @@ import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import SuTabell, { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import {
     getDataCellInfo,

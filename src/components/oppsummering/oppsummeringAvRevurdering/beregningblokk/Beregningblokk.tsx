@@ -1,14 +1,15 @@
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 
-import BeregningOgSimulering from '~src/components/beregningOgSimulering/BeregningOgSimulering';
-import simulertUtbetaling from '~src/components/beregningOgSimulering/simulering/simulering-nb';
+import simulertUtbetaling from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvSimulering/OppsummeringAvSimulering-nb';
 import { useI18n } from '~src/lib/i18n';
 import { Oppsummeringsfelt } from '~src/pages/søknad/steg/oppsummering/components/Oppsummeringsfelt';
 import { InformasjonsRevurderingStatus, Revurdering, SimuleringForAvkortingsvarsel } from '~src/types/Revurdering';
 import { formatPeriode } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { harBeregninger, harSimulering, hentAvkortingFraRevurdering } from '~src/utils/revurdering/revurderingUtils';
+
+import OppsummeringAvBeregningOgSimulering from '../../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 
 import messages from './beregningblokk-nb';
 import * as styles from './beregningblokk.module.less';
@@ -33,7 +34,7 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
     }, [revurdering]);
 
     return (
-        <BeregningOgSimulering
+        <OppsummeringAvBeregningOgSimulering
             beregning={harBeregninger(revurdering) ? revurdering.beregning : null}
             simulering={harSimulering(revurdering) ? revurdering.simulering : null}
             childrenOverBeregning={
