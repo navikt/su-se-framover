@@ -133,7 +133,8 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }
                                 url: props.nesteUrl,
                                 savingState: pipe(
                                     combinedLagringsstatus,
-                                    RemoteData.fold3(
+                                    RemoteData.fold(
+                                        () => RemoteData.initial,
                                         () => RemoteData.pending,
                                         (err) => RemoteData.failure(err),
                                         (res) => RemoteData.success(res)
