@@ -98,7 +98,7 @@ const TilbakekrevingForm = (props: {
                                 steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
                             }),
                         }}
-                        fortsettSenere={{
+                        lagreOgfortsettSenere={{
                             url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
                         }}
                     >

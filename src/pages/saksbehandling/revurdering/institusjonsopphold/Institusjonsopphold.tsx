@@ -83,7 +83,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                             url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
                             onClick: props.onTilbakeClickOverride,
                         }}
-                        fortsettSenere={{
+                        lagreOgfortsettSenere={{
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

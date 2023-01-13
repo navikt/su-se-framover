@@ -141,7 +141,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }
                                     )
                                 ) as ApiResult<VilkårOgGrunnlagApiResult>,
                             }}
-                            fortsettSenere={{
+                            lagreOgfortsettSenere={{
                                 url: props.avsluttUrl,
                             }}
                             tilbake={{

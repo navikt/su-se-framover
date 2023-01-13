@@ -78,9 +78,26 @@ const SendTilAttestering = (props: {
     const [lagreStatus, setLagreStatus] = React.useState<RemoteData.RemoteData<ApiError, Revurdering>>(
         RemoteData.initial
     );
+
+    const [lagreBrevStatus, lagreBrev] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
         RevurderingActions.sendRevurderingTilAttestering
     );
+
+    const handleLagreOgFortsettSenere = (values: BrevvalgFormData) => {
+        lagreBrev(
+            {
+                sakId: props.sakId,
+                revurderingId: props.revurdering.id,
+                valg: values.valg,
+                fritekst: values.fritekst,
+                begrunnelse: values.begrunnelse,
+            },
+            () => {
+                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            }
+        );
+    };
 
     //Vi gjør dispatching litt på gamle måten fordi vi må chaine se-brev kallet bare hvis det dispatchen er OK
     const dispatchLagBrev = async (values: BrevvalgFormData) => {
@@ -172,9 +189,11 @@ const SendTilAttestering = (props: {
                                 steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
                             }),
                         }}
-                        fortsettSenere={{
+                        lagreOgfortsettSenere={{
+                            chainNesteKall: false,
+                            onClick: handleLagreOgFortsettSenere,
+                            loading: RemoteData.isPending(lagreBrevStatus),
                             url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
-                            tekst: formatMessage('knapp.fortsettSenere'),
                         }}
                     >
                         <div>

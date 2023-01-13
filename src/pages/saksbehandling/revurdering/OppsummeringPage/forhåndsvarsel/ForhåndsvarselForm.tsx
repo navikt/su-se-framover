@@ -98,7 +98,7 @@ const ForhåndsvarselForm = (props: {
                         }}
                         tilbake={{ url: props.forrigeUrl }}
                         fortsettSenere={{
-                            url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                            onClick: () => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
                             tekst: formatMessage('forhåndsvarsel.fortsettSenere'),
                         }}
                     >

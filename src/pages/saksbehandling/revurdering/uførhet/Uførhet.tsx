@@ -88,7 +88,7 @@ const Uførhet = (props: RevurderingStegProps) => {
                             url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
                             onClick: props.onTilbakeClickOverride,
                         }}
-                        fortsettSenere={{
+                        lagreOgfortsettSenere={{
                             url: props.avsluttUrl,
                         }}
                         minOgMaxPeriode={{

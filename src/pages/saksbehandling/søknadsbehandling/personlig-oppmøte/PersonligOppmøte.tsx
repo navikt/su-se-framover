@@ -109,7 +109,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                         tilbake={{
                             url: props.forrigeUrl,
                         }}
-                        fortsettSenere={{
+                        lagreOgfortsettSenere={{
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}

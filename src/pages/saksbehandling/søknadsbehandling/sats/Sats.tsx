@@ -253,7 +253,7 @@ const SatsForm = (props: SatsProps) => {
                         tilbake={{
                             url: props.forrigeUrl,
                         }}
-                        fortsettSenere={{
+                        lagreOgfortsettSenere={{
                             url: props.avsluttUrl,
                         }}
                     >

@@ -86,7 +86,7 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                         tilbake={{
                             url: props.forrigeUrl,
                         }}
-                        fortsettSenere={{
+                        lagreOgfortsettSenere={{
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}

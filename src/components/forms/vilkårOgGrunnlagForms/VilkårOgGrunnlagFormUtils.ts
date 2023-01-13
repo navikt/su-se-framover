@@ -15,15 +15,18 @@ export interface VilkårFormProps<FormData extends FieldValues> {
         savingState: VilkårFormSaveState;
         onClick: (values: FormData, onSuccess: () => void) => void;
     };
-
     tilbake: {
         url?: string;
         onClick?: () => void;
     };
-
-    fortsettSenere?: {
+    lagreOgfortsettSenere?: {
+        chainNesteKall?: boolean;
         loading?: boolean;
-        tekst?: string;
         url: string;
+        onClick?: (values: FormData, onSuccess: () => void) => void;
+    };
+    fortsettSenere?: {
+        onClick: () => void;
+        tekst?: string;
     };
 }

@@ -72,7 +72,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                         tilbake={{
                             url: props.forrigeUrl,
                         }}
-                        fortsettSenere={{
+                        lagreOgfortsettSenere={{
                             url: props.avsluttUrl,
                         }}
                         minOgMaxPeriode={{

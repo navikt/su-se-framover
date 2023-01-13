@@ -30,17 +30,35 @@ interface Props<T extends FieldValues, U> {
         url?: string;
         onClick?: () => void;
     };
-    fortsettSenere?: {
+    lagreOgfortsettSenere?: {
+        chainNesteKall?: boolean;
         loading?: boolean;
-        tekst?: string;
         url: string;
+        onClick?: (values: T, onSuccess: (res?: U) => void) => void;
+    };
+    fortsettSenere?: {
+        onClick: () => void;
+        tekst?: string;
     };
 }
 
+/**
+ *
+ * @param chainNesteKall i `lagreOgFortsettSenere` blir kun tatt stilling til dersom det sendes med en onClick
+ */
 export const FormWrapper = <T extends FieldValues, U extends Søknadsbehandling>({ form, ...props }: Props<T, U>) => {
     const { formatMessage } = useI18n({ messages: stegSharedI18n });
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+
+    const lagreOgFortsettSenereMedNeste = (values: T) =>
+        props.lagreOgfortsettSenere!.onClick!(values, () =>
+            props.neste.onClick(values, () => navigate(props.lagreOgfortsettSenere!.url))
+        );
+    const lagreOgFortsettSenereUtenNeste = (values: T) =>
+        props.lagreOgfortsettSenere!.onClick!(values, () => navigate(props.lagreOgfortsettSenere!.url));
+    const lagreOgFortsettSenereUtenOnClick = (values: T) =>
+        props.neste.onClick!(values, () => navigate(props.lagreOgfortsettSenere!.url));
 
     return (
         <form
@@ -71,11 +89,19 @@ export const FormWrapper = <T extends FieldValues, U extends Søknadsbehandling>
                 }}
                 tilbake={props.tilbake}
                 fortsettSenere={
-                    props.fortsettSenere
+                    props.lagreOgfortsettSenere
                         ? {
                               onClick: form.handleSubmit((values) =>
-                                  props.neste.onClick(values, () => navigate(props.fortsettSenere!.url))
+                                  props.lagreOgfortsettSenere?.onClick
+                                      ? props.lagreOgfortsettSenere?.chainNesteKall
+                                          ? lagreOgFortsettSenereMedNeste(values)
+                                          : lagreOgFortsettSenereUtenNeste(values)
+                                      : lagreOgFortsettSenereUtenOnClick(values)
                               ),
+                          }
+                        : props.fortsettSenere
+                        ? {
+                              onClick: props.fortsettSenere.onClick,
                               tekst: props.fortsettSenere?.tekst,
                           }
                         : undefined
