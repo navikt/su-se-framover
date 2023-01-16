@@ -105,3 +105,10 @@ Ute i miljøene gjøres det gjennom bruk av `handlebars`.
 Vi utnytter at både `posthtml-expressions` og `handlebars` har samme syntax for å sette inn "unescaped" verdier (`{{{verdi}}}`).
 
 Se [./src/index.html](), [./posthtml.config.js](), [./server/config.ts]() og [./server/routes.ts]() for mer info.
+
+## Node og npm oppgradering
+
+-   Må oppgradere .github/workflows (`branch-deploy.yml`, `branch.yml`, `master.yml`) sin `node-version:`
+-   I `package.json` og `server/package.json`: Endre `engines->node`
+-   I `Dockerfile` endre `FROM navikt/node-express:`
+-   Lokalt, dersom du bruker nvm, `nvm install <version>; nvm use <version>; nvm alias default <version>;` Må muligens også oppdatere paths.

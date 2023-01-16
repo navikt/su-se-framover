@@ -12,7 +12,7 @@
     "author": "",
     "license": "ISC",
     "engines": {
-        "node": ">=16 <17",
+        "node": ">=18 <19",
         "npm": ">=8 <9"
     },
     "dependencies": {
