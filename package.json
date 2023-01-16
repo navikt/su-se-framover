@@ -34,7 +34,7 @@
     "author": "supstonad",
     "license": "MIT",
     "engines": {
-        "node": ">=18 <19",
+        "node": ">=16 <17",
         "npm": ">=8 <9"
     },
     "bugs": {
