@@ -79,7 +79,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }
                 behandlingId: props.behandling.id,
                 epsFnr: values.epsFnr,
             },
-            () =>
+            () => {
                 lagreFormue(
                     {
                         ...formueVilkårFormTilRequest(props.sakId, props.behandling.id, values as FormueVilkårFormData),
@@ -89,7 +89,8 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }
                         clearDraft();
                         onSuccess();
                     }
-                )
+                );
+            }
         );
     };
 

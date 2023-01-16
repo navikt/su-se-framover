@@ -34,7 +34,7 @@ export function useAsyncActionCreator<T, U>(
         args: T,
         onSuccess?: (result: U) => void | Promise<void>,
         onFailure?: (error: ApiError | undefined) => void | Promise<void>
-    ) => Promise<void>,
+    ) => Promise<'ok' | 'error' | 'pending' | void>,
     () => void
 ] {
     const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
@@ -54,11 +54,14 @@ export function useAsyncActionCreator<T, U>(
                 if (actionCreator.fulfilled.match(action)) {
                     setApiResult(RemoteData.success(action.payload));
                     await onSuccess?.(action.payload);
+                    return 'ok';
                 } else {
                     setApiResult(RemoteData.failure(action.payload));
                     await onFailure?.(action.payload);
+                    return 'error';
                 }
             }
+            return 'pending';
         },
         [apiResult, actionCreator]
     );
