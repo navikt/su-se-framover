@@ -172,7 +172,7 @@ export enum ApiErrorCode {
 
     //S
     SAKSNUMMER_IKKE_GYLDIG = 'saksnummer_ikke_gyldig',
-    SENERE_STØNADSPERIODE_EKSISTERER = 'senere_stønadsperioder_eksisterer',
+    SENERE_STØNADSPERIODE_EKSISTERER = 'senere_stønadsperiode',
     SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
     SISTE_UTBETALING_ER_IKKE_STANS = 'siste_utbetaling_er_ikke_stans',
     SISTE_VEDTAK_IKKE_STANS = 'siste_vedtak_ikke_stans',
