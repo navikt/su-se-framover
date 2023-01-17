@@ -50,7 +50,7 @@
         "@navikt/ds-css-internal": "^2.0.12",
         "@navikt/ds-icons": "^2.0.12",
         "@navikt/ds-react": "^2.0.12",
-        "@navikt/ds-react-internal": "^2.0.12",
+        "@navikt/ds-react-internal": "^2.0.14",
         "@radix-ui/react-tabs": "^1.0.1",
         "@reduxjs/toolkit": "^1.9.1",
         "@sentry/browser": "^7.29.0",
