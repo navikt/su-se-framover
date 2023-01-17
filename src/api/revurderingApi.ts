@@ -202,7 +202,7 @@ export async function lagreTilbakekrevingsbehandling(
     sakId: string,
     revurderingId: string,
     tilbakekrevingsbehandling: TilbakekrevingsbehandlingFormData
-): Promise<ApiClientResult<SimulertRevurdering>> {
+): Promise<ApiClientResult<SimulertRevurdering | UnderkjentRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilbakekreving`,
         method: 'POST',

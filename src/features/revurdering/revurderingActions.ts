@@ -169,7 +169,7 @@ export const lagreBrevvalg = createAsyncThunk<
 );
 
 export const lagreTilbakekrevingsbehandling = createAsyncThunk<
-    SimulertRevurdering,
+    SimulertRevurdering | UnderkjentRevurdering,
     {
         sakId: string;
         revurderingId: string;
