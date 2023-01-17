@@ -22,8 +22,8 @@ import {
     erSimulert,
     erUnderkjent,
     erVilkårsvurderingerVurdertAvslag,
-} from '~src/utils/behandling/SøknadsbehandlingUtils';
-import { createVilkårUrl, mapToVilkårsinformasjon } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~src/utils/SøknadsbehandlingUtils';
+import { createVilkårUrl, mapToVilkårsinformasjon } from '~src/utils/vilkårUtils';
 
 import messages from './sendTilAttesteringPage-nb';
 import * as styles from './sendTilAttesteringPage.module.less';

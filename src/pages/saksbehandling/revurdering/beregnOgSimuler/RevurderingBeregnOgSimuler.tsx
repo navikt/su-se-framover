@@ -27,7 +27,7 @@ import {
     periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~src/utils/revurdering/revurderingUtils';
 
-import Navigasjonsknapper from '../../bunnknapper/Navigasjonsknapper';
+import Navigasjonsknapper from '../../../../components/navigasjonsknapper/Navigasjonsknapper';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './RevurderingBeregnOgsimuler-nb';

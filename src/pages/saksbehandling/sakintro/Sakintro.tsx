@@ -17,11 +17,11 @@ import { Nullable } from '~src/lib/types';
 import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
 import { KlageStatus } from '~src/types/Klage';
 import { Sakstype } from '~src/types/Sak';
-import { erSøknadsbehandlingÅpen } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { erKlageAvsluttet, erKlageÅpen } from '~src/utils/klage/klageUtils';
 import { erReguleringAvsluttet, erReguleringÅpen } from '~src/utils/ReguleringUtils';
 import { erRevurderingAvsluttet, erRevurderingÅpen } from '~src/utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, erSøknadLukket, erSøknadÅpen } from '~src/utils/søknad/søknadUtils';
+import { erSøknadsbehandlingÅpen } from '~src/utils/SøknadsbehandlingUtils';
 
 import AvsluttedeBehandlingerTabell from './avsluttedeBehandlingerTabell/AvsluttedeBehandlingerTabell';
 import messages from './sakintro-nb';

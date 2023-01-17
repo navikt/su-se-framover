@@ -4,7 +4,6 @@ import { Regulering } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Søknad } from '~src/types/Søknad';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { splitStatusOgResultatFraSøkandsbehandling } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { splitStatusOgResultatFraKlage } from '~src/utils/klage/klageUtils';
 import { erReguleringAvsluttet } from '~src/utils/ReguleringUtils';
 import {
@@ -14,6 +13,7 @@ import {
     splitStatusOgResultatFraRevurdering,
 } from '~src/utils/revurdering/revurderingUtils';
 import { erPapirSøknad, erSøknadLukket } from '~src/utils/søknad/søknadUtils';
+import { splitStatusOgResultatFraSøkandsbehandling } from '~src/utils/SøknadsbehandlingUtils';
 
 export const isRegulering = (b: TabellBehandling): b is Regulering => 'reguleringsstatus' in b;
 export const isSøknadMedEllerUtenBehandling = (b: TabellBehandling): b is SøknadMedEllerUtenBehandling => 'søknad' in b;

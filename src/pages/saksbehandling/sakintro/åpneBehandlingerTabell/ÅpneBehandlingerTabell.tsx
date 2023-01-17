@@ -34,11 +34,6 @@ import { Klage } from '~src/types/Klage';
 import { Regulering, Reguleringstype } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
-import {
-    erSøknadsbehandlingTilAttestering,
-    hentSisteVurdertSaksbehandlingssteg,
-    kanNavigeresTilOppsummering,
-} from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { erKlageTilAttestering, hentSisteVurderteSteg } from '~src/utils/klage/klageUtils';
 import {
@@ -48,6 +43,11 @@ import {
     erRevurderingTilAttestering,
     finnNesteRevurderingsteg,
 } from '~src/utils/revurdering/revurderingUtils';
+import {
+    erSøknadsbehandlingTilAttestering,
+    hentSisteVurdertSaksbehandlingssteg,
+    kanNavigeresTilOppsummering,
+} from '~src/utils/SøknadsbehandlingUtils';
 
 import messages from '../sakintro-nb';
 

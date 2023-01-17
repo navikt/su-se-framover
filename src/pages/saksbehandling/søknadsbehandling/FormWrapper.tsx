@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import Navigasjonsknapper from '~src/pages/saksbehandling/bunnknapper/Navigasjonsknapper';
 import stegSharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 

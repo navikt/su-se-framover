@@ -12,7 +12,7 @@ import {
     Vilkårsinformasjon,
     vilkårsinformasjonForBeregningssteg,
     vilkårTittelFormatted,
-} from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~src/utils/vilkårUtils';
 
 import messages from './saksbehandlingFramdriftsindikator-nb';
 

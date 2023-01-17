@@ -14,7 +14,7 @@ import * as Routes from '~src/lib/routes';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { erIverksatt, erTilAttestering } from '~src/utils/behandling/SøknadsbehandlingUtils';
+import { erIverksatt, erTilAttestering } from '~src/utils/SøknadsbehandlingUtils';
 
 import messages from './attesterSøknadsbehandling-nb';
 import * as styles from './attesterSøknadsbehandling.module.less';

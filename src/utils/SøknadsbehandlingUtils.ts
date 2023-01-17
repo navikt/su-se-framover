@@ -8,7 +8,7 @@ import {
     erAlleVilkårStartet,
     mapToVilkårsinformasjon,
     vilkårsinformasjonForBeregningssteg,
-} from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~src/utils/vilkårUtils';
 
 export const erSøknadsbehandlingOpprettet = (s: Søknadsbehandling) => s.status === SøknadsbehandlingStatus.OPPRETTET;
 export const erSøknadsbehandlingVilkårsvurdert = (s: Søknadsbehandling) =>

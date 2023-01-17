@@ -25,7 +25,6 @@ import { Revurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erBehandlingRevurdering, erBehandlingSøknadsbehandling } from '~src/utils/behandling/BehandlingUtils';
-import { splitStatusOgResultatFraSøkandsbehandling } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { formatDate, formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
@@ -36,6 +35,7 @@ import {
     splitStatusOgResultatFraRevurdering,
 } from '~src/utils/revurdering/revurderingUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
+import { splitStatusOgResultatFraSøkandsbehandling } from '~src/utils/SøknadsbehandlingUtils';
 import { getVedtaketsbehandling, getVedtakstype } from '~src/utils/VedtakUtils';
 
 import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';

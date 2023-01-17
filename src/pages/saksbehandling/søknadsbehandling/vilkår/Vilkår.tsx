@@ -9,9 +9,9 @@ import Beregning from '~src/pages/saksbehandling/søknadsbehandling/beregning/Be
 import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/familieforening/Familieforening';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
-import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/behandling/SøknadsbehandlingUtils';
 import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
-import { createVilkårUrl } from '~src/utils/søknadsbehandling/vilkår/vilkårUtils';
+import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/SøknadsbehandlingUtils';
+import { createVilkårUrl } from '~src/utils/vilkårUtils';
 
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';
 import Flyktning from '../flyktning/Flyktning';

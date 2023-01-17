@@ -31,7 +31,7 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
-import Navigasjonsknapper from '../../bunnknapper/Navigasjonsknapper';
+import Navigasjonsknapper from '../../../../components/navigasjonsknapper/Navigasjonsknapper';
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
