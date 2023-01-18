@@ -14,7 +14,6 @@ const HomePage = () => {
     const harTilgangTilDrift = user.roller.includes(Rolle.Drift);
     const harTilgangTilVeileder = user.roller.includes(Rolle.Veileder);
     const harTilgangTilSaksbehandler = user.roller.includes(Rolle.Saksbehandler);
-    const harTilgangTilAttestant = user.roller.includes(Rolle.Attestant);
 
     React.useEffect(() => {
         if (user.roller.length === 1 && user.roller[0] === Rolle.Veileder) {
@@ -42,15 +41,6 @@ const HomePage = () => {
                         className={styles.link}
                     >
                         Saksbehandler
-                    </LinkAsButton>
-                )}
-                {harTilgangTilAttestant && (
-                    <LinkAsButton
-                        variant="secondary"
-                        href={Routes.saksoversiktIndex.createURL()}
-                        className={styles.link}
-                    >
-                        Attestant
                     </LinkAsButton>
                 )}
                 {harTilgangTilDrift && (
