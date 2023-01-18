@@ -65,20 +65,10 @@ export const useSøknadsbehandlingDraftContextFor = <U extends FieldValues, T ex
         [setDraft]
     );
 
-    const useDraftFromFormikValues = React.useCallback(
-        (values: U) => {
-            React.useEffect(() => {
-                setDraft(values);
-            }, [values, setDraft]);
-        },
-        [setDraft]
-    );
-
     return {
         draft: value[vilkårtype] as U | undefined,
         setDraft,
         clearDraft,
         useDraftFormSubscribe,
-        useDraftFromFormikValues,
     };
 };
