@@ -310,9 +310,9 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
     [ApiErrorCode.ÅPEN_REVURDERING_STANS_EKSISTERER]: 'Åpen revurdering for stans av ytelse eksisterer fra før',
     [ApiErrorCode.ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_REVURDERING]:
-        'Saken avventer kravgrunnlag (forrige iverksatte utbetaling førte til feilutbetaling). Vi kan ikke sende nye utbetalinslinjer før Oppdrag returnerer kravgrunnlaget. Dette utføres ofte innen 3 virkedager, men kan ta lengre tid. Hvis det tar lenger tid er det mulig å purre',
+        'Saken avventer kravgrunnlag (forrige iverksatte utbetaling førte til feilutbetaling). Vi kan ikke sende nye utbetalinslinjer før Oppdrag returnerer kravgrunnlaget. Dette utføres ofte innen 3 virkedager, men kan ta lengre tid. Hvis det tar lenger tid er det mulig å purre NØS',
     [ApiErrorCode.ÅPENT_KRAVGRUNNLAG_MÅ_HÅNDTERES_FØR_NY_SØKNADSBEHANDLING]:
-        'Saken avventer kravgrunnlag (forrige iverksatte utbetaling førte til feilutbetaling). Vi kan ikke sende nye utbetalinslinjer før Oppdrag returnerer kravgrunnlaget. Dette utføres ofte innen 3 virkedager, men kan ta lengre tid. Hvis det tar lenger tid er det mulig å purre',
+        'Saken avventer kravgrunnlag (forrige iverksatte utbetaling førte til feilutbetaling). Vi kan ikke sende nye utbetalinslinjer før Oppdrag returnerer kravgrunnlaget. Dette utføres ofte innen 3 virkedager, men kan ta lengre tid. Hvis det tar lenger tid er det mulig å purre NØS',
 };
 export default messages;
 
