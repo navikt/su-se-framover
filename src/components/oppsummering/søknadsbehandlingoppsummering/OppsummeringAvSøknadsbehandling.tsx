@@ -67,6 +67,26 @@ const OppsummeringAvSøknadsbehandling = (props: {
                             retning={'vertikal'}
                         />
                     </div>
+                    {props.medBrevutkast && (
+                        <div className={styles.brevContainer}>
+                            <Button
+                                variant="secondary"
+                                type="button"
+                                onClick={() =>
+                                    hentBrevutkast(
+                                        { sakId: props.medBrevutkast!.sakId, behandlingId: props.behandling.id },
+                                        (b: Blob) => window.open(URL.createObjectURL(b))
+                                    )
+                                }
+                                loading={RemoteData.isPending(hentBrevutkastStatus)}
+                            >
+                                {formatMessage('knapp.vis')}
+                            </Button>
+                            {RemoteData.isFailure(hentBrevutkastStatus) && (
+                                <ApiErrorAlert error={hentBrevutkastStatus.error} />
+                            )}
+                        </div>
+                    )}
                     {underkjenteAttesteringer.length > 0 && (
                         <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
                     )}
@@ -84,24 +104,6 @@ const OppsummeringAvSøknadsbehandling = (props: {
                 beregning={props.behandling.beregning}
                 simulering={props.behandling.simulering}
             />
-            {props.medBrevutkast && (
-                <>
-                    <Button
-                        variant="secondary"
-                        type="button"
-                        onClick={() =>
-                            hentBrevutkast(
-                                { sakId: props.medBrevutkast!.sakId, behandlingId: props.behandling.id },
-                                (b: Blob) => window.open(URL.createObjectURL(b))
-                            )
-                        }
-                        loading={RemoteData.isPending(hentBrevutkastStatus)}
-                    >
-                        {formatMessage('knapp.vis')}
-                    </Button>
-                    {RemoteData.isFailure(hentBrevutkastStatus) && <ApiErrorAlert error={hentBrevutkastStatus.error} />}
-                </>
-            )}
         </div>
     );
 };

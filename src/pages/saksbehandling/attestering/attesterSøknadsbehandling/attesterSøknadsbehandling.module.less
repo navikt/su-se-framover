@@ -1,9 +1,13 @@
 @import '~/src/styles/variables.less';
 
-.pageContainer {
-    margin: @spacing 0 0 10vw;
+.mainContentContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: @spacing-xl;
+    margin: 0 10vw;
 
-    > :not(:last-child) {
-        margin-bottom: @spacing-s;
+    > :first-child {
+        position: sticky;
+        top: 20px;
     }
 }

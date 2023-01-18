@@ -6,6 +6,10 @@ import { Controller, useForm } from 'react-hook-form';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -77,44 +81,52 @@ export const AttesteringsForm = (props: Props) => {
     };
 
     return (
-        <form className={styles.container} onSubmit={handleSubmit(submitHandler)}>
-            <Controller
-                control={control}
-                name={'beslutning'}
-                render={({ field, fieldState }) => (
-                    <RadioGroup
-                        {...field}
-                        legend={formatMessage('beslutning.label')}
-                        error={fieldState.error?.message}
-                        value={field.value ?? ''}
+        <Oppsummeringspanel ikon={Oppsummeringsikon.Blyant} farge={Oppsummeringsfarge.Blå} tittel={'Beslutning'}>
+            <form className={styles.container} onSubmit={handleSubmit(submitHandler)}>
+                <Controller
+                    control={control}
+                    name={'beslutning'}
+                    render={({ field, fieldState }) => (
+                        <RadioGroup
+                            {...field}
+                            className={styles.radiogroup}
+                            legend={formatMessage('beslutning.label')}
+                            error={fieldState.error?.message}
+                            value={field.value ?? ''}
+                        >
+                            <Radio value={Beslutning.IVERKSETT}>
+                                {props.radioTexts?.bekreftText ?? formatMessage('beslutning.iverksett')}
+                            </Radio>
+                            <Radio value={Beslutning.UNDERKJENN}>
+                                {props.radioTexts?.underkjennText ?? formatMessage('beslutning.underkjenn')}
+                            </Radio>
+                        </RadioGroup>
+                    )}
+                />
+                {watch('beslutning') === Beslutning.UNDERKJENN && <UnderkjennelsesForm control={control} />}
+                <div className={styles.knapperContainer}>
+                    <LinkAsButton
+                        variant="secondary"
+                        href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
                     >
-                        <Radio value={Beslutning.IVERKSETT}>
-                            {props.radioTexts?.bekreftText ?? formatMessage('beslutning.iverksett')}
-                        </Radio>
-                        <Radio value={Beslutning.UNDERKJENN}>
-                            {props.radioTexts?.underkjennText ?? formatMessage('beslutning.underkjenn')}
-                        </Radio>
-                    </RadioGroup>
-                )}
-            />
-            {watch('beslutning') === Beslutning.UNDERKJENN && <UnderkjennelsesForm control={control} />}
-            <div className={styles.knapperContainer}>
-                <LinkAsButton variant="secondary" href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
-                    {formatMessage('knapp.tilbake')}
-                </LinkAsButton>
-                <Button>
-                    {formatMessage('knapp.bekreft')}
-                    {(RemoteData.isPending(props.iverksett.status) ||
-                        RemoteData.isPending(props.underkjenn.status)) && <Loader />}
-                </Button>
-            </div>
-            <div className={styles.apiErrorContainer}>
-                {RemoteData.isFailure(props.iverksett.status) && <ApiErrorAlert error={props.iverksett.status.error} />}
-                {RemoteData.isFailure(props.underkjenn.status) && (
-                    <ApiErrorAlert error={props.underkjenn.status.error} />
-                )}
-            </div>
-        </form>
+                        {formatMessage('knapp.tilbake')}
+                    </LinkAsButton>
+                    <Button>
+                        {formatMessage('knapp.bekreft')}
+                        {(RemoteData.isPending(props.iverksett.status) ||
+                            RemoteData.isPending(props.underkjenn.status)) && <Loader />}
+                    </Button>
+                </div>
+                <div className={styles.apiErrorContainer}>
+                    {RemoteData.isFailure(props.iverksett.status) && (
+                        <ApiErrorAlert error={props.iverksett.status.error} />
+                    )}
+                    {RemoteData.isFailure(props.underkjenn.status) && (
+                        <ApiErrorAlert error={props.underkjenn.status.error} />
+                    )}
+                </div>
+            </form>
+        </Oppsummeringspanel>
     );
 };
 

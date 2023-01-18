@@ -20,7 +20,6 @@ const UnderkjennelsesForm = (props: { control: Control<AttesteringFormData> }) =
                 render={({ field, fieldState }) => (
                     <Select
                         {...field}
-                        className={styles.grunnContainer}
                         label={formatMessage('underkjennelse.select.label')}
                         value={field.value ?? ''}
                         error={fieldState.error?.message}

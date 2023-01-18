@@ -1,11 +1,9 @@
-import { Alert, Heading } from '@navikt/ds-react';
+import { Alert } from '@navikt/ds-react';
 import React from 'react';
-import { Link, useNavigate, useOutletContext } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { Person } from '~src/api/personApi';
 import { AttesteringsForm } from '~src/components/forms/attesteringForm/AttesteringsForm';
 import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
-import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -19,20 +17,7 @@ import { erIverksatt, erTilAttestering } from '~src/utils/SøknadsbehandlingUtil
 import messages from './attesterSøknadsbehandling-nb';
 import * as styles from './attesterSøknadsbehandling.module.less';
 
-const AttesterSøknadsbehandling = () => {
-    const props = useOutletContext<SaksoversiktContext>();
-    const urlParams = Routes.useRouteParams<typeof Routes.attesterSøknadsbehandling>();
-    const { formatMessage } = useI18n({ messages });
-
-    const behandling = props.sak.behandlinger.find((x) => x.id === urlParams.behandlingId);
-
-    if (!behandling) {
-        return <Alert variant="error">{formatMessage('feil.fantIkkeBehandling')}</Alert>;
-    }
-    return <Attesteringsinnhold behandling={behandling} sak={props.sak} søker={props.søker} />;
-};
-
-const Attesteringsinnhold = ({ ...props }: { behandling: Søknadsbehandling; sak: Sak; søker: Person }) => {
+const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søknadsbehandling }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [iverksettStatus, attesteringIverksett] = useAsyncActionCreator(
@@ -47,7 +32,7 @@ const Attesteringsinnhold = ({ ...props }: { behandling: Søknadsbehandling; sak
     };
 
     const iverksettCallback = () =>
-        attesteringIverksett({ sakId: props.sak.id, behandlingId: props.behandling.id }, (res) => {
+        attesteringIverksett({ sakId: props.sak.id, behandlingId: props.søknadsbehandling.id }, (res) => {
             fetchSak({ sakId: res.sakId }, () => {
                 redirectTilSaksoversikt(formatMessage('status.iverksatt'));
             });
@@ -57,7 +42,7 @@ const Attesteringsinnhold = ({ ...props }: { behandling: Søknadsbehandling; sak
         attesteringUnderkjent(
             {
                 sakId: props.sak.id,
-                behandlingId: props.behandling.id,
+                behandlingId: props.søknadsbehandling.id,
                 grunn: grunn,
                 kommentar: kommentar,
             },
@@ -66,7 +51,7 @@ const Attesteringsinnhold = ({ ...props }: { behandling: Søknadsbehandling; sak
             }
         );
 
-    if (!erTilAttestering(props.behandling) && !erIverksatt(props.behandling)) {
+    if (!erTilAttestering(props.søknadsbehandling) && !erIverksatt(props.søknadsbehandling)) {
         return (
             <div>
                 <Alert variant="error">
@@ -78,15 +63,15 @@ const Attesteringsinnhold = ({ ...props }: { behandling: Søknadsbehandling; sak
     }
 
     return (
-        <div className={styles.pageContainer}>
-            <Heading level="1" size="large" spacing>
-                {formatMessage('page.tittel')}
-            </Heading>
-            <OppsummeringAvSøknadsbehandling behandling={props.behandling} medBrevutkast={{ sakId: props.sak.id }} />
+        <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 sakId={props.sak.id}
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                 underkjenn={{ fn: underkjennCallback, status: underkjennStatus }}
+            />
+            <OppsummeringAvSøknadsbehandling
+                behandling={props.søknadsbehandling}
+                medBrevutkast={{ sakId: props.sak.id }}
             />
         </div>
     );

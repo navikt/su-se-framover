@@ -194,7 +194,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
                     className={styles.dataCellLink}
                     variant="secondary"
                     size="small"
-                    href={Routes.attesterSøknadsbehandling.createURL({
+                    href={Routes.attestering.createURL({
                         sakId: props.sakId,
                         behandlingId: props.b.søknadsbehandling.id,
                     })}
@@ -274,9 +274,9 @@ const KlageKnapper = (props: { sakId: string; k: Klage }) => {
                 <LinkAsButton
                     variant="secondary"
                     size="small"
-                    href={Routes.attesterKlage.createURL({
+                    href={Routes.attestering.createURL({
                         sakId: props.sakId,
-                        klageId: props.k.id,
+                        behandlingId: props.k.id,
                     })}
                 >
                     {formatMessage('attestering.attester')}
@@ -323,9 +323,9 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
                 <LinkAsButton
                     variant="secondary"
                     size="small"
-                    href={Routes.attesterRevurdering.createURL({
+                    href={Routes.attestering.createURL({
                         sakId: props.sakId,
-                        revurderingId: props.r.id,
+                        behandlingId: props.r.id,
                     })}
                 >
                     {formatMessage('attestering.attester')}

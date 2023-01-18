@@ -1,16 +1,17 @@
-import { Alert, Heading } from '@navikt/ds-react';
+import { Alert } from '@navikt/ds-react';
 import React from 'react';
-import { Link, useNavigate, useOutletContext } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import AttesteringsForm from '~src/components/forms/attesteringForm/AttesteringsForm';
 import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
-import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as klageActions from '~src/features/klage/klageActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Klage } from '~src/types/Klage';
+import { Vedtak } from '~src/types/Vedtak';
 import {
     erKlageINoenFormForAvvist,
     erKlageOpprettholdt,
@@ -18,42 +19,19 @@ import {
     erKlageTilAttesteringAvvist,
 } from '~src/utils/klage/klageUtils';
 
-import * as sharedStyles from '../sharedStyles.module.less';
-
 import messages from './attesterKlage-nb';
 import * as styles from './attesterKlage.module.less';
 
-const AttesterKlage = () => {
-    const { sak } = useOutletContext<SaksoversiktContext>();
-    const props = { sakId: sak.id, klager: sak.klager, vedtaker: sak.vedtak };
+const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
-    const urlParams = Routes.useRouteParams<typeof Routes.attesterKlage>();
-
-    const klage = props.klager.find((k) => k.id === urlParams.klageId);
-    const klagensVedtak = props.vedtaker.find((v) => v.id === klage?.vedtakId);
 
     const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
     const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.iverksattAvvist);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
 
-    if (!klagensVedtak || !klage) {
-        return (
-            <div className={styles.fantIkkevedtakFeilContainer}>
-                <Alert variant="error">{formatMessage('feil.fantIkkeKlageEllerVedtakensKlage')}</Alert>
-                <Link
-                    to={Routes.saksoversiktValgtSak.createURL({
-                        sakId: props.sakId,
-                    })}
-                >
-                    {formatMessage('knapp.tilbake')}
-                </Link>
-            </div>
-        );
-    }
-
-    if (!erKlageTilAttestering(klage)) {
+    if (!erKlageTilAttestering(props.klage)) {
         return (
             <div className={styles.fantIkkevedtakFeilContainer}>
                 <Alert variant="error">{formatMessage('feil.klageErIkkeTilAttestering')}</Alert>
@@ -65,7 +43,7 @@ const AttesterKlage = () => {
     }
 
     const iverksettCallback = () => {
-        if (erKlageTilAttesteringAvvist(klage)) {
+        if (erKlageTilAttesteringAvvist(props.klage)) {
             return avvisCallbackOgStatus();
         } else {
             return oversendCallbackOgStatus();
@@ -78,7 +56,7 @@ const AttesterKlage = () => {
                 avvis(
                     {
                         sakId: props.sakId,
-                        klageId: klage.id,
+                        klageId: props.klage.id,
                     },
                     () => {
                         fetchSak({ sakId: props.sakId }, () => {
@@ -100,7 +78,7 @@ const AttesterKlage = () => {
                 oversend(
                     {
                         sakId: props.sakId,
-                        klageId: klage.id,
+                        klageId: props.klage.id,
                     },
                     () => {
                         Routes.navigateToSakIntroWithMessage(
@@ -118,7 +96,7 @@ const AttesterKlage = () => {
         underkjenn(
             {
                 sakId: props.sakId,
-                klageId: klage.id,
+                klageId: props.klage.id,
                 grunn: grunn,
                 kommentar: kommentar,
             },
@@ -128,11 +106,7 @@ const AttesterKlage = () => {
         );
 
     return (
-        <div className={styles.pageContainer}>
-            <Heading level="1" size="large" className={sharedStyles.tittel}>
-                {formatMessage('page.tittel')}
-            </Heading>
-            <OppsummeringAvKlage klage={klage} klagensVedtak={klagensVedtak} />
+        <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 sakId={props.sakId}
                 iverksett={{
@@ -144,13 +118,14 @@ const AttesterKlage = () => {
                     status: underkjennStatus,
                 }}
                 radioTexts={{
-                    bekreftText: erKlageOpprettholdt(klage)
+                    bekreftText: erKlageOpprettholdt(props.klage)
                         ? formatMessage('radio.overførTilKlageinstans')
-                        : erKlageINoenFormForAvvist(klage)
+                        : erKlageINoenFormForAvvist(props.klage)
                         ? formatMessage('radio.godkjennAvvisning')
                         : undefined,
                 }}
             />
+            <OppsummeringAvKlage klage={props.klage} klagensVedtak={props.klagensVedtak} />
         </div>
     );
 };

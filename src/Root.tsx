@@ -14,13 +14,7 @@ import Store from './redux/Store';
 import './externalStyles';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 
-const AttesterKlage = React.lazy(() => import('~src/pages/saksbehandling/attestering/attesterKlage/AttesterKlage'));
-const AttesterRevurdering = React.lazy(
-    () => import('~src/pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering')
-);
-const AttesterSøknadsbehandling = React.lazy(
-    () => import('~src/pages/saksbehandling/attestering/attesterSøknadsbehandling/AttesterSøknadsbehandling')
-);
+const Attestering = React.lazy(() => import('~src/pages/saksbehandling/attestering/Attestering'));
 const Kvittering = React.lazy(() => import('~src/pages/søknad/kvittering/Kvittering'));
 const Infoside = React.lazy(() => import('~src/pages/søknad/steg/infoside/Infoside'));
 const Inngang = React.lazy(() => import('~src/pages/søknad/steg/inngang/Inngang'));
@@ -107,11 +101,7 @@ const AppRoutes = () => (
             <Route path={routes.stansRoot.path} element={<Stans />} />
             <Route path={routes.gjenopptaStansRoot.path} element={<Gjenoppta />} />
 
-            <Route>
-                <Route path={routes.attesterSøknadsbehandling.path} element={<AttesterSøknadsbehandling />} />
-                <Route path={routes.attesterRevurdering.path} element={<AttesterRevurdering />} />
-                <Route path={routes.attesterKlage.path} element={<AttesterKlage />} />
-            </Route>
+            <Route path={routes.attestering.path} element={<Attestering />} />
             <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
             <Route path={routes.revurderValgtSak.path} element={<RevurderingIntroPage />} />
             <Route path={routes.revurderingSeksjonSteg.path} element={<Revurdering />} />

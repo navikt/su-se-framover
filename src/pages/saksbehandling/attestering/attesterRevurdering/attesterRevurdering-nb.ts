@@ -8,7 +8,6 @@ const brevvalgTekstMapper: { [key in Valg]: string } = {
 
 export default {
     ...brevvalgTekstMapper,
-    'feil.fantIkkeRevurdering': 'Fant ikke revurdering.',
     'feil.ikkeTilAttestering': 'Revurderingen er ikke til attestering.',
     'feil.klarteIkkeHenteBrev': 'Klarte ikke hente brevet.',
 
@@ -24,8 +23,6 @@ export default {
     'attester.sendtTilbake': 'Revurdering er sendt tilbake til vurdering',
 
     'knapp.brev': 'Vis brev',
-
-    'page.tittel': 'Attestering',
 
     tilbakekreving: 'Denne revurderingen fører til tilbakekreving',
     tilbakekrevingOgOpphør: 'Denne revurderingen fører til tilbakekreving og opphør for bruker',

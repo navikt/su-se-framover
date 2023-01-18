@@ -1,10 +1,21 @@
 @import '~/src/styles/variables.less';
 
-.attesteringContainer {
+.mainContentContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: @spacing-xl;
+    margin: 0 10vw;
+
+    > :first-child {
+        position: sticky;
+        top: 20px;
+    }
+}
+
+.panelerContainer {
     //TODO - se på å maks-widthe revurderings oppsumeringen istedenfor.
     //den er litt funky under selve revurderingen
     max-width: 950px;
-    margin-left: 10vw;
 }
 
 .accordion {

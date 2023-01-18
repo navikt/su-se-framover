@@ -185,22 +185,10 @@ export const alleDokumenterForSak: Route<{ sakId: string }> = {
 };
 
 //---------------Attestering-------------------------
-export const attesterSøknadsbehandling: Route<{ sakId: string; behandlingId: string }> = {
+export const attestering: Route<{ sakId: string; behandlingId: string }> = {
     path: 'behandling/:behandlingId/attestering',
     absPath: '/saksoversikt/:sakId/behandling/:behandlingId/attestering',
     createURL: (args) => `/saksoversikt/${args.sakId}/behandling/${args.behandlingId}/attestering`,
-};
-
-export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }> = {
-    path: 'revurdering/:revurderingId/attestering',
-    absPath: '/saksoversikt/:sakId/revurdering/:revurderingId/attestering',
-    createURL: (args) => `/saksoversikt/${args.sakId}/revurdering/${args.revurderingId}/attestering`,
-};
-
-export const attesterKlage: Route<{ sakId: string; klageId: string }> = {
-    path: 'klage/:klageId/attestering',
-    absPath: 'saksoversikt/:sakId/klage/:klageId/attestering',
-    createURL: (args) => `/saksoversikt/${args.sakId}/klage/${args.klageId}/attestering`,
 };
 
 //---------------Stans------------------------------
