@@ -31,6 +31,8 @@ import { formatCurrency } from '~src/utils/format/formatUtils';
 import { splitStatusOgResultatFraKlage } from '~src/utils/klage/klageUtils';
 import {
     erInformasjonsRevurdering,
+    erRevurderingTilbakekreving,
+    erRevurderingTilbakekrevingsbehandling,
     hentAvkortingFraRevurdering,
     splitStatusOgResultatFraRevurdering,
 } from '~src/utils/revurdering/revurderingUtils';
@@ -222,12 +224,19 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                     verdi={formatMessage(props.r.årsak)}
                     retning={'vertikal'}
                 />
-                <OppsummeringPar
-                    label={formatMessage('revurdering.begrunnelse')}
-                    verdi={props.r.begrunnelse}
-                    retning={'vertikal'}
-                />
+                {erRevurderingTilbakekrevingsbehandling(props.r) && (
+                    <OppsummeringPar
+                        label={formatMessage('revurdering.skalTilbakekreves')}
+                        verdi={formatMessage(`bool.${erRevurderingTilbakekreving(props.r)}`)}
+                        retning={'vertikal'}
+                    />
+                )}
             </div>
+            <OppsummeringPar
+                label={formatMessage('revurdering.begrunnelse')}
+                verdi={props.r.begrunnelse}
+                retning={'vertikal'}
+            />
             {pipe(
                 revurderingSnapshot,
                 RemoteData.fold(

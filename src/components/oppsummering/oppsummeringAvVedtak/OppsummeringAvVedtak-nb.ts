@@ -35,6 +35,7 @@ export default {
     'revurdering.startet': 'Revurdering startet',
     'revurdering.årsakForRevurdering': 'Årsak for revurdering',
     'revurdering.begrunnelse': 'Revurderingsbegrunnelse',
+    'revurdering.skalTilbakekreves': 'Skal tilbakekreves',
 
     'regulering.utført': 'Utført',
 
@@ -43,6 +44,9 @@ export default {
     'klage.datoKlageMottatt': 'Klage mottatt',
 
     'knapp.seBrev': 'Se brev',
+
+    'bool.true': 'Ja',
+    'bool.false': 'Nei',
 
     ...opprettRevurderingÅrsakTekstMapper,
     ...vedtakMessages,
