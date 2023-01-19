@@ -3,6 +3,7 @@ import { opplysningspliktStatusMessages } from '~src/typeMappinger/Vilkårsstatu
 import { IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';
 
 export const velgbareFradragskategoriMessages: { [key in VelgbareFradragskategorier]: string } = {
+    [VelgbareFradragskategorier.StatensLånekasse]: 'Statens lånekasse',
     [VelgbareFradragskategorier.Sosialstønad]: 'Sosialstønad',
     [VelgbareFradragskategorier.Uføretrygd]: 'Uføretrygd',
     [VelgbareFradragskategorier.Alderspensjon]: 'Alderspensjon',

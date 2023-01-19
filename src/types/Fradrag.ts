@@ -46,6 +46,7 @@ export enum FradragTilhører {
 export type Fradragskategori = VelgbareFradragskategorier | IkkeVelgbareFradragskategorier;
 
 export enum VelgbareFradragskategorier {
+    StatensLånekasse = 'StatensLånekasse',
     Sosialstønad = 'Sosialstønad',
     Uføretrygd = 'Uføretrygd',
     Alderspensjon = 'Alderspensjon',
@@ -110,6 +111,7 @@ export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
         case VelgbareFradragskategorier.Kontantstøtte:
         case VelgbareFradragskategorier.BidragEtterEkteskapsloven:
         case VelgbareFradragskategorier.Sosialstønad:
+        case VelgbareFradragskategorier.StatensLånekasse:
         case IkkeVelgbareFradragskategorier.ForventetInntekt:
         case IkkeVelgbareFradragskategorier.BeregnetFradragEPS:
         case IkkeVelgbareFradragskategorier.UnderMinstenivå:
