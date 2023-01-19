@@ -217,6 +217,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     //S
     [ApiErrorCode.SAKSNUMMER_IKKE_GYLDIG]: 'Saksnummer er ikke gyldig',
     [ApiErrorCode.SENERE_STØNADSPERIODE_EKSISTERER]: 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
+    [ApiErrorCode.SISTE_MÅNED_I_REVURDERINGSPERIODE_KAN_IKKE_VÆRE_UTBETALT_VED_OPPHØR_AVKORTING]:
+        'Opphør med avkorting: Siste måned i revurderingsperioden kan ikke være utbetalt.',
     [ApiErrorCode.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]:
         'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     [ApiErrorCode.SISTE_UTBETALING_ER_IKKE_STANS]: 'Feil ved kontroll av simulering',
