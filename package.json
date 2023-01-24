@@ -47,7 +47,7 @@
         "@formatjs/intl-numberformat": "^8.3.3",
         "@hookform/resolvers": "^2.9.10",
         "@navikt/ds-css": "^2.1.0",
-        "@navikt/ds-css-internal": "^2.0.14",
+        "@navikt/ds-css-internal": "^2.1.0",
         "@navikt/ds-icons": "^2.0.12",
         "@navikt/ds-react": "^2.0.12",
         "@navikt/ds-react-internal": "^2.0.14",
