@@ -89,7 +89,7 @@
     },
     "devDependencies": {
         "@parcel/config-default": "^2.4.1",
-        "@parcel/transformer-less": "^2.8.2",
+        "@parcel/transformer-less": "^2.8.3",
         "@parcel/utils": "^2.8.3",
         "@testing-library/react": "^13.4.0",
         "@types/amplitude-js": "^8.16.2",
