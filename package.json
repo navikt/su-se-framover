@@ -73,7 +73,7 @@
         "process": "^0.11.10",
         "prop-types": "^15.8.1",
         "react": "^18.2.0",
-        "react-datepicker": "^4.8.0",
+        "react-datepicker": "^4.10.0",
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.42.1",
         "react-intl": "^6.2.7",
