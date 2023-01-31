@@ -123,6 +123,7 @@ export enum ApiErrorCode {
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
     KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_GJENOPPTAK = 'kunne_ikke_opprette_revurdering_for_gjenopptak',
     KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_STANS = 'kunne_ikke_opprette_revurdering_for_stans',
+    KUNNE_IKKE_OVERSENDE_TIL_KLAGEINSTANS = 'kunne_ikke_oversende_til_klageinstans',
     KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
 

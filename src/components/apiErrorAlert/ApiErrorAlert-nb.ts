@@ -155,6 +155,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'Kunne ikke opprette oppgave',
     [ApiErrorCode.KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_GJENOPPTAK]: 'Kunne ikke opprette revurdering for gjenopptak',
     [ApiErrorCode.KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_STANS]: 'Kunne ikke opprette revurdering for stans',
+    [ApiErrorCode.KUNNE_IKKE_OVERSENDE_TIL_KLAGEINSTANS]: 'Kunne ikke oversende klagen til klageinstansen (Kabal)',
     [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp ektefelle eller samboer i PDL',
     [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp EPS',
     [ApiErrorCode.KUNNE_IKKE_UTBETALE]: 'Kunne ikke utbetale',
