@@ -58,7 +58,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
         }));
     }
 
-    console.log(boOgOppholdFraStore.fortsattInnlagt);
     return (
         <form
             className={sharedStyles.container}

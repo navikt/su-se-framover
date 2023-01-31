@@ -146,7 +146,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
             : 0;
     }, [form.watch('skalReiseDatoer')]);
 
-    console.log('formState: ', form.formState.errors);
     return (
         <div className={sharedStyles.container}>
             <form
