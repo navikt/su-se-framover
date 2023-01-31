@@ -143,6 +143,8 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Kryssjekk av utbetalingstidslinje og simulering feilet.',
     [ApiErrorCode.KUN_EN_ADRESSEGRUNN_KAN_VÆRE_UTFYLT]:
         'Flere adresser ble registrert sendt inn. Kun én adresse kan sendes inn',
+    [ApiErrorCode.KUNNE_IKKE_BEKREFTE_JOURNALPOSTER]:
+        'Kunne ikke bekrefte journalpost. Mest sannsynlig den ikke eksisterer',
     [ApiErrorCode.KUNNE_IKKE_FERDIGSTILLE_REGULERING]: 'Kunne ikke ferdigstille regulering',
     [ApiErrorCode.KUNNE_IKKE_GENERERE_BREV]: 'Kunne ikke generere brev',
     [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND]: 'Siste utbetaling er ikke stans',

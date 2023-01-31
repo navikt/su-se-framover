@@ -58,6 +58,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
         }));
     }
 
+    console.log(boOgOppholdFraStore.fortsattInnlagt);
     return (
         <form
             className={sharedStyles.container}
@@ -98,6 +99,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                         label={formatMessage('innlagtPåInstitusjon.datoForInnleggelse')}
                                         feil={fieldState.error?.message}
                                         value={toDateOrNull(field.value)}
+                                        autoComplete="off"
                                     />
                                 )}
                             />
@@ -117,6 +119,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                             value={toDateOrNull(field.value)}
                                             minDate={toDateOrNull(form.watch('datoForInnleggelse'))}
                                             disabled={form.watch('fortsattInnlagt') ?? false}
+                                            autoComplete="off"
                                         />
                                     )}
                                 />
@@ -129,6 +132,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                         <Checkbox
                                             {...field}
                                             value={field.value ?? false}
+                                            checked={field.value !== null}
                                             onChange={() => {
                                                 field.onChange(!field.value);
                                                 setFieldsToNull(['datoForUtskrivelse']);

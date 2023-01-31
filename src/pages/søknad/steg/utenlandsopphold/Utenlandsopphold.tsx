@@ -6,14 +6,12 @@ import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import DatePicker from '~src/components/datePicker/DatePicker';
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
-import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { kalkulerTotaltAntallDagerIUtlandet, toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
@@ -48,7 +46,7 @@ const MultiTidsperiodevelger = (props: {
     return (
         <SøknadInputliste leggTilLabel={formatMessage('button.leggTilReiserad')} onLeggTilClick={props.onLeggTilClick}>
             {props.perioder.map((periode, index) => {
-                const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
+                const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : props.errors;
                 const baseId = `${props.feltnavn}[${index}]`;
                 return (
                     <SøknadInputliste.Item
@@ -70,11 +68,8 @@ const MultiTidsperiodevelger = (props: {
                                     value={toDateOrNull(periode.utreisedato)}
                                     minDate={props.limitations?.utreise?.minDate}
                                     maxDate={props.limitations?.utreise?.maxDate}
-                                    feil={
-                                        errorForLinje && typeof errorForLinje === 'object'
-                                            ? errorForLinje?.utreisedato
-                                            : undefined
-                                    }
+                                    feil={errorForLinje?.message}
+                                    autoComplete="off"
                                     onChange={(value: Date) =>
                                         value &&
                                         props.onChange({
@@ -90,11 +85,8 @@ const MultiTidsperiodevelger = (props: {
                                 <DatePicker
                                     id={`${baseId}.innreisedato`}
                                     name={'innreisedato'}
-                                    feil={
-                                        errorForLinje && typeof errorForLinje === 'object'
-                                            ? errorForLinje?.innreisedato
-                                            : undefined
-                                    }
+                                    feil={errorForLinje?.message}
+                                    autoComplete="off"
                                     dateFormat="dd.MM.yyyy"
                                     label={formatMessage('innreisedato.label')}
                                     value={toDateOrNull(periode.innreisedato)}
@@ -154,6 +146,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
             : 0;
     }, [form.watch('skalReiseDatoer')]);
 
+    console.log('formState: ', form.formState.errors);
     return (
         <div className={sharedStyles.container}>
             <form
@@ -307,13 +300,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     </Alert>
                 )}
 
-                <Feiloppsummering
-                    className={sharedStyles.marginBottom}
-                    tittel={formatMessage('feiloppsummering.title')}
-                    feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
-                    hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
-                    ref={feiloppsummeringref}
-                />
                 <Bunnknapper
                     previous={{
                         onClick: () => {

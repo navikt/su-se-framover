@@ -111,6 +111,7 @@ export enum ApiErrorCode {
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
     KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET = 'kryssjekk_utbetalingstidslinjer_simulering_feilet',
     KUN_EN_ADRESSEGRUNN_KAN_VÆRE_UTFYLT = 'kun_en_adressegrunn_kan_være_utfylt',
+    KUNNE_IKKE_BEKREFTE_JOURNALPOSTER = 'kunne_ikke_bekrefte_journalposter',
     KUNNE_IKKE_FERDIGSTILLE_REGULERING = 'kunne_ikke_ferdigstille_regulering',
     KUNNE_IKKE_GENERERE_BREV = 'kunne_ikke_generere_brev',
     KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_gjenopptak_ugyldig_tilstand',
