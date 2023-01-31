@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Loader, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import React from 'react';
-import { FieldErrors } from 'react-hook-form';
+import { FieldErrorsImpl } from 'react-hook-form';
 
 import * as søknadApi from '~src/api/søknadApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -15,7 +15,7 @@ import nb from './lukkSøknad-nb';
 import * as styles from './lukkSøknad.module.less';
 import { AvvistBrevtyper } from './lukkSøknadUtils';
 
-interface AvvistFormData {
+export interface AvvistFormData {
     skalSendesBrev: Nullable<boolean>;
     typeBrev: Nullable<AvvistBrevtyper>;
     fritekst: Nullable<string>;
@@ -24,7 +24,7 @@ interface AvvistFormData {
 interface AvvistProps {
     søknadId: string;
     avvistFormData: AvvistFormData;
-    feilmeldinger?: FieldErrors<AvvistFormData>;
+    feilmeldinger?: FieldErrorsImpl<AvvistFormData>;
     onValueChange: (value: AvvistFormData) => void;
     onRequestValidate: (onSuccess: () => void) => void;
 }
