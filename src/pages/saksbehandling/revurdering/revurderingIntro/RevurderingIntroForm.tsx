@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Checkbox, CheckboxGroup, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FieldErrors, useForm } from 'react-hook-form';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -14,6 +14,7 @@ import { keyOf, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validerPeriodeTomEtterFom } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { FormValues } from '~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage';
+import { NullablePeriode } from '~src/types/Periode';
 import {
     gyldigeÅrsaker,
     InformasjonSomRevurderes,
@@ -129,7 +130,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                         fraOgMed: props.periodeConfig.fraOgMed.max,
                                         tilOgMed: props.periodeConfig.tilOgMed.max,
                                     }}
-                                    error={form.formState.errors.periode}
+                                    error={form.formState.errors.periode as FieldErrors<NullablePeriode>}
                                 />
                             )}
                         />

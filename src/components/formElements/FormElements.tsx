@@ -2,7 +2,7 @@ import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import React, { forwardRef } from 'react';
-import { FieldErrors } from 'react-hook-form';
+import { FieldErrorsImpl } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
@@ -50,7 +50,7 @@ export const PeriodeForm = (props: {
         tilOgMed?: string;
     };
     onChange: (periode: NullablePeriode) => void;
-    error?: FieldErrors<NullablePeriode>;
+    error?: FieldErrorsImpl<NullablePeriode>;
     size?: 'S' | 'L';
     minDate: {
         fraOgMed?: Nullable<Date>;
