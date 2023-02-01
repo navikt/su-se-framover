@@ -122,7 +122,6 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
 
                     <PeriodeForm
                         value={stønadsperiode}
-                        name={'stønadsperiode'}
                         onChange={setStønadsperiode}
                         minDate={{
                             fraOgMed: new Date('2021-01-01'),

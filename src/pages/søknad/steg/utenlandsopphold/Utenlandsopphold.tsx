@@ -12,7 +12,6 @@ import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgr
 import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { kalkulerTotaltAntallDagerIUtlandet, toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
@@ -53,7 +52,7 @@ const MultiTidsperiodevelger = (props: {
         <SøknadInputliste leggTilLabel={formatMessage('button.leggTilReiserad')} onLeggTilClick={props.onLeggTilClick}>
             {props.perioder.map((periode, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : props.errors;
-                const baseId = `${props.feltnavn}[${index}]`;
+
                 return (
                     <SøknadInputliste.Item
                         key={index}
@@ -85,10 +84,7 @@ const MultiTidsperiodevelger = (props: {
 
                             <div>
                                 <DatePicker
-                                    id={`${baseId}.innreisedato`}
-                                    name={'innreisedato'}
-                                    feil={errorForLinje?.message}
-                                    dateFormat="dd.MM.yyyy"
+                                    error={errorForLinje?.message}
                                     label={formatMessage('innreisedato.label')}
                                     value={toDateOrNull(periode.innreisedato)}
                                     fromDate={props.limitations?.innreise?.minDate}

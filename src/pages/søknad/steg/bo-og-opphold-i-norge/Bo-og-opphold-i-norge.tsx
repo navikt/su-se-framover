@@ -97,7 +97,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                         label={formatMessage('innlagtPåInstitusjon.datoForInnleggelse')}
                                         error={fieldState.error?.message}
                                         value={toDateOrNull(field.value)}
-                                        autoComplete="off"
                                     />
                                 )}
                             />
@@ -116,7 +115,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                             value={toDateOrNull(field.value)}
                                             fromDate={toDateOrNull(form.watch('datoForInnleggelse'))}
                                             disabled={form.watch('fortsattInnlagt') ?? false}
-                                            autoComplete="off"
                                         />
                                     )}
                                 />
