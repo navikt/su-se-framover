@@ -42,7 +42,10 @@ export default createSlice({
                     etternavn: 'etternavn',
                 },
                 kjønn: null,
-                fødselsdato: null,
+                fødsel: {
+                    dato: null,
+                    år: 2000,
+                },
                 alder: null,
                 telefonnummer: {
                     landskode: '+47',

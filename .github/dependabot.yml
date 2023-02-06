@@ -6,10 +6,6 @@ updates:
       schedule:
           interval: weekly
       open-pull-requests-limit: 20
-      ignore:
-          - dependency-name: yup
-            versions:
-                - '< 0.33'
     - package-ecosystem: 'github-actions'
       directory: '/'
       schedule:
@@ -18,5 +14,5 @@ updates:
     - package-ecosystem: npm
       directory: '/server'
       schedule:
-        interval: weekly
+          interval: weekly
       open-pull-requests-limit: 20
