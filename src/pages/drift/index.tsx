@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Modal, Select } from '@navikt/ds-react';
+import { Alert, Button, Heading, Label, Loader, Modal, Select } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -11,6 +11,7 @@ import {
     SøknadResponse,
     konsistensavstemming,
     grensesnittsavstemming,
+    stønadsmottakere,
 } from '~src/api/driftApi';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
@@ -47,6 +48,7 @@ const Drift = () => {
         hentStatus();
     }, []);
 
+    const [stønadsmottakereModal, setStønadsmottakereModal] = useState<boolean>(false);
     const [visReguleringModal, setVisReguleringModal] = React.useState(false);
     const [fixSøknaderResponse, setfixSøknaderResponse] = React.useState<
         RemoteData.RemoteData<ApiError, SøknadResponse>
@@ -75,6 +77,9 @@ const Drift = () => {
 
     return (
         <div className={styles.container}>
+            {stønadsmottakereModal && (
+                <StønadsmottakereModal open={stønadsmottakereModal} onClose={() => setStønadsmottakereModal(false)} />
+            )}
             <div>
                 <h1>Drift</h1>
             </div>
@@ -247,6 +252,15 @@ const Drift = () => {
                     >
                         Nøkkeltall
                     </Button>
+
+                    <Button
+                        variant="secondary"
+                        className={styles.knapp}
+                        type="button"
+                        onClick={() => setStønadsmottakereModal(true)}
+                    >
+                        Stønadsmottakere
+                    </Button>
                 </div>
                 {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">
@@ -273,6 +287,36 @@ const Drift = () => {
                 {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
             </div>
         </div>
+    );
+};
+
+const StønadsmottakereModal = (props: { open: boolean; onClose: () => void }) => {
+    const [stønadsmottakereStatus, hentStønadsmottakere] = useApiCall(stønadsmottakere);
+
+    return (
+        <Modal open={props.open} onClose={props.onClose}>
+            <Modal.Content>
+                <div>
+                    <Heading size="medium" spacing>
+                        stønadsmottakere
+                    </Heading>
+                    <Button onClick={() => hentStønadsmottakere({})}>Hent stønadsmottakere</Button>
+
+                    {RemoteData.isSuccess(stønadsmottakereStatus) && (
+                        <div>
+                            <Label>For dato: {stønadsmottakereStatus.value.dato}</Label>
+                            <Label>Antall: {stønadsmottakereStatus.value.fnr.length}</Label>
+                            <Label>Fødselsnummere: </Label>
+                            <ul>
+                                {stønadsmottakereStatus.value.fnr.map((s) => (
+                                    <li key={s}>{s}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+            </Modal.Content>
+        </Modal>
     );
 };
 

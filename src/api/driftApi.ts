@@ -70,3 +70,11 @@ export async function konsistensavstemming(args: {
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }
+
+export async function stønadsmottakere(): Promise<ApiClientResult<{ dato: string; fnr: string[] }>> {
+    return apiClient({
+        url: `/stønadsmottakere`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
