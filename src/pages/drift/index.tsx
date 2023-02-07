@@ -304,9 +304,9 @@ const StønadsmottakereModal = (props: { open: boolean; onClose: () => void }) =
 
                     {RemoteData.isSuccess(stønadsmottakereStatus) && (
                         <div>
-                            <Label>For dato: {stønadsmottakereStatus.value.dato}</Label>
-                            <Label>Antall: {stønadsmottakereStatus.value.fnr.length}</Label>
-                            <Label>Fødselsnummere: </Label>
+                            <Label as="p">For dato: {stønadsmottakereStatus.value.dato}</Label>
+                            <Label as="p">Antall: {stønadsmottakereStatus.value.fnr.length}</Label>
+                            <Label as="p">Fødselsnummere: </Label>
                             <ul>
                                 {stønadsmottakereStatus.value.fnr.map((s) => (
                                     <li key={s}>{s}</li>
