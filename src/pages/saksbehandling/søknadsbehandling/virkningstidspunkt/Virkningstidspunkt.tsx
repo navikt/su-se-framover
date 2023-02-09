@@ -2,11 +2,10 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Heading, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import * as D from 'fp-ts/lib/Date';
-import { struct } from 'fp-ts/lib/Eq';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Person } from '~src/api/personApi';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -15,67 +14,44 @@ import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActi
 import { nullableMap, pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { eqNullable, Nullable } from '~src/lib/types';
-import yup, { getDateErrorMessage } from '~src/lib/validering';
+import { getDateErrorMessage } from '~src/lib/validering';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppSelector } from '~src/redux/Store';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
-import { er67EllerEldre } from '~src/utils/person/personUtils';
+import { er66EllerEldre } from '~src/utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './virkningstidspunkt-nb';
 import * as styles from './virkningstidspunkt.module.less';
+import {
+    eqBehandlingsperiode,
+    TIDLIGST_MULIG_START_DATO,
+    VirkningstidspunktFormData,
+    virkningstidspunktSchema,
+} from './VirkningstidspunktUtils';
 
-interface FormData {
-    fraOgMed: Nullable<Date>;
-    tilOgMed: Nullable<Date>;
-}
+const PersonAldersAdvarsel = (props: { p: Person }) => {
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
-const TIDLIGST_MULIG_START_DATO = new Date(2021, 0, 1);
-const eqBehandlingsperiode = struct<FormData>({
-    fraOgMed: eqNullable(D.Eq),
-    tilOgMed: eqNullable(D.Eq),
-});
-
-const schema = yup
-    .object<FormData>({
-        fraOgMed: yup
-            .date()
-            .nullable()
-            .required('Du må velge virkningstidspunkt for supplerende stønad')
-            .min(TIDLIGST_MULIG_START_DATO),
-        tilOgMed: yup
-            .date()
-            .nullable()
-            .required('Du må velge til-og-med-dato')
-            .test(
-                'maks12MndStønadsperiode',
-                'Stønadsperioden kan ikke være lenger enn 12 måneder',
-                function (tilOgMed) {
-                    const { fraOgMed } = this.parent;
-                    if (!tilOgMed || !fraOgMed) {
-                        return false;
-                    }
-                    if (DateFns.differenceInYears(tilOgMed, fraOgMed) >= 1) {
-                        return false;
-                    }
-                    return true;
-                }
-            )
-            .test('isAfterFom', 'Sluttdato må være etter startdato', function (tilOgMed) {
-                const { fraOgMed } = this.parent;
-                if (!tilOgMed || !fraOgMed) {
-                    return false;
-                }
-
-                return fraOgMed <= tilOgMed;
-            }),
-    })
-    .required();
+    return (
+        <div>
+            {er66EllerEldre(props.p.alder) && (
+                <Alert className={styles.alert} variant="warning">
+                    {formatMessage('person.advarsel.alderOVer66')}
+                </Alert>
+            )}
+            {!props.p.alder && (
+                <Alert className={styles.alert} variant="warning">
+                    {formatMessage('person.advarsel.harIkkeAlder')}
+                </Alert>
+            )}
+        </div>
+    );
+};
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
@@ -86,18 +62,18 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
         tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
     };
-    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
-        Vilkårtype.Virkningstidspunkt,
-        (values) => eqBehandlingsperiode.equals(values, initialValues)
-    );
+    const { draft, clearDraft, useDraftFormSubscribe } =
+        useSøknadsbehandlingDraftContextFor<VirkningstidspunktFormData>(Vilkårtype.Virkningstidspunkt, (values) =>
+            eqBehandlingsperiode.equals(values, initialValues)
+        );
 
-    const form = useForm<FormData>({
+    const form = useForm<VirkningstidspunktFormData>({
         defaultValues: draft ?? initialValues,
-        resolver: yupResolver(schema),
+        resolver: yupResolver(virkningstidspunktSchema),
     });
     useDraftFormSubscribe(form.watch);
 
-    const save = (data: FormData, onSuccess: () => void) =>
+    const save = (data: VirkningstidspunktFormData, onSuccess: () => void) =>
         lagreVirkningstidspunkt(
             {
                 sakId: props.sakId,
@@ -138,11 +114,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                         }}
                                     >
                                         <>
-                                            {er67EllerEldre(søker.alder) && (
-                                                <Alert className={styles.alert} variant="warning">
-                                                    {formatMessage('advarsel.alder')}
-                                                </Alert>
-                                            )}
+                                            <PersonAldersAdvarsel p={søker} />
                                             <Controller
                                                 control={form.control}
                                                 name="fraOgMed"
@@ -200,7 +172,11 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                         <Heading size="small">{formatMessage('søker.personalia')}</Heading>
                                         <OppsummeringPar
                                             label={formatMessage('søker.fødselsdato')}
-                                            verdi={formatDate(søker.fødselsdato ?? 'feil.fantIkkeFnr')}
+                                            verdi={
+                                                søker.fødsel?.dato
+                                                    ? formatDate(søker.fødsel?.dato)
+                                                    : formatMessage('feil.fantIkkeFnr')
+                                            }
                                         />
                                     </div>
                                 ),
