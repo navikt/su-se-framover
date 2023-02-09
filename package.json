@@ -79,7 +79,7 @@
         "react-intl": "^6.2.7",
         "react-modal": "^3.16.1",
         "react-redux": "^8.0.5",
-        "react-router-dom": "^6.8.0",
+        "react-router-dom": "^6.8.1",
         "redux": "^4.2.1",
         "redux-thunk": "^2.4.2",
         "regenerator-runtime": "^0.13.11",
