@@ -38,8 +38,8 @@ export async function lagreVirkningstidspunkt(arg: {
     behandlingId: string;
     fraOgMed: string;
     tilOgMed: string;
-}) {
-    return apiClient<Søknadsbehandling>({
+}): Promise<ApiClientResult<{ søknadsbehandling: Søknadsbehandling; måKontrolleres: boolean }>> {
+    return apiClient({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/stønadsperiode`,
         method: 'POST',
         body: {

@@ -20,7 +20,7 @@ export const startBehandling = createAsyncThunk<
 });
 
 export const lagreVirkningstidspunkt = createApiCallAsyncThunk<
-    Søknadsbehandling,
+    { søknadsbehandling: Søknadsbehandling; måKontrolleres: boolean },
     { sakId: string; behandlingId: string; fraOgMed: string; tilOgMed: string }
 >('behandling/lagreVirkningstidspunk', behandlingApi.lagreVirkningstidspunkt);
 

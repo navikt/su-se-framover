@@ -1,11 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Heading, Loader } from '@navikt/ds-react';
+import { Heading, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Person } from '~src/api/personApi';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -20,7 +19,6 @@ import { useAppSelector } from '~src/redux/Store';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
-import { er66EllerEldre } from '~src/utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -33,25 +31,6 @@ import {
     VirkningstidspunktFormData,
     virkningstidspunktSchema,
 } from './VirkningstidspunktUtils';
-
-const PersonAldersAdvarsel = (props: { p: Person }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
-
-    return (
-        <div>
-            {er66EllerEldre(props.p.alder) && (
-                <Alert className={styles.alert} variant="warning">
-                    {formatMessage('person.advarsel.alderOVer66')}
-                </Alert>
-            )}
-            {!props.p.alder && (
-                <Alert className={styles.alert} variant="warning">
-                    {formatMessage('person.advarsel.harIkkeAlder')}
-                </Alert>
-            )}
-        </div>
-    );
-};
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
@@ -114,7 +93,6 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                         }}
                                     >
                                         <>
-                                            <PersonAldersAdvarsel p={søker} />
                                             <Controller
                                                 control={form.control}
                                                 name="fraOgMed"
