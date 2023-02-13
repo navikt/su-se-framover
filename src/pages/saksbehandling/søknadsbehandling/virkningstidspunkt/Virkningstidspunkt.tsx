@@ -1,10 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading, Loader } from '@navikt/ds-react';
+import { Alert, Heading, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Fødsel } from '~src/api/personApi';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -13,12 +14,18 @@ import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActi
 import { nullableMap, pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
 import { getDateErrorMessage } from '~src/lib/validering';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppSelector } from '~src/redux/Store';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
+import {
+    alderSomPersonFyllerIÅr,
+    alderSomPersonFyllerIÅrDate,
+    alderSomPersonFyllerPåDato,
+} from '~src/utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -32,6 +39,54 @@ import {
     virkningstidspunktSchema,
 } from './VirkningstidspunktUtils';
 
+const SaksbehandlerMåKontrollereStønadsperioden = (props: {
+    stønadsperiodeTilOgMed: Nullable<Date>;
+    søkersFødselsinformasjon: Nullable<Fødsel>;
+}) => {
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+
+    if (!props.søkersFødselsinformasjon) {
+        return (
+            <div>
+                <Alert className={styles.alert} variant="warning">
+                    {formatMessage('person.harIkkeFødselsinformasjon')}
+                </Alert>
+            </div>
+        );
+    } else if (!props.stønadsperiodeTilOgMed) {
+        return <div></div>;
+    }
+
+    if (props.søkersFødselsinformasjon.dato) {
+        if (
+            alderSomPersonFyllerPåDato(props.stønadsperiodeTilOgMed, new Date(props.søkersFødselsinformasjon.dato)) >=
+                67 &&
+            props.stønadsperiodeTilOgMed.getMonth() > new Date(props.søkersFødselsinformasjon.dato).getMonth()
+        ) {
+            return (
+                <div>
+                    <Alert className={styles.alert} variant="warning">
+                        {formatMessage('person.medFødselsdato.fyller67VedAngittStønadsperiode')}
+                    </Alert>
+                </div>
+            );
+        } else return <div></div>;
+    }
+    if (
+        alderSomPersonFyllerIÅrDate(props.stønadsperiodeTilOgMed.getFullYear(), props.søkersFødselsinformasjon.år) >= 67
+    ) {
+        return (
+            <div>
+                <Alert className={styles.alert} variant="warning">
+                    {formatMessage('person.utenFødselsdato.fyller67VedAngittStønadsperiode')}
+                </Alert>
+            </div>
+        );
+    }
+
+    return <div></div>;
+};
+
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
@@ -41,6 +96,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
         tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
     };
+
     const { draft, clearDraft, useDraftFormSubscribe } =
         useSøknadsbehandlingDraftContextFor<VirkningstidspunktFormData>(Vilkårtype.Virkningstidspunkt, (values) =>
             eqBehandlingsperiode.equals(values, initialValues)
@@ -58,7 +114,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 fraOgMed: DateFns.formatISO(data.fraOgMed!, { representation: 'date' }),
-                tilOgMed: DateFns.formatISO(DateFns.endOfMonth(data.tilOgMed!), { representation: 'date' }),
+                tilOgMed: DateFns.formatISO(data.tilOgMed!, { representation: 'date' }),
             },
             () => {
                 clearDraft();
@@ -66,6 +122,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             }
         );
 
+    console.log(form.getValues());
     return (
         <>
             {pipe(
@@ -93,6 +150,11 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                         }}
                                     >
                                         <>
+                                            <SaksbehandlerMåKontrollereStønadsperioden
+                                                stønadsperiodeTilOgMed={form.watch('tilOgMed')}
+                                                søkersFødselsinformasjon={søker.fødsel}
+                                            />
+
                                             <Controller
                                                 control={form.control}
                                                 name="fraOgMed"
@@ -128,7 +190,11 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                 render={({ field, fieldState }) => (
                                                     <DatePicker
                                                         name={field.name}
-                                                        onChange={field.onChange}
+                                                        onChange={(date) =>
+                                                            date
+                                                                ? field.onChange(DateFns.endOfMonth(date))
+                                                                : field.onChange(date)
+                                                        }
                                                         value={field.value}
                                                         className={styles.dato}
                                                         id="tilOgMed"
@@ -153,9 +219,35 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                             verdi={
                                                 søker.fødsel?.dato
                                                     ? formatDate(søker.fødsel?.dato)
-                                                    : formatMessage('feil.fantIkkeFnr')
+                                                    : formatMessage('feil.harIkkeFødselsdato')
                                             }
                                         />
+                                        <OppsummeringPar
+                                            label={formatMessage('søker.fødselsår')}
+                                            verdi={
+                                                søker.fødsel?.år
+                                                    ? søker.fødsel.år
+                                                    : formatMessage('feil.harIkkeFødselsår')
+                                            }
+                                        />
+                                        {søker.fødsel?.alder ? (
+                                            <OppsummeringPar
+                                                label={formatMessage('søker.alder')}
+                                                verdi={søker.fødsel.alder}
+                                            />
+                                        ) : (
+                                            <OppsummeringPar
+                                                label={formatMessage('søker.alder')}
+                                                verdi={
+                                                    søker.fødsel?.år
+                                                        ? formatMessage('søker.årSøkerFyller', {
+                                                              år: alderSomPersonFyllerIÅr(søker.fødsel.år),
+                                                              detteÅret: new Date().getFullYear(),
+                                                          })
+                                                        : formatMessage('feil.kunneIkkeAvgjøreAlder')
+                                                }
+                                            />
+                                        )}
                                     </div>
                                 ),
                             }}

@@ -313,11 +313,11 @@ const Inngang = () => {
                     />
                     {pipe(
                         RemoteData.combine(sakinfo, hentPersonStatus),
-                        RemoteData.map(([begrensetSakInfo, { alder }]) => (
+                        RemoteData.map(([begrensetSakInfo, { fødsel }]) => (
                             <SakinfoAlertContainer
-                                key={alder}
+                                key={fødsel?.alder}
                                 alleredeÅpenSakInfo={begrensetSakInfo}
-                                søkerAlder={alder}
+                                søkerAlder={fødsel?.alder ?? null}
                             />
                         )),
                         RemoteData.getOrElse(() => null as React.ReactNode)

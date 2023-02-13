@@ -58,8 +58,8 @@ interface SatsProps extends VilkårsvurderingBaseProps {
 }
 
 const tilBosituasjonsValg = (values: FormData, eps: Nullable<Person>): Nullable<BosituasjonsValg> => {
-    if (eps && eps.alder) {
-        if (eps.alder >= 67) {
+    if (eps && eps.fødsel?.alder) {
+        if (eps.fødsel.alder >= 67) {
             return BosituasjonsValg.EPS_67_ELLER_OVER;
         }
 
@@ -122,7 +122,7 @@ const getValidationSchema = (eps: Nullable<Person>) => {
                     'eps mottar SU',
                     'Du må velge om ektefelle/samboer mottar supplerende stønad',
                     function (mottarSu) {
-                        if (eps && eps.alder && eps.alder < 67) {
+                        if (eps && eps.fødsel?.alder && eps.fødsel.alder < 67) {
                             return mottarSu !== null;
                         }
 
@@ -187,7 +187,9 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
 };
 
 function mottarEktemakeEllerSamboerSUInitialValue(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasjon>) {
-    return eps && eps.alder && eps.alder >= 67 ? null : bosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null;
+    return eps && eps.fødsel?.alder && eps.fødsel.alder >= 67
+        ? null
+        : bosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null;
 }
 
 function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasjon>) {
@@ -218,7 +220,7 @@ const SatsForm = (props: SatsProps) => {
 
     const watch = form.watch();
 
-    const sats = useMemo(() => utledSats(watch, Boolean(eps), eps?.alder), [eps, watch]);
+    const sats = useMemo(() => utledSats(watch, Boolean(eps), eps?.fødsel?.alder), [eps, watch]);
 
     const handleSave = async (values: FormData, onSuccess: () => void) => {
         const bosituasjonsvalg = tilBosituasjonsValg(values, eps);
@@ -277,7 +279,7 @@ const SatsForm = (props: SatsProps) => {
                                     )}
                                 />
                             )}
-                            {eps?.alder && eps.alder < 67 && (
+                            {eps?.fødsel?.alder && eps.fødsel.alder < 67 && (
                                 <Controller
                                     control={form.control}
                                     name="mottarEktemakeEllerSamboerSU"

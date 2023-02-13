@@ -136,7 +136,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                                                                 getHentetPerson={(person) => {
                                                                     form.setValue(`${nameAndIdx}`, {
                                                                         ...watch,
-                                                                        epsAlder: person?.alder ?? null,
+                                                                        epsAlder: person?.fødsel?.alder ?? null,
                                                                     });
                                                                 }}
                                                             />
