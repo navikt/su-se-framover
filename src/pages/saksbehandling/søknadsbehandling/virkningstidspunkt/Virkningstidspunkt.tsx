@@ -21,11 +21,7 @@ import { useAppSelector } from '~src/redux/Store';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
-import {
-    alderSomPersonFyllerIÅr,
-    alderSomPersonFyllerIÅrDate,
-    alderSomPersonFyllerPåDato,
-} from '~src/utils/person/personUtils';
+import { alderSomPersonFyllerIÅr } from '~src/utils/person/personUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -34,58 +30,12 @@ import messages from './virkningstidspunkt-nb';
 import * as styles from './virkningstidspunkt.module.less';
 import {
     eqBehandlingsperiode,
+    er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned,
+    fyller67PlusVedStønadsperiodeTilOgMed,
     TIDLIGST_MULIG_START_DATO,
     VirkningstidspunktFormData,
     virkningstidspunktSchema,
 } from './VirkningstidspunktUtils';
-
-const SaksbehandlerMåKontrollereStønadsperioden = (props: {
-    stønadsperiodeTilOgMed: Nullable<Date>;
-    søkersFødselsinformasjon: Nullable<Fødsel>;
-}) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
-
-    if (!props.søkersFødselsinformasjon) {
-        return (
-            <div>
-                <Alert className={styles.alert} variant="warning">
-                    {formatMessage('person.harIkkeFødselsinformasjon')}
-                </Alert>
-            </div>
-        );
-    } else if (!props.stønadsperiodeTilOgMed) {
-        return <div></div>;
-    }
-
-    if (props.søkersFødselsinformasjon.dato) {
-        if (
-            alderSomPersonFyllerPåDato(props.stønadsperiodeTilOgMed, new Date(props.søkersFødselsinformasjon.dato)) >=
-                67 &&
-            props.stønadsperiodeTilOgMed.getMonth() > new Date(props.søkersFødselsinformasjon.dato).getMonth()
-        ) {
-            return (
-                <div>
-                    <Alert className={styles.alert} variant="warning">
-                        {formatMessage('person.medFødselsdato.fyller67VedAngittStønadsperiode')}
-                    </Alert>
-                </div>
-            );
-        } else return <div></div>;
-    }
-    if (
-        alderSomPersonFyllerIÅrDate(props.stønadsperiodeTilOgMed.getFullYear(), props.søkersFødselsinformasjon.år) >= 67
-    ) {
-        return (
-            <div>
-                <Alert className={styles.alert} variant="warning">
-                    {formatMessage('person.utenFødselsdato.fyller67VedAngittStønadsperiode')}
-                </Alert>
-            </div>
-        );
-    }
-
-    return <div></div>;
-};
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
@@ -256,6 +206,49 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                 )
             )}
         </>
+    );
+};
+
+const SaksbehandlerMåKontrollereStønadsperioden = (props: {
+    stønadsperiodeTilOgMed: Nullable<Date>;
+    søkersFødselsinformasjon: Nullable<Fødsel>;
+}) => {
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+
+    if (!props.søkersFødselsinformasjon) {
+        return <FødselsinfoAdvarsel message={formatMessage('person.harIkkeFødselsinformasjon')} />;
+    } else if (!props.stønadsperiodeTilOgMed) {
+        return <div></div>;
+    }
+
+    if (props.søkersFødselsinformasjon.dato) {
+        <FødselsdatoHandler
+            periodeTilOgMed={props.stønadsperiodeTilOgMed}
+            fødselsdato={props.søkersFødselsinformasjon.dato}
+        />;
+    }
+    if (fyller67PlusVedStønadsperiodeTilOgMed(props.stønadsperiodeTilOgMed, props.søkersFødselsinformasjon.år)) {
+        return (
+            <FødselsinfoAdvarsel message={formatMessage('person.utenFødselsdato.fyller67VedAngittStønadsperiode')} />
+        );
+    }
+
+    return <div></div>;
+};
+
+const FødselsdatoHandler = (props: { periodeTilOgMed: Date; fødselsdato: string }) => {
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    if (er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned(props.periodeTilOgMed, new Date(props.fødselsdato))) {
+        return <FødselsinfoAdvarsel message={formatMessage('person.medFødselsdato.fyller67VedAngittStønadsperiode')} />;
+    }
+    return <div></div>;
+};
+
+const FødselsinfoAdvarsel = (props: { message: string }) => {
+    return (
+        <Alert className={styles.alert} variant="warning">
+            {props.message}
+        </Alert>
     );
 };
 

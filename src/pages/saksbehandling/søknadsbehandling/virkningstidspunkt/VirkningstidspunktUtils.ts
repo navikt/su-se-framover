@@ -4,6 +4,7 @@ import { struct } from 'fp-ts/lib/Eq';
 
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
+import { alderSomPersonFyllerIÅrDate, alderSomPersonFyllerPåDato } from '~src/utils/person/personUtils';
 
 export interface VirkningstidspunktFormData {
     fraOgMed: Nullable<Date>;
@@ -15,6 +16,16 @@ export const eqBehandlingsperiode = struct<VirkningstidspunktFormData>({
     fraOgMed: eqNullable(D.Eq),
     tilOgMed: eqNullable(D.Eq),
 });
+
+export const er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned = (
+    stønadsperiodeTilOgMed: Date,
+    fødselsdato: Date
+) =>
+    alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) >= 67 &&
+    stønadsperiodeTilOgMed.getMonth() > new Date(fødselsdato).getMonth();
+
+export const fyller67PlusVedStønadsperiodeTilOgMed = (stønadsperiodeTilOgMed: Date, fødselsår: number) =>
+    alderSomPersonFyllerIÅrDate(stønadsperiodeTilOgMed.getFullYear(), fødselsår) >= 67;
 
 export const virkningstidspunktSchema = yup
     .object<VirkningstidspunktFormData>({
