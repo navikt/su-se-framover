@@ -176,6 +176,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET]:
         'Kunne ikke hente navn for saksbehandler eller attestant',
     [ApiErrorCode.NEI_ER_IKKE_STØTTET]: 'Det er ikke støtte for å svare "nei"',
+    [ApiErrorCode.NYE_OVERLAPPENDE_VEDTAK]:
+        'Det har kommet nye vedtak i revurderingsperioden etter revurderingen ble opprettet/oppdatert. Revurderingen må sendes tilbake til saksbehandler som igjen må "starte revurdering på nytt"',
 
     //O
     [ApiErrorCode.OPPDATERING_AV_STØNADSPERIODE]: 'Feil ved oppdatering av stønadsperiode',

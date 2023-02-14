@@ -141,6 +141,7 @@ export enum ApiErrorCode {
     //N
     NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET = 'navneoppslag_feilet',
     NEI_ER_IKKE_STØTTET = 'nei_er_ikke_støttet',
+    NYE_OVERLAPPENDE_VEDTAK = 'nye_overlappende_vedtak',
 
     //O
     OPPDATERING_AV_STØNADSPERIODE = 'oppdatering_av_stønadsperiode',
