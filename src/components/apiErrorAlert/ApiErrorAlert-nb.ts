@@ -65,6 +65,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FINNER_IKKE_PERSON]: 'Simulering feilet. Finner ikke person i TPS',
     [ApiErrorCode.FINNER_IKKE_UTBETALING]: 'Finner ikke utbetaling',
     [ApiErrorCode.FINNES_ALLEREDE_EN_ÅPEN_KLAGE]: 'Det finnes allerede en åpen klage',
+    [ApiErrorCode.FINNES_ÅPEN_SØKNADSBEHANDLING]: 'Det finnes allerede en åpen søknadsbehandling',
     [ApiErrorCode.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'Formue som fører til opphør må revurderes',
     [ApiErrorCode.FORMUELISTE_KAN_IKKE_VÆRE_TOM]: 'Formuelisten kan ikke være tom',
     [ApiErrorCode.FORSKJELLIG_RESULTAT]: 'Vurderingsperiode kan ikke inneholde forskjellige resultater',
