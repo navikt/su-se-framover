@@ -229,7 +229,8 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Opphør med avkorting: Siste måned i revurderingsperioden kan ikke være utbetalt.',
     [ApiErrorCode.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]:
         'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
-    [ApiErrorCode.SISTE_UTBETALING_ER_IKKE_STANS]: 'Feil ved kontroll av simulering',
+    [ApiErrorCode.SISTE_UTBETALING_ER_IKKE_STANS]:
+        'Kan ikke gjenoppta siden siste utbetaling ikke er en stansutbetaling',
     [ApiErrorCode.SISTE_VEDTAK_IKKE_STANS]: 'Kan ikke gjenoppta siden siste utbetaling ikke er en stansutbetaling',
     [ApiErrorCode.SKATTEGRUNNLAGET_FINNES_IKKE_LENGER]: 'Skattegrunnlag finnes ikke lenger',
     [ApiErrorCode.SPESIFISERT_FRADRAG_SKAL_IKKE_HA_BESKRIVELSE]: 'Et valgt fradragskategori skal ikke spesifiseres',
