@@ -98,8 +98,8 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
     const navigate = useNavigate();
     const [fnr, setFnr] = useState<Nullable<string>>(null);
     const [stønadsperiode, setStønadsperiode] = useState<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
-        fraOgMed: new Date('01-01-2021'),
-        tilOgMed: new Date('12-31-2021'),
+        fraOgMed: new Date('2021-01-01'),
+        tilOgMed: new Date('2021-12-31'),
     });
     const [typeSøknadsbehandling, setTypeSøknadsbehandling] = useState<'avslag' | 'innvilget'>('innvilget');
 
@@ -125,7 +125,7 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
                         name={'stønadsperiode'}
                         onChange={setStønadsperiode}
                         minDate={{
-                            fraOgMed: new Date('01-01-2021'),
+                            fraOgMed: new Date('2021-01-01'),
                             tilOgMed: undefined,
                         }}
                         maxDate={{
