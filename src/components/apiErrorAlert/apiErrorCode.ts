@@ -56,7 +56,7 @@ export enum ApiErrorCode {
     FINNER_IKKE_UTBETALING = 'finner_ikke_utbetaling',
     FINNES_ALLEREDE_EN_ÅPEN_KLAGE = 'finnes_allerede_en_åpen_klage',
     FINNES_ÅPEN_STANSBEHANDLING = 'finnes_åpen_stansbehandling',
-    FINNES_ÅPEN_STANSBEHANDLING = 'finnes_åpen_stansbehandling',
+    FINNES_ÅPEN_GJENOPPTAKSBEHANDLING = 'finnes_åpen_gjenopptaksbehandling',
     FINNES_ÅPEN_SØKNADSBEHANDLING = 'finnes_åpen_søknadsbehandling',
     FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'formue_som_fører_til_opphør_må_revurderes',
     FORMUELISTE_KAN_IKKE_VÆRE_TOM = 'formueliste_kan_ikke_være_tom',
