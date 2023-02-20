@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Heading, Loader } from '@navikt/ds-react';
+import { Alert, ConfirmationPanel, Heading, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -22,6 +22,7 @@ import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { alderSomPersonFyllerIÅr } from '~src/utils/person/personUtils';
+import { harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse } from '~src/utils/SøknadsbehandlingUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -29,6 +30,7 @@ import { VilkårsvurderingBaseProps } from '../types';
 import messages from './virkningstidspunkt-nb';
 import * as styles from './virkningstidspunkt.module.less';
 import {
+    behovForSaksbehandlerAvgjørelse,
     eqBehandlingsperiode,
     er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned,
     fyller67PlusVedStønadsperiodeTilOgMed,
@@ -45,6 +47,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const initialValues = {
         fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
         tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
+        harSaksbehandlerAvgjort: !!props.behandling.aldersvurdering?.harSaksbehandlerAvgjort,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } =
@@ -55,6 +58,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const form = useForm<VirkningstidspunktFormData>({
         defaultValues: draft ?? initialValues,
         resolver: yupResolver(virkningstidspunktSchema),
+        context: { søknadsbehandling: props.behandling },
     });
     useDraftFormSubscribe(form.watch);
 
@@ -65,14 +69,17 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                 behandlingId: props.behandling.id,
                 fraOgMed: DateFns.formatISO(data.fraOgMed!, { representation: 'date' }),
                 tilOgMed: DateFns.formatISO(data.tilOgMed!, { representation: 'date' }),
+                harSaksbehandlerAvgjort: data.harSaksbehandlerAvgjort,
             },
-            () => {
+            (res) => {
+                if (behovForSaksbehandlerAvgjørelse(res)) {
+                    return;
+                }
                 clearDraft();
                 onSuccess();
             }
         );
 
-    console.log(form.getValues());
     return (
         <>
             {pipe(
@@ -104,6 +111,25 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                 stønadsperiodeTilOgMed={form.watch('tilOgMed')}
                                                 søkersFødselsinformasjon={søker.fødsel}
                                             />
+
+                                            {harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse(props.behandling) && (
+                                                <Controller
+                                                    control={form.control}
+                                                    name="harSaksbehandlerAvgjort"
+                                                    render={({ field }) => (
+                                                        <ConfirmationPanel
+                                                            className={styles.confirmationPanel}
+                                                            checked={field.value}
+                                                            label={formatMessage(
+                                                                'stønadsperiode.advarsel.checkbox.måBekreftes'
+                                                            )}
+                                                            onChange={() => field.onChange(!field.value)}
+                                                        >
+                                                            {formatMessage('stønadsperiode.advarsel.tekst')}
+                                                        </ConfirmationPanel>
+                                                    )}
+                                                />
+                                            )}
 
                                             <Controller
                                                 control={form.control}

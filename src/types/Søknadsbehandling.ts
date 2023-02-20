@@ -2,6 +2,7 @@ import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
 import { Simulering } from '~src/types/Simulering';
 
+import { Aldersvurdering } from './Aldersvurdering';
 import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { Søknad } from './Søknad';
@@ -16,6 +17,7 @@ export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus>
     fritekstTilBrev: string;
     simuleringForAvkortingsvarsel: Nullable<Simulering>;
     erLukket: boolean;
+    aldersvurdering: Nullable<Aldersvurdering>;
 }
 
 export interface Stønadsperiode {

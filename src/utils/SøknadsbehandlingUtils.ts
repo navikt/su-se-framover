@@ -1,3 +1,4 @@
+import { Aldersvurdering, MaskinellVurderingsresultat } from '~src/types/Aldersvurdering';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
@@ -144,3 +145,10 @@ export const splitStatusOgResultatFraSøkandsbehandling = (
             return { status: 'Iverksatt', resultat: 'Innvilget' };
     }
 };
+
+export const harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse = (s: Søknadsbehandling) =>
+    s.aldersvurdering !== null && maskinellVurderingGirBehovForSaksbehandlerAvgjørelse(s.aldersvurdering);
+
+const maskinellVurderingGirBehovForSaksbehandlerAvgjørelse = (aldersvurdering: Aldersvurdering) =>
+    aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.RETT_PÅ_ALDER ||
+    aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.UKJENT;

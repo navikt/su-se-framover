@@ -14,9 +14,13 @@ export default {
     'feil.harIkkeFødselsår': 'Fødselsår er ikke registrert',
     'feil.kunneIkkeAvgjøreAlder': 'Kan ikke regne ut søkers alder',
 
-    'person.harIkkeFødselsinformasjon': 'Søker har ikke registrerts fødselsinformasjon. Behov for manuell sjekk',
+    'stønadsperiode.advarsel.checkbox.måBekreftes': 'Jeg bekrefter angitt stønadsperiode',
+    'stønadsperiode.advarsel.tekst':
+        'Systemet har identifisert at søker er over 67, eller mangler fødselsinformasjon for å kunne gjøre en vurdering med angitt stønadsperiode',
+
+    'person.harIkkeFødselsinformasjon': 'Søker har ikke registrerts fødselsinformasjon',
     'person.medFødselsdato.fyller67VedAngittStønadsperiode':
-        'Søker er fyllt 67 ved angitt stønadsperiode. Dem kan få stønad til og med måneden dem blir 67. Juster stønadsperioden',
+        'Søker er fyllt 67 ved angitt stønadsperiode. Dem kan få stønad til og med måneden dem blir 67',
     'person.utenFødselsdato.fyller67VedAngittStønadsperiode':
-        'Søker har ikke en registrert fødselsdato. Basert på fødselsåret, fyller søker, eller har allerede fylt 67 dette året. Behov for manuell sjekk. Juster så stønadsperioden deretter',
+        'Søker har ikke en registrert fødselsdato. Basert på fødselsåret, fyller søker, eller har allerede fylt 67 dette året',
 };
