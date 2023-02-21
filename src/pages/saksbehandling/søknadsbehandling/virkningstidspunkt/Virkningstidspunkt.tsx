@@ -248,10 +248,12 @@ const SaksbehandlerMåKontrollereStønadsperioden = (props: {
     }
 
     if (props.søkersFødselsinformasjon.dato) {
-        <FødselsdatoHandler
-            periodeTilOgMed={props.stønadsperiodeTilOgMed}
-            fødselsdato={props.søkersFødselsinformasjon.dato}
-        />;
+        return (
+            <FødselsdatoHandler
+                periodeTilOgMed={props.stønadsperiodeTilOgMed}
+                fødselsdato={props.søkersFødselsinformasjon.dato}
+            />
+        );
     }
     if (fyller67PlusVedStønadsperiodeTilOgMed(props.stønadsperiodeTilOgMed, props.søkersFødselsinformasjon.år)) {
         return (
