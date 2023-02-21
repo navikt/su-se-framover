@@ -45,8 +45,8 @@ export default createSlice({
                 fødsel: {
                     dato: null,
                     år: 2000,
+                    alder: 23,
                 },
-                alder: null,
                 telefonnummer: {
                     landskode: '+47',
                     nummer: '2225555',

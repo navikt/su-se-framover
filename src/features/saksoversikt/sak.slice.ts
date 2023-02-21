@@ -151,7 +151,7 @@ export default createSlice({
         });
 
         builder.addCase(SøknadsbehandlingActions.lagreVirkningstidspunkt.fulfilled, (state, action) => {
-            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload.søknadsbehandling);
+            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
         builder.addCase(SøknadsbehandlingActions.startBeregning.fulfilled, (state, action) => {

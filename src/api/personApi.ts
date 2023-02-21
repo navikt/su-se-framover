@@ -61,7 +61,6 @@ export interface Person {
     navn: Navn;
     kjønn: Nullable<Kjønn>;
     fødsel: Nullable<Fødsel>;
-    alder: Nullable<number>;
     telefonnummer: {
         landskode: string;
         nummer: string;
@@ -82,9 +81,10 @@ export interface Person {
     dødsdato: Nullable<string>;
 }
 
-interface Fødsel {
+export interface Fødsel {
     dato: Nullable<string>;
     år: number;
+    alder: number;
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {

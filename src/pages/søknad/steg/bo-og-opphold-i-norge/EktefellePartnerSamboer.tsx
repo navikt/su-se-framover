@@ -47,7 +47,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     props.onChange({
                         ...epsFormData,
                         eps: person,
-                        alder: person?.alder ?? null,
+                        alder: person?.fødsel?.alder ?? null,
                     });
                 }}
             />

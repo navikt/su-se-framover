@@ -23,13 +23,13 @@ export const Personkort = (props: { person: Person; variant?: 'normal' | 'wide' 
                         <span className={styles.horizontalSeparator}>–</span>
                         <span>{formatFnr(props.person.fnr)}</span>
                         <span className={styles.horizontalSeparator}>–</span>
-                        <span>{props.person.alder} år</span>
+                        <span>{props.person.fødsel?.alder} år</span>
                         <PersonAdvarsel person={props.person} />
                     </>
                 ) : (
                     <>
                         <span>{showName(props.person.navn)}</span>
-                        <span>{`${formatFnr(props.person.fnr)}, ${props.person.alder} år`}</span>
+                        <span>{`${formatFnr(props.person.fnr)}, ${props.person.fødsel?.alder} år`}</span>
                         <PersonAdvarsel person={props.person} />
                     </>
                 )}
