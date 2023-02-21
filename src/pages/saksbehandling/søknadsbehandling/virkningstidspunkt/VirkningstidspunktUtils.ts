@@ -41,21 +41,19 @@ export const virkningstidspunktSchema = yup
             .boolean()
             .defined()
             .test('Saksbehandler må bekrefte stønadsperiode', 'Bekreftelse av stønadsperiode påkrevd', function (val) {
-                if (
-                    this.options.context &&
-                    'søknadsbehandling' in this.options.context &&
-                    behovForSaksbehandlerAvgjørelse(this.options.context.søknadsbehandling as Søknadsbehandling) &&
-                    val
-                ) {
+                if (!this.options.context || !('søknadsbehandling' in this.options.context)) {
+                    throw new Error('Har ikke søknadsbehandling i validerings-contexten. Se Virkningstidspunkt.tsx');
+                }
+
+                const søknadsbehandling = this.options.context.søknadsbehandling as Søknadsbehandling;
+
+                if (val === true) {
                     return true;
                 }
-                if (
-                    this.options.context &&
-                    'søknadsbehandling' in this.options.context &&
-                    !harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse(
-                        this.options.context.søknadsbehandling as Søknadsbehandling
-                    )
-                ) {
+                if (behovForSaksbehandlerAvgjørelse(søknadsbehandling) && val) {
+                    return true;
+                }
+                if (!harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse(søknadsbehandling)) {
                     return true;
                 }
                 return false;
