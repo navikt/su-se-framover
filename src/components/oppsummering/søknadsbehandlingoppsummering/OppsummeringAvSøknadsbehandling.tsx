@@ -13,6 +13,7 @@ import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../../oppsummeringspanel/Oppsummeringspanel';
 import UnderkjenteAttesteringer from '../../underkjenteAttesteringer/UnderkjenteAttesteringer';
+import AldersvurderingAdvarsel from '../OppsummeringAvAldersvurdering/OppsummeringAvAldersvurdering';
 import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
@@ -35,11 +36,7 @@ const OppsummeringAvSøknadsbehandling = (props: {
                 farge={Oppsummeringsfarge.Lilla}
                 tittel={formatMessage('oppsummering.søknadsbehandling')}
             >
-                <div
-                    className={classNames({
-                        [styles.headerContainer]: underkjenteAttesteringer.length > 0,
-                    })}
-                >
+                <div className={classNames({ [styles.headerContainer]: underkjenteAttesteringer.length > 0 })}>
                     <div className={styles.tilleggsinfoContainer}>
                         <OppsummeringPar
                             label={formatMessage('vurdering.tittel')}
@@ -67,6 +64,7 @@ const OppsummeringAvSøknadsbehandling = (props: {
                             retning={'vertikal'}
                         />
                     </div>
+
                     {props.medBrevutkast && (
                         <div className={styles.brevContainer}>
                             <Button
@@ -88,7 +86,12 @@ const OppsummeringAvSøknadsbehandling = (props: {
                         </div>
                     )}
                     {underkjenteAttesteringer.length > 0 && (
-                        <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
+                        <div className={styles.underkjenteAttesteringerContainer}>
+                            <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
+                        </div>
+                    )}
+                    {props.behandling.aldersvurdering && (
+                        <AldersvurderingAdvarsel a={props.behandling.aldersvurdering} />
                     )}
                 </div>
 

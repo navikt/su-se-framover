@@ -18,9 +18,9 @@ export default {
     'stønadsperiode.advarsel.tekst':
         'Systemet har identifisert at søker er over 67, eller mangler fødselsinformasjon for å kunne gjøre en vurdering med angitt stønadsperiode',
 
-    'person.harIkkeFødselsinformasjon': 'Søker har ikke registrerts fødselsinformasjon',
+    'person.harIkkeFødselsinformasjon': 'Søker har ikke registrert fødselsinformasjon',
     'person.medFødselsdato.fyller67VedAngittStønadsperiode':
-        'Søker er fyllt 67 ved angitt stønadsperiode. Dem kan få stønad til og med måneden dem blir 67',
+        'Søker fyller 67 år i løpet av stønadsperioden. Hen kan få stønad til og med måneden hen fyller 67',
     'person.utenFødselsdato.fyller67VedAngittStønadsperiode':
         'Søker har ikke en registrert fødselsdato. Basert på fødselsåret, fyller søker, eller har allerede fylt 67 dette året',
 };
