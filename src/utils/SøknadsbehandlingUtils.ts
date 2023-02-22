@@ -150,5 +150,5 @@ export const harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse = (s: Søknad
     s.aldersvurdering !== null && maskinellVurderingGirBehovForSaksbehandlerAvgjørelse(s.aldersvurdering);
 
 const maskinellVurderingGirBehovForSaksbehandlerAvgjørelse = (aldersvurdering: Aldersvurdering) =>
-    aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.RETT_PÅ_ALDER ||
+    aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.IKKE_RETT_PÅ_UFØRE ||
     aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.UKJENT;

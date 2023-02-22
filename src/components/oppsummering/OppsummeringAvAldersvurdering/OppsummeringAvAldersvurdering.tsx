@@ -14,7 +14,7 @@ const AldersvurderingAdvarsel = (props: { a: Aldersvurdering }) => {
     switch (props.a.maskinellVurderingsresultat) {
         case MaskinellVurderingsresultat.HISTORISK:
             return null;
-        case MaskinellVurderingsresultat.RETT_PÅ_ALDER:
+        case MaskinellVurderingsresultat.IKKE_RETT_PÅ_UFØRE:
             return <Alert variant="warning">{formatMessage('person.rettPåAlder')}</Alert>;
         case MaskinellVurderingsresultat.RETT_PÅ_UFØRE:
             return null;
