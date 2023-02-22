@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { IngenAdresseGrunn } from '~src/api/personApi';
 import { TypeOppholdstillatelse } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
+import { IngenAdresseGrunn } from '~src/types/Person';
 import { Boforhold, Oppholdstillatelse } from '~src/types/Søknadinnhold';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 

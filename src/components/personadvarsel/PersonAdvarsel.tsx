@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
 
-import { Person, Adressebeskyttelse } from '~src/api/personApi';
+import { Person, Adressebeskyttelse } from '~src/types/Person';
 
 import * as styles from './personAdvarsel.module.less';
 
@@ -71,7 +71,7 @@ export const getEtiketter = (person: Person) => {
 export const PersonAdvarsel = (props: { person: Person }) => {
     const etiketter = getEtiketter(props.person);
     return (
-        <div className={styles.container}>
+        <div className={styles.personadvarselContainer}>
             {etiketter.map((etikett) => (
                 <TagWithBlack key={etikett.text} etikett={etikett} />
             ))}

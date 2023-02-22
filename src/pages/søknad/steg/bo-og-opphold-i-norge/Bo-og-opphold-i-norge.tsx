@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { Adresse, IngenAdresseGrunn } from '~src/api/personApi';
 import Datepicker from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -17,6 +16,7 @@ import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/bo-og-opphold-i-norge/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Adresse, IngenAdresseGrunn } from '~src/types/Person';
 import { toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 

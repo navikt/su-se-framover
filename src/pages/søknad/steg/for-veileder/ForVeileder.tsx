@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { Person } from '~src/api/personApi';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import søknadSlice from '~src/features/søknad/søknad.slice';
@@ -14,6 +13,7 @@ import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/for-veileder/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
+import { Person } from '~src/types/Person';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';

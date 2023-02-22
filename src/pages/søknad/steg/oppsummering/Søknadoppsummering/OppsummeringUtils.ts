@@ -1,7 +1,7 @@
 import { IntlShape } from 'react-intl';
 
-import { IngenAdresseGrunn } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
+import { IngenAdresseGrunn } from '~src/types/Person';
 
 export function ingenAdresseGrunnTekst(grunn: Nullable<IngenAdresseGrunn>, intl: IntlShape): Nullable<string> {
     switch (grunn) {

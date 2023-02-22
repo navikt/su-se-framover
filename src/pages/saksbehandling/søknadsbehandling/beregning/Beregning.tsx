@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
-import { Person } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
@@ -38,6 +37,7 @@ import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { NullablePeriode } from '~src/types/Periode';
+import { Person } from '~src/types/Person';
 import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';

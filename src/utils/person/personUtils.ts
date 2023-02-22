@@ -1,16 +1,14 @@
 import * as DateFns from 'date-fns';
 
-import { Navn } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
+import { Navn } from '~src/types/Person';
 
-export function showName(navn: Navn): string {
+export const showName = (navn: Navn) => {
     const mellomnavn = navn.mellomnavn ? ` ${navn.mellomnavn} ` : ' ';
     return `${navn.fornavn}${mellomnavn}${navn.etternavn}`;
-}
+};
 
-export function formatFnr(fnr: string): string {
-    return `${fnr.substring(0, 6)} ${fnr.substring(6, 11)}`;
-}
+export const formatFnr = (fnr: string) => `${fnr.substring(0, 6)} ${fnr.substring(6, 11)}`;
 
 export const er67EllerEldre = (alder: Nullable<number>): boolean => (alder ?? 67) >= 67;
 export const alderSomPersonFyllerIÅr = (år: number) => new Date().getFullYear() - år;

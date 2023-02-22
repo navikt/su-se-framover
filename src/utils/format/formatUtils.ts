@@ -1,9 +1,9 @@
 import { createIntl, createIntlCache } from 'react-intl';
 
-import { Adresse } from '~src/api/personApi';
 import { AdresseFraSøknad } from '~src/features/søknad/søknad.slice';
 import { Languages } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
+import { Adresse } from '~src/types/Person';
 
 const cache = createIntlCache();
 const intl = createIntl({ locale: Languages.nb }, cache);

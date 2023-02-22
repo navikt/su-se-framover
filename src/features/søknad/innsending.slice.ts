@@ -2,16 +2,16 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
-import * as personApi from '~src/api/personApi';
 import * as søknadApi from '~src/api/søknadApi';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
+import { Person } from '~src/types/Person';
 
 import { AlderssøknadState, UføresøknadState } from './søknad.slice';
 import { toAldersinnsending, toUføreinnsending } from './utils';
 
 export const sendUføresøknad = createAsyncThunk<
     søknadApi.OpprettetSøknad,
-    { søknad: UføresøknadState; søker: personApi.Person },
+    { søknad: UføresøknadState; søker: Person },
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
     const søknadDto = toUføreinnsending(søknad, søker.fnr);
@@ -25,7 +25,7 @@ export const sendUføresøknad = createAsyncThunk<
 
 export const sendAldersøknad = createAsyncThunk<
     søknadApi.OpprettetSøknad,
-    { søknad: AlderssøknadState; søker: personApi.Person },
+    { søknad: AlderssøknadState; søker: Person },
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
     const søknadDto = toAldersinnsending(søknad, søker.fnr);

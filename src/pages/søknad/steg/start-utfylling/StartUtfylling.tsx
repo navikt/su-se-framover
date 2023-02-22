@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, ContentContainer, Heading, Loader, Stepper } from '@navikt/ds-react';
+import { Alert, Button, ContentContainer, Loader, Stepper } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -144,11 +144,7 @@ const StartUtfylling = () => {
                     () => <ManglendeData />,
                     (søker) => (
                         <>
-                            <div>
-                                <Heading level="2" size="large" className={styles.personkortContainer}>
-                                    <Personkort person={søker} variant="wide" />
-                                </Heading>
-                            </div>
+                            <Personkort person={søker} variant="wide" />
                             <div className={styles.content}>
                                 <div className={styles.stepperContainer}>
                                     <Stepper

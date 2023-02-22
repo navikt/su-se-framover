@@ -1,14 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Loader, Search } from '@navikt/ds-react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Search } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Person } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import { pipe } from '~src/lib/fp';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import yup from '~src/lib/validering';
+import { Person } from '~src/types/Person';
 import { removeSpaces } from '~src/utils/format/formatUtils';
 
 import { Personkort } from '../personkort/Personkort';
@@ -22,27 +23,28 @@ interface Props {
     onFetchBySaksnummer?: (saksnummer: string) => void;
     onReset: () => void;
 }
-interface Form {
+interface PersonSøkFormData {
     fnr: string;
 }
+
+const personSøkSchema = yup.object<PersonSøkFormData>({
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore - integer() er lagt til i validering.ts, men typescript fortår seg ikke på det
+    fnr: yup.string().integer().required().typeError('Ugyldig fødselsnummer'),
+});
 
 const Personsøk = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
-    const [inputErrorMessage, setInputErrorMsg] = React.useState<string | null>(null);
-    const { control, handleSubmit } = useForm<Form>({
-        defaultValues: {
-            fnr: '',
-        },
+    const { control, handleSubmit } = useForm<PersonSøkFormData>({
+        defaultValues: { fnr: '' },
+        resolver: yupResolver(personSøkSchema),
     });
 
-    const submitHandler = (formData: Form) => {
+    const submitHandler = (formData: PersonSøkFormData) => {
         props.onReset();
-        setInputErrorMsg(null);
+
         const strippedSearch = removeSpaces(formData.fnr);
-        if (!Number(strippedSearch)) {
-            return setInputErrorMsg(formatMessage('feilmelding.måVareTall'));
-        }
 
         !props.onFetchBySaksnummer || strippedSearch.length === 11
             ? props.onFetchByFnr(strippedSearch)
@@ -59,7 +61,7 @@ const Personsøk = (props: Props) => {
                 <Controller
                     control={control}
                     name="fnr"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                         <Search
                             value={field.value}
                             onChange={field.onChange}
@@ -69,20 +71,15 @@ const Personsøk = (props: Props) => {
                                     : formatMessage('input.fnr.label')
                             }
                             onClear={props.onReset}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Enter') {
-                                    handleSubmit(submitHandler);
-                                }
-                            }}
                             type="primary"
+                            error={fieldState.error?.message}
                         >
-                            <Search.Button>
-                                {RemoteData.isPending(props.person) ? <Loader /> : formatMessage('knapp.søk')}
+                            <Search.Button loading={RemoteData.isPending(props.person)}>
+                                {formatMessage('knapp.søk')}
                             </Search.Button>
                         </Search>
                     )}
                 />
-                {inputErrorMessage && <SkjemaelementFeilmelding>{inputErrorMessage}</SkjemaelementFeilmelding>}
             </form>
             <div className={styles.personkortWrapper}>
                 {pipe(

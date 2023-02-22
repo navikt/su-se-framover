@@ -4,6 +4,4 @@ export default {
     'knapp.søk': 'Søk',
     'feilmelding.lengde': 'Fødselsnummeret må inneholde 11 siffer',
     'feilmelding.ugyldig': 'Fødselsnummeret er ikke gyldig',
-
-    'feilmelding.måVareTall': 'Må være et tall',
 };

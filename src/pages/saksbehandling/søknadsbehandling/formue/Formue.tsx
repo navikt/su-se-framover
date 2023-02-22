@@ -31,6 +31,7 @@ import {
     BosituasjonTyper,
     UfullstendigBosituasjon,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Person } from '~src/types/Person';
 import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
@@ -39,7 +40,7 @@ import sharedI18n from '../sharedI18n-nb';
 
 import messages from './formue-nb';
 
-const Formue = (props: VilkårsvurderingBaseProps & { søker: personApi.Person }) => {
+const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFormuegrunnlag);
     const [lagreEpsGrunnlagStatus, lagreEpsGrunnlag] = useAsyncActionCreator(

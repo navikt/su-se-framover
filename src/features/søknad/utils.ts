@@ -1,5 +1,5 @@
-import { Adresse } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
+import { Adresse } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak';
 import {
     EktefellePartnerSamboer,

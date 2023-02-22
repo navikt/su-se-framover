@@ -1,5 +1,5 @@
-import { Person } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
+import { Person } from '~src/types/Person';
 
 export enum TypeOppholdstillatelse {
     Permanent = 'permanent',

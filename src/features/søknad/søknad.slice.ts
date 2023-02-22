@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Adresse, IngenAdresseGrunn } from '~src/api/personApi';
 import { Nullable } from '~src/lib/types';
+import { Adresse, IngenAdresseGrunn } from '~src/types/Person';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import {

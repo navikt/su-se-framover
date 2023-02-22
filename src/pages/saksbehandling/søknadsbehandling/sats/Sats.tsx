@@ -7,7 +7,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { fetchPerson, Person } from '~src/api/personApi';
+import { fetchPerson } from '~src/api/personApi';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import OppsummeringAvBoforhold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
@@ -22,6 +22,7 @@ import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Person } from '~src/types/Person';
 import { Sats as FaktiskSats } from '~src/types/Sats';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -227,6 +228,7 @@ const SatsForm = (props: SatsProps) => {
         if (!bosituasjonsvalg) {
             return;
         }
+        console.log('lol');
 
         await lagreBosituasjon(
             {

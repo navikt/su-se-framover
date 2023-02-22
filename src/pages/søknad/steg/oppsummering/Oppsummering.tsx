@@ -5,7 +5,6 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { Person } from '~src/api/personApi';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { useUserContext } from '~src/context/userContext';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
@@ -27,6 +26,7 @@ import { schema as uføreSchema } from '~src/pages/søknad/steg/uførevedtak/val
 import { schema as utenlandsoppholdSchema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
+import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 

@@ -1,8 +1,8 @@
-import { IngenAdresseGrunn } from '~src/api/personApi';
 import { AdresseFraSøknad } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed, GrunnForPapirinnsending, Vergemål } from '~src/features/søknad/types';
 import { Nullable } from '~src/lib/types';
 
+import { IngenAdresseGrunn } from './Person';
 import { Sakstype } from './Sak';
 
 export type SøknadInnhold = SøknadInnholdAlder | SøknadInnholdUføre;

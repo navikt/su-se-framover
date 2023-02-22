@@ -2,7 +2,6 @@ import { Heading, Ingress } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { Person } from '~src/api/personApi';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
 import * as routes from '~src/lib/routes';
@@ -21,6 +20,7 @@ import Oppsummering from '~src/pages/søknad/steg/oppsummering/Oppsummering';
 import Uførevedtak from '~src/pages/søknad/steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from '~src/pages/søknad/steg/utenlandsopphold/Utenlandsopphold';
 import { Alderssteg, Fellessteg, Søknadssteg, Uføresteg } from '~src/pages/søknad/types';
+import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 

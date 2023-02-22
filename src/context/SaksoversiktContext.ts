@@ -1,4 +1,4 @@
-import { Person } from '~src/api/personApi';
+import { Person } from '~src/types/Person';
 import { Sak } from '~src/types/Sak';
 
 export interface SaksoversiktContext {

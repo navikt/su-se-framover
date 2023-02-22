@@ -5,7 +5,6 @@ import { Controller, UseFormReturn } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
-import * as personApi from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -16,6 +15,7 @@ import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch } from '~src/redux/Store';
+import { Person } from '~src/types/Person';
 import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { removeSpaces } from '~src/utils/format/formatUtils';
 import { showName } from '~src/utils/person/personUtils';
@@ -28,10 +28,10 @@ import styles from './bosituasjonFormIntegrertMedFormue.module.less';
 const BosituasjonFormIntegrertMedFormue = (props: {
     sakId: string;
     søknadsbehandlingId: string;
-    søker: personApi.Person;
+    søker: Person;
     søknadInnhold: SøknadInnhold;
-    eps: ApiResult<personApi.Person>;
-    fetchEps: (args: string, onSuccess?: ((result: personApi.Person) => void) | undefined) => void;
+    eps: ApiResult<Person>;
+    fetchEps: (args: string, onSuccess?: ((result: Person) => void) | undefined) => void;
     resetEpsToInitial: () => void;
     form: UseFormReturn<FormueVilkårOgDelvisBosituasjonFormData>;
 }) => {
@@ -97,9 +97,9 @@ const EpsSkjermingModalOgPersonkort = (props: {
     sakId: string;
     søknadsbehandlingId: string;
     form: UseFormReturn<FormueVilkårOgDelvisBosituasjonFormData>;
-    eps: ApiResult<personApi.Person>;
+    eps: ApiResult<Person>;
     søknadInnhold: SøknadInnhold;
-    søker: personApi.Person;
+    søker: Person;
 }) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();

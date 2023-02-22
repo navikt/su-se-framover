@@ -1,10 +1,10 @@
 import * as DateFns from 'date-fns';
 
-import { Adresse, IngenAdresseGrunn, Person } from '~src/api/personApi';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed, EPSFormData } from '~src/features/søknad/types';
 import { keyOf } from '~src/lib/types';
 import yup from '~src/lib/validering';
+import { Person, Adresse, IngenAdresseGrunn } from '~src/types/Person';
 
 export type FormData = SøknadState['boOgOpphold'];
 

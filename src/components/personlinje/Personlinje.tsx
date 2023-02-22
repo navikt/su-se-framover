@@ -5,11 +5,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
-import { fetchPerson, Kjønn, Person, Sivilstand as ISivilstand, SivilstandTyper } from '~src/api/personApi';
+import { fetchPerson } from '~src/api/personApi';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Person, Kjønn, SivilstandTyper, Sivilstand as ISivilstand } from '~src/types/Person';
 import { showName, formatFnr } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
@@ -64,7 +65,6 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
                     </span>
                 )}
             </div>
-
             <PersonAdvarsel person={props.søker} />
         </div>
     );

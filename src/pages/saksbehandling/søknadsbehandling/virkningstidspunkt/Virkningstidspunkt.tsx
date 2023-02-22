@@ -5,7 +5,6 @@ import * as DateFns from 'date-fns';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Fødsel } from '~src/api/personApi';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -18,6 +17,7 @@ import { Nullable } from '~src/lib/types';
 import { getDateErrorMessage } from '~src/lib/validering';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppSelector } from '~src/redux/Store';
+import { Fødsel } from '~src/types/Person';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
@@ -38,6 +38,8 @@ import {
     VirkningstidspunktFormData,
     virkningstidspunktSchema,
 } from './VirkningstidspunktUtils';
+
+//TODO: warning hvis fødselsår i fødselsnummeret er ulik fødseslåret
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });

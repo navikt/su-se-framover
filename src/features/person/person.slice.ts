@@ -4,8 +4,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~src/api/apiClient';
 import * as personApi from '~src/api/personApi';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
+import { Person } from '~src/types/Person';
 
-export const fetchPerson = createAsyncThunk<personApi.Person, { fnr: string }, { rejectValue: ApiError }>(
+export const fetchPerson = createAsyncThunk<Person, { fnr: string }, { rejectValue: ApiError }>(
     'person/fetch',
     async ({ fnr }, thunkApi) => {
         const res = await personApi.fetchPerson(fnr);
@@ -18,7 +19,7 @@ export const fetchPerson = createAsyncThunk<personApi.Person, { fnr: string }, {
 );
 
 export interface PersonState {
-    søker: RemoteData.RemoteData<ApiError, personApi.Person>;
+    søker: RemoteData.RemoteData<ApiError, Person>;
 }
 
 const initialState: PersonState = {

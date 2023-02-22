@@ -11,6 +11,10 @@ function label(data: Partial<yup.TestMessageParams>) {
     return data.label ?? 'Feltet';
 }
 
+yup.addMethod(yup.string, 'integer', function () {
+    return yup.string().matches(/^\d+$/, 'Feltet kan bare inneholde tall');
+});
+
 export const validateStringAsPositiveNumber = yup
     .number()
     .required('Feltet må fylles ut')
