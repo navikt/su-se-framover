@@ -5,7 +5,8 @@ import { struct } from 'fp-ts/lib/Eq';
 
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { Periode } from '~src/types/Periode';
+import { Stønadsperiode, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { alderSomPersonFyllerIÅrDate, alderSomPersonFyllerPåDato } from '~src/utils/person/personUtils';
 import { harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse } from '~src/utils/SøknadsbehandlingUtils';
 
@@ -35,29 +36,19 @@ export const fyller67PlusVedStønadsperiodeTilOgMed = (stønadsperiodeTilOgMed: 
 export const behovForSaksbehandlerAvgjørelse = (s: Søknadsbehandling) =>
     harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse(s) && s.aldersvurdering?.harSaksbehandlerAvgjort === false;
 
+export const erAldersvurderingAvgjortOgHarEndretPåStønadsperioden = (arg: {
+    s: Søknadsbehandling;
+    angittPeriode: Periode<string>;
+}) =>
+    arg.s.aldersvurdering?.harSaksbehandlerAvgjort === true &&
+    harEndretPåStønadsperioden({ s: arg.s.stønadsperiode, angittPeriode: arg.angittPeriode });
+
+const harEndretPåStønadsperioden = (arg: { s: Nullable<Stønadsperiode>; angittPeriode: Periode<string> }) =>
+    arg.s?.periode.fraOgMed !== arg.angittPeriode.fraOgMed || arg.s?.periode.tilOgMed !== arg.angittPeriode.tilOgMed;
+
 export const virkningstidspunktSchema = yup
     .object<VirkningstidspunktFormData>({
-        harSaksbehandlerAvgjort: yup
-            .boolean()
-            .defined()
-            .test('Saksbehandler må bekrefte stønadsperiode', 'Bekreftelse av stønadsperiode påkrevd', function (val) {
-                if (!this.options.context || !('søknadsbehandling' in this.options.context)) {
-                    throw new Error('Har ikke søknadsbehandling i validerings-contexten. Se Virkningstidspunkt.tsx');
-                }
-
-                const søknadsbehandling = this.options.context.søknadsbehandling as Søknadsbehandling;
-
-                if (val === true) {
-                    return true;
-                }
-                if (behovForSaksbehandlerAvgjørelse(søknadsbehandling) && val) {
-                    return true;
-                }
-                if (!harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse(søknadsbehandling)) {
-                    return true;
-                }
-                return false;
-            }),
+        harSaksbehandlerAvgjort: yup.boolean().defined(),
         fraOgMed: yup
             .date()
             .nullable()

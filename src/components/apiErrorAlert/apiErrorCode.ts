@@ -1,5 +1,6 @@
 export enum ApiErrorCode {
     //A
+    ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE = 'aldersvurdering_gir_ikke_rett_på_uføre',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
     ATTESTANT_SAMME_SOM_SAKSBEHANDLER = 'attestant_samme_som_saksbehandler',
     AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG = 'avkorting_er_ufullstendig',

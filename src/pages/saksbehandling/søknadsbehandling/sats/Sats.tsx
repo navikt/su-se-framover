@@ -228,7 +228,6 @@ const SatsForm = (props: SatsProps) => {
         if (!bosituasjonsvalg) {
             return;
         }
-        console.log('lol');
 
         await lagreBosituasjon(
             {

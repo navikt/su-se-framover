@@ -5,6 +5,7 @@ import * as DateFns from 'date-fns';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -22,7 +23,6 @@ import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { alderSomPersonFyllerIÅr } from '~src/utils/person/personUtils';
-import { harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse } from '~src/utils/SøknadsbehandlingUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -30,9 +30,9 @@ import { VilkårsvurderingBaseProps } from '../types';
 import messages from './virkningstidspunkt-nb';
 import * as styles from './virkningstidspunkt.module.less';
 import {
-    behovForSaksbehandlerAvgjørelse,
     eqBehandlingsperiode,
     er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned,
+    erAldersvurderingAvgjortOgHarEndretPåStønadsperioden,
     fyller67PlusVedStønadsperiodeTilOgMed,
     TIDLIGST_MULIG_START_DATO,
     VirkningstidspunktFormData,
@@ -64,23 +64,28 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     });
     useDraftFormSubscribe(form.watch);
 
-    const save = (data: VirkningstidspunktFormData, onSuccess: () => void) =>
-        lagreVirkningstidspunkt(
+    const save = (data: VirkningstidspunktFormData, onSuccess: () => void) => {
+        const fraOgMed = DateFns.formatISO(data.fraOgMed!, { representation: 'date' });
+        const tilOgMed = DateFns.formatISO(data.tilOgMed!, { representation: 'date' });
+        return lagreVirkningstidspunkt(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 fraOgMed: DateFns.formatISO(data.fraOgMed!, { representation: 'date' }),
                 tilOgMed: DateFns.formatISO(data.tilOgMed!, { representation: 'date' }),
-                harSaksbehandlerAvgjort: data.harSaksbehandlerAvgjort,
+                harSaksbehandlerAvgjort: erAldersvurderingAvgjortOgHarEndretPåStønadsperioden({
+                    s: props.behandling,
+                    angittPeriode: { fraOgMed: fraOgMed, tilOgMed: tilOgMed },
+                })
+                    ? false
+                    : data.harSaksbehandlerAvgjort,
             },
-            (res) => {
-                if (behovForSaksbehandlerAvgjørelse(res)) {
-                    return;
-                }
+            () => {
                 clearDraft();
                 onSuccess();
             }
         );
+    };
 
     return (
         <>
@@ -114,7 +119,10 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                 søkersFødselsinformasjon={søker.fødsel}
                                             />
 
-                                            {harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse(props.behandling) && (
+                                            {((RemoteData.isFailure(status) &&
+                                                status.error?.body?.code ===
+                                                    ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE) ||
+                                                props.behandling.aldersvurdering?.harSaksbehandlerAvgjort) && (
                                                 <Controller
                                                     control={form.control}
                                                     name="harSaksbehandlerAvgjort"
