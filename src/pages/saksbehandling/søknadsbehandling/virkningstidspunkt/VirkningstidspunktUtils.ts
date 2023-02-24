@@ -8,7 +8,7 @@ import yup from '~src/lib/validering';
 import { NullablePeriode } from '~src/types/Periode';
 import { Stønadsperiode, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { alderSomPersonFyllerIÅrDate, alderSomPersonFyllerPåDato } from '~src/utils/person/personUtils';
-import { harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse } from '~src/utils/SøknadsbehandlingUtils';
+import { maskinellVurderingGirBehovForSaksbehandlerAvgjørelse } from '~src/utils/SøknadsbehandlingUtils';
 
 export interface VirkningstidspunktFormData {
     fraOgMed: Nullable<Date>;
@@ -33,11 +33,10 @@ export const er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned = (
 export const fyller67PlusVedStønadsperiodeTilOgMed = (stønadsperiodeTilOgMed: Date, fødselsår: number) =>
     alderSomPersonFyllerIÅrDate(stønadsperiodeTilOgMed.getFullYear(), fødselsår) >= 67;
 
-export const behovForSaksbehandlerAvgjørelse = (s: Søknadsbehandling) =>
-    harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse(s) && s.aldersvurdering?.harSaksbehandlerAvgjort === false;
-
 export const skalViseBekreftelsesPanel = (arg: { s: Søknadsbehandling; angittPeriode: NullablePeriode<string> }) =>
-    arg.s.aldersvurdering !== null && !erAldersvurderingAvgjortOgHarEndretPåStønadsperioden(arg);
+    arg.s.aldersvurdering !== null &&
+    !erAldersvurderingAvgjortOgHarEndretPåStønadsperioden(arg) &&
+    maskinellVurderingGirBehovForSaksbehandlerAvgjørelse(arg.s.aldersvurdering);
 
 export const erAldersvurderingAvgjortOgHarEndretPåStønadsperioden = (arg: {
     s: Søknadsbehandling;

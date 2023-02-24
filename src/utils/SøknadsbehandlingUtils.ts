@@ -149,6 +149,6 @@ export const splitStatusOgResultatFraSøkandsbehandling = (
 export const harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse = (s: Søknadsbehandling) =>
     s.aldersvurdering !== null && maskinellVurderingGirBehovForSaksbehandlerAvgjørelse(s.aldersvurdering);
 
-const maskinellVurderingGirBehovForSaksbehandlerAvgjørelse = (aldersvurdering: Aldersvurdering) =>
+export const maskinellVurderingGirBehovForSaksbehandlerAvgjørelse = (aldersvurdering: Aldersvurdering) =>
     aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.IKKE_RETT_PÅ_UFØRE ||
     aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.UKJENT;
