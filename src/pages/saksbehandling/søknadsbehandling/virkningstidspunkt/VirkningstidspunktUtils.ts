@@ -36,6 +36,9 @@ export const fyller67PlusVedStønadsperiodeTilOgMed = (stønadsperiodeTilOgMed: 
 export const behovForSaksbehandlerAvgjørelse = (s: Søknadsbehandling) =>
     harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse(s) && s.aldersvurdering?.harSaksbehandlerAvgjort === false;
 
+export const skalViseBekreftelsesPanel = (arg: { s: Søknadsbehandling; angittPeriode: NullablePeriode<string> }) =>
+    arg.s.aldersvurdering !== null && !erAldersvurderingAvgjortOgHarEndretPåStønadsperioden(arg);
+
 export const erAldersvurderingAvgjortOgHarEndretPåStønadsperioden = (arg: {
     s: Søknadsbehandling;
     angittPeriode: NullablePeriode<string>;

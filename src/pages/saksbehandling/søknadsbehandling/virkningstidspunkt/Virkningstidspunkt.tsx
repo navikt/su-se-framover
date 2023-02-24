@@ -34,6 +34,7 @@ import {
     er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned,
     erAldersvurderingAvgjortOgHarEndretPåStønadsperioden,
     fyller67PlusVedStønadsperiodeTilOgMed,
+    skalViseBekreftelsesPanel,
     TIDLIGST_MULIG_START_DATO,
     VirkningstidspunktFormData,
     virkningstidspunktSchema,
@@ -135,7 +136,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                             {((RemoteData.isFailure(status) &&
                                                 status.error?.body?.code ===
                                                     ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE) ||
-                                                !erAldersvurderingAvgjortOgHarEndretPåStønadsperioden({
+                                                skalViseBekreftelsesPanel({
                                                     s: props.behandling,
                                                     angittPeriode: {
                                                         fraOgMed: form.watch('fraOgMed')
