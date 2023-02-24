@@ -5,7 +5,7 @@ import { struct } from 'fp-ts/lib/Eq';
 
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Periode } from '~src/types/Periode';
+import { NullablePeriode } from '~src/types/Periode';
 import { Stønadsperiode, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { alderSomPersonFyllerIÅrDate, alderSomPersonFyllerPåDato } from '~src/utils/person/personUtils';
 import { harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse } from '~src/utils/SøknadsbehandlingUtils';
@@ -38,12 +38,12 @@ export const behovForSaksbehandlerAvgjørelse = (s: Søknadsbehandling) =>
 
 export const erAldersvurderingAvgjortOgHarEndretPåStønadsperioden = (arg: {
     s: Søknadsbehandling;
-    angittPeriode: Periode<string>;
+    angittPeriode: NullablePeriode<string>;
 }) =>
     arg.s.aldersvurdering?.harSaksbehandlerAvgjort === true &&
     harEndretPåStønadsperioden({ s: arg.s.stønadsperiode, angittPeriode: arg.angittPeriode });
 
-const harEndretPåStønadsperioden = (arg: { s: Nullable<Stønadsperiode>; angittPeriode: Periode<string> }) =>
+const harEndretPåStønadsperioden = (arg: { s: Nullable<Stønadsperiode>; angittPeriode: NullablePeriode<string> }) =>
     arg.s?.periode.fraOgMed !== arg.angittPeriode.fraOgMed || arg.s?.periode.tilOgMed !== arg.angittPeriode.tilOgMed;
 
 export const virkningstidspunktSchema = yup

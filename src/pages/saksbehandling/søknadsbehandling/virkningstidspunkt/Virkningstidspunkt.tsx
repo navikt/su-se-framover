@@ -71,14 +71,9 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                fraOgMed: DateFns.formatISO(data.fraOgMed!, { representation: 'date' }),
-                tilOgMed: DateFns.formatISO(data.tilOgMed!, { representation: 'date' }),
-                harSaksbehandlerAvgjort: erAldersvurderingAvgjortOgHarEndretPåStønadsperioden({
-                    s: props.behandling,
-                    angittPeriode: { fraOgMed: fraOgMed, tilOgMed: tilOgMed },
-                })
-                    ? false
-                    : data.harSaksbehandlerAvgjort,
+                fraOgMed: fraOgMed,
+                tilOgMed: tilOgMed,
+                harSaksbehandlerAvgjort: data.harSaksbehandlerAvgjort,
             },
             () => {
                 clearDraft();
@@ -86,6 +81,24 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             }
         );
     };
+
+    React.useEffect(() => {
+        if (
+            erAldersvurderingAvgjortOgHarEndretPåStønadsperioden({
+                s: props.behandling,
+                angittPeriode: {
+                    fraOgMed: form.watch('fraOgMed')
+                        ? DateFns.formatISO(form.watch('fraOgMed')!, { representation: 'date' })
+                        : null,
+                    tilOgMed: form.watch('tilOgMed')
+                        ? DateFns.formatISO(form.watch('tilOgMed')!, { representation: 'date' })
+                        : null,
+                },
+            })
+        ) {
+            form.setValue('harSaksbehandlerAvgjort', false);
+        }
+    }, [props.behandling, form.watch('fraOgMed'), form.watch('tilOgMed')]);
 
     return (
         <>
@@ -122,7 +135,21 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                             {((RemoteData.isFailure(status) &&
                                                 status.error?.body?.code ===
                                                     ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE) ||
-                                                props.behandling.aldersvurdering?.harSaksbehandlerAvgjort) && (
+                                                !erAldersvurderingAvgjortOgHarEndretPåStønadsperioden({
+                                                    s: props.behandling,
+                                                    angittPeriode: {
+                                                        fraOgMed: form.watch('fraOgMed')
+                                                            ? DateFns.formatISO(form.watch('fraOgMed')!, {
+                                                                  representation: 'date',
+                                                              })
+                                                            : null,
+                                                        tilOgMed: form.watch('tilOgMed')
+                                                            ? DateFns.formatISO(form.watch('tilOgMed')!, {
+                                                                  representation: 'date',
+                                                              })
+                                                            : null,
+                                                    },
+                                                })) && (
                                                 <Controller
                                                     control={form.control}
                                                     name="harSaksbehandlerAvgjort"
