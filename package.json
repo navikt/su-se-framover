@@ -60,7 +60,7 @@
         "amplitude-js": "^8.21.5",
         "autoprefixer": "^10.4.13",
         "classnames": "^2.3.2",
-        "core-js": "^3.28.0",
+        "core-js": "^3.29.0",
         "country-data-list": "^1.2.3",
         "date-fns": "^2.29.3",
         "dayjs": "^1.11.7",
