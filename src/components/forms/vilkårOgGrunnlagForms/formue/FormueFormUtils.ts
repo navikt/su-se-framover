@@ -29,7 +29,7 @@ export type FormueFormDataer = FormueVilkårFormData | FormueVilkårOgDelvisBosi
 
 export interface FormueVilkårOgDelvisBosituasjonFormData extends FormueVilkårFormData {
     borSøkerMedEPS: boolean;
-    epsFnr: string;
+    epsFnr: Nullable<string>;
 }
 
 export interface FormueVilkårFormData {
@@ -246,7 +246,7 @@ export function getInitialFormueVilkårOgDelvisBosituasjon(
     const epsInformasjon = hentOmSøkerBorMedEpsOgEpsFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
     return {
         borSøkerMedEPS: epsInformasjon?.borSøkerMedEPS,
-        epsFnr: epsInformasjon?.epsFnr ?? '',
+        epsFnr: epsInformasjon?.epsFnr,
         formue: [
             {
                 epsFnr: epsInformasjon?.epsFnr,
@@ -311,9 +311,12 @@ export const formueFormSchema = yup.object<FormueFormDataer>({
         )
         .required(),
     borSøkerMedEPS: yup.boolean(),
-    epsFnr: yup.mixed<string>().test('eps', 'Ektefelle/samboers fnr må fylles ut', function (value) {
-        if (this.parent.borSøkerMedEPS) {
-            return value?.length === 11;
-        } else return true;
-    }),
+    epsFnr: yup
+        .mixed<string>()
+        .nullable()
+        .test('eps', 'Ektefelle/samboers fnr må fylles ut', function (value) {
+            if (this.parent.borSøkerMedEPS) {
+                return value?.length === 11;
+            } else return true;
+        }),
 });

@@ -29,14 +29,12 @@ const OppsummeringAvSkattegrunnlag = (props: {
             hentSkattegrunnlagSøker({ fnr: props.søkerFnr });
         }
     }, []);
+
     useEffect(() => {
-        console.log(RemoteData.isSuccess(skattegrunnlagEps));
         if (!RemoteData.isSuccess(skattegrunnlagEps) && props.skalHenteSkattegrunnlagForEPS) {
             hentSkattegrunnlagEps({ fnr: props.skalHenteSkattegrunnlagForEPS });
         }
     }, [props.skalHenteSkattegrunnlagForEPS]);
-
-    console.log(props.skalHenteSkattegrunnlagForEPS);
 
     return (
         <div className={styles.skattegrunnlag}>

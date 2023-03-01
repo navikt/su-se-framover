@@ -59,7 +59,7 @@ const BosituasjonFormIntegrertMedFormue = (props: {
                             error={fieldState.error?.message}
                             onChange={(val) => {
                                 field.onChange(val);
-                                props.form.setValue('epsFnr', '');
+                                props.form.setValue('epsFnr', null);
                                 props.form.setValue('formue.0.epsFnr', null);
                                 props.form.setValue('formue.0.epsFormue', null);
                                 props.resetEpsToInitial();
@@ -79,6 +79,7 @@ const BosituasjonFormIntegrertMedFormue = (props: {
                                 label={formatMessage('formueOgBosituasjon.input.ektefellesFødselsnummer')}
                                 error={fieldState.error?.message}
                                 size="small"
+                                value={field.value ?? ''}
                                 onChange={(e) => field.onChange(removeSpaces(e.target.value))}
                             />
                         )}
