@@ -211,7 +211,7 @@ const Inngang = () => {
         soknadstema: urlForSakstype(sakstype),
         papirsøknad: isPapirsøknad,
     });
-    const { søker } = useAppSelector((s) => s.søker);
+    const { søker } = useAppSelector((s) => s.personopplysninger);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);

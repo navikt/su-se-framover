@@ -32,7 +32,6 @@ import {
     UfullstendigBosituasjon,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Person } from '~src/types/Person';
-import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
@@ -169,7 +168,6 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                         />
                         {skattemeldingToggle && (
                             <OppsummeringAvSkattegrunnlag
-                                kategori={SkattegrunnlagKategori.FORMUE}
                                 søkerFnr={props.søker.fnr}
                                 skalHenteSkattegrunnlagForEPS={watch.epsFnr?.length === 11 ? watch.epsFnr : null}
                             />

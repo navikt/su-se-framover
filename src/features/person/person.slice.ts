@@ -19,18 +19,16 @@ export const fetchPerson = createAsyncThunk<Person, { fnr: string }, { rejectVal
     }
 );
 
-export const fetchSkattegrunnlagForPerson = createAsyncThunk<
-    Skattegrunnlag,
-    { fnr: string },
-    { rejectValue: ApiError }
->('person/skatt/fetch', async ({ fnr }, thunkApi) => {
-    return hentSkattegrunnlag(fnr).then(
-        (onFulfilled) => onFulfilled,
-        (onRejected) => thunkApi.rejectWithValue(onRejected)
-    );
-});
+export const fetchSkattegrunnlagSøker = createAsyncThunk<Skattegrunnlag, { fnr: string }, { rejectValue: ApiError }>(
+    'person/skatt/fetch',
+    async ({ fnr }, thunkApi) =>
+        hentSkattegrunnlag(fnr).then(
+            (onFulfilled) => onFulfilled,
+            (onRejected) => thunkApi.rejectWithValue(onRejected)
+        )
+);
 
-export const fetchSkattegrunnlagForEPS = createAsyncThunk<Skattegrunnlag, { fnr: string }, { rejectValue: ApiError }>(
+export const fetchSkattegrunnlagEps = createAsyncThunk<Skattegrunnlag, { fnr: string }, { rejectValue: ApiError }>(
     'person/eps/skatt/fetch',
     async ({ fnr }, thunkApi) =>
         hentSkattegrunnlag(fnr).then(
@@ -48,14 +46,14 @@ const hentSkattegrunnlag = async (fnr: string): Promise<Skattegrunnlag> => {
 
 export interface PersonState {
     søker: RemoteData.RemoteData<ApiError, Person>;
-    skattegrunnlag: RemoteData.RemoteData<ApiError, Skattegrunnlag>;
-    skattegrunnlagForEPS: RemoteData.RemoteData<ApiError, Skattegrunnlag>;
+    skattegrunnlagSøker: RemoteData.RemoteData<ApiError, Skattegrunnlag>;
+    skattegrunnlagEps: RemoteData.RemoteData<ApiError, Skattegrunnlag>;
 }
 
 const initialState: PersonState = {
     søker: RemoteData.initial,
-    skattegrunnlag: RemoteData.initial,
-    skattegrunnlagForEPS: RemoteData.initial,
+    skattegrunnlagSøker: RemoteData.initial,
+    skattegrunnlagEps: RemoteData.initial,
 };
 
 export default createSlice({
@@ -77,10 +75,15 @@ export default createSlice({
                 state.søker = simpleRejectedActionToRemoteData(action);
             },
         });
-        handleAsyncThunk(builder, fetchSkattegrunnlagForPerson, {
-            pending: (state) => ({ ...state, skattegrunnlag: RemoteData.pending }),
-            fulfilled: (state, action) => ({ ...state, skattegrunnlag: RemoteData.success(action.payload) }),
-            rejected: (state, action) => ({ ...state, skattegrunnlag: simpleRejectedActionToRemoteData(action) }),
+        handleAsyncThunk(builder, fetchSkattegrunnlagSøker, {
+            pending: (state) => ({ ...state, skattegrunnlagSøker: RemoteData.pending }),
+            fulfilled: (state, action) => ({ ...state, skattegrunnlagSøker: RemoteData.success(action.payload) }),
+            rejected: (state, action) => ({ ...state, skattegrunnlagSøker: simpleRejectedActionToRemoteData(action) }),
+        });
+        handleAsyncThunk(builder, fetchSkattegrunnlagEps, {
+            pending: (state) => ({ ...state, skattegrunnlagSøker: RemoteData.pending }),
+            fulfilled: (state, action) => ({ ...state, skattegrunnlagEps: RemoteData.success(action.payload) }),
+            rejected: (state, action) => ({ ...state, skattegrunnlagEps: simpleRejectedActionToRemoteData(action) }),
         });
     },
 });

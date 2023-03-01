@@ -38,7 +38,6 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { Fradrag } from '~src/types/Fradrag';
 import { NullablePeriode } from '~src/types/Periode';
 import { Person } from '~src/types/Person';
-import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erIGyldigStatusForÅKunneBeregne } from '~src/utils/BeregningUtils';
@@ -328,7 +327,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 skalHenteSkattegrunnlagForEPS={
                                     hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr
                                 }
-                                kategori={SkattegrunnlagKategori.INNTEKT}
                             />
                         )}
                     </div>

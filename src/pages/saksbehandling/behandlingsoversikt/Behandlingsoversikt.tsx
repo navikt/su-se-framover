@@ -34,7 +34,7 @@ enum Tab {
 const Behandlingsoversikt = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { søker } = useAppSelector((s) => ({ søker: s.søker.søker }));
+    const { søker } = useAppSelector((s) => ({ søker: s.personopplysninger.søker }));
     const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });

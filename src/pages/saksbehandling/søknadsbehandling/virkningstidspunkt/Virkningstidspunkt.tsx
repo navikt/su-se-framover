@@ -46,7 +46,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
-    const søkerState = useAppSelector((state) => state.søker.søker);
+    const søkerState = useAppSelector((state) => state.personopplysninger.søker);
     const initialValues = {
         fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
         tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
