@@ -34,7 +34,7 @@ const Kvittering = () => {
     const { formatMessage } = useI18n({ messages });
 
     const handleAvsluttSøknad = (sakId: Nullable<string>) => {
-        dispatch(personSlice.default.actions.resetSøker());
+        dispatch(personSlice.default.actions.resetSøkerData());
         dispatch(søknadslice.default.actions.resetSøknad());
 
         if (søknadstype === Søknadstype.Papirsøknad && sakId) {

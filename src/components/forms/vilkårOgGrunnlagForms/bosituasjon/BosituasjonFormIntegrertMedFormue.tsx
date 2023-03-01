@@ -118,7 +118,7 @@ const EpsSkjermingModalOgPersonkort = (props: {
             },
             () => {
                 dispatch(sakSliceActions.actions.resetSak());
-                dispatch(personSlice.actions.resetSøker());
+                dispatch(personSlice.actions.resetSøkerData());
                 navigate(Routes.home.createURL());
             }
         );

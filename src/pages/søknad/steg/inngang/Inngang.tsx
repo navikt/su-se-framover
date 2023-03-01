@@ -306,7 +306,7 @@ const Inngang = () => {
                 <div>
                     <Personsøk
                         onReset={() => {
-                            dispatch(personSlice.default.actions.resetSøker());
+                            dispatch(personSlice.default.actions.resetSøkerData());
                         }}
                         onFetchByFnr={handleSøk}
                         person={søker}

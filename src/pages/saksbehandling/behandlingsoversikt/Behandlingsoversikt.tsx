@@ -71,7 +71,7 @@ const Behandlingsoversikt = () => {
                 </Heading>
                 <Personsøk
                     onReset={() => {
-                        dispatch(personSlice.default.actions.resetSøker());
+                        dispatch(personSlice.default.actions.resetSøkerData());
                         resetSak();
                     }}
                     onFetchByFnr={(fnr) => {
