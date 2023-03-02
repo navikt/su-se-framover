@@ -13,7 +13,7 @@ const SpinnerMedTekst = (props: { className?: string; text?: string }) => {
     return (
         <div className={classNames(styles.spinnerMedTekstContainer, props.className)}>
             <Loader size="3xlarge" title={props.text ?? formatMessage('spinner.laster')} />
-            <Heading level="3" size="large">
+            <Heading level="3" size="medium">
                 {props.text ?? formatMessage('spinner.laster')}
             </Heading>
         </div>

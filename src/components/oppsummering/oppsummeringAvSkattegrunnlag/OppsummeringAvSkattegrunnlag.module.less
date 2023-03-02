@@ -1,18 +1,29 @@
 @import '~/src/styles/variables.less';
 
-.skattegrunnlag {
-    margin-top: @spacing;
-    max-width: 75%;
+.skattegrunnlagsInformasjonContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(48%, 1fr));
+    gap: @spacing-s;
+}
 
-    .light {
-        font-weight: normal;
-    }
+.årsgrunnlagMedTittelContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
 
-    .italic {
-        font-style: italic;
-    }
+.årsgrunnlaginformasjonContainer {
+    margin-bottom: @spacing-s;
+}
 
-    .eps {
-        margin-top: @spacing-xs;
-    }
+.grunnlagslisteContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+}
+
+.grunnlagsinformasjonContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
 }

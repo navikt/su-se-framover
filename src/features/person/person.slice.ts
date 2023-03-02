@@ -81,7 +81,7 @@ export default createSlice({
             rejected: (state, action) => ({ ...state, skattegrunnlagSøker: simpleRejectedActionToRemoteData(action) }),
         });
         handleAsyncThunk(builder, fetchSkattegrunnlagEps, {
-            pending: (state) => ({ ...state, skattegrunnlagSøker: RemoteData.pending }),
+            pending: (state) => ({ ...state, skattegrunnlagEps: RemoteData.pending }),
             fulfilled: (state, action) => ({ ...state, skattegrunnlagEps: RemoteData.success(action.payload) }),
             rejected: (state, action) => ({ ...state, skattegrunnlagEps: simpleRejectedActionToRemoteData(action) }),
         });

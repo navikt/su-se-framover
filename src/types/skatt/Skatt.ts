@@ -9,10 +9,10 @@ export interface Skattegrunnlag {
 export interface Årsgrunnlag {
     inntektsår: number;
     skatteoppgjørsdato: Nullable<Date>;
-    grunnlag: Skattegrunnlagsliste;
+    grunnlag: Grunnlagsliste;
 }
 
-export interface Skattegrunnlagsliste {
+export interface Grunnlagsliste {
     formue: Grunnlag[];
     inntekt: Grunnlag[];
     inntektsfradrag: Grunnlag[];

@@ -1,10 +1,31 @@
 export default {
     'skattegrunnlag.tittel': 'Skattegrunnlag',
-    'skattegrunnlag.lagresIkke': 'Denne informasjonen er hentet fra skatteetaten og lagres ikke.',
-    'skattegrunnlag.tom': 'Fant ingen relevant skattedata for gitt person',
-    'skattegrunnlag.hentet': 'Informasjon hentet: {dato}',
-    'skattegrunnlag.bruker': 'Bruker',
-    'skattegrunnlag.eps': 'EPS',
+
+    'skattegrunnlag.søker': 'Søker',
+    'skattegrunnlag.eps': 'Ektefelle/Partner/Samboer',
+    'skattegrunnlag.laster.søker': 'Henter skattegrunnlag for søker',
+    'skattegrunnlag.laster.eps': 'Henter skattegrunnlag for Ektefelle/Partner/Samboer',
+
+    'årsgrunnlag.inntektsår': 'Inntektsår',
+    'årsgrunnlag.skatteoppgjørsdato': 'Skatteoppgjørsdato',
+    'årsgrunnlag.skatteoppgjørsdato.finnesIkke': 'Skatteoppgjørsdato finnes ikke',
+
+    'grunnlagstype.formue': 'Formue',
+    'grunnlagstype.inntekt': 'Inntekt',
+    'grunnlagstype.inntektsfradrag': 'Inntektsfradrag',
+    'grunnlagstype.formuesfradrag': 'Formuesfradrag',
+    'grunnlagstype.verdsettingsrabattSomGirGjeldsreduksjon': 'VerdsettingsrabattSomGirGjeldsreduksjon',
+    'grunnlagstype.oppjusteringAvEierinntekter': 'OppjusteringAvEierinntekter',
+    'grunnlagstype.annet': 'Annet',
+
+    'kjøretøySpesifisering.antattMarkedsverdi': 'Antatt markedsverdi',
+    'kjøretøySpesifisering.antattVerdiSomNytt': 'Antatt verdi som nytt',
+    'kjøretøySpesifisering.beløp': 'Beløp',
+    'kjøretøySpesifisering.fabrikatnavn': 'Fabrikatnavn',
+    'kjøretøySpesifisering.formuesverdi': 'Formuesverdi',
+    'kjøretøySpesifisering.registreringsnummer': 'Registreringsnummer',
+    'kjøretøySpesifisering.årForFørstegangsregistrering': 'År for førstegangsregistrering',
+    'kjøretøySpesifisering.verdiFinnesIkke': 'Verdi finnes ikke',
 
     // Oversettelser for tekniskNavn
     aarsavgiftForKontoIVerdipapirregister: 'Årsavgift VPS konto',
