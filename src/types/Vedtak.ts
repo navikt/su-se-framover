@@ -18,7 +18,7 @@ export interface Vedtak<T extends VedtakType = VedtakType> {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
     utbetalingId: Nullable<string>;
-    harDokument: boolean;
+    dokumenttilstand: Dokumenttilstand;
 }
 
 export interface AvslagVedtak extends Vedtak<VedtakType.AVSLAG> {
@@ -69,4 +69,15 @@ export enum VedtakType {
     STANS_AV_YTELSE = 'STANS_AV_YTELSE',
     GJENOPPTAK_AV_YTELSE = 'GJENOPPTAK_AV_YTELSE',
     AVVIST_KLAGE = 'AVVIST_KLAGE',
+}
+
+/**
+ * Et dokuments livvsløp
+ */
+export enum Dokumenttilstand {
+    SKAL_IKKE_GENERERE = 'SKAL_IKKE_GENERERE',
+    IKKE_GENERERT_ENDA = 'IKKE_GENERERT_ENDA',
+    GENERERT = 'GENERERT',
+    JOURNALFØRT = 'JOURNALFØRT',
+    SENDT = 'SENDT',
 }

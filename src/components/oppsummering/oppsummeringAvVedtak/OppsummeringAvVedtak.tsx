@@ -38,7 +38,13 @@ import {
 } from '~src/utils/revurdering/revurderingUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 import { splitStatusOgResultatFraSøkandsbehandling } from '~src/utils/SøknadsbehandlingUtils';
-import { getVedtaketsbehandling, getVedtakstype } from '~src/utils/VedtakUtils';
+import {
+    erDokumentGenerertEllerSenere,
+    erDokumentIkkeGenerertEnda,
+    getVedtaketsbehandling,
+    getVedtakstype,
+    skalDokumentIkkeGenereres,
+} from '~src/utils/VedtakUtils';
 
 import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 
@@ -111,7 +117,10 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                         />
                     )}
                 </div>
-                {vedtak.harDokument ? (
+
+                {skalDokumentIkkeGenereres(vedtak) && <Label>{formatMessage('vedtak.brev.ingenBrevSendt')}</Label>}
+                {erDokumentIkkeGenerertEnda(vedtak) && <Label>{formatMessage('vedtak.brev.ikkeGenerertEnda')}</Label>}
+                {erDokumentGenerertEllerSenere(vedtak) && (
                     <div className={styles.knappOgApiErrorContainer}>
                         <Button
                             className={styles.knapp}
@@ -129,8 +138,6 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                             <ApiErrorAlert error={hentDokumenterStatus.error} />
                         )}
                     </div>
-                ) : (
-                    <Label>{formatMessage('vedtak.brev.ingenBrevSendt')}</Label>
                 )}
             </Oppsummeringspanel>
             <Oppsummeringspanel

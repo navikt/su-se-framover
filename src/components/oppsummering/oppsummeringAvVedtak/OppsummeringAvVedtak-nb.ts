@@ -19,6 +19,7 @@ export default {
     'vedtak.beregning.ingen': 'Ingen beregning',
 
     'vedtak.brev.ingenBrevSendt': 'Brev er ikke sendt ut i forbindelse med revurderingen',
+    'vedtak.brev.ikkeGenerertEnda': 'Vedtaksbrevet er ikke blitt generert på nåværende tidspunkt. Prøv igjen senere',
 
     'vedtak.simulering': 'Simulering',
     'vedtak.simulering.ingen': 'Ingen simulering',
