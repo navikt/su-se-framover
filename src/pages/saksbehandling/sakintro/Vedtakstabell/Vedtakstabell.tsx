@@ -22,6 +22,7 @@ import { Klage, KlageStatus } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import { formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
+import { erDokumentGenerertEllerSenere } from '~src/utils/VedtakUtils';
 
 import messages from '../sakintro-nb';
 
@@ -141,7 +142,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                         </Link>
                                     </Table.DataCell>
                                     <Table.DataCell>
-                                        {isOversendtKlage(vedtak) || vedtak.harDokument ? (
+                                        {isOversendtKlage(vedtak) || erDokumentGenerertEllerSenere(vedtak) ? (
                                             <Button
                                                 className={styles.seBrevButton}
                                                 variant="secondary"

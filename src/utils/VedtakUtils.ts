@@ -2,7 +2,7 @@ import { Behandling } from '~src/types/Behandling';
 import { Klage } from '~src/types/Klage';
 import { Regulering } from '~src/types/Regulering';
 import { Sak } from '~src/types/Sak';
-import { Vedtak, VedtakType } from '~src/types/Vedtak';
+import { Dokumenttilstand, Vedtak, VedtakType } from '~src/types/Vedtak';
 
 export const getVedtakstype = (v: Vedtak) => {
     switch (v.type) {
@@ -41,3 +41,11 @@ export const getVedtaketsbehandling = (v: Vedtak, sak: Sak): Behandling | Regule
             return sak.klager.find((k) => k.id === v.behandlingId)!;
     }
 };
+
+export const erDokumentGenerertEllerSenere = (v: Vedtak) =>
+    v.dokumenttilstand === Dokumenttilstand.GENERERT ||
+    v.dokumenttilstand === Dokumenttilstand.JOURNALFØRT ||
+    v.dokumenttilstand === Dokumenttilstand.SENDT;
+
+export const skalDokumentIkkeGenereres = (v: Vedtak) => v.dokumenttilstand === Dokumenttilstand.SKAL_IKKE_GENERERE;
+export const erDokumentIkkeGenerertEnda = (v: Vedtak) => v.dokumenttilstand === Dokumenttilstand.IKKE_GENERERT_ENDA;
