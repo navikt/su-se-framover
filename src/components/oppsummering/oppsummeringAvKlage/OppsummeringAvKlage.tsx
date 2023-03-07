@@ -3,6 +3,7 @@ import { BodyShort, Label, Heading, Button, Tag } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
+import * as DokumentApi from '~src/api/dokumentApi';
 import * as pdfApi from '~src/api/pdfApi';
 import { InformationIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -10,11 +11,13 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~src/components/oppsummeringspanel/Oppsummeringspanel';
-import { useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, KlageStatus, KlageVurderingType } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
-import { erKlageOmgjort, erKlageOpprettholdt } from '~src/utils/klage/klageUtils';
+import { getBlob } from '~src/utils/dokumentUtils';
+import { erKlageOmgjort, erKlageOpprettholdt, erKlageOversendt } from '~src/utils/klage/klageUtils';
 
 import formkravMessages from '../../../pages/klage/vurderFormkrav/vurderFormkrav-nb';
 import vurderingMessages from '../../../pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
@@ -28,6 +31,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
     const { formatMessage } = useI18n({ messages: oppsummeringMessages });
 
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
+    const [hentDokumenterStatus, hentDokumenter] = useApiCall(DokumentApi.hentDokumenter);
 
     const hentVurderingstekstId = (klage: Klage): keyof typeof oppsummeringMessages => {
         if (klage.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD) return 'label.vurdering.opprettholdt';
@@ -64,16 +68,36 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     </Heading>
                 </div>
 
-                <div className={styles.seBrevContainer}>
-                    <Button
-                        variant="secondary"
-                        loading={RemoteData.isPending(brevStatus)}
-                        onClick={() => hentBrev({ sakId: props.klage.sakid, klageId: props.klage.id })}
-                    >
-                        {formatMessage('knapp.seBrev')}
-                    </Button>
-                    {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
-                </div>
+                {erKlageOversendt(props.klage) ? (
+                    <div className={styles.seBrevContainer}>
+                        <Button
+                            className={styles.knapp}
+                            variant="secondary"
+                            loading={RemoteData.isPending(hentDokumenterStatus)}
+                            onClick={() =>
+                                hentDokumenter({ id: props.klage.id, idType: DokumentIdType.Klage }, (dokumenter) =>
+                                    window.open(URL.createObjectURL(getBlob(dokumenter[0])))
+                                )
+                            }
+                        >
+                            {formatMessage('knapp.seBrev')}
+                        </Button>
+                        {RemoteData.isFailure(hentDokumenterStatus) && (
+                            <ApiErrorAlert error={hentDokumenterStatus.error} />
+                        )}
+                    </div>
+                ) : (
+                    <div className={styles.seBrevContainer}>
+                        <Button
+                            variant="secondary"
+                            loading={RemoteData.isPending(brevStatus)}
+                            onClick={() => hentBrev({ sakId: props.klage.sakid, klageId: props.klage.id })}
+                        >
+                            {formatMessage('knapp.seBrev')}
+                        </Button>
+                        {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
+                    </div>
+                )}
             </Oppsummeringspanel>
         </div>
     );
