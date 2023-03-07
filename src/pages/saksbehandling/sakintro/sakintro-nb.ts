@@ -85,6 +85,9 @@ export default {
 
     'dataCell.seOppsummering': 'Se oppsummering',
 
+    'datacell.brev.skalIkkeGenerere': 'Skal ikke sende brev',
+    'datacell.brev.ikkeGenerert': 'Ikke generert',
+
     'datacell.vedtakstype.SØKNAD': 'Søknad',
     'datacell.vedtakstype.AVSLAG': 'Søknad',
     'datacell.vedtakstype.ENDRING': 'Revurdering',
