@@ -10,11 +10,15 @@ import { Nullable } from '~src/lib/types';
 import {
     Filter,
     hentFiltrerteVerdier,
-    RestansResultatFilter,
-    RestansTypeFilter,
+    BehandlingssammendragResultatFilter,
+    BehandlingssammendragTypeFilter,
 } from '~src/pages/saksbehandling/behandlingsoversikt/filter/Filter';
-import RestanserTabell from '~src/pages/saksbehandling/restans/Restanser';
-import { Restans, RestansStatus, RestansType } from '~src/types/Restans';
+import BehandlingssammendragTabell from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
+import {
+    Behandlingssammendrag,
+    BehandlingssammendragStatus,
+    BehandlingssammendragType,
+} from '~src/types/Behandlingssammendrag';
 import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
@@ -33,32 +37,40 @@ export const FerdigeBehandlinger = () => {
     const tilOgMed = useState<Nullable<Date>>(null);
     const fraOgMed = useState<Nullable<Date>>(null);
 
-    const [type, setType] = useState<RestansTypeFilter>({
-        [RestansType.SØKNADSBEHANDLING]: false,
-        [RestansType.REVURDERING]: false,
-        [RestansType.KLAGE]: false,
-        [RestansType.REGULERING]: false,
+    const [type, setType] = useState<BehandlingssammendragTypeFilter>({
+        [BehandlingssammendragType.SØKNADSBEHANDLING]: false,
+        [BehandlingssammendragType.REVURDERING]: false,
+        [BehandlingssammendragType.KLAGE]: false,
+        [BehandlingssammendragType.REGULERING]: false,
     });
 
-    const [resultat, setResultat] = useState<RestansResultatFilter>({
-        [RestansStatus.OPPHØR]: false,
-        [RestansStatus.AVSLAG]: false,
-        [RestansStatus.INNVILGET]: false,
-        [RestansStatus.STANS]: false,
-        [RestansStatus.GJENOPPTAK]: false,
-        [RestansStatus.OVERSENDT]: false,
+    const [resultat, setResultat] = useState<BehandlingssammendragResultatFilter>({
+        [BehandlingssammendragStatus.OPPHØR]: false,
+        [BehandlingssammendragStatus.AVSLAG]: false,
+        [BehandlingssammendragStatus.INNVILGET]: false,
+        [BehandlingssammendragStatus.STANS]: false,
+        [BehandlingssammendragStatus.GJENOPPTAK]: false,
+        [BehandlingssammendragStatus.OVERSENDT]: false,
     });
 
-    const filtrerRestanser = (restanser: Restans[]): Restans[] => {
+    const filtrerBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {
         const typefilter = hentFiltrerteVerdier(type);
         const resultatfilter = hentFiltrerteVerdier(resultat);
 
-        return restanser
-            .filter((restans) => (tilOgMed[0] ? (toDateOrNull(restans.behandlingStartet) ?? '') <= tilOgMed[0] : true))
-            .filter((restans) => (fraOgMed[0] ? (toDateOrNull(restans.behandlingStartet) ?? '') >= fraOgMed[0] : true))
-            .filter((restans) => (typefilter.length ? typefilter.includes(restans.typeBehandling) : true))
-            .filter((restans) =>
-                resultatfilter.length ? resultatfilter.includes(restans.status as keyof RestansResultatFilter) : true
+        return behandlingssammendrag
+            .filter((behandlingssammendrag) =>
+                tilOgMed[0] ? (toDateOrNull(behandlingssammendrag.behandlingStartet) ?? '') <= tilOgMed[0] : true
+            )
+            .filter((behandlingssammendrag) =>
+                fraOgMed[0] ? (toDateOrNull(behandlingssammendrag.behandlingStartet) ?? '') >= fraOgMed[0] : true
+            )
+            .filter((behandlingssammendrag) =>
+                typefilter.length ? typefilter.includes(behandlingssammendrag.typeBehandling) : true
+            )
+            .filter((behandlingssammendrag) =>
+                resultatfilter.length
+                    ? resultatfilter.includes(behandlingssammendrag.status as keyof BehandlingssammendragResultatFilter)
+                    : true
             );
     };
 
@@ -88,10 +100,14 @@ export const FerdigeBehandlinger = () => {
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (restanser: Restans[]) => (
+                    (behandlingssammendrag: Behandlingssammendrag[]) => (
                         <div>
-                            <AntallBehandlinger restanser={filtrerRestanser(restanser)} />
-                            <RestanserTabell tabelldata={filtrerRestanser(restanser)} />
+                            <AntallBehandlinger
+                                behandlingssammendrag={filtrerBehandlingssammendrag(behandlingssammendrag)}
+                            />
+                            <BehandlingssammendragTabell
+                                tabelldata={filtrerBehandlingssammendrag(behandlingssammendrag)}
+                            />
                         </div>
                     )
                 )

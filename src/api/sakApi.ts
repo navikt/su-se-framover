@@ -1,3 +1,4 @@
+import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { Dokument, OpprettDokumentBody } from '~src/types/dokument/Dokument';
 import {
     OppdaterRegistrertUtenlandsoppholdRequest,
@@ -5,7 +6,6 @@ import {
     RegistrerUtenlandsoppholdRequest,
     AnnullerRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
-import { Restans } from '~src/types/Restans';
 import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
 import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
 
@@ -36,11 +36,11 @@ export async function fetchSakBySakId(sakId: string): Promise<ApiClientResult<Sa
     return apiClient({ url: `/saker/${sakId}`, method: 'GET' });
 }
 
-export async function hentÅpneBehandlinger(): Promise<ApiClientResult<Restans[]>> {
+export async function hentÅpneBehandlinger(): Promise<ApiClientResult<Behandlingssammendrag[]>> {
     return apiClient({ url: `/saker/behandlinger/apne`, method: 'GET' });
 }
 
-export async function hentFerdigeBehandlinger(): Promise<ApiClientResult<Restans[]>> {
+export async function hentFerdigeBehandlinger(): Promise<ApiClientResult<Behandlingssammendrag[]>> {
     return apiClient({ url: `/saker/behandlinger/ferdige`, method: 'GET' });
 }
 

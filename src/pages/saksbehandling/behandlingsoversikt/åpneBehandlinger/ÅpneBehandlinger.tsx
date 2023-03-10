@@ -9,11 +9,15 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import {
     Filter,
     hentFiltrerteVerdier,
-    RestansStatusFilter,
-    RestansTypeFilter,
+    BehandlingssammendragStatusFilter,
+    BehandlingssammendragTypeFilter,
 } from '~src/pages/saksbehandling/behandlingsoversikt/filter/Filter';
-import RestanserTabell from '~src/pages/saksbehandling/restans/Restanser';
-import { Restans, RestansStatus, RestansType } from '~src/types/Restans';
+import BehandlingssammendragTabell from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
+import {
+    Behandlingssammendrag,
+    BehandlingssammendragStatus,
+    BehandlingssammendragType,
+} from '~src/types/Behandlingssammendrag';
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
 
@@ -26,28 +30,32 @@ export const ÅpneBehandlinger = () => {
         hentÅpneBehandlinger();
     }, []);
 
-    const [type, setType] = useState<RestansTypeFilter>({
-        [RestansType.SØKNADSBEHANDLING]: false,
-        [RestansType.REVURDERING]: false,
-        [RestansType.KLAGE]: false,
-        [RestansType.REGULERING]: false,
+    const [type, setType] = useState<BehandlingssammendragTypeFilter>({
+        [BehandlingssammendragType.SØKNADSBEHANDLING]: false,
+        [BehandlingssammendragType.REVURDERING]: false,
+        [BehandlingssammendragType.KLAGE]: false,
+        [BehandlingssammendragType.REGULERING]: false,
     });
 
-    const [status, setStatus] = useState<RestansStatusFilter>({
-        [RestansStatus.NY_SØKNAD]: false,
-        [RestansStatus.UNDER_BEHANDLING]: false,
-        [RestansStatus.TIL_ATTESTERING]: false,
-        [RestansStatus.UNDERKJENT]: false,
+    const [status, setStatus] = useState<BehandlingssammendragStatusFilter>({
+        [BehandlingssammendragStatus.NY_SØKNAD]: false,
+        [BehandlingssammendragStatus.UNDER_BEHANDLING]: false,
+        [BehandlingssammendragStatus.TIL_ATTESTERING]: false,
+        [BehandlingssammendragStatus.UNDERKJENT]: false,
     });
 
-    const filterRestanser = (restanser: Restans[]): Restans[] => {
+    const filterBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {
         const typefilter = hentFiltrerteVerdier(type);
         const statusfilter = hentFiltrerteVerdier(status);
 
-        return restanser
-            .filter((restans) => (typefilter.length ? typefilter.includes(restans.typeBehandling) : true))
-            .filter((restans) =>
-                statusfilter.length ? statusfilter.includes(restans.status as keyof RestansStatusFilter) : true
+        return behandlingssammendrag
+            .filter((behandlingssammendrag) =>
+                typefilter.length ? typefilter.includes(behandlingssammendrag.typeBehandling) : true
+            )
+            .filter((behandlingssammendrag) =>
+                statusfilter.length
+                    ? statusfilter.includes(behandlingssammendrag.status as keyof BehandlingssammendragStatusFilter)
+                    : true
             );
     };
 
@@ -66,10 +74,14 @@ export const ÅpneBehandlinger = () => {
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (restanser: Restans[]) => (
+                    (behandlingssammendrag: Behandlingssammendrag[]) => (
                         <div>
-                            <AntallBehandlinger restanser={filterRestanser(restanser)} />
-                            <RestanserTabell tabelldata={filterRestanser(restanser)} />
+                            <AntallBehandlinger
+                                behandlingssammendrag={filterBehandlingssammendrag(behandlingssammendrag)}
+                            />
+                            <BehandlingssammendragTabell
+                                tabelldata={filterBehandlingssammendrag(behandlingssammendrag)}
+                            />
                         </div>
                     )
                 )

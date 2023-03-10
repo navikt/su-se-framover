@@ -4,6 +4,7 @@ import { Regulering } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Søknad } from '~src/types/Søknad';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { formatPeriode } from '~src/utils/date/dateUtils';
 import { splitStatusOgResultatFraKlage } from '~src/utils/klage/klageUtils';
 import { erReguleringAvsluttet } from '~src/utils/ReguleringUtils';
 import {
@@ -43,6 +44,7 @@ export interface DataCellInfo {
     type: 'søknad' | 'regulering' | 'revurdering' | 'klage' | 'stans' | 'gjenopptak';
     status: DatacellStatus;
     resultat: DataCellResultat;
+    periode: string;
     mottattOpprettetTidspunkt: string;
     avsluttetTidspunkt: Nullable<string>;
 }
@@ -56,6 +58,9 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             type: 'søknad',
             status: statusOgResultat?.status ?? 'nySøknad',
             resultat: statusOgResultat?.resultat ?? '-',
+            periode: b.søknadsbehandling?.stønadsperiode?.periode
+                ? formatPeriode(b.søknadsbehandling.stønadsperiode.periode)
+                : '-',
             mottattOpprettetTidspunkt: erPapirSøknad(b.søknad)
                 ? b.søknad.søknadInnhold.forNav.mottaksdatoForSøknad
                 : b.søknad.opprettet,
@@ -68,6 +73,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             type: 'regulering',
             status: '-',
             resultat: '-',
+            periode: formatPeriode(b.periode),
             mottattOpprettetTidspunkt: b.opprettet,
             avsluttetTidspunkt: erReguleringAvsluttet(b) ? b.avsluttet.tidspunkt : null,
         };
@@ -79,6 +85,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             type: erRevurderingStans(b) ? 'stans' : erRevurderingGjenopptak(b) ? 'gjenopptak' : 'revurdering',
             status: statusOgResultat.status,
             resultat: statusOgResultat.resultat,
+            periode: formatPeriode(b.periode),
             mottattOpprettetTidspunkt: b.opprettet,
             avsluttetTidspunkt: erRevurderingAvsluttet(b) ? b.avsluttetTidspunkt : null,
         };
@@ -89,6 +96,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             type: 'klage',
             status: statusOgResultat.status,
             resultat: statusOgResultat.resultat,
+            periode: '-',
             mottattOpprettetTidspunkt: b.opprettet,
             avsluttetTidspunkt: b.avsluttetTidspunkt,
         };
