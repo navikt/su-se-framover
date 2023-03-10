@@ -12,6 +12,7 @@ import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { pipe } from '~src/lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
+import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import {
@@ -20,7 +21,6 @@ import {
     RegistrerUtenlandsoppholdRequest,
     AnnullerRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
-import { Restans } from '~src/types/Restans';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -41,7 +41,7 @@ export const fetchSak = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentÅpneBehandlinger = createAsyncThunk<Restans[], void, { rejectValue: ApiError }>(
+export const hentÅpneBehandlinger = createAsyncThunk<Behandlingssammendrag[], void, { rejectValue: ApiError }>(
     'sak/apneBehandlinger',
     async (_, thunkApi) => {
         const res = await sakApi.hentÅpneBehandlinger();
@@ -52,7 +52,7 @@ export const hentÅpneBehandlinger = createAsyncThunk<Restans[], void, { rejectV
     }
 );
 
-export const hentFerdigeBehandlinger = createAsyncThunk<Restans[], void, { rejectValue: ApiError }>(
+export const hentFerdigeBehandlinger = createAsyncThunk<Behandlingssammendrag[], void, { rejectValue: ApiError }>(
     'sak/ferdigeBehandlinger',
     async (_, thunkApi) => {
         const res = await sakApi.hentFerdigeBehandlinger();
