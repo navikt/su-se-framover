@@ -5,43 +5,43 @@ import React from 'react';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { RestansStatus, RestansType } from '~src/types/Restans';
+import { BehandlingssammendragStatus, BehandlingssammendragType } from '~src/types/Behandlingssammendrag';
 
 import messages from './filter-nb';
 import * as styles from './filter.module.less';
 
-export type RestansTypeFilter = {
-    [RestansType.SØKNADSBEHANDLING]: boolean;
-    [RestansType.REVURDERING]: boolean;
-    [RestansType.KLAGE]: boolean;
-    [RestansType.REGULERING]: boolean;
+export type BehandlingssammendragTypeFilter = {
+    [BehandlingssammendragType.SØKNADSBEHANDLING]: boolean;
+    [BehandlingssammendragType.REVURDERING]: boolean;
+    [BehandlingssammendragType.KLAGE]: boolean;
+    [BehandlingssammendragType.REGULERING]: boolean;
 };
 
-export type RestansStatusFilter = {
-    [RestansStatus.NY_SØKNAD]: boolean;
-    [RestansStatus.UNDER_BEHANDLING]: boolean;
-    [RestansStatus.TIL_ATTESTERING]: boolean;
-    [RestansStatus.UNDERKJENT]: boolean;
+export type BehandlingssammendragStatusFilter = {
+    [BehandlingssammendragStatus.NY_SØKNAD]: boolean;
+    [BehandlingssammendragStatus.UNDER_BEHANDLING]: boolean;
+    [BehandlingssammendragStatus.TIL_ATTESTERING]: boolean;
+    [BehandlingssammendragStatus.UNDERKJENT]: boolean;
 };
 
-export type RestansResultatFilter = {
-    [RestansStatus.OPPHØR]: boolean;
-    [RestansStatus.AVSLAG]: boolean;
-    [RestansStatus.INNVILGET]: boolean;
-    [RestansStatus.STANS]: boolean;
-    [RestansStatus.GJENOPPTAK]: boolean;
-    [RestansStatus.OVERSENDT]: boolean;
+export type BehandlingssammendragResultatFilter = {
+    [BehandlingssammendragStatus.OPPHØR]: boolean;
+    [BehandlingssammendragStatus.AVSLAG]: boolean;
+    [BehandlingssammendragStatus.INNVILGET]: boolean;
+    [BehandlingssammendragStatus.STANS]: boolean;
+    [BehandlingssammendragStatus.GJENOPPTAK]: boolean;
+    [BehandlingssammendragStatus.OVERSENDT]: boolean;
 };
 
 export interface FilterProps {
     tilOgMedState?: [Nullable<Date>, (date: Nullable<Date>) => void];
     fraOgMedState?: [Nullable<Date>, (date: Nullable<Date>) => void];
-    type?: RestansTypeFilter;
-    status?: RestansStatusFilter;
-    resultat?: RestansResultatFilter;
-    oppdaterType?: (key: keyof RestansTypeFilter, verdi: boolean) => void;
-    oppdaterStatus?: (key: keyof RestansStatusFilter, verdi: boolean) => void;
-    oppdaterResultat?: (key: keyof RestansResultatFilter, verdi: boolean) => void;
+    type?: BehandlingssammendragTypeFilter;
+    status?: BehandlingssammendragStatusFilter;
+    resultat?: BehandlingssammendragResultatFilter;
+    oppdaterType?: (key: keyof BehandlingssammendragTypeFilter, verdi: boolean) => void;
+    oppdaterStatus?: (key: keyof BehandlingssammendragStatusFilter, verdi: boolean) => void;
+    oppdaterResultat?: (key: keyof BehandlingssammendragResultatFilter, verdi: boolean) => void;
 }
 
 const tilOgMedErGyldig = (fraOgMed: Nullable<Date> | undefined, tilOgMed: Nullable<Date>) => {
@@ -91,11 +91,13 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                     <Label className={styles.label}>{formatMessage('behandlingstype')}</Label>
                     {Object.entries(props.type).map(([key, value]) => (
                         <Checkbox
-                            key={key as keyof RestansTypeFilter}
+                            key={key as keyof BehandlingssammendragTypeFilter}
                             checked={value}
-                            onChange={(e) => props.oppdaterType?.(key as keyof RestansTypeFilter, e.target.checked)}
+                            onChange={(e) =>
+                                props.oppdaterType?.(key as keyof BehandlingssammendragTypeFilter, e.target.checked)
+                            }
                         >
-                            {formatMessage(key as keyof RestansTypeFilter)}
+                            {formatMessage(key as keyof BehandlingssammendragTypeFilter)}
                         </Checkbox>
                     ))}
                 </div>
@@ -105,11 +107,13 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                     <Label className={styles.label}>{formatMessage('behandlingsstatus')}</Label>
                     {Object.entries(props.status).map(([key, value]) => (
                         <Checkbox
-                            key={key as keyof RestansStatusFilter}
+                            key={key as keyof BehandlingssammendragStatusFilter}
                             checked={value}
-                            onChange={(e) => props.oppdaterStatus?.(key as keyof RestansStatusFilter, e.target.checked)}
+                            onChange={(e) =>
+                                props.oppdaterStatus?.(key as keyof BehandlingssammendragStatusFilter, e.target.checked)
+                            }
                         >
-                            {formatMessage(key as keyof RestansStatusFilter)}
+                            {formatMessage(key as keyof BehandlingssammendragStatusFilter)}
                         </Checkbox>
                     ))}
                 </div>
@@ -119,13 +123,16 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                     <Label className={styles.label}>{formatMessage('resultat')}</Label>
                     {Object.entries(props.resultat).map(([key, value]) => (
                         <Checkbox
-                            key={key as keyof RestansResultatFilter}
+                            key={key as keyof BehandlingssammendragResultatFilter}
                             checked={value}
                             onChange={(e) =>
-                                props.oppdaterResultat?.(key as keyof RestansResultatFilter, e.target.checked)
+                                props.oppdaterResultat?.(
+                                    key as keyof BehandlingssammendragResultatFilter,
+                                    e.target.checked
+                                )
                             }
                         >
-                            {formatMessage(key as keyof RestansResultatFilter)}
+                            {formatMessage(key as keyof BehandlingssammendragResultatFilter)}
                         </Checkbox>
                     ))}
                 </div>
