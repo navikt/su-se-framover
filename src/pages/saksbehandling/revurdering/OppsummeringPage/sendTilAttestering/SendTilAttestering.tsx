@@ -42,7 +42,10 @@ export interface BrevvalgFormData {
 export const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
 const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
     yup.object<BrevvalgFormData>({
-        valg: yup.string().oneOf(Object.values(Valg)).required(),
+        valg: yup
+            .string()
+            .oneOf([Valg.SEND, Valg.IKKE_SEND], 'Må velge om vedtaksbrev skal sendes ut eller ikke')
+            .required(),
         fritekst: yup
             .string()
             .defined()
