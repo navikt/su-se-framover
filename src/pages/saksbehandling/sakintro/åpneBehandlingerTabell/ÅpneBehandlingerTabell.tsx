@@ -57,6 +57,7 @@ enum ÅpneBehandlingerKolonner {
     behandlingstype = 'behandlingstype',
     status = 'status',
     resultat = 'resultat',
+    periode = 'periode',
     mottatt_opprettet_tidspunkt = 'mottatt_opprettet_tidspunkt',
 }
 
@@ -85,6 +86,8 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                             return dataCellInfo.status;
                         case ÅpneBehandlingerKolonner.resultat:
                             return dataCellInfo.resultat;
+                        case ÅpneBehandlingerKolonner.periode:
+                            return dataCellInfo.periode;
                         case ÅpneBehandlingerKolonner.mottatt_opprettet_tidspunkt:
                             return dataCellInfo.mottattOpprettetTidspunkt;
                     }
@@ -132,6 +135,9 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                             <Table.ColumnHeader sortable sortKey={ÅpneBehandlingerKolonner.status}>
                                 {formatMessage('header.status')}
                             </Table.ColumnHeader>
+                            <Table.ColumnHeader sortable sortKey={ÅpneBehandlingerKolonner.periode}>
+                                {formatMessage('header.periode')}
+                            </Table.ColumnHeader>
                             <Table.ColumnHeader sortable sortKey={ÅpneBehandlingerKolonner.resultat}>
                                 {formatMessage('header.resultat')}
                             </Table.ColumnHeader>
@@ -160,6 +166,7 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                                     <Table.DataCell>
                                         {formatMessage(`datacell.status.${dataCellInfo.status}`)}
                                     </Table.DataCell>
+                                    <Table.DataCell>{dataCellInfo.periode}</Table.DataCell>
                                     <Table.DataCell>
                                         {formatMessage(`datacell.resultat.${dataCellInfo.resultat}`)}
                                     </Table.DataCell>
