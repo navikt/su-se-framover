@@ -1,21 +1,24 @@
 import { Nullable } from '~src/lib/types';
 
-export interface Restans {
+import { Periode } from './Periode';
+
+export interface Behandlingssammendrag {
     saksnummer: string;
     behandlingId: string;
-    typeBehandling: RestansType;
-    status: RestansStatus;
+    typeBehandling: BehandlingssammendragType;
+    status: BehandlingssammendragStatus;
+    periode: Nullable<Periode<string>>;
     behandlingStartet: Nullable<string>;
 }
 
-export enum RestansType {
+export enum BehandlingssammendragType {
     SØKNADSBEHANDLING = 'SØKNADSBEHANDLING',
     REVURDERING = 'REVURDERING',
     KLAGE = 'KLAGE',
     REGULERING = 'REGULERING',
 }
 
-export enum RestansStatus {
+export enum BehandlingssammendragStatus {
     NY_SØKNAD = 'NY_SØKNAD',
     UNDER_BEHANDLING = 'UNDER_BEHANDLING',
     TIL_ATTESTERING = 'TIL_ATTESTERING',

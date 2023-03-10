@@ -1,4 +1,7 @@
-import { restansStatus, restansTypeMessages } from '~src/pages/saksbehandling/restans/restanser-nb';
+import {
+    behandlingssammendragStatus,
+    behandlingssammendragTypeMessages,
+} from '~src/pages/saksbehandling/behandlingssammendrag/Behandlingssammendrag-nb';
 
 export default {
     tidsperiode: 'Tidsperiode',
@@ -8,6 +11,6 @@ export default {
     tilOgMed: 'Dato til og med',
     fraOgMed: 'Dato fra og med',
     datovalidering: 'Kan ikke være før fra og med dato',
-    ...restansTypeMessages,
-    ...restansStatus,
+    ...behandlingssammendragTypeMessages,
+    ...behandlingssammendragStatus,
 };
