@@ -46,7 +46,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
 
     const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
     const søkerState = useAppSelector((state) => state.søker.søker);
-    const initialValues = {
+    const initialValues: VirkningstidspunktFormData = {
         periode: {
             fraOgMed: nullableMap(
                 props.behandling.stønadsperiode?.periode.fraOgMed ?? null,
@@ -56,8 +56,8 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                 props.behandling.stønadsperiode?.periode.tilOgMed ?? null,
                 DateUtils.parseIsoDateOnly
             ),
-            harSaksbehandlerAvgjort: !!props.behandling.aldersvurdering?.harSaksbehandlerAvgjort,
         },
+        harSaksbehandlerAvgjort: !!props.behandling.aldersvurdering?.harSaksbehandlerAvgjort,
     };
 
     const { draft, clearDraft, useDraftFormSubscribe } =
@@ -73,8 +73,8 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     useDraftFormSubscribe(form.watch);
 
     const save = (data: VirkningstidspunktFormData, onSuccess: () => void) => {
-        const fraOgMed = DateFns.formatISO(data.fraOgMed!, { representation: 'date' });
-        const tilOgMed = DateFns.formatISO(data.tilOgMed!, { representation: 'date' });
+        const fraOgMed = DateFns.formatISO(data.periode.fraOgMed!, { representation: 'date' });
+        const tilOgMed = DateFns.formatISO(data.periode.tilOgMed!, { representation: 'date' });
         return lagreVirkningstidspunkt(
             {
                 sakId: props.sakId,
@@ -95,18 +95,18 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             erAldersvurderingAvgjortOgHarEndretPåStønadsperioden({
                 s: props.behandling,
                 angittPeriode: {
-                    fraOgMed: form.watch('fraOgMed')
-                        ? DateFns.formatISO(form.watch('fraOgMed')!, { representation: 'date' })
+                    fraOgMed: form.watch('periode.fraOgMed')
+                        ? DateFns.formatISO(form.watch('periode.fraOgMed')!, { representation: 'date' })
                         : null,
-                    tilOgMed: form.watch('tilOgMed')
-                        ? DateFns.formatISO(form.watch('tilOgMed')!, { representation: 'date' })
+                    tilOgMed: form.watch('periode.tilOgMed')
+                        ? DateFns.formatISO(form.watch('periode.tilOgMed')!, { representation: 'date' })
                         : null,
                 },
             })
         ) {
             form.setValue('harSaksbehandlerAvgjort', false);
         }
-    }, [props.behandling, form.watch('fraOgMed'), form.watch('tilOgMed')]);
+    }, [props.behandling, form.watch('periode.fraOgMed'), form.watch('periode.tilOgMed')]);
 
     return (
         <>
@@ -136,7 +136,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     >
                                         <>
                                             <SaksbehandlerMåKontrollereStønadsperioden
-                                                stønadsperiodeTilOgMed={form.watch('tilOgMed')}
+                                                stønadsperiodeTilOgMed={form.watch('periode.tilOgMed')}
                                                 søkersFødselsinformasjon={søker.fødsel}
                                             />
 
@@ -146,13 +146,13 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                 skalViseBekreftelsesPanel({
                                                     s: props.behandling,
                                                     angittPeriode: {
-                                                        fraOgMed: form.watch('fraOgMed')
-                                                            ? DateFns.formatISO(form.watch('fraOgMed')!, {
+                                                        fraOgMed: form.watch('periode.fraOgMed')
+                                                            ? DateFns.formatISO(form.watch('periode.fraOgMed')!, {
                                                                   representation: 'date',
                                                               })
                                                             : null,
-                                                        tilOgMed: form.watch('tilOgMed')
-                                                            ? DateFns.formatISO(form.watch('tilOgMed')!, {
+                                                        tilOgMed: form.watch('periode.tilOgMed')
+                                                            ? DateFns.formatISO(form.watch('periode.tilOgMed')!, {
                                                                   representation: 'date',
                                                               })
                                                             : null,
