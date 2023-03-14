@@ -12,8 +12,8 @@
     "author": "",
     "license": "ISC",
     "engines": {
-        "node": ">=16 <17",
-        "npm": ">=8 <9"
+        "node": "19.7.0",
+        "npm": "9.5.0"
     },
     "dependencies": {
         "@parcel/core": "^2.6.1",
