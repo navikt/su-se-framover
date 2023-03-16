@@ -22,12 +22,15 @@ jobs:
         with:
             node-version: '18.x'
       - name: install deps
-        run: npm ci
+        run: |
+          npm ci
+          npm --prefix server ci
       - name: lint and typecheck
         run: npm run lint-and-typecheck
       - name: build client
         run: |
           npm run build
+          npm --prefix server build
           npm --prefix server prune --omit=dev
       - name: create sentry release
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
