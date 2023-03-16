@@ -1,28 +1,13 @@
-FROM navikt/node-express:16
+FROM gcr.io/distroless/nodejs:18
 
 ENV NODE_ENV production
-ENV BASE_DIR /app
-ENV FRONTEND_DIR ${BASE_DIR}/frontend
-ENV BACKEND_DIR ${BASE_DIR}/server
-ENV PORT 8080
 
-USER root
+WORKDIR /app/server
 
-COPY dist ${FRONTEND_DIR}
-COPY server ${BACKEND_DIR}
-# Trengs av server-bygget
-COPY tsconfig.json ${BASE_DIR}/
+COPY dist /app/frontend
+COPY server/dist /app/server
+COPY server/node_modules /app/server/node_modules
 
-WORKDIR ${BACKEND_DIR}
-# We need Python2/3 to install node-gyp: https://github.com/nodejs/docker-node/issues/384
-RUN apk --no-cache add --virtual native-deps \
-    make g++ python3 && \
-    npm ci &&\
-    apk del native-deps
-RUN npm run build
+EXPOSE 8080
 
-EXPOSE ${PORT}
-
-USER apprunner
-
-CMD ["npm", "start"]
+CMD ["index.js"]
