@@ -1,4 +1,4 @@
-FROM navikt/node-express:16
+FROM navikt/node-express:18
 
 ENV NODE_ENV production
 ENV BASE_DIR /app
