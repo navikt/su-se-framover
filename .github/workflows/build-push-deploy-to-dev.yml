@@ -21,16 +21,18 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
             node-version: '18.x'
-      - name: install-deps
-        run: |
-          npm ci
-          npm --prefix server ci
+      - name: install-deps-client
+        run: npm ci
       - name: lint-and-typecheck
         run: npm run lint-and-typecheck
-      - name: build
-        run: |
-          npm run build
-          npm --prefix server run build
+      - name: build-client
+        run: npm run build
+      - name: install-deps-server
+        working-directory: server
+        run: npm ci
+      - name: build-server
+        working-directory: server
+        run: npm run build
       - name: create-sentry-release
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
         run: npm run sentry-release
