@@ -30,7 +30,7 @@ jobs:
       - name: build client
         run: |
           npm run build
-          npm --prefix server build
+          npm --prefix server run build
           npm --prefix server prune --omit=dev
       - name: create sentry release
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
