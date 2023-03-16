@@ -21,18 +21,17 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
             node-version: '18.x'
-      - name: install deps
+      - name: install-deps
         run: |
           npm ci
           npm --prefix server ci
-      - name: lint and typecheck
+      - name: lint-and-typecheck
         run: npm run lint-and-typecheck
-      - name: build client
+      - name: build
         run: |
           npm run build
           npm --prefix server run build
-          npm --prefix server prune --omit=dev
-      - name: create sentry release
+      - name: create-sentry-release
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
         run: npm run sentry-release
         env:
@@ -67,6 +66,7 @@ jobs:
           VARS: nais-dev.json
 
   generate-draft-release:
+    if: (github.ref == 'refs/heads/master')
     name: Generate/update draft release
     runs-on: ubuntu-latest
     steps:
