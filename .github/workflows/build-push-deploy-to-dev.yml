@@ -1,8 +1,8 @@
 name: build-push-deploy-to-dev.yml
 
 on:
-  push
-  workflow_dispatch
+  push:
+  workflow_dispatch:
 
 jobs:
   build-push-docker-image:
