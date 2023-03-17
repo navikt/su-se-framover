@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/nodejs:18
+FROM node:18-alpine
 
 ENV NODE_ENV production
 
