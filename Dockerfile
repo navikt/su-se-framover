@@ -1,14 +1,15 @@
 FROM node:18-alpine
 
 ENV NODE_ENV production
+ENV PORT 8080
 ENV FRONTEND_DIR /app/frontend
 
-COPY dist /app/frontend
+COPY dist ${FRONTEND_DIR}
 COPY server/dist /app/server
 COPY server/node_modules /app/server/node_modules
 
 WORKDIR /app/server
 
-EXPOSE 8080
+EXPOSE ${PORT}
 
 CMD ["index.js"]
