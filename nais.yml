@@ -53,6 +53,7 @@ spec:
         value: /tmp 
   envFrom:
     - secret: redis-password
+    - secret: su-se-framover-session-key
 ---
 apiVersion: nais.io/v1alpha1
 kind: Application

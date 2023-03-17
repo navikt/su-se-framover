@@ -96,6 +96,16 @@ Disse styres gjennom `.env` lokalt og på vanlig måte i miljøene.
     - **Merk**: Hvis verdien er hemmelig så må man heller legge den inn i `Vault` enn i `nais.json`-filene
 2. Legg den til i [./server/config.ts](); enten i `server`- eller `client`-verdien, avhengig av hvor den skal brukes
 
+### Hemmelige variabler
+
+https://doc.nais.io/security/secrets/kubernetes-secrets/
+
+#### SESSION_KEY
+
+Brukes for å signere session-cookies. Se: http://expressjs.com/en/resources/middleware/session.html#secret
+
+1. kubectl create secret generic su-se-framover-session-key --from-literal=SESSION_KEY=<super-secret>
+
 ### Miljøvariabler for frontend (teknisk)
 
 Det er satt opp slik at denne konfigurasjonen settes i en `script`-tag av typen `application/json`, som så lastes inn og parses runtime (i frontend).
