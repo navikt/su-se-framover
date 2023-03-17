@@ -1,6 +1,7 @@
 FROM node:18-alpine
 
 ENV NODE_ENV production
+ENV FRONTEND_DIR /app/frontend
 
 COPY dist /app/frontend
 COPY server/dist /app/server
