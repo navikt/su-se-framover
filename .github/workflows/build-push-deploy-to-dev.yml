@@ -4,12 +4,13 @@ on:
   push:
   workflow_dispatch:
 
+env:
+  image: ghcr.io/${{ github.repository }}/su-se-framover:${{ github.sha }}
+
 jobs:
   build-push-docker-image:
     name: build-push-docker-image
     runs-on: ubuntu-latest
-    env:
-      image: ghcr.io/${{ github.repository }}/${{ github.repository }}:${{ github.sha }}
     outputs:
       image: ${{ env.image }}
     permissions:
@@ -62,7 +63,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais.yml
-          VAR: image=${{ needs.build.outputs.image }}
+          VAR: image=${{ env.image }}
           VARS: nais-dev.json
 
   generate-draft-release:
