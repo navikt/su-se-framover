@@ -9,7 +9,7 @@ jobs:
     name: build-push-docker-image
     runs-on: ubuntu-latest
     env:
-      image: ghcr.io/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
+      image: ghcr.io/${{ github.repository }}/${{ github.repository }}:${{ github.sha }}
     outputs:
       image: ${{ env.image }}
     permissions:
