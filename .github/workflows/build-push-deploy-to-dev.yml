@@ -21,15 +21,12 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
             node-version: '18.x'
-      - name: install-deps-client
+      - name: install-deps-client-and-server
         run: npm ci
       - name: lint-and-typecheck
         run: npm run lint-and-typecheck
       - name: build-client
         run: npm run build
-      - name: install-deps-server
-        working-directory: server
-        run: npm ci
       - name: build-server
         working-directory: server
         run: npm run build
@@ -49,6 +46,7 @@ jobs:
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
         uses: docker/build-push-action@v4
         with:
+          context: .
           push: true
           tags: ${{ env.image }}
 
