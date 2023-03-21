@@ -7,6 +7,7 @@ export interface Skattegrunnlag {
 }
 
 export interface Årsgrunnlag {
+    stadie: string;
     inntektsår: number;
     skatteoppgjørsdato: Nullable<Date>;
     grunnlag: Grunnlagsliste;

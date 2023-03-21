@@ -7,6 +7,7 @@ export default {
     'skattegrunnlag.laster.eps': 'Henter skattegrunnlag for Ektefelle/Partner/Samboer',
 
     'årsgrunnlag.inntektsår': 'Inntektsår',
+    'årsgrunnlag.stadie': 'Stadie',
     'årsgrunnlag.skatteoppgjørsdato': 'Skatteoppgjørsdato',
     'årsgrunnlag.skatteoppgjørsdato.finnesIkke': 'Skatteoppgjørsdato finnes ikke',
 

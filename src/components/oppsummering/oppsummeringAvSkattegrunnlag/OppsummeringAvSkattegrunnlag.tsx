@@ -98,6 +98,7 @@ const OppsummeringAvÅrsgrunnlag = (props: { årsgrunnlag: Årsgrunnlag }) => {
         <div>
             <div className={styles.årsgrunnlaginformasjonContainer}>
                 <OppsummeringPar label={formatMessage('årsgrunnlag.inntektsår')} verdi={props.årsgrunnlag.inntektsår} />
+                <OppsummeringPar label={formatMessage('årsgrunnlag.stadie')} verdi={props.årsgrunnlag.stadie} />
                 <OppsummeringPar
                     label={formatMessage('årsgrunnlag.skatteoppgjørsdato')}
                     verdi={
