@@ -15,7 +15,7 @@ export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>>
 
 export async function fetchSkattegrunnlagForPerson(fnr: string): Promise<ApiClientResult<Skattegrunnlag>> {
     return apiClient<Skattegrunnlag>({
-        url: `/skatt/${fnr}`,
+        url: `/skatt/person/${fnr}`,
         method: 'GET',
     }).then(
         (res) => Promise.resolve(res),
