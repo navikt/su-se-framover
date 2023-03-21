@@ -211,7 +211,7 @@ const Inngang = () => {
         soknadstema: urlForSakstype(sakstype),
         papirsøknad: isPapirsøknad,
     });
-    const { søker } = useAppSelector((s) => s.søker);
+    const { søker } = useAppSelector((s) => s.personopplysninger);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);
@@ -306,7 +306,7 @@ const Inngang = () => {
                 <div>
                     <Personsøk
                         onReset={() => {
-                            dispatch(personSlice.default.actions.resetSøker());
+                            dispatch(personSlice.default.actions.resetSøkerData());
                         }}
                         onFetchByFnr={handleSøk}
                         person={søker}

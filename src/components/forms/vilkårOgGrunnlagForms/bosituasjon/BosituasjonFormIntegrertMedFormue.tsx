@@ -69,25 +69,23 @@ const BosituasjonFormIntegrertMedFormue = (props: {
                 />
             </div>
             {watch.borSøkerMedEPS && (
-                <>
-                    <div className={styles.fnrInputContainer}>
-                        <Controller
-                            control={props.form.control}
-                            name="epsFnr"
-                            render={({ field, fieldState }) => (
-                                <TextField
-                                    {...field}
-                                    label={formatMessage('formueOgBosituasjon.input.ektefellesFødselsnummer')}
-                                    error={fieldState.error?.message}
-                                    size="small"
-                                    value={field.value ?? ''}
-                                    onChange={(e) => field.onChange(removeSpaces(e.target.value))}
-                                />
-                            )}
-                        />
-                        <EpsSkjermingModalOgPersonkort {...props} />
-                    </div>
-                </>
+                <div className={styles.fnrInputContainer}>
+                    <Controller
+                        control={props.form.control}
+                        name="epsFnr"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                label={formatMessage('formueOgBosituasjon.input.ektefellesFødselsnummer')}
+                                error={fieldState.error?.message}
+                                size="small"
+                                value={field.value ?? ''}
+                                onChange={(e) => field.onChange(removeSpaces(e.target.value))}
+                            />
+                        )}
+                    />
+                    <EpsSkjermingModalOgPersonkort {...props} />
+                </div>
             )}
         </div>
     );
@@ -118,7 +116,7 @@ const EpsSkjermingModalOgPersonkort = (props: {
             },
             () => {
                 dispatch(sakSliceActions.actions.resetSak());
-                dispatch(personSlice.actions.resetSøker());
+                dispatch(personSlice.actions.resetSøkerData());
                 navigate(Routes.home.createURL());
             }
         );

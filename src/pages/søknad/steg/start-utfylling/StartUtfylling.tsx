@@ -25,7 +25,7 @@ import { Sakstype } from '~src/types/Sak';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 
 const StartUtfylling = () => {
-    const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
+    const { søker: søkerFraStore } = useAppSelector((s) => s.personopplysninger);
     const søknad = useAppSelector((s) => s.soknad);
     const { step, soknadstema } = useRouteParams<typeof soknadsutfylling>();
     const sakstype = routes.sakstypeFraTemaIUrl(soknadstema);

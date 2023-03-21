@@ -265,6 +265,7 @@ const FormueGrunnlagInputs = (props: {
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
+                                    value={field.value ?? ''}
                                     label={formatMessage(`formue.grunnlag.verdi.${id}`)}
                                     error={fieldState?.error?.message}
                                     inputMode="numeric"

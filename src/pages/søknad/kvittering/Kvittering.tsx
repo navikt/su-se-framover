@@ -26,7 +26,7 @@ const Kvittering = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const søknad = useAppSelector((state) => state.innsending.søknad);
-    const søker = useAppSelector((state) => state.søker.søker);
+    const søker = useAppSelector((state) => state.personopplysninger.søker);
     const søknadstype = useAppSelector((state) => state.soknad.forVeileder.type);
     const [fetchSøknadPdfState, setFetchSøknadPdfState] = React.useState<RemoteData.RemoteData<ApiError, null>>(
         RemoteData.initial
@@ -34,7 +34,7 @@ const Kvittering = () => {
     const { formatMessage } = useI18n({ messages });
 
     const handleAvsluttSøknad = (sakId: Nullable<string>) => {
-        dispatch(personSlice.default.actions.resetSøker());
+        dispatch(personSlice.default.actions.resetSøkerData());
         dispatch(søknadslice.default.actions.resetSøknad());
 
         if (søknadstype === Søknadstype.Papirsøknad && sakId) {

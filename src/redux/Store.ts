@@ -9,7 +9,7 @@ import søknadSlice from '~src/features/søknad/søknad.slice';
 
 const store = configureStore({
     reducer: {
-        søker: person.reducer,
+        personopplysninger: person.reducer,
         soknad: søknadSlice.reducer,
         sak: sakSlice.reducer,
         innsending: innsending.reducer,

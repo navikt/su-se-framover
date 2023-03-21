@@ -32,13 +32,13 @@ import {
     UfullstendigBosituasjon,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Person } from '~src/types/Person';
-import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 
 import messages from './formue-nb';
+import styles from './Formue.module.less';
 
 const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -159,7 +159,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                     </div>
                 ),
                 right: (
-                    <div>
+                    <div className={styles.rightContainer}>
                         <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
                         <OppsummeringAvFormue
                             formue={{
@@ -169,7 +169,6 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                         />
                         {skattemeldingToggle && (
                             <OppsummeringAvSkattegrunnlag
-                                kategori={SkattegrunnlagKategori.FORMUE}
                                 søkerFnr={props.søker.fnr}
                                 skalHenteSkattegrunnlagForEPS={watch.epsFnr?.length === 11 ? watch.epsFnr : null}
                             />
