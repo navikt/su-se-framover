@@ -13,6 +13,7 @@ import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/SøknadsbehandlingUtils';
 import { createVilkårUrl } from '~src/utils/vilkårUtils';
 
+import Bosituasjon from '../bosituasjon/Bosituasjon';
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';
 import Flyktning from '../flyktning/Flyktning';
 import Formue from '../formue/Formue';
@@ -158,6 +159,15 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
                             nesteUrl={vilkårUrl(Vilkårtype.Formue)}
+                            avsluttUrl={avsluttUrl}
+                            sakId={sakId}
+                        />
+                    )}
+                    {vilkar === Vilkårtype.Bosituasjon && (
+                        <Bosituasjon
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
+                            nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
                         />

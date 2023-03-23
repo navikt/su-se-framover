@@ -7,6 +7,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import {
+    bosituasjonFormSchema,
+    BosituasjonGrunnlagFormData,
+    bosituasjonTilFormItemData,
+    nyBosituasjon,
+} from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -23,19 +29,13 @@ import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøtte
 
 import messages from './bosituasjonForm-nb';
 import styles from './bosituasjonForm.module.less';
-import {
-    BosituasjonFormData,
-    bosituasjonFormSchema,
-    bosituasjonTilFormItemData,
-    nyBosituasjon,
-} from './bosituasjonPageUtils';
 
 const BosituasjonPage = (props: RevurderingStegProps) => {
     const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
-    const form = useForm<BosituasjonFormData>({
+    const form = useForm<BosituasjonGrunnlagFormData>({
         defaultValues: {
             bosituasjoner:
                 props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.map((b) =>
@@ -46,7 +46,7 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
     });
 
     const lagreBosituasjon = (
-        data: BosituasjonFormData,
+        data: BosituasjonGrunnlagFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
     ) =>
         lagre(

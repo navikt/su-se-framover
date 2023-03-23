@@ -53,6 +53,8 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Institusjonsopphold';
         case Vilkårtype.FastOppholdINorge:
             return 'Opphold i Norge';
+        case Vilkårtype.Bosituasjon:
+            return 'Bositausjon & Sats';
         case Vilkårtype.OppholdIUtlandet:
             return 'Opphold i utlandet';
         case Vilkårtype.Sats:
@@ -137,6 +139,7 @@ export const mapToVilkårsinformasjon = (
         familiegjenforening,
         lovligOpphold,
         formue,
+        bosituasjon,
         uføre,
         utenlandsopphold,
         personligOppmøte,
@@ -176,6 +179,11 @@ export const mapToVilkårsinformasjon = (
             ),
             vilkårtype: Vilkårtype.OppholdIUtlandet,
             erStartet: utenlandsopphold !== null,
+        },
+        {
+            status: VilkårVurderingStatus.IkkeOk,
+            vilkårtype: Vilkårtype.Bosituasjon,
+            erStartet: bosituasjon !== null,
         },
         {
             status: getVilkårVurderingStatus(

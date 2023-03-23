@@ -1,6 +1,7 @@
 import { Fradragsgrunnlagrequest } from '~src/types/Fradrag';
 import { AlderspensjonVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import {
+    BosituasjongrunnlagRequest,
     BosituasjonRequest,
     FullstendigBosituasjonRequest,
     UfullstendigBosituasjonRequest,
@@ -112,6 +113,14 @@ export async function lagreUtenlandsopphold(arg: BehandlingstypeMedApiRequest<Ut
         body: { vurderinger: arg.utenlandsopphold },
     });
 }
+
+export const lagreBosituasjon = async (arg: BehandlingstypeMedApiRequest<BosituasjongrunnlagRequest>) => {
+    return apiClient<Søknadsbehandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon`,
+        method: 'POST',
+        body: arg.vurderinger,
+    });
+};
 
 export async function lagreUfullstendigBosituasjon(arg: UfullstendigBosituasjonRequest) {
     return apiClient<Søknadsbehandling>({

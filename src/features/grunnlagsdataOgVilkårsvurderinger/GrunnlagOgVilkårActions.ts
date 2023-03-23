@@ -5,6 +5,7 @@ import * as GrunnlagOgVilkårApi from '~src/api/GrunnlagOgVilkårApi';
 import { Fradragsgrunnlagrequest } from '~src/types/Fradrag';
 import { AlderspensjonVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import {
+    BosituasjongrunnlagRequest,
     BosituasjonRequest,
     FullstendigBosituasjonRequest,
     UfullstendigBosituasjonRequest,
@@ -113,6 +114,18 @@ export const lagreUtenlandsopphold = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/utlandsopphold/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreUtenlandsopphold(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreBosituasjon = createAsyncThunk<
+    Søknadsbehandling,
+    GrunnlagOgVilkårApi.BehandlingstypeMedApiRequest<BosituasjongrunnlagRequest>,
+    { rejectValue: ApiError }
+>('behandling/bosituasjon/ufullstendig', async (arg, thunkApi) => {
+    const res = await GrunnlagOgVilkårApi.lagreBosituasjon(arg);
     if (res.status === 'ok') {
         return res.data;
     }
