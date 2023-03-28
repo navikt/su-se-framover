@@ -17,6 +17,7 @@ export async function fetchSkattegrunnlagForPerson(fnr: string): Promise<ApiClie
     return apiClient<Skattegrunnlag>({
         url: `/skatt/person/${fnr}`,
         method: 'GET',
+        returnAsPromise: true,
     }).then(
         (res) => Promise.resolve(res),
         (res) => Promise.reject(res)
