@@ -1,25 +1,42 @@
-import React from 'react';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Loader, Modal, Heading, BodyLong, Button } from '@navikt/ds-react';
+import { pipe } from 'fp-ts/lib/function';
+import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
+import { ErrorCode } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
+import personSlice from '~src/features/person/person.slice';
+import sakSliceActions from '~src/features/saksoversikt/sak.slice';
+import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
+import { useAppDispatch } from '~src/redux/Store';
+import { Person } from '~src/types/Person';
+import { showName } from '~src/utils/person/personUtils';
 
+import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import messages from './BosituasjonForm-nb';
 import styles from './BosituasjonForm.module.less';
 import { BosituasjonGrunnlagFormData, nyBosituasjon } from './BosituasjonFormUtils';
 
 interface Props extends VilkårFormProps<BosituasjonGrunnlagFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
+    søker: Person;
+    children?: React.ReactNode;
 }
 
 const BosituasjonForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
+
+    const [epsStatus, setEpsStatus] = useState<ApiResult<Person>>(RemoteData.initial);
 
     return (
         <FormWrapper {...props}>
@@ -38,12 +55,13 @@ const BosituasjonForm = (props: Props) => {
                         const watch = props.form.watch(nameAndIdx);
                         return (
                             <div className={styles.formItemInputContainer}>
+                                <EpsSkjermingModalOgPersonkort eps={epsStatus} søker={props.søker} />
                                 <Controller
                                     control={props.form.control}
                                     name={`${nameAndIdx}.harEPS`}
                                     render={({ field, fieldState }) => (
                                         <BooleanRadioGroup
-                                            legend={formatMessage('form.harSøkerEPS')}
+                                            legend={formatMessage('bosituasjon.harSøkerEPS')}
                                             error={fieldState.error?.message}
                                             {...field}
                                         />
@@ -56,7 +74,7 @@ const BosituasjonForm = (props: Props) => {
                                             name={`${nameAndIdx}.epsFnr`}
                                             render={({ field, fieldState }) => (
                                                 <FnrInput
-                                                    label={formatMessage('form.epsFnr')}
+                                                    label={formatMessage('bosituasjon.epsFnr')}
                                                     inputId="epsFnr"
                                                     name={`${nameAndIdx}.epsFnr`}
                                                     onFnrChange={field.onChange}
@@ -68,6 +86,7 @@ const BosituasjonForm = (props: Props) => {
                                                             epsAlder: person?.fødsel?.alder ?? null,
                                                         });
                                                     }}
+                                                    getPersonStatus={(res) => setEpsStatus(res)}
                                                 />
                                             )}
                                         />
@@ -77,7 +96,7 @@ const BosituasjonForm = (props: Props) => {
                                                 name={`${nameAndIdx}.erEPSUførFlyktning`}
                                                 render={({ field, fieldState }) => (
                                                     <BooleanRadioGroup
-                                                        legend={formatMessage('form.erEPSUførFlyktning')}
+                                                        legend={formatMessage('bosituasjon.erEPSUførFlyktning')}
                                                         error={fieldState.error?.message}
                                                         {...field}
                                                     />
@@ -92,7 +111,7 @@ const BosituasjonForm = (props: Props) => {
                                         name={`${nameAndIdx}.delerBolig`}
                                         render={({ field, fieldState }) => (
                                             <BooleanRadioGroup
-                                                legend={formatMessage('form.delerBolig')}
+                                                legend={formatMessage('bosituasjon.delerBolig')}
                                                 error={fieldState.error?.message}
                                                 {...field}
                                             />
@@ -103,9 +122,75 @@ const BosituasjonForm = (props: Props) => {
                         );
                     }}
                 />
+                {props.children}
             </>
         </FormWrapper>
     );
 };
 
 export default BosituasjonForm;
+
+const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: Person }) => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const { formatMessage } = useI18n({ messages });
+
+    const handleEpsSkjermingModalContinueClick = async () => {
+        dispatch(sakSliceActions.actions.resetSak());
+        dispatch(personSlice.actions.resetSøkerData());
+        navigate(Routes.home.createURL());
+    };
+
+    return (
+        <div className={styles.result}>
+            {pipe(
+                props.eps,
+                RemoteData.fold(
+                    () => null,
+                    () => <Loader />,
+                    (err) => {
+                        return (
+                            <>
+                                <ApiErrorAlert error={err} />
+
+                                {err?.statusCode === ErrorCode.Unauthorized && (
+                                    <Modal
+                                        open={true}
+                                        onClose={() => {
+                                            return;
+                                        }}
+                                    >
+                                        <Modal.Content>
+                                            <div className={styles.modalInnhold}>
+                                                <Heading level="2" size="small" spacing>
+                                                    {formatMessage('formueOgBosituasjon.modal.skjerming.heading')}
+                                                </Heading>
+                                                <BodyLong spacing>
+                                                    {formatMessage('formueOgBosituasjon.modal.skjerming.innhold', {
+                                                        navn: showName(props.søker.navn),
+                                                        fnr: props.søker.fnr,
+                                                        b: (chunks) => <b>{chunks}</b>,
+                                                        // eslint-disable-next-line react/display-name
+                                                        br: () => <br />,
+                                                    })}
+                                                </BodyLong>
+                                                <Button
+                                                    variant="secondary"
+                                                    type="button"
+                                                    onClick={() => handleEpsSkjermingModalContinueClick()}
+                                                >
+                                                    OK
+                                                </Button>
+                                            </div>
+                                        </Modal.Content>
+                                    </Modal>
+                                )}
+                            </>
+                        );
+                    },
+                    () => null
+                )
+            )}
+        </div>
+    );
+};

@@ -4,12 +4,7 @@ import { ApiError } from '~src/api/apiClient';
 import * as GrunnlagOgVilkårApi from '~src/api/GrunnlagOgVilkårApi';
 import { Fradragsgrunnlagrequest } from '~src/types/Fradrag';
 import { AlderspensjonVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
-import {
-    BosituasjongrunnlagRequest,
-    BosituasjonRequest,
-    FullstendigBosituasjonRequest,
-    UfullstendigBosituasjonRequest,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { BosituasjongrunnlagRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Familiegjenforeningrequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
 import { FastOppholdVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
 import { FlyktningVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
@@ -120,24 +115,12 @@ export const lagreUtenlandsopphold = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const lagreBosituasjon = createAsyncThunk<
-    Søknadsbehandling,
+export const lagreBosituasjongrunnlag = createAsyncThunk<
+    GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
     GrunnlagOgVilkårApi.BehandlingstypeMedApiRequest<BosituasjongrunnlagRequest>,
     { rejectValue: ApiError }
->('behandling/bosituasjon/ufullstendig', async (arg, thunkApi) => {
+>('behandling/bosituasjon', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreBosituasjon(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreUfullstendigBosituasjon = createAsyncThunk<
-    Søknadsbehandling,
-    UfullstendigBosituasjonRequest,
-    { rejectValue: ApiError }
->('behandling/bosituasjon/ufullstendig', async (arg, thunkApi) => {
-    const res = await GrunnlagOgVilkårApi.lagreUfullstendigBosituasjon(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -168,40 +151,12 @@ export const lagrePersonligOppmøteVilkår = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const lagreFullstendigBosituasjon = createAsyncThunk<
-    Søknadsbehandling,
-    FullstendigBosituasjonRequest,
-    { rejectValue: ApiError }
->('behandling/grunnlag/bosituasjon/fullfør', async (arg, thunkApi) => {
-    const res = await GrunnlagOgVilkårApi.lagreFullstendigBosituasjon(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 export const lagreFradragsgrunnlag = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
     GrunnlagOgVilkårApi.BehandlingstypeMedApiRequest<Fradragsgrunnlagrequest>,
     { rejectValue: ApiError }
 >('beregning/fradrag/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFradragsgrunnlag(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const lagreBosituasjonsgrunnlag = createAsyncThunk<
-    GrunnlagOgVilkårApi.RevurderingOgFeilmeldinger,
-    BosituasjonRequest,
-    { rejectValue: ApiError }
->('revurdering/grunnlag/bosituasjon/lagre', async (arg, thunkApi) => {
-    const res = await GrunnlagOgVilkårApi.lagreBosituasjonsgrunnlag({
-        sakId: arg.sakId,
-        revurderingId: arg.revurderingId,
-        bosituasjoner: arg.bosituasjoner,
-    });
     if (res.status === 'ok') {
         return res.data;
     }

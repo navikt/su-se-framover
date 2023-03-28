@@ -1,6 +1,5 @@
 import * as Routes from '~src/lib/routes';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
-import { erBosituasjonFullstendig } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -9,7 +8,6 @@ import { Sakstype } from '~src/types/Sak';
 import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
-import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
     Routes.saksbehandlingVilkårsvurdering.createURL({
@@ -57,8 +55,6 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Bositausjon & Sats';
         case Vilkårtype.OppholdIUtlandet:
             return 'Opphold i utlandet';
-        case Vilkårtype.Sats:
-            return 'Vurdering av sats';
         case Vilkårtype.Beregning:
             return 'Beregning';
     }
@@ -181,9 +177,9 @@ export const mapToVilkårsinformasjon = (
             erStartet: utenlandsopphold !== null,
         },
         {
-            status: VilkårVurderingStatus.IkkeOk,
+            status: bosituasjon.length > 0 ? VilkårVurderingStatus.Ok : VilkårVurderingStatus.IkkeVurdert,
             vilkårtype: Vilkårtype.Bosituasjon,
-            erStartet: bosituasjon !== null,
+            erStartet: bosituasjon.length > 0,
         },
         {
             status: getVilkårVurderingStatus(
@@ -208,11 +204,6 @@ export const mapToVilkårsinformasjon = (
 export const vilkårsinformasjonForBeregningssteg = (b: Søknadsbehandling): Vilkårsinformasjon[] => {
     return [
         {
-            status: getSatsStatus(b),
-            vilkårtype: Vilkårtype.Sats,
-            erStartet: erSatsStartet(b),
-        },
-        {
             status:
                 b.beregning === null
                     ? VilkårVurderingStatus.IkkeVurdert
@@ -223,27 +214,6 @@ export const vilkårsinformasjonForBeregningssteg = (b: Søknadsbehandling): Vil
             erStartet: b.beregning !== null,
         },
     ];
-};
-
-const getSatsStatus = (b: Søknadsbehandling) => {
-    //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
-    if (b.status === SøknadsbehandlingStatus.OPPRETTET || b.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG) {
-        return VilkårVurderingStatus.IkkeVurdert;
-    }
-
-    if (erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger))) {
-        return VilkårVurderingStatus.Ok;
-    }
-    return VilkårVurderingStatus.IkkeVurdert;
-};
-
-const erSatsStartet = (b: Søknadsbehandling) => {
-    //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
-    if (b.status === SøknadsbehandlingStatus.OPPRETTET || b.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG) {
-        return false;
-    }
-
-    return !!erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger));
 };
 
 export const erAlleVilkårStartet = (sakstype: Sakstype, g: GrunnlagsdataOgVilkårsvurderinger) => {

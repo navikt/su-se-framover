@@ -127,7 +127,7 @@ export interface BosituasjonRequest {
 export interface BosituasjongrunnlagRequest {
     sakId: string;
     behandlingId: string;
-    vurderinger: BosituasjonVurderingRequest[];
+    bosituasjoner: BosituasjonVurderingRequest[];
 }
 
 export interface BosituasjonVurderingRequest {

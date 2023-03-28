@@ -56,14 +56,17 @@ export const bosituasjongrunnlagTilFormDataEllerNy = (
     b: Bosituasjon[],
     p: Periode<string>
 ): BosituasjonGrunnlagFormData => ({
-    bosituasjoner: b.map((bo) => ({
-        periode: lagDatePeriodeAvStringPeriode(bo.periode),
-        harEPS: bo.fnr !== null,
-        epsFnr: bo.fnr,
-        epsAlder: null,
-        delerBolig: bo.delerBolig,
-        erEPSUførFlyktning: bo.ektemakeEllerSamboerUførFlyktning,
-    })) ?? [nyBosituasjon(p)],
+    bosituasjoner:
+        b.length > 0
+            ? b.map((bo) => ({
+                  periode: lagDatePeriodeAvStringPeriode(bo.periode),
+                  harEPS: bo.fnr !== null,
+                  epsFnr: bo.fnr,
+                  epsAlder: null,
+                  delerBolig: bo.delerBolig,
+                  erEPSUførFlyktning: bo.ektemakeEllerSamboerUførFlyktning,
+              }))
+            : [nyBosituasjon(p)],
 });
 
 export const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): BosituasjonFormItemData => ({
@@ -85,14 +88,14 @@ export const bosituasjongrunnlagFormDataTilRequest = (args: {
 }): BosituasjongrunnlagRequest => ({
     sakId: args.sakId,
     behandlingId: args.behandlingId,
-    vurderinger: args.data.bosituasjoner.map((b) => ({
+    bosituasjoner: args.data.bosituasjoner.map((b) => ({
         periode: {
             fraOgMed: DateUtils.toIsoDateOnlyString(b.periode.fraOgMed!),
             tilOgMed: DateUtils.toIsoDateOnlyString(b.periode.tilOgMed!),
         },
-        epsFnr: b.epsFnr,
-        delerBolig: b.delerBolig,
-        erEPSUførFlyktning: b.erEPSUførFlyktning,
+        epsFnr: b.harEPS ? b.epsFnr : null,
+        delerBolig: b.harEPS ? null : b.delerBolig,
+        erEPSUførFlyktning: b.harEPS && b.epsAlder && b.epsAlder < 67 ? b.erEPSUførFlyktning : null,
     })),
 });
 

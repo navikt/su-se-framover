@@ -108,7 +108,10 @@ export function useApiCall<T, U>(
             if (!RemoteData.isPending(apiResult)) {
                 setApiResult(RemoteData.pending);
 
-                const res = await fn(args);
+                const res = await fn(args).then(
+                    (res) => res,
+                    (res) => res
+                );
                 if (res.status === 'ok') {
                     setApiResult(RemoteData.success(res.data));
                     onSuccess?.(res.data);

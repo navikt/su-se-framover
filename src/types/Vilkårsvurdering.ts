@@ -27,7 +27,6 @@ export enum VilkårtypeFelles {
     FastOppholdINorge = 'FAST_OPPHOLD_I_NORGE',
     OppholdIUtlandet = 'OPPHOLD_I_UTLANDET',
     Bosituasjon = 'BOSITUASJON',
-    Sats = 'SATS',
     Beregning = 'BEREGNING',
 }
 

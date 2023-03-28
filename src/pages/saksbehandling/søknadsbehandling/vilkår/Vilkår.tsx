@@ -22,7 +22,6 @@ import Institusjonsopphold from '../institusjonsopphold/Institusjonsopphold';
 import LovligOppholdINorge from '../lovlig-opphold-i-norge/LovligOppholdINorge';
 import OppholdIUtlandet from '../opphold-i-utlandet/OppholdIUtlandet';
 import PersonligOppmøte from '../personlig-oppmøte/PersonligOppmøte';
-import Sats from '../sats/Sats';
 import Uførhet from '../uførhet/Uførhet';
 import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
 
@@ -158,7 +157,7 @@ const Vilkår = () => {
                         <OppholdIUtlandet
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Formue)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Bosituasjon)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
                         />
@@ -167,15 +166,16 @@ const Vilkår = () => {
                         <Bosituasjon
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
-                            nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Formue)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
+                            søker={props.søker}
                         />
                     )}
                     {vilkar === Vilkårtype.Formue && (
                         <Formue
                             behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Bosituasjon)}
                             søker={props.søker}
                             nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             avsluttUrl={avsluttUrl}
@@ -186,29 +186,20 @@ const Vilkår = () => {
                         <PersonligOppmøte
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Sats)}
-                            avsluttUrl={avsluttUrl}
-                            sakstype={sakstype}
-                            sakId={sakId}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.Sats && (
-                        <Sats
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             nesteUrl={
                                 erVilkårsvurderingerVurdertAvslag(behandling)
                                     ? vedtakUrl
                                     : vilkårUrl(Vilkårtype.Beregning)
                             }
                             avsluttUrl={avsluttUrl}
+                            sakstype={sakstype}
                             sakId={sakId}
                         />
                     )}
                     {vilkar === Vilkårtype.Beregning && (
                         <Beregning
                             behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Sats)}
+                            forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             nesteUrl={vedtakUrl}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}

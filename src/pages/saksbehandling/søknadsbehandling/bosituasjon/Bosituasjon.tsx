@@ -12,11 +12,13 @@ import {
     bosituasjongrunnlagTilFormDataEllerNy,
     eqBosituasjonGrunnlagFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
+import OppsummeringAvBoforhold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
-import { lagreBosituasjon } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
+import { lagreBosituasjongrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { Person } from '~src/types/Person';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
@@ -26,8 +28,8 @@ import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './Bosituasjon-nb';
 
-const Bosituasjon = (props: VilkårsvurderingBaseProps) => {
-    const [status, lagre] = useAsyncActionCreator(lagreBosituasjon);
+const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
+    const [status, lagre] = useAsyncActionCreator(lagreBosituasjongrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
 
     const initialValues = bosituasjongrunnlagTilFormDataEllerNy(
@@ -87,6 +89,7 @@ const Bosituasjon = (props: VilkårsvurderingBaseProps) => {
                 right: (
                     <div>
                         <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                        <OppsummeringAvBoforhold boforhold={props.behandling.søknad.søknadInnhold.boforhold} />
                     </div>
                 ),
             }}

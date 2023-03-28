@@ -25,13 +25,6 @@ import {
     hentOmSøkerBorMedEpsOgEpsFnr,
 } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
-export type FormueFormDataer = FormueVilkårFormData | FormueVilkårOgDelvisBosituasjonFormData;
-
-export interface FormueVilkårOgDelvisBosituasjonFormData extends FormueVilkårFormData {
-    borSøkerMedEPS: boolean;
-    epsFnr: Nullable<string>;
-}
-
 export interface FormueVilkårFormData {
     formue: FormuegrunnlagFormData[];
 }
@@ -242,11 +235,9 @@ export function getInitialFormueVilkårOgDelvisBosituasjon(
     søknadsInnhold: SøknadInnhold,
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger,
     stønadsperiode: Periode
-): FormueVilkårOgDelvisBosituasjonFormData {
+): FormueVilkårFormData {
     const epsInformasjon = hentOmSøkerBorMedEpsOgEpsFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
     return {
-        borSøkerMedEPS: epsInformasjon?.borSøkerMedEPS,
-        epsFnr: epsInformasjon?.epsFnr,
         formue: [
             {
                 epsFnr: epsInformasjon?.epsFnr,
@@ -290,7 +281,7 @@ const verdierFormDataValidering = yup
     })
     .required();
 
-export const formueFormSchema = yup.object<FormueFormDataer>({
+export const formueFormSchema = yup.object<FormueVilkårFormData>({
     formue: yup
         .array<FormuegrunnlagFormData>(
             yup
@@ -310,13 +301,4 @@ export const formueFormSchema = yup.object<FormueFormDataer>({
                 .required()
         )
         .required(),
-    borSøkerMedEPS: yup.boolean(),
-    epsFnr: yup
-        .mixed<string>()
-        .nullable()
-        .test('eps', 'Ektefelle/samboers fnr må fylles ut', function (value) {
-            if (this.parent.borSøkerMedEPS) {
-                return value?.length === 11;
-            } else return true;
-        }),
 });
