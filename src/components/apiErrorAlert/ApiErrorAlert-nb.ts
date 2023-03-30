@@ -113,6 +113,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
         'Ingen summert skattegrunnlag funnet på oppgitt personidentifikator og inntektsår',
     [ApiErrorCode.INNSENDING_AV_SØKNAD_IKKE_TILLATT]: 'Innsending av søknad er ikke tillatt',
+    [ApiErrorCode.INNEHOLDER_UFULLSTENDIG_BOSITUASJON]:
+        'Behandlingen inneholder ufullstendig bosituasjon. Dette kan være fordi behandlingen har blitt utført før en teknisk endring som sammenslår "EPS søket i formue" & "Vurdering av Sats". Vennligst gå til "Bosituasjon og Sats" og oppdater det som er nødvendig.',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
         'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
     [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:

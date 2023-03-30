@@ -92,6 +92,7 @@ export enum ApiErrorCode {
     INGEN_FORMUE_FOR_BOSITUASJONSPERIODE = 'ingen_formue_for_bosituasjonsperiode',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
     INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'inget_skattegrunnlag_for_gitt_fnr_og_år',
+    INNEHOLDER_UFULLSTENDIG_BOSITUASJON = 'inneholder_ufullstendig_bosituasjon',
     INNSENDING_AV_SØKNAD_IKKE_TILLATT = 'innsending_av_søknad_ikke_tillatt',
     IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
 
