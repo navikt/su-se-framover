@@ -75,6 +75,6 @@ export default async function apiClient<TSuccess>(arg: {
 
     const errorBody: ErrorMessage = await res.json().catch((_err) => ({}));
 
-    if (arg.returnAsPromise) Promise.reject(error({ statusCode: res.status, correlationId, body: errorBody }));
+    if (arg.returnAsPromise) return Promise.reject(error({ statusCode: res.status, correlationId, body: errorBody }));
     return error({ statusCode: res.status, correlationId, body: errorBody });
 }

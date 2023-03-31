@@ -10,10 +10,7 @@ export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>>
         body: {
             fnr: fnr,
         },
-    }).then(
-        (res) => Promise.resolve(res),
-        (res) => Promise.reject(res)
-    );
+    });
 }
 
 export async function fetchSkattegrunnlagForPerson(fnr: string): Promise<ApiClientResult<Skattegrunnlag>> {
