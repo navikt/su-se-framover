@@ -1,17 +1,24 @@
-import { v4 as uuid } from 'uuid';
+import { getEq } from 'fp-ts/Array';
+import * as B from 'fp-ts/lib/boolean';
+import { struct } from 'fp-ts/lib/Eq';
+import * as N from 'fp-ts/lib/number';
+import * as S from 'fp-ts/lib/string';
 
-import { Nullable } from '~src/lib/types';
+import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { NullablePeriode } from '~src/types/Periode';
+import {
+    Bosituasjon,
+    BosituasjongrunnlagRequest,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { NullablePeriode, Periode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
+import { eqPeriode, lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils';
 
-export interface BosituasjonFormData {
+export interface BosituasjonGrunnlagFormData {
     bosituasjoner: BosituasjonFormItemData[];
 }
 
 export interface BosituasjonFormItemData {
-    id: string;
     periode: {
         fraOgMed: Nullable<Date>;
         tilOgMed: Nullable<Date>;
@@ -23,12 +30,21 @@ export interface BosituasjonFormItemData {
     erEPSUførFlyktning: Nullable<boolean>;
 }
 
-export const nyBosituasjon = (): BosituasjonFormItemData => ({
-    id: uuid(),
-    periode: {
-        fraOgMed: null,
-        tilOgMed: null,
-    },
+export const eqBosituasjonFormItemData = struct<BosituasjonFormItemData>({
+    periode: eqNullable(eqPeriode),
+    harEPS: eqNullable(B.Eq),
+    epsFnr: eqNullable(S.Eq),
+    epsAlder: eqNullable(N.Eq),
+    delerBolig: eqNullable(B.Eq),
+    erEPSUførFlyktning: eqNullable(B.Eq),
+});
+
+export const eqBosituasjonGrunnlagFormData = struct<BosituasjonGrunnlagFormData>({
+    bosituasjoner: getEq(eqBosituasjonFormItemData),
+});
+
+export const nyBosituasjon = (p?: Periode<string>): BosituasjonFormItemData => ({
+    periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     harEPS: null,
     epsFnr: null,
     epsAlder: null,
@@ -36,8 +52,24 @@ export const nyBosituasjon = (): BosituasjonFormItemData => ({
     erEPSUførFlyktning: null,
 });
 
+export const bosituasjongrunnlagTilFormDataEllerNy = (
+    b: Bosituasjon[],
+    p: Periode<string>
+): BosituasjonGrunnlagFormData => ({
+    bosituasjoner:
+        b.length > 0
+            ? b.map((bo) => ({
+                  periode: lagDatePeriodeAvStringPeriode(bo.periode),
+                  harEPS: bo.fnr !== null,
+                  epsFnr: bo.fnr,
+                  epsAlder: null,
+                  delerBolig: bo.delerBolig,
+                  erEPSUførFlyktning: bo.ektemakeEllerSamboerUførFlyktning,
+              }))
+            : [nyBosituasjon(p)],
+});
+
 export const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): BosituasjonFormItemData => ({
-    id: uuid(),
     periode: {
         fraOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.fraOgMed),
         tilOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.tilOgMed),
@@ -49,13 +81,30 @@ export const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): Bosituasjo
     erEPSUførFlyktning: bosituasjon.ektemakeEllerSamboerUførFlyktning,
 });
 
+export const bosituasjongrunnlagFormDataTilRequest = (args: {
+    sakId: string;
+    behandlingId: string;
+    data: BosituasjonGrunnlagFormData;
+}): BosituasjongrunnlagRequest => ({
+    sakId: args.sakId,
+    behandlingId: args.behandlingId,
+    bosituasjoner: args.data.bosituasjoner.map((b) => ({
+        periode: {
+            fraOgMed: DateUtils.toIsoDateOnlyString(b.periode.fraOgMed!),
+            tilOgMed: DateUtils.toIsoDateOnlyString(b.periode.tilOgMed!),
+        },
+        epsFnr: b.harEPS ? b.epsFnr : null,
+        delerBolig: b.harEPS ? null : b.delerBolig,
+        erEPSUførFlyktning: b.harEPS && b.epsAlder && b.epsAlder < 67 ? b.erEPSUførFlyktning : null,
+    })),
+});
+
 export const bosituasjonFormSchema = yup
-    .object<BosituasjonFormData>({
+    .object<BosituasjonGrunnlagFormData>({
         bosituasjoner: yup
             .array<BosituasjonFormItemData>(
                 yup
                     .object<BosituasjonFormItemData>({
-                        id: yup.string().required(),
                         periode: yup
                             .object<NullablePeriode>({
                                 fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),

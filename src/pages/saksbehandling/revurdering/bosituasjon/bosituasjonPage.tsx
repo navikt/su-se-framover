@@ -2,70 +2,61 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { FnrInput } from '~src/components/FnrInput/FnrInput';
-import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
-import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
+import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
+import BosituasjonForm from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonForm';
+import {
+    bosituasjonFormSchema,
+    BosituasjonGrunnlagFormData,
+    bosituasjongrunnlagFormDataTilRequest,
+    bosituasjongrunnlagTilFormDataEllerNy,
+} from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { lagreBosituasjonsgrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
+import { lagreBosituasjongrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
+import { Person } from '~src/types/Person';
 import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
-import * as DateUtils from '~src/utils/date/dateUtils';
+import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import sharedMessages from '../revurdering-nb';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './bosituasjonForm-nb';
-import styles from './bosituasjonForm.module.less';
-import {
-    BosituasjonFormData,
-    bosituasjonFormSchema,
-    bosituasjonTilFormItemData,
-    nyBosituasjon,
-} from './bosituasjonPageUtils';
 
-const BosituasjonPage = (props: RevurderingStegProps) => {
+const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
     const navigate = useNavigate();
-    const [status, lagre] = useAsyncActionCreator(lagreBosituasjonsgrunnlag);
+    const [status, lagre] = useAsyncActionCreator(lagreBosituasjongrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
-    const form = useForm<BosituasjonFormData>({
-        defaultValues: {
-            bosituasjoner:
-                props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.map((b) =>
-                    bosituasjonTilFormItemData(b)
-                ) ?? [],
-        },
+    const form = useForm<BosituasjonGrunnlagFormData>({
+        defaultValues: bosituasjongrunnlagTilFormDataEllerNy(
+            props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
+            props.revurdering.periode
+        ),
         resolver: yupResolver(bosituasjonFormSchema),
     });
 
     const lagreBosituasjon = (
-        data: BosituasjonFormData,
+        data: BosituasjonGrunnlagFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
     ) =>
         lagre(
             {
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                bosituasjoner: data.bosituasjoner.map((b) => ({
-                    periode: {
-                        fraOgMed: DateUtils.toIsoDateOnlyString(b.periode.fraOgMed!),
-                        tilOgMed: DateUtils.toIsoDateOnlyString(b.periode.tilOgMed!),
-                    },
-                    epsFnr: b.harEPS ? b.epsFnr : null,
-                    delerBolig: b.harEPS ? null : b.delerBolig,
-                    erEPSUførFlyktning: b.harEPS && b.epsAlder && b.epsAlder < 67 ? b.erEPSUførFlyktning : null,
-                })),
+                ...bosituasjongrunnlagFormDataTilRequest({
+                    sakId: props.sakId,
+                    behandlingId: props.revurdering.id,
+                    data: data,
+                }),
+                behandlingstype: Behandlingstype.Revurdering,
             },
             (res) => {
-                if (res.feilmeldinger.length === 0) {
-                    onSuccess(res.revurdering, props.nesteUrl);
+                if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
+                    onSuccess((res as RevurderingOgFeilmeldinger).revurdering, props.nesteUrl);
                 }
             }
         );
@@ -74,8 +65,12 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <FormWrapper
+                    <BosituasjonForm
                         form={form}
+                        søknadsbehandlingEllerRevurdering={'Revurdering'}
+                        skalIkkeKunneVelgePeriode
+                        minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.revurdering.periode)}
+                        begrensTilEnPeriode
                         neste={{
                             url: props.nesteUrl,
                             savingState: status,
@@ -87,98 +82,16 @@ const BosituasjonPage = (props: RevurderingStegProps) => {
                                         : () => navigate(props.nesteUrl)
                                 ),
                         }}
-                        tilbake={{
-                            url: props.onTilbakeClickOverride ? undefined : props.forrigeUrl,
-                            onClick: props.onTilbakeClickOverride,
-                        }}
-                        lagreOgfortsettSenere={{
-                            url: props.avsluttUrl,
-                        }}
+                        tilbake={{ url: props.forrigeUrl }}
+                        lagreOgfortsettSenere={{ url: props.avsluttUrl }}
                         {...props}
                     >
-                        <>
-                            <MultiPeriodeVelger
-                                name={'bosituasjoner'}
-                                controller={form.control}
-                                appendNyPeriode={nyBosituasjon}
-                                periodeConfig={{
-                                    minFraOgMed: new Date(props.revurdering.periode.fraOgMed),
-                                    maxTilOgMed: new Date(props.revurdering.periode.tilOgMed),
-                                }}
-                                getChild={(nameAndIdx) => {
-                                    const watch = form.watch(nameAndIdx);
-                                    return (
-                                        <div className={styles.formItemInputContainer}>
-                                            <Controller
-                                                control={form.control}
-                                                name={`${nameAndIdx}.harEPS`}
-                                                render={({ field, fieldState }) => (
-                                                    <BooleanRadioGroup
-                                                        legend={formatMessage('form.harSøkerEPS')}
-                                                        error={fieldState.error?.message}
-                                                        {...field}
-                                                    />
-                                                )}
-                                            />
-                                            {watch.harEPS && (
-                                                <div className={styles.epsFormContainer}>
-                                                    <Controller
-                                                        control={form.control}
-                                                        name={`${nameAndIdx}.epsFnr`}
-                                                        render={({ field, fieldState }) => (
-                                                            <FnrInput
-                                                                label={formatMessage('form.epsFnr')}
-                                                                inputId="epsFnr"
-                                                                name={`${nameAndIdx}.epsFnr`}
-                                                                onFnrChange={field.onChange}
-                                                                fnr={field.value ?? ''}
-                                                                feil={fieldState.error?.message}
-                                                                getHentetPerson={(person) => {
-                                                                    form.setValue(`${nameAndIdx}`, {
-                                                                        ...watch,
-                                                                        epsAlder: person?.fødsel?.alder ?? null,
-                                                                    });
-                                                                }}
-                                                            />
-                                                        )}
-                                                    />
-                                                    {watch.epsAlder && watch.epsAlder < 67 && (
-                                                        <Controller
-                                                            control={form.control}
-                                                            name={`${nameAndIdx}.erEPSUførFlyktning`}
-                                                            render={({ field, fieldState }) => (
-                                                                <BooleanRadioGroup
-                                                                    legend={formatMessage('form.erEPSUførFlyktning')}
-                                                                    error={fieldState.error?.message}
-                                                                    {...field}
-                                                                />
-                                                            )}
-                                                        />
-                                                    )}
-                                                </div>
-                                            )}
-                                            {watch.harEPS === false && (
-                                                <Controller
-                                                    control={form.control}
-                                                    name={`${nameAndIdx}.delerBolig`}
-                                                    render={({ field, fieldState }) => (
-                                                        <BooleanRadioGroup
-                                                            legend={formatMessage('form.delerBolig')}
-                                                            error={fieldState.error?.message}
-                                                            {...field}
-                                                        />
-                                                    )}
-                                                />
-                                            )}
-                                        </div>
-                                    );
-                                }}
+                        {RemoteData.isSuccess(status) && (
+                            <UtfallSomIkkeStøttes
+                                feilmeldinger={(status.value as RevurderingOgFeilmeldinger).feilmeldinger}
                             />
-                            {RemoteData.isSuccess(status) && (
-                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
-                            )}
-                        </>
-                    </FormWrapper>
+                        )}
+                    </BosituasjonForm>
                 ),
                 right: (
                     <>

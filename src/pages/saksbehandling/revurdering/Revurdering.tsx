@@ -222,6 +222,7 @@ const GrunnlagOgVilkårSteg = (props: {
     informasjonsRevurdering: InformasjonsRevurdering;
     gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
+    const { søker } = useOutletContext<SaksoversiktContext>();
     const navigate = useNavigate();
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [navigererTilOppsummeringMedVilkårIkkeVurdert, setNavigererTilOppsummeringMedVilkårIkkeVurdert] =
@@ -309,7 +310,7 @@ const GrunnlagOgVilkårSteg = (props: {
                 <Institusjonsopphold {...stegProps} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Bosituasjon && (
-                <BosituasjonPage {...stegProps} />
+                <BosituasjonPage {...stegProps} søker={søker} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.EndringAvFradrag && (
                 <EndringAvFradrag {...stegProps} />

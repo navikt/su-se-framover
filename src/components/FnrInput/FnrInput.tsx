@@ -6,7 +6,7 @@ import { fetchPerson } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { Personkort } from '~src/components/personkort/Personkort';
 import { pipe } from '~src/lib/fp';
-import { useApiCall } from '~src/lib/hooks';
+import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Person } from '~src/types/Person';
@@ -22,26 +22,28 @@ interface FnrInputProps {
     onFnrChange: (fnr: string) => void;
     feil?: string;
     getHentetPerson: (person: Nullable<Person>) => void;
+    getPersonStatus?: (res: ApiResult<Person>) => void;
 }
-export const FnrInput = ({ label, inputId, name, fnr, onFnrChange, feil, getHentetPerson }: FnrInputProps) => {
+export const FnrInput = (props: FnrInputProps) => {
     const { formatMessage } = useI18n({ messages });
 
     const [personStatus, hentPerson] = useApiCall(fetchPerson);
 
     useEffect(() => {
-        if (fnr?.length === 11) {
-            hentPerson(fnr);
+        if (props.fnr?.length === 11) {
+            hentPerson(props.fnr);
         }
-    }, [fnr]);
+    }, [props.fnr]);
 
     useEffect(() => {
+        props.getPersonStatus?.(personStatus);
         pipe(
             personStatus,
             RemoteData.fold(
-                () => getHentetPerson(null),
-                () => getHentetPerson(null),
-                () => getHentetPerson(null),
-                (data) => getHentetPerson(data)
+                () => props.getHentetPerson(null),
+                () => props.getHentetPerson(null),
+                () => props.getHentetPerson(null),
+                (data) => props.getHentetPerson(data)
             )
         );
     }, [personStatus._tag]);
@@ -49,13 +51,13 @@ export const FnrInput = ({ label, inputId, name, fnr, onFnrChange, feil, getHent
     return (
         <div className={styles.fnrInput}>
             <TextField
-                id={inputId}
-                label={label ?? formatMessage('input.ektefelleEllerSamboerFnr.label')}
-                name={name}
+                id={props.inputId}
+                label={props.label ?? formatMessage('input.ektefelleEllerSamboerFnr.label')}
+                name={props.name}
                 description={formatMessage('input.ektefelleEllerSamboerFnrDescription.label')}
-                onChange={(e) => onFnrChange(e.target.value)}
-                value={fnr ?? ''}
-                error={feil}
+                onChange={(e) => props.onFnrChange(e.target.value)}
+                value={props.fnr ?? ''}
+                error={props.feil}
             />
 
             {pipe(

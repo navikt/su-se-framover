@@ -26,7 +26,7 @@ export enum VilkårtypeFelles {
     LovligOpphold = 'LOVLIG_OPPHOLD',
     FastOppholdINorge = 'FAST_OPPHOLD_I_NORGE',
     OppholdIUtlandet = 'OPPHOLD_I_UTLANDET',
-    Sats = 'SATS',
+    Bosituasjon = 'BOSITUASJON',
     Beregning = 'BEREGNING',
 }
 
