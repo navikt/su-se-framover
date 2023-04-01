@@ -1,45 +1,45 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Heading, Label } from '@navikt/ds-react';
+import { BodyShort, Heading, Label } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
-import {
-    fetchSkattegrunnlagEps as fetchSkattegrunnlagEps,
-    fetchSkattegrunnlagSøker as fetchSkattegrunnlagSøker,
-} from '~src/features/person/person.slice';
+import { hentSkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
 import { useAppSelector } from '~src/redux/Store';
 import { Grunnlag, Grunnlagsliste, KjøretøySpesifisering, Årsgrunnlag } from '~src/types/skatt/Skatt';
+import { erSkattegrunnlag, erSkatteOppslagsFeil } from '~src/utils/SkattUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './OppsummeringAvSkattegrunnlag-nb';
 import styles from './OppsummeringAvSkattegrunnlag.module.less';
 
-const OppsummeringAvSkattegrunnlag = (props: {
-    søkerFnr: string;
-    skalHenteSkattegrunnlagForEPS?: Nullable<string>;
-}) => {
-    const { skattegrunnlagSøker, skattegrunnlagEps } = useAppSelector((state) => state.personopplysninger);
+/**
+ * TODO: komponenten før bare ta inn skattegrunnlaget, og vise den og henting av data bør gjøres på utsiden
+ */
+const OppsummeringAvSkattegrunnlag = (props: { behandlingId: string }) => {
     const { formatMessage } = useI18n({ messages });
-    const [, hentSkattegrunnlagSøker] = useAsyncActionCreator(fetchSkattegrunnlagSøker);
-    const [, hentSkattegrunnlagEps] = useAsyncActionCreator(fetchSkattegrunnlagEps);
+    const skattedataFraStore = useAppSelector((state) => state.sak.skattedata);
+    const [status, hentSkattedata] = useAsyncActionCreator(hentSkattegrunnlag);
 
-    useEffect(() => {
-        if (!RemoteData.isSuccess(skattegrunnlagSøker)) {
-            hentSkattegrunnlagSøker({ fnr: props.søkerFnr });
+    const skattedataFraStoreEllerApiKall = useMemo(() => {
+        const behandlingensSkattedataFraStore = skattedataFraStore.find(
+            (data) => data.behandlingId === props.behandlingId
+        );
+        if (behandlingensSkattedataFraStore) {
+            return RemoteData.success({
+                skatteoppslagEps: behandlingensSkattedataFraStore.skatteoppslagEps,
+                skatteoppslagSøker: behandlingensSkattedataFraStore.skatteoppslagSøker,
+            });
         }
-    }, []);
-
-    useEffect(() => {
-        if (!RemoteData.isSuccess(skattegrunnlagEps) && props.skalHenteSkattegrunnlagForEPS) {
-            hentSkattegrunnlagEps({ fnr: props.skalHenteSkattegrunnlagForEPS });
+        if (RemoteData.isInitial(status)) {
+            hentSkattedata({ behandlingId: props.behandlingId });
         }
-    }, [props.skalHenteSkattegrunnlagForEPS]);
+        return status;
+    }, [status]);
 
     return (
         <div>
@@ -47,45 +47,56 @@ const OppsummeringAvSkattegrunnlag = (props: {
                 {formatMessage('skattegrunnlag.tittel')}
             </Heading>
 
-            <div className={styles.skattegrunnlagsInformasjonContainer}>
-                {pipe(
-                    skattegrunnlagSøker,
-                    RemoteData.fold(
-                        () => null,
-                        () => <SpinnerMedTekst text={formatMessage('skattegrunnlag.laster.søker')} />,
-                        (err) => <ApiErrorAlert error={err} />,
-                        (sgs) => (
-                            <div className={styles.årsgrunnlagMedTittelContainer}>
-                                <Heading level="2" size="small">
-                                    {formatMessage('skattegrunnlag.søker')}
-                                </Heading>
-                                {sgs.årsgrunnlag.map((å) => (
-                                    <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
-                                ))}
-                            </div>
-                        )
-                    )
-                )}
-                {props.skalHenteSkattegrunnlagForEPS &&
-                    pipe(
-                        skattegrunnlagEps,
-                        RemoteData.fold(
-                            () => null,
-                            () => <SpinnerMedTekst text={formatMessage('skattegrunnlag.laster.eps')} />,
-                            (err) => <ApiErrorAlert error={err} />,
-                            (sge) => (
+            {pipe(
+                skattedataFraStoreEllerApiKall,
+                RemoteData.fold(
+                    () => <p>null</p>,
+                    () => <SpinnerMedTekst text={formatMessage('skattegrunnlag.laster.søker')} />,
+                    (err) => <ApiErrorAlert error={err} />,
+                    (skatteoppslag) => (
+                        <div className={styles.skattegrunnlagsInformasjonContainer}>
+                            {erSkatteOppslagsFeil(skatteoppslag.skatteoppslagSøker) && (
+                                <div>
+                                    <BodyShort>Feil ved henting av skattedata</BodyShort>
+                                    <BodyShort>{skatteoppslag.skatteoppslagSøker.httpCode.value}</BodyShort>
+                                    <BodyShort>{skatteoppslag.skatteoppslagSøker.httpCode.description}</BodyShort>
+                                </div>
+                            )}
+
+                            {erSkattegrunnlag(skatteoppslag.skatteoppslagSøker) && (
                                 <div className={styles.årsgrunnlagMedTittelContainer}>
                                     <Heading level="2" size="small">
-                                        {formatMessage('skattegrunnlag.eps')}
+                                        {formatMessage('skattegrunnlag.søker')}
                                     </Heading>
-                                    {sge.årsgrunnlag.map((å) => (
+                                    {skatteoppslag.skatteoppslagSøker.årsgrunnlag.map((å) => (
                                         <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
                                     ))}
                                 </div>
-                            )
-                        )
-                    )}
-            </div>
+                            )}
+
+                            {erSkatteOppslagsFeil(skatteoppslag.skatteoppslagEps) && (
+                                <div>
+                                    <BodyShort>Feil ved henting av skattedata</BodyShort>
+                                    <BodyShort>{skatteoppslag.skatteoppslagEps.httpCode.value}</BodyShort>
+                                    <BodyShort>{skatteoppslag.skatteoppslagEps.httpCode.description}</BodyShort>
+                                    <BodyShort>TODO: serialisering i backend fjerner original feil</BodyShort>
+                                </div>
+                            )}
+
+                            {erSkattegrunnlag(skatteoppslag.skatteoppslagEps) && (
+                                <div className={styles.årsgrunnlagMedTittelContainer}>
+                                    <Heading level="2" size="small">
+                                        {formatMessage('skattegrunnlag.søker')}
+                                    </Heading>
+                                    {skatteoppslag.skatteoppslagEps.årsgrunnlag.map((å) => (
+                                        <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )
+                )
+            )}
         </div>
     );
 };
