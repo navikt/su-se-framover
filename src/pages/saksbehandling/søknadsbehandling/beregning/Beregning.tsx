@@ -321,14 +321,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                             }}
                         />
 
-                        {skattemeldingToggle && (
-                            <OppsummeringAvSkattegrunnlag
-                                søkerFnr={props.søker.fnr}
-                                skalHenteSkattegrunnlagForEPS={
-                                    hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr
-                                }
-                            />
-                        )}
+                        {skattemeldingToggle && <OppsummeringAvSkattegrunnlag behandlingId={props.behandling.id} />}
                     </div>
                 ),
             }}

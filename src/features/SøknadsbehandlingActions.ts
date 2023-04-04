@@ -5,6 +5,7 @@ import * as behandlingApi from '~src/api/behandlingApi';
 import { Nullable } from '~src/lib/types';
 import { createApiCallAsyncThunk } from '~src/redux/utils';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Skattegrunnlag, SkatteoppslagsFeil } from '~src/types/skatt/Skatt';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const startBehandling = createAsyncThunk<
@@ -78,6 +79,22 @@ export const attesteringUnderkjenn = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/underkjenn', async ({ sakId, behandlingId, grunn, kommentar }, thunkApi) => {
     const res = await behandlingApi.underkjenn({ sakId, behandlingId, grunn, kommentar });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const hentSkattegrunnlag = createAsyncThunk<
+    {
+        skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
+        skatteoppslagEps: SkatteoppslagsFeil | Skattegrunnlag;
+    },
+    { behandlingId: string },
+    { rejectValue: ApiError }
+>('behandling/skatt', async ({ behandlingId }, thunkApi) => {
+    const res = await behandlingApi.hentSkattegrunnlagForBehandling(behandlingId);
+    console.log('res: ', res);
     if (res.status === 'ok') {
         return res.data;
     }

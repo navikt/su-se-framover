@@ -1,5 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { Skattegrunnlag, SkatteoppslagsFeil } from '~src/types/skatt/Skatt';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -94,5 +95,17 @@ export async function underkjenn(arg: {
             grunn: arg.grunn,
             kommentar: arg.kommentar,
         },
+    });
+}
+
+export async function hentSkattegrunnlagForBehandling(behandlingId: string): Promise<
+    ApiClientResult<{
+        skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
+        skatteoppslagEps: SkatteoppslagsFeil | Skattegrunnlag;
+    }>
+> {
+    return apiClient({
+        url: `/skatt/soknadsbehandling/${behandlingId}`,
+        method: 'GET',
     });
 }

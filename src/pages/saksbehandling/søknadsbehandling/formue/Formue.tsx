@@ -114,14 +114,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
                         />
-                        {skattemeldingToggle && (
-                            <OppsummeringAvSkattegrunnlag
-                                søkerFnr={props.søker.fnr}
-                                skalHenteSkattegrunnlagForEPS={
-                                    props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr
-                                }
-                            />
-                        )}
+                        {skattemeldingToggle && <OppsummeringAvSkattegrunnlag behandlingId={props.behandling.id} />}
                     </div>
                 ),
             }}

@@ -38,3 +38,12 @@ export interface KjøretøySpesifisering {
     antattVerdiSomNytt: Nullable<string>;
     antattMarkedsverdi: Nullable<string>;
 }
+
+export interface SkatteoppslagsFeil {
+    httpCode: OppslagsFeil;
+}
+
+export interface OppslagsFeil {
+    value: number;
+    description: string;
+}
