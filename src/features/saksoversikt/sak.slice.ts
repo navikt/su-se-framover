@@ -11,6 +11,7 @@ import * as revurderingActions from '~src/features/revurdering/revurderingAction
 import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { pipe } from '~src/lib/fp';
+import { Nullable } from '~src/lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
@@ -117,7 +118,7 @@ interface SakState {
     skattedata: Array<{
         behandlingId: string;
         skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
-        skatteoppslagEps: SkatteoppslagsFeil | Skattegrunnlag;
+        skatteoppslagEps: Nullable<SkatteoppslagsFeil | Skattegrunnlag>;
     }>;
 }
 

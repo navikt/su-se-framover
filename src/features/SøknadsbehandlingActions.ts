@@ -88,7 +88,7 @@ export const attesteringUnderkjenn = createAsyncThunk<
 export const hentSkattegrunnlag = createAsyncThunk<
     {
         skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
-        skatteoppslagEps: SkatteoppslagsFeil | Skattegrunnlag;
+        skatteoppslagEps: Nullable<SkatteoppslagsFeil | Skattegrunnlag>;
     },
     { behandlingId: string },
     { rejectValue: ApiError }

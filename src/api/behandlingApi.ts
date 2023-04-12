@@ -101,7 +101,7 @@ export async function underkjenn(arg: {
 export async function hentSkattegrunnlagForBehandling(behandlingId: string): Promise<
     ApiClientResult<{
         skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
-        skatteoppslagEps: SkatteoppslagsFeil | Skattegrunnlag;
+        skatteoppslagEps: Nullable<SkatteoppslagsFeil | Skattegrunnlag>;
     }>
 > {
     return apiClient({
