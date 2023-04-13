@@ -321,7 +321,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                             }}
                         />
 
-                        {skattemeldingToggle && <OppsummeringAvSkattegrunnlag behandlingId={props.behandling.id} />}
+                        {skattemeldingToggle && <OppsummeringAvSkattegrunnlag behandling={props.behandling} />}
                     </div>
                 ),
             }}

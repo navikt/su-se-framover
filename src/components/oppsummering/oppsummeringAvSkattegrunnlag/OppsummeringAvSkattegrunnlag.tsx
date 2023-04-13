@@ -10,6 +10,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { useAppSelector } from '~src/redux/Store';
 import { Grunnlag, Grunnlagsliste, KjøretøySpesifisering, Årsgrunnlag } from '~src/types/skatt/Skatt';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { erSkattegrunnlag, erSkatteOppslagsFeil } from '~src/utils/SkattUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
@@ -20,14 +21,14 @@ import styles from './OppsummeringAvSkattegrunnlag.module.less';
 /**
  * TODO: komponenten før bare ta inn skattegrunnlaget, og vise den og henting av data bør gjøres på utsiden
  */
-const OppsummeringAvSkattegrunnlag = (props: { behandlingId: string }) => {
+const OppsummeringAvSkattegrunnlag = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
     const skattedataFraStore = useAppSelector((state) => state.sak.skattedata);
     const [status, hentSkattedata] = useAsyncActionCreator(hentSkattegrunnlag);
 
     const skattedataFraStoreEllerApiKall = useMemo(() => {
         const behandlingensSkattedataFraStore = skattedataFraStore.find(
-            (data) => data.behandlingId === props.behandlingId
+            (data) => data.behandlingId === props.behandling.id
         );
         if (behandlingensSkattedataFraStore) {
             return RemoteData.success({
@@ -36,7 +37,7 @@ const OppsummeringAvSkattegrunnlag = (props: { behandlingId: string }) => {
             });
         }
         if (RemoteData.isInitial(status)) {
-            hentSkattedata({ behandlingId: props.behandlingId });
+            hentSkattedata({ behandlingId: props.behandling.id });
         }
         return status;
     }, [status]);

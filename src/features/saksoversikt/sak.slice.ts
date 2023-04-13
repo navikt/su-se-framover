@@ -11,7 +11,6 @@ import * as revurderingActions from '~src/features/revurdering/revurderingAction
 import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { pipe } from '~src/lib/fp';
-import { Nullable } from '~src/lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
@@ -24,7 +23,7 @@ import {
 } from '~src/types/RegistrertUtenlandsopphold';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
-import { Skattegrunnlag, SkatteoppslagsFeil } from '~src/types/skatt/Skatt';
+import { Skatteoppslag } from '~src/types/skatt/Skatt';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const fetchSak = createAsyncThunk<
@@ -115,11 +114,7 @@ export const annullerRegistrertUtenlandsopphold = createAsyncThunk<
 
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
-    skattedata: Array<{
-        behandlingId: string;
-        skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
-        skatteoppslagEps: Nullable<SkatteoppslagsFeil | Skattegrunnlag>;
-    }>;
+    skattedata: Array<Skatteoppslag & { behandlingId: string }>;
 }
 
 const initialState: SakState = {
@@ -183,7 +178,6 @@ export default createSlice({
         });
 
         builder.addCase(SøknadsbehandlingActions.hentSkattegrunnlag.fulfilled, (state, action) => {
-            console.log('payload: ', action.payload);
             state.skattedata = [
                 ...state.skattedata.filter((i) => i.behandlingId !== action.meta.arg.behandlingId),
                 {

@@ -39,6 +39,11 @@ export interface KjøretøySpesifisering {
     antattMarkedsverdi: Nullable<string>;
 }
 
+export interface Skatteoppslag {
+    skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
+    skatteoppslagEps: Nullable<SkatteoppslagsFeil | Skattegrunnlag>;
+}
+
 export interface SkatteoppslagsFeil {
     httpCode: OppslagsFeil;
 }

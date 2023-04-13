@@ -114,7 +114,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
                         />
-                        {skattemeldingToggle && <OppsummeringAvSkattegrunnlag behandlingId={props.behandling.id} />}
+                        {skattemeldingToggle && <OppsummeringAvSkattegrunnlag behandling={props.behandling} />}
                     </div>
                 ),
             }}

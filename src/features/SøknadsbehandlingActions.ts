@@ -5,7 +5,7 @@ import * as behandlingApi from '~src/api/behandlingApi';
 import { Nullable } from '~src/lib/types';
 import { createApiCallAsyncThunk } from '~src/redux/utils';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Skattegrunnlag, SkatteoppslagsFeil } from '~src/types/skatt/Skatt';
+import { Skatteoppslag } from '~src/types/skatt/Skatt';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const startBehandling = createAsyncThunk<
@@ -85,18 +85,14 @@ export const attesteringUnderkjenn = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentSkattegrunnlag = createAsyncThunk<
-    {
-        skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
-        skatteoppslagEps: Nullable<SkatteoppslagsFeil | Skattegrunnlag>;
-    },
-    { behandlingId: string },
-    { rejectValue: ApiError }
->('behandling/skatt', async ({ behandlingId }, thunkApi) => {
-    const res = await behandlingApi.hentSkattegrunnlagForBehandling(behandlingId);
-    console.log('res: ', res);
-    if (res.status === 'ok') {
-        return res.data;
+export const hentSkattegrunnlag = createAsyncThunk<Skatteoppslag, { behandlingId: string }, { rejectValue: ApiError }>(
+    'behandling/skatt',
+    async ({ behandlingId }, thunkApi) => {
+        const res = await behandlingApi.hentSkattegrunnlagForBehandling(behandlingId);
+
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
