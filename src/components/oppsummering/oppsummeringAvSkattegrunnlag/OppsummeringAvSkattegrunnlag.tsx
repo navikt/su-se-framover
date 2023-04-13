@@ -115,7 +115,7 @@ const OppsummeringAvÅrsgrunnlag = (props: { årsgrunnlag: Årsgrunnlag }) => {
                     label={formatMessage('årsgrunnlag.skatteoppgjørsdato')}
                     verdi={
                         props.årsgrunnlag.skatteoppgjørsdato
-                            ? props.årsgrunnlag.skatteoppgjørsdato.toDateString()
+                            ? props.årsgrunnlag.skatteoppgjørsdato
                             : formatMessage('årsgrunnlag.skatteoppgjørsdato.finnesIkke')
                     }
                 />
