@@ -85,14 +85,15 @@ export const attesteringUnderkjenn = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentSkattegrunnlag = createAsyncThunk<Skatteoppslag, { behandlingId: string }, { rejectValue: ApiError }>(
-    'behandling/skatt',
-    async ({ behandlingId }, thunkApi) => {
-        const res = await behandlingApi.hentSkattegrunnlagForBehandling(behandlingId);
+export const hentSkattegrunnlag = createAsyncThunk<
+    Skatteoppslag,
+    { sakId: string; behandlingId: string },
+    { rejectValue: ApiError }
+>('behandling/skatt', async (arg, thunkApi) => {
+    const res = await behandlingApi.hentSkattegrunnlagForBehandling(arg);
 
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
+    if (res.status === 'ok') {
+        return res.data;
     }
-);
+    return thunkApi.rejectWithValue(res.error);
+});

@@ -98,9 +98,12 @@ export async function underkjenn(arg: {
     });
 }
 
-export async function hentSkattegrunnlagForBehandling(behandlingId: string): Promise<ApiClientResult<Skatteoppslag>> {
+export async function hentSkattegrunnlagForBehandling(arg: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Skatteoppslag>> {
     return apiClient({
-        url: `/skatt/soknadsbehandling/${behandlingId}`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag`,
         method: 'GET',
     });
 }

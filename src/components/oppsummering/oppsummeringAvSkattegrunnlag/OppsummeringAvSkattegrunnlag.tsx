@@ -37,7 +37,7 @@ const OppsummeringAvSkattegrunnlag = (props: { behandling: Søknadsbehandling })
             });
         }
         if (RemoteData.isInitial(status)) {
-            hentSkattedata({ behandlingId: props.behandling.id });
+            hentSkattedata({ sakId: props.behandling.sakId, behandlingId: props.behandling.id });
         }
         return status;
     }, [status]);
