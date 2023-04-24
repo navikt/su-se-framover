@@ -34,8 +34,8 @@
     "author": "supstonad",
     "license": "MIT",
     "engines": {
-        "node": "18.15.0",
-        "npm": "9.5.0"
+        "node": ">=18",
+        "npm": ">=9"
     },
     "bugs": {
         "url": "https://github.com/navikt/su-se-framover/issues"
