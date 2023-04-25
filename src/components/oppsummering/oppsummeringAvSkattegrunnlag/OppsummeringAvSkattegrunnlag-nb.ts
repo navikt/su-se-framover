@@ -1,10 +1,6 @@
 export default {
-    'skattegrunnlag.tittel': 'Skattegrunnlag',
-
-    'skattegrunnlag.søker': 'Søker',
-    'skattegrunnlag.eps': 'Ektefelle/Partner/Samboer',
-    'skattegrunnlag.laster.søker': 'Henter skattegrunnlag for søker',
-    'skattegrunnlag.laster.eps': 'Henter skattegrunnlag for Ektefelle/Partner/Samboer',
+    'skattegrunnlag.fnr': 'Fødselsnummer',
+    'skattegrunnlag.tidspunktHentet': 'Tidspunkt hentet',
 
     'årsgrunnlag.inntektsår': 'Inntektsår',
     'årsgrunnlag.stadie': 'Stadie',

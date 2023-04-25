@@ -1,26 +1,15 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Heading, Label } from '@navikt/ds-react';
-import { pipe } from 'fp-ts/lib/function';
-import React, { useMemo } from 'react';
+import { Label } from '@navikt/ds-react';
+import React from 'react';
 
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
-import { hentSkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { useAppSelector } from '~src/redux/Store';
-import { Grunnlag, Grunnlagsliste, KjøretøySpesifisering, Årsgrunnlag } from '~src/types/skatt/Skatt';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { erSkattegrunnlag, erSkatteOppslagsFeil } from '~src/utils/SkattUtils';
+import { Grunnlag, Grunnlagsliste, KjøretøySpesifisering, Skattegrunnlag, Årsgrunnlag } from '~src/types/skatt/Skatt';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './OppsummeringAvSkattegrunnlag-nb';
 import styles from './OppsummeringAvSkattegrunnlag.module.less';
-
-/**
- * TODO: komponenten før bare ta inn skattegrunnlaget, og vise den og henting av data bør gjøres på utsiden
- */
+/*
 const OppsummeringAvSkattegrunnlag = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
     const skattedataFraStore = useAppSelector((state) => state.sak.skattedata);
@@ -87,17 +76,34 @@ const OppsummeringAvSkattegrunnlag = (props: { behandling: Søknadsbehandling })
                             {erSkattegrunnlag(skatteoppslag.skatteoppslagEps) && (
                                 <div className={styles.årsgrunnlagMedTittelContainer}>
                                     <Heading level="2" size="small">
-                                        {formatMessage('skattegrunnlag.søker')}
+                                        {formatMessage('skattegrunnlag.eps')}
                                     </Heading>
                                     {skatteoppslag.skatteoppslagEps.årsgrunnlag.map((å) => (
                                         <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
                                     ))}
+                                    <SkattegrunnlagOppsummering skattegrunnlag={skatteoppslag.skatteoppslagEps} />
                                 </div>
                             )}
                         </div>
                     )
                 )
             )}
+        </div>
+    );
+};*/
+
+const OppsummeringAvSkattegrunnlag = (props: { skattegrunnlag: Skattegrunnlag }) => {
+    const { formatMessage } = useI18n({ messages });
+    return (
+        <div className={styles.årsgrunnlagMedTittelContainer}>
+            <OppsummeringPar label={formatMessage('skattegrunnlag.fnr')} verdi={props.skattegrunnlag.fnr} />
+            <OppsummeringPar
+                label={formatMessage('skattegrunnlag.tidspunktHentet')}
+                verdi={formatDateTime(props.skattegrunnlag.hentetTidspunkt)}
+            />
+            {props.skattegrunnlag.årsgrunnlag.map((å) => (
+                <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
+            ))}
         </div>
     );
 };
