@@ -68,9 +68,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
                     <BosituasjonForm
                         form={form}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
-                        skalIkkeKunneVelgePeriode
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.revurdering.periode)}
-                        begrensTilEnPeriode={false}
                         neste={{
                             url: props.nesteUrl,
                             savingState: status,
