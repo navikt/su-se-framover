@@ -1,96 +1,24 @@
 import { Label } from '@navikt/ds-react';
 import React from 'react';
 
+import { ErrorMessageAlert } from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useI18n } from '~src/lib/i18n';
-import { Grunnlag, Grunnlagsliste, KjøretøySpesifisering, Skattegrunnlag, Årsgrunnlag } from '~src/types/skatt/Skatt';
+import {
+    Grunnlag,
+    SkattegrunnlagForÅr,
+    KjøretøySpesifisering,
+    Skattegrunnlag,
+    Stadie,
+    Årsgrunnlag,
+    StadieFeil,
+} from '~src/types/skatt/Skatt';
 import { formatDateTime } from '~src/utils/date/dateUtils';
+import { erStadie, erStadieFeil } from '~src/utils/SkattUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './OppsummeringAvSkattegrunnlag-nb';
 import styles from './OppsummeringAvSkattegrunnlag.module.less';
-/*
-const OppsummeringAvSkattegrunnlag = (props: { behandling: Søknadsbehandling }) => {
-    const { formatMessage } = useI18n({ messages });
-    const skattedataFraStore = useAppSelector((state) => state.sak.skattedata);
-    const [status, hentSkattedata] = useAsyncActionCreator(hentSkattegrunnlag);
-
-    const skattedataFraStoreEllerApiKall = useMemo(() => {
-        const behandlingensSkattedataFraStore = skattedataFraStore.find(
-            (data) => data.behandlingId === props.behandling.id
-        );
-        if (behandlingensSkattedataFraStore) {
-            return RemoteData.success({
-                skatteoppslagEps: behandlingensSkattedataFraStore.skatteoppslagEps,
-                skatteoppslagSøker: behandlingensSkattedataFraStore.skatteoppslagSøker,
-            });
-        }
-        if (RemoteData.isInitial(status)) {
-            hentSkattedata({ sakId: props.behandling.sakId, behandlingId: props.behandling.id });
-        }
-        return status;
-    }, [status]);
-
-    return (
-        <div>
-            <Heading level="2" size="medium">
-                {formatMessage('skattegrunnlag.tittel')}
-            </Heading>
-
-            {pipe(
-                skattedataFraStoreEllerApiKall,
-                RemoteData.fold(
-                    () => <p>null</p>,
-                    () => <SpinnerMedTekst text={formatMessage('skattegrunnlag.laster.søker')} />,
-                    (err) => <ApiErrorAlert error={err} />,
-                    (skatteoppslag) => (
-                        <div className={styles.skattegrunnlagsInformasjonContainer}>
-                            {erSkatteOppslagsFeil(skatteoppslag.skatteoppslagSøker) && (
-                                <div>
-                                    <BodyShort>Feil ved henting av skattedata</BodyShort>
-                                    <BodyShort>{skatteoppslag.skatteoppslagSøker.httpCode.value}</BodyShort>
-                                    <BodyShort>{skatteoppslag.skatteoppslagSøker.httpCode.description}</BodyShort>
-                                </div>
-                            )}
-
-                            {erSkattegrunnlag(skatteoppslag.skatteoppslagSøker) && (
-                                <div className={styles.årsgrunnlagMedTittelContainer}>
-                                    <Heading level="2" size="small">
-                                        {formatMessage('skattegrunnlag.søker')}
-                                    </Heading>
-                                    {skatteoppslag.skatteoppslagSøker.årsgrunnlag.map((å) => (
-                                        <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
-                                    ))}
-                                </div>
-                            )}
-
-                            {erSkatteOppslagsFeil(skatteoppslag.skatteoppslagEps) && (
-                                <div>
-                                    <BodyShort>Feil ved henting av skattedata</BodyShort>
-                                    <BodyShort>{skatteoppslag.skatteoppslagEps.httpCode.value}</BodyShort>
-                                    <BodyShort>{skatteoppslag.skatteoppslagEps.httpCode.description}</BodyShort>
-                                    <BodyShort>TODO: serialisering i backend fjerner original feil</BodyShort>
-                                </div>
-                            )}
-
-                            {erSkattegrunnlag(skatteoppslag.skatteoppslagEps) && (
-                                <div className={styles.årsgrunnlagMedTittelContainer}>
-                                    <Heading level="2" size="small">
-                                        {formatMessage('skattegrunnlag.eps')}
-                                    </Heading>
-                                    {skatteoppslag.skatteoppslagEps.årsgrunnlag.map((å) => (
-                                        <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
-                                    ))}
-                                    <SkattegrunnlagOppsummering skattegrunnlag={skatteoppslag.skatteoppslagEps} />
-                                </div>
-                            )}
-                        </div>
-                    )
-                )
-            )}
-        </div>
-    );
-};*/
 
 const OppsummeringAvSkattegrunnlag = (props: { skattegrunnlag: Skattegrunnlag }) => {
     const { formatMessage } = useI18n({ messages });
@@ -110,24 +38,13 @@ const OppsummeringAvSkattegrunnlag = (props: { skattegrunnlag: Skattegrunnlag })
 
 export default OppsummeringAvSkattegrunnlag;
 
-const OppsummeringAvÅrsgrunnlag = (props: { årsgrunnlag: Årsgrunnlag }) => {
+const OppsummeringAvStadie = (props: { stadie: Stadie }) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div>
-            <div className={styles.årsgrunnlaginformasjonContainer}>
-                <OppsummeringPar label={formatMessage('årsgrunnlag.inntektsår')} verdi={props.årsgrunnlag.inntektsår} />
-                <OppsummeringPar label={formatMessage('årsgrunnlag.stadie')} verdi={props.årsgrunnlag.stadie} />
-                <OppsummeringPar
-                    label={formatMessage('årsgrunnlag.skatteoppgjørsdato')}
-                    verdi={
-                        props.årsgrunnlag.skatteoppgjørsdato
-                            ? props.årsgrunnlag.skatteoppgjørsdato
-                            : formatMessage('årsgrunnlag.skatteoppgjørsdato.finnesIkke')
-                    }
-                />
-            </div>
+            <OppsummeringPar label={formatMessage('årsgrunnlag.stadie')} verdi={props.stadie.stadie} />
             <OppsummeringAvGrunnlagsliste
-                grunnlagsliste={props.årsgrunnlag.grunnlag}
+                grunnlag={props.stadie.grunnlag}
                 felter={[
                     'formue',
                     'inntekt',
@@ -141,6 +58,26 @@ const OppsummeringAvÅrsgrunnlag = (props: { årsgrunnlag: Årsgrunnlag }) => {
         </div>
     );
 };
+const OppsummeringAvStadieFeil = (props: { feil: StadieFeil }) => {
+    return (
+        <div>
+            <ErrorMessageAlert err={props.feil.error} />
+        </div>
+    );
+};
+
+const OppsummeringAvÅrsgrunnlag = (props: { årsgrunnlag: Årsgrunnlag }) => {
+    const { formatMessage } = useI18n({ messages });
+    return (
+        <div>
+            <div className={styles.årsgrunnlaginformasjonContainer}>
+                <OppsummeringPar label={formatMessage('årsgrunnlag.inntektsår')} verdi={props.årsgrunnlag.inntektsår} />
+                {erStadie(props.årsgrunnlag) && <OppsummeringAvStadie stadie={props.årsgrunnlag} />}
+                {erStadieFeil(props.årsgrunnlag) && <OppsummeringAvStadieFeil feil={props.årsgrunnlag} />}
+            </div>
+        </div>
+    );
+};
 
 type Grunnlagsfelt =
     | 'formue'
@@ -151,7 +88,7 @@ type Grunnlagsfelt =
     | 'oppjusteringAvEierinntekter'
     | 'annet';
 
-const OppsummeringAvGrunnlagsliste = (props: { grunnlagsliste: Grunnlagsliste; felter: Grunnlagsfelt[] }) => {
+const OppsummeringAvGrunnlagsliste = (props: { grunnlag: SkattegrunnlagForÅr; felter: Grunnlagsfelt[] }) => {
     const { formatMessage } = useI18n({ messages });
     if (props.felter.length === 0) {
         return <div>Teknisk feil: Må spesifisere hvilke felter som skal vises</div>;
@@ -159,8 +96,16 @@ const OppsummeringAvGrunnlagsliste = (props: { grunnlagsliste: Grunnlagsliste; f
 
     return (
         <div className={styles.grunnlagslisteContainer}>
+            <OppsummeringPar
+                label={formatMessage('årsgrunnlag.skatteoppgjørsdato')}
+                verdi={
+                    props.grunnlag.oppgjørsdato
+                        ? props.grunnlag.oppgjørsdato
+                        : formatMessage('årsgrunnlag.skatteoppgjørsdato.finnesIkke')
+                }
+            />
             {props.felter.includes('formue') &&
-                props.grunnlagsliste.formue.map((f) => (
+                props.grunnlag.formue.map((f) => (
                     <OppsummeringAvGrunnlag
                         key={`${f.navn}-${f.beløp}`}
                         grunnlag={f}
@@ -168,7 +113,7 @@ const OppsummeringAvGrunnlagsliste = (props: { grunnlagsliste: Grunnlagsliste; f
                     />
                 ))}
             {props.felter.includes('inntekt') &&
-                props.grunnlagsliste.inntekt.map((i) => (
+                props.grunnlag.inntekt.map((i) => (
                     <OppsummeringAvGrunnlag
                         key={`${i.navn}-${i.beløp}`}
                         grunnlag={i}
@@ -176,7 +121,7 @@ const OppsummeringAvGrunnlagsliste = (props: { grunnlagsliste: Grunnlagsliste; f
                     />
                 ))}
             {props.felter.includes('inntektsfradrag') &&
-                props.grunnlagsliste.inntektsfradrag.map((ifr) => (
+                props.grunnlag.inntektsfradrag.map((ifr) => (
                     <OppsummeringAvGrunnlag
                         key={`${ifr.navn}-${ifr.beløp}`}
                         grunnlag={ifr}
@@ -184,7 +129,7 @@ const OppsummeringAvGrunnlagsliste = (props: { grunnlagsliste: Grunnlagsliste; f
                     />
                 ))}
             {props.felter.includes('formuesfradrag') &&
-                props.grunnlagsliste.formuesfradrag.map((ff) => (
+                props.grunnlag.formuesfradrag.map((ff) => (
                     <OppsummeringAvGrunnlag
                         key={`${ff.navn}-${ff.beløp}`}
                         grunnlag={ff}
@@ -192,7 +137,7 @@ const OppsummeringAvGrunnlagsliste = (props: { grunnlagsliste: Grunnlagsliste; f
                     />
                 ))}
             {props.felter.includes('verdsettingsrabattSomGirGjeldsreduksjon') &&
-                props.grunnlagsliste.verdsettingsrabattSomGirGjeldsreduksjon.map((vsr) => (
+                props.grunnlag.verdsettingsrabattSomGirGjeldsreduksjon.map((vsr) => (
                     <OppsummeringAvGrunnlag
                         key={`${vsr.navn}-${vsr.beløp}`}
                         grunnlag={vsr}
@@ -200,7 +145,7 @@ const OppsummeringAvGrunnlagsliste = (props: { grunnlagsliste: Grunnlagsliste; f
                     />
                 ))}
             {props.felter.includes('oppjusteringAvEierinntekter') &&
-                props.grunnlagsliste.oppjusteringAvEierinntekter.map((oaei) => (
+                props.grunnlag.oppjusteringAvEierinntekter.map((oaei) => (
                     <OppsummeringAvGrunnlag
                         key={`${oaei.navn}-${oaei.beløp}`}
                         grunnlag={oaei}
@@ -208,7 +153,7 @@ const OppsummeringAvGrunnlagsliste = (props: { grunnlagsliste: Grunnlagsliste; f
                     />
                 ))}
             {props.felter.includes('annet') &&
-                props.grunnlagsliste.annet.map((a) => (
+                props.grunnlag.annet.map((a) => (
                     <OppsummeringAvGrunnlag key={'a'} grunnlag={a} tittel={formatMessage('grunnlagstype.annet')} />
                 ))}
         </div>
@@ -305,14 +250,3 @@ const formatSkattTekniskMessage = (id: string, formatMessage: (id: keyof typeof 
         return id;
     }
 };
-
-/*
-const SkatteApiFeilmelding = ({ tittel, error }: { tittel: string; error: ApiError | undefined }) => (
-    <div>
-        <Label className={styles.overskrift} spacing>
-            {tittel}
-        </Label>
-        <ApiErrorAlert error={error} />
-    </div>
-);
-*/

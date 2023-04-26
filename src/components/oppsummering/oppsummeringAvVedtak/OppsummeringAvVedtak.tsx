@@ -164,9 +164,12 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
             </Oppsummeringspanel>
 
             <OppsummeringAvBeregningOgSimulering
+                sakId={vedtak.sakId}
+                behandlingId={vedtak.behandlingId}
                 tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
                 beregning={vedtak.beregning}
                 simulering={vedtak.simulering}
+                harSkattegrunnlag={vedtak.harSkattegrunnlag}
             />
         </div>
     );

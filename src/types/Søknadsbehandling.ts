@@ -18,6 +18,7 @@ export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus>
     simuleringForAvkortingsvarsel: Nullable<Simulering>;
     erLukket: boolean;
     aldersvurdering: Nullable<Aldersvurdering>;
+    harSkattegrunnlag: boolean;
 }
 
 export interface Stønadsperiode {

@@ -243,7 +243,12 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         </Heading>
                         <div className={styles.beregningsContainer}>
                             {props.behandling.beregning && (
-                                <OppsummeringAvBeregning beregning={props.behandling.beregning} />
+                                <OppsummeringAvBeregning
+                                    sakId={props.behandling.sakId}
+                                    behandlingId={props.behandling.id}
+                                    harSkattegrunnlag={props.behandling.harSkattegrunnlag}
+                                    beregning={props.behandling.beregning}
+                                />
                             )}
                             <Feiloppsummering
                                 tittel={formatMessage('feiloppsummering.title')}

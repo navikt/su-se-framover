@@ -1,19 +1,29 @@
+import { ErrorMessage } from '~src/api/apiClient';
 import { Nullable } from '~src/lib/types';
 
 export interface Skattegrunnlag {
     fnr: string;
     hentetTidspunkt: string;
     årsgrunnlag: Årsgrunnlag[];
+    saksbehandler: string;
+    årSpurtFor: { fra: number; til: number };
 }
 
-export interface Årsgrunnlag {
+export type Årsgrunnlag = Stadie | StadieFeil;
+
+export interface Stadie {
     stadie: string;
-    inntektsår: string;
-    skatteoppgjørsdato: Nullable<string>;
-    grunnlag: Grunnlagsliste;
+    inntektsår: number;
+    grunnlag: SkattegrunnlagForÅr;
 }
 
-export interface Grunnlagsliste {
+export interface StadieFeil {
+    error: ErrorMessage;
+    inntektsår: number;
+}
+
+export interface SkattegrunnlagForÅr {
+    oppgjørsdato: Nullable<string>;
     formue: Grunnlag[];
     inntekt: Grunnlag[];
     inntektsfradrag: Grunnlag[];
@@ -40,15 +50,6 @@ export interface KjøretøySpesifisering {
 }
 
 export interface Skatteoppslag {
-    skatteoppslagSøker: SkatteoppslagsFeil | Skattegrunnlag;
-    skatteoppslagEps: Nullable<SkatteoppslagsFeil | Skattegrunnlag>;
-}
-
-export interface SkatteoppslagsFeil {
-    httpCode: OppslagsFeil;
-}
-
-export interface OppslagsFeil {
-    value: number;
-    description: string;
+    skatteoppslagSøker: Skattegrunnlag;
+    skatteoppslagEps: Nullable<Skattegrunnlag>;
 }

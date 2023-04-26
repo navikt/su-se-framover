@@ -104,8 +104,11 @@ const OppsummeringAvSøknadsbehandling = (props: {
             </Oppsummeringspanel>
 
             <OppsummeringAvBeregningOgSimulering
+                sakId={props.behandling.sakId}
+                behandlingId={props.behandling.id}
                 beregning={props.behandling.beregning}
                 simulering={props.behandling.simulering}
+                harSkattegrunnlag={props.behandling.harSkattegrunnlag}
             />
         </div>
     );

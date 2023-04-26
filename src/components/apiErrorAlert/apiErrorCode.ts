@@ -90,8 +90,8 @@ export enum ApiErrorCode {
     INGEN_BOSITUASJON_FOR_FRADRAGSPERIODER = 'ingen_bosituasjon_for_fradragsperiode',
     INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE = 'ingen_formue_eps_for_bosituasjonsperiode',
     INGEN_FORMUE_FOR_BOSITUASJONSPERIODE = 'ingen_formue_for_bosituasjonsperiode',
+    INGEN_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'ingen_skattegrunnlag_for_gitt_fnr_og_år',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
-    INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'inget_skattegrunnlag_for_gitt_fnr_og_år',
     INNEHOLDER_UFULLSTENDIG_BOSITUASJON = 'inneholder_ufullstendig_bosituasjon',
     INNSENDING_AV_SØKNAD_IKKE_TILLATT = 'innsending_av_søknad_ikke_tillatt',
     IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
@@ -138,6 +138,7 @@ export enum ApiErrorCode {
     MANGLER_BREVVALG = 'mangler_brevvalg',
     MANGLER_ID = 'mangler_id',
     MANGLER_IDTYPE = 'mangler_idType',
+    MANGLER_RETTIGHETER_MOT_SKATT = 'mangler_rettigheter_mot_skatt',
     MANGLER_SAKSNUMMER_FØDSELSNUMMER = 'mangler_saksnummer_fødselsnummer',
     MÅ_HA_BOSITUASJON_FØR_FRADRAG = 'må_ha_bosituasjon_før_fradrag',
     MÅ_VELGE_INFORMASJON_SOM_REVURDERES = 'må_velge_informasjon_som_revurderes',
@@ -146,6 +147,7 @@ export enum ApiErrorCode {
     //N
     NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET = 'navneoppslag_feilet',
     NEI_ER_IKKE_STØTTET = 'nei_er_ikke_støttet',
+    NETTVERKSFEIL_SKATT = 'nettverksfeil_skatt',
     NYE_OVERLAPPENDE_VEDTAK = 'nye_overlappende_vedtak',
 
     //O

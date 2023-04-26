@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Heading, BodyShort } from '@navikt/ds-react';
+import { Heading } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
 
@@ -7,7 +7,6 @@ import { hentSkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { useAppSelector } from '~src/redux/Store';
-import { erSkatteOppslagsFeil, erSkattegrunnlag } from '~src/utils/SkattUtils';
 
 import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
 import SpinnerMedTekst from '../henterInnhold/SpinnerMedTekst';
@@ -51,28 +50,9 @@ const HentOgVisSkattegrunnlag = (props: { sakId: string; behandlingId: string })
                     (err) => <ApiErrorAlert error={err} />,
                     (skatteoppslag) => (
                         <div className={styles.skattegrunnlagsInformasjonContainer}>
-                            {erSkatteOppslagsFeil(skatteoppslag.skatteoppslagSøker) && (
-                                <div>
-                                    <BodyShort>Feil ved henting av skattedata</BodyShort>
-                                    <BodyShort>{skatteoppslag.skatteoppslagSøker.httpCode.value}</BodyShort>
-                                    <BodyShort>{skatteoppslag.skatteoppslagSøker.httpCode.description}</BodyShort>
-                                </div>
-                            )}
+                            <OppsummeringAvSkattegrunnlag skattegrunnlag={skatteoppslag.skatteoppslagSøker} />
 
-                            {erSkattegrunnlag(skatteoppslag.skatteoppslagSøker) && (
-                                <OppsummeringAvSkattegrunnlag skattegrunnlag={skatteoppslag.skatteoppslagSøker} />
-                            )}
-
-                            {erSkatteOppslagsFeil(skatteoppslag.skatteoppslagEps) && (
-                                <div>
-                                    <BodyShort>Feil ved henting av skattedata</BodyShort>
-                                    <BodyShort>{skatteoppslag.skatteoppslagEps.httpCode.value}</BodyShort>
-                                    <BodyShort>{skatteoppslag.skatteoppslagEps.httpCode.description}</BodyShort>
-                                    <BodyShort>TODO: serialisering i backend fjerner original feil</BodyShort>
-                                </div>
-                            )}
-
-                            {erSkattegrunnlag(skatteoppslag.skatteoppslagEps) && (
+                            {skatteoppslag.skatteoppslagEps && (
                                 <OppsummeringAvSkattegrunnlag skattegrunnlag={skatteoppslag.skatteoppslagEps} />
                             )}
                         </div>
