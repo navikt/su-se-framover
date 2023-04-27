@@ -1,4 +1,4 @@
-import { BodyShort, Button, Heading, Label, Modal } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
@@ -7,7 +7,6 @@ import * as S from 'fp-ts/string';
 import React, { useState } from 'react';
 
 import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
-import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';
@@ -16,6 +15,8 @@ import { Sats } from '~src/types/Sats';
 import { groupBy, groupByEq } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
+
+import Skattegrunnlagsmodal from '../../oppsummeringAvSkattegrunnlag/Skattegrunnlagsmodal';
 
 import messages from './OppsummeringAvBeregning-nb';
 import * as styles from './OppsummeringAvBeregning.module.less';
@@ -299,7 +300,7 @@ const OppsummeringAvBeregning = (props: {
             )}
             {props.harSkattegrunnlag && (
                 <Button
-                    className={styles.detaljerKnapp}
+                    className={styles.seSkattegrunnlagKnapp}
                     variant="tertiary"
                     type="button"
                     onClick={() => setModalÅpen(true)}
@@ -316,16 +317,6 @@ const OppsummeringAvBeregning = (props: {
                 />
             )}
         </div>
-    );
-};
-
-const Skattegrunnlagsmodal = (props: { sakId: string; behandlingId: string; open: boolean; close: () => void }) => {
-    return (
-        <Modal open={props.open} onClose={() => props.close()}>
-            <Modal.Content className={styles.skattegrunnlagsmodal}>
-                <HentOgVisSkattegrunnlag sakId={props.sakId} behandlingId={props.behandlingId} />
-            </Modal.Content>
-        </Modal>
     );
 };
 

@@ -246,8 +246,9 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                                 <OppsummeringAvBeregning
                                     sakId={props.behandling.sakId}
                                     behandlingId={props.behandling.id}
-                                    harSkattegrunnlag={props.behandling.harSkattegrunnlag}
                                     beregning={props.behandling.beregning}
+                                    //vil ikkke vise link til skattegrunnlaget her
+                                    harSkattegrunnlag={false}
                                 />
                             )}
                             <Feiloppsummering

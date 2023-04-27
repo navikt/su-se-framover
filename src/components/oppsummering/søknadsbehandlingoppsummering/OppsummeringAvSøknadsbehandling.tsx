@@ -99,6 +99,11 @@ const OppsummeringAvSøknadsbehandling = (props: {
                     <SidestiltOppsummeringAvVilkårOgGrunnlag
                         grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
                         visesSidestiltMed={props.behandling.søknad.søknadInnhold}
+                        harSkattegrunnlag={
+                            props.behandling.harSkattegrunnlag
+                                ? { sakId: props.behandling.sakId, behandlingId: props.behandling.id }
+                                : undefined
+                        }
                     />
                 </div>
             </Oppsummeringspanel>
