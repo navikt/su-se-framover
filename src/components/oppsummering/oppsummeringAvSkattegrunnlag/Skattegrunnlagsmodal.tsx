@@ -9,7 +9,12 @@ const Skattegrunnlagsmodal = (props: { sakId: string; behandlingId: string; open
     return (
         <Modal open={props.open} onClose={() => props.close()}>
             <Modal.Content className={styles.skattegrunnlagsmodal}>
-                <HentOgVisSkattegrunnlag sakId={props.sakId} behandlingId={props.behandlingId} />
+                <HentOgVisSkattegrunnlag
+                    sakId={props.sakId}
+                    behandlingId={props.behandlingId}
+                    hentBareEksisterende
+                    harSkattegrunnlag
+                />
             </Modal.Content>
         </Modal>
     );

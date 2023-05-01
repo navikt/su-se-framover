@@ -331,6 +331,8 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                             <HentOgVisSkattegrunnlag
                                 sakId={props.behandling.sakId}
                                 behandlingId={props.behandling.id}
+                                hentBareEksisterende
+                                harSkattegrunnlag={props.behandling.harSkattegrunnlag}
                             />
                         )}
                     </div>

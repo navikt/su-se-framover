@@ -98,12 +98,28 @@ export async function underkjenn(arg: {
     });
 }
 
-export async function hentSkattegrunnlagForBehandling(arg: {
+/**
+ * Henter ny fra skatt
+ */
+export async function hentNySkattegrunnlag(arg: {
     sakId: string;
     behandlingId: string;
 }): Promise<ApiClientResult<Skatteoppslag>> {
     return apiClient({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag`,
+        method: 'GET',
+    });
+}
+
+/**
+ * Henter bare det som allerede er lagret
+ */
+export async function hentSkattegrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Skatteoppslag>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag/eksisterende`,
         method: 'GET',
     });
 }

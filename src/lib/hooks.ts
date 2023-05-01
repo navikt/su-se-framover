@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
@@ -145,3 +145,43 @@ export function useBrevForhåndsvisning<T>(
         resetToInitial,
     ];
 }
+
+/*
+export const exclusiveCombine = <Error, Success>(
+    a: RemoteData.RemoteData<Error, Success>,
+    b: RemoteData.RemoteData<Error, Success>
+) => {
+    if (!RemoteData.isInitial(a)) {
+        console.log('returning a - not initial', a);
+        return a;
+    }
+    if (!RemoteData.isInitial(b)) {
+        console.log('returning b - not initial', b);
+        return b;
+    }
+    console.log('returning a - default');
+    return a;
+};
+*/
+
+/**
+ * Returnerer det aktive kallet. Dersom begge er aktive på en gang, gir vi ut bare den første.
+ * Da vil du kanskje heller bruke RemoteData.combine() hvis du skal ha begge aktive
+ */
+export const useExclusiveCombine = <Error, Success>(
+    a: RemoteData.RemoteData<Error, Success>,
+    b: RemoteData.RemoteData<Error, Success>
+) => {
+    return useMemo(() => {
+        if (!RemoteData.isInitial(a)) {
+            console.log('returning a - not initial', a);
+            return a;
+        }
+        if (!RemoteData.isInitial(b)) {
+            console.log('returning b - not initial', b);
+            return b;
+        }
+        console.log('returning a - default');
+        return a;
+    }, [a, b]);
+};
