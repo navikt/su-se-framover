@@ -116,7 +116,7 @@
         "nodemon": "^2.0.21",
         "parcel": "^2.8.3",
         "path-browserify": "^1.0.1",
-        "prettier": "^2.8.4",
+        "prettier": "^2.8.8",
         "react-test-renderer": "^18.2.0",
         "rimraf": "^5.0.0",
         "ts-jest": "^29.0.5",
