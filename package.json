@@ -45,7 +45,7 @@
         "@devexperts/remote-data-ts": "^2.1.1",
         "@formatjs/intl-datetimeformat": "^6.5.1",
         "@formatjs/intl-numberformat": "^8.5.0",
-        "@hookform/resolvers": "^2.9.11",
+        "@hookform/resolvers": "^3.1.0",
         "@navikt/ds-css": "^2.9.8",
         "@navikt/ds-css-internal": "^2.7.6",
         "@navikt/ds-icons": "^2.7.6",
