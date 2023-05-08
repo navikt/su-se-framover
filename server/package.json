@@ -23,7 +23,7 @@
         "express-http-proxy": "^1.6.3",
         "express-session": "^1.17.2",
         "helmet": "^6.0.0",
-        "https-proxy-agent": "^5.0.0",
+        "https-proxy-agent": "^6.1.0",
         "jsonwebtoken": "^9.0.0",
         "openid-client": "^5.0.2",
         "passport": "^0.6.0",
