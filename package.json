@@ -53,7 +53,7 @@
         "@navikt/ds-react-internal": "^2.9.8",
         "@radix-ui/react-tabs": "^1.0.3",
         "@reduxjs/toolkit": "^1.9.5",
-        "@sentry/browser": "^7.50.0",
+        "@sentry/browser": "^7.51.1",
         "@sentry/cli": "^2.17.5",
         "@types/jest": "^29.4.0",
         "@types/react-datepicker": "^4.10.0",
