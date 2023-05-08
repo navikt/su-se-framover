@@ -52,7 +52,7 @@
         "@navikt/ds-react": "^2.7.6",
         "@navikt/ds-react-internal": "^2.7.6",
         "@radix-ui/react-tabs": "^1.0.3",
-        "@reduxjs/toolkit": "^1.9.3",
+        "@reduxjs/toolkit": "^1.9.5",
         "@sentry/browser": "^7.50.0",
         "@sentry/cli": "^2.14.4",
         "@types/jest": "^29.4.0",
