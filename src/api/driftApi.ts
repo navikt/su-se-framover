@@ -89,3 +89,13 @@ export async function resendstatistikkSøknadsbehandlingVedtak(body: {
         body: body,
     });
 }
+
+export async function resendSpesifikkVedtakstatistikk(args: {
+    vedtakId: string;
+}): Promise<ApiClientResult<{ status: string }>> {
+    return apiClient({
+        url: `/drift/resend-statistikk/vedtak/${args.vedtakId}`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}

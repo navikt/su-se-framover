@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Label, Loader, Modal, Select } from '@navikt/ds-react';
+import { Alert, Button, Heading, Label, Loader, Modal, Select, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -13,6 +13,7 @@ import {
     grensesnittsavstemming,
     stønadsmottakere,
     resendstatistikkSøknadsbehandlingVedtak,
+    resendSpesifikkVedtakstatistikk,
 } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useApiCall } from '~src/lib/hooks';
@@ -310,17 +311,27 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
     const [søknadsbehandlingVedtakStatistikkStatus, resendSøknadsbehandlingVedtak] = useApiCall(
         resendstatistikkSøknadsbehandlingVedtak
     );
+    const [, resendSpesifikkVedtak] = useApiCall(resendSpesifikkVedtakstatistikk);
 
     const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
+    const [vedtakId, setVedtakId] = useState<string>('');
 
     return (
         <Modal open={props.open} onClose={props.onClose}>
             <Modal.Content>
                 <div>
                     <Heading size="medium" spacing>
-                        Resend statistikk
+                        Spesifikk
                     </Heading>
 
+                    <TextField label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
+                    <Button onClick={() => resendSpesifikkVedtak({ vedtakId: vedtakId })}>
+                        Resend spesifikk vedtak statistikk
+                    </Button>
+
+                    <Heading size="medium" spacing>
+                        Alle
+                    </Heading>
                     <DatePicker
                         dateFormat="dd/MM/yyyy"
                         selected={fraOgMed}
