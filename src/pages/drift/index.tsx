@@ -311,7 +311,7 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
     const [søknadsbehandlingVedtakStatistikkStatus, resendSøknadsbehandlingVedtak] = useApiCall(
         resendstatistikkSøknadsbehandlingVedtak
     );
-    const [, resendSpesifikkVedtak] = useApiCall(resendSpesifikkVedtakstatistikk);
+    const [spesifikkStatus, resendSpesifikkVedtak] = useApiCall(resendSpesifikkVedtakstatistikk);
 
     const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
     const [vedtakId, setVedtakId] = useState<string>('');
@@ -328,6 +328,9 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
                     <Button onClick={() => resendSpesifikkVedtak({ vedtakId: vedtakId })}>
                         Resend spesifikk vedtak statistikk
                     </Button>
+                    {RemoteData.isSuccess(spesifikkStatus) && <p>Nice 👍🤌</p>}
+
+                    {RemoteData.isFailure(spesifikkStatus) && <ApiErrorAlert error={spesifikkStatus.error} />}
 
                     <Heading size="medium" spacing>
                         Alle
