@@ -78,3 +78,14 @@ export async function stønadsmottakere(): Promise<ApiClientResult<{ dato: strin
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }
+
+export async function resendstatistikkSøknadsbehandlingVedtak(body: {
+    fraOgMed: string;
+}): Promise<ApiClientResult<{ status: string }>> {
+    return apiClient({
+        url: `/drift/resend-statistikk/vedtak/søknadsbehandling`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: body,
+    });
+}

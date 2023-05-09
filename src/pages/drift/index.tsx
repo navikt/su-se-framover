@@ -12,7 +12,9 @@ import {
     konsistensavstemming,
     grensesnittsavstemming,
     stønadsmottakere,
+    resendstatistikkSøknadsbehandlingVedtak,
 } from '~src/api/driftApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
@@ -48,6 +50,8 @@ const Drift = () => {
         hentStatus();
     }, []);
 
+    const [vilResendeStatistikk, setVilResendeStatistikk] = useState<boolean>(false);
+
     const [stønadsmottakereModal, setStønadsmottakereModal] = useState<boolean>(false);
     const [visReguleringModal, setVisReguleringModal] = React.useState(false);
     const [fixSøknaderResponse, setfixSøknaderResponse] = React.useState<
@@ -79,6 +83,9 @@ const Drift = () => {
         <div className={styles.container}>
             {stønadsmottakereModal && (
                 <StønadsmottakereModal open={stønadsmottakereModal} onClose={() => setStønadsmottakereModal(false)} />
+            )}
+            {vilResendeStatistikk && (
+                <ResendStatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
             )}
             <div>
                 <h1>Drift</h1>
@@ -261,6 +268,15 @@ const Drift = () => {
                     >
                         Stønadsmottakere
                     </Button>
+
+                    <Button
+                        variant="secondary"
+                        className={styles.knapp}
+                        type="button"
+                        onClick={() => setVilResendeStatistikk(true)}
+                    >
+                        Resend statistikk
+                    </Button>
                 </div>
                 {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">
@@ -287,6 +303,50 @@ const Drift = () => {
                 {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
             </div>
         </div>
+    );
+};
+
+const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
+    const [søknadsbehandlingVedtakStatistikkStatus, resendSøknadsbehandlingVedtak] = useApiCall(
+        resendstatistikkSøknadsbehandlingVedtak
+    );
+
+    const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
+
+    return (
+        <Modal open={props.open} onClose={props.onClose}>
+            <Modal.Content>
+                <div>
+                    <Heading size="medium" spacing>
+                        Resend statistikk
+                    </Heading>
+
+                    <DatePicker
+                        dateFormat="dd/MM/yyyy"
+                        selected={fraOgMed}
+                        onChange={(date: Date) => {
+                            setFraOgMed(date);
+                        }}
+                    />
+
+                    <Button
+                        onClick={() =>
+                            resendSøknadsbehandlingVedtak({
+                                fraOgMed: toIsoDateOnlyString(fraOgMed!),
+                            })
+                        }
+                    >
+                        Søknadsbehandling vedtak
+                    </Button>
+
+                    {RemoteData.isSuccess(søknadsbehandlingVedtakStatistikkStatus) && <p>Nice 👍🤌</p>}
+
+                    {RemoteData.isFailure(søknadsbehandlingVedtakStatistikkStatus) && (
+                        <ApiErrorAlert error={søknadsbehandlingVedtakStatistikkStatus.error} />
+                    )}
+                </div>
+            </Modal.Content>
+        </Modal>
     );
 };
 
