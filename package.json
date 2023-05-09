@@ -85,7 +85,7 @@
         "regenerator-runtime": "^0.13.11",
         "reset-css": "^5.0.1",
         "uuid": "^9.0.0",
-        "yup": "^0.29.3"
+        "yup": "^1.1.1"
     },
     "devDependencies": {
         "@parcel/config-default": "^2.4.1",
