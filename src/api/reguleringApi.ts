@@ -14,6 +14,17 @@ export async function startRegulering({ startDato }: { startDato: string }) {
     });
 }
 
+export async function dryRunRegulering({ startDato, verdi }: { startDato: string; verdi: number }) {
+    return apiClient({
+        url: `/reguleringer/automatisk/dry`,
+        method: 'POST',
+        body: {
+            startDato,
+            verdi: verdi,
+        },
+    });
+}
+
 export async function hentReguleringsstatus(): Promise<ApiClientResult<ReguleringOversiktsstatus[]>> {
     return apiClient({
         url: `/reguleringer/status`,

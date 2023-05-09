@@ -1,19 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, GuidePanel, Heading, Loader } from '@navikt/ds-react';
+import { Alert, Button, GuidePanel, Heading, Loader, TextField } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 
-import { startRegulering } from '~src/api/reguleringApi';
+import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
 import * as reguleringApi from '~src/api/reguleringApi';
 import DatePicker from '~src/components/datePicker/DatePicker';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
-import { toStringDateOrNull } from '~src/utils/date/dateUtils';
+import { toIsoDateOnlyString, toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import * as styles from '../index.module.less';
 
 const StartGRegulering = () => {
     const [reguleringsstatus, reguler] = useApiCall(startRegulering);
+    const [dryRunStatus, dryRun] = useApiCall(dryRunRegulering);
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useApiCall(reguleringApi.hentSakerMedÅpneBehandlinger);
 
     useEffect(() => {
@@ -22,8 +23,29 @@ const StartGRegulering = () => {
 
     const [startDato, setStartDato] = useState<Nullable<Date>>(null);
 
+    const [startDatoDryRun, setStartDatoDryRun] = useState<Nullable<Date>>(null);
+    const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
+
     return (
         <div className={styles.regulering}>
+            <div>
+                <DatePicker
+                    label="Velg reguleringsdato"
+                    value={startDatoDryRun}
+                    dateFormat="MM/yyyy"
+                    showMonthYearPicker
+                    onChange={(dato) => setStartDatoDryRun(dato)}
+                />
+                <TextField label={'G-verdi'} onChange={(v) => setGVerdiDryRun(Number(v.target.value))} />
+
+                <Button
+                    onClick={() => dryRun({ startDato: toIsoDateOnlyString(startDatoDryRun!), verdi: gverdiDryRun! })}
+                    loading={RemoteData.isPending(dryRunStatus)}
+                >
+                    Start dry-run regulering
+                </Button>
+            </div>
+
             <Heading level="1" size="medium" className={styles.reguleringHeader}>
                 Start G-regulering
             </Heading>
