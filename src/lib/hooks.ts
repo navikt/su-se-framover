@@ -168,20 +168,11 @@ export const exclusiveCombine = <Error, Success>(
  * Returnerer det aktive kallet. Dersom begge er aktive på en gang, gir vi ut bare den første.
  * Da vil du kanskje heller bruke RemoteData.combine() hvis du skal ha begge aktive
  */
-export const useExclusiveCombine = <Error, Success>(
-    a: RemoteData.RemoteData<Error, Success>,
-    b: RemoteData.RemoteData<Error, Success>
-) => {
+export const useExclusiveCombine = <Error, Success>(...args: Array<RemoteData.RemoteData<Error, Success>>) => {
+    if (args.length <= 0) {
+        throw new Error('UseExclusiveCombine må ta inn en liste med elementer');
+    }
     return useMemo(() => {
-        if (!RemoteData.isInitial(a)) {
-            console.log('returning a - not initial', a);
-            return a;
-        }
-        if (!RemoteData.isInitial(b)) {
-            console.log('returning b - not initial', b);
-            return b;
-        }
-        console.log('returning a - default');
-        return a;
-    }, [a, b]);
+        return args.find((a) => !RemoteData.isInitial(a)) ?? args[0];
+    }, [args]);
 };

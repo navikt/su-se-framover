@@ -26,7 +26,6 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { Person } from '~src/types/Person';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-import { erSøknadsbehandlingOpprettet, erSøknadsbehandlingVilkårsvurdert } from '~src/utils/SøknadsbehandlingUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 
@@ -120,12 +119,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 sakId={props.behandling.sakId}
                                 behandlingId={props.behandling.id}
                                 //henter bare ny hvis tilstanden er opprettet / vilkårsvurdert
-                                hentBareEksisterende={
-                                    !(
-                                        erSøknadsbehandlingOpprettet(props.behandling) ||
-                                        erSøknadsbehandlingVilkårsvurdert(props.behandling)
-                                    )
-                                }
+                                hentBareEksisterende={false}
                                 harSkattegrunnlag={props.behandling.harSkattegrunnlag}
                             />
                         )}

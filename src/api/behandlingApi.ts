@@ -123,3 +123,16 @@ export async function hentSkattegrunnlag(arg: {
         method: 'GET',
     });
 }
+
+/**
+ * Refresher en allerede eksisterende skattegrunnlag
+ */
+export async function oppfriskSkattegrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Skatteoppslag>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag/oppfrisk`,
+        method: 'GET',
+    });
+}

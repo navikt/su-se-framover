@@ -4,7 +4,11 @@ import { Button, Heading } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useEffect } from 'react';
 
-import { hentNySkattegrunnlag, hentSkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
+import {
+    hentNySkattegrunnlag,
+    hentSkattegrunnlag,
+    oppfriskSkattegrunnlag,
+} from '~src/features/SøknadsbehandlingActions';
 import { useAsyncActionCreator, useExclusiveCombine } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 
@@ -25,8 +29,9 @@ const HentOgVisSkattegrunnlag = (props: {
 
     const [nyStatus, ny] = useAsyncActionCreator(hentNySkattegrunnlag);
     const [hentStatus, hent] = useAsyncActionCreator(hentSkattegrunnlag);
+    const [oppfriskStatus, oppfrisk] = useAsyncActionCreator(oppfriskSkattegrunnlag);
 
-    const status = useExclusiveCombine(nyStatus, hentStatus);
+    const status = useExclusiveCombine(nyStatus, hentStatus, oppfriskStatus);
 
     useEffect(() => {
         if (props.hentBareEksisterende || props.harSkattegrunnlag) {
@@ -46,8 +51,8 @@ const HentOgVisSkattegrunnlag = (props: {
                     <Button
                         variant="tertiary"
                         className={styles.refreshButton}
-                        onClick={() => ny({ sakId: props.sakId, behandlingId: props.behandlingId })}
-                        loading={RemoteData.isPending(nyStatus)}
+                        onClick={() => oppfrisk({ sakId: props.sakId, behandlingId: props.behandlingId })}
+                        loading={RemoteData.isPending(oppfriskStatus)}
                     >
                         <ArrowsCirclepathIcon title="Last inn skattegrunnlag på nytt" fontSize="2rem" />
                     </Button>
