@@ -94,7 +94,7 @@ export async function resendSpesifikkVedtakstatistikk(args: {
     vedtakIder: string;
 }): Promise<ApiClientResult<{ status: string }>> {
     return apiClient({
-        url: `/drift/resend-statistikk/vedtak/`,
+        url: `/drift/resend-statistikk/vedtak`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/json' }) },
         body: {
