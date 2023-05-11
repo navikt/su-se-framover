@@ -146,26 +146,9 @@ export function useBrevForhåndsvisning<T>(
     ];
 }
 
-/*
-export const exclusiveCombine = <Error, Success>(
-    a: RemoteData.RemoteData<Error, Success>,
-    b: RemoteData.RemoteData<Error, Success>
-) => {
-    if (!RemoteData.isInitial(a)) {
-        console.log('returning a - not initial', a);
-        return a;
-    }
-    if (!RemoteData.isInitial(b)) {
-        console.log('returning b - not initial', b);
-        return b;
-    }
-    console.log('returning a - default');
-    return a;
-};
-*/
-
 /**
- * Returnerer det aktive kallet. Dersom begge er aktive på en gang, gir vi ut bare den første.
+ * Returnerer det første ikke-initial remoteDataen.
+ * Dersom det finnes flere ikke-initial remotedataer, blir fortsatt bare den første returnert. Her har rekkefølge noe å si
  * Da vil du kanskje heller bruke RemoteData.combine() hvis du skal ha begge aktive
  */
 export const useExclusiveCombine = <Error, Success>(...args: Array<RemoteData.RemoteData<Error, Success>>) => {

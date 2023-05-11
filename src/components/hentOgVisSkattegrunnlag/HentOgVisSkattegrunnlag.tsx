@@ -31,7 +31,7 @@ const HentOgVisSkattegrunnlag = (props: {
     const [hentStatus, hent] = useAsyncActionCreator(hentSkattegrunnlag);
     const [oppfriskStatus, oppfrisk] = useAsyncActionCreator(oppfriskSkattegrunnlag);
 
-    const status = useExclusiveCombine(nyStatus, hentStatus, oppfriskStatus);
+    const status = useExclusiveCombine(nyStatus, oppfriskStatus, hentStatus);
 
     useEffect(() => {
         if (props.hentBareEksisterende || props.harSkattegrunnlag) {
@@ -58,6 +58,7 @@ const HentOgVisSkattegrunnlag = (props: {
                     </Button>
                 )}
             </div>
+            {RemoteData.isFailure(oppfriskStatus) && <ApiErrorAlert error={oppfriskStatus.error} />}
 
             {pipe(
                 status,
