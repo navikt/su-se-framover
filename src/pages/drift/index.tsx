@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Label, Loader, Modal, Select, TextField } from '@navikt/ds-react';
+import { Alert, Button, Heading, Label, Loader, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -324,8 +324,8 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
                         Spesifikk
                     </Heading>
 
-                    <TextField label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
-                    <Button onClick={() => resendSpesifikkVedtak({ vedtakId: vedtakId })}>
+                    <Textarea label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
+                    <Button onClick={() => resendSpesifikkVedtak({ vedtakIder: vedtakId })}>
                         Resend spesifikk vedtak statistikk
                     </Button>
                     {RemoteData.isSuccess(spesifikkStatus) && <p>Nice 👍🤌</p>}

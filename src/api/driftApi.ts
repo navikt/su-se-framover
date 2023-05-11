@@ -91,11 +91,14 @@ export async function resendstatistikkSøknadsbehandlingVedtak(body: {
 }
 
 export async function resendSpesifikkVedtakstatistikk(args: {
-    vedtakId: string;
+    vedtakIder: string;
 }): Promise<ApiClientResult<{ status: string }>> {
     return apiClient({
-        url: `/drift/resend-statistikk/vedtak/${args.vedtakId}`,
+        url: `/drift/resend-statistikk/vedtak/`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: {
+            vedtak: args.vedtakIder,
+        },
     });
 }
