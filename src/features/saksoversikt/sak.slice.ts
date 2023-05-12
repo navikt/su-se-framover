@@ -23,7 +23,6 @@ import {
 } from '~src/types/RegistrertUtenlandsopphold';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
-import { Skatteoppslag } from '~src/types/skatt/Skatt';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const fetchSak = createAsyncThunk<
@@ -114,12 +113,10 @@ export const annullerRegistrertUtenlandsopphold = createAsyncThunk<
 
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
-    skattedata: Array<Skatteoppslag & { behandlingId: string }>;
 }
 
 const initialState: SakState = {
     sak: RemoteData.initial,
-    skattedata: [],
 };
 
 export default createSlice({
@@ -175,17 +172,6 @@ export default createSlice({
 
         builder.addCase(SøknadsbehandlingActions.sendTilAttestering.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
-        });
-
-        builder.addCase(SøknadsbehandlingActions.hentSkattegrunnlag.fulfilled, (state, action) => {
-            state.skattedata = [
-                ...state.skattedata.filter((i) => i.behandlingId !== action.meta.arg.behandlingId),
-                {
-                    behandlingId: action.meta.arg.behandlingId,
-                    skatteoppslagEps: action.payload.skatteoppslagEps,
-                    skatteoppslagSøker: action.payload.skatteoppslagSøker,
-                },
-            ];
         });
 
         builder.addCase(SøknadActions.lukkSøknad.fulfilled, (state, action) => {

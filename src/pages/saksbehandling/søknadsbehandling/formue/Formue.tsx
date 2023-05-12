@@ -14,7 +14,7 @@ import {
     getInitialFormueVilkårOgDelvisBosituasjon,
     formueVilkårFormTilRequest,
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
-import OppsummeringAvSkattegrunnlag from '~src/components/oppsummering/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
+import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -114,7 +114,15 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
                         />
-                        {skattemeldingToggle && <OppsummeringAvSkattegrunnlag behandling={props.behandling} />}
+                        {skattemeldingToggle && (
+                            <HentOgVisSkattegrunnlag
+                                sakId={props.behandling.sakId}
+                                behandlingId={props.behandling.id}
+                                //henter bare ny hvis tilstanden er opprettet / vilkårsvurdert
+                                hentBareEksisterende={false}
+                                harSkattegrunnlag={props.behandling.harSkattegrunnlag}
+                            />
+                        )}
                     </div>
                 ),
             }}

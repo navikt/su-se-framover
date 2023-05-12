@@ -19,6 +19,9 @@ import * as styles from './OppsummeringAvBeregningOgSimulering.module.less';
 import { Utbetalingssimulering } from './oppsummeringAvSimulering/OppsummeringAvSimulering';
 
 const OppsummeringAvBeregningOgSimulering = (props: {
+    sakId: string;
+    behandlingId: string;
+    harSkattegrunnlag: boolean;
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
     tittel?: string;
@@ -46,7 +49,13 @@ const OppsummeringAvBeregningOgSimulering = (props: {
                     </Heading>
                     <Panel border>
                         {props.beregning ? (
-                            <OppsummeringAvBeregning beregning={props.beregning} utenTittel />
+                            <OppsummeringAvBeregning
+                                sakId={props.sakId}
+                                behandlingId={props.behandlingId}
+                                beregning={props.beregning}
+                                harSkattegrunnlag={props.harSkattegrunnlag}
+                                utenTittel
+                            />
                         ) : (
                             formatMessage('error.ingenBeregning')
                         )}

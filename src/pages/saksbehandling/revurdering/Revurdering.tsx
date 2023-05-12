@@ -162,11 +162,7 @@ const RevurderingSeksjonerWrapper = (props: {
                         />
                     )}
                     {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.BeregningOgSimulering && (
-                        <RevurderingBeregnOgSimuler
-                            seksjoner={seksjoner}
-                            sakId={props.sakId}
-                            informasjonsRevurdering={props.revurdering}
-                        />
+                        <RevurderingBeregnOgSimuler seksjoner={seksjoner} informasjonsRevurdering={props.revurdering} />
                     )}
                     {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Oppsummering && (
                         <RevurderingOppsummeringPage

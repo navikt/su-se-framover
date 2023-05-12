@@ -98,9 +98,41 @@ export async function underkjenn(arg: {
     });
 }
 
-export async function hentSkattegrunnlagForBehandling(behandlingId: string): Promise<ApiClientResult<Skatteoppslag>> {
+/**
+ * Henter ny fra skatt
+ */
+export async function hentNySkattegrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Skatteoppslag>> {
     return apiClient({
-        url: `/skatt/soknadsbehandling/${behandlingId}`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag`,
+        method: 'GET',
+    });
+}
+
+/**
+ * Henter bare det som allerede er lagret
+ */
+export async function hentSkattegrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Skatteoppslag>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag/eksisterende`,
+        method: 'GET',
+    });
+}
+
+/**
+ * Refresher en allerede eksisterende skattegrunnlag
+ */
+export async function oppfriskSkattegrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Skatteoppslag>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag/oppfrisk`,
         method: 'GET',
     });
 }

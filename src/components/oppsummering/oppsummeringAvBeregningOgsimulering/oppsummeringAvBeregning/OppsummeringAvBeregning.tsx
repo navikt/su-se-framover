@@ -1,10 +1,10 @@
-import { BodyShort, Heading, Label } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import React from 'react';
+import React, { useState } from 'react';
 
 import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import { combineOptions, pipe } from '~src/lib/fp';
@@ -15,6 +15,8 @@ import { Sats } from '~src/types/Sats';
 import { groupBy, groupByEq } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
+
+import Skattegrunnlagsmodal from '../../oppsummeringAvSkattegrunnlag/Skattegrunnlagsmodal';
 
 import messages from './OppsummeringAvBeregning-nb';
 import * as styles from './OppsummeringAvBeregning.module.less';
@@ -115,8 +117,16 @@ const VisBenyttetEpsFradrag = ({
     );
 };
 
-const OppsummeringAvBeregning = (props: { beregningsTittel?: string; utenTittel?: boolean; beregning: Beregning }) => {
+const OppsummeringAvBeregning = (props: {
+    sakId: string;
+    behandlingId: string;
+    harSkattegrunnlag: boolean;
+    beregningsTittel?: string;
+    utenTittel?: boolean;
+    beregning: Beregning;
+}) => {
     const { formatMessage, intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    const [modalÅpen, setModalÅpen] = useState<boolean>(false);
 
     return (
         <div className={styles.beregningdetaljer}>
@@ -288,7 +298,26 @@ const OppsummeringAvBeregning = (props: { beregningsTittel?: string; utenTittel?
                     </div>
                 ))
             )}
+            {props.harSkattegrunnlag && (
+                <Button
+                    className={styles.seSkattegrunnlagKnapp}
+                    variant="tertiary"
+                    type="button"
+                    onClick={() => setModalÅpen(true)}
+                >
+                    {formatMessage('knapp.seSkattegrunnlag')}
+                </Button>
+            )}
+            {modalÅpen && (
+                <Skattegrunnlagsmodal
+                    sakId={props.sakId}
+                    behandlingId={props.behandlingId}
+                    open={modalÅpen}
+                    close={() => setModalÅpen(false)}
+                />
+            )}
         </div>
     );
 };
+
 export default OppsummeringAvBeregning;

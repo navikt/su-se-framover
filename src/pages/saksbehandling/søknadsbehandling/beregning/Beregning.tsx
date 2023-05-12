@@ -20,9 +20,9 @@ import {
     eqFradragFormData,
     fradragSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
+import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import OppsummeringAvBeregning from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning';
-import OppsummeringAvSkattegrunnlag from '~src/components/oppsummering/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
 import OppsummeringAvInntektOgPensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -243,7 +243,13 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         </Heading>
                         <div className={styles.beregningsContainer}>
                             {props.behandling.beregning && (
-                                <OppsummeringAvBeregning beregning={props.behandling.beregning} />
+                                <OppsummeringAvBeregning
+                                    sakId={props.behandling.sakId}
+                                    behandlingId={props.behandling.id}
+                                    beregning={props.behandling.beregning}
+                                    //vil ikkke vise link til skattegrunnlaget her
+                                    harSkattegrunnlag={false}
+                                />
                             )}
                             <Feiloppsummering
                                 tittel={formatMessage('feiloppsummering.title')}
@@ -321,7 +327,14 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                             }}
                         />
 
-                        {skattemeldingToggle && <OppsummeringAvSkattegrunnlag behandling={props.behandling} />}
+                        {skattemeldingToggle && (
+                            <HentOgVisSkattegrunnlag
+                                sakId={props.behandling.sakId}
+                                behandlingId={props.behandling.id}
+                                hentBareEksisterende
+                                harSkattegrunnlag={props.behandling.harSkattegrunnlag}
+                            />
+                        )}
                     </div>
                 ),
             }}

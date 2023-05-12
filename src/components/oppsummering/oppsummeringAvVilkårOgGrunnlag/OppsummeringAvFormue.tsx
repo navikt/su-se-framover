@@ -1,6 +1,6 @@
-import { BodyShort, Label } from '@navikt/ds-react';
+import { BodyShort, Button, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { regnUtFormuegrunnlagVerdier } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import Formuestatus from '~src/components/formuestatus/Formuestatus';
@@ -10,13 +10,19 @@ import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fo
 import { FormueStatus, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { formatPeriode } from '~src/utils/date/dateUtils';
 
+import Skattegrunnlagsmodal from '../oppsummeringAvSkattegrunnlag/Skattegrunnlagsmodal';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
-const OppsummeringAvFormueVilkår = (props: { formue: FormueVilkår; visesIVedtak?: boolean }) => {
+const OppsummeringAvFormueVilkår = (props: {
+    harSkattegrunnlag?: { sakId: string; behandlingId: string };
+    formue: FormueVilkår;
+    visesIVedtak?: boolean;
+}) => {
     const { formatMessage } = useI18n({ messages });
+    const [modalÅpen, setModalÅpen] = useState<boolean>(false);
 
     return (
         <div>
@@ -46,6 +52,24 @@ const OppsummeringAvFormueVilkår = (props: { formue: FormueVilkår; visesIVedta
                     })
                 )}
             </ul>
+            {props.harSkattegrunnlag && (
+                <Button
+                    className={styles.seSkattegrunnlagKnapp}
+                    variant="tertiary"
+                    type="button"
+                    onClick={() => setModalÅpen(true)}
+                >
+                    {formatMessage('formue.knapp.seSkattegrunnlag')}
+                </Button>
+            )}
+            {modalÅpen && props.harSkattegrunnlag && (
+                <Skattegrunnlagsmodal
+                    sakId={props.harSkattegrunnlag.sakId}
+                    behandlingId={props.harSkattegrunnlag.behandlingId}
+                    open={modalÅpen}
+                    close={() => setModalÅpen(false)}
+                />
+            )}
         </div>
     );
 };

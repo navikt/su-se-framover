@@ -110,7 +110,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.INGEN_FORMUE_FOR_BOSITUASJONSPERIODE]:
         'Formue mangler for en eller flere perioder hvor det eksisterer bosituasjon.',
     [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
-    [ApiErrorCode.INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
+    [ApiErrorCode.INGEN_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
         'Ingen summert skattegrunnlag funnet på oppgitt personidentifikator og inntektsår',
     [ApiErrorCode.INNSENDING_AV_SØKNAD_IKKE_TILLATT]: 'Innsending av søknad er ikke tillatt',
     [ApiErrorCode.INNEHOLDER_UFULLSTENDIG_BOSITUASJON]:
@@ -174,6 +174,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.MANGLER_BREVVALG]: 'Vennligst velg om det skal sendes brev eller ikke',
     [ApiErrorCode.MANGLER_ID]: 'Parameter for id mangler',
     [ApiErrorCode.MANGLER_IDTYPE]: 'Parameter for idType mangler',
+    [ApiErrorCode.MANGLER_RETTIGHETER_MOT_SKATT]: 'Autentiserings- eller autoriseringsfeil. Mangler du rettigheter?',
     [ApiErrorCode.MANGLER_SAKSNUMMER_FØDSELSNUMMER]: 'Må oppgi enten saksnummer eller fødselsnummer',
     [ApiErrorCode.MÅ_HA_BOSITUASJON_FØR_FRADRAG]: 'Bosituasjon må legges inn før fradrag',
     [ApiErrorCode.MÅ_VELGE_INFORMASJON_SOM_REVURDERES]: 'Må velge hva som skal revurderes',
@@ -183,6 +184,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET]:
         'Kunne ikke hente navn for saksbehandler eller attestant',
     [ApiErrorCode.NEI_ER_IKKE_STØTTET]: 'Det er ikke støtte for å svare "nei"',
+    [ApiErrorCode.NETTVERKSFEIL_SKATT]: 'Får ikke kontakt med Sigrun/Skatteetaten. Prøv igjen senere.',
     [ApiErrorCode.NYE_OVERLAPPENDE_VEDTAK]:
         'Det har kommet nye vedtak i revurderingsperioden etter revurderingen ble opprettet/oppdatert. Revurderingen må sendes tilbake til saksbehandler som igjen må "starte revurdering på nytt"',
 

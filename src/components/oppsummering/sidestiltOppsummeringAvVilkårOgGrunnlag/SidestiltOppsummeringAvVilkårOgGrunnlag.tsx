@@ -88,6 +88,7 @@ import styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
 const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     visesSidestiltMed: GrunnlagsdataOgVilkårsvurderinger | SøknadInnhold;
+    harSkattegrunnlag?: { sakId: string; behandlingId: string };
 }) => {
     const { formatMessage } = useI18n({ messages });
 
@@ -240,6 +241,7 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                               }
                             : undefined
                     }
+                    harSkattegrunnlag={props.harSkattegrunnlag}
                 />
                 <AccordionItemPersonligOppmøte
                     personligOppmøteFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
@@ -576,6 +578,7 @@ const AccordionItemFormue = (props: {
         søkers: Formue;
         eps?: Nullable<Formue>;
     };
+    harSkattegrunnlag?: { sakId: string; behandlingId: string };
 }) => {
     const { formatMessage } = useI18n({ messages });
     const harEndretFormue = props.sidestiltFormue && !formueErlik(props.formueFraGrunnlag, props.sidestiltFormue);
@@ -593,7 +596,10 @@ const AccordionItemFormue = (props: {
                 )}
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvFormueVilkår formue={props.formueFraGrunnlag} />
+                <OppsummeringAvFormueVilkår
+                    harSkattegrunnlag={props.harSkattegrunnlag}
+                    formue={props.formueFraGrunnlag}
+                />
                 {props.sidestiltFormue && <OppsummeringAvFormueVilkår formue={props.sidestiltFormue} />}
                 {props.sidestiltFormueFraSøknad && (
                     <div className={styles.oppsummeringAvSøknadsformueContainer}>
