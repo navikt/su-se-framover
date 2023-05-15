@@ -102,3 +102,11 @@ export async function resendSpesifikkVedtakstatistikk(args: {
         },
     });
 }
+
+export async function ferdigstillVedtak(args: { vedtakId: string }): Promise<ApiClientResult<{ status: string }>> {
+    return apiClient({
+        url: `/drift/vedtak/${args.vedtakId}/ferdigstill`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}

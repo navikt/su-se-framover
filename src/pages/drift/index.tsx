@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Label, Loader, Modal, Select, Textarea } from '@navikt/ds-react';
+import { Alert, Button, Heading, Label, Loader, Modal, Select, Textarea, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -14,6 +14,7 @@ import {
     stønadsmottakere,
     resendstatistikkSøknadsbehandlingVedtak,
     resendSpesifikkVedtakstatistikk,
+    ferdigstillVedtak,
 } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useApiCall } from '~src/lib/hooks';
@@ -52,6 +53,7 @@ const Drift = () => {
     }, []);
 
     const [vilResendeStatistikk, setVilResendeStatistikk] = useState<boolean>(false);
+    const [vilFikseVedtak, setVilFikseVedtak] = useState<boolean>(false);
 
     const [stønadsmottakereModal, setStønadsmottakereModal] = useState<boolean>(false);
     const [visReguleringModal, setVisReguleringModal] = React.useState(false);
@@ -88,6 +90,8 @@ const Drift = () => {
             {vilResendeStatistikk && (
                 <ResendStatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
             )}
+            {vilFikseVedtak && <VilFikseVedtakModal open={vilFikseVedtak} onClose={() => setVilFikseVedtak(false)} />}
+
             <div>
                 <h1>Drift</h1>
             </div>
@@ -278,6 +282,15 @@ const Drift = () => {
                     >
                         Resend statistikk
                     </Button>
+
+                    <Button
+                        variant="secondary"
+                        className={styles.knapp}
+                        type="button"
+                        onClick={() => setVilFikseVedtak(true)}
+                    >
+                        Fiks vedtak
+                    </Button>
                 </div>
                 {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">
@@ -304,6 +317,27 @@ const Drift = () => {
                 {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
             </div>
         </div>
+    );
+};
+
+const VilFikseVedtakModal = (props: { open: boolean; onClose: () => void }) => {
+    const [ferdigstillStatus, ferdigstill] = useApiCall(ferdigstillVedtak);
+    const [vedtakId, setVedtakId] = useState<string>('');
+    return (
+        <Modal open={props.open} onClose={props.onClose}>
+            <Modal.Content>
+                <div>
+                    <Heading size="medium" spacing>
+                        Ferdigstill
+                    </Heading>
+                    <TextField label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
+                    <Button onClick={() => ferdigstill({ vedtakId: vedtakId })}>Ferdigstill vedtak</Button>
+                    {RemoteData.isSuccess(ferdigstillStatus) && <p>Nice 👍🤌</p>}
+
+                    {RemoteData.isFailure(ferdigstillStatus) && <ApiErrorAlert error={ferdigstillStatus.error} />}
+                </div>
+            </Modal.Content>
+        </Modal>
     );
 };
 
