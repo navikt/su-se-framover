@@ -1,20 +1,17 @@
 import { Modal } from '@navikt/ds-react';
 import React from 'react';
 
-import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
+import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
+
+import OppsummeringAvEksternGrunnlagSkatt from '../oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 
 import styles from './Skattegrunnlagsmodal.module.less';
 
-const Skattegrunnlagsmodal = (props: { sakId: string; behandlingId: string; open: boolean; close: () => void }) => {
+const Skattegrunnlagsmodal = (props: { skatt: EksternGrunnlagSkatt; open: boolean; close: () => void }) => {
     return (
         <Modal open={props.open} onClose={() => props.close()}>
             <Modal.Content className={styles.skattegrunnlagsmodal}>
-                <HentOgVisSkattegrunnlag
-                    sakId={props.sakId}
-                    behandlingId={props.behandlingId}
-                    hentBareEksisterende
-                    harSkattegrunnlag
-                />
+                <OppsummeringAvEksternGrunnlagSkatt eksternGrunnlagSkatt={props.skatt} />
             </Modal.Content>
         </Modal>
     );

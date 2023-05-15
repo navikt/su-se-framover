@@ -9,6 +9,7 @@ import Oppsummeringspanel, {
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Beregning } from '~src/types/Beregning';
+import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Simulering } from '~src/types/Simulering';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
@@ -19,9 +20,7 @@ import * as styles from './OppsummeringAvBeregningOgSimulering.module.less';
 import { Utbetalingssimulering } from './oppsummeringAvSimulering/OppsummeringAvSimulering';
 
 const OppsummeringAvBeregningOgSimulering = (props: {
-    sakId: string;
-    behandlingId: string;
-    harSkattegrunnlag: boolean;
+    eksterngrunnlagSkatt: Nullable<EksternGrunnlagSkatt>;
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
     tittel?: string;
@@ -50,10 +49,8 @@ const OppsummeringAvBeregningOgSimulering = (props: {
                     <Panel border>
                         {props.beregning ? (
                             <OppsummeringAvBeregning
-                                sakId={props.sakId}
-                                behandlingId={props.behandlingId}
                                 beregning={props.beregning}
-                                harSkattegrunnlag={props.harSkattegrunnlag}
+                                eksternGrunnlagSkatt={props.eksterngrunnlagSkatt}
                                 utenTittel
                             />
                         ) : (

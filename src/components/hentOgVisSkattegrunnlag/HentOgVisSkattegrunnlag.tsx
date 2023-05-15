@@ -2,44 +2,34 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { ArrowsCirclepathIcon } from '@navikt/aksel-icons';
 import { Button, Heading } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 
-import {
-    hentNySkattegrunnlag,
-    hentSkattegrunnlag,
-    oppfriskSkattegrunnlag,
-} from '~src/features/SøknadsbehandlingActions';
-import { useAsyncActionCreator, useExclusiveCombine } from '~src/lib/hooks';
+import { hentNySkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
 import SpinnerMedTekst from '../henterInnhold/SpinnerMedTekst';
-import OppsummeringAvSkattegrunnlag from '../oppsummering/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
+import OppsummeringAvEksternGrunnlagSkatt from '../oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 
 import messages from './HentOgVisSkattegrunnlag-nb';
 import styles from './HentOgVisSkattegrunnlag.module.less';
 
-const HentOgVisSkattegrunnlag = (props: {
-    sakId: string;
-    behandlingId: string;
-    harSkattegrunnlag: boolean;
-    hentBareEksisterende?: boolean;
-}) => {
+const HentOgVisSkattegrunnlag = (props: { søknadsbehandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
 
     const [nyStatus, ny] = useAsyncActionCreator(hentNySkattegrunnlag);
-    const [hentStatus, hent] = useAsyncActionCreator(hentSkattegrunnlag);
-    const [oppfriskStatus, oppfrisk] = useAsyncActionCreator(oppfriskSkattegrunnlag);
 
-    const status = useExclusiveCombine(nyStatus, oppfriskStatus, hentStatus);
-
-    useEffect(() => {
-        if (props.hentBareEksisterende || props.harSkattegrunnlag) {
-            hent({ sakId: props.sakId, behandlingId: props.behandlingId });
-        } else {
-            ny({ sakId: props.sakId, behandlingId: props.behandlingId });
+    //defaulter til det som er på behandlingen, hvis ikke, søker vi opp automatisk ny ved sidelast
+    const status = useMemo(() => {
+        if (RemoteData.isInitial(nyStatus) && props.søknadsbehandling.eksterneGrunnlag.skatt !== null) {
+            return RemoteData.success(props.søknadsbehandling);
+        } else if (RemoteData.isInitial(nyStatus) && props.søknadsbehandling.eksterneGrunnlag.skatt === null) {
+            ny({ sakId: props.søknadsbehandling.sakId, behandlingId: props.søknadsbehandling.id });
         }
-    }, []);
+        return nyStatus;
+    }, [nyStatus]);
 
     return (
         <div>
@@ -47,18 +37,16 @@ const HentOgVisSkattegrunnlag = (props: {
                 <Heading level="2" size="medium">
                     {formatMessage('skattegrunnlag.tittel')}
                 </Heading>
-                {!props.hentBareEksisterende && (
-                    <Button
-                        variant="tertiary"
-                        className={styles.refreshButton}
-                        onClick={() => oppfrisk({ sakId: props.sakId, behandlingId: props.behandlingId })}
-                        loading={RemoteData.isPending(oppfriskStatus)}
-                    >
-                        <ArrowsCirclepathIcon title="Last inn skattegrunnlag på nytt" fontSize="2rem" />
-                    </Button>
-                )}
+                <Button
+                    variant="tertiary"
+                    className={styles.refreshButton}
+                    onClick={() =>
+                        ny({ sakId: props.søknadsbehandling.sakId, behandlingId: props.søknadsbehandling.id })
+                    }
+                >
+                    <ArrowsCirclepathIcon title="Last inn skattegrunnlag på nytt" fontSize="2rem" />
+                </Button>
             </div>
-            {RemoteData.isFailure(oppfriskStatus) && <ApiErrorAlert error={oppfriskStatus.error} />}
 
             {pipe(
                 status,
@@ -66,14 +54,10 @@ const HentOgVisSkattegrunnlag = (props: {
                     () => null,
                     () => <SpinnerMedTekst text={formatMessage('skattegrunnlag.laster')} />,
                     (err) => <ApiErrorAlert error={err} />,
-                    (skatteoppslag) => (
-                        <div className={styles.skattegrunnlagsInformasjonContainer}>
-                            <OppsummeringAvSkattegrunnlag skattegrunnlag={skatteoppslag.skatteoppslagSøker} />
-
-                            {skatteoppslag.skatteoppslagEps && (
-                                <OppsummeringAvSkattegrunnlag skattegrunnlag={skatteoppslag.skatteoppslagEps} />
-                            )}
-                        </div>
+                    (søknadsbehandling) => (
+                        <OppsummeringAvEksternGrunnlagSkatt
+                            eksternGrunnlagSkatt={søknadsbehandling.eksterneGrunnlag.skatt}
+                        />
                     )
                 )
             )}

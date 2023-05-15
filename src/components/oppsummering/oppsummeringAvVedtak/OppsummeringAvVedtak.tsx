@@ -164,12 +164,14 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
             </Oppsummeringspanel>
 
             <OppsummeringAvBeregningOgSimulering
-                sakId={vedtak.sakId}
-                behandlingId={vedtak.behandlingId}
+                eksterngrunnlagSkatt={
+                    behandlingstype === 'søknadsbehandling'
+                        ? (vedtaketsBehandling as Søknadsbehandling).eksterneGrunnlag.skatt
+                        : null
+                }
                 tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
                 beregning={vedtak.beregning}
                 simulering={vedtak.simulering}
-                harSkattegrunnlag={vedtak.harSkattegrunnlag}
             />
         </div>
     );
@@ -200,9 +202,6 @@ const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling 
             <SidestiltOppsummeringAvVilkårOgGrunnlag
                 grunnlagsdataOgVilkårsvurderinger={props.s.grunnlagsdataOgVilkårsvurderinger}
                 visesSidestiltMed={props.s.søknad.søknadInnhold}
-                harSkattegrunnlag={
-                    props.s.harSkattegrunnlag ? { sakId: props.s.sakId, behandlingId: props.s.id } : undefined
-                }
             />
         </div>
     );

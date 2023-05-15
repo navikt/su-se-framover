@@ -6,6 +6,7 @@ import { regnUtFormuegrunnlagVerdier } from '~src/components/forms/vilkårOgGrun
 import Formuestatus from '~src/components/formuestatus/Formuestatus';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
+import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 import { FormueStatus, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { formatPeriode } from '~src/utils/date/dateUtils';
@@ -17,7 +18,7 @@ import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
 const OppsummeringAvFormueVilkår = (props: {
-    harSkattegrunnlag?: { sakId: string; behandlingId: string };
+    eksternGrunnlagSkatt?: Nullable<EksternGrunnlagSkatt>;
     formue: FormueVilkår;
     visesIVedtak?: boolean;
 }) => {
@@ -52,23 +53,24 @@ const OppsummeringAvFormueVilkår = (props: {
                     })
                 )}
             </ul>
-            {props.harSkattegrunnlag && (
-                <Button
-                    className={styles.seSkattegrunnlagKnapp}
-                    variant="tertiary"
-                    type="button"
-                    onClick={() => setModalÅpen(true)}
-                >
-                    {formatMessage('formue.knapp.seSkattegrunnlag')}
-                </Button>
-            )}
-            {modalÅpen && props.harSkattegrunnlag && (
-                <Skattegrunnlagsmodal
-                    sakId={props.harSkattegrunnlag.sakId}
-                    behandlingId={props.harSkattegrunnlag.behandlingId}
-                    open={modalÅpen}
-                    close={() => setModalÅpen(false)}
-                />
+            {props.eksternGrunnlagSkatt && (
+                <>
+                    <Button
+                        className={styles.seSkattegrunnlagKnapp}
+                        variant="tertiary"
+                        type="button"
+                        onClick={() => setModalÅpen(true)}
+                    >
+                        {formatMessage('formue.knapp.seSkattegrunnlag')}
+                    </Button>
+                    {modalÅpen && (
+                        <Skattegrunnlagsmodal
+                            skatt={props.eksternGrunnlagSkatt}
+                            open={modalÅpen}
+                            close={() => setModalÅpen(false)}
+                        />
+                    )}
+                </>
             )}
         </div>
     );

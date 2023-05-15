@@ -114,15 +114,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
                         />
-                        {skattemeldingToggle && (
-                            <HentOgVisSkattegrunnlag
-                                sakId={props.behandling.sakId}
-                                behandlingId={props.behandling.id}
-                                //henter bare ny hvis tilstanden er opprettet / vilkårsvurdert
-                                hentBareEksisterende={false}
-                                harSkattegrunnlag={props.behandling.harSkattegrunnlag}
-                            />
-                        )}
+                        {skattemeldingToggle && <HentOgVisSkattegrunnlag søknadsbehandling={props.behandling} />}
                     </div>
                 ),
             }}
