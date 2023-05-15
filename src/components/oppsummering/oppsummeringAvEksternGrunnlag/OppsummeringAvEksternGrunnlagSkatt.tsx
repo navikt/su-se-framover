@@ -8,10 +8,11 @@ import OppsummeringAvSkattegrunnlag from '../oppsummeringAvSkattegrunnlag/Oppsum
 import styles from './OppsummeringAvEksterneGrunnlagSkatt.module.less';
 
 const OppsummeringAvEksternGrunnlagSkatt = (props: { eksternGrunnlagSkatt: Nullable<EksternGrunnlagSkatt> }) => {
+    console.log(props.eksternGrunnlagSkatt);
     return (
         <div className={styles.skattegrunnlagsInformasjonContainer}>
-            {props.eksternGrunnlagSkatt?.søker && (
-                <OppsummeringAvSkattegrunnlag skattegrunnlag={props.eksternGrunnlagSkatt.søker} />
+            {props.eksternGrunnlagSkatt?.søkers && (
+                <OppsummeringAvSkattegrunnlag skattegrunnlag={props.eksternGrunnlagSkatt.søkers} />
             )}
             {props.eksternGrunnlagSkatt?.eps && (
                 <OppsummeringAvSkattegrunnlag skattegrunnlag={props.eksternGrunnlagSkatt.eps} />

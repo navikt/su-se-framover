@@ -54,11 +54,15 @@ const HentOgVisSkattegrunnlag = (props: { søknadsbehandling: Søknadsbehandling
                     () => null,
                     () => <SpinnerMedTekst text={formatMessage('skattegrunnlag.laster')} />,
                     (err) => <ApiErrorAlert error={err} />,
-                    (søknadsbehandling) => (
-                        <OppsummeringAvEksternGrunnlagSkatt
-                            eksternGrunnlagSkatt={søknadsbehandling.eksterneGrunnlag.skatt}
-                        />
-                    )
+                    (søknadsbehandling) => {
+                        return (
+                            <>
+                                <OppsummeringAvEksternGrunnlagSkatt
+                                    eksternGrunnlagSkatt={søknadsbehandling.eksterneGrunnlag.skatt}
+                                />
+                            </>
+                        );
+                    }
                 )
             )}
         </div>

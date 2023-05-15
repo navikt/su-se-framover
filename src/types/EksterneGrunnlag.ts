@@ -7,6 +7,6 @@ export interface EksterneGrunnlag {
 }
 
 export interface EksternGrunnlagSkatt {
-    søker: Skattegrunnlag;
+    søkers: Skattegrunnlag;
     eps: Nullable<Skattegrunnlag>;
 }
