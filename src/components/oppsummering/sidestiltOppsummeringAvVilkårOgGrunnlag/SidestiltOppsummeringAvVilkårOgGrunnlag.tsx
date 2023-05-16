@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
+import { EksterneGrunnlag, EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Fradrag, fradragErlik } from '~src/types/Fradrag';
 import { Aldersvilkår, aldersvilkårErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import {
@@ -88,7 +89,7 @@ import styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
 const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     visesSidestiltMed: GrunnlagsdataOgVilkårsvurderinger | SøknadInnhold;
-    harSkattegrunnlag?: { sakId: string; behandlingId: string };
+    eksterneGrunnlag?: EksterneGrunnlag;
 }) => {
     const { formatMessage } = useI18n({ messages });
 
@@ -241,7 +242,7 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                               }
                             : undefined
                     }
-                    harSkattegrunnlag={props.harSkattegrunnlag}
+                    eksternGrunnlagSkatt={props.eksterneGrunnlag?.skatt ?? null}
                 />
                 <AccordionItemPersonligOppmøte
                     personligOppmøteFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
@@ -578,7 +579,7 @@ const AccordionItemFormue = (props: {
         søkers: Formue;
         eps?: Nullable<Formue>;
     };
-    harSkattegrunnlag?: { sakId: string; behandlingId: string };
+    eksternGrunnlagSkatt: Nullable<EksternGrunnlagSkatt>;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const harEndretFormue = props.sidestiltFormue && !formueErlik(props.formueFraGrunnlag, props.sidestiltFormue);
@@ -597,7 +598,7 @@ const AccordionItemFormue = (props: {
             </Accordion.Header>
             <Accordion.Content className={styles.accordionContent}>
                 <OppsummeringAvFormueVilkår
-                    harSkattegrunnlag={props.harSkattegrunnlag}
+                    eksternGrunnlagSkatt={props.eksternGrunnlagSkatt}
                     formue={props.formueFraGrunnlag}
                 />
                 {props.sidestiltFormue && <OppsummeringAvFormueVilkår formue={props.sidestiltFormue} />}

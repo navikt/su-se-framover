@@ -174,6 +174,10 @@ export default createSlice({
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
+        builder.addCase(SøknadsbehandlingActions.hentNySkattegrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+        });
+
         builder.addCase(SøknadActions.lukkSøknad.fulfilled, (state, action) => {
             state.sak = RemoteData.success(action.payload);
         });

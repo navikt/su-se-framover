@@ -1,6 +1,5 @@
 import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Skatteoppslag } from '~src/types/skatt/Skatt';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -98,41 +97,12 @@ export async function underkjenn(arg: {
     });
 }
 
-/**
- * Henter ny fra skatt
- */
 export async function hentNySkattegrunnlag(arg: {
     sakId: string;
     behandlingId: string;
-}): Promise<ApiClientResult<Skatteoppslag>> {
+}): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag`,
-        method: 'GET',
-    });
-}
-
-/**
- * Henter bare det som allerede er lagret
- */
-export async function hentSkattegrunnlag(arg: {
-    sakId: string;
-    behandlingId: string;
-}): Promise<ApiClientResult<Skatteoppslag>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag/eksisterende`,
-        method: 'GET',
-    });
-}
-
-/**
- * Refresher en allerede eksisterende skattegrunnlag
- */
-export async function oppfriskSkattegrunnlag(arg: {
-    sakId: string;
-    behandlingId: string;
-}): Promise<ApiClientResult<Skatteoppslag>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag/oppfrisk`,
         method: 'GET',
     });
 }

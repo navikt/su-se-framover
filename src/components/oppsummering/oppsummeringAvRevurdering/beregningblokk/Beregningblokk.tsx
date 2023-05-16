@@ -35,8 +35,7 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
 
     return (
         <OppsummeringAvBeregningOgSimulering
-            sakId={revurdering.sakId}
-            behandlingId={revurdering.id}
+            eksterngrunnlagSkatt={null}
             beregning={harBeregninger(revurdering) ? revurdering.beregning : null}
             simulering={harSimulering(revurdering) ? revurdering.simulering : null}
             childrenOverBeregning={
@@ -52,7 +51,6 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
             childrenUnderBeregning={
                 simuleringForAvkortingsvarsel && <AvkortingRevurdering avkorting={simuleringForAvkortingsvarsel} />
             }
-            harSkattegrunnlag={false}
         />
     );
 };

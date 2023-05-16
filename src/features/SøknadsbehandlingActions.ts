@@ -5,7 +5,6 @@ import * as behandlingApi from '~src/api/behandlingApi';
 import { Nullable } from '~src/lib/types';
 import { createApiCallAsyncThunk } from '~src/redux/utils';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Skatteoppslag } from '~src/types/skatt/Skatt';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const startBehandling = createAsyncThunk<
@@ -86,37 +85,11 @@ export const attesteringUnderkjenn = createAsyncThunk<
 });
 
 export const hentNySkattegrunnlag = createAsyncThunk<
-    Skatteoppslag,
+    Søknadsbehandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('behandling/skatt/ny', async (arg, thunkApi) => {
     const res = await behandlingApi.hentNySkattegrunnlag(arg);
-
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const hentSkattegrunnlag = createAsyncThunk<
-    Skatteoppslag,
-    { sakId: string; behandlingId: string },
-    { rejectValue: ApiError }
->('behandling/skatt/hent', async (arg, thunkApi) => {
-    const res = await behandlingApi.hentSkattegrunnlag(arg);
-
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const oppfriskSkattegrunnlag = createAsyncThunk<
-    Skatteoppslag,
-    { sakId: string; behandlingId: string },
-    { rejectValue: ApiError }
->('behandling/skatt/oppfrisk', async (arg, thunkApi) => {
-    const res = await behandlingApi.oppfriskSkattegrunnlag(arg);
 
     if (res.status === 'ok') {
         return res.data;

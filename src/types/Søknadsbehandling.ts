@@ -5,6 +5,7 @@ import { Simulering } from '~src/types/Simulering';
 import { Aldersvurdering } from './Aldersvurdering';
 import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
+import { EksterneGrunnlag } from './EksterneGrunnlag';
 import { Søknad } from './Søknad';
 
 export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus> {
@@ -18,7 +19,7 @@ export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus>
     simuleringForAvkortingsvarsel: Nullable<Simulering>;
     erLukket: boolean;
     aldersvurdering: Nullable<Aldersvurdering>;
-    harSkattegrunnlag: boolean;
+    eksterneGrunnlag: EksterneGrunnlag;
 }
 
 export interface Stønadsperiode {

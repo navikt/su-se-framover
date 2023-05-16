@@ -20,9 +20,9 @@ import {
     eqFradragFormData,
     fradragSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
-import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import OppsummeringAvBeregning from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning';
+import OppsummeringAvEksternGrunnlagSkatt from '~src/components/oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 import OppsummeringAvInntektOgPensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -244,11 +244,9 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         <div className={styles.beregningsContainer}>
                             {props.behandling.beregning && (
                                 <OppsummeringAvBeregning
-                                    sakId={props.behandling.sakId}
-                                    behandlingId={props.behandling.id}
-                                    beregning={props.behandling.beregning}
                                     //vil ikkke vise link til skattegrunnlaget her
-                                    harSkattegrunnlag={false}
+                                    eksternGrunnlagSkatt={null}
+                                    beregning={props.behandling.beregning}
                                 />
                             )}
                             <Feiloppsummering
@@ -328,11 +326,8 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         />
 
                         {skattemeldingToggle && (
-                            <HentOgVisSkattegrunnlag
-                                sakId={props.behandling.sakId}
-                                behandlingId={props.behandling.id}
-                                hentBareEksisterende
-                                harSkattegrunnlag={props.behandling.harSkattegrunnlag}
+                            <OppsummeringAvEksternGrunnlagSkatt
+                                eksternGrunnlagSkatt={props.behandling.eksterneGrunnlag.skatt}
                             />
                         )}
                     </div>

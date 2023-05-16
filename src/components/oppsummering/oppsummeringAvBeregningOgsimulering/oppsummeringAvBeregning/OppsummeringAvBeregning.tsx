@@ -9,7 +9,9 @@ import React, { useState } from 'react';
 import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types';
 import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';
+import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Fradrag, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Sats } from '~src/types/Sats';
 import { groupBy, groupByEq } from '~src/utils/array/arrayUtils';
@@ -118,12 +120,10 @@ const VisBenyttetEpsFradrag = ({
 };
 
 const OppsummeringAvBeregning = (props: {
-    sakId: string;
-    behandlingId: string;
-    harSkattegrunnlag: boolean;
     beregningsTittel?: string;
     utenTittel?: boolean;
     beregning: Beregning;
+    eksternGrunnlagSkatt: Nullable<EksternGrunnlagSkatt>;
 }) => {
     const { formatMessage, intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
     const [modalÅpen, setModalÅpen] = useState<boolean>(false);
@@ -298,23 +298,24 @@ const OppsummeringAvBeregning = (props: {
                     </div>
                 ))
             )}
-            {props.harSkattegrunnlag && (
-                <Button
-                    className={styles.seSkattegrunnlagKnapp}
-                    variant="tertiary"
-                    type="button"
-                    onClick={() => setModalÅpen(true)}
-                >
-                    {formatMessage('knapp.seSkattegrunnlag')}
-                </Button>
-            )}
-            {modalÅpen && (
-                <Skattegrunnlagsmodal
-                    sakId={props.sakId}
-                    behandlingId={props.behandlingId}
-                    open={modalÅpen}
-                    close={() => setModalÅpen(false)}
-                />
+            {props.eksternGrunnlagSkatt && (
+                <>
+                    <Button
+                        className={styles.seSkattegrunnlagKnapp}
+                        variant="tertiary"
+                        type="button"
+                        onClick={() => setModalÅpen(true)}
+                    >
+                        {formatMessage('knapp.seSkattegrunnlag')}
+                    </Button>
+                    {modalÅpen && (
+                        <Skattegrunnlagsmodal
+                            skatt={props.eksternGrunnlagSkatt}
+                            open={modalÅpen}
+                            close={() => setModalÅpen(false)}
+                        />
+                    )}
+                </>
             )}
         </div>
     );

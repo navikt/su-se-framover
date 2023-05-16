@@ -48,8 +48,3 @@ export interface KjøretøySpesifisering {
     antattVerdiSomNytt: Nullable<string>;
     antattMarkedsverdi: Nullable<string>;
 }
-
-export interface Skatteoppslag {
-    skatteoppslagSøker: Skattegrunnlag;
-    skatteoppslagEps: Nullable<Skattegrunnlag>;
-}
