@@ -136,7 +136,7 @@ const ForhåndsvarsletRevurderingForm = (props: {
                                 pdfApi.fetchBrevutkastForAvslutningAvRevurdering({
                                     sakId: props.sakId,
                                     revurderingId: props.revurderingId,
-                                    fritekst: props.watch('fritekst'),
+                                    fritekst: props.watch('fritekst') || '',
                                 })
                             }
                             onChange={field.onChange}
