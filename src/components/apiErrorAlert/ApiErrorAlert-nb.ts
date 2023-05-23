@@ -27,6 +27,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.DELER_BOLIG_MED_ER_IKKE_UTFYLT]: 'Forventet at hvem søker deler bolig med skulle være utfylt',
     [ApiErrorCode.DELVIS_OPPHØR]: 'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     [ApiErrorCode.DEPOSITUM_HØYERE_ENN_INNSKUDD]: 'Depositumsbeløpet er høyere enn innskuddsbeløpet',
+    [ApiErrorCode.DOKUMENTID_MANGLER_ELLER_FEIL_FORMAT]:
+        'Dokument-id mangler, eller er i feil format. Her var det et teknisk glipp',
 
     //E
     [ApiErrorCode.EKTEFELLE_PARTNER_SAMBOER_ER_IKKE_UTFYLT]: 'Ektefelle/Partner/Samboer ved bosituasjon må være utfylt',

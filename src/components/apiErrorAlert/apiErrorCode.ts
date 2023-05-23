@@ -21,6 +21,7 @@ export enum ApiErrorCode {
     DELER_BOLIG_MED_ER_IKKE_UTFYLT = 'deler_bolig_med_er_ikke_utfylt',
     DELVIS_OPPHØR = 'delvis_opphør',
     DEPOSITUM_HØYERE_ENN_INNSKUDD = 'depositum_høyere_enn_innskudd',
+    DOKUMENTID_MANGLER_ELLER_FEIL_FORMAT = 'dokumentId_mangler_eller_feil_format',
 
     //E
     EKTEFELLE_PARTNER_SAMBOER_ER_IKKE_UTFYLT = 'ektefelle_partner_samboer_er_ikke_utfylt',
