@@ -11,7 +11,7 @@ const Skattegrunnlagsmodal = (props: { skatt: EksternGrunnlagSkatt; open: boolea
     return (
         <Modal open={props.open} onClose={() => props.close()}>
             <Modal.Content className={styles.skattegrunnlagsmodal}>
-                <OppsummeringAvEksternGrunnlagSkatt eksternGrunnlagSkatt={props.skatt} />
+                <OppsummeringAvEksternGrunnlagSkatt medTittel eksternGrunnlagSkatt={props.skatt} />
             </Modal.Content>
         </Modal>
     );

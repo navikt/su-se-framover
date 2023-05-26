@@ -329,6 +329,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
 
                         {skattemeldingToggle && (
                             <OppsummeringAvEksternGrunnlagSkatt
+                                medTittel
                                 eksternGrunnlagSkatt={props.behandling.eksterneGrunnlag.skatt}
                             />
                         )}
