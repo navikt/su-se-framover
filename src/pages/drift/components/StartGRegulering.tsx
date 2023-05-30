@@ -50,6 +50,9 @@ const StartGRegulering = () => {
                 >
                     Start dry-run regulering
                 </Button>
+                {RemoteData.isSuccess(dryRunStatus) && (
+                    <Alert variant="success">Nice 👍🤌. Dry run regulering startet. Sjekk logger</Alert>
+                )}
             </div>
 
             <Heading level="1" size="medium" className={styles.reguleringHeader}>
