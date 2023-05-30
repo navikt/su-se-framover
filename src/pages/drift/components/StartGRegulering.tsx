@@ -8,7 +8,7 @@ import DatePicker from '~src/components/datePicker/DatePicker';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
-import { toIsoDateOnlyString, toStringDateOrNull } from '~src/utils/date/dateUtils';
+import { toIsoMonthOrNull } from '~src/utils/date/dateUtils';
 
 import * as styles from '../index.module.less';
 
@@ -39,7 +39,13 @@ const StartGRegulering = () => {
                 <TextField label={'G-verdi'} onChange={(v) => setGVerdiDryRun(Number(v.target.value))} />
 
                 <Button
-                    onClick={() => dryRun({ startDato: toIsoDateOnlyString(startDatoDryRun!), verdi: gverdiDryRun! })}
+                    onClick={() =>
+                        startDatoDryRun &&
+                        dryRun({
+                            fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
+                            grunnbeløp: gverdiDryRun,
+                        })
+                    }
                     loading={RemoteData.isPending(dryRunStatus)}
                 >
                     Start dry-run regulering
@@ -78,7 +84,7 @@ const StartGRegulering = () => {
             />
 
             <Button
-                onClick={() => reguler({ startDato: toStringDateOrNull(startDato) ?? '' })}
+                onClick={() => startDato && reguler({ fraOgMedMåned: toIsoMonthOrNull(startDato)! })}
                 loading={RemoteData.isPending(reguleringsstatus)}
                 disabled={!RemoteData.isInitial(reguleringsstatus)}
             >

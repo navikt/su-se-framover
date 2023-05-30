@@ -1,26 +1,33 @@
+import { Nullable } from '~src/lib/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import { Regulering, ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function startRegulering({ startDato }: { startDato: string }) {
+export async function startRegulering({ fraOgMedMåned }: { fraOgMedMåned: string }) {
     return apiClient({
         url: `/reguleringer/automatisk`,
         method: 'POST',
         body: {
-            startDato,
+            fraOgMedMåned,
         },
     });
 }
 
-export async function dryRunRegulering({ startDato, verdi }: { startDato: string; verdi: number }) {
+export async function dryRunRegulering({
+    fraOgMedMåned,
+    grunnbeløp,
+}: {
+    fraOgMedMåned: string;
+    grunnbeløp: Nullable<number>;
+}) {
     return apiClient({
         url: `/reguleringer/automatisk/dry`,
         method: 'POST',
         body: {
-            startDato,
-            verdi: verdi,
+            fraOgMedMåned,
+            grunnbeløp,
         },
     });
 }

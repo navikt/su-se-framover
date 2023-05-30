@@ -10,6 +10,7 @@ const intl = createIntl({ locale: Languages.nb }, cache);
 
 enum DateFormats {
     IsoDateOnly = 'yyyy-MM-dd',
+    IsoMonthOnly = 'yyyy-MM',
 }
 
 const formatDateOptions: FormatDateOptions = {
@@ -59,6 +60,12 @@ export const toStringDateOrNull = (date: Date | null) => {
     if (!date) return null;
 
     return DateFns.format(date, DateFormats.IsoDateOnly);
+};
+
+export const toIsoMonthOrNull = (date: Date | null) => {
+    if (!date) return null;
+
+    return DateFns.format(date, DateFormats.IsoMonthOnly);
 };
 
 // Tipper det ikke blir nødvendig med "overload" for Periode<Date>
