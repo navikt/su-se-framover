@@ -22,7 +22,7 @@ const Reguleringsoversikt = (props: Props) => {
 
     const sortByFnr = pipe(
         S.Ord,
-        contramap((r: ReguleringOversiktsstatus) => r.regulering.fnr)
+        contramap((r: ReguleringOversiktsstatus) => r.fnr)
     );
 
     const Reguleringstabell = ({ data }: { data: ReguleringOversiktsstatus[] }) => {
@@ -41,19 +41,19 @@ const Reguleringsoversikt = (props: Props) => {
                         {pipe(
                             data,
                             arr.sortBy([sortByFnr]),
-                            arr.mapWithIndex((index, { regulering, merknad }) => {
+                            arr.mapWithIndex((index, { saksnummer, fnr, merknader }) => {
                                 return (
                                     <Table.Row key={index}>
-                                        <Table.DataCell>{regulering.saksnummer}</Table.DataCell>
-                                        <Table.DataCell>{regulering.fnr}</Table.DataCell>
+                                        <Table.DataCell>{saksnummer}</Table.DataCell>
+                                        <Table.DataCell>{fnr}</Table.DataCell>
                                         <Table.DataCell>
                                             <VelgSakKnapp
-                                                saksnummer={regulering.saksnummer.toString()}
+                                                saksnummer={saksnummer.toString()}
                                                 label={formatMessage('tabell.lenke.knapp')}
                                             />
                                         </Table.DataCell>
                                         <Table.DataCell>
-                                            {merknad.map((m, index) => (
+                                            {merknader.map((m, index) => (
                                                 <Tag variant="info" key={index}>
                                                     {formatMessage(m)}
                                                 </Tag>
