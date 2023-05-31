@@ -318,7 +318,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
                     </form>
                 ),
                 right: (
-                    <div>
+                    <div className={styles.høyresideContainer}>
                         <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
                         <OppsummeringAvInntektOgPensjon
                             inntektOgPensjon={{
