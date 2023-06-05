@@ -179,7 +179,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
         defaultValues: draft ?? initialFormData,
         resolver: yupResolver(
             yup.object<FormData>({
-                fradrag: yup.array(fradragSchema.required()).defined(),
+                fradrag: yup.array<FradragFormData>(fradragSchema.required()).defined(),
                 begrunnelse: yup.string(),
             })
         ),

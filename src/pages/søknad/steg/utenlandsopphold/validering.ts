@@ -74,7 +74,7 @@ export const schema = yup.object<FormData>({
         .nullable()
         .required('Fyll ut om du har reist til utlandet i løpet av de 90 siste dagene'),
     harReistDatoer: yup
-        .array(reiseSchema.required())
+        .array<UtenlandsoppholdType>(reiseSchema.required())
         .defined()
         .when('harReistTilUtlandetSiste90dager', {
             is: true,
@@ -91,7 +91,7 @@ export const schema = yup.object<FormData>({
         .nullable()
         .required('Fyll ut om du skal reise til utlandet i løpet av de 12 neste månedene'),
     skalReiseDatoer: yup
-        .array(reiseSchema.required())
+        .array<UtenlandsoppholdType>(reiseSchema.required())
         .defined()
         .when('skalReiseTilUtlandetNeste12Måneder', {
             is: true,
@@ -101,6 +101,6 @@ export const schema = yup.object<FormData>({
                 .test('Overlapping', 'Utenlandsopphold kan ikke overlappe', testOverlappendeUtenlandsopphold)
                 .test('Utreisedato', 'Planlagt reise må skje senere enn dagens dato', testUtreise)
                 .required(),
-            otherwise: yup.array().max(0),
+            otherwise: yup.array<UtenlandsoppholdType>().max(0),
         }),
 });
