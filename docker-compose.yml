@@ -9,7 +9,6 @@ services:
             SERVER_PORT: 4321
             JSON_CONFIG: '{ "interactiveLogin": false }'
         restart: unless-stopped # Ønsker å starter container ved reboot maskin/docker
-        network_mode: "host"
         hostname: mock-oauth2-server
     redis:
         image: bitnami/redis:7.0.9
@@ -20,5 +19,4 @@ services:
         environment:
             REDIS_PASSWORD: subar
         restart: unless-stopped # Ønsker å starter container ved reboot maskin/docker
-        network_mode: "host"
         hostname: redis
