@@ -117,10 +117,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.INNSENDING_AV_SØKNAD_IKKE_TILLATT]: 'Innsending av søknad er ikke tillatt',
     [ApiErrorCode.INNEHOLDER_UFULLSTENDIG_BOSITUASJON]:
         'Behandlingen inneholder ufullstendig bosituasjon. Dette kan være fordi behandlingen har blitt utført før en teknisk endring som sammenslår "EPS søket i formue" & "Vurdering av Sats". Vennligst gå til "Bosituasjon og Sats" og oppdater det som er nødvendig.',
-    [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
-        'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
-    [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
-        'Iverksetting av stans som fører til feilutbetaling støttes ikke',
 
     //J
     [ApiErrorCode.JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT]:
@@ -141,8 +137,6 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Kan ikke lukke en søknadsbehandling til attestering',
     [ApiErrorCode.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
         'Kan ikke oppdatere en revurdering som er forhåndsvarslet',
-    [ApiErrorCode.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
-        'Kan ikke oppdatere revurdering som er forhåndsvarslet',
     [ApiErrorCode.KAN_IKKE_REGULERE_STANSET_SAK]: 'Kan ikke regulere en stanset sak',
     [ApiErrorCode.KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER]: 'Kan ikke stanste opphørte utbetalinger',
     [ApiErrorCode.KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD]: 'Kan ikke velge både omgjør og oppretthold',
@@ -156,7 +150,11 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Kunne ikke bekrefte journalpost. Mest sannsynlig den ikke eksisterer',
     [ApiErrorCode.KUNNE_IKKE_FERDIGSTILLE_REGULERING]: 'Kunne ikke ferdigstille regulering',
     [ApiErrorCode.KUNNE_IKKE_GENERERE_BREV]: 'Kunne ikke generere brev',
+    [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_FØRER_TIL_FEILUTBETALING]:
+        'Gjenopptak kan ikke føre til feilutbetaling - prøv å start behandlingen på nytt.',
     [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND]: 'Siste utbetaling er ikke stans',
+    [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_STANS_FØRER_TIL_FEILUTBETALING]:
+        'Stans kan ikke føre til feilutbetaling - prøv å start behandlingen på nytt.',
     [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND]: 'Kan ikke stanse utbetalinger som allerede er stanset',
     [ApiErrorCode.KUNNE_IKKE_LAGE_BREV]: 'Kunne ikke lage brevutkast',
     [ApiErrorCode.KUNNE_IKKE_LAGE_FRADRAG]: 'Kunne ikke lage fradrag',
@@ -168,7 +166,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_STANS]: 'Kunne ikke opprette revurdering for stans',
     [ApiErrorCode.KUNNE_IKKE_OVERSENDE_TIL_KLAGEINSTANS]: 'Kunne ikke oversende klagen til klageinstansen (Kabal)',
     [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp ektefelle eller samboer i PDL',
-    [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp EPS',
     [ApiErrorCode.KUNNE_IKKE_UTBETALE]: 'Kunne ikke utbetale',
 
     //M
@@ -297,7 +294,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_TILSTAND]: 'Ugyldig tilstand',
     [ApiErrorCode.UGYLDIG_VALG]: 'Ugyldig valg av beslutning for forhåndsvarsel',
     [ApiErrorCode.UGYLDIG_ÅRSAK]: 'Ugyldig årsak',
-    [ApiErrorCode.UGYLDIG_ÅRSAK]: 'Årsak er ugyldig',
     [ApiErrorCode.UKJENT_BREVTYPE]: 'Ukjent brevtype',
     [ApiErrorCode.UKJENT_FEIL_VED_HENTING_AV_JOURNALPOST]: 'Ukjent feil ved henting av journalpost',
     [ApiErrorCode.UKJENT_FEIL]: 'Ukjent feil',

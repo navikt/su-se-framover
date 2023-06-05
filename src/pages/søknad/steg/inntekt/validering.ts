@@ -35,7 +35,7 @@ export const inntektsValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             }) as yup.Schema<Nullable<string>>,
         mottarPensjon: yup.boolean().nullable().required(`Fyll ut om ${tilhører} mottar pensjon`),
         pensjonsInntekt: yup
-            .array(
+            .array<{ ordning: string; beløp: string }>(
                 yup
                     .object({
                         ordning: yup.string().required(`Fyll ut hvem ${tilhører} mottar pensjon fra`),
@@ -103,7 +103,7 @@ export const inntektsValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .nullable()
             .required(`Fyll ut om ${tilhører} har trygdeytelser i utlandet`),
         trygdeytelserIUtlandet: yup
-            .array(trygdeytelserIUtlandetSchema.required())
+            .array<{ beløp: string; type: string; valuta: string }>(trygdeytelserIUtlandetSchema.required())
             .defined()
             .when('harTrygdeytelserIUtlandet', {
                 is: true,

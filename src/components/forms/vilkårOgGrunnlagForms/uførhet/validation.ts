@@ -63,7 +63,7 @@ export const uførhetSchema = (erGRegulering: boolean) =>
     yup
         .object<UførhetFormData>({
             grunnlag: yup
-                .array(uføregrunnlagFormDataSchema(erGRegulering).required())
+                .array<UføreperiodeFormData>(uføregrunnlagFormDataSchema(erGRegulering).required())
                 .required('Du må legge inn minst én periode')
                 .test(
                     'Har ikke overlappende perioder',

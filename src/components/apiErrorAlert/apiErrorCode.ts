@@ -95,7 +95,6 @@ export enum ApiErrorCode {
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
     INNEHOLDER_UFULLSTENDIG_BOSITUASJON = 'inneholder_ufullstendig_bosituasjon',
     INNSENDING_AV_SØKNAD_IKKE_TILLATT = 'innsending_av_søknad_ikke_tillatt',
-    IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
 
     //J
     JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT = 'journalpost_er_ikke_et_innkommende_dokument',
@@ -120,7 +119,9 @@ export enum ApiErrorCode {
     KUNNE_IKKE_BEKREFTE_JOURNALPOSTER = 'kunne_ikke_bekrefte_journalposter',
     KUNNE_IKKE_FERDIGSTILLE_REGULERING = 'kunne_ikke_ferdigstille_regulering',
     KUNNE_IKKE_GENERERE_BREV = 'kunne_ikke_generere_brev',
+    KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
     KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_gjenopptak_ugyldig_tilstand',
+    KUNNE_IKKE_IVERKSETTE_STANS_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_stans_fører_til_feilutbetaling',
     KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_stans_ugyldig_tilstand',
     KUNNE_IKKE_LAGE_BREV = 'kunne_ikke_lage_brevutkast',
     KUNNE_IKKE_LAGE_FRADRAG = 'kunne_ikke_lage_fradrag',
