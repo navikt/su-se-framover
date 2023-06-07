@@ -6,16 +6,16 @@ import { Link } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { fetchPerson } from '~src/api/personApi';
+import { KjønnUkjent } from '~src/assets/Icons';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Person, Kjønn, SivilstandTyper, Sivilstand as ISivilstand } from '~src/types/Person';
+import { Person, SivilstandTyper, Sivilstand as ISivilstand } from '~src/types/Person';
 import { showName, formatFnr } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
-import GenderIcon from './GenderIcon';
 import messages from './personlinje-nb';
 import * as styles from './personlinje.module.less';
 
@@ -32,7 +32,7 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
         <div className={styles.container}>
             <div className={styles.personInformasjon}>
                 <span className={styles.icon}>
-                    <GenderIcon kjønn={props.søker.kjønn ?? Kjønn.Ukjent} />
+                    <KjønnUkjent size="24px" />
                 </span>
                 <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakInfo.sakId })}>
                     <BodyShort as="span" className={styles.navn}>
@@ -103,7 +103,7 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                     ),
                     (eps) => (
                         <span className={styles.epsInformasjon}>
-                            <GenderIcon kjønn={eps.kjønn ?? Kjønn.Ukjent} />
+                            <KjønnUkjent size="24px" />
                             <BodyShort>{showName(eps.navn)}</BodyShort>
                             <CopyToClipboard
                                 copyText={eps.fnr}

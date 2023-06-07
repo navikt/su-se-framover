@@ -4,7 +4,6 @@ export interface Person {
     fnr: string;
     aktorId: string;
     navn: Navn;
-    kjønn: Nullable<Kjønn>;
     fødsel: Nullable<Fødsel>;
     telefonnummer: {
         landskode: string;
