@@ -53,7 +53,6 @@ const localPersonStub = () =>
         fnr: '12312312312',
         aktorId: 'aktørId',
         navn: { fornavn: 'fornavn', mellomnavn: null, etternavn: 'etternavn' },
-        kjønn: null,
         fødsel: { dato: null, år: 2000, alder: 23 },
         telefonnummer: { landskode: '+47', nummer: '2225555' },
         adresse: null,

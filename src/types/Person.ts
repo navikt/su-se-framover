@@ -31,12 +31,6 @@ export interface Fødsel {
     alder: number;
 }
 
-export enum Kjønn {
-    Mann = 'MANN',
-    Kvinne = 'KVINNE',
-    Ukjent = 'UKJENT',
-}
-
 export enum Adressebeskyttelse {
     Ugradert = 'UGRADERT',
     StrengtFortrolig = 'STRENGT_FORTROLIG',
