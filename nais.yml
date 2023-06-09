@@ -53,6 +53,7 @@ spec:
         value: /tmp 
   envFrom:
     - secret: redis-password
+    - secret: su-se-framover-session-key
 ---
 apiVersion: nais.io/v1alpha1
 kind: Application
@@ -72,7 +73,6 @@ spec:
     max: 1 # More replicas doesn't sync
   resources: # you need to monitor the resource usage yourself
     limits:
-      cpu: 100m
       memory: 128Mi
     requests:
       cpu: 100m

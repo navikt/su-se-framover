@@ -1,11 +1,11 @@
-@spacing-xxxs: 4px;
-@spacing-xxs: 0.5rem;
-@spacing-xs: 1rem;
-@spacing-s: 20px;
-@spacing: 2rem;
-@spacing-l: 2.5rem;
-@spacing-xl: 4rem;
-@spacing-xxl: 80px;
+@spacing-xxxs: var(--a-spacing-1);
+@spacing-xxs: var(--a-spacing-2);
+@spacing-xs: var(--a-spacing-4);
+@spacing-s: var(--a-spacing-5);
+@spacing: var(--a-spacing-8);
+@spacing-l: var(--a-spacing-10);
+@spacing-xl: var(--a-spacing-16);
+@spacing-xxl: var(--a-spacing-20);
 
 @knappBredde: 14em;
 
@@ -13,10 +13,11 @@
 @navBakgrunn: var(--a-bg-default);
 
 // https://github.com/navikt/nav-frontend-core/blob/162c248da84041fa91bbcd8eadb8449bc90e8556/less/_variabler.less
-@grid-gutter-width: 16px;
-@container-tablet: (720px + @grid-gutter-width);
+
+@grid-gutter-width: @spacing-xs;
+@container-tablet: calc(720px + @grid-gutter-width);
 @container-sm: @container-tablet;
-@container-desktop: (940px + @grid-gutter-width);
+@container-desktop: calc(940px + @grid-gutter-width);
 @container-md: @container-desktop;
 
-@border-radius-base: 4px;
+@border-radius-base: @spacing-xxxs;

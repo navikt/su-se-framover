@@ -53,6 +53,13 @@ export default {
     'utenlandsopphold.vilkår':
         'Har søker planlagt å oppholde seg i utlandet i mer enn 90 dager innenfor stønadsperioden?',
 
+    'bosituasjon.delerBolig': 'Deler søker bolig med noen over 18 år?',
+    'bosituasjon.erEPSUførFlyktning': 'Er ektefelle/samboer ufør flyktning?',
+    'bosituasjon.epsFnr': 'Ektefelle/samboers fødelsnummer',
+    'bosituasjon.harSøkerEPS': 'Har søker ektefelle eller samboer?',
+    'bosituasjon.fjern.bosituasjon': 'Slett',
+    'bosituasjon.ny.bosituasjon': 'Ny periode for opplysning',
+
     'formue.personkort.eps': 'Ektefelle/Samboer',
 
     'formue.grunnlag.verdi.verdiIkkePrimærbolig': 'Verdier på bolig',
@@ -76,7 +83,7 @@ export default {
     'formueOgBosituasjon.input.ektefellesFødselsnummer': 'Ektefelle/samboers fødselsnummer',
     'formueOgBosituasjon.modal.skjerming.ariaBeskrivelse': 'Advarsel om at søkers ektefelle har en type skjerming',
     'formueOgBosituasjon.modal.skjerming.heading': 'Ektefelle/samboer har en type skjerming',
-    'formueOgBosituasjon.modal.skjerming.innhold': `Ektefellen/samboeren til {navn} ({fnr}) har en type <b>skjerming</b> (fortrolig adresse, strengt fortrolig adresse eller skjerming). {br} {br} Derfor mister du tilgang til saken og den må behandles av noen med riktig tilgang.`,
+    'formueOgBosituasjon.modal.skjerming.innhold': `Ektefellen/samboeren til {navn} ({fnr}) har en type <b>skjerming</b> (fortrolig adresse, strengt fortrolig adresse eller skjerming). {br} {br} Du vil bli navigert ut av saken og den må behandles av noen med riktig tilgang.`,
 
     'personligOppmøte.vilkår': 'Har bruker møtt personlig?',
     'personligOppmøte.ikkeMøttPersonlig.vilkår': 'Hvorfor har ikke bruker møtt personlig?',

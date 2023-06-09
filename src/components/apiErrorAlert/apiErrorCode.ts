@@ -21,6 +21,7 @@ export enum ApiErrorCode {
     DELER_BOLIG_MED_ER_IKKE_UTFYLT = 'deler_bolig_med_er_ikke_utfylt',
     DELVIS_OPPHØR = 'delvis_opphør',
     DEPOSITUM_HØYERE_ENN_INNSKUDD = 'depositum_høyere_enn_innskudd',
+    DOKUMENTID_MANGLER_ELLER_FEIL_FORMAT = 'dokumentId_mangler_eller_feil_format',
 
     //E
     EKTEFELLE_PARTNER_SAMBOER_ER_IKKE_UTFYLT = 'ektefelle_partner_samboer_er_ikke_utfylt',
@@ -90,10 +91,10 @@ export enum ApiErrorCode {
     INGEN_BOSITUASJON_FOR_FRADRAGSPERIODER = 'ingen_bosituasjon_for_fradragsperiode',
     INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE = 'ingen_formue_eps_for_bosituasjonsperiode',
     INGEN_FORMUE_FOR_BOSITUASJONSPERIODE = 'ingen_formue_for_bosituasjonsperiode',
+    INGEN_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'ingen_skattegrunnlag_for_gitt_fnr_og_år',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
-    INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR = 'inget_skattegrunnlag_for_gitt_fnr_og_år',
+    INNEHOLDER_UFULLSTENDIG_BOSITUASJON = 'inneholder_ufullstendig_bosituasjon',
     INNSENDING_AV_SØKNAD_IKKE_TILLATT = 'innsending_av_søknad_ikke_tillatt',
-    IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
 
     //J
     JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT = 'journalpost_er_ikke_et_innkommende_dokument',
@@ -118,7 +119,9 @@ export enum ApiErrorCode {
     KUNNE_IKKE_BEKREFTE_JOURNALPOSTER = 'kunne_ikke_bekrefte_journalposter',
     KUNNE_IKKE_FERDIGSTILLE_REGULERING = 'kunne_ikke_ferdigstille_regulering',
     KUNNE_IKKE_GENERERE_BREV = 'kunne_ikke_generere_brev',
+    KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
     KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_gjenopptak_ugyldig_tilstand',
+    KUNNE_IKKE_IVERKSETTE_STANS_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_stans_fører_til_feilutbetaling',
     KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_stans_ugyldig_tilstand',
     KUNNE_IKKE_LAGE_BREV = 'kunne_ikke_lage_brevutkast',
     KUNNE_IKKE_LAGE_FRADRAG = 'kunne_ikke_lage_fradrag',
@@ -137,6 +140,7 @@ export enum ApiErrorCode {
     MANGLER_BREVVALG = 'mangler_brevvalg',
     MANGLER_ID = 'mangler_id',
     MANGLER_IDTYPE = 'mangler_idType',
+    MANGLER_RETTIGHETER_MOT_SKATT = 'mangler_rettigheter_mot_skatt',
     MANGLER_SAKSNUMMER_FØDSELSNUMMER = 'mangler_saksnummer_fødselsnummer',
     MÅ_HA_BOSITUASJON_FØR_FRADRAG = 'må_ha_bosituasjon_før_fradrag',
     MÅ_VELGE_INFORMASJON_SOM_REVURDERES = 'må_velge_informasjon_som_revurderes',
@@ -145,6 +149,7 @@ export enum ApiErrorCode {
     //N
     NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET = 'navneoppslag_feilet',
     NEI_ER_IKKE_STØTTET = 'nei_er_ikke_støttet',
+    NETTVERKSFEIL_SKATT = 'nettverksfeil_skatt',
     NYE_OVERLAPPENDE_VEDTAK = 'nye_overlappende_vedtak',
 
     //O
@@ -237,6 +242,7 @@ export enum ApiErrorCode {
     UKJENT_FEIL = 'ukjent_feil',
     UKJENT_FEIL_VED_HENTING_AV_JOURNALPOST = 'ukjent_feil_ved_henting_av_journalpost',
     UKJENT_FRADRAGSTYPE = 'ukjent_fradragstype',
+    UFORVENTET_FEIL_MOT_SKATT = 'uforventet_feil_mot_skatt',
     USPESIFISIERT_FRADRAG_KREVER_BESKRIVELSE = 'uspesifisiert_fradrag_krever_beskrivelse',
     UTBETALING_ALLEREDE_OPPHØRT = 'utbetaling_allerede_opphørt',
     UTBETALING_ALLEREDE_STANSET = 'utbetaling_allerede_stanset',

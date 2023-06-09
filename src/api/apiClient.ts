@@ -21,24 +21,14 @@ export interface ErrorMessage {
     code?: ApiErrorCode;
 }
 
-export type ApiClientResult<TSuccess> =
-    | { status: 'ok'; data: TSuccess; statusCode: number }
-    | { status: 'error'; error: ApiError };
+export type ApiClientResult<TSuccess> = ApiClientSuccessResult<TSuccess> | ApiClientFailureResult;
+export type ApiClientSuccessResult<TSuccess> = { status: 'ok'; data: TSuccess; statusCode: number };
+export type ApiClientFailureResult = { status: 'error'; error: ApiError };
 
-function error<TSuccess = unknown>(e: ApiError): ApiClientResult<TSuccess> {
-    return {
-        status: 'error',
-        error: e as ApiError,
-    };
-}
-
-function success<TSuccess>(data: TSuccess, statusCode: number): ApiClientResult<TSuccess> {
-    return {
-        status: 'ok',
-        data,
-        statusCode,
-    };
-}
+const error = (e: ApiError): ApiClientFailureResult => ({ status: 'error', error: e as ApiError });
+const success = <TSuccess>(data: TSuccess, statusCode: number): ApiClientSuccessResult<TSuccess> => {
+    return { status: 'ok', data, statusCode };
+};
 
 type Method = 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE';
 
@@ -51,6 +41,7 @@ export default async function apiClient<TSuccess>(arg: {
     successStatusCodes?: number[];
     extraData?: { correlationId: string };
     bodyTransformer?: (res: Response) => Promise<TSuccess>;
+    returnAsPromise?: boolean;
 }): Promise<ApiClientResult<TSuccess>> {
     const correlationId = arg.extraData?.correlationId ?? uuid();
 
@@ -66,9 +57,11 @@ export default async function apiClient<TSuccess>(arg: {
 
     if (res.ok || arg.successStatusCodes?.includes(res.status)) {
         if (arg.bodyTransformer) {
-            return success<TSuccess>(await arg.bodyTransformer(res), res.status);
+            if (arg.returnAsPromise) return Promise.resolve(success(await arg.bodyTransformer(res), res.status));
+            return success(await arg.bodyTransformer(res), res.status);
         }
-        return success<TSuccess>(await res.json(), res.status);
+        if (arg.returnAsPromise) return Promise.resolve(success(await res.json(), res.status));
+        return success(await res.json(), res.status);
     }
 
     const authenticateChallengeHeader = res.headers.get('WWW-Authenticate');
@@ -82,9 +75,6 @@ export default async function apiClient<TSuccess>(arg: {
 
     const errorBody: ErrorMessage = await res.json().catch((_err) => ({}));
 
-    return error({
-        statusCode: res.status,
-        correlationId,
-        body: errorBody,
-    });
+    if (arg.returnAsPromise) return Promise.reject(error({ statusCode: res.status, correlationId, body: errorBody }));
+    return error({ statusCode: res.status, correlationId, body: errorBody });
 }

@@ -83,3 +83,16 @@ export const attesteringUnderkjenn = createAsyncThunk<
     }
     return thunkApi.rejectWithValue(res.error);
 });
+
+export const hentNySkattegrunnlag = createAsyncThunk<
+    Søknadsbehandling,
+    { sakId: string; behandlingId: string },
+    { rejectValue: ApiError }
+>('behandling/skatt/ny', async (arg, thunkApi) => {
+    const res = await behandlingApi.hentNySkattegrunnlag(arg);
+
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});

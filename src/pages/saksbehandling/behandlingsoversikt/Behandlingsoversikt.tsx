@@ -15,7 +15,6 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import { Reguleringstype } from '~src/types/Regulering';
 
 import messages from './behandlingsoversikt-nb';
 import * as styles from './behandlingsoversikt.module.less';
@@ -34,15 +33,13 @@ enum Tab {
 const Behandlingsoversikt = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { søker } = useAppSelector((s) => ({ søker: s.søker.søker }));
+    const { søker } = useAppSelector((s) => ({ søker: s.personopplysninger.søker }));
     const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
     const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
     const gjenståendeManuelleReguleringer = RemoteData.isSuccess(reguleringerOgMerknader)
-        ? reguleringerOgMerknader.value.filter(
-              ({ regulering }) => !regulering.erFerdigstilt && regulering.reguleringstype === Reguleringstype.MANUELL
-          )
+        ? reguleringerOgMerknader.value
         : [];
 
     useEffect(() => {
@@ -71,7 +68,7 @@ const Behandlingsoversikt = () => {
                 </Heading>
                 <Personsøk
                     onReset={() => {
-                        dispatch(personSlice.default.actions.resetSøker());
+                        dispatch(personSlice.default.actions.resetSøkerData());
                         resetSak();
                     }}
                     onFetchByFnr={(fnr) => {

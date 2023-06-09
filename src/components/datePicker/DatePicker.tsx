@@ -1,10 +1,10 @@
 import {
-    UNSAFE_MonthPicker,
-    UNSAFE_DatePicker,
-    UNSAFE_useMonthpicker,
-    UNSAFE_useDatepicker,
-    UNSAFE_useRangeDatepicker,
     HelpText,
+    useDatepicker,
+    DatePicker as DatePickerDS,
+    useMonthpicker,
+    MonthPicker as MonthPickerDS,
+    useRangeDatepicker,
 } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
@@ -27,7 +27,7 @@ export const DatePicker = (props: {
     hjelpetekst?: string;
     disabled?: boolean;
 }) => {
-    const { datepickerProps, inputProps } = UNSAFE_useDatepicker({
+    const { datepickerProps, inputProps } = useDatepicker({
         fromDate: props.fromDate ?? new Date('jan 01 2021'),
         toDate: props.toDate ?? DateFns.addYears(new Date(new Date().getFullYear(), 12, 0), 1),
         onDateChange: (d) => props.onChange(d ?? null),
@@ -36,8 +36,8 @@ export const DatePicker = (props: {
 
     return (
         <div>
-            <UNSAFE_DatePicker {...datepickerProps}>
-                <UNSAFE_DatePicker.Input
+            <DatePickerDS {...datepickerProps}>
+                <DatePickerDS.Input
                     {...inputProps}
                     label={
                         <div className={styles.datepickerLabelContainer}>
@@ -48,7 +48,7 @@ export const DatePicker = (props: {
                     error={props.error}
                     disabled={props.disabled}
                 />
-            </UNSAFE_DatePicker>
+            </DatePickerDS>
         </div>
     );
 };
@@ -62,7 +62,7 @@ export const MonthPicker = (props: {
     onChange: (date: Nullable<Date>) => void;
     error?: string;
 }) => {
-    const { monthpickerProps, inputProps } = UNSAFE_useMonthpicker({
+    const { monthpickerProps, inputProps } = useMonthpicker({
         fromDate: props.fromDate ?? new Date('2021-01-01'),
         toDate: props.toDate ?? new Date('2023-12-01'),
         onMonthChange: (d) => props.onChange(d ?? null),
@@ -71,9 +71,9 @@ export const MonthPicker = (props: {
 
     return (
         <div>
-            <UNSAFE_MonthPicker {...monthpickerProps} selected={props.value ?? undefined} dropdownCaption>
-                <UNSAFE_MonthPicker.Input {...inputProps} label={props.label} size={props.size} error={props.error} />
-            </UNSAFE_MonthPicker>
+            <MonthPickerDS {...monthpickerProps} selected={props.value ?? undefined} dropdownCaption>
+                <MonthPickerDS.Input {...inputProps} label={props.label} size={props.size} error={props.error} />
+            </MonthPickerDS>
         </div>
     );
 };
@@ -129,7 +129,7 @@ export const RangePickerDate = (props: {
     error?: { fraOgMed?: string; tilOgMed?: string };
 }) => {
     const { formatMessage } = useI18n({ messages });
-    const { datepickerProps, fromInputProps, toInputProps } = UNSAFE_useRangeDatepicker({
+    const { datepickerProps, fromInputProps, toInputProps } = useRangeDatepicker({
         fromDate: props.fromDate ?? new Date('2021-01-01'),
         toDate: props.toDate ?? DateFns.addYears(new Date(new Date().getFullYear(), 12, 0), 1),
         onRangeChange: (v) => props.onChange({ fraOgMed: v?.from ?? null, tilOgMed: v?.to ?? null }),
@@ -137,19 +137,19 @@ export const RangePickerDate = (props: {
     });
 
     return (
-        <UNSAFE_DatePicker wrapperClassName={styles.rangePickerContainer} {...datepickerProps} dropdownCaption>
-            <UNSAFE_DatePicker.Input
+        <DatePickerDS wrapperClassName={styles.rangePickerContainer} {...datepickerProps} dropdownCaption>
+            <DatePickerDS.Input
                 {...fromInputProps}
                 label={props.label?.fraOgMed ?? formatMessage('date.fraOgMed')}
                 size={props.size ?? 'medium'}
                 error={props.error?.fraOgMed}
             />
-            <UNSAFE_DatePicker.Input
+            <DatePickerDS.Input
                 {...toInputProps}
                 label={props.label?.tilOgMed ?? formatMessage('date.tilOgMed')}
                 size={props.size ?? 'medium'}
                 error={props.error?.tilOgMed}
             />
-        </UNSAFE_DatePicker>
+        </DatePickerDS>
     );
 };

@@ -1,6 +1,6 @@
 import http from 'http';
 
-import connectRedis, { Client } from 'connect-redis';
+import RedisStore from 'connect-redis';
 import { Express } from 'express';
 import session from 'express-session';
 import * as OpenIdClient from 'openid-client';
@@ -30,21 +30,19 @@ declare global {
 const SESSION_MAX_AGE_MILLIS = 60 * 60 * 1000 * 2;
 
 async function getRedisStore() {
-    const RedisStore = connectRedis(session);
-
     const redisClient = createClient({
         socket: {
             host: Config.redis.host,
             port: Config.redis.port,
         },
         password: Config.redis.password,
-        legacyMode: true,
+        legacyMode: false,
     });
     await redisClient.connect();
 
     return new RedisStore({
-        client: redisClient as unknown as Client,
-        disableTouch: true,
+        client: redisClient,
+        prefix: 'su-se-framover',
     });
 }
 

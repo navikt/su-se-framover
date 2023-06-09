@@ -2,7 +2,7 @@ import { Ingress } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import GenderIcon from '~src/components/personlinje/GenderIcon';
+import { KjønnUkjent } from '~src/assets/Icons';
 import { Person } from '~src/types/Person';
 import { showName, formatFnr } from '~src/utils/person/personUtils';
 
@@ -16,7 +16,7 @@ export const Personkort = (props: { person: Person; variant?: 'normal' | 'wide' 
     return (
         <div className={classNames(styles.personkortContainer, styles[`variant-${props.variant ?? 'normal'}`])}>
             <div className={styles.personkortSVG}>
-                <GenderIcon kjønn={props.person.kjønn} />
+                <KjønnUkjent size="24px" />
             </div>
 
             <div className={styles.personalia}>

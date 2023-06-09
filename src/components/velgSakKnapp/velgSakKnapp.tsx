@@ -21,7 +21,7 @@ const VelgSakKnapp = (props: { label: string; saksnummer: string }) => {
             <Button
                 variant="tertiary"
                 onClick={async () => {
-                    dispatch(personSlice.default.actions.resetSøker());
+                    dispatch(personSlice.default.actions.resetSøkerData());
                     dispatch(sakSlice.default.actions.resetSak());
                     hentSak({ saksnummer: props.saksnummer }, (sak) => {
                         navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));

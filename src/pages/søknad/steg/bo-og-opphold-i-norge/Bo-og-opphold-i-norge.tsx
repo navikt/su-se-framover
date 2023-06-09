@@ -30,7 +30,7 @@ import EktefellePartnerSamboer from './EktefellePartnerSamboer';
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const { søker, soknad } = useAppSelector((s) => ({
-        søker: s.søker.søker,
+        søker: s.personopplysninger.søker,
         soknad: s.soknad,
     }));
 

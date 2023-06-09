@@ -164,6 +164,11 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
             </Oppsummeringspanel>
 
             <OppsummeringAvBeregningOgSimulering
+                eksterngrunnlagSkatt={
+                    behandlingstype === 'søknadsbehandling'
+                        ? (vedtaketsBehandling as Søknadsbehandling).eksterneGrunnlag.skatt
+                        : null
+                }
                 tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
                 beregning={vedtak.beregning}
                 simulering={vedtak.simulering}

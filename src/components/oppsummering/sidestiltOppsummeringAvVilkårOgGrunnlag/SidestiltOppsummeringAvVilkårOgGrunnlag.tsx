@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
+import { EksterneGrunnlag, EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Fradrag, fradragErlik } from '~src/types/Fradrag';
 import { Aldersvilkår, aldersvilkårErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import {
@@ -88,6 +89,7 @@ import styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
 const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     visesSidestiltMed: GrunnlagsdataOgVilkårsvurderinger | SøknadInnhold;
+    eksterneGrunnlag?: EksterneGrunnlag;
 }) => {
     const { formatMessage } = useI18n({ messages });
 
@@ -111,7 +113,7 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                     <Heading size="medium">{formatMessage('accordion.overskrift.fraSøknad')}</Heading>
                 )}
             </div>
-            <Accordion className={styles.accordion}>
+            <Accordion variant="neutral" size="large">
                 {props.grunnlagsdataOgVilkårsvurderinger.uføre && (
                     <AccordionItemUføre
                         uføreFraGrunnlagsdata={props.grunnlagsdataOgVilkårsvurderinger.uføre}
@@ -240,6 +242,7 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                               }
                             : undefined
                     }
+                    eksternGrunnlagSkatt={props.eksterneGrunnlag?.skatt ?? null}
                 />
                 <AccordionItemPersonligOppmøte
                     personligOppmøteFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
@@ -302,10 +305,14 @@ const AccordionItemUføre = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvUførevilkår uførevilkår={props.uføreFraGrunnlagsdata} />
-                {props.sidestiltUførevilkår && <OppsummeringAvUførevilkår uførevilkår={props.sidestiltUførevilkår} />}
-                {props.sidestiltUføreFraSøknad && <OppsummeringAvUføre uføre={props.sidestiltUføreFraSøknad} />}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvUførevilkår uførevilkår={props.uføreFraGrunnlagsdata} />
+                    {props.sidestiltUførevilkår && (
+                        <OppsummeringAvUførevilkår uførevilkår={props.sidestiltUførevilkår} />
+                    )}
+                    {props.sidestiltUføreFraSøknad && <OppsummeringAvUføre uføre={props.sidestiltUføreFraSøknad} />}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -321,7 +328,7 @@ const AccordionItemFlyktning = (props: {
         props.sidestiltFlyktningVilkår && !flyktningErLik(props.flyktningFraGrunnlag, props.sidestiltFlyktningVilkår);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.flyktningFraGrunnlag?.resultat ?? null} />
@@ -333,14 +340,16 @@ const AccordionItemFlyktning = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvFlyktningvilkår flyktning={props.flyktningFraGrunnlag} />
-                {props.sidestiltFlyktningVilkår && (
-                    <OppsummeringAvFlyktningvilkår flyktning={props.sidestiltFlyktningVilkår} />
-                )}
-                {props.sidestiltFlyktningFraSøknad && (
-                    <OppsummeringAvFlyktningstatus flyktningstatus={props.sidestiltFlyktningFraSøknad} />
-                )}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvFlyktningvilkår flyktning={props.flyktningFraGrunnlag} />
+                    {props.sidestiltFlyktningVilkår && (
+                        <OppsummeringAvFlyktningvilkår flyktning={props.sidestiltFlyktningVilkår} />
+                    )}
+                    {props.sidestiltFlyktningFraSøknad && (
+                        <OppsummeringAvFlyktningstatus flyktningstatus={props.sidestiltFlyktningFraSøknad} />
+                    )}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -357,7 +366,7 @@ const AccordionItemAldersvilkår = (props: {
         !aldersvilkårErLik(props.aldersvilkårFraGrunnlagsdata, props.sidestiltAldersvilkår);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.aldersvilkårFraGrunnlagsdata?.resultat ?? null} />
@@ -369,14 +378,16 @@ const AccordionItemAldersvilkår = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvAldersvilkår aldersvilkår={props.aldersvilkårFraGrunnlagsdata} />
-                {props.sidestiltAldersvilkår && (
-                    <OppsummeringAvAldersvilkår aldersvilkår={props.sidestiltAldersvilkår} />
-                )}
-                {props.sidestiltAlderspensjon && (
-                    <OppsummeringAvAlderspensjon alderspensjon={props.sidestiltAlderspensjon} />
-                )}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvAldersvilkår aldersvilkår={props.aldersvilkårFraGrunnlagsdata} />
+                    {props.sidestiltAldersvilkår && (
+                        <OppsummeringAvAldersvilkår aldersvilkår={props.sidestiltAldersvilkår} />
+                    )}
+                    {props.sidestiltAlderspensjon && (
+                        <OppsummeringAvAlderspensjon alderspensjon={props.sidestiltAlderspensjon} />
+                    )}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -393,7 +404,7 @@ const AccordionItemFamiliegjenforening = (props: {
         !familiegjenforeningErLik(props.familiegjenforeningFraGrunnlagsdata, props.sidestiltFamiliegjenforening);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.familiegjenforeningFraGrunnlagsdata?.resultat ?? null} />
@@ -405,16 +416,20 @@ const AccordionItemFamiliegjenforening = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvFamiliegjenforening familiegjenforening={props.familiegjenforeningFraGrunnlagsdata} />
-                {props.sidestiltFamiliegjenforening && (
-                    <OppsummeringAvFamiliegjenforening familiegjenforening={props.sidestiltFamiliegjenforening} />
-                )}
-                {props.sidestiltOppholdstillatelseAlder && (
-                    <OppsummeringAvOppholdstillatelseAlder
-                        oppholdstillatelse={props.sidestiltOppholdstillatelseAlder}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvFamiliegjenforening
+                        familiegjenforening={props.familiegjenforeningFraGrunnlagsdata}
                     />
-                )}
+                    {props.sidestiltFamiliegjenforening && (
+                        <OppsummeringAvFamiliegjenforening familiegjenforening={props.sidestiltFamiliegjenforening} />
+                    )}
+                    {props.sidestiltOppholdstillatelseAlder && (
+                        <OppsummeringAvOppholdstillatelseAlder
+                            oppholdstillatelse={props.sidestiltOppholdstillatelseAlder}
+                        />
+                    )}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -431,7 +446,7 @@ const AccordionItemLovligOpphold = (props: {
         !lovligOppholdErLik(props.lovligOppholdFraGrunnlag, props.sidestiltLovligOppholdVilkår);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.lovligOppholdFraGrunnlag?.resultat ?? null} />
@@ -443,14 +458,16 @@ const AccordionItemLovligOpphold = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvLovligOppholdvilkår lovligOpphold={props.lovligOppholdFraGrunnlag} />
-                {props.sidestiltLovligOppholdVilkår && (
-                    <OppsummeringAvLovligOppholdvilkår lovligOpphold={props.sidestiltLovligOppholdVilkår} />
-                )}
-                {props.sidestiltOppholdstillatelseFraSøknad && (
-                    <OppsummeringAvOpphold oppholdstillatelse={props.sidestiltOppholdstillatelseFraSøknad} />
-                )}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvLovligOppholdvilkår lovligOpphold={props.lovligOppholdFraGrunnlag} />
+                    {props.sidestiltLovligOppholdVilkår && (
+                        <OppsummeringAvLovligOppholdvilkår lovligOpphold={props.sidestiltLovligOppholdVilkår} />
+                    )}
+                    {props.sidestiltOppholdstillatelseFraSøknad && (
+                        <OppsummeringAvOpphold oppholdstillatelse={props.sidestiltOppholdstillatelseFraSøknad} />
+                    )}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -467,7 +484,7 @@ const AccordionItemFastOpphold = (props: {
         !fastOppholdErLik(props.fastOppholdFraGrunnlag, props.sidestiltFastOppholdVilkår);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.fastOppholdFraGrunnlag?.resultat ?? null} />
@@ -479,17 +496,19 @@ const AccordionItemFastOpphold = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvFastOppholdvilkår fastOpphold={props.fastOppholdFraGrunnlag} />
-                {props.sidestiltFastOppholdVilkår && (
-                    <OppsummeringAvFastOppholdvilkår fastOpphold={props.sidestiltFastOppholdVilkår} />
-                )}
-                {props.sidestiltOppholdstillatelseFraSøknad && (
-                    <OppsummeringAvOpphold
-                        oppholdstillatelse={props.sidestiltOppholdstillatelseFraSøknad.oppholdstillatelse}
-                        visAdresse={props.sidestiltOppholdstillatelseFraSøknad.boforhold}
-                    />
-                )}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvFastOppholdvilkår fastOpphold={props.fastOppholdFraGrunnlag} />
+                    {props.sidestiltFastOppholdVilkår && (
+                        <OppsummeringAvFastOppholdvilkår fastOpphold={props.sidestiltFastOppholdVilkår} />
+                    )}
+                    {props.sidestiltOppholdstillatelseFraSøknad && (
+                        <OppsummeringAvOpphold
+                            oppholdstillatelse={props.sidestiltOppholdstillatelseFraSøknad.oppholdstillatelse}
+                            visAdresse={props.sidestiltOppholdstillatelseFraSøknad.boforhold}
+                        />
+                    )}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -518,16 +537,22 @@ const AccordionItemInstitusjonsopphold = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvInstitusjonsoppholdvilkår institusjonsopphold={props.institusjonsoppholdFraGrunnlag} />
-                {props.sidestiltInstitusjonsopphold && (
-                    <OppsummeringAvInstitusjonsoppholdvilkår institusjonsopphold={props.sidestiltInstitusjonsopphold} />
-                )}
-                {props.sidestiltInstitusjonsoppholdFraSøknad !== undefined && (
-                    <OppsummeringAvInnlagtPåInstitusjon
-                        innlagtPåInstitusjon={props.sidestiltInstitusjonsoppholdFraSøknad}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvInstitusjonsoppholdvilkår
+                        institusjonsopphold={props.institusjonsoppholdFraGrunnlag}
                     />
-                )}
+                    {props.sidestiltInstitusjonsopphold && (
+                        <OppsummeringAvInstitusjonsoppholdvilkår
+                            institusjonsopphold={props.sidestiltInstitusjonsopphold}
+                        />
+                    )}
+                    {props.sidestiltInstitusjonsoppholdFraSøknad !== undefined && (
+                        <OppsummeringAvInnlagtPåInstitusjon
+                            innlagtPåInstitusjon={props.sidestiltInstitusjonsoppholdFraSøknad}
+                        />
+                    )}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -556,14 +581,18 @@ const AccordionItemUtenlandsopphold = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvUtenlandsopphold utenlandsopphold={props.utenlandsoppholdFraGrunnlag} />
-                {props.sidestiltUtenlandsopphold && (
-                    <OppsummeringAvUtenlandsopphold utenlandsopphold={props.sidestiltUtenlandsopphold} />
-                )}
-                {props.sidestiltUtenlandsoppholdFraSøknad && (
-                    <OppsummeringAvUtenlandsoppholdSøknad utenlandsopphold={props.sidestiltUtenlandsoppholdFraSøknad} />
-                )}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvUtenlandsopphold utenlandsopphold={props.utenlandsoppholdFraGrunnlag} />
+                    {props.sidestiltUtenlandsopphold && (
+                        <OppsummeringAvUtenlandsopphold utenlandsopphold={props.sidestiltUtenlandsopphold} />
+                    )}
+                    {props.sidestiltUtenlandsoppholdFraSøknad && (
+                        <OppsummeringAvUtenlandsoppholdSøknad
+                            utenlandsopphold={props.sidestiltUtenlandsoppholdFraSøknad}
+                        />
+                    )}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -576,11 +605,12 @@ const AccordionItemFormue = (props: {
         søkers: Formue;
         eps?: Nullable<Formue>;
     };
+    eksternGrunnlagSkatt: Nullable<EksternGrunnlagSkatt>;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const harEndretFormue = props.sidestiltFormue && !formueErlik(props.formueFraGrunnlag, props.sidestiltFormue);
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.formueFraGrunnlag.resultat ?? null} />
@@ -592,14 +622,19 @@ const AccordionItemFormue = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvFormueVilkår formue={props.formueFraGrunnlag} />
-                {props.sidestiltFormue && <OppsummeringAvFormueVilkår formue={props.sidestiltFormue} />}
-                {props.sidestiltFormueFraSøknad && (
-                    <div className={styles.oppsummeringAvSøknadsformueContainer}>
-                        <OppsummeringAvFormue formue={props.sidestiltFormueFraSøknad} />
-                    </div>
-                )}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvFormueVilkår
+                        eksternGrunnlagSkatt={props.eksternGrunnlagSkatt}
+                        formue={props.formueFraGrunnlag}
+                    />
+                    {props.sidestiltFormue && <OppsummeringAvFormueVilkår formue={props.sidestiltFormue} />}
+                    {props.sidestiltFormueFraSøknad && (
+                        <div className={styles.oppsummeringAvSøknadsformueContainer}>
+                            <OppsummeringAvFormue formue={props.sidestiltFormueFraSøknad} />
+                        </div>
+                    )}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -616,7 +651,7 @@ const AccordionItemPersonligOppmøte = (props: {
         !personligOppmøteErLik(props.personligOppmøteFraGrunnlag, props.sidestiltPersonligOppmøte);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>
                     <VilkårResultatStatusIkon resultat={props.personligOppmøteFraGrunnlag?.resultat ?? null} />
@@ -628,12 +663,14 @@ const AccordionItemPersonligOppmøte = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvPersonligoppmøtevilkår personligoppmøte={props.personligOppmøteFraGrunnlag} />
-                {props.sidestiltPersonligOppmøte && (
-                    <OppsummeringAvPersonligoppmøtevilkår personligoppmøte={props.sidestiltPersonligOppmøte} />
-                )}
-                {props.sidestiltForNav && <OppsummeringAvForNav forNav={props.sidestiltForNav} />}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvPersonligoppmøtevilkår personligoppmøte={props.personligOppmøteFraGrunnlag} />
+                    {props.sidestiltPersonligOppmøte && (
+                        <OppsummeringAvPersonligoppmøtevilkår personligoppmøte={props.sidestiltPersonligOppmøte} />
+                    )}
+                    {props.sidestiltForNav && <OppsummeringAvForNav forNav={props.sidestiltForNav} />}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -649,7 +686,7 @@ const AccordionItemBosituasjon = (props: {
         props.sidestiltBosituasjon && !bosituasjonErlik(props.bosituasjonFraGrunnlag, props.sidestiltBosituasjon);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.bosituasjon')}</div>
                 {harEndretBosituasjon && (
@@ -658,12 +695,14 @@ const AccordionItemBosituasjon = (props: {
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvBosituasjongrunnlag bosituasjon={props.bosituasjonFraGrunnlag} />
-                {props.sidestiltBosituasjon && (
-                    <OppsummeringAvBosituasjongrunnlag bosituasjon={props.sidestiltBosituasjon} />
-                )}
-                {props.boforholdFraSøknad && <OppsummeringAvBoforhold boforhold={props.boforholdFraSøknad} />}
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvBosituasjongrunnlag bosituasjon={props.bosituasjonFraGrunnlag} />
+                    {props.sidestiltBosituasjon && (
+                        <OppsummeringAvBosituasjongrunnlag bosituasjon={props.sidestiltBosituasjon} />
+                    )}
+                    {props.boforholdFraSøknad && <OppsummeringAvBoforhold boforhold={props.boforholdFraSøknad} />}
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );
@@ -674,7 +713,7 @@ const AccordionItemFradrag = (props: { fradragFraGrunnlag: Fradrag[]; sidestiltF
     const harEndretFradrag = !fradragErlik(props.fradragFraGrunnlag, props.sidestiltFradrag);
 
     return (
-        <Accordion.Item>
+        <Accordion.Item className={styles.accordionItem}>
             <Accordion.Header className={styles.accordionHeader}>
                 <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.inntekt')}</div>
                 {harEndretFradrag && (
@@ -683,9 +722,11 @@ const AccordionItemFradrag = (props: { fradragFraGrunnlag: Fradrag[]; sidestiltF
                     </div>
                 )}
             </Accordion.Header>
-            <Accordion.Content className={styles.accordionContent}>
-                <OppsummeringAvFradrag fradrag={props.fradragFraGrunnlag} />
-                <OppsummeringAvFradrag fradrag={props.sidestiltFradrag} />
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvFradrag fradrag={props.fradragFraGrunnlag} />
+                    <OppsummeringAvFradrag fradrag={props.sidestiltFradrag} />
+                </div>
             </Accordion.Content>
         </Accordion.Item>
     );

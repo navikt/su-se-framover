@@ -4,7 +4,6 @@ export interface Person {
     fnr: string;
     aktorId: string;
     navn: Navn;
-    kjønn: Nullable<Kjønn>;
     fødsel: Nullable<Fødsel>;
     telefonnummer: {
         landskode: string;
@@ -30,12 +29,6 @@ export interface Fødsel {
     dato: Nullable<string>;
     år: number;
     alder: number;
-}
-
-export enum Kjønn {
-    Mann = 'MANN',
-    Kvinne = 'KVINNE',
-    Ukjent = 'UKJENT',
 }
 
 export enum Adressebeskyttelse {

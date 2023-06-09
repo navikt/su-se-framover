@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Label, Loader, Modal, Select } from '@navikt/ds-react';
+import { Alert, Button, Heading, Label, Loader, Modal, Select, Textarea, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -11,7 +11,11 @@ import {
     konsistensavstemming,
     grensesnittsavstemming,
     stønadsmottakere,
+    resendstatistikkSøknadsbehandlingVedtak,
+    resendSpesifikkVedtakstatistikk,
+    ferdigstillVedtak,
 } from '~src/api/driftApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker } from '~src/components/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
@@ -47,6 +51,9 @@ const Drift = () => {
         };
         hentStatus();
     }, []);
+
+    const [vilResendeStatistikk, setVilResendeStatistikk] = useState<boolean>(false);
+    const [vilFikseVedtak, setVilFikseVedtak] = useState<boolean>(false);
 
     const [stønadsmottakereModal, setStønadsmottakereModal] = useState<boolean>(false);
     const [visReguleringModal, setVisReguleringModal] = React.useState(false);
@@ -84,6 +91,11 @@ const Drift = () => {
             {stønadsmottakereModal && (
                 <StønadsmottakereModal open={stønadsmottakereModal} onClose={() => setStønadsmottakereModal(false)} />
             )}
+            {vilResendeStatistikk && (
+                <ResendStatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
+            )}
+            {vilFikseVedtak && <VilFikseVedtakModal open={vilFikseVedtak} onClose={() => setVilFikseVedtak(false)} />}
+
             <div>
                 <h1>Drift</h1>
             </div>
@@ -265,6 +277,24 @@ const Drift = () => {
                     >
                         Stønadsmottakere
                     </Button>
+
+                    <Button
+                        variant="secondary"
+                        className={styles.knapp}
+                        type="button"
+                        onClick={() => setVilResendeStatistikk(true)}
+                    >
+                        Resend statistikk
+                    </Button>
+
+                    <Button
+                        variant="secondary"
+                        className={styles.knapp}
+                        type="button"
+                        onClick={() => setVilFikseVedtak(true)}
+                    >
+                        Fiks vedtak
+                    </Button>
                 </div>
                 {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">
@@ -291,6 +321,84 @@ const Drift = () => {
                 {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
             </div>
         </div>
+    );
+};
+
+const VilFikseVedtakModal = (props: { open: boolean; onClose: () => void }) => {
+    const [ferdigstillStatus, ferdigstill] = useApiCall(ferdigstillVedtak);
+    const [vedtakId, setVedtakId] = useState<string>('');
+    return (
+        <Modal open={props.open} onClose={props.onClose}>
+            <Modal.Content>
+                <div>
+                    <Heading size="medium" spacing>
+                        Ferdigstill
+                    </Heading>
+                    <TextField label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
+                    <Button onClick={() => ferdigstill({ vedtakId: vedtakId })}>Ferdigstill vedtak</Button>
+                    {RemoteData.isSuccess(ferdigstillStatus) && <p>Nice 👍🤌</p>}
+
+                    {RemoteData.isFailure(ferdigstillStatus) && <ApiErrorAlert error={ferdigstillStatus.error} />}
+                </div>
+            </Modal.Content>
+        </Modal>
+    );
+};
+
+const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
+    const [søknadsbehandlingVedtakStatistikkStatus, resendSøknadsbehandlingVedtak] = useApiCall(
+        resendstatistikkSøknadsbehandlingVedtak
+    );
+    const [spesifikkStatus, resendSpesifikkVedtak] = useApiCall(resendSpesifikkVedtakstatistikk);
+
+    const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
+    const [vedtakId, setVedtakId] = useState<string>('');
+
+    return (
+        <Modal open={props.open} onClose={props.onClose}>
+            <Modal.Content>
+                <div>
+                    <Heading size="medium" spacing>
+                        Spesifikk
+                    </Heading>
+
+                    <Textarea label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
+                    <Button onClick={() => resendSpesifikkVedtak({ vedtakIder: vedtakId })}>
+                        Resend spesifikk vedtak statistikk
+                    </Button>
+                    {RemoteData.isSuccess(spesifikkStatus) && <p>Nice 👍🤌</p>}
+
+                    {RemoteData.isFailure(spesifikkStatus) && <ApiErrorAlert error={spesifikkStatus.error} />}
+
+                    <Heading size="medium" spacing>
+                        Alle
+                    </Heading>
+                    <DatePicker
+                        label="Fra og med"
+                        value={fraOgMed}
+                        onChange={(date) => {
+                            setFraOgMed(date);
+                        }}
+                    />
+
+                    <Button
+                        onClick={() =>
+                            resendSøknadsbehandlingVedtak({
+                                fraOgMed: toIsoDateOnlyString(fraOgMed!),
+                            })
+                        }
+                    >
+                        Søknadsbehandling vedtak
+                    </Button>
+
+                    {RemoteData.isSuccess(søknadsbehandlingVedtakStatistikkStatus) && <p>Nice 👍🤌</p>}
+
+                    {RemoteData.isFailure(søknadsbehandlingVedtakStatistikkStatus) && (
+                        <ApiErrorAlert error={søknadsbehandlingVedtakStatistikkStatus.error} />
+                    )}
+                </div>
+            </Modal.Content>
+        </Modal>
     );
 };
 

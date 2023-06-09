@@ -27,6 +27,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.DELER_BOLIG_MED_ER_IKKE_UTFYLT]: 'Forventet at hvem søker deler bolig med skulle være utfylt',
     [ApiErrorCode.DELVIS_OPPHØR]: 'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     [ApiErrorCode.DEPOSITUM_HØYERE_ENN_INNSKUDD]: 'Depositumsbeløpet er høyere enn innskuddsbeløpet',
+    [ApiErrorCode.DOKUMENTID_MANGLER_ELLER_FEIL_FORMAT]:
+        'Dokument-id mangler, eller er i feil format. Her var det et teknisk glipp',
 
     //E
     [ApiErrorCode.EKTEFELLE_PARTNER_SAMBOER_ER_IKKE_UTFYLT]: 'Ektefelle/Partner/Samboer ved bosituasjon må være utfylt',
@@ -110,13 +112,11 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.INGEN_FORMUE_FOR_BOSITUASJONSPERIODE]:
         'Formue mangler for en eller flere perioder hvor det eksisterer bosituasjon.',
     [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
-    [ApiErrorCode.INGET_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
+    [ApiErrorCode.INGEN_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
         'Ingen summert skattegrunnlag funnet på oppgitt personidentifikator og inntektsår',
     [ApiErrorCode.INNSENDING_AV_SØKNAD_IKKE_TILLATT]: 'Innsending av søknad er ikke tillatt',
-    [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
-        'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
-    [ApiErrorCode.IVERKSETTING_FØRER_TIL_FEILUTBETALING]:
-        'Iverksetting av stans som fører til feilutbetaling støttes ikke',
+    [ApiErrorCode.INNEHOLDER_UFULLSTENDIG_BOSITUASJON]:
+        'Behandlingen inneholder ufullstendig bosituasjon. Dette kan være fordi behandlingen har blitt utført før en teknisk endring som sammenslår "EPS søket i formue" & "Vurdering av Sats". Vennligst gå til "Bosituasjon og Sats" og oppdater det som er nødvendig.',
 
     //J
     [ApiErrorCode.JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT]:
@@ -137,8 +137,6 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Kan ikke lukke en søknadsbehandling til attestering',
     [ApiErrorCode.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
         'Kan ikke oppdatere en revurdering som er forhåndsvarslet',
-    [ApiErrorCode.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
-        'Kan ikke oppdatere revurdering som er forhåndsvarslet',
     [ApiErrorCode.KAN_IKKE_REGULERE_STANSET_SAK]: 'Kan ikke regulere en stanset sak',
     [ApiErrorCode.KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER]: 'Kan ikke stanste opphørte utbetalinger',
     [ApiErrorCode.KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD]: 'Kan ikke velge både omgjør og oppretthold',
@@ -152,7 +150,11 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Kunne ikke bekrefte journalpost. Mest sannsynlig den ikke eksisterer',
     [ApiErrorCode.KUNNE_IKKE_FERDIGSTILLE_REGULERING]: 'Kunne ikke ferdigstille regulering',
     [ApiErrorCode.KUNNE_IKKE_GENERERE_BREV]: 'Kunne ikke generere brev',
+    [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_FØRER_TIL_FEILUTBETALING]:
+        'Gjenopptak kan ikke føre til feilutbetaling - prøv å start behandlingen på nytt.',
     [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND]: 'Siste utbetaling er ikke stans',
+    [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_STANS_FØRER_TIL_FEILUTBETALING]:
+        'Stans kan ikke føre til feilutbetaling - prøv å start behandlingen på nytt.',
     [ApiErrorCode.KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND]: 'Kan ikke stanse utbetalinger som allerede er stanset',
     [ApiErrorCode.KUNNE_IKKE_LAGE_BREV]: 'Kunne ikke lage brevutkast',
     [ApiErrorCode.KUNNE_IKKE_LAGE_FRADRAG]: 'Kunne ikke lage fradrag',
@@ -164,7 +166,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_STANS]: 'Kunne ikke opprette revurdering for stans',
     [ApiErrorCode.KUNNE_IKKE_OVERSENDE_TIL_KLAGEINSTANS]: 'Kunne ikke oversende klagen til klageinstansen (Kabal)',
     [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp ektefelle eller samboer i PDL',
-    [ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS]: 'Kunne ikke slå opp EPS',
     [ApiErrorCode.KUNNE_IKKE_UTBETALE]: 'Kunne ikke utbetale',
 
     //M
@@ -172,6 +173,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.MANGLER_BREVVALG]: 'Vennligst velg om det skal sendes brev eller ikke',
     [ApiErrorCode.MANGLER_ID]: 'Parameter for id mangler',
     [ApiErrorCode.MANGLER_IDTYPE]: 'Parameter for idType mangler',
+    [ApiErrorCode.MANGLER_RETTIGHETER_MOT_SKATT]: 'Autentiserings- eller autoriseringsfeil. Mangler du rettigheter?',
     [ApiErrorCode.MANGLER_SAKSNUMMER_FØDSELSNUMMER]: 'Må oppgi enten saksnummer eller fødselsnummer',
     [ApiErrorCode.MÅ_HA_BOSITUASJON_FØR_FRADRAG]: 'Bosituasjon må legges inn før fradrag',
     [ApiErrorCode.MÅ_VELGE_INFORMASJON_SOM_REVURDERES]: 'Må velge hva som skal revurderes',
@@ -181,6 +183,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET]:
         'Kunne ikke hente navn for saksbehandler eller attestant',
     [ApiErrorCode.NEI_ER_IKKE_STØTTET]: 'Det er ikke støtte for å svare "nei"',
+    [ApiErrorCode.NETTVERKSFEIL_SKATT]: 'Får ikke kontakt med Sigrun/Skatteetaten. Prøv igjen senere.',
     [ApiErrorCode.NYE_OVERLAPPENDE_VEDTAK]:
         'Det har kommet nye vedtak i revurderingsperioden etter revurderingen ble opprettet/oppdatert. Revurderingen må sendes tilbake til saksbehandler som igjen må "starte revurdering på nytt"',
 
@@ -291,11 +294,11 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_TILSTAND]: 'Ugyldig tilstand',
     [ApiErrorCode.UGYLDIG_VALG]: 'Ugyldig valg av beslutning for forhåndsvarsel',
     [ApiErrorCode.UGYLDIG_ÅRSAK]: 'Ugyldig årsak',
-    [ApiErrorCode.UGYLDIG_ÅRSAK]: 'Årsak er ugyldig',
     [ApiErrorCode.UKJENT_BREVTYPE]: 'Ukjent brevtype',
     [ApiErrorCode.UKJENT_FEIL_VED_HENTING_AV_JOURNALPOST]: 'Ukjent feil ved henting av journalpost',
     [ApiErrorCode.UKJENT_FEIL]: 'Ukjent feil',
     [ApiErrorCode.UKJENT_FRADRAGSTYPE]: 'Ukjent fradragstype',
+    [ApiErrorCode.UFORVENTET_FEIL_MOT_SKATT]: 'Kunne ikke hente skattemelding; uforventet feil',
     [ApiErrorCode.USPESIFISIERT_FRADRAG_KREVER_BESKRIVELSE]: 'Et fradrag som er "Annet" må spesifiseres',
     [ApiErrorCode.UTBETALING_ALLEREDE_OPPHØRT]: 'Utbetaling allerede opphørt',
     [ApiErrorCode.UTBETALING_ALLEREDE_STANSET]: 'Utbetaling allerede stanset',

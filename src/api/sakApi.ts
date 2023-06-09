@@ -7,7 +7,6 @@ import {
     AnnullerRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
 import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
-import { SamletSkattegrunnlag } from '~src/types/skatt/Skatt';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -98,13 +97,6 @@ export async function annullerRegistrertUtenlandsopphold(
         body: {
             saksversjon: arg.saksversjon,
         },
-    });
-}
-
-export async function hentSkattemelding({ fnr }: { fnr: string }): Promise<ApiClientResult<SamletSkattegrunnlag>> {
-    return apiClient({
-        url: `/skatt/${fnr}`,
-        method: 'GET',
     });
 }
 

@@ -35,6 +35,7 @@ const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
 
     return (
         <OppsummeringAvBeregningOgSimulering
+            eksterngrunnlagSkatt={null}
             beregning={harBeregninger(revurdering) ? revurdering.beregning : null}
             simulering={harSimulering(revurdering) ? revurdering.simulering : null}
             childrenOverBeregning={

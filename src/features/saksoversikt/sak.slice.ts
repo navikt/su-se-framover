@@ -174,6 +174,10 @@ export default createSlice({
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
+        builder.addCase(SøknadsbehandlingActions.hentNySkattegrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+        });
+
         builder.addCase(SøknadActions.lukkSøknad.fulfilled, (state, action) => {
             state.sak = RemoteData.success(action.payload);
         });
@@ -339,8 +343,8 @@ export default createSlice({
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
-        builder.addCase(GrunnlagOgVilkårActions.lagreUfullstendigBosituasjon.fulfilled, (state, action) => {
-            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+        builder.addCase(GrunnlagOgVilkårActions.lagreBosituasjongrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
         builder.addCase(GrunnlagOgVilkårActions.lagreFormuegrunnlag.fulfilled, (state, action) => {
@@ -351,16 +355,8 @@ export default createSlice({
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
-        builder.addCase(GrunnlagOgVilkårActions.lagreFullstendigBosituasjon.fulfilled, (state, action) => {
-            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
-        });
-
         builder.addCase(GrunnlagOgVilkårActions.lagreFradragsgrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
-        });
-
-        builder.addCase(GrunnlagOgVilkårActions.lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
-            state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
         builder.addCase(GrunnlagOgVilkårActions.lagreOpplysningsplikt.fulfilled, (state, action) => {

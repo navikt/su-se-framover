@@ -34,7 +34,6 @@ import messages from './RevurderingBeregnOgsimuler-nb';
 import styles from './RevurderingBeregnOgSimuler.module.less';
 
 const RevurderingBeregnOgSimuler = (props: {
-    sakId: string;
     informasjonsRevurdering: InformasjonsRevurdering;
     seksjoner: Seksjon[];
 }) => {
@@ -55,7 +54,7 @@ const RevurderingBeregnOgSimuler = (props: {
     React.useEffect(() => {
         if (RemoteData.isInitial(beregningStatus)) {
             beregnOgSimuler({
-                sakId: props.sakId,
+                sakId: props.informasjonsRevurdering.sakId,
                 periode: props.informasjonsRevurdering.periode,
                 revurderingId: props.informasjonsRevurdering.id,
             });
@@ -65,14 +64,14 @@ const RevurderingBeregnOgSimuler = (props: {
     const getNesteUrl = (beregnetOgSimulertRevurdering: InformasjonsRevurdering) => {
         if (erRevurderingTilbakekrevingsbehandling(beregnetOgSimulertRevurdering)) {
             return Routes.revurderingSeksjonSteg.createURL({
-                sakId: props.sakId,
+                sakId: props.informasjonsRevurdering.sakId,
                 revurderingId: props.informasjonsRevurdering.id,
                 seksjon: RevurderingSeksjoner.Oppsummering,
                 steg: RevurderingOppsummeringSteg.Tilbakekreving,
             });
         } else {
             return Routes.revurderingSeksjonSteg.createURL({
-                sakId: props.sakId,
+                sakId: props.informasjonsRevurdering.sakId,
                 revurderingId: props.informasjonsRevurdering.id,
                 seksjon: RevurderingSeksjoner.Oppsummering,
                 steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
@@ -112,7 +111,7 @@ const RevurderingBeregnOgSimuler = (props: {
                                 loading={RemoteData.isPending(beregnOgSimulerStatus)}
                                 onClick={() =>
                                     beregnOgSimuler({
-                                        sakId: props.sakId,
+                                        sakId: props.informasjonsRevurdering.sakId,
                                         periode: props.informasjonsRevurdering.periode,
                                         revurderingId: props.informasjonsRevurdering.id,
                                     })

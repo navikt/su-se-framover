@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
@@ -108,7 +108,10 @@ export function useApiCall<T, U>(
             if (!RemoteData.isPending(apiResult)) {
                 setApiResult(RemoteData.pending);
 
-                const res = await fn(args);
+                const res = await fn(args).then(
+                    (res) => res,
+                    (res) => res
+                );
                 if (res.status === 'ok') {
                     setApiResult(RemoteData.success(res.data));
                     onSuccess?.(res.data);
@@ -142,3 +145,17 @@ export function useBrevForhåndsvisning<T>(
         resetToInitial,
     ];
 }
+
+/**
+ * Returnerer det første ikke-initial remoteDataen.
+ * Dersom det finnes flere ikke-initial remotedataer, blir fortsatt bare den første returnert. Her har rekkefølge noe å si
+ * Da vil du kanskje heller bruke RemoteData.combine() hvis du skal ha begge aktive
+ */
+export const useExclusiveCombine = <Error, Success>(...args: Array<RemoteData.RemoteData<Error, Success>>) => {
+    if (args.length <= 0) {
+        throw new Error('UseExclusiveCombine må ta inn en liste med elementer');
+    }
+    return useMemo(() => {
+        return args.find((a) => !RemoteData.isInitial(a)) ?? args[0];
+    }, [args]);
+};

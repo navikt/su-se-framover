@@ -45,7 +45,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
-    const søkerState = useAppSelector((state) => state.søker.søker);
+    const søkerState = useAppSelector((state) => state.personopplysninger.søker);
     const initialValues: VirkningstidspunktFormData = {
         periode: {
             fraOgMed: nullableMap(
@@ -199,7 +199,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     </FormWrapper>
                                 ),
                                 right: (
-                                    <div className={styles.høyresideContainer}>
+                                    <div>
                                         <Heading size="small">{formatMessage('søker.personalia')}</Heading>
                                         <OppsummeringPar
                                             label={formatMessage('søker.fødselsdato')}

@@ -78,3 +78,35 @@ export async function stønadsmottakere(): Promise<ApiClientResult<{ dato: strin
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }
+
+export async function resendstatistikkSøknadsbehandlingVedtak(body: {
+    fraOgMed: string;
+}): Promise<ApiClientResult<{ status: string }>> {
+    return apiClient({
+        url: `/drift/resend-statistikk/vedtak/søknadsbehandling`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: body,
+    });
+}
+
+export async function resendSpesifikkVedtakstatistikk(args: {
+    vedtakIder: string;
+}): Promise<ApiClientResult<{ status: string }>> {
+    return apiClient({
+        url: `/drift/resend-statistikk/vedtak`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: {
+            vedtak: args.vedtakIder,
+        },
+    });
+}
+
+export async function ferdigstillVedtak(args: { vedtakId: string }): Promise<ApiClientResult<{ status: string }>> {
+    return apiClient({
+        url: `/drift/vedtak/${args.vedtakId}/ferdigstill`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}

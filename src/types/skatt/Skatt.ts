@@ -1,20 +1,50 @@
+import { ErrorMessage } from '~src/api/apiClient';
 import { Nullable } from '~src/lib/types';
 
-export interface SamletSkattegrunnlag {
-    fnr: string;
-    inntektsår: string;
-    grunnlag: Skattegrunnlag[];
-    skatteoppgjoersdato: Nullable<string>;
-    hentetDato: string;
-}
-
 export interface Skattegrunnlag {
-    navn: string;
-    beløp: number;
-    kategori: string[];
+    fnr: string;
+    hentetTidspunkt: string;
+    årsgrunnlag: Årsgrunnlag[];
+    saksbehandler: string;
+    årSpurtFor: { fra: number; til: number };
 }
 
-export enum SkattegrunnlagKategori {
-    FORMUE = 'formue',
-    INNTEKT = 'inntekt',
+export type Årsgrunnlag = Stadie | StadieFeil;
+
+export interface Stadie {
+    stadie: string;
+    inntektsår: number;
+    grunnlag: SkattegrunnlagForÅr;
+}
+
+export interface StadieFeil {
+    error: ErrorMessage;
+    inntektsår: number;
+}
+
+export interface SkattegrunnlagForÅr {
+    oppgjørsdato: Nullable<string>;
+    formue: Grunnlag[];
+    inntekt: Grunnlag[];
+    inntektsfradrag: Grunnlag[];
+    formuesfradrag: Grunnlag[];
+    verdsettingsrabattSomGirGjeldsreduksjon: Grunnlag[];
+    oppjusteringAvEierinntekter: Grunnlag[];
+    annet: Grunnlag[];
+}
+
+export interface Grunnlag {
+    navn: string;
+    beløp: string;
+    spesifisering: KjøretøySpesifisering[];
+}
+
+export interface KjøretøySpesifisering {
+    beløp: Nullable<string>;
+    registreringsnummer: Nullable<string>;
+    fabrikatnavn: Nullable<string>;
+    årForFørstegangsregistrering: Nullable<string>;
+    formuesverdi: Nullable<string>;
+    antattVerdiSomNytt: Nullable<string>;
+    antattMarkedsverdi: Nullable<string>;
 }

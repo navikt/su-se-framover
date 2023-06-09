@@ -1,146 +1,252 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Heading, Label, Loader } from '@navikt/ds-react';
-import classNames from 'classnames';
-import { pipe } from 'fp-ts/lib/function';
-import React, { useEffect } from 'react';
+import { Label } from '@navikt/ds-react';
+import React from 'react';
 
-import { ApiError } from '~src/api/apiClient';
-import { hentSkattemelding } from '~src/api/sakApi';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { useApiCall } from '~src/lib/hooks';
+import { ErrorMessageAlert } from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useI18n } from '~src/lib/i18n';
-import { Nullable } from '~src/lib/types';
-import { SamletSkattegrunnlag, SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
+import {
+    Grunnlag,
+    SkattegrunnlagForÅr,
+    KjøretøySpesifisering,
+    Skattegrunnlag,
+    Stadie,
+    Årsgrunnlag,
+    StadieFeil,
+} from '~src/types/skatt/Skatt';
 import { formatDateTime } from '~src/utils/date/dateUtils';
-import { formatCurrency } from '~src/utils/format/formatUtils';
+import { erStadie, erStadieFeil } from '~src/utils/SkattUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
-import skattegrunnlagMessages from './OppsummeringAvSkattegrunnlag-nb';
+import messages from './OppsummeringAvSkattegrunnlag-nb';
 import styles from './OppsummeringAvSkattegrunnlag.module.less';
 
-const OppsummeringAvSkattegrunnlag = (props: {
-    kategori: SkattegrunnlagKategori;
-    søkerFnr: string;
-    skalHenteSkattegrunnlagForEPS?: Nullable<string>;
-}) => {
-    const { formatMessage } = useI18n({ messages: skattegrunnlagMessages });
-    const [skattemeldingBruker, hentSkattemeldingBruker] = useApiCall(hentSkattemelding);
-    const [skattemeldingEPS, hentSkattemeldingEPS, resetSkattemeldingEPS] = useApiCall(hentSkattemelding);
-
-    useEffect(() => {
-        hentSkattemeldingBruker({ fnr: props.søkerFnr });
-    }, []);
-
-    useEffect(() => {
-        resetSkattemeldingEPS();
-        if (props.skalHenteSkattegrunnlagForEPS) {
-            hentSkattemeldingEPS({ fnr: props.skalHenteSkattegrunnlagForEPS });
-        }
-    }, [props.skalHenteSkattegrunnlagForEPS]);
-
+const OppsummeringAvSkattegrunnlag = (props: { skattegrunnlag: Skattegrunnlag }) => {
+    const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.skattegrunnlag}>
-            <Heading level="2" size="xsmall">
-                {formatMessage('skattegrunnlag.tittel')}
-            </Heading>
-
-            {pipe(
-                skattemeldingBruker,
-                RemoteData.fold(
-                    () => null,
-                    () => <Loader />,
-                    (error) => <SkatteApiFeilmelding tittel={formatMessage('skattegrunnlag.bruker')} error={error} />,
-                    (skattegrunnlag) => (
-                        <>
-                            <Label spacing size="small" className={styles.light}>
-                                {formatMessage('skattegrunnlag.lagresIkke')}
-                            </Label>
-                            <Label spacing size="small" className={classNames([styles.light, styles.italic])}>
-                                {formatMessage('skattegrunnlag.hentet', {
-                                    dato: formatDateTime(skattegrunnlag.hentetDato),
-                                })}
-                            </Label>
-                            <SkattemeldingFaktablokkComponent
-                                tittel={formatMessage('skattegrunnlag.bruker')}
-                                samletSkattegrunnlag={skattegrunnlag}
-                                kategori={props.kategori}
-                            />
-                        </>
-                    )
-                )
-            )}
-            {skattemeldingEPS &&
-                pipe(
-                    skattemeldingEPS,
-                    RemoteData.fold(
-                        () => null,
-                        () => <Loader />,
-                        (error) => <SkatteApiFeilmelding tittel={formatMessage('skattegrunnlag.eps')} error={error} />,
-                        (skattegrunnlag) => (
-                            <div className={styles.eps}>
-                                <SkattemeldingFaktablokkComponent
-                                    tittel={formatMessage('skattegrunnlag.eps')}
-                                    samletSkattegrunnlag={skattegrunnlag}
-                                    kategori={props.kategori}
-                                />
-                            </div>
-                        )
-                    )
-                )}
+        <div className={styles.årsgrunnlagMedTittelContainer}>
+            <OppsummeringPar label={formatMessage('skattegrunnlag.fnr')} verdi={props.skattegrunnlag.fnr} />
+            <OppsummeringPar
+                label={formatMessage('skattegrunnlag.tidspunktHentet')}
+                verdi={formatDateTime(props.skattegrunnlag.hentetTidspunkt)}
+            />
+            {props.skattegrunnlag.årsgrunnlag.map((å) => (
+                <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
+            ))}
         </div>
     );
 };
 
 export default OppsummeringAvSkattegrunnlag;
 
-const SkattemeldingFaktablokkComponent = ({
-    tittel,
-    samletSkattegrunnlag,
-    kategori,
-}: {
-    tittel: string;
-    samletSkattegrunnlag: SamletSkattegrunnlag;
-    kategori: SkattegrunnlagKategori;
-}) => {
-    const { formatMessage } = useI18n({ messages: skattegrunnlagMessages });
-    const filtrertSkattefakta = samletSkattegrunnlag.grunnlag
-        .filter((skattegrunnlag) => skattegrunnlag.beløp !== 0)
-        .filter((skattegrunnlag) => skattegrunnlag.kategori.includes(kategori))
-        .map((skattegrunnlag) => (
-            <OppsummeringPar
-                key={`${skattegrunnlag.navn} - ${skattegrunnlag.beløp}`}
-                label={formatSkattTekniskMessage(skattegrunnlag.navn, formatMessage)}
-                verdi={formatCurrency(skattegrunnlag.beløp, { numDecimals: 0 })}
-            />
-        ));
-
+const OppsummeringAvStadie = (props: { stadie: Stadie }) => {
+    const { formatMessage } = useI18n({ messages });
     return (
         <div>
-            <Heading size="small">{tittel}</Heading>
-            {filtrertSkattefakta.length === 0 ? (
-                <OppsummeringPar label={tittel} verdi={formatMessage('skattegrunnlag.tom')} />
-            ) : (
-                filtrertSkattefakta.map((it) => it)
-            )}
+            <OppsummeringPar label={formatMessage('årsgrunnlag.stadie')} verdi={props.stadie.stadie} />
+            <OppsummeringAvGrunnlagsliste
+                grunnlag={props.stadie.grunnlag}
+                felter={[
+                    'formue',
+                    'inntekt',
+                    'inntektsfradrag',
+                    'formuesfradrag',
+                    'verdsettingsrabattSomGirGjeldsreduksjon',
+                    'oppjusteringAvEierinntekter',
+                    'annet',
+                ]}
+            />
+        </div>
+    );
+};
+const OppsummeringAvStadieFeil = (props: { feil: StadieFeil }) => {
+    return (
+        <div>
+            <ErrorMessageAlert err={props.feil.error} />
         </div>
     );
 };
 
-/* Hjelpefunksjon for å håndtere att vi får ukjente tekniske navn på formue / inntekt fra skatteetaten */
-const formatSkattTekniskMessage = (id: string, formatMessage: (id: keyof typeof skattegrunnlagMessages) => string) => {
+const OppsummeringAvÅrsgrunnlag = (props: { årsgrunnlag: Årsgrunnlag }) => {
+    const { formatMessage } = useI18n({ messages });
+    return (
+        <div>
+            <div className={styles.årsgrunnlaginformasjonContainer}>
+                <OppsummeringPar label={formatMessage('årsgrunnlag.inntektsår')} verdi={props.årsgrunnlag.inntektsår} />
+                {erStadie(props.årsgrunnlag) && <OppsummeringAvStadie stadie={props.årsgrunnlag} />}
+                {erStadieFeil(props.årsgrunnlag) && <OppsummeringAvStadieFeil feil={props.årsgrunnlag} />}
+            </div>
+        </div>
+    );
+};
+
+type Grunnlagsfelt =
+    | 'formue'
+    | 'inntekt'
+    | 'inntektsfradrag'
+    | 'formuesfradrag'
+    | 'verdsettingsrabattSomGirGjeldsreduksjon'
+    | 'oppjusteringAvEierinntekter'
+    | 'annet';
+
+const OppsummeringAvGrunnlagsliste = (props: { grunnlag: SkattegrunnlagForÅr; felter: Grunnlagsfelt[] }) => {
+    const { formatMessage } = useI18n({ messages });
+    if (props.felter.length === 0) {
+        return <div>Teknisk feil: Må spesifisere hvilke felter som skal vises</div>;
+    }
+
+    return (
+        <div className={styles.grunnlagslisteContainer}>
+            <OppsummeringPar
+                label={formatMessage('årsgrunnlag.skatteoppgjørsdato')}
+                verdi={
+                    props.grunnlag.oppgjørsdato
+                        ? props.grunnlag.oppgjørsdato
+                        : formatMessage('årsgrunnlag.skatteoppgjørsdato.finnesIkke')
+                }
+            />
+            {props.felter.includes('formue') &&
+                props.grunnlag.formue.map((f) => (
+                    <OppsummeringAvGrunnlag
+                        key={`${f.navn}-${f.beløp}`}
+                        grunnlag={f}
+                        tittel={formatMessage('grunnlagstype.formue')}
+                    />
+                ))}
+            {props.felter.includes('inntekt') &&
+                props.grunnlag.inntekt.map((i) => (
+                    <OppsummeringAvGrunnlag
+                        key={`${i.navn}-${i.beløp}`}
+                        grunnlag={i}
+                        tittel={formatMessage('grunnlagstype.inntekt')}
+                    />
+                ))}
+            {props.felter.includes('inntektsfradrag') &&
+                props.grunnlag.inntektsfradrag.map((ifr) => (
+                    <OppsummeringAvGrunnlag
+                        key={`${ifr.navn}-${ifr.beløp}`}
+                        grunnlag={ifr}
+                        tittel={formatMessage('grunnlagstype.inntektsfradrag')}
+                    />
+                ))}
+            {props.felter.includes('formuesfradrag') &&
+                props.grunnlag.formuesfradrag.map((ff) => (
+                    <OppsummeringAvGrunnlag
+                        key={`${ff.navn}-${ff.beløp}`}
+                        grunnlag={ff}
+                        tittel={formatMessage('grunnlagstype.formuesfradrag')}
+                    />
+                ))}
+            {props.felter.includes('verdsettingsrabattSomGirGjeldsreduksjon') &&
+                props.grunnlag.verdsettingsrabattSomGirGjeldsreduksjon.map((vsr) => (
+                    <OppsummeringAvGrunnlag
+                        key={`${vsr.navn}-${vsr.beløp}`}
+                        grunnlag={vsr}
+                        tittel={formatMessage('grunnlagstype.verdsettingsrabattSomGirGjeldsreduksjon')}
+                    />
+                ))}
+            {props.felter.includes('oppjusteringAvEierinntekter') &&
+                props.grunnlag.oppjusteringAvEierinntekter.map((oaei) => (
+                    <OppsummeringAvGrunnlag
+                        key={`${oaei.navn}-${oaei.beløp}`}
+                        grunnlag={oaei}
+                        tittel={formatMessage('grunnlagstype.oppjusteringAvEierinntekter')}
+                    />
+                ))}
+            {props.felter.includes('annet') &&
+                props.grunnlag.annet.map((a) => (
+                    <OppsummeringAvGrunnlag key={'a'} grunnlag={a} tittel={formatMessage('grunnlagstype.annet')} />
+                ))}
+        </div>
+    );
+};
+
+const OppsummeringAvGrunnlag = (props: { grunnlag: Grunnlag; tittel: string }) => {
+    const { formatMessage } = useI18n({ messages });
+    return (
+        <div>
+            <Label>{props.tittel}</Label>
+            <div className={styles.grunnlagsinformasjonContainer}>
+                <OppsummeringPar
+                    label={formatSkattTekniskMessage(props.grunnlag.navn, formatMessage)}
+                    verdi={props.grunnlag.beløp}
+                />
+                {props.grunnlag.spesifisering.map((kjs) => (
+                    <OppsummeringAvKjøretøySpesifisering key={kjs.registreringsnummer} kjøretøySpesifisering={kjs} />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const OppsummeringAvKjøretøySpesifisering = (props: { kjøretøySpesifisering: KjøretøySpesifisering }) => {
+    const { formatMessage } = useI18n({ messages });
+    return (
+        <div>
+            <OppsummeringPar
+                label={formatMessage('kjøretøySpesifisering.antattMarkedsverdi')}
+                verdi={
+                    props.kjøretøySpesifisering.antattMarkedsverdi
+                        ? props.kjøretøySpesifisering.antattMarkedsverdi
+                        : formatMessage('kjøretøySpesifisering.verdiFinnesIkke')
+                }
+            />
+            <OppsummeringPar
+                label={formatMessage('kjøretøySpesifisering.antattVerdiSomNytt')}
+                verdi={
+                    props.kjøretøySpesifisering.antattVerdiSomNytt
+                        ? props.kjøretøySpesifisering.antattVerdiSomNytt
+                        : formatMessage('kjøretøySpesifisering.verdiFinnesIkke')
+                }
+            />
+            <OppsummeringPar
+                label={formatMessage('kjøretøySpesifisering.beløp')}
+                verdi={
+                    props.kjøretøySpesifisering.beløp
+                        ? props.kjøretøySpesifisering.beløp
+                        : formatMessage('kjøretøySpesifisering.verdiFinnesIkke')
+                }
+            />
+            <OppsummeringPar
+                label={formatMessage('kjøretøySpesifisering.fabrikatnavn')}
+                verdi={
+                    props.kjøretøySpesifisering.fabrikatnavn
+                        ? props.kjøretøySpesifisering.fabrikatnavn
+                        : formatMessage('kjøretøySpesifisering.verdiFinnesIkke')
+                }
+            />
+            <OppsummeringPar
+                label={formatMessage('kjøretøySpesifisering.formuesverdi')}
+                verdi={
+                    props.kjøretøySpesifisering.formuesverdi
+                        ? props.kjøretøySpesifisering.formuesverdi
+                        : formatMessage('kjøretøySpesifisering.verdiFinnesIkke')
+                }
+            />
+            <OppsummeringPar
+                label={formatMessage('kjøretøySpesifisering.registreringsnummer')}
+                verdi={
+                    props.kjøretøySpesifisering.registreringsnummer
+                        ? props.kjøretøySpesifisering.registreringsnummer
+                        : formatMessage('kjøretøySpesifisering.verdiFinnesIkke')
+                }
+            />
+            <OppsummeringPar
+                label={formatMessage('kjøretøySpesifisering.årForFørstegangsregistrering')}
+                verdi={
+                    props.kjøretøySpesifisering.årForFørstegangsregistrering
+                        ? props.kjøretøySpesifisering.årForFørstegangsregistrering
+                        : formatMessage('kjøretøySpesifisering.verdiFinnesIkke')
+                }
+            />
+        </div>
+    );
+};
+
+// Hjelpefunksjon for å håndtere att vi får ukjente tekniske navn på formue / inntekt fra skatteetaten
+const formatSkattTekniskMessage = (id: string, formatMessage: (id: keyof typeof messages) => string) => {
     try {
-        return formatMessage(id as keyof typeof skattegrunnlagMessages);
+        return formatMessage(id as keyof typeof messages);
     } catch (e) {
         return id;
     }
 };
-
-const SkatteApiFeilmelding = ({ tittel, error }: { tittel: string; error: ApiError | undefined }) => (
-    <div>
-        <Label className={styles.overskrift} spacing>
-            {tittel}
-        </Label>
-        <ApiErrorAlert error={error} />
-    </div>
-);

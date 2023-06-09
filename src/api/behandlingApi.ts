@@ -96,3 +96,13 @@ export async function underkjenn(arg: {
         },
     });
 }
+
+export async function hentNySkattegrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Søknadsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag`,
+        method: 'GET',
+    });
+}

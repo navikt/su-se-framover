@@ -22,7 +22,7 @@ import {
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import OppsummeringAvBeregning from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning';
-import OppsummeringAvSkattegrunnlag from '~src/components/oppsummering/oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
+import OppsummeringAvEksternGrunnlagSkatt from '~src/components/oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 import OppsummeringAvInntektOgPensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -38,7 +38,7 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { Fradrag } from '~src/types/Fradrag';
 import { NullablePeriode } from '~src/types/Periode';
 import { Person } from '~src/types/Person';
-import { SkattegrunnlagKategori } from '~src/types/skatt/Skatt';
+import { Simulering } from '~src/types/Simulering';
 import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erIGyldigStatusForÅKunneBeregne } from '~src/utils/BeregningUtils';
@@ -69,7 +69,8 @@ const getInitialValues = (
 });
 
 type Søker = { søker: Person };
-const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
+type UteståendeAvkorting = { uteståendeAvkorting: Nullable<Simulering> };
+const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkorting) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
@@ -178,7 +179,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
         defaultValues: draft ?? initialFormData,
         resolver: yupResolver(
             yup.object<FormData>({
-                fradrag: yup.array(fradragSchema.required()).defined(),
+                fradrag: yup.array<FradragFormData>(fradragSchema.required()).defined(),
                 begrunnelse: yup.string(),
             })
         ),
@@ -201,7 +202,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
             {{
                 left: (
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        {props.behandling.simuleringForAvkortingsvarsel && (
+                        {props.uteståendeAvkorting && (
                             <Alert variant={'info'} className={styles.avkortingAlert}>
                                 {formatMessage('alert.advarsel.avkorting')}
                             </Alert>
@@ -244,7 +245,11 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         </Heading>
                         <div className={styles.beregningsContainer}>
                             {props.behandling.beregning && (
-                                <OppsummeringAvBeregning beregning={props.behandling.beregning} />
+                                <OppsummeringAvBeregning
+                                    //vil ikkke vise link til skattegrunnlaget her
+                                    eksternGrunnlagSkatt={null}
+                                    beregning={props.behandling.beregning}
+                                />
                             )}
                             <Feiloppsummering
                                 tittel={formatMessage('feiloppsummering.title')}
@@ -313,7 +318,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                     </form>
                 ),
                 right: (
-                    <div>
+                    <div className={styles.høyresideContainer}>
                         <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
                         <OppsummeringAvInntektOgPensjon
                             inntektOgPensjon={{
@@ -323,12 +328,9 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                         />
 
                         {skattemeldingToggle && (
-                            <OppsummeringAvSkattegrunnlag
-                                søkerFnr={props.søker.fnr}
-                                skalHenteSkattegrunnlagForEPS={
-                                    hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr
-                                }
-                                kategori={SkattegrunnlagKategori.INNTEKT}
+                            <OppsummeringAvEksternGrunnlagSkatt
+                                medTittel
+                                eksternGrunnlagSkatt={props.behandling.eksterneGrunnlag.skatt}
                             />
                         )}
                     </div>

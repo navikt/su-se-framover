@@ -85,7 +85,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     };
 
     const schema = yup.object<EndringAvFradragFormData>({
-        fradrag: yup.array(fradragSchema.required()).defined(),
+        fradrag: yup.array<FradragFormData>(fradragSchema.required()).defined(),
     });
     const form = useForm<EndringAvFradragFormData>({
         defaultValues: {

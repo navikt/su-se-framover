@@ -30,39 +30,8 @@ export default createSlice({
     name: 'søker',
     initialState,
     reducers: {
-        resetSøker(state) {
-            state.søker = RemoteData.initial;
-        },
-        setSøker(state) {
-            state.søker = RemoteData.success({
-                fnr: '12312312312',
-                aktorId: 'aktørId',
-                navn: {
-                    fornavn: 'fornavn',
-                    mellomnavn: null,
-                    etternavn: 'etternavn',
-                },
-                kjønn: null,
-                fødsel: {
-                    dato: null,
-                    år: 2000,
-                    alder: 23,
-                },
-                telefonnummer: {
-                    landskode: '+47',
-                    nummer: '2225555',
-                },
-                adresse: null,
-                statsborgerskap: null,
-                adressebeskyttelse: null,
-                skjermet: null,
-                sivilstand: null,
-                kontaktinfo: null,
-                vergemål: null,
-                fullmakt: null,
-                dødsdato: null,
-            });
-        },
+        resetSøkerData: () => initialState,
+        setSøker: (state) => ({ ...state, søker: localPersonStub() }),
     },
     extraReducers: (builder) => {
         handleAsyncThunk(builder, fetchPerson, {
@@ -78,3 +47,21 @@ export default createSlice({
         });
     },
 });
+
+const localPersonStub = () =>
+    RemoteData.success({
+        fnr: '12312312312',
+        aktorId: 'aktørId',
+        navn: { fornavn: 'fornavn', mellomnavn: null, etternavn: 'etternavn' },
+        fødsel: { dato: null, år: 2000, alder: 23 },
+        telefonnummer: { landskode: '+47', nummer: '2225555' },
+        adresse: null,
+        statsborgerskap: null,
+        adressebeskyttelse: null,
+        skjermet: null,
+        sivilstand: null,
+        kontaktinfo: null,
+        vergemål: null,
+        fullmakt: null,
+        dødsdato: null,
+    });

@@ -23,9 +23,17 @@ export const eqBehandlingsperiode = struct<VirkningstidspunktFormData>({
 export const er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned = (
     stønadsperiodeTilOgMed: Date,
     fødselsdato: Date
-) =>
-    alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) >= 67 &&
-    stønadsperiodeTilOgMed.getMonth() > new Date(fødselsdato).getMonth();
+) => {
+    if (alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) > 67) {
+        return true;
+    }
+
+    if (alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) === 67) {
+        return stønadsperiodeTilOgMed.getMonth() > new Date(fødselsdato).getMonth();
+    }
+
+    return false;
+};
 
 export const fyller67PlusVedStønadsperiodeTilOgMed = (stønadsperiodeTilOgMed: Date, fødselsår: number) =>
     alderSomPersonFyllerIÅrDate(stønadsperiodeTilOgMed.getFullYear(), fødselsår) >= 67;

@@ -73,7 +73,7 @@ export async function fetchBrevutkastForForhåndsvarsel(
 export async function fetchBrevutkastForAvslutningAvRevurdering(args: {
     sakId: string;
     revurderingId: string;
-    fritekst: Nullable<string>;
+    fritekst: string;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkastForAvslutting`,

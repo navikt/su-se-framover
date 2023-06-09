@@ -99,11 +99,13 @@ const OppsummeringAvSøknadsbehandling = (props: {
                     <SidestiltOppsummeringAvVilkårOgGrunnlag
                         grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
                         visesSidestiltMed={props.behandling.søknad.søknadInnhold}
+                        eksterneGrunnlag={props.behandling.eksterneGrunnlag}
                     />
                 </div>
             </Oppsummeringspanel>
 
             <OppsummeringAvBeregningOgSimulering
+                eksterngrunnlagSkatt={props.behandling.eksterneGrunnlag.skatt}
                 beregning={props.behandling.beregning}
                 simulering={props.behandling.simulering}
             />

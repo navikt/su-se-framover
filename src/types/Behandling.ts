@@ -9,6 +9,7 @@ export type Behandlingsstatus = SøknadsbehandlingStatus | RevurderingStatus;
 
 export interface Behandling<Status = Behandlingsstatus> {
     id: string;
+    sakId: string;
     sakstype: Sakstype;
     opprettet: string;
     status: Status;

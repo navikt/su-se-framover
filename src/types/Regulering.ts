@@ -32,8 +32,9 @@ export enum Reguleringsstatus {
 }
 
 export interface ReguleringOversiktsstatus {
-    regulering: Regulering;
-    merknad: ReguleringMerknad[];
+    saksnummer: number;
+    fnr: string;
+    merknader: ReguleringMerknad[];
 }
 
 export enum ReguleringMerknad {

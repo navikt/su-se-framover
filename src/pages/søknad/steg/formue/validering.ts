@@ -1,4 +1,4 @@
-import { SøknadState } from '~src/features/søknad/søknad.slice';
+import { Kjøretøy, SøknadState } from '~src/features/søknad/søknad.slice';
 import { keyOf, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
@@ -103,7 +103,7 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             }),
         eierKjøretøy: yup.boolean().nullable().required(`Fyll ut om ${tilhører} eier kjøretøy`),
         kjøretøy: yup
-            .array(kjøretøySchema.required())
+            .array<Kjøretøy>(kjøretøySchema.required())
             .defined()
             .when(keyOf<FormData>('eierKjøretøy'), {
                 is: true,
