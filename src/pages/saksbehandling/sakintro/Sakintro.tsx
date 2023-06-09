@@ -145,7 +145,9 @@ const Sakintro = () => {
                 </div>
             </div>
 
-            <Vedtakstidslinje vedtakerPåTidslinje={props.sak.vedtakPåTidslinje} />
+            <div className={styles.vedtaksTidslinjeContainer}>
+                <Vedtakstidslinje vedtakerPåTidslinje={props.sak.vedtakPåTidslinje} />
+            </div>
 
             {props.sak.søknader.length > 0 ? (
                 <div className={styles.contentContainer}>
