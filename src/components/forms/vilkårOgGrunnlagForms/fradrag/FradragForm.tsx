@@ -180,20 +180,12 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                         name={`${partialFradragNavn}.periode` as Path<T>}
                                         render={({ field }) => (
                                             <PeriodeForm
-                                                name={`${partialFradragNavn}.periode`}
                                                 value={field.value}
                                                 onChange={(periode: NullablePeriode) => {
                                                     update(idx, { ...watchedFradrag, periode: periode });
                                                 }}
-                                                size="S"
-                                                minDate={{
-                                                    fraOgMed: props.beregningsDato?.fraOgMed,
-                                                    tilOgMed: watchedFradrag?.periode?.fraOgMed,
-                                                }}
-                                                maxDate={{
-                                                    fraOgMed: props.beregningsDato?.fraOgMed,
-                                                    tilOgMed: props.beregningsDato?.tilOgMed,
-                                                }}
+                                                minDate={props.beregningsDato?.fraOgMed ?? null}
+                                                maxDate={props.beregningsDato?.tilOgMed ?? null}
                                             />
                                         )}
                                     />

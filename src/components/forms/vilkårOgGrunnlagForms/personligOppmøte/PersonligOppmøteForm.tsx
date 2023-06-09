@@ -35,8 +35,8 @@ const PersonligOppmøteForm = (props: Props) => {
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodePersonligOppmøteMedEllerUtenPeriode}
                     periodeConfig={{
-                        minFraOgMed: props.minOgMaxPeriode.fraOgMed,
-                        maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
+                        minDate: props.minOgMaxPeriode.fraOgMed,
+                        maxDate: props.minOgMaxPeriode.tilOgMed,
                     }}
                     getChild={(nameAndIdx: `personligOppmøte.${number}`) => (
                         <>

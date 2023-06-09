@@ -2,7 +2,7 @@ import { Checkbox, Label } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { BehandlingssammendragStatus, BehandlingssammendragType } from '~src/types/Behandlingssammendrag';
@@ -66,7 +66,6 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                     {fraOgMedState && (
                         <DatePicker
                             label={formatMessage('fraOgMed')}
-                            dateFormat={'dd.MM.yyyy'}
                             value={fraOgMedState[0]}
                             onChange={(dato) => fraOgMedState[1](dato ? DateFns.startOfDay(dato) : dato)}
                         />
@@ -75,9 +74,8 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                         <DatePicker
                             label={formatMessage('tilOgMed')}
                             value={tilOgMedState[0]}
-                            dateFormat={'dd.MM.yyyy'}
                             onChange={(dato) => tilOgMedState[1](dato ? DateFns.endOfDay(dato) : dato)}
-                            feil={
+                            error={
                                 tilOgMedErGyldig(fraOgMedState?.[0], tilOgMedState[0])
                                     ? undefined
                                     : formatMessage('datovalidering')

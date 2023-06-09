@@ -122,16 +122,9 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
 
                     <PeriodeForm
                         value={stønadsperiode}
-                        name={'stønadsperiode'}
                         onChange={setStønadsperiode}
-                        minDate={{
-                            fraOgMed: new Date('2021-01-01'),
-                            tilOgMed: undefined,
-                        }}
-                        maxDate={{
-                            fraOgMed: undefined,
-                            tilOgMed: undefined,
-                        }}
+                        minDate={new Date('2021-01-01')}
+                        maxDate={null}
                     />
 
                     <TextField

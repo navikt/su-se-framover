@@ -28,9 +28,9 @@ interface Props<T extends FieldValues, U> {
     controller: Control<T>;
     appendNyPeriode: () => U;
     periodeConfig: {
-        minFraOgMed: Date;
-        maxTilOgMed: Date;
-        size?: 'S' | 'L';
+        minDate: Date;
+        maxDate: Date;
+        size?: 'medium' | 'small';
     };
     getChild: (nameAndIdx: PartialName<T>) => React.ReactNode;
     childrenOverDato?: boolean;
@@ -60,19 +60,12 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                             name={`${props.name}.${idx}.periode` as Path<T>}
                             render={({ field, fieldState }) => (
                                 <PeriodeForm
-                                    name={`${props.name}.${idx}.periode`}
                                     value={field.value}
                                     onChange={(periode: NullablePeriode) => {
                                         update(idx, { ...watchedItem, periode: periode });
                                     }}
-                                    minDate={{
-                                        fraOgMed: props.periodeConfig.minFraOgMed,
-                                        tilOgMed: props.periodeConfig.maxTilOgMed,
-                                    }}
-                                    maxDate={{
-                                        fraOgMed: props.periodeConfig.minFraOgMed,
-                                        tilOgMed: props.periodeConfig.maxTilOgMed,
-                                    }}
+                                    minDate={props.periodeConfig.minDate}
+                                    maxDate={props.periodeConfig.maxDate}
                                     error={fieldState.error as FieldErrors<NullablePeriode>}
                                     size={props.periodeConfig.size}
                                 />

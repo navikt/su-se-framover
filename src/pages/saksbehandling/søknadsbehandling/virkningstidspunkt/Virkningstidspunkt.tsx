@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { RangePickerMonth } from '~src/components/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -15,7 +15,6 @@ import { nullableMap, pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { getDateErrorMessage } from '~src/lib/validering';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppSelector } from '~src/redux/Store';
 import { Fødsel } from '~src/types/Person';
@@ -47,9 +46,17 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
 
     const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
     const søkerState = useAppSelector((state) => state.personopplysninger.søker);
-    const initialValues = {
-        fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
-        tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
+    const initialValues: VirkningstidspunktFormData = {
+        periode: {
+            fraOgMed: nullableMap(
+                props.behandling.stønadsperiode?.periode.fraOgMed ?? null,
+                DateUtils.parseIsoDateOnly
+            ),
+            tilOgMed: nullableMap(
+                props.behandling.stønadsperiode?.periode.tilOgMed ?? null,
+                DateUtils.parseIsoDateOnly
+            ),
+        },
         harSaksbehandlerAvgjort: !!props.behandling.aldersvurdering?.harSaksbehandlerAvgjort,
     };
 
@@ -66,8 +73,8 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     useDraftFormSubscribe(form.watch);
 
     const save = (data: VirkningstidspunktFormData, onSuccess: () => void) => {
-        const fraOgMed = DateFns.formatISO(data.fraOgMed!, { representation: 'date' });
-        const tilOgMed = DateFns.formatISO(data.tilOgMed!, { representation: 'date' });
+        const fraOgMed = DateFns.formatISO(data.periode.fraOgMed!, { representation: 'date' });
+        const tilOgMed = DateFns.formatISO(data.periode.tilOgMed!, { representation: 'date' });
         return lagreVirkningstidspunkt(
             {
                 sakId: props.sakId,
@@ -88,18 +95,18 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             erAldersvurderingAvgjortOgHarEndretPåStønadsperioden({
                 s: props.behandling,
                 angittPeriode: {
-                    fraOgMed: form.watch('fraOgMed')
-                        ? DateFns.formatISO(form.watch('fraOgMed')!, { representation: 'date' })
+                    fraOgMed: form.watch('periode.fraOgMed')
+                        ? DateFns.formatISO(form.watch('periode.fraOgMed')!, { representation: 'date' })
                         : null,
-                    tilOgMed: form.watch('tilOgMed')
-                        ? DateFns.formatISO(form.watch('tilOgMed')!, { representation: 'date' })
+                    tilOgMed: form.watch('periode.tilOgMed')
+                        ? DateFns.formatISO(form.watch('periode.tilOgMed')!, { representation: 'date' })
                         : null,
                 },
             })
         ) {
             form.setValue('harSaksbehandlerAvgjort', false);
         }
-    }, [props.behandling, form.watch('fraOgMed'), form.watch('tilOgMed')]);
+    }, [props.behandling, form.watch('periode.fraOgMed'), form.watch('periode.tilOgMed')]);
 
     return (
         <>
@@ -129,7 +136,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     >
                                         <>
                                             <SaksbehandlerMåKontrollereStønadsperioden
-                                                stønadsperiodeTilOgMed={form.watch('tilOgMed')}
+                                                stønadsperiodeTilOgMed={form.watch('periode.tilOgMed')}
                                                 søkersFødselsinformasjon={søker.fødsel}
                                             />
 
@@ -139,13 +146,13 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                 skalViseBekreftelsesPanel({
                                                     s: props.behandling,
                                                     angittPeriode: {
-                                                        fraOgMed: form.watch('fraOgMed')
-                                                            ? DateFns.formatISO(form.watch('fraOgMed')!, {
+                                                        fraOgMed: form.watch('periode.fraOgMed')
+                                                            ? DateFns.formatISO(form.watch('periode.fraOgMed')!, {
                                                                   representation: 'date',
                                                               })
                                                             : null,
-                                                        tilOgMed: form.watch('tilOgMed')
-                                                            ? DateFns.formatISO(form.watch('tilOgMed')!, {
+                                                        tilOgMed: form.watch('periode.tilOgMed')
+                                                            ? DateFns.formatISO(form.watch('periode.tilOgMed')!, {
                                                                   representation: 'date',
                                                               })
                                                             : null,
@@ -170,55 +177,21 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                             )}
 
                                             <Controller
+                                                name={`periode`}
                                                 control={form.control}
-                                                name="fraOgMed"
-                                                render={({ field, fieldState }) => (
-                                                    <DatePicker
-                                                        name={field.name}
-                                                        value={field.value}
-                                                        onChange={(date) => {
-                                                            field.onChange(date);
-                                                            if (form.watch('tilOgMed') === null && date !== null) {
-                                                                form.setValue(
-                                                                    'tilOgMed',
-                                                                    DateFns.endOfMonth(DateFns.addMonths(date, 11))
-                                                                );
-                                                            }
+                                                render={({ field }) => (
+                                                    <RangePickerMonth
+                                                        name={'periode'}
+                                                        label={{
+                                                            fraOgMed: formatMessage('datovelger.fom.label'),
                                                         }}
-                                                        className={styles.dato}
-                                                        id="fraOgMed"
-                                                        label={formatMessage('datovelger.fom.label')}
-                                                        dateFormat="MM/yyyy"
-                                                        showMonthYearPicker
-                                                        isClearable
-                                                        selectsEnd
-                                                        autoComplete="off"
-                                                        minDate={TIDLIGST_MULIG_START_DATO}
-                                                        feil={getDateErrorMessage(fieldState.error)}
-                                                    />
-                                                )}
-                                            />
-                                            <Controller
-                                                control={form.control}
-                                                name="tilOgMed"
-                                                render={({ field, fieldState }) => (
-                                                    <DatePicker
-                                                        name={field.name}
-                                                        onChange={(date) =>
-                                                            date
-                                                                ? field.onChange(DateFns.endOfMonth(date))
-                                                                : field.onChange(date)
-                                                        }
                                                         value={field.value}
-                                                        className={styles.dato}
-                                                        id="tilOgMed"
-                                                        label={formatMessage('datovelger.tom.label')}
-                                                        dateFormat="MM/yyyy"
-                                                        showMonthYearPicker
-                                                        isClearable
-                                                        selectsEnd
-                                                        autoComplete="off"
-                                                        feil={getDateErrorMessage(fieldState.error)}
+                                                        onChange={field.onChange}
+                                                        fromDate={TIDLIGST_MULIG_START_DATO}
+                                                        error={{
+                                                            fraOgMed: form.formState.errors.periode?.fraOgMed?.message,
+                                                            tilOgMed: form.formState.errors.periode?.tilOgMed?.message,
+                                                        }}
                                                     />
                                                 )}
                                             />

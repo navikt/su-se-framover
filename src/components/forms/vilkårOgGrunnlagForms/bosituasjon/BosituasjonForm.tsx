@@ -48,8 +48,8 @@ const BosituasjonForm = (props: Props) => {
                     appendNyPeriode={nyBosituasjon}
                     skalIkkeKunneVelgePeriode={props.skalIkkeKunneVelgePeriode}
                     periodeConfig={{
-                        minFraOgMed: props.minOgMaxPeriode.fraOgMed,
-                        maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
+                        minDate: props.minOgMaxPeriode.fraOgMed,
+                        maxDate: props.minOgMaxPeriode.tilOgMed,
                     }}
                     getChild={(nameAndIdx) => {
                         const watch = props.form.watch(nameAndIdx);

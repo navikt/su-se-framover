@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 
 import { WarningIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import RegistreringAvUtenlandsoppholdForm from '~src/components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdForm';
 import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from '~src/components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdFormUtils';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
@@ -79,17 +79,13 @@ const Oppsummeringsfiltrering = (props: {
         <div className={styles.filterContainer}>
             <DatePicker
                 label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.fraOgMed')}
-                dateFormat={'dd.MM.yyyy'}
                 value={props.fraOgMed.value}
                 onChange={(dato) => (dato ? props.fraOgMed.set(DateFns.startOfDay(dato)) : props.fraOgMed.set(dato))}
-                isClearable
             />
             <DatePicker
                 label={formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.tilOgMed')}
                 value={props.tilOgMed.value}
-                dateFormat={'dd.MM.yyyy'}
                 onChange={(dato) => (dato ? props.tilOgMed.set(DateFns.endOfDay(dato)) : props.tilOgMed.set(dato))}
-                isClearable
             />
             <Checkbox checked={props.annullert.value} onChange={(e) => props.annullert.set(e.target.checked)}>
                 {formatMessage('oppsummeringAvRegistrerteUtenlandsopphold.filtrering.annullerte')}

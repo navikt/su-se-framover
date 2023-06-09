@@ -1,25 +1,22 @@
 import * as DateFns from 'date-fns';
 import * as B from 'fp-ts/boolean';
-import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 
-import { eqNullable, Nullable } from '~src/lib/types';
+import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { NullablePeriode } from '~src/types/Periode';
+import { eqNullableDatePeriode, NullablePeriode } from '~src/types/Periode';
 import { Stønadsperiode, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { alderSomPersonFyllerIÅrDate, alderSomPersonFyllerPåDato } from '~src/utils/person/personUtils';
 import { maskinellVurderingGirBehovForSaksbehandlerAvgjørelse } from '~src/utils/SøknadsbehandlingUtils';
 
 export interface VirkningstidspunktFormData {
-    fraOgMed: Nullable<Date>;
-    tilOgMed: Nullable<Date>;
+    periode: NullablePeriode;
     harSaksbehandlerAvgjort: boolean;
 }
 
 export const TIDLIGST_MULIG_START_DATO = new Date(2021, 0, 1);
 export const eqBehandlingsperiode = struct<VirkningstidspunktFormData>({
-    fraOgMed: eqNullable(D.Eq),
-    tilOgMed: eqNullable(D.Eq),
+    periode: eqNullableDatePeriode,
     harSaksbehandlerAvgjort: B.Eq,
 });
 
@@ -59,36 +56,40 @@ const harEndretPåStønadsperioden = (arg: { s: Nullable<Stønadsperiode>; angit
 export const virkningstidspunktSchema = yup
     .object<VirkningstidspunktFormData>({
         harSaksbehandlerAvgjort: yup.boolean().defined(),
-        fraOgMed: yup
-            .date()
-            .nullable()
-            .required('Du må velge virkningstidspunkt for supplerende stønad')
-            .min(TIDLIGST_MULIG_START_DATO),
-        tilOgMed: yup
-            .date()
-            .nullable()
-            .required('Du må velge til-og-med-dato')
-            .test(
-                'maks12MndStønadsperiode',
-                'Stønadsperioden kan ikke være lenger enn 12 måneder',
-                function (tilOgMed) {
-                    const { fraOgMed } = this.parent;
-                    if (!tilOgMed || !fraOgMed) {
-                        return false;
-                    }
-                    if (DateFns.differenceInYears(tilOgMed, fraOgMed) >= 1) {
-                        return false;
-                    }
-                    return true;
-                }
-            )
-            .test('isAfterFom', 'Sluttdato må være etter startdato', function (tilOgMed) {
-                const { fraOgMed } = this.parent;
-                if (!tilOgMed || !fraOgMed) {
-                    return false;
-                }
+        periode: yup
+            .object({
+                fraOgMed: yup
+                    .date()
+                    .nullable()
+                    .required('Du må velge virkningstidspunkt for supplerende stønad')
+                    .min(TIDLIGST_MULIG_START_DATO),
+                tilOgMed: yup
+                    .date()
+                    .nullable()
+                    .required('Du må velge til-og-med-dato')
+                    .test(
+                        'maks12MndStønadsperiode',
+                        'Stønadsperioden kan ikke være lenger enn 12 måneder',
+                        function (tilOgMed) {
+                            const { fraOgMed } = this.parent;
+                            if (!tilOgMed || !fraOgMed) {
+                                return false;
+                            }
+                            if (DateFns.differenceInYears(tilOgMed, fraOgMed) >= 1) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    )
+                    .test('isAfterFom', 'Sluttdato må være etter startdato', function (tilOgMed) {
+                        const { fraOgMed } = this.parent;
+                        if (!tilOgMed || !fraOgMed) {
+                            return false;
+                        }
 
-                return fraOgMed <= tilOgMed;
-            }),
+                        return fraOgMed <= tilOgMed;
+                    }),
+            })
+            .required(),
     })
     .required();

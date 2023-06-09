@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as klageActions from '~src/features/klage/klageActions';
@@ -90,13 +90,11 @@ const OpprettKlage = () => {
                 name="datoKlageMottatt"
                 render={({ field, fieldState }) => (
                     <DatePicker
-                        {...field}
-                        dateFormat="dd/MM/yyyy"
                         label={formatMessage('opprett.klageMottatt.label')}
-                        feil={fieldState.error?.message}
-                        maxDate={DateFns.endOfDay(new Date())}
                         value={field.value}
-                        autoComplete="off"
+                        onChange={field.onChange}
+                        error={fieldState.error?.message}
+                        toDate={DateFns.endOfDay(new Date())}
                         hjelpetekst={formatMessage('opprett.klageMottatt.hjelpetekst')}
                     />
                 )}

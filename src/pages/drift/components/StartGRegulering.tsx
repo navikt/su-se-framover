@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
 import * as reguleringApi from '~src/api/reguleringApi';
-import DatePicker from '~src/components/datePicker/DatePicker';
+import { MonthPicker } from '~src/components/datePicker/DatePicker';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
@@ -29,11 +29,9 @@ const StartGRegulering = () => {
     return (
         <div className={styles.regulering}>
             <div>
-                <DatePicker
+                <MonthPicker
                     label="Velg reguleringsdato"
                     value={startDatoDryRun}
-                    dateFormat="MM/yyyy"
-                    showMonthYearPicker
                     onChange={(dato) => setStartDatoDryRun(dato)}
                 />
                 <TextField label={'G-verdi'} onChange={(v) => setGVerdiDryRun(Number(v.target.value))} />
@@ -77,14 +75,7 @@ const StartGRegulering = () => {
                     )
                 )}
             </GuidePanel>
-
-            <DatePicker
-                label="Velg reguleringsdato"
-                value={startDato}
-                dateFormat="MM/yyyy"
-                showMonthYearPicker
-                onChange={(dato) => setStartDato(dato)}
-            />
+            <MonthPicker label="Velg reguleringsdato" value={startDato} onChange={(dato) => setStartDato(dato)} />
 
             <Button
                 onClick={() => startDato && reguler({ fraOgMedMåned: toIsoMonthOrNull(startDato)! })}

@@ -30,9 +30,8 @@ const OpplysningspliktForm = (props: Props) => {
                     controller={props.form.control}
                     appendNyPeriode={nyVurderingsperiodeOpplysningspliktMedEllerUtenPeriode}
                     periodeConfig={{
-                        minFraOgMed: props.minOgMaxPeriode.fraOgMed,
-                        maxTilOgMed: props.minOgMaxPeriode.tilOgMed,
-                        size: 'S',
+                        minDate: props.minOgMaxPeriode.fraOgMed,
+                        maxDate: props.minOgMaxPeriode.tilOgMed,
                     }}
                     childrenOverDato
                     getChild={(nameAndIdx) => (

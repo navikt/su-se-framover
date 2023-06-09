@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import Datepicker from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/datePicker/DatePicker';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import søknadSlice from '~src/features/søknad/søknad.slice';
@@ -91,14 +91,12 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 control={form.control}
                                 name={'datoForInnleggelse'}
                                 render={({ field, fieldState }) => (
-                                    <Datepicker
-                                        id={field.name}
+                                    <DatePicker
+                                        {...field}
                                         onChange={(val) => field.onChange(val ? toIsoDateOnlyString(val) : null)}
-                                        dateFormat="dd.MM.yyyy"
                                         label={formatMessage('innlagtPåInstitusjon.datoForInnleggelse')}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         value={toDateOrNull(field.value)}
-                                        autoComplete="off"
                                     />
                                 )}
                             />
@@ -109,16 +107,14 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                     control={form.control}
                                     name={'datoForUtskrivelse'}
                                     render={({ field, fieldState }) => (
-                                        <Datepicker
-                                            id={field.name}
+                                        <DatePicker
+                                            {...field}
                                             onChange={(val) => field.onChange(val ? toIsoDateOnlyString(val) : null)}
-                                            dateFormat="dd.MM.yyyy"
                                             label={formatMessage('innlagtPåInstitusjon.datoForUtskrivelse')}
-                                            feil={fieldState.error?.message}
+                                            error={fieldState.error?.message}
                                             value={toDateOrNull(field.value)}
-                                            minDate={toDateOrNull(form.watch('datoForInnleggelse'))}
+                                            fromDate={toDateOrNull(form.watch('datoForInnleggelse'))}
                                             disabled={form.watch('fortsattInnlagt') ?? false}
-                                            autoComplete="off"
                                         />
                                     )}
                                 />

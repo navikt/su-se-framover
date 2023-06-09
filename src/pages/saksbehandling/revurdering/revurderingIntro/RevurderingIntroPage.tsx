@@ -95,13 +95,8 @@ const RevurderingIntroPage = () => {
             tilbakeUrl={forrigeUrl}
             revurdering={informasjonsRevurdering}
             periodeConfig={{
-                fraOgMed: {
-                    min: DateFns.parseISO(førsteUtbetaling.fraOgMed),
-                    max: DateFns.parseISO(sisteUtbetaling.tilOgMed),
-                },
-                tilOgMed: {
-                    max: DateFns.parseISO(sisteUtbetaling.tilOgMed),
-                },
+                minDate: DateFns.parseISO(førsteUtbetaling.fraOgMed),
+                maxDate: DateFns.parseISO(sisteUtbetaling.tilOgMed),
             }}
             opprettRevurderingStatus={opprettStatus}
             oppdaterRevurderingStatus={oppdaterStatus}
