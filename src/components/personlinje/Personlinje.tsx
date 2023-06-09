@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Loader } from '@navikt/ds-react';
-import { CopyToClipboard } from '@navikt/ds-react-internal';
+import { Alert, BodyShort, CopyButton, Loader } from '@navikt/ds-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -40,23 +39,22 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
                     </BodyShort>
                 </Link>
                 <Separator />
-                <CopyToClipboard
+                <CopyButton
                     copyText={props.søker.fnr}
-                    popoverText={formatMessage('ariaLabel.kopierteFnr')}
+                    activeText={formatMessage('ariaLabel.kopierteFnr')}
                     size="small"
-                >
-                    {formatFnr(props.søker.fnr)}
-                </CopyToClipboard>
+                    text={formatFnr(props.søker.fnr)}
+                />
+
                 <Separator />
                 <span className={styles.saksnummer}>
                     <BodyShort as="span">{formatMessage('label.saksnummer')}&nbsp;</BodyShort>
-                    <CopyToClipboard
+                    <CopyButton
                         copyText={props.sakInfo.saksnummer.toString()}
-                        popoverText={formatMessage('ariaLabel.kopierteSaksnummer')}
+                        activeText={formatMessage('ariaLabel.kopierteSaksnummer')}
                         size="small"
-                    >
-                        {props.sakInfo.saksnummer}
-                    </CopyToClipboard>
+                        text={props.sakInfo.saksnummer.toString()}
+                    />
                 </span>
                 {props.søker.sivilstand && (
                     <span className={styles.sivilstandAndSeperator}>
@@ -105,13 +103,12 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                         <span className={styles.epsInformasjon}>
                             <KjønnUkjent size="24px" />
                             <BodyShort>{showName(eps.navn)}</BodyShort>
-                            <CopyToClipboard
+                            <CopyButton
                                 copyText={eps.fnr}
-                                popoverText={formatMessage('ariaLabel.kopierteFnr')}
+                                activeText={formatMessage('ariaLabel.kopierteFnr')}
                                 size="small"
-                            >
-                                {formatFnr(eps.fnr)}
-                            </CopyToClipboard>
+                                text={formatFnr(eps.fnr)}
+                            />
                         </span>
                     )
                 )
