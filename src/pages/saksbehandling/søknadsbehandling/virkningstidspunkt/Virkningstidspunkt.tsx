@@ -226,7 +226,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     </FormWrapper>
                                 ),
                                 right: (
-                                    <div className={styles.høyresideContainer}>
+                                    <div>
                                         <Heading size="small">{formatMessage('søker.personalia')}</Heading>
                                         <OppsummeringPar
                                             label={formatMessage('søker.fødselsdato')}
