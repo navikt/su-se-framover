@@ -153,29 +153,28 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                             <BodyShort>{formatMessage('datacell.brev.ikkeGenerert')}</BodyShort>
                                         )}
 
-                                        {isOversendtKlage(vedtak) ||
-                                            (erDokumentGenerertEllerSenere(vedtak) && (
-                                                <Button
-                                                    className={styles.seBrevButton}
-                                                    variant="secondary"
-                                                    size={'small'}
-                                                    loading={RemoteData.isPending(hentDokumenterStatus)}
-                                                    onClick={() => {
-                                                        hentDokumenter(
-                                                            {
-                                                                id: vedtak.id,
-                                                                idType: isOversendtKlage(vedtak)
-                                                                    ? DokumentIdType.Klage
-                                                                    : DokumentIdType.Vedtak,
-                                                            },
-                                                            (dokumenter) =>
-                                                                window.open(URL.createObjectURL(getBlob(dokumenter[0])))
-                                                        );
-                                                    }}
-                                                >
-                                                    <Email />
-                                                </Button>
-                                            ))}
+                                        {(isOversendtKlage(vedtak) || erDokumentGenerertEllerSenere(vedtak)) && (
+                                            <Button
+                                                className={styles.seBrevButton}
+                                                variant="secondary"
+                                                size={'small'}
+                                                loading={RemoteData.isPending(hentDokumenterStatus)}
+                                                onClick={() => {
+                                                    hentDokumenter(
+                                                        {
+                                                            id: vedtak.id,
+                                                            idType: isOversendtKlage(vedtak)
+                                                                ? DokumentIdType.Klage
+                                                                : DokumentIdType.Vedtak,
+                                                        },
+                                                        (dokumenter) =>
+                                                            window.open(URL.createObjectURL(getBlob(dokumenter[0])))
+                                                    );
+                                                }}
+                                            >
+                                                <Email />
+                                            </Button>
+                                        )}
                                     </Table.DataCell>
                                 </Table.Row>
                             );
