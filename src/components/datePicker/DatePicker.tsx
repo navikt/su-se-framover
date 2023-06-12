@@ -28,8 +28,8 @@ export const DatePicker = (props: {
     disabled?: boolean;
 }) => {
     const { datepickerProps, inputProps } = useDatepicker({
-        fromDate: props.fromDate ?? new Date('jan 01 2021'),
-        toDate: props.toDate ?? DateFns.addYears(new Date(new Date().getFullYear(), 12, 0), 1),
+        fromDate: props.fromDate ?? new Date('2000-01-01'),
+        toDate: props.toDate ?? new Date('2099-12-1'),
         onDateChange: (d) => props.onChange(d ?? null),
         defaultSelected: props.value ?? undefined,
     });
@@ -63,15 +63,15 @@ export const MonthPicker = (props: {
     error?: string;
 }) => {
     const { monthpickerProps, inputProps } = useMonthpicker({
-        fromDate: props.fromDate ?? new Date('2021-01-01'),
-        toDate: props.toDate ?? new Date('2023-12-01'),
+        fromDate: props.fromDate ?? new Date('2000-01-01'),
+        toDate: props.toDate ?? new Date('2099-12-1'),
         onMonthChange: (d) => props.onChange(d ?? null),
         defaultSelected: props.value ?? undefined,
     });
 
     return (
         <div>
-            <MonthPickerDS {...monthpickerProps} selected={props.value ?? undefined} dropdownCaption>
+            <MonthPickerDS {...monthpickerProps} selected={props.value ?? undefined}>
                 <MonthPickerDS.Input {...inputProps} label={props.label} size={props.size} error={props.error} />
             </MonthPickerDS>
         </div>
@@ -130,8 +130,8 @@ export const RangePickerDate = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
     const { datepickerProps, fromInputProps, toInputProps } = useRangeDatepicker({
-        fromDate: props.fromDate ?? new Date('2021-01-01'),
-        toDate: props.toDate ?? DateFns.addYears(new Date(new Date().getFullYear(), 12, 0), 1),
+        fromDate: props.fromDate ?? new Date('2000-01-01'),
+        toDate: props.toDate ?? new Date('2099-12-1'),
         onRangeChange: (v) => props.onChange({ fraOgMed: v?.from ?? null, tilOgMed: v?.to ?? null }),
         defaultSelected: { from: props.value.fraOgMed ?? undefined, to: props.value.tilOgMed ?? undefined },
     });
