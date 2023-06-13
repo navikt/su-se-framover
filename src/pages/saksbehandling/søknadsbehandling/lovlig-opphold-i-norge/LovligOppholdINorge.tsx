@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import LovligOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
@@ -28,6 +29,7 @@ import { VilkårsvurderingBaseProps } from '../types';
 import messages from './lovligOppholdINorge-nb';
 
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagreLovligopphold] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreLovligOppholdVilkår);
 
@@ -42,6 +44,10 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         );
 
     const save = (values: LovligOppholdVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
+        if (eqLovligOppholdVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
         lagreLovligopphold(
             {
                 ...lovligOppholdFormDataTilRequest({

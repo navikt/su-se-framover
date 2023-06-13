@@ -44,13 +44,9 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
                   ),
         uføregrad: yup.mixed<string>().when('oppfylt', {
             is: UføreResultat.VilkårOppfylt,
-            then: yup
-                .number()
-                .required('Feltet må fylles ut')
-                .min(1, 'Feltet må være større eller lik 1')
-                .typeError('Feltet må være et tall')
-                .max(100, 'Uføregrad må være mellom 0 og 100'),
-            otherwise: yup.string().notRequired(),
+            then: yup.string().test('uføregrad', 'uføregrad må være minst 1, og maks 100', function (value) {
+                return value ? Number.parseInt(value, 10) <= 100 && Number.parseInt(value, 10) >= 1 : false;
+            }),
         }),
         forventetInntekt: yup.mixed<string>().when('oppfylt', {
             is: UføreResultat.VilkårOppfylt,

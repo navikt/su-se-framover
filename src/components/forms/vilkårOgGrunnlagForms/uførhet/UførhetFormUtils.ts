@@ -1,10 +1,25 @@
+import { getEq } from 'fp-ts/Array';
+import { struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
 import { v4 as uuid } from 'uuid';
 
-import { Nullable } from '~src/lib/types';
+import { eqNullable, Nullable } from '~src/lib/types';
 import { UføreResultat, VurderingsperiodeUføre } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { NullablePeriode, Periode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { lagDatePeriodeAvStringPeriodeEllerTomPeriode } from '~src/utils/periode/periodeUtils';
+import { eqPeriode, lagDatePeriodeAvStringPeriodeEllerTomPeriode } from '~src/utils/periode/periodeUtils';
+
+export const eqUføreperiodeFormData = struct<UføreperiodeFormData>({
+    id: S.Eq,
+    periode: eqPeriode,
+    uføregrad: S.Eq,
+    forventetInntekt: S.Eq,
+    oppfylt: eqNullable(S.Eq),
+});
+
+export const eqUføreVilkårFormData = struct<UførhetFormData>({
+    grunnlag: getEq(eqUføreperiodeFormData),
+});
 
 export const lagTomUføreperiode = (periode?: Periode<string>): UføreperiodeFormData => ({
     id: uuid(),

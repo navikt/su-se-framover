@@ -4,6 +4,7 @@ import { Alert, ConfirmationPanel, Heading, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import { RangePickerMonth } from '~src/components/datePicker/DatePicker';
@@ -43,6 +44,7 @@ import {
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const navigate = useNavigate();
 
     const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
     const søkerState = useAppSelector((state) => state.personopplysninger.søker);
@@ -73,6 +75,11 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     useDraftFormSubscribe(form.watch);
 
     const save = (data: VirkningstidspunktFormData, onSuccess: () => void) => {
+        if (eqBehandlingsperiode.equals(initialValues, data)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+
         const fraOgMed = DateFns.formatISO(data.periode.fraOgMed!, { representation: 'date' });
         const tilOgMed = DateFns.formatISO(data.periode.tilOgMed!, { representation: 'date' });
         return lagreVirkningstidspunkt(

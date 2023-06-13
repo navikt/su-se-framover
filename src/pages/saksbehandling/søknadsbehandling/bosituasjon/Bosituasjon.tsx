@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import BosituasjonForm from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonForm';
@@ -29,6 +30,7 @@ import { VilkårsvurderingBaseProps } from '../types';
 import messages from './Bosituasjon-nb';
 
 const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
+    const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjongrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
 
@@ -50,6 +52,10 @@ const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => 
     useDraftFormSubscribe(form.watch);
 
     const save = (values: BosituasjonGrunnlagFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
+        if (eqBosituasjonGrunnlagFormData.equals(values, initialValues)) {
+            navigate(props.nesteUrl);
+            return;
+        }
         lagre(
             {
                 ...bosituasjongrunnlagFormDataTilRequest({

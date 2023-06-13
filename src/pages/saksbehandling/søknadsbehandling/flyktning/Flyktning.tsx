@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import FlyktningForm from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningForm';
@@ -33,6 +34,7 @@ import messages from './flyktning-nb';
 import * as styles from './flyktning.module.less';
 
 const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
 
@@ -63,6 +65,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
     });
 
     const save = (values: FlyktningVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
+        if (eqFlyktningVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
         lagre(
             {
                 ...flyktningFormDataTilRequest({
