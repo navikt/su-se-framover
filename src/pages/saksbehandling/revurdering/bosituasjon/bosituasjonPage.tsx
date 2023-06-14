@@ -12,6 +12,7 @@ import {
     BosituasjonGrunnlagFormData,
     bosituasjongrunnlagFormDataTilRequest,
     bosituasjongrunnlagTilFormDataEllerNy,
+    eqBosituasjonGrunnlagFormDataUtenEpsAlder,
 } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -33,19 +34,24 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjongrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
+    const initialValues = bosituasjongrunnlagTilFormDataEllerNy(
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
+        props.revurdering.periode
+    );
     const form = useForm<BosituasjonGrunnlagFormData>({
-        defaultValues: bosituasjongrunnlagTilFormDataEllerNy(
-            props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
-            props.revurdering.periode
-        ),
+        defaultValues: initialValues,
         resolver: yupResolver(bosituasjonFormSchema),
     });
 
     const lagreBosituasjon = (
         data: BosituasjonGrunnlagFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
-    ) =>
-        lagre(
+    ) => {
+        if (eqBosituasjonGrunnlagFormDataUtenEpsAlder.equals(initialValues, data)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        return lagre(
             {
                 ...bosituasjongrunnlagFormDataTilRequest({
                     sakId: props.sakId,
@@ -60,6 +66,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
                 }
             }
         );
+    };
 
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>

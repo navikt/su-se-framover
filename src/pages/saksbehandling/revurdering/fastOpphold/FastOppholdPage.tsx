@@ -11,6 +11,7 @@ import {
     fastOppholdFormSchema,
     fastOppholdVilkårTilFormDataEllerNy,
     fastOppholdFormDataTilRequest,
+    eqFastOppholdVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
 import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -27,18 +28,23 @@ export function FastOppholdPage(props: RevurderingStegProps) {
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
 
+    const initialValues = fastOppholdVilkårTilFormDataEllerNy(
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.fastOpphold
+    );
     const form = useForm<FastOppholdVilkårFormData>({
         resolver: yupResolver(fastOppholdFormSchema),
-        defaultValues: fastOppholdVilkårTilFormDataEllerNy(
-            props.revurdering.grunnlagsdataOgVilkårsvurderinger.fastOpphold
-        ),
+        defaultValues: initialValues,
     });
 
     const lagreFastOpphold = (
         values: FastOppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
-    ) =>
-        lagre(
+    ) => {
+        if (eqFastOppholdVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        return lagre(
             {
                 ...fastOppholdFormDataTilRequest({
                     sakId: props.sakId,
@@ -54,6 +60,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                 }
             }
         );
+    };
 
     const revurderingsperiode = {
         fraOgMed: new Date(props.revurdering.periode.fraOgMed),

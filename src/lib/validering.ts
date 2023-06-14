@@ -15,11 +15,14 @@ yup.addMethod(yup.string, 'integer', function () {
     return yup.string().matches(/^\d+$/, 'Feltet kan bare inneholde tall');
 });
 
-export const validateStringAsPositiveNumber = yup
-    .number()
-    .required('Feltet må fylles ut')
-    .moreThan(0, 'Feltet må være et positivt tall høyere enn 0')
-    .typeError('Feltet må være et tall') as unknown as yup.Schema<string>;
+export const validateStringAsPositiveNumber = (name = 'feltet') =>
+    yup
+        .string()
+        .test('strengSomTall', `${name} må være et tall større enn 0`, function (value) {
+            return value ? Number.parseInt(value, 10) > 0 : false;
+        })
+        .required()
+        .label(name);
 
 export const validerAtNullablePeriodeErUtfylt = yup
     .object<NullablePeriode>({
@@ -75,17 +78,13 @@ export const validerPeriodeTomEtterFomUtenSisteDagBegrensning = yup
     .required();
 
 export function validateStringAsNonNegativeNumber(name = 'feltet') {
-    // Vi ønsker at tom streng skal regnes som at feltet ikke er fylt inn,
-    // men yup.number() vil behandle det som et ugyldig tall.
-    // Vi sjekker derfor eksplisitt på om `originalValue` (verdien før yup konverterte til number)
-    // var tom streng og tvinger den da til 'ikke-utfylt'.
     return yup
-        .number()
-        .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+        .string()
+        .test('strengSomTall', `${name} må være et tall større eller lik 0`, function (value) {
+            return value ? Number.parseInt(value, 10) >= 0 : false;
+        })
         .required()
-        .min(0)
-        .label(name)
-        .typeError(`${name} må være et tall`) as unknown as yup.StringSchema<string>;
+        .label(name);
 }
 
 const norskLocale: yup.LocaleObject = {

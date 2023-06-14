@@ -21,33 +21,27 @@
 }
 
 .revurderingContainer {
-    width: 100%;
     display: flex;
     flex-direction: column;
+    align-self: flex-start;
+    gap: @spacing;
     padding-top: @spacing;
     margin-bottom: @spacing-xxl;
-    gap: @spacing;
+    padding-left: 10rem;
+    padding-right: 10rem;
 
-    .mainContentContainer {
-        padding-left: 10rem;
-        padding-right: 10rem;
-        display: flex;
-        align-self: flex-start;
-        flex-direction: column;
-
-        .knappContainer {
-            > :not(:last-child) {
-                margin-right: @spacing;
-            }
+    .knappContainer {
+        > :not(:last-child) {
+            margin-right: @spacing;
         }
+    }
 
-        .feilmelding {
-            margin-bottom: @spacing;
-        }
+    .feilmelding {
+        margin-bottom: @spacing;
+    }
 
-        .alertstripe {
-            margin-bottom: @spacing;
-        }
+    .alertstripe {
+        margin-bottom: @spacing;
     }
 }
 

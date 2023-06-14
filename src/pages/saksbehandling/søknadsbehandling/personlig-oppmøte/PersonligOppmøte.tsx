@@ -61,6 +61,10 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
     };
 
     const save = async (values: PersonligOppmøteVilkårFormData, onSuccess: (res: Søknadsbehandling) => void) => {
+        if (eqPersonligOppmøteVilkårFormData.equals(values, initialValues)) {
+            navigate(props.nesteUrl);
+            return;
+        }
         lagre(
             {
                 ...personligOppmøteFormDataTilRequest({

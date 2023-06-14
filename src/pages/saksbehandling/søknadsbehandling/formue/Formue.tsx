@@ -4,6 +4,7 @@ import { Heading } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
@@ -13,6 +14,7 @@ import {
     formueFormSchema,
     getInitialFormueVilkårOgDelvisBosituasjon,
     formueVilkårFormTilRequest,
+    eqFormueVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
@@ -33,6 +35,7 @@ import messages from './formue-nb';
 import styles from './Formue.module.less';
 
 const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFormuegrunnlag);
     const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
@@ -45,7 +48,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormueVilkårFormData>(
         Vilkårtype.Formue,
-        () => props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.resultat === null
+        (values) => eqFormueVilkårFormData.equals(values, initialValues)
     );
 
     const form = useForm<FormueVilkårFormData>({
@@ -56,6 +59,10 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
     useDraftFormSubscribe(form.watch);
 
     const handleSave = async (values: FormueVilkårFormData, onSuccess: () => void) => {
+        if (eqFormueVilkårFormData.equals(values, initialValues)) {
+            navigate(props.nesteUrl);
+            return;
+        }
         await lagreFormue(
             {
                 ...formueVilkårFormTilRequest(props.sakId, props.behandling.id, values as FormueVilkårFormData),

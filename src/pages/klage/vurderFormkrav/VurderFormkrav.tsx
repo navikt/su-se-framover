@@ -96,11 +96,7 @@ const VurderFormkrav = (props: Props) => {
 
     const handleLagreFormkrav = (values: FormData) => {
         if (eqFormData.equals(values, initialValues)) {
-            navigate(
-                Routes.saksoversiktValgtSak.createURL({
-                    sakId: props.sakId,
-                })
-            );
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
 
@@ -114,11 +110,7 @@ const VurderFormkrav = (props: Props) => {
                 erUnderskrevet: values.erUnderskrevet,
             },
             () => {
-                navigate(
-                    Routes.saksoversiktValgtSak.createURL({
-                        sakId: props.sakId,
-                    })
-                );
+                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             }
         );
     };

@@ -67,20 +67,19 @@ const RevurderingPage = () => {
                 <Heading level="1" size="large" className={styles.tittel}>
                     {formatMessage('revurdering.tittel')}
                 </Heading>
-                <div className={styles.mainContentContainer}>
-                    <div>
-                        <SkjemaelementFeilmelding className={styles.feilmelding}>
-                            {formatMessage('feil.kanIkkeRevurdere')}
-                        </SkjemaelementFeilmelding>
-                    </div>
-                    <div className={styles.knappContainer}>
-                        <LinkAsButton
-                            variant="secondary"
-                            href={routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
-                        >
-                            {formatMessage('knapp.avslutt')}
-                        </LinkAsButton>
-                    </div>
+
+                <div>
+                    <SkjemaelementFeilmelding className={styles.feilmelding}>
+                        {formatMessage('feil.kanIkkeRevurdere')}
+                    </SkjemaelementFeilmelding>
+                </div>
+                <div className={styles.knappContainer}>
+                    <LinkAsButton
+                        variant="secondary"
+                        href={routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+                    >
+                        {formatMessage('knapp.avslutt')}
+                    </LinkAsButton>
                 </div>
             </div>
         );

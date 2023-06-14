@@ -11,6 +11,7 @@ import {
     personligOppmøteFormSchema,
     personligOppmøteVilkårTilFormDataEllerNy,
     personligOppmøteFormDataTilRequest,
+    eqPersonligOppmøteVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -27,18 +28,23 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
+    const initialValues = personligOppmøteVilkårTilFormDataEllerNy(
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.personligOppmøte
+    );
     const form = useForm<PersonligOppmøteVilkårFormData>({
         resolver: yupResolver(personligOppmøteFormSchema),
-        defaultValues: personligOppmøteVilkårTilFormDataEllerNy(
-            props.revurdering.grunnlagsdataOgVilkårsvurderinger.personligOppmøte
-        ),
+        defaultValues: initialValues,
     });
 
     const lagrePersonligOppmøte = (
         values: PersonligOppmøteVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
-    ) =>
-        lagre(
+    ) => {
+        if (eqPersonligOppmøteVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        return lagre(
             {
                 ...personligOppmøteFormDataTilRequest({
                     sakId: props.sakId,
@@ -54,6 +60,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                 }
             }
         );
+    };
 
     const revurderingsperiode = {
         fraOgMed: new Date(props.revurdering.periode.fraOgMed),

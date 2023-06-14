@@ -11,6 +11,7 @@ import {
     institusjonsoppholdFormDataTilRequest,
     InstitusjonsoppholdVilkårFormData,
     institusjonsoppholdVilkårTilFormDataEllerNy,
+    eqInstitusjonsoppholdFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
 import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -28,18 +29,23 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
 
+    const initialValues = institusjonsoppholdVilkårTilFormDataEllerNy(
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold
+    );
     const form = useForm<InstitusjonsoppholdVilkårFormData>({
         resolver: yupResolver(institusjonsoppholdFormSchema),
-        defaultValues: institusjonsoppholdVilkårTilFormDataEllerNy(
-            props.revurdering.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold
-        ),
+        defaultValues: initialValues,
     });
 
     const lagreInstitusjonsopphold = (
         values: InstitusjonsoppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
-    ) =>
-        lagre(
+    ) => {
+        if (eqInstitusjonsoppholdFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        return lagre(
             {
                 ...institusjonsoppholdFormDataTilRequest({
                     sakId: props.sakId,
@@ -55,6 +61,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                 }
             }
         );
+    };
 
     const revurderingsperiode = {
         fraOgMed: new Date(props.revurdering.periode.fraOgMed),

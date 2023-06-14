@@ -8,6 +8,7 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import { UførhetForm } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
     UførhetFormData,
+    eqUføreVilkårFormData,
     lagTomUføreperiode,
     vurderingsperiodeTilFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
@@ -30,19 +31,24 @@ const Uførhet = (props: RevurderingStegProps) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
+    const initialValues = {
+        grunnlag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((u) =>
+            vurderingsperiodeTilFormData(u)
+        ) ?? [lagTomUføreperiode()],
+    };
     const form = useForm<UførhetFormData>({
-        defaultValues: {
-            grunnlag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((u) =>
-                vurderingsperiodeTilFormData(u)
-            ) ?? [lagTomUføreperiode()],
-        },
+        defaultValues: initialValues,
         resolver: yupResolver(uførhetSchema(erGregulering(props.revurdering.årsak))),
     });
 
     const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreUføregrunnlag);
 
-    const handleSave = (values: UførhetFormData, onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void) =>
-        lagre(
+    const handleSave = (values: UførhetFormData, onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void) => {
+        if (eqUføreVilkårFormData.equals(values, initialValues)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        return lagre(
             {
                 sakId: props.sakId,
                 behandlingId: props.revurdering.id,
@@ -66,6 +72,7 @@ const Uførhet = (props: RevurderingStegProps) => {
                 }
             }
         );
+    };
 
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
