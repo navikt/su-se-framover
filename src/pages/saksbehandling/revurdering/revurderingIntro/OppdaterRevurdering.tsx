@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import RevurderingIntroForm from '~src/components/forms/revurdering/RevurderingIntroForm';
 import {
     RevurderingIntroFormData,
+    eqRevurderingIntroFormData,
     revurderingIntroFormDataTilOppdaterRequest,
     revurderingIntroFormSchema,
 } from '~src/components/forms/revurdering/RevurderingIntroFormUtils';
@@ -16,6 +17,7 @@ import { Periode } from '~src/types/Periode';
 import {
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
+    OpprettetRevurdering,
     RevurderingSeksjoner,
     RevurderingSteg,
 } from '~src/types/Revurdering';
@@ -30,19 +32,25 @@ const OppdaterRevurdering = (props: {
     const navigate = useNavigate();
     const [oppdaterStatus, oppdater] = useAsyncActionCreator(oppdaterRevurderingsPeriode);
 
+    const initialValues = {
+        periode: lagDatePeriodeAvStringPeriode(props.revurdering.periode),
+        årsak: props.revurdering.årsak,
+        informasjonSomRevurderes: Object.keys(props.revurdering.informasjonSomRevurderes) as InformasjonSomRevurderes[],
+        begrunnelse: props.revurdering.begrunnelse,
+    };
     const form = useForm<RevurderingIntroFormData>({
-        defaultValues: {
-            periode: lagDatePeriodeAvStringPeriode(props.revurdering.periode),
-            årsak: props.revurdering.årsak,
-            informasjonSomRevurderes: Object.keys(
-                props.revurdering.informasjonSomRevurderes
-            ) as InformasjonSomRevurderes[],
-            begrunnelse: props.revurdering.begrunnelse,
-        },
+        defaultValues: initialValues,
         resolver: yupResolver(revurderingIntroFormSchema),
     });
 
-    const save = (values: RevurderingIntroFormData) => {
+    const save = (
+        values: RevurderingIntroFormData,
+        onSuccess: (opprettetRevurdering: OpprettetRevurdering) => void
+    ) => {
+        if (eqRevurderingIntroFormData.equals(values, initialValues)) {
+            navigate(nesteUrl(props.revurdering));
+            return;
+        }
         oppdater(
             {
                 ...revurderingIntroFormDataTilOppdaterRequest({
@@ -51,22 +59,29 @@ const OppdaterRevurdering = (props: {
                     values,
                 }),
             },
-            (opprettetRevurdering) => {
-                const grunnlagOgVilkårSeksjoner = lagVilkårOgGrunnlagSeksjon({
-                    sakId: props.sakId,
-                    r: opprettetRevurdering,
-                });
-
-                navigate(
-                    Routes.revurderingSeksjonSteg.createURL({
-                        sakId: props.sakId,
-                        revurderingId: opprettetRevurdering.id,
-                        seksjon: grunnlagOgVilkårSeksjoner.id as RevurderingSeksjoner,
-                        steg: grunnlagOgVilkårSeksjoner.linjer[0].id as RevurderingSteg,
-                    })
-                );
-            }
+            onSuccess
         );
+    };
+
+    const navigateTo = (opprettetRevurdering: OpprettetRevurdering, to: 'saksoversikt' | 'nesteSteg') => {
+        if (to === 'saksoversikt') {
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        } else {
+            navigate(nesteUrl(opprettetRevurdering));
+        }
+    };
+
+    const nesteUrl = (revurdering: InformasjonsRevurdering) => {
+        const grunnlagOgVilkårSeksjoner = lagVilkårOgGrunnlagSeksjon({
+            sakId: props.sakId,
+            r: revurdering,
+        });
+        return Routes.revurderingSeksjonSteg.createURL({
+            sakId: props.sakId,
+            revurderingId: revurdering.id,
+            seksjon: grunnlagOgVilkårSeksjoner.id as RevurderingSeksjoner,
+            steg: grunnlagOgVilkårSeksjoner.linjer[0].id as RevurderingSteg,
+        });
     };
 
     return (
@@ -75,22 +90,12 @@ const OppdaterRevurdering = (props: {
             minOgMaxPeriode={props.minOgMaxPeriode}
             neste={{
                 savingState: oppdaterStatus,
-                onClick: save,
+                onClick: (values) => save(values, (rev) => navigateTo(rev, 'nesteSteg')),
             }}
             tilbake={{ url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }) }}
             lagreOgfortsettSenere={{
                 url: Routes.revurderValgtSak.createURL({ sakId: props.sakId }),
-                onClick: (values) =>
-                    oppdater(
-                        {
-                            ...revurderingIntroFormDataTilOppdaterRequest({
-                                sakId: props.sakId,
-                                revurderingId: props.revurdering.id,
-                                values,
-                            }),
-                        },
-                        () => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }))
-                    ),
+                onClick: (values) => save(values, (rev) => navigateTo(rev, 'saksoversikt')),
             }}
         />
     );

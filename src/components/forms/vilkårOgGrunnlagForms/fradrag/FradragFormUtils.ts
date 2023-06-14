@@ -124,15 +124,15 @@ const utenlandskInntekt = yup
     .when('fraUtland', {
         is: true,
         then: yup.object<UtenlandskInntektFormData>({
-            beløpIUtenlandskValuta: validateStringAsPositiveNumber,
+            beløpIUtenlandskValuta: validateStringAsPositiveNumber(),
             valuta: yup.string().required(),
-            kurs: validateStringAsPositiveNumber,
+            kurs: validateStringAsPositiveNumber(),
         }),
         otherwise: yup.object<UtenlandskInntektFormData>(),
     });
 
 export const fradragSchema = yup.object<FradragFormData>({
-    beløp: validateStringAsPositiveNumber,
+    beløp: validateStringAsPositiveNumber(),
     kategori: yup
         .string()
         .defined()

@@ -1,6 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Heading } from '@navikt/ds-react';
+import { getEq } from 'fp-ts/lib/Array';
+import { struct } from 'fp-ts/lib/Eq';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +13,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
+    eqFradragFormData,
     FradragFormData,
     fradragFormdataTilFradrag,
     fradragSchema,
@@ -43,6 +46,11 @@ interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
 }
 
+//TODO - en del ting her burde bli abstrahert ut
+export const eqFradragGrunnlagFormData = struct<EndringAvFradragFormData>({
+    fradrag: getEq(eqFradragFormData),
+});
+
 const EndringAvFradrag = (props: RevurderingStegProps) => {
     const { intl } = useI18n({
         messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...messages },
@@ -53,10 +61,33 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
         RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
     >(RemoteData.initial);
 
+    const schema = yup.object<EndringAvFradragFormData>({
+        fradrag: yup.array<FradragFormData>(fradragSchema.required()).defined(),
+    });
+    const initialValues = {
+        fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
+            props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag
+        ).map((f) =>
+            fradragTilFradragFormData(f, {
+                fraOgMed: DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed),
+                tilOgMed: DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed),
+            })
+        ),
+    };
+    const form = useForm<EndringAvFradragFormData>({
+        defaultValues: initialValues,
+        resolver: yupResolver(schema),
+    });
+
     const save = async (
         values: EndringAvFradragFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
     ) => {
+        if (eqFradragGrunnlagFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+
         if (RemoteData.isPending(savingState)) {
             return;
         }
@@ -83,23 +114,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
             setSavingState(RemoteData.failure(res.payload!));
         }
     };
-
-    const schema = yup.object<EndringAvFradragFormData>({
-        fradrag: yup.array<FradragFormData>(fradragSchema.required()).defined(),
-    });
-    const form = useForm<EndringAvFradragFormData>({
-        defaultValues: {
-            fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
-                props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag
-            ).map((f) =>
-                fradragTilFradragFormData(f, {
-                    fraOgMed: DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed),
-                    tilOgMed: DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed),
-                })
-            ),
-        },
-        resolver: yupResolver(schema),
-    });
 
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>

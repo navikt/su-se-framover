@@ -11,6 +11,7 @@ import {
     flyktningFormSchema,
     flyktningFormDataTilRequest,
     flyktningVilkårTilFormDataEllerNy,
+    eqFlyktningVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -27,16 +28,23 @@ export function FlyktningPage(props: RevurderingStegProps) {
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
 
+    const initialValues = flyktningVilkårTilFormDataEllerNy(
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning
+    );
     const form = useForm<FlyktningVilkårFormData>({
         resolver: yupResolver(flyktningFormSchema),
-        defaultValues: flyktningVilkårTilFormDataEllerNy(props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning),
+        defaultValues: initialValues,
     });
 
     const lagreFlyktning = (
         values: FlyktningVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
-    ) =>
-        lagre(
+    ) => {
+        if (eqFlyktningVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        return lagre(
             {
                 ...flyktningFormDataTilRequest({
                     sakId: props.sakId,
@@ -52,6 +60,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
                 }
             }
         );
+    };
     const revurderingsperiode = {
         fraOgMed: new Date(props.revurdering.periode.fraOgMed),
         tilOgMed: new Date(props.revurdering.periode.tilOgMed),

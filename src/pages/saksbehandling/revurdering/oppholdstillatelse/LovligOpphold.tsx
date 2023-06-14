@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import LovligOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
 import {
+    eqLovligOppholdVilkårFormData,
     lovligOppholdFormDataTilRequest,
     lovligOppholdFormSchema,
     LovligOppholdVilkårFormData,
@@ -33,17 +34,22 @@ const LovligOpphold = (props: RevurderingStegProps) => {
         tilOgMed: new Date(props.revurdering.periode.tilOgMed),
     };
 
+    const initialValues = lovligOppholdVilkårTilFormDataEllerNy(
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.lovligOpphold
+    );
     const form = useForm<LovligOppholdVilkårFormData>({
         resolver: yupResolver(lovligOppholdFormSchema),
-        defaultValues: lovligOppholdVilkårTilFormDataEllerNy(
-            props.revurdering.grunnlagsdataOgVilkårsvurderinger.lovligOpphold
-        ),
+        defaultValues: initialValues,
     });
 
     const lagreLovligOpphold = (
         data: LovligOppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
     ) => {
+        if (eqLovligOppholdVilkårFormData.equals(initialValues, data)) {
+            navigate(props.nesteUrl);
+            return;
+        }
         lagre(
             {
                 ...lovligOppholdFormDataTilRequest({

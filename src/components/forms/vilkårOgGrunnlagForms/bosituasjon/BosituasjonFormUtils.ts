@@ -43,6 +43,18 @@ export const eqBosituasjonGrunnlagFormData = struct<BosituasjonGrunnlagFormData>
     bosituasjoner: getEq(eqBosituasjonFormItemData),
 });
 
+export const eqBosituasjonFormItemDataUtenEpsAlder = struct<Omit<BosituasjonFormItemData, 'epsAlder'>>({
+    periode: eqNullable(eqPeriode),
+    harEPS: eqNullable(B.Eq),
+    epsFnr: eqNullable(S.Eq),
+    delerBolig: eqNullable(B.Eq),
+    erEPSUførFlyktning: eqNullable(B.Eq),
+});
+
+export const eqBosituasjonGrunnlagFormDataUtenEpsAlder = struct<BosituasjonGrunnlagFormData>({
+    bosituasjoner: getEq(eqBosituasjonFormItemDataUtenEpsAlder),
+});
+
 export const nyBosituasjon = (p?: Periode<string>): BosituasjonFormItemData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     harEPS: null,

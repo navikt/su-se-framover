@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OpplysningspliktForm from '~src/components/forms/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktForm';
 import {
+    eqOpplysningspliktVilkårFormData,
     opplysningspliktFormSchema,
     OpplysningspliktVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktFormUtils';
@@ -34,23 +35,28 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
         tilOgMed: new Date(props.revurdering.periode.tilOgMed),
     };
 
+    const initialValues = {
+        opplysningsplikt: vurderinger.map((vurdering) => ({
+            periode: {
+                fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
+                tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
+            },
+            beskrivelse: vurdering.beskrivelse ?? null,
+        })),
+    };
     const form = useForm<OpplysningspliktVilkårFormData>({
         resolver: yupResolver(opplysningspliktFormSchema),
-        defaultValues: {
-            opplysningsplikt: vurderinger.map((vurdering) => ({
-                periode: {
-                    fraOgMed: parseIsoDateOnly(vurdering.periode.fraOgMed),
-                    tilOgMed: parseIsoDateOnly(vurdering.periode.tilOgMed),
-                },
-                beskrivelse: vurdering.beskrivelse ?? null,
-            })),
-        },
+        defaultValues: initialValues,
     });
 
     const handleSubmit = async (
         form: OpplysningspliktVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
     ) => {
+        if (eqOpplysningspliktVilkårFormData.equals(initialValues, form)) {
+            navigate(props.nesteUrl);
+            return;
+        }
         lagre(
             {
                 behandlingId: props.revurdering.id,

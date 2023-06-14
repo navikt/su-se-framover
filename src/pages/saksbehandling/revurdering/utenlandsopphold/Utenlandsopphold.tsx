@@ -11,6 +11,7 @@ import {
     UtenlandsoppholdVilkårFormData,
     utenlandsoppholdFormDataTilRequest,
     utenlandsoppholdVilkårTilFormDataEllerNy,
+    eqUtenlandsoppholdVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdFormUtils';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -27,11 +28,12 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...messages, ...revurderingmessages } });
 
+    const initialValues = utenlandsoppholdVilkårTilFormDataEllerNy(
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold
+    );
     const form = useForm<UtenlandsoppholdVilkårFormData>({
         resolver: yupResolver(utenlandsoppholdFormSchema),
-        defaultValues: utenlandsoppholdVilkårTilFormDataEllerNy(
-            props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold
-        ),
+        defaultValues: initialValues,
     });
     const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
 
@@ -39,6 +41,10 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         values: UtenlandsoppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
     ) => {
+        if (eqUtenlandsoppholdVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
         lagre(
             {
                 ...utenlandsoppholdFormDataTilRequest({

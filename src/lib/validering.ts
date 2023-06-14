@@ -15,11 +15,14 @@ yup.addMethod(yup.string, 'integer', function () {
     return yup.string().matches(/^\d+$/, 'Feltet kan bare inneholde tall');
 });
 
-export const validateStringAsPositiveNumber = yup
-    .number()
-    .required('Feltet må fylles ut')
-    .moreThan(0, 'Feltet må være et positivt tall høyere enn 0')
-    .typeError('Feltet må være et tall') as unknown as yup.Schema<string>;
+export const validateStringAsPositiveNumber = (name = 'feltet') =>
+    yup
+        .string()
+        .test('strengSomTall', `${name} må være et tall større enn 0`, function (value) {
+            return value ? Number.parseInt(value, 10) > 0 : false;
+        })
+        .required()
+        .label(name);
 
 export const validerAtNullablePeriodeErUtfylt = yup
     .object<NullablePeriode>({
