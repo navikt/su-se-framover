@@ -87,7 +87,7 @@ const Avvist = (props: AvvistProps) => {
                     </RadioGroup>
                 </div>
             )}
-            {props.avvistFormData.typeBrev === AvvistBrevtyper.Fritekstsbrev && (
+            {props.avvistFormData.typeBrev && (
                 <div className={styles.textAreaContainer}>
                     <Textarea
                         label={formatMessage('avvist.fritekst')}
