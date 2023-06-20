@@ -38,14 +38,12 @@ export default async function apiClient<TSuccess>(arg: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body?: Record<string, any>;
     request?: Partial<Request>;
-    successStatusCodes?: number[];
-    extraData?: { correlationId: string };
     bodyTransformer?: (res: Response) => Promise<TSuccess>;
     returnAsPromise?: boolean;
 }): Promise<ApiClientResult<TSuccess>> {
-    const correlationId = arg.extraData?.correlationId ?? uuid();
-
+    const correlationId = uuid();
     const headers = new Headers(arg.request?.headers);
+
     headers.append('X-Correlation-ID', correlationId);
 
     const res = await fetch(`/api/${arg.url.startsWith('/') ? arg.url.slice(1) : arg.url}`, {
@@ -55,7 +53,7 @@ export default async function apiClient<TSuccess>(arg: {
         body: arg.body ? JSON.stringify(arg.body) : undefined,
     });
 
-    if (res.ok || arg.successStatusCodes?.includes(res.status)) {
+    if (res.ok) {
         if (arg.bodyTransformer) {
             if (arg.returnAsPromise) return Promise.resolve(success(await arg.bodyTransformer(res), res.status));
             return success(await arg.bodyTransformer(res), res.status);

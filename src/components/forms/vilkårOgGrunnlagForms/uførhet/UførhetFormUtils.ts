@@ -1,7 +1,6 @@
 import { getEq } from 'fp-ts/Array';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
-import { v4 as uuid } from 'uuid';
 
 import { eqNullable, Nullable } from '~src/lib/types';
 import { UføreResultat, VurderingsperiodeUføre } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -10,7 +9,6 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { eqPeriode, lagDatePeriodeAvStringPeriodeEllerTomPeriode } from '~src/utils/periode/periodeUtils';
 
 export const eqUføreperiodeFormData = struct<UføreperiodeFormData>({
-    id: S.Eq,
     periode: eqPeriode,
     uføregrad: S.Eq,
     forventetInntekt: S.Eq,
@@ -22,7 +20,6 @@ export const eqUføreVilkårFormData = struct<UførhetFormData>({
 });
 
 export const lagTomUføreperiode = (periode?: Periode<string>): UføreperiodeFormData => ({
-    id: uuid(),
     periode: lagDatePeriodeAvStringPeriodeEllerTomPeriode(periode),
     forventetInntekt: '',
     oppfylt: null,
@@ -30,7 +27,6 @@ export const lagTomUføreperiode = (periode?: Periode<string>): UføreperiodeFor
 });
 
 export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføreperiodeFormData => ({
-    id: uuid(),
     periode: {
         fraOgMed: DateUtils.parseIsoDateOnly(u.periode.fraOgMed),
         tilOgMed: DateUtils.parseIsoDateOnly(u.periode.tilOgMed),
@@ -41,7 +37,6 @@ export const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): Uføre
 });
 
 export interface UføreperiodeFormData {
-    id: string;
     periode: NullablePeriode;
     uføregrad: string;
     forventetInntekt: string;

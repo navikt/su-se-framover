@@ -10,7 +10,6 @@ import { UføreperiodeFormData, UførhetFormData } from './UførhetFormUtils';
 
 const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
     yup.object<UføreperiodeFormData>({
-        id: yup.string(),
         periode: yup
             .object<NullablePeriode>({
                 fraOgMed: yup.date().required().defined(),
@@ -73,7 +72,6 @@ export const uførhetSchema = (erGRegulering: boolean) =>
                                 DateUtils.isValidInterval(v1.periode.fraOgMed, v1.periode.tilOgMed) &&
                                 uføregrunnlager.some(
                                     (v2) =>
-                                        v1.id !== v2.id &&
                                         DateUtils.isValidInterval(v2.periode.fraOgMed, v2.periode.tilOgMed) &&
                                         DateFns.areIntervalsOverlapping(
                                             {
