@@ -1,6 +1,7 @@
 import { Nullable } from '~src/lib/types';
 
 import { SøknadInnhold } from './Søknadinnhold';
+import { Dokumenttilstand } from './Vedtak';
 
 export interface Søknad {
     id: string;
@@ -14,6 +15,7 @@ export interface Lukket {
     tidspunkt: string;
     saksbehandler: Saksbehandler;
     type: LukkSøknadBegrunnelse;
+    dokumenttilstand: Dokumenttilstand;
 }
 
 export enum LukkSøknadBegrunnelse {

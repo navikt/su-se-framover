@@ -1,9 +1,12 @@
-import { BodyShort, Table } from '@navikt/ds-react';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Email } from '@navikt/ds-icons';
+import { BodyShort, Button, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import React from 'react';
 
+import * as DokumentApi from '~src/api/dokumentApi';
 import { ErrorIcon } from '~src/assets/Icons';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -17,8 +20,16 @@ import {
     TabellBehandlinger,
 } from '~src/components/tabell/SuTabellUtils';
 import { pipe } from '~src/lib/fp';
+import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { formatDateTime } from '~src/utils/date/dateUtils';
+import { getBlob } from '~src/utils/dokumentUtils';
+import {
+    erDokumentGenerertEllerSenere,
+    erDokumentIkkeGenerertEnda,
+    skalDokumentIkkeGenereres,
+} from '~src/utils/søknad/søknadUtils';
 
 import messages from '../sakintro-nb';
 
@@ -89,6 +100,7 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                 {formatMessage('header.mottatOpprettetTidspunkt')}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader></Table.ColumnHeader>
+                            <Table.ColumnHeader></Table.ColumnHeader>
                         </Table.Row>
                     </Table.Header>
                 )}
@@ -96,6 +108,7 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                     <Table.Body>
                         {sorterTabell(tabelldata, sortertKolonne, sortVerdi).map((behandling) => {
                             const dataCellInfo = getDataCellInfo(behandling);
+                            const [hentDokumenterStatus, hentDokumenter] = useApiCall(DokumentApi.hentDokumenter);
                             return (
                                 <Table.Row
                                     key={
@@ -122,6 +135,38 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                                 <BodyShort>{formatMessage(behandling.søknad.lukket!.type)}</BodyShort>
                                             </div>
                                         )}
+                                    </Table.DataCell>
+                                    <Table.DataCell>
+                                        {isSøknadMedEllerUtenBehandling(behandling) &&
+                                            skalDokumentIkkeGenereres(behandling.søknad) && (
+                                                <BodyShort>{formatMessage('datacell.brev.skalIkkeGenerere')}</BodyShort>
+                                            )}
+                                        {isSøknadMedEllerUtenBehandling(behandling) &&
+                                            erDokumentIkkeGenerertEnda(behandling.søknad) && (
+                                                <BodyShort>{formatMessage('datacell.brev.ikkeGenerert')}</BodyShort>
+                                            )}
+
+                                        {isSøknadMedEllerUtenBehandling(behandling) &&
+                                            erDokumentGenerertEllerSenere(behandling.søknad) && (
+                                                <Button
+                                                    className={styles.seBrevButton}
+                                                    variant="secondary"
+                                                    size={'small'}
+                                                    loading={RemoteData.isPending(hentDokumenterStatus)}
+                                                    onClick={() => {
+                                                        hentDokumenter(
+                                                            {
+                                                                id: behandling.søknad.id,
+                                                                idType: DokumentIdType.Søknad,
+                                                            },
+                                                            (dokumenter) =>
+                                                                window.open(URL.createObjectURL(getBlob(dokumenter[0])))
+                                                        );
+                                                    }}
+                                                >
+                                                    <Email />
+                                                </Button>
+                                            )}
                                     </Table.DataCell>
                                 </Table.Row>
                             );
