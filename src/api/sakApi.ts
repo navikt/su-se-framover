@@ -1,5 +1,6 @@
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { Dokument, OpprettDokumentBody } from '~src/types/dokument/Dokument';
+import { Journalpost } from '~src/types/Journalpost';
 import {
     OppdaterRegistrertUtenlandsoppholdRequest,
     RegistrerteUtenlandsopphold,
@@ -123,3 +124,10 @@ export async function opprettFritekstDokument(arg: OpprettDokumentBody): Promise
         bodyTransformer: (res) => res.blob(),
     });
 }
+
+export const hentJournalposter = async (arg: { sakId: string }): Promise<ApiClientResult<Journalpost[]>> => {
+    return apiClient({
+        url: `/saker/${arg.sakId}/journalposter`,
+        method: 'GET',
+    });
+};
