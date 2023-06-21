@@ -6,6 +6,7 @@ import {
     SøknadInnholdUføre,
     Søknadstype,
 } from '~src/types/Søknadinnhold';
+import { Dokumenttilstand } from '~src/types/Vedtak';
 import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 
 import { Sak } from '../../types/Sak';
@@ -77,3 +78,12 @@ export function getIverksatteAvslåtteSøknader(sak: Sak) {
             };
         });
 }
+
+export const skalDokumentIkkeGenereres = (s: Søknad) =>
+    s.lukket?.dokumenttilstand === Dokumenttilstand.SKAL_IKKE_GENERERE;
+export const erDokumentIkkeGenerertEnda = (s: Søknad) =>
+    s.lukket?.dokumenttilstand === Dokumenttilstand.IKKE_GENERERT_ENDA;
+export const erDokumentGenerertEllerSenere = (s: Søknad) =>
+    s.lukket?.dokumenttilstand === Dokumenttilstand.GENERERT ||
+    s.lukket?.dokumenttilstand === Dokumenttilstand.JOURNALFØRT ||
+    s.lukket?.dokumenttilstand === Dokumenttilstand.SENDT;
