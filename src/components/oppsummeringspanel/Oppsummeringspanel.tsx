@@ -65,8 +65,9 @@ const Oppsummeringspanel = (props: {
     farge: Oppsummeringsfarge;
     tittel: string;
     children: React.ReactNode;
+    className?: string;
 }) => (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, props.className)}>
         <div className={classNames(styles.tittel, fargeklassenavn(props.farge))}>
             <Ikon className={styles.ikon} ikon={props.ikon} />
             <Heading level="2" size="medium">

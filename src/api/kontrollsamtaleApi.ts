@@ -14,7 +14,13 @@ export const settNyDatoForKontrollsamtale = (args: { sakId: string; nyDato: Date
     });
 
 export const fetchNesteKontrollsamtale = (sakId: string) =>
-    apiClient<Kontrollsamtale | null>({
+    apiClient<Kontrollsamtale>({
         url: `/kontrollsamtale/hent/${sakId}`,
+        method: 'GET',
+    });
+
+export const hentKontrollsamtaler = (arg: { sakId: string }) =>
+    apiClient<Kontrollsamtale[]>({
+        url: `/kontrollsamtaler/${arg.sakId}`,
         method: 'GET',
     });

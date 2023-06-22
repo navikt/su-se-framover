@@ -1,4 +1,8 @@
 export default {
+    'kontrollsamtale.panel.nyDato': 'Ny kontrollsamtale dato',
+
+    'oppsummeringAvKontrollsamtaler.panel.tittel': 'Registrerte kontrollsamtaler',
+
     kontrollsamtale: 'Kontrollsamtale',
     nestePlanlagt: 'Innkalling til neste planlagte kontrollsamtale: ',
     ingenPlanlagt: 'Ingen planlagte kontrollsamtaler',
