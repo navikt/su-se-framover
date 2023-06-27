@@ -1,24 +1,64 @@
 @import '~/src/styles/variables.less';
 
-.kontrollsamtalePage {
+.pageContainer {
+    width: 100%;
+}
+
+.headingContainer {
+    border-bottom: 1px solid black;
+    margin-bottom: @spacing-s;
+
+    .kontrollsamtaleHeading {
+        margin-top: @spacing-s;
+        margin-left: 10rem;
+        margin-bottom: @spacing-s;
+    }
+}
+
+.mainContentContainer {
+    display: flex;
+    gap: @spacing-xxl;
+    margin: 0 10rem;
+    flex-wrap: wrap;
+}
+
+.nyKontrollsamtaleDatoContainer {
+    height: max-content;
+}
+
+.nyDatoMainContenctContainer {
     display: flex;
     flex-direction: column;
+    gap: @spacing-s;
+    height: max-content;
+}
+
+.buttonsContainer {
+    display: flex;
     gap: @spacing;
-    padding: @spacing;
-    width: 100%;
+}
 
-    .nyDatoContainer {
-        display: flex;
-        gap: @spacing-xs;
+.kontrollsamtalerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+    max-height: 500px;
+    padding-right: 2rem;
+    overflow: auto;
+}
 
-        .nyDatoButton {
-            margin-top: @spacing;
-            height: fit-content;
-        }
-    }
+.kontrollsamtaleDetalje {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
 
-    .tilbakeknapp,
-    .alert {
-        width: fit-content;
-    }
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }

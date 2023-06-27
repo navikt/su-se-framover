@@ -5,16 +5,21 @@ import apiClient from './apiClient';
 
 export const settNyDatoForKontrollsamtale = (args: { sakId: string; nyDato: Date }) =>
     apiClient({
-        url: '/kontrollsamtale/nyDato',
+        url: `/saker/${args.sakId}/kontrollsamtaler/nyDato`,
         method: 'POST',
         body: {
-            sakId: args.sakId,
             nyDato: toStringDateOrNull(args.nyDato),
         },
     });
 
 export const fetchNesteKontrollsamtale = (sakId: string) =>
-    apiClient<Kontrollsamtale | null>({
-        url: `/kontrollsamtale/hent/${sakId}`,
+    apiClient<Kontrollsamtale>({
+        url: `/saker/${sakId}/kontrollsamtaler/hent`,
+        method: 'GET',
+    });
+
+export const hentKontrollsamtaler = (arg: { sakId: string }) =>
+    apiClient<Kontrollsamtale[]>({
+        url: `/saker/${arg.sakId}/kontrollsamtaler`,
         method: 'GET',
     });
