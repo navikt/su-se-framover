@@ -27,12 +27,16 @@ export const DatePicker = (props: {
     hjelpetekst?: string;
     disabled?: boolean;
 }) => {
-    const { datepickerProps, inputProps } = useDatepicker({
+    const { datepickerProps, inputProps, setSelected } = useDatepicker({
         fromDate: props.fromDate ?? new Date('2000-01-01'),
         toDate: props.toDate ?? new Date('2099-12-1'),
         onDateChange: (d) => props.onChange(d ?? null),
         defaultSelected: props.value ?? undefined,
     });
+
+    React.useEffect(() => {
+        setSelected(props.value ?? undefined);
+    }, [props.value?.toDateString()]);
 
     return (
         <div>

@@ -123,19 +123,17 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 control={form.control}
                                 name={'fortsattInnlagt'}
                                 render={({ field }) => (
-                                    <>
-                                        <Checkbox
-                                            {...field}
-                                            value={field.value ?? false}
-                                            checked={field.value !== null}
-                                            onChange={() => {
-                                                field.onChange(!field.value);
-                                                setFieldsToNull(['datoForUtskrivelse']);
-                                            }}
-                                        >
-                                            {formatMessage('innlagtPåInstitusjon.fortsattInnlagt')}
-                                        </Checkbox>
-                                    </>
+                                    <Checkbox
+                                        {...field}
+                                        value={field.value ?? false}
+                                        checked={field.value === true}
+                                        onChange={() => {
+                                            field.onChange(!field.value);
+                                            setFieldsToNull(['datoForUtskrivelse']);
+                                        }}
+                                    >
+                                        {formatMessage('innlagtPåInstitusjon.fortsattInnlagt')}
+                                    </Checkbox>
                                 )}
                             />
                         </div>
