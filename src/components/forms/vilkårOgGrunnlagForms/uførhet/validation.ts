@@ -72,6 +72,7 @@ export const uførhetSchema = (erGRegulering: boolean) =>
                                 DateUtils.isValidInterval(v1.periode.fraOgMed, v1.periode.tilOgMed) &&
                                 uføregrunnlager.some(
                                     (v2) =>
+                                        v1 !== v2 &&
                                         DateUtils.isValidInterval(v2.periode.fraOgMed, v2.periode.tilOgMed) &&
                                         DateFns.areIntervalsOverlapping(
                                             {
