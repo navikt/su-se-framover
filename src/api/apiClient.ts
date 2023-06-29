@@ -13,6 +13,7 @@ export enum ErrorCode {
 export interface ApiError {
     statusCode: ErrorCode | number;
     correlationId: string;
+    //TODO: gjør body til union type -  error: ErrorMessage | ErrorMessage[] | null
     body: ErrorMessage | null;
 }
 
