@@ -39,7 +39,6 @@ export default async function apiClient<TSuccess>(arg: {
     body?: Record<string, any>;
     request?: Partial<Request>;
     bodyTransformer?: (res: Response) => Promise<TSuccess>;
-    returnAsPromise?: boolean;
 }): Promise<ApiClientResult<TSuccess>> {
     const correlationId = uuid();
     const headers = new Headers(arg.request?.headers);
@@ -55,10 +54,8 @@ export default async function apiClient<TSuccess>(arg: {
 
     if (res.ok) {
         if (arg.bodyTransformer) {
-            if (arg.returnAsPromise) return Promise.resolve(success(await arg.bodyTransformer(res), res.status));
             return success(await arg.bodyTransformer(res), res.status);
         }
-        if (arg.returnAsPromise) return Promise.resolve(success(await res.json(), res.status));
         return success(await res.json(), res.status);
     }
 
@@ -73,6 +70,5 @@ export default async function apiClient<TSuccess>(arg: {
 
     const errorBody: ErrorMessage = await res.json().catch((_err) => ({}));
 
-    if (arg.returnAsPromise) return Promise.reject(error({ statusCode: res.status, correlationId, body: errorBody }));
     return error({ statusCode: res.status, correlationId, body: errorBody });
 }
