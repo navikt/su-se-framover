@@ -28,8 +28,8 @@ export const DatePicker = (props: {
     disabled?: boolean;
 }) => {
     const { datepickerProps, inputProps, setSelected } = useDatepicker({
-        fromDate: props.fromDate ?? new Date('2000-01-01'),
-        toDate: props.toDate ?? new Date('2099-12-1'),
+        fromDate: props.fromDate ?? new Date(2000, 0, 1),
+        toDate: props.toDate ?? new Date(2099, 11, 31),
         onDateChange: (d) => props.onChange(d ?? null),
         defaultSelected: props.value ?? undefined,
     });
@@ -67,8 +67,8 @@ export const MonthPicker = (props: {
     error?: string;
 }) => {
     const { monthpickerProps, inputProps } = useMonthpicker({
-        fromDate: props.fromDate ?? new Date('2000-01-01'),
-        toDate: props.toDate ?? new Date('2099-12-1'),
+        fromDate: props.fromDate ?? new Date(2000, 0, 1),
+        toDate: props.toDate ?? new Date(2099, 11, 31),
         onMonthChange: (d) => props.onChange(d ?? null),
         defaultSelected: props.value ?? undefined,
     });
