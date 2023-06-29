@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import React from 'react';
 
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
-import { useI18n } from '~src/lib/i18n';
+import { MessageFormatter, useI18n } from '~src/lib/i18n';
 
 import messages from './ApiErrorAlert-nb';
 import * as styles from './apierroralert.module.less';
@@ -16,13 +16,20 @@ interface Props {
     variant?: 'error' | 'warning' | 'info' | 'success';
 }
 
+const konstruerMeldingForAlert = (formatMessage: MessageFormatter<typeof messages>, error?: ApiError) => {
+    if (error?.statusCode === 503) {
+        return formatMessage(ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG);
+    } else if (error?.body?.code) {
+        return formatMessage(error?.body?.code);
+    }
+
+    return formatMessage(ApiErrorCode.UKJENT_FEIL) + ` - Original feil: ${JSON.stringify(error)}`;
+};
+
 const ApiErrorAlert = ({ error, className = '', size, variant = 'error' }: Props) => {
     const { formatMessage } = useI18n({ messages });
 
-    const melding =
-        error?.statusCode === 503
-            ? formatMessage(ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG)
-            : formatMessage(error?.body?.code ?? ApiErrorCode.UKJENT_FEIL);
+    const melding = konstruerMeldingForAlert(formatMessage, error);
 
     return (
         <Alert variant={variant} className={classNames(className, styles.alertstripe)} size={size}>

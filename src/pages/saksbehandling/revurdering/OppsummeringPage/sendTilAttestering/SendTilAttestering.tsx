@@ -167,7 +167,6 @@ const SendTilAttestering = (props: {
                             }),
                         }}
                         lagreOgfortsettSenere={{
-                            chainNesteKall: false,
                             onClick: handleLagreOgFortsettSenere,
                             loading: RemoteData.isPending(lagreBrevStatus),
                             url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
