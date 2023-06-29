@@ -67,7 +67,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                             <RangePickerDate
                                 value={field.value}
                                 onChange={field.onChange}
-                                fromDate={new Date('01-01-2021')}
+                                fromDate={new Date(2021, 0, 1)}
                                 error={{
                                     fraOgMed: formState.errors.periode?.fraOgMed?.message,
                                     tilOgMed: formState.errors.periode?.tilOgMed?.message,

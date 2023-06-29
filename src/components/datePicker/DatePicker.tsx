@@ -134,8 +134,8 @@ export const RangePickerDate = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
     const { datepickerProps, fromInputProps, toInputProps } = useRangeDatepicker({
-        fromDate: props.fromDate ?? new Date('2000-01-01'),
-        toDate: props.toDate ?? new Date('2099-12-1'),
+        fromDate: props.fromDate ?? new Date(2000, 0, 0),
+        toDate: props.toDate ?? new Date(2099, 11, 31),
         onRangeChange: (v) => props.onChange({ fraOgMed: v?.from ?? null, tilOgMed: v?.to ?? null }),
         defaultSelected: { from: props.value.fraOgMed ?? undefined, to: props.value.tilOgMed ?? undefined },
     });
