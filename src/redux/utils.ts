@@ -9,6 +9,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
+import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 
 // Kopiert fra createAsyncThunk.d.ts siden den ikke er eksportert enda.
 declare type AsyncThunkConfig = {
@@ -39,7 +40,10 @@ export const simpleRejectedActionToRemoteData = <ActionType extends string, M, E
 ): RemoteData.RemoteData<ApiError, never> =>
     RemoteData.failure(
         action.payload ?? {
-            body: null,
+            body: {
+                message: 'Ukjent feil - simpleRejectedActionToRemoteData',
+                code: ApiErrorCode.UKJENT_FEIL,
+            },
             correlationId: '',
             statusCode: -1,
         }

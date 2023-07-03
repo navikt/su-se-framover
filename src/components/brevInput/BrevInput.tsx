@@ -23,9 +23,7 @@ export interface BrevInputProps {
 
 export function BrevInput(props: BrevInputProps) {
     const { formatMessage } = useI18n({ messages });
-    const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError | undefined, null>>(
-        RemoteData.initial
-    );
+    const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
 
     const onHentBrev = async () => {
         if (RemoteData.isPending(hentBrevStatus)) return;
@@ -44,7 +42,7 @@ export function BrevInput(props: BrevInputProps) {
             setHentBrevStatus(RemoteData.success(null));
             window.open(URL.createObjectURL(response.data));
         } else {
-            setHentBrevStatus(RemoteData.failure(response?.error));
+            setHentBrevStatus(RemoteData.failure(response.error));
         }
     };
 

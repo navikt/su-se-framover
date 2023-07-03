@@ -13,20 +13,20 @@ export enum ErrorCode {
 export interface ApiError {
     statusCode: ErrorCode | number;
     correlationId: string;
-    //TODO: gjør body til union type -  error: ErrorMessage | ErrorMessage[] | null
-    body: ErrorMessage | null;
+    //TODO: gjør body til union type -  error: ErrorMessage | ErrorMessage[]
+    body: ErrorMessage;
 }
 
 export interface ErrorMessage {
     message: string;
-    code?: ApiErrorCode;
+    code: ApiErrorCode;
 }
 
 export type ApiClientResult<TSuccess> = ApiClientSuccessResult<TSuccess> | ApiClientFailureResult;
 export type ApiClientSuccessResult<TSuccess> = { status: 'ok'; data: TSuccess; statusCode: number };
 export type ApiClientFailureResult = { status: 'error'; error: ApiError };
 
-const error = (e: ApiError): ApiClientFailureResult => ({ status: 'error', error: e as ApiError });
+const error = (e: ApiError): ApiClientFailureResult => ({ status: 'error', error: e });
 const success = <TSuccess>(data: TSuccess, statusCode: number): ApiClientSuccessResult<TSuccess> => {
     return { status: 'ok', data, statusCode };
 };

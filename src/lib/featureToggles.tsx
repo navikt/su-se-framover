@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { ApiClientResult, ApiError, ErrorCode } from '~src/api/apiClient';
 import { fetchAll as fetchAllFeatureToggles, FeatureToggle, FeatureToggles } from '~src/api/featureToggleApi';
+import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 
 import { pipe } from './fp';
 
@@ -38,7 +39,10 @@ export const FeatureToggleProvider: React.FC<React.PropsWithChildren> = ({ child
                     status: 'error',
                     error: {
                         statusCode: ErrorCode.Unknown,
-                        body: null,
+                        body: {
+                            message: 'ukjent feil ved feature toggles',
+                            code: ApiErrorCode.UKJENT_FEIL,
+                        },
                         correlationId: '',
                     },
                 };
