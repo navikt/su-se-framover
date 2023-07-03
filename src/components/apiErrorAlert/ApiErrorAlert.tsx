@@ -19,14 +19,19 @@ interface Props {
 }
 
 const konstruerMeldingForAlert = (formatMessage: MessageFormatter<typeof messages>, error: ApiErrorAlertErrorType) => {
-    if (error.statusCode === 503) {
-        return formatMessage(ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG);
-    }
+    try {
+        if (error.statusCode === 503) {
+            return formatMessage(ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG);
+        }
 
-    if (Array.isArray(error.body)) {
-        return error.body.map((err) => formatMessage(err.code));
-    } else {
-        return formatMessage(error.body.code);
+        if (Array.isArray(error.body)) {
+            return error.body.map((err) => formatMessage(err.code));
+        } else {
+            return formatMessage(error.body.code);
+        }
+    } catch (err) {
+        //TODO: her vil vi kanskje logge noe tiol sentry
+        return `Ukjent feil - Original feil: ${JSON.stringify(error)}`;
     }
 };
 
