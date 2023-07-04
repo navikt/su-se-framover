@@ -4,7 +4,6 @@ import { Heading } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
@@ -35,7 +34,6 @@ import messages from './formue-nb';
 import styles from './Formue.module.less';
 
 const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
-    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFormuegrunnlag);
     const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
@@ -59,10 +57,11 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
     useDraftFormSubscribe(form.watch);
 
     const handleSave = async (values: FormueVilkårFormData, onSuccess: () => void) => {
-        if (eqFormueVilkårFormData.equals(values, initialValues)) {
-            navigate(props.nesteUrl);
-            return;
-        }
+        /*
+        Fordi vi pre-utfyller ved formue, har vi ikke en god sjekk på at saksbehandler
+        faktisk ikke vil endre på noen felter. Det vil si at hvis pre-utfyllingen er riktig, så vil vi 
+        uansett sende verdiene til backend. 
+        */
         await lagreFormue(
             {
                 ...formueVilkårFormTilRequest(props.sakId, props.behandling.id, values as FormueVilkårFormData),
