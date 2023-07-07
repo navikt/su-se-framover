@@ -1,12 +1,14 @@
-import { BodyShort, Button, Heading, Label } from '@navikt/ds-react';
+import { BodyShort, Heading, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import React, { useState } from 'react';
+import React from 'react';
 
+import { FeatureToggle } from '~src/api/featureToggleApi';
 import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
+import { useFeatureToggle } from '~src/lib/featureToggles';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
@@ -18,7 +20,7 @@ import { groupBy, groupByEq } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
-import Skattegrunnlagsmodal from '../../oppsummeringAvSkattegrunnlag/Skattegrunnlagsmodal';
+import SeSkattegrunnlag from '../../oppsummeringAvSkattegrunnlag/Skattegrunnlagsmodal';
 
 import messages from './OppsummeringAvBeregning-nb';
 import * as styles from './OppsummeringAvBeregning.module.less';
@@ -126,7 +128,7 @@ const OppsummeringAvBeregning = (props: {
     eksternGrunnlagSkatt: Nullable<EksternGrunnlagSkatt>;
 }) => {
     const { formatMessage, intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
-    const [modalÅpen, setModalÅpen] = useState<boolean>(false);
+    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     return (
         <div className={styles.beregningdetaljer}>
@@ -298,24 +300,8 @@ const OppsummeringAvBeregning = (props: {
                     </div>
                 ))
             )}
-            {props.eksternGrunnlagSkatt && (
-                <>
-                    <Button
-                        className={styles.seSkattegrunnlagKnapp}
-                        variant="tertiary"
-                        type="button"
-                        onClick={() => setModalÅpen(true)}
-                    >
-                        {formatMessage('knapp.seSkattegrunnlag')}
-                    </Button>
-                    {modalÅpen && (
-                        <Skattegrunnlagsmodal
-                            skatt={props.eksternGrunnlagSkatt}
-                            open={modalÅpen}
-                            close={() => setModalÅpen(false)}
-                        />
-                    )}
-                </>
+            {props.eksternGrunnlagSkatt && skattemeldingToggle && (
+                <SeSkattegrunnlag eksternGrunnlagSkatt={props.eksternGrunnlagSkatt} />
             )}
         </div>
     );

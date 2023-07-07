@@ -5,6 +5,4 @@ export default {
 
     'display.visBeregning.sats.høy': 'Høy sats',
     'display.visBeregning.sats.ordinær': 'Ordinær sats',
-
-    'knapp.seSkattegrunnlag': 'Se skattegrunnlag',
 };

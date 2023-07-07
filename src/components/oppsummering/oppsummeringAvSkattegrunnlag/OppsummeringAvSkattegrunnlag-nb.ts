@@ -24,6 +24,8 @@ export default {
     'kjøretøySpesifisering.årForFørstegangsregistrering': 'År for førstegangsregistrering',
     'kjøretøySpesifisering.verdiFinnesIkke': 'Verdi finnes ikke',
 
+    'seSkattegrunnlag.knapp.seSkatt': 'Se skattegrunnlag',
+
     // Oversettelser for tekniskNavn
     aarsavgiftForKontoIVerdipapirregister: 'Årsavgift VPS konto',
     alderspensjonFraIPAOgIPS: 'Alderspensjon fra individuell pensjonsordning (IPS/IPA)',
