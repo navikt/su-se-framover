@@ -32,12 +32,12 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
 
     const initialValues = fastOppholdVilkårTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.fastOpphold,
-        props.behandling.stønadsperiode?.periode
+        props.behandling.stønadsperiode?.periode,
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FastOppholdVilkårFormData>(
         Vilkårtype.FastOppholdINorge,
-        (values) => eqFastOppholdVilkårFormData.equals(values, initialValues)
+        (values) => eqFastOppholdVilkårFormData.equals(values, initialValues),
     );
 
     const handleSave = (values: FastOppholdVilkårFormData, onSuccess: () => void) => {
@@ -58,7 +58,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             () => {
                 clearDraft();
                 onSuccess();
-            }
+            },
         );
     };
 

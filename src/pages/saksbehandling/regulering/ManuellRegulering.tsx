@@ -40,7 +40,7 @@ const ManuellRegulering = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.manuellRegulering>();
     const regulering = props.sak.reguleringer.find((r) => r.id === urlParams.reguleringId);
     const [gjeldendeGrunnlagsdataOgVilkårsvurderinger, hentGjeldendeGrunnlagsdataOgVilkårsvurderinger] = useApiCall(
-        hentgjeldendeGrunnlagsdataOgVilkårsvurderinger
+        hentgjeldendeGrunnlagsdataOgVilkårsvurderinger,
     );
     const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
     const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
@@ -82,14 +82,14 @@ const ManuellRegulering = () => {
                     fradragFormdataTilFradrag(f, {
                         fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
                         tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed)!,
-                    })
+                    }),
                 ),
             },
             () => {
                 hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
                     Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification'), props.sak.id);
                 });
-            }
+            },
         );
 
     useEffect(() => {
@@ -106,14 +106,14 @@ const ManuellRegulering = () => {
                             .map((v) => v?.grunnlag)
                             .filter(filtrerRegulerbarIEU) ?? [],
                     fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
-                        data.grunnlagsdataOgVilkårsvurderinger.fradrag
+                        data.grunnlagsdataOgVilkårsvurderinger.fradrag,
                     ).map((f) =>
                         fradragTilFradragFormData(f, {
                             fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
                             tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
-                        })
+                        }),
                     ),
-                })
+                }),
         );
     }, []);
 
@@ -218,8 +218,8 @@ const ManuellRegulering = () => {
                         </div>
                     </form>
                 );
-            }
-        )
+            },
+        ),
     );
 };
 
@@ -227,12 +227,12 @@ const hentProblemer = (årsaker: ÅrsakForManuell[]) =>
     årsaker.filter(
         (årsak) =>
             årsak !== ÅrsakForManuell.ForventetInntektErStørreEnn0 &&
-            årsak !== ÅrsakForManuell.FradragMåHåndteresManuelt
+            årsak !== ÅrsakForManuell.FradragMåHåndteresManuelt,
     );
 
 const hentTekstForManuellÅrsak = (
     årsak: ÅrsakForManuell,
-    formatMessage: (id: keyof typeof messages) => string
+    formatMessage: (id: keyof typeof messages) => string,
 ): string => {
     switch (årsak) {
         case ÅrsakForManuell.FradragMåHåndteresManuelt:

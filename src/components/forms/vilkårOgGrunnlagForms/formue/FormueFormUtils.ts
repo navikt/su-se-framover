@@ -91,7 +91,7 @@ export const nyFormueVilkår = () => ({ formue: [nyFormuegrunnlagMedEllerUtenPer
 
 export const formueVilkårTilFormData = (
     formueVilkår: FormueVilkår,
-    bosituasjonsgrunnlag: Bosituasjon[]
+    bosituasjonsgrunnlag: Bosituasjon[],
 ): FormueVilkårFormData => ({
     formue: formueVilkår.vurderinger.map((formue) => {
         const epsFnr = bosituasjonPåDato(bosituasjonsgrunnlag, formue.periode.fraOgMed)?.fnr;
@@ -119,7 +119,7 @@ export const nyFormuegrunnlagMedEllerUtenPeriode = (periode?: NullablePeriode): 
 });
 
 export const formuegrunnlagVerdierTilVerdierFormDataEllerNy = (
-    verdier: Nullable<FormuegrunnlagVerdier>
+    verdier: Nullable<FormuegrunnlagVerdier>,
 ): FormuegrunnlagVerdierFormData => {
     if (!verdier) {
         return lagTomFormuegrunnlagVerdier();
@@ -152,13 +152,13 @@ export const erFormueVilkårOppfylt = (
     søkersBekreftetFormue: number,
     epsBekreftetFormue: number,
     fraOgMed: Nullable<Date>,
-    formuegrenser: Formuegrenser[]
+    formuegrenser: Formuegrenser[],
 ) => søkersBekreftetFormue + epsBekreftetFormue <= getSenesteHalvGVerdi(fraOgMed, formuegrenser);
 
 export const formueVilkårFormTilRequest = (
     sakId: string,
     behandlingId: string,
-    f: FormueVilkårFormData
+    f: FormueVilkårFormData,
 ): FormueVilkårRequest => ({
     sakId: sakId,
     behandlingId: behandlingId,
@@ -171,7 +171,7 @@ export const formueVilkårFormTilRequest = (
 });
 
 export const formuegrunnlagVerdierTilRequest = (
-    verdier: FormuegrunnlagVerdierFormData
+    verdier: FormuegrunnlagVerdierFormData,
 ): FormuegrunnlagVerdierRequest => ({
     verdiIkkePrimærbolig: Number.parseInt(verdier.verdiIkkePrimærbolig, 0),
     verdiEiendommer: Number.parseInt(verdier.verdiEiendommer, 0),
@@ -212,7 +212,7 @@ export const summerFormue = (formue: number[]) => {
 };
 
 export const regnUtFormuegrunnlagVerdier = (
-    verdier: Nullable<FormuegrunnlagVerdier | FormuegrunnlagVerdierFormData>
+    verdier: Nullable<FormuegrunnlagVerdier | FormuegrunnlagVerdierFormData>,
 ) => {
     if (!verdier) {
         return 0;
@@ -223,7 +223,7 @@ export const regnUtFormuegrunnlagVerdier = (
     const innskudd = Math.max(
         (verdier.innskudd ? Number(verdier.innskudd) : 0) -
             (verdier.depositumskonto ? Number(verdier.depositumskonto) : 0),
-        0
+        0,
     );
 
     const skalAdderes = [
@@ -236,7 +236,7 @@ export const regnUtFormuegrunnlagVerdier = (
     ];
 
     const skalAdderesParsed = skalAdderes.map((verdi) =>
-        typeof verdi === 'string' ? Number.parseInt(verdi, 0) : verdi
+        typeof verdi === 'string' ? Number.parseInt(verdi, 0) : verdi,
     );
 
     const formue = [...skalAdderesParsed, innskudd];
@@ -246,7 +246,7 @@ export const regnUtFormuegrunnlagVerdier = (
 
 const getInitialVerdierFraGrunnlagEllerSøknad = (
     verdier: Nullable<FormuegrunnlagVerdier>,
-    søknadsFormue: Nullable<SøknadInnhold['formue']>
+    søknadsFormue: Nullable<SøknadInnhold['formue']>,
 ): FormuegrunnlagVerdierFormData => ({
     verdiIkkePrimærbolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
     verdiEiendommer: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
@@ -261,7 +261,7 @@ const getInitialVerdierFraGrunnlagEllerSøknad = (
 export function getInitialFormueVilkårOgDelvisBosituasjon(
     søknadsInnhold: SøknadInnhold,
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger,
-    stønadsperiode: Periode
+    stønadsperiode: Periode,
 ): FormueVilkårFormData {
     const epsInformasjon = hentOmSøkerBorMedEpsOgEpsFnr(hentBosituasjongrunnlag(grunnlagsdata), søknadsInnhold);
     return {
@@ -270,12 +270,12 @@ export function getInitialFormueVilkårOgDelvisBosituasjon(
                 epsFnr: epsInformasjon?.epsFnr,
                 søkersFormue: getInitialVerdierFraGrunnlagEllerSøknad(
                     grunnlagsdata.formue?.vurderinger[0]?.grunnlag.søkersFormue ?? null,
-                    søknadsInnhold.formue
+                    søknadsInnhold.formue,
                 ),
                 epsFormue: epsInformasjon?.borSøkerMedEPS
                     ? getInitialVerdierFraGrunnlagEllerSøknad(
                           grunnlagsdata.formue?.vurderinger[0]?.grunnlag.epsFormue ?? null,
-                          søknadsInnhold.ektefelle?.formue ?? null
+                          søknadsInnhold.ektefelle?.formue ?? null,
                       )
                     : null,
                 periode: stønadsperiode,
@@ -303,7 +303,7 @@ const verdierFormDataValidering = yup
                     return false;
                 }
                 return depositum <= innskudd;
-            }
+            },
         ),
     })
     .required();
@@ -325,7 +325,7 @@ export const formueFormSchema = yup.object<FormueVilkårFormData>({
                         }),
                     måInnhenteMerInformasjon: yup.boolean(),
                 })
-                .required()
+                .required(),
         )
         .required(),
 });

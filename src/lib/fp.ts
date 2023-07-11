@@ -14,7 +14,7 @@ export const combineOptions = Option.sequenceArray;
  */
 export function pickRemoteData<E, A, B>(
     r1: RemoteData.RemoteData<E, A>,
-    r2: RemoteData.RemoteData<E, B>
+    r2: RemoteData.RemoteData<E, B>,
 ): RemoteData.RemoteData<E, A | B> {
     return RemoteData.isInitial(r2) ? r1 : r2;
 }

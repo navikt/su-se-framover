@@ -12,6 +12,6 @@ export const familieforeningSchema = yup.object<FamilieforeningFormData>({
         .defined()
         .oneOf(
             [Vilkårstatus.VilkårOppfylt, Vilkårstatus.VilkårIkkeOppfylt],
-            'Du må velge om bruker har vedtak om alderspensjon'
+            'Du må velge om bruker har vedtak om alderspensjon',
         ),
 });

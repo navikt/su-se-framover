@@ -55,8 +55,8 @@ const DokumentForm = () => {
                     },
                     () => {
                         navigate(Routes.alleDokumenterForSak.createURL({ sakId: context.sak.id }));
-                    }
-                )
+                    },
+                ),
             )}
         >
             <Heading level="2" size={'large'}>

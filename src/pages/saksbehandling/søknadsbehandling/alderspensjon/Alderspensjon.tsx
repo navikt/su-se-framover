@@ -18,7 +18,7 @@ const Alderspensjon = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [lagreAlderspensjongrunnlagStatus, lagreAlderspensjongrunnlag] = useAsyncActionCreator(
-        GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag
+        GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag,
     );
 
     const handleSave = (values: AlderspensjonFormData, onSuccess: () => void) =>
@@ -37,7 +37,7 @@ const Alderspensjon = (props: VilkårsvurderingBaseProps) => {
                     },
                 ],
             },
-            onSuccess
+            onSuccess,
         );
 
     return (

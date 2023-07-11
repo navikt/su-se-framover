@@ -24,7 +24,7 @@ export const fetchMe = createAsyncThunk<LoggedInUser, void, { rejectValue: ApiEr
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export default createSlice({

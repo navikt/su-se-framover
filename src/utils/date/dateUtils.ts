@@ -41,7 +41,7 @@ export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Nullable<Utlandsd
         datesArray.reduce(
             (acc, { utreisedato, innreisedato }) =>
                 acc + DateFns.differenceInCalendarDays(DateFns.parseISO(innreisedato), DateFns.parseISO(utreisedato)),
-            0
+            0,
         ) - datesArray.length
     );
 };

@@ -36,7 +36,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
 
     const initialValues = bosituasjongrunnlagTilFormDataEllerNy(
         props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
-        props.revurdering.periode
+        props.revurdering.periode,
     );
     const form = useForm<BosituasjonGrunnlagFormData>({
         defaultValues: initialValues,
@@ -45,7 +45,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
 
     const lagreBosituasjon = (
         data: BosituasjonGrunnlagFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqBosituasjonGrunnlagFormDataUtenEpsAlder.equals(initialValues, data)) {
             navigate(props.nesteUrl);
@@ -64,7 +64,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
                 if ((res as RevurderingOgFeilmeldinger).feilmeldinger.length === 0) {
                     onSuccess((res as RevurderingOgFeilmeldinger).revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -84,7 +84,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                         }}
                         tilbake={{ url: props.forrigeUrl }}

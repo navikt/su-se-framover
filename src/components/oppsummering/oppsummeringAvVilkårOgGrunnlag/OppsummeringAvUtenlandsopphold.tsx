@@ -25,7 +25,7 @@ const OppsummeringAvUtenlandsopphold = (props: { utenlandsopphold: Nullable<Uten
                 verdi={formatMessage(
                     props.utenlandsopphold?.status
                         ? `utenlandsopphold.vilkår.erOppfylt.${props.utenlandsopphold.status}`
-                        : 'vilkår.ikkeVurdert'
+                        : 'vilkår.ikkeVurdert',
                 )}
             />
             <ul>

@@ -98,7 +98,7 @@ const RevurderingBeregnOgSimuler = (props: {
                             {harSimulering(res.revurdering) &&
                                 periodenInneholderTilbakekrevingOgAndreTyper(
                                     res.revurdering.simulering,
-                                    res.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT
+                                    res.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT,
                                 ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
                             <Beregningblokk revurdering={res.revurdering} />
                             {res.feilmeldinger.length > 0 && <UtfallSomIkkeStøttes feilmeldinger={res.feilmeldinger} />}
@@ -127,15 +127,15 @@ const RevurderingBeregnOgSimuler = (props: {
                                             getNesteUrl(
                                                 RemoteData.isSuccess(beregnOgSimulerStatus)
                                                     ? beregnOgSimulerStatus.value.revurdering
-                                                    : props.informasjonsRevurdering
-                                            )
+                                                    : props.informasjonsRevurdering,
+                                            ),
                                         ),
                                 }}
                                 tilbake={{ url: forrigeUrl }}
                             />
                         </div>
-                    )
-                )
+                    ),
+                ),
             )}
         </div>
     );

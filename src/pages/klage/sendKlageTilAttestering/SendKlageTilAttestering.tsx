@@ -35,9 +35,9 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
                 Routes.navigateToSakIntroWithMessage(
                     navigate,
                     formatMessage('notification.sendtTilAttestering'),
-                    props.sakId
+                    props.sakId,
                 );
-            }
+            },
         );
     };
 
@@ -89,7 +89,7 @@ const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker:
                                 sakId: props.sakId,
                                 klageId: props.klage.id,
                                 steg: KlageSteg.Vurdering,
-                            })
+                            }),
                         )
                     }
                 >

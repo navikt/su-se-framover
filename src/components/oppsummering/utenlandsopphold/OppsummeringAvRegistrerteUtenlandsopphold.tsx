@@ -140,10 +140,10 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
     const { formatMessage } = useI18n({ messages });
     const [endrerRegistrertUtenlandsopphold, setEndrerRegistrertUtenlandsopphold] = useState<boolean>(false);
     const [oppdaterStatus, oppdaterUtenlandsopphold] = useAsyncActionCreator(
-        SakSlice.oppdaterRegistrertUtenlandsopphold
+        SakSlice.oppdaterRegistrertUtenlandsopphold,
     );
     const [ugyldiggjørStatus, ugyldiggjørUtenlandsopphold] = useAsyncActionCreator(
-        SakSlice.annullerRegistrertUtenlandsopphold
+        SakSlice.annullerRegistrertUtenlandsopphold,
     );
 
     if (endrerRegistrertUtenlandsopphold) {
@@ -167,7 +167,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
                                 saksversjon: props.saksversjon,
                                 oppdatererVersjon: props.registrertUtenlandsopphold.versjon,
                                 data: validatedValues,
-                            })
+                            }),
                         )
                     }
                 >

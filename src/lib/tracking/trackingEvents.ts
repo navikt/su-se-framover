@@ -9,7 +9,7 @@ const createEvent = <U, T extends TrackingCode>(code: T) => {
 };
 
 export const startBeregning = createEvent<{ sakId: string; behandlingId: string }, TrackingCode.StartBeregning>(
-    TrackingCode.StartBeregning
+    TrackingCode.StartBeregning,
 );
 
 export const søknadOppsummeringEndreSvarKlikk = createEvent<
@@ -17,11 +17,11 @@ export const søknadOppsummeringEndreSvarKlikk = createEvent<
     TrackingCode.SøknadOppsummeringEndreSvarKlikk
 >(TrackingCode.SøknadOppsummeringEndreSvarKlikk);
 export const søknadHjelpeTekstKlikk = createEvent<void, TrackingCode.SøknadHjelpeTekstKlikk>(
-    TrackingCode.SøknadHjelpeTekstKlikk
+    TrackingCode.SøknadHjelpeTekstKlikk,
 );
 export const søknadSendInn = createEvent<{ ident: string }, TrackingCode.SøknadSendInn>(TrackingCode.SøknadSendInn);
 export const søknadNesteSteg = createEvent<{ ident: string; steg: string }, TrackingCode.SøknadNesteSteg>(
-    TrackingCode.SøknadNesteSteg
+    TrackingCode.SøknadNesteSteg,
 );
 
 export interface TrackingEvent<T extends TrackingCode, U> {

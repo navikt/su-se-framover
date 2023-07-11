@@ -25,12 +25,12 @@ function getTokenSetById(tokenSets: TokenSets, id: string): TokenSet | null {
 export async function getOrRefreshOnBehalfOfToken(
     authClient: OpenIdClient.Client,
     tokenSets: TokenSets,
-    log: Logger
+    log: Logger,
 ): Promise<TokenSet> {
     const selfToken = getTokenSetById(tokenSets, tokenSetSelfId);
     if (!selfToken) {
         throw Error(
-            'getOrRefreshOnBehalfOfToken: Missing self-token in tokenSets. This should have been set by the middleware.'
+            'getOrRefreshOnBehalfOfToken: Missing self-token in tokenSets. This should have been set by the middleware.',
         );
     }
     const onBehalfOfToken = getTokenSetById(tokenSets, Config.auth.suSeBakoverUri);
@@ -55,7 +55,7 @@ async function getOrRefreshSelfTokenIfExpired(
     authClient: OpenIdClient.Client,
     selfToken: TokenSet,
     tokenSets: TokenSets,
-    log: Logger
+    log: Logger,
 ): Promise<TokenSet> {
     if (selfToken.expired()) {
         // Denne vil ikke bli kalt initielt, men først når OBO/self-token har expired
@@ -103,7 +103,7 @@ export async function getOpenIdClient(issuerUrl: string) {
                 token_endpoint_auth_method: 'private_key_jwt',
                 token_endpoint_auth_signing_alg: 'RS256',
             },
-            Config.auth.jwks
+            Config.auth.jwks,
         );
     } catch (e) {
         logger.error(`Could not discover issuer: ${issuerUrl}`);

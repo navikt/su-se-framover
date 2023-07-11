@@ -29,7 +29,7 @@ const Kvittering = () => {
     const søker = useAppSelector((state) => state.personopplysninger.søker);
     const søknadstype = useAppSelector((state) => state.soknad.forVeileder.type);
     const [fetchSøknadPdfState, setFetchSøknadPdfState] = React.useState<RemoteData.RemoteData<ApiError, null>>(
-        RemoteData.initial
+        RemoteData.initial,
     );
     const { formatMessage } = useI18n({ messages });
 
@@ -163,8 +163,8 @@ const Kvittering = () => {
                                 </div>
                             </div>
                         );
-                    }
-                )
+                    },
+                ),
             )}
         </div>
     );

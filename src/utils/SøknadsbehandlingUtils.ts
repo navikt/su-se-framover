@@ -31,7 +31,7 @@ export const erSøknadsbehandlingIverksatt = (s: Søknadsbehandling) =>
 
 export const erTilAttestering = ({ status }: Søknadsbehandling) =>
     [SøknadsbehandlingStatus.TIL_ATTESTERING_AVSLAG, SøknadsbehandlingStatus.TIL_ATTESTERING_INNVILGET].includes(
-        status
+        status,
     );
 
 export const erIverksatt = ({ status }: Søknadsbehandling) =>
@@ -87,7 +87,7 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Søknadsbehandlin
 const hentSaksbehandlingssteg = (behandling: Søknadsbehandling) => {
     const vilkårsinformasjon = mapToVilkårsinformasjon(
         behandling.søknad.søknadInnhold.type,
-        behandling.grunnlagsdataOgVilkårsvurderinger
+        behandling.grunnlagsdataOgVilkårsvurderinger,
     );
     const satsOgBeregningssteg = vilkårsinformasjonForBeregningssteg(behandling);
     return [...vilkårsinformasjon, ...satsOgBeregningssteg];
@@ -113,7 +113,7 @@ export const erSøknadsbehandlingTidligAvslag = (s: Søknadsbehandling) =>
         s.grunnlagsdataOgVilkårsvurderinger.flyktning.resultat === Vilkårstatus.VilkårIkkeOppfylt);
 
 export const splitStatusOgResultatFraSøkandsbehandling = (
-    s: Søknadsbehandling
+    s: Søknadsbehandling,
 ): {
     status: 'Opprettet' | 'Vilkårsvurdert' | 'Beregnet' | 'Simulert' | 'Til attestering' | 'Underkjent' | 'Iverksatt';
     resultat: '-' | 'Avslag' | 'Innvilget';

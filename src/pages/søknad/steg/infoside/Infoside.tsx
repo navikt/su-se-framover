@@ -41,7 +41,7 @@ const Infoside = () => {
                         }),
                         {
                             strong: (text) => <strong>{text}</strong>,
-                        }
+                        },
                     )}
                 </BodyLong>
             </GuidePanel>
@@ -89,7 +89,7 @@ const Infoside = () => {
                             getSøknadstematekst(sakstype, {
                                 [Sakstype.Uføre]: 'henterInnInfo.viHenter.flyktningsstatus',
                                 [Sakstype.Alder]: 'henterInnInfo.viHenter.oppholdstillatelse',
-                            })
+                            }),
                         )}
                     </li>
                 </BodyLong>

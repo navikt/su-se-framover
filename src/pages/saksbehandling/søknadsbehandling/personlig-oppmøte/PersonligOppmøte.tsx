@@ -41,12 +41,12 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
 
     const initialValues = personligOppmøteVilkårTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte,
-        props.behandling.stønadsperiode?.periode
+        props.behandling.stønadsperiode?.periode,
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } =
         useSøknadsbehandlingDraftContextFor<PersonligOppmøteVilkårFormData>(Vilkårtype.PersonligOppmøte, (values) =>
-            eqPersonligOppmøteVilkårFormData.equals(values, initialValues)
+            eqPersonligOppmøteVilkårFormData.equals(values, initialValues),
         );
 
     const form = useForm({
@@ -78,7 +78,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                 const oppdatertSøknadsbehandling = res as Søknadsbehandling;
                 clearDraft();
                 onSuccess(oppdatertSøknadsbehandling);
-            }
+            },
         );
     };
 
@@ -92,7 +92,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                   Routes.saksbehandlingSendTilAttestering.createURL({
                       sakId: props.sakId,
                       behandlingId: props.behandling.id,
-                  })
+                  }),
               )
             : navigate(props.nesteUrl);
     };

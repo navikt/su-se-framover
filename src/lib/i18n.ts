@@ -20,7 +20,7 @@ export interface UseI18N<T extends Record<string, string> | void> {
     formatMessage(id: keyof T, values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>): string;
     formatMessage<X = React.ReactNode>(
         id: keyof T,
-        values?: Record<string, PrimitiveType | FormatXMLElementFn<string, X>>
+        values?: Record<string, PrimitiveType | FormatXMLElementFn<string, X>>,
     ): X;
     formatDate(date: string | Date, dateFormat?: DateFormats): string;
 }
@@ -37,14 +37,14 @@ export const useI18n = <T extends Record<string, string>>(args: { messages: T })
     const formatMessage = React.useCallback<UseI18N<T>['formatMessage']>(
         (id: keyof T, values: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>): string =>
             intl.formatMessage({ id: id as string }, values),
-        [intl]
+        [intl],
     );
 
     const formatDate = React.useCallback(
         (date: string | Date, dateFormat: DateFormats) => {
             return intl.formatDate(date, dateFormat);
         },
-        [intl]
+        [intl],
     );
 
     return { intl, formatMessage, formatDate };

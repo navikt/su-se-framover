@@ -5,6 +5,6 @@ export const fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold = (
         [
             ...Object.values(VelgbareFradragskategorier),
             IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold,
-        ].includes(f.type)
+        ].includes(f.type),
     );
 };

@@ -29,7 +29,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...revurderingmessages } });
 
     const initialValues = utenlandsoppholdVilkårTilFormDataEllerNy(
-        props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold,
     );
     const form = useForm<UtenlandsoppholdVilkårFormData>({
         resolver: yupResolver(utenlandsoppholdFormSchema),
@@ -39,7 +39,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
 
     const handleSubmit = async (
         values: UtenlandsoppholdVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqUtenlandsoppholdVilkårFormData.equals(initialValues, values)) {
             navigate(props.nesteUrl);
@@ -59,7 +59,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -81,7 +81,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                             savingState: status,
                             url: props.nesteUrl,

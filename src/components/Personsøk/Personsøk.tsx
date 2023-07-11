@@ -88,8 +88,8 @@ const Personsøk = (props: Props) => {
                         () => null,
                         () => null,
                         (err) => <ApiErrorAlert error={err} />,
-                        (s) => <Personkort person={s} />
-                    )
+                        (s) => <Personkort person={s} />,
+                    ),
                 )}
             </div>
         </div>

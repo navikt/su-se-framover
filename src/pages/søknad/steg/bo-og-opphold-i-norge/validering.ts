@@ -113,7 +113,7 @@ export const schema = yup.object<FormData>({
                     } else {
                         return DateFns.isAfter(
                             DateFns.parse(val, 'yyyy-MM-dd', new Date()),
-                            new Date(datoForInnleggelse)
+                            new Date(datoForInnleggelse),
                         );
                     }
                 }

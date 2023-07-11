@@ -40,7 +40,7 @@ const getBenyttedeFradrag = (månedsberegning: Månedsberegning): Fradrag[] =>
                 tilhører: fradrag[0].tilhører,
                 utenlandskInntekt: fradrag[0].utenlandskInntekt,
                 periode: fradrag[0].periode,
-            }))
+            })),
     );
 
 const DetaljertFradrag = (props: {
@@ -144,7 +144,7 @@ const OppsummeringAvBeregning = (props: {
                         props.beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0),
                         {
                             numDecimals: 0,
-                        }
+                        },
                     )}
                 </span>
             </Label>
@@ -163,7 +163,7 @@ const OppsummeringAvBeregning = (props: {
                                 ([head, last]) => ({
                                     tittel: `${formatMonthYear(head.fraOgMed)} - ${formatMonthYear(last.tilOgMed)}`,
                                     beløp: head.beløp,
-                                })
+                                }),
                             ),
                             ({ tittel, beløp }) => (
                                 <Label className={styles.linje} spacing>
@@ -175,7 +175,7 @@ const OppsummeringAvBeregning = (props: {
                                         i mnd
                                     </span>
                                 </Label>
-                            )
+                            ),
                         )}
 
                         <ol className={styles.fradragliste}>
@@ -184,7 +184,7 @@ const OppsummeringAvBeregning = (props: {
                                     {formatMessage(
                                         månedsberegninger[0].sats === Sats.Høy
                                             ? 'display.visBeregning.sats.høy'
-                                            : 'display.visBeregning.sats.ordinær'
+                                            : 'display.visBeregning.sats.ordinær',
                                     )}
                                 </span>
                                 <span>{formatCurrency(månedsberegninger[0].satsbeløp)}</span>
@@ -195,11 +195,11 @@ const OppsummeringAvBeregning = (props: {
                                 arr.sortBy([
                                     pipe(
                                         S.Ord,
-                                        Ord.contramap((f: Fradrag) => f.tilhører)
+                                        Ord.contramap((f: Fradrag) => f.tilhører),
                                     ),
                                     pipe(
                                         S.Ord,
-                                        Ord.contramap((f: Fradrag) => f.type)
+                                        Ord.contramap((f: Fradrag) => f.type),
                                     ),
                                 ]),
                                 arr.map((fradrag) => (
@@ -223,7 +223,7 @@ const OppsummeringAvBeregning = (props: {
                                                             fradrag.utenlandskInntekt.beløpIUtenlandskValuta,
                                                             {
                                                                 currency: fradrag.utenlandskInntekt.valuta,
-                                                            }
+                                                            },
                                                         ),
                                                     },
                                                     {
@@ -239,13 +239,13 @@ const OppsummeringAvBeregning = (props: {
                                             </>
                                         )}
                                     </li>
-                                ))
+                                )),
                             )}
                             {pipe(månedsberegninger[0], getBenyttedeFradrag, (benyttedeFradrag) => {
                                 return (
                                     månedsberegninger[0].epsInputFradrag.length === 0 ||
                                     benyttedeFradrag.some(
-                                        (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.BeregnetFradragEPS
+                                        (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.BeregnetFradragEPS,
                                     ) // Beregnet fradrag er når det er over fribeløp
                                 );
                             }) ? null : (
@@ -277,7 +277,7 @@ const OppsummeringAvBeregning = (props: {
                                                             f.utenlandskInntekt.beløpIUtenlandskValuta,
                                                             {
                                                                 currency: f.utenlandskInntekt.valuta,
-                                                            }
+                                                            },
                                                         ),
                                                         epsUtland: true,
                                                     },
@@ -298,7 +298,7 @@ const OppsummeringAvBeregning = (props: {
                             )}
                         </ol>
                     </div>
-                ))
+                )),
             )}
             {props.eksternGrunnlagSkatt && skattemeldingToggle && (
                 <SeSkattegrunnlag eksternGrunnlagSkatt={props.eksternGrunnlagSkatt} />

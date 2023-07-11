@@ -40,7 +40,7 @@ export const Utbetalinger = (props: {
         kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.STANS &&
         utbetalingsperioder.some(
             (u) =>
-                !DateFns.isBefore(DateFns.parseISO(u.tilOgMed), DateFns.startOfMonth(DateFns.addMonths(new Date(), 1)))
+                !DateFns.isBefore(DateFns.parseISO(u.tilOgMed), DateFns.startOfMonth(DateFns.addMonths(new Date(), 1))),
         );
     const kanGjenopptas = kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA;
 
@@ -65,7 +65,7 @@ export const Utbetalinger = (props: {
                                     {formatMessage(
                                         kanGjenopptas
                                             ? 'utbetalinger.stønadsperiode.stoppet'
-                                            : 'utbetalinger.stønadsperiode.utløpt'
+                                            : 'utbetalinger.stønadsperiode.utløpt',
                                     )}
                                 </BodyShort>
                             </>

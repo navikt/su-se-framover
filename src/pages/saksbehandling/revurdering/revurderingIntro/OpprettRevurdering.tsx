@@ -46,9 +46,9 @@ const OpprettRevurdering = (props: { sakId: string; minOgMaxPeriode: Periode }) 
                         revurderingId: opprettetRevurdering.id,
                         seksjon: grunnlagOgVilkårSeksjoner.id as RevurderingSeksjoner,
                         steg: grunnlagOgVilkårSeksjoner.linjer[0].id as RevurderingSteg,
-                    })
+                    }),
                 );
-            }
+            },
         );
     };
 
@@ -65,7 +65,7 @@ const OpprettRevurdering = (props: { sakId: string; minOgMaxPeriode: Periode }) 
                 url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
                 onClick: (values) =>
                     opprett({ ...revurderingIntroFormDataTilOpprettRequest({ sakId: props.sakId, values }) }, () =>
-                        navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }))
+                        navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
                     ),
             }}
         />

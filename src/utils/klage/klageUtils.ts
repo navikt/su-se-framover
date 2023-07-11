@@ -116,7 +116,7 @@ export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
 export const erKlageÅpen = (k: Klage) => !erKlageFerdigbehandlet(k) && !erKlageAvsluttet(k);
 
 export const erKlageOmgjort = (
-    k: Klage
+    k: Klage,
 ): k is Klage & {
     vedtaksvurdering: {
         type: KlageVurderingType.OMGJØR;
@@ -130,7 +130,7 @@ export const erKlageOmgjort = (
     return k.vedtaksvurdering?.type === KlageVurderingType.OMGJØR;
 };
 export const erKlageOpprettholdt = (
-    k: Klage
+    k: Klage,
 ): k is Klage & {
     vedtaksvurdering: {
         type: KlageVurderingType.OPPRETTHOLD;
@@ -279,7 +279,7 @@ export const hentSisteVedtattUtfall = (vedtak: VedtattUtfall[]) =>
     pipe(vedtak, maxBy(Ord.contramap((v: VedtattUtfall) => v.opprettet)(S.Ord)), toNullable);
 
 export const splitStatusOgResultatFraKlage = (
-    k: Klage
+    k: Klage,
 ): {
     status: 'Opprettet' | 'Vilkårsvurdert' | '-' | 'Til attestering' | 'Oversendt' | 'Iverksatt';
     resultat: '-' | 'Avvist' | 'Til vurdering';

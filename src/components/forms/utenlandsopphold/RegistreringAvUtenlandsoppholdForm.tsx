@@ -32,7 +32,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
     status: ApiResult<RegistrerteUtenlandsopphold>;
     onFormSubmit: (
         values: RegisteringAvUtenlandsoppholdFormData,
-        formReset: UseFormReset<RegisteringAvUtenlandsoppholdFormData>
+        formReset: UseFormReset<RegisteringAvUtenlandsoppholdFormData>,
     ) => void;
     children: React.ReactNode;
 }) => {
@@ -43,7 +43,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
         {
             defaultValues: registrertUtenlandsoppholdTilFormDataEllerDefault(props.registrertUtenlandsopphold),
             resolver: yupResolver(registeringAvUtenlandsoppholdFormSchema),
-        }
+        },
     );
     const watched = watch();
 
@@ -52,7 +52,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
             DateFns.differenceInCalendarDays(watched.periode.tilOgMed ?? 0, watched.periode.fraOgMed ?? 0) - 1;
 
         setAntallDagerIUtlandet(
-            antallDagerIUtlandetMinusUtreiseOgInnreiseDato < 0 ? 0 : antallDagerIUtlandetMinusUtreiseOgInnreiseDato
+            antallDagerIUtlandetMinusUtreiseOgInnreiseDato < 0 ? 0 : antallDagerIUtlandetMinusUtreiseOgInnreiseDato,
         );
     }, [watched.periode.fraOgMed, watched.periode.tilOgMed]);
 
@@ -93,7 +93,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                         >
                             <option value="">
                                 {formatMessage(
-                                    'registreringAvUtenlandsopphold.form.dokumentasjon.defaultValue.velgTypeDokumentasjon'
+                                    'registreringAvUtenlandsopphold.form.dokumentasjon.defaultValue.velgTypeDokumentasjon',
                                 )}
                             </option>
                             {Object.values(UtenlandsoppholdDokumentasjon).map((v) => (
@@ -182,7 +182,7 @@ const JournalpostIderInputs = (props: {
                 {formatMessage(
                     journalposter.fields.length === 0
                         ? 'registreringAvUtenlandsopphold.form.button.journalpostId.leggTil'
-                        : 'registreringAvUtenlandsopphold.form.button.journalpostId.ny'
+                        : 'registreringAvUtenlandsopphold.form.button.journalpostId.ny',
                 )}
             </Button>
         </ul>

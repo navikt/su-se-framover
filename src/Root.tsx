@@ -25,14 +25,14 @@ const DevTools = React.lazy(() => import('~/src/pages/dev/DevToolsPage'));
 const HomePage = React.lazy(() => import('~/src/pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));
 const Behandlingsoversikt = React.lazy(
-    () => import('~/src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt')
+    () => import('~/src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt'),
 );
 const Soknad = React.lazy(() => import('~/src/pages/søknad'));
 const SendTilAttesteringPage = React.lazy(
-    () => import('~/src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
+    () => import('~/src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage'),
 );
 const VedtakEllerOversendtKlageOppsummering = React.lazy(
-    () => import('~src/pages/saksbehandling/vedtak/VedtakEllerOversendtKlageOppsummering')
+    () => import('~src/pages/saksbehandling/vedtak/VedtakEllerOversendtKlageOppsummering'),
 );
 const AvsluttBehandling = React.lazy(() => import('~/src/pages/saksbehandling/avsluttBehandling/AvsluttBehandling'));
 const Revurdering = React.lazy(() => import('~/src/pages/saksbehandling/revurdering/Revurdering'));
@@ -42,7 +42,7 @@ const OpprettKlage = React.lazy(() => import('~src/pages/klage/opprettKlage/Oppr
 const Klage = React.lazy(() => import('~src/pages/klage/Klage'));
 const NyDatoForKontrollsamtale = React.lazy(() => import('~src/pages/kontrollsamtale/KontrollsamtalePage'));
 const RevurderingIntroPage = React.lazy(
-    () => import('~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage')
+    () => import('~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage'),
 );
 const ManuellReguleringPage = React.lazy(() => import('~src/pages/saksbehandling/regulering/ManuellRegulering'));
 const Stans = React.lazy(() => import('~src/pages/saksbehandling/stans/Stans'));

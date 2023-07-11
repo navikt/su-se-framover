@@ -66,7 +66,7 @@ export const nyBosituasjon = (p?: Periode<string>): BosituasjonFormItemData => (
 
 export const bosituasjongrunnlagTilFormDataEllerNy = (
     b: Bosituasjon[],
-    p: Periode<string>
+    p: Periode<string>,
 ): BosituasjonGrunnlagFormData => ({
     bosituasjoner:
         b.length > 0
@@ -166,7 +166,7 @@ export const bosituasjonFormSchema = yup
                             otherwise: yup.boolean().defined(),
                         }),
                     })
-                    .required()
+                    .required(),
             )
             .required(),
     })

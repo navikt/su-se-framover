@@ -15,7 +15,7 @@ export function groupByEq<T>(eqT: Eq<T>) {
     return chop((arr: T[]) => {
         const { init, rest } = pipe(
             arr,
-            spanLeft((a) => eqT.equals(a, arr[0]))
+            spanLeft((a) => eqT.equals(a, arr[0])),
         );
         return [init, rest];
     });
@@ -24,7 +24,7 @@ export function groupByEq<T>(eqT: Eq<T>) {
 export function groupBy<T>(arr: T[], keyFunction: (element: T) => string): Record<string, T[]> {
     return arr.reduce(
         (acc, element) => ({ ...acc, [keyFunction(element)]: [...(acc[keyFunction(element)] ?? []), element] }),
-        {} as Record<string, T[]>
+        {} as Record<string, T[]>,
     );
 }
 
@@ -40,14 +40,14 @@ export function groupWhile<T>(shouldBeGroupedTogether: (curr: T, prev: T) => boo
             arr,
             spanLeftWithIndex((i, a) => {
                 return i === 0 || shouldBeGroupedTogether(a, arr[i - 1]);
-            })
+            }),
         );
         return [init, rest];
     });
 }
 
 export function spanLeftWithIndex<T>(
-    predicate: (idx: number, element: T) => boolean
+    predicate: (idx: number, element: T) => boolean,
 ): (arr: T[]) => { init: T[]; rest: T[] } {
     const helper = (idx: number, init: T[], rest: T[]): { init: T[]; rest: T[] } => {
         if (rest.length === 0) {

@@ -63,10 +63,10 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
                             Routes.navigateToSakIntroWithMessage(
                                 navigate,
                                 formatMessage('notification.avvist'),
-                                props.sakId
+                                props.sakId,
                             );
                         });
-                    }
+                    },
                 ),
             status: avvisStatus,
         };
@@ -84,9 +84,9 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
                         Routes.navigateToSakIntroWithMessage(
                             navigate,
                             formatMessage('notification.oversendt'),
-                            props.sakId
+                            props.sakId,
                         );
-                    }
+                    },
                 ),
             status: oversendStatus,
         };
@@ -102,7 +102,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
             },
             () => {
                 Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification.underkjent'), props.sakId);
-            }
+            },
         );
 
     return (

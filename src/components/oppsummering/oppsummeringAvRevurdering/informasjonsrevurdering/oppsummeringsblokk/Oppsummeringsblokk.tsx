@@ -49,8 +49,8 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                             maxBy(Ord.contramap((a: Attestering) => a.opprettet)(S.Ord)),
                             Option.fold(
                                 () => '-',
-                                (a) => a.attestant
-                            )
+                                (a) => a.attestant,
+                            ),
                         ),
                     },
                     {
@@ -76,7 +76,7 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                     <OppsummeringPar
                         label={formatMessage('tilbakekreving.skalTilbakekreves')}
                         verdi={formatMessage(
-                            `tilbakekreving.resultat.tilJaNei.${props.revurdering.tilbakekrevingsbehandling.avgjørelse}`
+                            `tilbakekreving.resultat.tilJaNei.${props.revurdering.tilbakekrevingsbehandling.avgjørelse}`,
                         )}
                         retning={'vertikal'}
                     />

@@ -30,7 +30,7 @@ export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectV
     'klage/vurderFormkrav',
     async (
         { sakId, klageId, vedtakId, innenforFristen, klagesDetPåKonkreteElementerIVedtaket, erUnderskrevet },
-        thunkApi
+        thunkApi,
     ) => {
         const res = await klageApi.vilkårsvurder({
             sakId,
@@ -44,7 +44,7 @@ export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectV
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export const bekreftFormkrav = createAsyncThunk<Klage, { sakId: string; klageId: string }, { rejectValue: ApiError }>(
@@ -58,7 +58,7 @@ export const bekreftFormkrav = createAsyncThunk<Klage, { sakId: string; klageId:
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export const lagreVurderingAvKlage = createAsyncThunk<Klage, VurderingRequest, { rejectValue: ApiError }>(
@@ -75,7 +75,7 @@ export const lagreVurderingAvKlage = createAsyncThunk<Klage, VurderingRequest, {
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export const bekreftVurderinger = createAsyncThunk<
@@ -135,7 +135,7 @@ export const oversend = createAsyncThunk<Klage, { sakId: string; klageId: string
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export const iverksattAvvist = createAsyncThunk<Klage, { sakId: string; klageId: string }, { rejectValue: ApiError }>(
@@ -149,7 +149,7 @@ export const iverksattAvvist = createAsyncThunk<Klage, { sakId: string; klageId:
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export const underkjenn = createAsyncThunk<

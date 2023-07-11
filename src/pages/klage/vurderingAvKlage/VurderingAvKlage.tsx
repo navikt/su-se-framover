@@ -86,7 +86,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
         .required()
         .oneOf(
             [KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD],
-            'Feltet må være "Omgjør", eller "Oppretthold"'
+            'Feltet må være "Omgjør", eller "Oppretthold"',
         ),
     omgjør: yup
         .object<OmgjørFormData>()
@@ -117,7 +117,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const { formatMessage } = useI18n({ messages });
 
     const [lagreVurderingAvKlageStatus, lagreVurderingAvKlage] = useAsyncActionCreator(
-        klageActions.lagreVurderingAvKlage
+        klageActions.lagreVurderingAvKlage,
     );
     const [bekreftVurderingerStatus, bekreftVurderinger] = useAsyncActionCreator(klageActions.bekreftVurderinger);
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
@@ -192,7 +192,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                     sakId: props.sakId,
                     klageId: props.klage.id,
                     steg: KlageSteg.Oppsummering,
-                })
+                }),
             );
             return;
         }
@@ -208,9 +208,9 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             sakId: props.sakId,
                             klageId: props.klage.id,
                             steg: KlageSteg.Oppsummering,
-                        })
+                        }),
                     );
-                }
+                },
             );
         });
     };

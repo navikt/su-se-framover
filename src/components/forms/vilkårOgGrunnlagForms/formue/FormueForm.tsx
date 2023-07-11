@@ -125,7 +125,7 @@ const FormueGrunnlagsperiode = (props: {
     const [epsStatus, hentEPS, resetToInitial] = useApiCall(PersonApi.fetchPerson);
 
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
-        regnUtFormuegrunnlagVerdier(watch.søkersFormue)
+        regnUtFormuegrunnlagVerdier(watch.søkersFormue),
     );
     const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormuegrunnlagVerdier(watch.epsFormue));
 
@@ -182,7 +182,7 @@ const FormueGrunnlagsperiode = (props: {
                     søkersBekreftetFormue,
                     epsBekreftetFormue,
                     watch.periode.fraOgMed,
-                    props.formuegrenser
+                    props.formuegrenser,
                 )}
             />
         </div>

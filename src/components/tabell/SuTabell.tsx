@@ -16,7 +16,7 @@ export type AriaSortVerdi = 'ascending' | 'descending';
 const SuTabell = <Kolonner extends Record<string, string>>(props: Props<Kolonner>) => {
     const [sortVerdi, setSortVerdi] = useState<AriaSortVerdi>('descending');
     const [sortertKolonne, setSortertKolonne] = useState<ValueOf<Kolonner>>(
-        props.kolonnerConfig.defaultKolonneSorteresEtter
+        props.kolonnerConfig.defaultKolonneSorteresEtter,
     );
 
     const handleSorterClick = (kolonne: ValueOf<Kolonner>) => {

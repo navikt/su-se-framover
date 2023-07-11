@@ -126,7 +126,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                             onChange={(e) =>
                                 props.oppdaterResultat?.(
                                     key as keyof BehandlingssammendragResultatFilter,
-                                    e.target.checked
+                                    e.target.checked,
                                 )
                             }
                         >

@@ -111,7 +111,7 @@ const VurderFormkrav = (props: Props) => {
             },
             () => {
                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-            }
+            },
         );
     };
 
@@ -125,7 +125,7 @@ const VurderFormkrav = (props: Props) => {
                 sakId: props.sakId,
                 klageId: props.klage.id,
                 steg: skalNavigeresTilAvvisning(klage) ? KlageSteg.Avvisning : KlageSteg.Vurdering,
-            })
+            }),
         );
     };
 
@@ -152,9 +152,9 @@ const VurderFormkrav = (props: Props) => {
                     },
                     (klage) => {
                         navigerTilNesteSide(klage);
-                    }
+                    },
                 );
-            }
+            },
         );
     };
 
@@ -198,7 +198,7 @@ const VurderFormkrav = (props: Props) => {
                                     <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
                                     {props.vedtaker.map((v) => (
                                         <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
-                                            v.opprettet
+                                            v.opprettet,
                                         )}`}</option>
                                     ))}
                                 </Select>

@@ -71,8 +71,8 @@ const StartGRegulering = () => {
                                     <p>{saksnummer.sort().join(', ')}</p>
                                 </>
                             );
-                        }
-                    )
+                        },
+                    ),
                 )}
             </GuidePanel>
             <MonthPicker label="Velg reguleringsdato" value={startDato} onChange={(dato) => setStartDato(dato)} />

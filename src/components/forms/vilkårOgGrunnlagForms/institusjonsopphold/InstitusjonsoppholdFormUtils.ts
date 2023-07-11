@@ -36,32 +36,32 @@ export const eqInstitusjonsoppholdFormData = struct<InstitusjonsoppholdVilkårFo
 });
 
 export const institusjonsoppholdVilkårTilFormData = (
-    i: InstitusjonsoppholdVilkår
+    i: InstitusjonsoppholdVilkår,
 ): InstitusjonsoppholdVilkårFormData => ({
     institusjonsopphold: i.vurderingsperioder.map(institusjonsoppholdVurderingsperiodeTilFormData),
 });
 
 export const institusjonsoppholdVilkårTilFormDataEllerNy = (
     i: Nullable<InstitusjonsoppholdVilkår>,
-    p?: Periode<string>
+    p?: Periode<string>,
 ): InstitusjonsoppholdVilkårFormData =>
     i ? institusjonsoppholdVilkårTilFormData(i) : nyInstitusjonsoppholdVilkårMedEllerUtenPeriode(p);
 
 export const institusjonsoppholdVurderingsperiodeTilFormData = (
-    f: VurderingsperiodeInstitusjonsopphold
+    f: VurderingsperiodeInstitusjonsopphold,
 ): VurderingsperioderInstitusjonsoppholdFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     resultat: f.vurdering,
 });
 
 export const nyInstitusjonsoppholdVilkårMedEllerUtenPeriode = (
-    p?: Periode<string>
+    p?: Periode<string>,
 ): InstitusjonsoppholdVilkårFormData => ({
     institusjonsopphold: [nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode(p)],
 });
 
 export const nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode = (
-    p?: Periode<string>
+    p?: Periode<string>,
 ): VurderingsperioderInstitusjonsoppholdFormData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     resultat: null,
@@ -91,7 +91,7 @@ export const institusjonsoppholdFormSchema = yup.object<InstitusjonsoppholdVilk�
                     periode: validerAtNullablePeriodeErUtfylt,
                     resultat: yup.string().nullable().defined().oneOf(Object.values(Vilkårstatus)).required(),
                 })
-                .required()
+                .required(),
         )
         .min(1)
         .required(),

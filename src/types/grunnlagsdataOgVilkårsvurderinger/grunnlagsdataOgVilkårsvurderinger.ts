@@ -33,7 +33,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
 export const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
 export const trimIdAndOpprettetFromList = <T>(obj: T[]) =>
     (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj).map((obj) =>
-        harOpprettetTidspunkt(obj) ? trimOpprettetFromObject(obj) : obj
+        harOpprettetTidspunkt(obj) ? trimOpprettetFromObject(obj) : obj,
     );
 
 export const trimIdFromObject = <T>(obj: T) => {

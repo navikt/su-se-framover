@@ -41,11 +41,11 @@ export const lovligOppholdVilkårTilFormData = (l: LovligOppholdVilkår): Lovlig
 
 export const lovligOppholdVilkårTilFormDataEllerNy = (
     f: Nullable<LovligOppholdVilkår>,
-    p?: Periode<string>
+    p?: Periode<string>,
 ): LovligOppholdVilkårFormData => (f ? lovligOppholdVilkårTilFormData(f) : nyFlyktningVilkårMedEllerUtenPeriode(p));
 
 export const lovligOppholdVurderingsperiodeTilFormData = (
-    f: VurderingsperiodeLovligOpphold
+    f: VurderingsperiodeLovligOpphold,
 ): VurderingsperioderLovligOppholdFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     resultat: f.resultat,
@@ -56,7 +56,7 @@ export const nyFlyktningVilkårMedEllerUtenPeriode = (p?: Periode<string>): Lovl
 });
 
 export const nyVurderingsperiodeLovligOppholdMedEllerUtenPeriode = (
-    p?: Periode<string>
+    p?: Periode<string>,
 ): VurderingsperioderLovligOppholdFormData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     resultat: null,
@@ -86,7 +86,7 @@ export const lovligOppholdFormSchema = yup.object<LovligOppholdVilkårFormData>(
                     periode: validerAtNullablePeriodeErUtfylt,
                     resultat: yup.string().nullable().defined().oneOf(Object.values(Vilkårstatus)).required(),
                 })
-                .required()
+                .required(),
         )
         .min(1)
         .required(),

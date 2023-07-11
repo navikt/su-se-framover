@@ -30,7 +30,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
             søknadSlice.actions.ektefelleUpdated({
                 ...ektefelle,
                 formue: values,
-            })
+            }),
         );
     };
 
@@ -257,8 +257,8 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                                       verdiPåKjøretøy: val.verdiPåKjøretøy,
                                                       kjøretøyDeEier: val.kjøretøyDeEier,
                                                   }
-                                                : input
-                                        )
+                                                : input,
+                                        ),
                                     )
                                 }
                             />

@@ -91,7 +91,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                 innsendingSlice.sendUføresøknad({
                     søknad: values,
                     søker: props.søker,
-                })
+                }),
             );
             if (innsendingSlice.sendUføresøknad.fulfilled.match(res)) {
                 navigate(props.nesteUrl);
@@ -103,7 +103,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                 innsendingSlice.sendAldersøknad({
                     søknad: values,
                     søker: props.søker,
-                })
+                }),
             );
             if (innsendingSlice.sendAldersøknad.fulfilled.match(res)) {
                 navigate(props.nesteUrl);

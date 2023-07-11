@@ -57,7 +57,7 @@ export async function fetchBrevutkastForRevurderingMedPotensieltFritekst(args: {
 export async function fetchBrevutkastForForhåndsvarsel(
     sakId: string,
     revurderingId: string,
-    fritekst: string
+    fritekst: string,
 ): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkastForForhandsvarsel`,

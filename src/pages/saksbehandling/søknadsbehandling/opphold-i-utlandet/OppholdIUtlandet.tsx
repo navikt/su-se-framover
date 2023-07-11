@@ -32,12 +32,12 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
 
     const initialValues = utenlandsoppholdVilkårTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold,
-        props.behandling.stønadsperiode?.periode
+        props.behandling.stønadsperiode?.periode,
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } =
         useSøknadsbehandlingDraftContextFor<UtenlandsoppholdVilkårFormData>(Vilkårtype.OppholdIUtlandet, (values) =>
-            eqUtenlandsoppholdVilkårFormData.equals(values, initialValues)
+            eqUtenlandsoppholdVilkårFormData.equals(values, initialValues),
         );
 
     const form = useForm<UtenlandsoppholdVilkårFormData>({
@@ -66,7 +66,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
             () => {
                 clearDraft();
                 onSuccess();
-            }
+            },
         );
     };
 

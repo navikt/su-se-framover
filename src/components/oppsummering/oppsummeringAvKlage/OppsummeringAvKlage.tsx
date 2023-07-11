@@ -38,7 +38,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
         else if (klage.vedtaksvurdering?.type === KlageVurderingType.OMGJØR) return 'label.vurdering.omgjort';
         else if (
             [KlageStatus.AVVIST, KlageStatus.TIL_ATTESTERING_AVVIST, KlageStatus.IVERKSATT_AVVIST].includes(
-                klage.status
+                klage.status,
             )
         )
             return 'label.vurdering.avvist';
@@ -63,7 +63,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     <InformationIcon className={styles.tag} />
                     <Heading size="xsmall" level="6">
                         {`${formatMessage('label.vurdering.tittel')}: ${formatMessage(
-                            hentVurderingstekstId(props.klage)
+                            hentVurderingstekstId(props.klage),
                         )}`}
                     </Heading>
                 </div>
@@ -76,7 +76,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                             loading={RemoteData.isPending(hentDokumenterStatus)}
                             onClick={() =>
                                 hentDokumenter({ id: props.klage.id, idType: DokumentIdType.Klage }, (dokumenter) =>
-                                    window.open(URL.createObjectURL(getBlob(dokumenter[0])))
+                                    window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
                                 )
                             }
                         >

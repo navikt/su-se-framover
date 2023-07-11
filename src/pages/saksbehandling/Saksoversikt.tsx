@@ -59,8 +59,8 @@ const Saksoversikt = () => {
                                 <Outlet context={{ sak, søker }} />
                             </div>
                         </>
-                    )
-                )
+                    ),
+                ),
             )}
         </IntlProvider>
     );

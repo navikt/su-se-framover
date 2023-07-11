@@ -32,13 +32,13 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
 
     const initialValues = institusjonsoppholdVilkårTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold,
-        props.behandling.stønadsperiode?.periode
+        props.behandling.stønadsperiode?.periode,
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } =
         useSøknadsbehandlingDraftContextFor<InstitusjonsoppholdVilkårFormData>(
             Vilkårtype.Institusjonsopphold,
-            (values) => eqInstitusjonsoppholdFormData.equals(values, initialValues)
+            (values) => eqInstitusjonsoppholdFormData.equals(values, initialValues),
         );
 
     const form = useForm<InstitusjonsoppholdVilkårFormData>({
@@ -67,7 +67,7 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
             () => {
                 clearDraft();
                 onSuccess();
-            }
+            },
         );
     };
 

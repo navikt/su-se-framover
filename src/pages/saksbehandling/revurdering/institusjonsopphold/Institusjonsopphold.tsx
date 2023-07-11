@@ -30,7 +30,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
     const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
 
     const initialValues = institusjonsoppholdVilkårTilFormDataEllerNy(
-        props.revurdering.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold,
     );
     const form = useForm<InstitusjonsoppholdVilkårFormData>({
         resolver: yupResolver(institusjonsoppholdFormSchema),
@@ -39,7 +39,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
 
     const lagreInstitusjonsopphold = (
         values: InstitusjonsoppholdVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqInstitusjonsoppholdFormData.equals(initialValues, values)) {
             navigate(props.nesteUrl);
@@ -59,7 +59,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -83,7 +83,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                         }}
                         tilbake={{

@@ -58,7 +58,7 @@ const GjenopptaOppsummering = (props: { revurdering?: UtbetalingsRevurdering }) 
             Routes.navigateToSakIntroWithMessage(
                 navigate,
                 formatMessage('gjenoppta.notification'),
-                contextProps.sak.id
+                contextProps.sak.id,
             );
         });
     };
@@ -89,7 +89,7 @@ const GjenopptaOppsummering = (props: { revurdering?: UtbetalingsRevurdering }) 
                             Routes.oppdaterGjenopptaRoute.createURL({
                                 sakId: contextProps.sak.id,
                                 revurderingId: revurdering.id,
-                            })
+                            }),
                         )
                     }
                 >

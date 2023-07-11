@@ -40,7 +40,7 @@ const RegistreringAvUtenlandsopphold = (props: { sakId: string; saksversjon: num
                                 saksversjon: props.saksversjon,
                                 data: validatedValues,
                             }),
-                            () => formReset()
+                            () => formReset(),
                         )
                     }
                 >

@@ -116,7 +116,7 @@ const ShowSteg = (props: {
                     forrigeUrl={stegUrl(
                         props.sakstype === Sakstype.Uføre
                             ? Uføresteg.FlyktningstatusOppholdstillatelse
-                            : Alderssteg.Oppholdstillatelse
+                            : Alderssteg.Oppholdstillatelse,
                     )}
                     nesteUrl={stegUrl(Fellessteg.DinFormue)}
                     avbrytUrl={avbrytUrl}
@@ -199,7 +199,7 @@ const ShowSteg = (props: {
                     forrigeUrl={stegUrl(
                         props.søknad.forVeileder.type === Søknadstype.DigitalSøknad
                             ? Fellessteg.ForVeileder
-                            : Fellessteg.InformasjonOmPapirsøknad
+                            : Fellessteg.InformasjonOmPapirsøknad,
                     )}
                     nesteUrl={routes.søknadskvittering.createURL({
                         soknadstema: routes.urlForSakstype(props.sakstype),

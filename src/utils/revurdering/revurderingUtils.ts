@@ -96,7 +96,7 @@ export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
     årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;
 
 export const erRevurderingAvsluttet = (
-    r: Revurdering
+    r: Revurdering,
 ): r is AvsluttetRevurdering | AvsluttetStans | AvsluttetGjenopptak =>
     r.status === InformasjonsRevurderingStatus.AVSLUTTET ||
     r.status === UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK ||
@@ -128,12 +128,12 @@ export function harSimulering(r: Revurdering): r is Revurdering & { simulering: 
 }
 
 export const erRevurderingTilbakekrevingsbehandling = (
-    r: Revurdering
+    r: Revurdering,
 ): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Tilbakekrevingsbehandling } =>
     erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r && r['tilbakekrevingsbehandling'] !== null;
 
 export const erRevurderingTilbakekreving = (
-    r: Revurdering
+    r: Revurdering,
 ): r is InformasjonsRevurdering & {
     tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.TILBAKEKREV };
 } =>
@@ -141,7 +141,7 @@ export const erRevurderingTilbakekreving = (
     r.tilbakekrevingsbehandling.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV;
 
 export const erRevurderingTilbakekrevingIkkeAvgjort = (
-    r: Revurdering
+    r: Revurdering,
 ): r is InformasjonsRevurdering & {
     tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.IKKE_AVGJORT };
 } =>
@@ -149,7 +149,7 @@ export const erRevurderingTilbakekrevingIkkeAvgjort = (
     r.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.IKKE_AVGJORT;
 
 export const erRevurderingIkkeTilbakekrev = (
-    r: Revurdering
+    r: Revurdering,
 ): r is InformasjonsRevurdering & {
     tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV };
 } =>
@@ -178,7 +178,7 @@ export const revurderingGrunnlagOgVilkårRekkefølge = [
 ] as const;
 
 export const grunnlagOgVilkårStegTilInformasjonSomRevurderes = (
-    i: (typeof revurderingGrunnlagOgVilkårRekkefølge)[number]
+    i: (typeof revurderingGrunnlagOgVilkårRekkefølge)[number],
 ): InformasjonSomRevurderes => {
     switch (i) {
         case RevurderingGrunnlagOgVilkårSteg.Bosituasjon:
@@ -244,7 +244,7 @@ export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simuler
     simulering.periodeOppsummering.some((periode) => periode.sumFeilutbetaling > 0) &&
     (erOpphør ||
         !simulering.periodeOppsummering.every(
-            (periode) => periode.sumFeilutbetaling > 0 || periode.sumTilUtbetaling == 0
+            (periode) => periode.sumFeilutbetaling > 0 || periode.sumTilUtbetaling == 0,
         ));
 
 export const erRevurderingOpphørPgaManglendeDokumentasjon = (r: Revurdering) =>
@@ -253,7 +253,7 @@ export const erRevurderingOpphørPgaManglendeDokumentasjon = (r: Revurdering) =>
     r.informasjonSomRevurderes.Opplysningsplikt === Vurderingstatus.Vurdert;
 
 export const splitStatusOgResultatFraRevurdering = (
-    r: Revurdering
+    r: Revurdering,
 ): {
     status:
         | 'Opprettet'
@@ -395,7 +395,7 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                         status: !r.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt?.vurderinger
                             ? Linjestatus.Ingenting
                             : r.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt.vurderinger.some(
-                                  (o) => o.beskrivelse === OpplysningspliktBeksrivelse.UtilstrekkeligDokumentasjon
+                                  (o) => o.beskrivelse === OpplysningspliktBeksrivelse.UtilstrekkeligDokumentasjon,
                               )
                             ? Linjestatus.IkkeOk
                             : Linjestatus.Ok,
@@ -534,7 +534,7 @@ export const lagBeregnOgSimulerSeksjon = (arg: { sakId: string; r: InformasjonsR
                     steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
                 }),
                 erKlikkbar: Object.entries(arg.r.informasjonSomRevurderes).every(
-                    (o) => o[1] === Vurderingstatus.Vurdert
+                    (o) => o[1] === Vurderingstatus.Vurdert,
                 ),
             },
         ],

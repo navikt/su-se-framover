@@ -22,7 +22,7 @@ export async function startBeregning(
     behandlingId: string,
     arg: {
         begrunnelse: Nullable<string>;
-    }
+    },
 ): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
@@ -52,7 +52,7 @@ export async function lagreVirkningstidspunkt(arg: {
 
 export async function simulerBehandling(
     sakId: string,
-    behandlingId: string
+    behandlingId: string,
 ): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/simuler`,

@@ -29,7 +29,7 @@ describe('maxBy', () => {
     });
     it('works with strings', () => {
         expect(pipe(['2021-02-01', '2021-03-01', '2021-04-01', '2021-05-01', '2021-06-01'], maxBy(S.Ord))).toEqual(
-            Option.some('2021-06-01')
+            Option.some('2021-06-01'),
         );
     });
     it('returns noe if given empty list', () => {

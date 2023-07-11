@@ -18,7 +18,7 @@ export const hentBosituasjongrunnlag = (g: GrunnlagsdataOgVilkårsvurderinger): 
 
 export const hentOmSøkerBorMedEpsOgEpsFnr = (
     b: Nullable<Bosituasjon>,
-    søknadsinnhold: SøknadInnhold
+    søknadsinnhold: SøknadInnhold,
 ): { borSøkerMedEPS: boolean; epsFnr: Nullable<string> } => {
     if (!b) {
         return {

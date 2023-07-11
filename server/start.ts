@@ -64,13 +64,13 @@ export default async function startServer() {
                       },
                   }
                 : false,
-        })
+        }),
     );
     app.use(
         cors({
             origin: Config.server.host,
             allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'X-Requested-With'],
-        })
+        }),
     );
 
     app.use(compression());

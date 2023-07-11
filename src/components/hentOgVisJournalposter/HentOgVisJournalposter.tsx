@@ -24,8 +24,8 @@ const HentOgVisJournalposter = (props: { sakId: string }) => {
                     () => null,
                     () => <Loader />,
                     (err) => <ApiErrorAlert error={err} />,
-                    (journalposter) => <OppsummeringAvJournalposter journalposter={journalposter} />
-                )
+                    (journalposter) => <OppsummeringAvJournalposter journalposter={journalposter} />,
+                ),
             )}
         </div>
     );

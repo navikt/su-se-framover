@@ -72,8 +72,8 @@ const OppsummeringAvKontrollsamtaler = (props: { sakId: string }) => {
                                 </li>
                             ))}
                         </ul>
-                    )
-                )
+                    ),
+                ),
             )}
         </Oppsummeringspanel>
     );
@@ -121,7 +121,7 @@ const NyKontrollsamtaleDato = (props: { sakId: string }) => {
         settNyDatoPost({ sakId: props.sakId, nyDato: nyDato }, () =>
             fetchNesteKontrollsamtale(props.sakId, () => {
                 Routes.navigateToSakIntroWithMessage(navigate, formatMessage('nyDatoBekreftelse'), props.sakId);
-            })
+            }),
         );
     };
 
@@ -174,8 +174,8 @@ const NyKontrollsamtaleDato = (props: { sakId: string }) => {
                             </div>
                             {RemoteData.isFailure(nyDatoStatus) && <ApiErrorAlert error={nyDatoStatus.error} />}
                         </div>
-                    )
-                )
+                    ),
+                ),
             )}
         </Oppsummeringspanel>
     );

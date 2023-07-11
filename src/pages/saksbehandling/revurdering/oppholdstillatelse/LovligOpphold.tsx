@@ -35,7 +35,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
     };
 
     const initialValues = lovligOppholdVilkårTilFormDataEllerNy(
-        props.revurdering.grunnlagsdataOgVilkårsvurderinger.lovligOpphold
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.lovligOpphold,
     );
     const form = useForm<LovligOppholdVilkårFormData>({
         resolver: yupResolver(lovligOppholdFormSchema),
@@ -44,7 +44,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
 
     const lagreLovligOpphold = (
         data: LovligOppholdVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqLovligOppholdVilkårFormData.equals(initialValues, data)) {
             navigate(props.nesteUrl);
@@ -64,7 +64,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -83,7 +83,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                         }}
                         tilbake={{

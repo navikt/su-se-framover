@@ -40,11 +40,11 @@ export const flyktningVilkårTilFormData = (f: FlyktningVilkår): FlyktningVilk�
 
 export const flyktningVilkårTilFormDataEllerNy = (
     f: Nullable<FlyktningVilkår>,
-    p?: Periode<string>
+    p?: Periode<string>,
 ): FlyktningVilkårFormData => (f ? flyktningVilkårTilFormData(f) : nyFlyktningVilkårMedEllerUtenPeriode(p));
 
 export const flyktningVurderingsperiodeTilFormData = (
-    f: VurderingsperiodeFlyktning
+    f: VurderingsperiodeFlyktning,
 ): VurderingsperioderFlyktningFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     resultat: f.resultat,
@@ -55,7 +55,7 @@ export const nyFlyktningVilkårMedEllerUtenPeriode = (p?: Periode<string>): Flyk
 });
 
 export const nyVurderingsperiodeFlyktningMedEllerUtenPeriode = (
-    p?: Periode<string>
+    p?: Periode<string>,
 ): VurderingsperioderFlyktningFormData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     resultat: null,
@@ -85,7 +85,7 @@ export const flyktningFormSchema = yup.object<FlyktningVilkårFormData>({
                     periode: validerAtNullablePeriodeErUtfylt,
                     resultat: yup.string().nullable().defined().oneOf(Object.values(Vilkårstatus)).required(),
                 })
-                .required()
+                .required(),
         )
         .min(1)
         .required(),

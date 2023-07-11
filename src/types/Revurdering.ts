@@ -28,7 +28,7 @@ export interface StansAvYtelse<
     T extends UtbetalingsRevurderingStatus =
         | UtbetalingsRevurderingStatus.SIMULERT_STANS
         | UtbetalingsRevurderingStatus.IVERKSATT_STANS
-        | UtbetalingsRevurderingStatus.AVSLUTTET_STANS
+        | UtbetalingsRevurderingStatus.AVSLUTTET_STANS,
 > extends UtbetalingsRevurdering<UtbetalingsRevurderingStatus> {
     status: T;
     simulering: Simulering;
@@ -42,7 +42,7 @@ export interface Gjenopptak<
     T extends UtbetalingsRevurderingStatus =
         | UtbetalingsRevurderingStatus.SIMULERT_GJENOPPTAK
         | UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK
-        | UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK
+        | UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK,
 > extends UtbetalingsRevurdering<UtbetalingsRevurderingStatus> {
     status: T;
     simulering: Simulering;
@@ -167,7 +167,7 @@ export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
             OpprettetRevurderingGrunn.MIGRERT,
             OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING,
             OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING,
-        ].includes(x)
+        ].includes(x),
 );
 
 export enum RevurderingSeksjoner {

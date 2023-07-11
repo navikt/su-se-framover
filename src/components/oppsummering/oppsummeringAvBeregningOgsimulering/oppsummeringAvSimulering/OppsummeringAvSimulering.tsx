@@ -96,8 +96,8 @@ const GruppertSimuleringsperioder = (props: { perioder: SimuleringsperiodeOppsum
                         curr.sumTilUtbetaling === prev.sumTilUtbetaling &&
                         DateFns.differenceInCalendarMonths(
                             DateFns.parseISO(curr.fraOgMed),
-                            DateFns.parseISO(prev.tilOgMed)
-                        ) <= 1
+                            DateFns.parseISO(prev.tilOgMed),
+                        ) <= 1,
                 ),
                 arr.map((gruppe) =>
                     pipe(
@@ -112,9 +112,11 @@ const GruppertSimuleringsperioder = (props: { perioder: SimuleringsperiodeOppsum
                                 </Label>
                             </div>
                         )),
-                        Option.getOrElse(() => <Alert variant="warning">{formatMessage('feil.manglerPerioder')}</Alert>)
-                    )
-                )
+                        Option.getOrElse(() => (
+                            <Alert variant="warning">{formatMessage('feil.manglerPerioder')}</Alert>
+                        )),
+                    ),
+                ),
             )}
         </div>
     );

@@ -70,7 +70,7 @@ export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknad
                                 .mixed()
                                 .oneOf(
                                     [AvvistBrevtyper.Fritekstsbrev, AvvistBrevtyper.Vedtaksbrev],
-                                    'Du må velge type brev'
+                                    'Du må velge type brev',
                                 )
                                 .nullable(false),
                         }),
@@ -106,7 +106,7 @@ export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknad
                             LukkSøknadBegrunnelse.Avvist,
                             AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok,
                         ],
-                        'Du må velge begrunnelse for å avslutte behandlingen'
+                        'Du må velge begrunnelse for å avslutte behandlingen',
                     )
                     .required(),
             });

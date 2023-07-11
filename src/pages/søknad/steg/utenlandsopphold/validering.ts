@@ -47,8 +47,8 @@ const testOverlappendeUtenlandsopphold: yup.TestFunction<UtenlandsoppholdType[] 
         (o1, idx1) =>
             isValidUtenlandsopphold(o1) &&
             !oppholdIntervals.some(
-                (o2, idx2) => idx1 !== idx2 && isValidUtenlandsopphold(o2) && DateFns.areIntervalsOverlapping(o1, o2)
-            )
+                (o2, idx2) => idx1 !== idx2 && isValidUtenlandsopphold(o2) && DateFns.areIntervalsOverlapping(o1, o2),
+            ),
     );
 };
 

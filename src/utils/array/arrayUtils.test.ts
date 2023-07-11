@@ -25,21 +25,21 @@ describe('groupWhile', () => {
     it('puts all elements in same group when predicate is true', () => {
         const res = pipe(
             [1, 2, 3, 4, 5],
-            groupWhile((_curr, _prev) => true)
+            groupWhile((_curr, _prev) => true),
         );
         expect(res).toEqual([[1, 2, 3, 4, 5]]);
     });
     it('puts all elements in separate groups when predicate is false', () => {
         const res = pipe(
             [1, 2, 3, 4, 5],
-            groupWhile((_curr, _prev) => false)
+            groupWhile((_curr, _prev) => false),
         );
         expect(res).toEqual([[1], [2], [3], [4], [5]]);
     });
     it('groups numbers with equality', () => {
         const res = pipe(
             [1, 1, 2, 2, 3, 3],
-            groupWhile((curr, prev) => curr === prev)
+            groupWhile((curr, prev) => curr === prev),
         );
         expect(res).toEqual([
             [1, 1],
@@ -50,7 +50,7 @@ describe('groupWhile', () => {
     it('groups as expected when comparing numbers', () => {
         const res = pipe(
             [1, 2, 1, 2, 1, 2],
-            groupWhile((curr, prev) => curr > prev)
+            groupWhile((curr, prev) => curr > prev),
         );
         expect(res).toEqual([
             [1, 2],
@@ -64,7 +64,7 @@ describe('spanLeftWithIndex', () => {
     it('can split array by index', () => {
         const res = pipe(
             [1, 2, 3, 4],
-            spanLeftWithIndex((idx, _a) => idx < 2)
+            spanLeftWithIndex((idx, _a) => idx < 2),
         );
         expect(res).toEqual({
             init: [1, 2],
@@ -74,7 +74,7 @@ describe('spanLeftWithIndex', () => {
     it('can split array by element predicate', () => {
         const res = pipe(
             [1, 2, 3, 4],
-            spanLeftWithIndex((_idx, a) => a < 2)
+            spanLeftWithIndex((_idx, a) => a < 2),
         );
         expect(res).toEqual({
             init: [1],

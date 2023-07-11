@@ -57,7 +57,7 @@ const AttesterRevurdering = (props: {
     const [iverksettStatus, iverksett] = useAsyncActionCreator(RevurderingActions.iverksettRevurdering);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(RevurderingActions.underkjennRevurdering);
     const [grunnlagsdataOgVilkårsvurderinger, hentGrunnlagsdataOgVilkårsvurderinger] = useApiCall(
-        hentgjeldendeGrunnlagsdataOgVilkårsvurderinger
+        hentgjeldendeGrunnlagsdataOgVilkårsvurderinger,
     );
 
     useEffect(() => {
@@ -196,8 +196,8 @@ const AttesterRevurdering = (props: {
                         )}
                     </div>
                 </div>
-            )
-        )
+            ),
+        ),
     );
 };
 

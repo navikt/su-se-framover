@@ -57,7 +57,7 @@ const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
                                 {tekst}
                             </Link>
                         ),
-                    }
+                    },
                 )}
             </BodyLong>
         </div>
@@ -86,10 +86,10 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
             <BodyLong>
                 {formatMessage(`åpenSøknad.løpendeYtelse${typeErSammeSomTema ? '' : '.kort'}`, {
                     løpendePeriode: `${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
-                        iverksattInnvilgetStønadsperiode.tilOgMed
+                        iverksattInnvilgetStønadsperiode.tilOgMed,
                     )}`,
                     tidligestNyPeriode: formatDate(
-                        DateFns.startOfMonth(new Date(iverksattInnvilgetStønadsperiode.tilOgMed)).toString()
+                        DateFns.startOfMonth(new Date(iverksattInnvilgetStønadsperiode.tilOgMed)).toString(),
                     ),
                     type: formatMessage(type),
                 })}
@@ -118,7 +118,7 @@ const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: Al
                             getSøknadstematekst(sakstype, {
                                 [Sakstype.Alder]: 'heading.åpenSøknad',
                                 [Sakstype.Uføre]: 'heading.åpenSøknad.uføre',
-                            })
+                            }),
                         )}
                     </Heading>
                     <BodyLong>
@@ -133,7 +133,7 @@ const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: Al
                                         {tekst}
                                     </Link>
                                 ),
-                            }
+                            },
                         )}
                     </BodyLong>
                 </div>
@@ -145,7 +145,7 @@ const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: Al
                             getSøknadstematekst(sakstype, {
                                 [Sakstype.Alder]: 'heading.åpenSøknad.alder',
                                 [Sakstype.Uføre]: 'heading.åpenSøknad',
-                            })
+                            }),
                         )}
                     </Heading>
                     <BodyLong>
@@ -160,7 +160,7 @@ const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: Al
                                         {tekst}
                                     </Link>
                                 ),
-                            }
+                            },
                         )}
                     </BodyLong>
                 </div>
@@ -231,7 +231,7 @@ const Inngang = () => {
     const handleStartSøknadKlikk = () => {
         if (isFormValid) {
             dispatch(
-                søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad)
+                søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad),
             );
             navigate(startstegUrl);
         }
@@ -320,7 +320,7 @@ const Inngang = () => {
                                 søkerAlder={fødsel?.alder ?? null}
                             />
                         )),
-                        RemoteData.getOrElse(() => null as React.ReactNode)
+                        RemoteData.getOrElse(() => null as React.ReactNode),
                     )}
                     {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
                     {RemoteData.isSuccess(hentPersonStatus) &&

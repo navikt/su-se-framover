@@ -53,7 +53,7 @@ const Behandlingsoversikt = () => {
             styles['nav-frontend-tabs__tab-inner--interaktiv'],
             {
                 [styles['nav-frontend-tabs__tab-inner--aktiv']]: erAktiv,
-            }
+            },
         );
     };
 

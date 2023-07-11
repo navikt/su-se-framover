@@ -173,8 +173,8 @@ const RevurderingSeksjonerWrapper = (props: {
                         />
                     )}
                 </div>
-            )
-        )
+            ),
+        ),
     );
 };
 
@@ -232,7 +232,7 @@ const GrunnlagOgVilkårSteg = (props: {
         seksjonIdx === 1 &&
         idx === props.seksjoner[1].linjer.length - 1 &&
         Object.entries(props.informasjonsRevurdering.informasjonSomRevurderes).some(
-            (v) => v[1] === Vurderingstatus.IkkeVurdert
+            (v) => v[1] === Vurderingstatus.IkkeVurdert,
         );
 
     const kanOppdatertRevurderingNavigeresTilOppsummering = (r: InformasjonsRevurdering) => {

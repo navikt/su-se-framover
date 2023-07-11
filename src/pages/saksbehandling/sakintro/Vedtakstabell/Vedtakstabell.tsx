@@ -50,13 +50,13 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
     const sorterTabell = (
         vedtak: VedtakOgOversendteKlager,
         kolonne: VedtakstabellKolonner,
-        sortVerdi: AriaSortVerdi
+        sortVerdi: AriaSortVerdi,
     ) => {
         return pipe(vedtak, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)]));
 
         function kolonneOgRetning(
             kolonne: VedtakstabellKolonner,
-            sortVerdi: AriaSortVerdi
+            sortVerdi: AriaSortVerdi,
         ): Ord.Ord<VedtakEllerOversendtKlage> {
             return pipe(
                 sortVerdi === 'ascending' ? Ord.reverse(S.Ord) : S.Ord,
@@ -75,7 +75,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                 ? formatMessage(`datacell.vedtakstype.${v.status as KlageStatus.OVERSENDT}`)
                                 : formatMessage(`datacell.vedtakstype.${v.type}`);
                     }
-                })
+                }),
             );
         }
     };
@@ -120,14 +120,14 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                     <Table.DataCell>
                                         {isOversendtKlage(vedtak)
                                             ? formatMessage(
-                                                  `datacell.vedtakstype.${vedtak.status as KlageStatus.OVERSENDT}`
+                                                  `datacell.vedtakstype.${vedtak.status as KlageStatus.OVERSENDT}`,
                                               )
                                             : formatMessage(`datacell.vedtakstype.${vedtak.type}`)}
                                     </Table.DataCell>
                                     <Table.DataCell>
                                         {isOversendtKlage(vedtak)
                                             ? formatMessage(
-                                                  `datacell.resultat.${vedtak.status as KlageStatus.OVERSENDT}`
+                                                  `datacell.resultat.${vedtak.status as KlageStatus.OVERSENDT}`,
                                               )
                                             : formatMessage(`datacell.resultat.${vedtak.type}`)}
                                     </Table.DataCell>
@@ -168,7 +168,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                                                 : DokumentIdType.Vedtak,
                                                         },
                                                         (dokumenter) =>
-                                                            window.open(URL.createObjectURL(getBlob(dokumenter[0])))
+                                                            window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
                                                     );
                                                 }}
                                             >

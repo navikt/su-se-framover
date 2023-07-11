@@ -120,8 +120,8 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
                             </li>
                         ))}
                     </ol>
-                )
-        )
+                ),
+        ),
     );
 };
 

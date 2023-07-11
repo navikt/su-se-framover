@@ -22,7 +22,7 @@ const Reguleringsoversikt = (props: Props) => {
 
     const sortByFnr = pipe(
         S.Ord,
-        contramap((r: ReguleringOversiktsstatus) => r.fnr)
+        contramap((r: ReguleringOversiktsstatus) => r.fnr),
     );
 
     const Reguleringstabell = ({ data }: { data: ReguleringOversiktsstatus[] }) => {
@@ -61,7 +61,7 @@ const Reguleringsoversikt = (props: Props) => {
                                         </Table.DataCell>
                                     </Table.Row>
                                 );
-                            })
+                            }),
                         )}
                     </Table.Body>
                 </Table>
