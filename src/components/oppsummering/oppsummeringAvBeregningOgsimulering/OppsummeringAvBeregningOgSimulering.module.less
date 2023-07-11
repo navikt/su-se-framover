@@ -1,17 +1,10 @@
 @import '~/src/styles/variables.less';
 
 .container {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: @spacing-xs;
     margin-bottom: @spacing-s;
-
-    .column {
-        width: 50%;
-    }
-}
-
-.kompakt {
-    max-width: 800px;
 }
 
 .begrunnelseContainer {

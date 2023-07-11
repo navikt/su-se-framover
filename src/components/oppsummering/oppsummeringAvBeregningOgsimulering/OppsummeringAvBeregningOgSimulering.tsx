@@ -1,5 +1,4 @@
 import { Heading, Panel } from '@navikt/ds-react';
-import classNames from 'classnames';
 import React from 'react';
 
 import Oppsummeringspanel, {
@@ -24,7 +23,6 @@ const OppsummeringAvBeregningOgSimulering = (props: {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
     tittel?: string;
-    kompakt?: boolean;
     childrenOverBeregning?: React.ReactNode;
     childrenUnderBeregning?: React.ReactNode;
 }) => {
@@ -36,13 +34,8 @@ const OppsummeringAvBeregningOgSimulering = (props: {
             ikon={Oppsummeringsikon.Kalkulator}
         >
             {props.childrenOverBeregning && props.childrenOverBeregning}
-            <div
-                className={classNames({
-                    [styles.container]: true,
-                    [styles.kompakt]: props.kompakt,
-                })}
-            >
-                <div className={styles.column}>
+            <div className={styles.container}>
+                <div>
                     <Heading level="3" size="small" spacing>
                         {formatMessage('heading.beregning')}
                     </Heading>
@@ -58,7 +51,7 @@ const OppsummeringAvBeregningOgSimulering = (props: {
                         )}
                     </Panel>
                 </div>
-                <div className={styles.column}>
+                <div>
                     <Heading level="3" size="small" spacing>
                         {formatMessage('heading.simulering')}
                     </Heading>
