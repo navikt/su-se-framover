@@ -1,11 +1,12 @@
 import * as DateFns from 'date-fns';
 import { pipe } from 'fp-ts/lib/function';
 
+import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
 export interface OpprettKlageFormData {
     journalpostId: string;
-    datoKlageMottatt: Date;
+    datoKlageMottatt: Nullable<Date>;
 }
 
 export const opprettKlageSchema = yup.object<OpprettKlageFormData>({

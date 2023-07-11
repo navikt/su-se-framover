@@ -50,7 +50,7 @@ const OpprettKlage = () => {
                             {
                                 sakId: props.sak.id,
                                 journalpostId: values.journalpostId,
-                                datoKlageMottatt: DateFns.formatISO(values.datoKlageMottatt, {
+                                datoKlageMottatt: DateFns.formatISO(values.datoKlageMottatt!, {
                                     representation: 'date',
                                 }),
                             },
