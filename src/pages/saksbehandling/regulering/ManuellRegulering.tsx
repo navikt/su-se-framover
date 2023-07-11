@@ -162,9 +162,7 @@ const ManuellRegulering = () => {
                                                         <TextField
                                                             value={field.value.toString()}
                                                             size="medium"
-                                                            onChange={(e) => {
-                                                                field.onChange(e.currentTarget.value);
-                                                            }}
+                                                            onChange={field.onChange}
                                                             label={formatMessage('ieu', {
                                                                 dato: formatPeriode(u.periode),
                                                             })}

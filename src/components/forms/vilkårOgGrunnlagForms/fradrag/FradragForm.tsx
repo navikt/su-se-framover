@@ -158,9 +158,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                                 className={styles.checkbox}
                                                 name={field.name}
                                                 checked={field.value}
-                                                onChange={(e) => {
-                                                    field.onChange(e.target.checked);
-                                                }}
+                                                onChange={field.onChange}
                                             >
                                                 {formatMessage('fradrag.delerAvPeriode')}
                                             </Checkbox>
