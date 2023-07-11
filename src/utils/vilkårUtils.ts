@@ -64,7 +64,7 @@ type VilkårVurderingStatusMapping<T extends number | string | symbol> = Record<
 
 function getVilkårVurderingStatus<T extends number | string | symbol>(
     mapping: VilkårVurderingStatusMapping<T>,
-    value: T | undefined | null
+    value: T | undefined | null,
 ): VilkårVurderingStatus {
     if (!value) {
         return VilkårVurderingStatus.IkkeVurdert;
@@ -80,7 +80,7 @@ const defaultVilkårstatusMapping: VilkårVurderingStatusMapping<Vilkårstatus> 
 
 const mapToVilkårsinformasjonUføre = (
     uføre: GrunnlagsdataOgVilkårsvurderinger['uføre'],
-    flyktning: GrunnlagsdataOgVilkårsvurderinger['flyktning']
+    flyktning: GrunnlagsdataOgVilkårsvurderinger['flyktning'],
 ): Vilkårsinformasjon[] => [
     {
         status: getVilkårVurderingStatus(
@@ -89,7 +89,7 @@ const mapToVilkårsinformasjonUføre = (
                 [UføreResultat.HarUføresakTilBehandling]: VilkårVurderingStatus.Uavklart,
                 [UføreResultat.VilkårOppfylt]: VilkårVurderingStatus.Ok,
             },
-            uføre?.resultat
+            uføre?.resultat,
         ),
         vilkårtype: Vilkårtype.Uførhet,
         erStartet: uføre !== null,
@@ -103,7 +103,7 @@ const mapToVilkårsinformasjonUføre = (
 
 const mapToVilkårsinformasjonAlder = (
     pensjon: GrunnlagsdataOgVilkårsvurderinger['pensjon'],
-    familieforening: GrunnlagsdataOgVilkårsvurderinger['familiegjenforening']
+    familieforening: GrunnlagsdataOgVilkårsvurderinger['familiegjenforening'],
 ): Vilkårsinformasjon[] => [
     {
         status: getVilkårVurderingStatus(
@@ -112,7 +112,7 @@ const mapToVilkårsinformasjonAlder = (
                 [Aldersresultat.VilkårOppfylt]: VilkårVurderingStatus.Ok,
                 [Aldersresultat.VilkårIkkeOppfylt]: VilkårVurderingStatus.IkkeOk,
             },
-            pensjon?.resultat
+            pensjon?.resultat,
         ),
         vilkårtype: Vilkårtype.Alderspensjon,
         erStartet: pensjon !== null,
@@ -126,7 +126,7 @@ const mapToVilkårsinformasjonAlder = (
 
 export const mapToVilkårsinformasjon = (
     sakstype: Sakstype,
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger,
 ): Vilkårsinformasjon[] => {
     const {
         flyktning,
@@ -171,7 +171,7 @@ export const mapToVilkårsinformasjon = (
                     [Utenlandsoppholdstatus.SkalHoldeSegINorge]: VilkårVurderingStatus.Ok,
                     [Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet]: VilkårVurderingStatus.IkkeOk,
                 },
-                utenlandsopphold?.status
+                utenlandsopphold?.status,
             ),
             vilkårtype: Vilkårtype.OppholdIUtlandet,
             erStartet: utenlandsopphold !== null,
@@ -188,7 +188,7 @@ export const mapToVilkårsinformasjon = (
                     [FormueStatus.VilkårOppfylt]: VilkårVurderingStatus.Ok,
                     [FormueStatus.VilkårIkkeOppfylt]: VilkårVurderingStatus.IkkeOk,
                 },
-                formue.resultat
+                formue.resultat,
             ),
             vilkårtype: Vilkårtype.Formue,
             erStartet: formue.resultat !== null,

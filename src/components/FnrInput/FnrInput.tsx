@@ -43,8 +43,8 @@ export const FnrInput = (props: FnrInputProps) => {
                 () => props.getHentetPerson(null),
                 () => props.getHentetPerson(null),
                 () => props.getHentetPerson(null),
-                (data) => props.getHentetPerson(data)
-            )
+                (data) => props.getHentetPerson(data),
+            ),
         );
     }, [personStatus._tag]);
 
@@ -66,8 +66,8 @@ export const FnrInput = (props: FnrInputProps) => {
                     () => null,
                     () => <Loader />,
                     (err) => <ApiErrorAlert error={err} />,
-                    (data) => <Personkort person={data} />
-                )
+                    (data) => <Personkort person={data} />,
+                ),
             )}
         </div>
     );

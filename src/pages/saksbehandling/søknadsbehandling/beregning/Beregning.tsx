@@ -60,10 +60,10 @@ interface FormData {
 const getInitialValues = (
     fradrag: Fradrag[],
     beregningsDato: Nullable<NullablePeriode>,
-    begrunnelse?: Nullable<string>
+    begrunnelse?: Nullable<string>,
 ): FormData => ({
     fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) =>
-        fradragTilFradragFormData(f, beregningsDato)
+        fradragTilFradragFormData(f, beregningsDato),
     ),
     begrunnelse: begrunnelse ?? '',
 });
@@ -97,9 +97,9 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
             getInitialValues(
                 props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag,
                 stønadsperiode,
-                props.behandling.beregning?.begrunnelse
+                props.behandling.beregning?.begrunnelse,
             ),
-        [props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag]
+        [props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag],
     );
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling) || stønadsperiode === null) {
@@ -108,7 +108,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         Vilkårtype.Beregning,
-        (values) => eqBeregningFormData.equals(values, initialFormData)
+        (values) => eqBeregningFormData.equals(values, initialFormData),
     );
 
     const lagreFradragsgrunnlag = async (values: FormData) =>
@@ -119,7 +119,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
                 fradragFormdataTilFradrag(f, {
                     fraOgMed: stønadsperiode.fraOgMed!,
                     tilOgMed: stønadsperiode.tilOgMed!,
-                })
+                }),
             ),
             behandlingstype: Behandlingstype.Søknadsbehandling,
         });
@@ -141,7 +141,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
             },
             (b) => {
                 onSuccess(b);
-            }
+            },
         );
     };
 
@@ -171,7 +171,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
             },
-            () => navigate(props.nesteUrl)
+            () => navigate(props.nesteUrl),
         );
     };
 
@@ -181,7 +181,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
             yup.object<FormData>({
                 fradrag: yup.array<FradragFormData>(fradragSchema.required()).defined(),
                 begrunnelse: yup.string(),
-            })
+            }),
         ),
     });
 
@@ -190,7 +190,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
             clearDraft();
             setNeedsBeregning(false);
             form.reset(
-                getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, stønadsperiode, b.beregning?.begrunnelse)
+                getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, stønadsperiode, b.beregning?.begrunnelse),
             );
         });
     };
@@ -273,7 +273,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
                                         props.behandling.beregning &&
                                             props.behandling.beregning.månedsberegninger.some((m) => m.beløp > 0)
                                             ? 'beregning.nullutbetalingIStartEllerSlutt'
-                                            : 'beregning.førerTilAvslag'
+                                            : 'beregning.førerTilAvslag',
                                     )}
                                 </Alert>
                             )}
@@ -292,8 +292,8 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
                                 () => null,
                                 () => <Loader title={formatMessage('display.simulerer')} />,
                                 (err) => <ApiErrorAlert error={err} />,
-                                () => null
-                            )
+                                () => null,
+                            ),
                         )}
                         <Navigasjonsknapper
                             tilbake={{ url: props.forrigeUrl }}
@@ -343,12 +343,12 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
 function erFradragUlike(
     fradrag: Fradrag[] | undefined,
     formFradrag: FradragFormData[],
-    stønadsperiode: Nullable<NullablePeriode>
+    stønadsperiode: Nullable<NullablePeriode>,
 ): boolean {
     if (!fradrag) return true;
 
     const fradragFraDatabase = fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) =>
-        fradragTilFradragFormData(f, stønadsperiode)
+        fradragTilFradragFormData(f, stønadsperiode),
     );
 
     return !getEq(eqFradragFormData).equals(formFradrag, fradragFraDatabase);

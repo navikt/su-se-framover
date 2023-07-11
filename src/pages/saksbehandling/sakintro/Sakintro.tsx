@@ -66,7 +66,7 @@ const Sakintro = () => {
     const avsluttedeKlager = props.sak.klager.filter(erKlageAvsluttet);
     const lukkedeSøknaderMedEllerUtenBehandling = props.sak.søknader.filter(erSøknadLukket).map((lukketSøknad) => {
         const søknadensbehandling = props.sak.behandlinger.find(
-            (behandling) => behandling.søknad.id === lukketSøknad.id
+            (behandling) => behandling.søknad.id === lukketSøknad.id,
         );
         return { søknad: lukketSøknad, søknadsbehandling: søknadensbehandling };
     });

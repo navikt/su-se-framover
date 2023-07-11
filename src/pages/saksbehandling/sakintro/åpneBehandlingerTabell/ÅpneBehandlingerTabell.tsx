@@ -67,13 +67,13 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
     const sorterTabell = (
         behandlinger: TabellBehandlinger,
         kolonne: ÅpneBehandlingerKolonner,
-        sortVerdi: AriaSortVerdi
+        sortVerdi: AriaSortVerdi,
     ) => {
         return pipe(behandlinger, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)]));
 
         function kolonneOgRetning(
             kolonne: ÅpneBehandlingerKolonner,
-            sortVerdi: AriaSortVerdi
+            sortVerdi: AriaSortVerdi,
         ): Ord.Ord<TabellBehandling> {
             return pipe(
                 sortVerdi === 'ascending' ? Ord.reverse(S.Ord) : S.Ord,
@@ -91,7 +91,7 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                         case ÅpneBehandlingerKolonner.mottatt_opprettet_tidspunkt:
                             return dataCellInfo.mottattOpprettetTidspunkt;
                     }
-                })
+                }),
             );
         }
     };
@@ -237,7 +237,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
                                         vilkar: Vilkårtype.Virkningstidspunkt,
                                         sakId: props.sakId,
                                         behandlingId: response.id,
-                                    })
+                                    }),
                                 );
                             })
                         }

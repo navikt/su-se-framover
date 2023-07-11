@@ -15,7 +15,7 @@ export const fetchPerson = createAsyncThunk<Person, { fnr: string }, { rejectVal
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export interface PersonState {

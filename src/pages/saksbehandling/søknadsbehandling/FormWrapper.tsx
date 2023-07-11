@@ -53,7 +53,7 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
 
     const lagreOgFortsettSenereMedNeste = (values: T) =>
         props.lagreOgfortsettSenere!.onClick!(values, () =>
-            props.neste.onClick(values, () => navigate(props.lagreOgfortsettSenere!.url))
+            props.neste.onClick(values, () => navigate(props.lagreOgfortsettSenere!.url)),
         );
     const lagreOgFortsettSenereUtenNeste = (values: T) =>
         props.lagreOgfortsettSenere!.onClick!(values, () => navigate(props.lagreOgfortsettSenere!.url));
@@ -96,7 +96,7 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
                                       ? props.lagreOgfortsettSenere?.chainNesteKall
                                           ? lagreOgFortsettSenereMedNeste(values)
                                           : lagreOgFortsettSenereUtenNeste(values)
-                                      : lagreOgFortsettSenereUtenOnClick(values)
+                                      : lagreOgFortsettSenereUtenOnClick(values),
                               ),
                           }
                         : props.fortsettSenere

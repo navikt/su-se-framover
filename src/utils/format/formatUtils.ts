@@ -13,7 +13,7 @@ export function formatCurrency(
     options?: {
         currency?: string;
         numDecimals?: number;
-    }
+    },
 ) {
     const mergedOptions = {
         currency: 'NOK',

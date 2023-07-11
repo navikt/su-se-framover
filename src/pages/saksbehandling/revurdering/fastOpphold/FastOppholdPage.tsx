@@ -29,7 +29,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
 
     const initialValues = fastOppholdVilkårTilFormDataEllerNy(
-        props.revurdering.grunnlagsdataOgVilkårsvurderinger.fastOpphold
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.fastOpphold,
     );
     const form = useForm<FastOppholdVilkårFormData>({
         resolver: yupResolver(fastOppholdFormSchema),
@@ -38,7 +38,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
 
     const lagreFastOpphold = (
         values: FastOppholdVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqFastOppholdVilkårFormData.equals(initialValues, values)) {
             navigate(props.nesteUrl);
@@ -58,7 +58,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -83,7 +83,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                         }}
                         tilbake={{

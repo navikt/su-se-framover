@@ -41,12 +41,12 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
     const initialValues = getInitialFormueVilkårOgDelvisBosituasjon(
         props.behandling.søknad.søknadInnhold,
         props.behandling.grunnlagsdataOgVilkårsvurderinger,
-        lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)
+        lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode),
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormueVilkårFormData>(
         Vilkårtype.Formue,
-        (values) => eqFormueVilkårFormData.equals(values, initialValues)
+        (values) => eqFormueVilkårFormData.equals(values, initialValues),
     );
 
     const form = useForm<FormueVilkårFormData>({
@@ -70,7 +70,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
             () => {
                 clearDraft();
                 onSuccess();
-            }
+            },
         );
     };
 
@@ -84,7 +84,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                         neste={{
                             onClick: handleSave as (
                                 values: FormueVilkårFormData,
-                                onSuccess: () => void
+                                onSuccess: () => void,
                             ) => Promise<void>,
                             url: props.nesteUrl,
                             savingState: pipe(
@@ -93,8 +93,8 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                     () => RemoteData.initial,
                                     () => RemoteData.pending,
                                     (err) => RemoteData.failure(err),
-                                    (res) => RemoteData.success(res)
-                                )
+                                    (res) => RemoteData.success(res),
+                                ),
                             ) as ApiResult<VilkårOgGrunnlagApiResult>,
                         }}
                         lagreOgfortsettSenere={{

@@ -40,12 +40,12 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
 
     const initialValues = flyktningVilkårTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.flyktning,
-        props.behandling.stønadsperiode?.periode
+        props.behandling.stønadsperiode?.periode,
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FlyktningVilkårFormData>(
         Vilkårtype.Flyktning,
-        (values) => eqFlyktningVilkårFormData.equals(values, initialValues)
+        (values) => eqFlyktningVilkårFormData.equals(values, initialValues),
     );
 
     const form = useForm<FlyktningVilkårFormData>({
@@ -81,7 +81,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
             (behandling) => {
                 clearDraft();
                 onSuccess(behandling as Søknadsbehandling);
-            }
+            },
         );
     };
 

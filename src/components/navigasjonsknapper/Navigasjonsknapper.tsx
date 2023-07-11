@@ -39,7 +39,7 @@ const Navigasjonsknapper = (props: {
             </Button>
         );
         return tilbakeknapp(() =>
-            tilbake?.url ? navigate(tilbake.url) : tilbake?.onClick ? tilbake.onClick() : () => void 0
+            tilbake?.url ? navigate(tilbake.url) : tilbake?.onClick ? tilbake.onClick() : () => void 0,
         );
     };
 

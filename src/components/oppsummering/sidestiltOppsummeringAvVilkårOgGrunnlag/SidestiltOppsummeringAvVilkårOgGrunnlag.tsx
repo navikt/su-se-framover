@@ -276,11 +276,11 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
 };
 
 const sidestiltMedSøknadInnhold = (
-    sidestilt: GrunnlagsdataOgVilkårsvurderinger | SøknadInnhold
+    sidestilt: GrunnlagsdataOgVilkårsvurderinger | SøknadInnhold,
 ): sidestilt is SøknadInnhold => 'forNav' in sidestilt;
 
 const sidestiltMedGrunnlagsdataOgVilkårsvurderinger = (
-    sidestilt: GrunnlagsdataOgVilkårsvurderinger | SøknadInnhold
+    sidestilt: GrunnlagsdataOgVilkårsvurderinger | SøknadInnhold,
 ): sidestilt is GrunnlagsdataOgVilkårsvurderinger => 'bosituasjon' in sidestilt;
 
 const AccordionItemUføre = (props: {

@@ -40,12 +40,12 @@ export const OpplysningspliktVilkårTilFormData = (o: OpplysningspliktVilkår): 
 
 export const flyktningVilkårTilFormDataEllerNy = (
     o: Nullable<OpplysningspliktVilkår>,
-    p?: Periode<string>
+    p?: Periode<string>,
 ): OpplysningspliktVilkårFormData =>
     o ? OpplysningspliktVilkårTilFormData(o) : nyOpplysningspliktVilkårMedEllerUtenPeriode(p);
 
 export const OpplysningspliktVurderingsperiodeTilFormData = (
-    o: VurderingsperiodeOpplysningsplikt
+    o: VurderingsperiodeOpplysningsplikt,
 ): VurderingsperioderOpplysningspliktFormData => ({
     periode: lagDatePeriodeAvStringPeriode(o.periode),
     beskrivelse: o.beskrivelse,
@@ -56,7 +56,7 @@ export const nyOpplysningspliktVilkårMedEllerUtenPeriode = (p?: Periode<string>
 });
 
 export const nyVurderingsperiodeOpplysningspliktMedEllerUtenPeriode = (
-    p?: Periode<string>
+    p?: Periode<string>,
 ): VurderingsperioderOpplysningspliktFormData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     beskrivelse: null,
@@ -91,7 +91,7 @@ export const opplysningspliktFormSchema = yup.object<OpplysningspliktVilkårForm
                         .oneOf(Object.values(OpplysningspliktBeksrivelse))
                         .required(),
                 })
-                .required()
+                .required(),
         )
         .min(1)
         .required(),

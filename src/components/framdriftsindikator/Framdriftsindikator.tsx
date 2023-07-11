@@ -121,7 +121,7 @@ const Framdriftsindikator = (props: {
                                 : undefined
                         }
                     />
-                )
+                ),
             )}
         </ol>
     );

@@ -44,9 +44,9 @@ const OpprettStansPage = (props: { sakId: string }) => {
                     Routes.stansOppsummeringRoute.createURL({
                         sakId: props.sakId,
                         revurderingId: stansAvYtelse.id,
-                    })
+                    }),
                 );
-            }
+            },
         );
     };
 

@@ -14,7 +14,7 @@ const CircleWithIcon = (props: CircleWithIconProps) => (
         className={classNames(
             styles.container,
             styles[`variant-${props.variant}`],
-            styles[`size-${props.size ?? 'medium'}`]
+            styles[`size-${props.size ?? 'medium'}`],
         )}
     >
         {props.icon}

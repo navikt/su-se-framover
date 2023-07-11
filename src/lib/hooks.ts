@@ -27,15 +27,15 @@ export const useNotificationFromLocation = () => {
 
 export type ApiResult<U> = RemoteData.RemoteData<ApiError, U>;
 export function useAsyncActionCreator<Params, Returned>(
-    actionCreator: AsyncThunk<Returned, Params, { rejectValue: ApiError }>
+    actionCreator: AsyncThunk<Returned, Params, { rejectValue: ApiError }>,
 ): [
     ApiResult<Returned>,
     (
         args: Params,
         onSuccess?: (result: Returned) => void | Promise<void>,
-        onFailure?: (error: ApiError) => void | Promise<void>
+        onFailure?: (error: ApiError) => void | Promise<void>,
     ) => Promise<'ok' | 'error' | 'pending' | void>,
-    () => void
+    () => void,
 ] {
     const [apiResult, setApiResult] = useState<ApiResult<Returned>>(RemoteData.initial);
     const dispatch = useAppDispatch();
@@ -44,7 +44,7 @@ export function useAsyncActionCreator<Params, Returned>(
         async (
             args: Params,
             onSuccess?: (result: Returned) => void | Promise<void>,
-            onFailure?: (error: ApiError) => void | Promise<void>
+            onFailure?: (error: ApiError) => void | Promise<void>,
         ) => {
             if (!RemoteData.isPending(apiResult)) {
                 setApiResult(RemoteData.pending);
@@ -64,7 +64,7 @@ export function useAsyncActionCreator<Params, Returned>(
             }
             return 'pending';
         },
-        [apiResult, actionCreator]
+        [apiResult, actionCreator],
     );
 
     const resetToInitial = React.useCallback(() => {
@@ -75,7 +75,7 @@ export function useAsyncActionCreator<Params, Returned>(
 }
 
 export function useApiCall<T, U>(
-    fn: (req: T) => Promise<ApiClientResult<U>>
+    fn: (req: T) => Promise<ApiClientResult<U>>,
 ): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void, () => void] {
     const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
 
@@ -86,7 +86,7 @@ export function useApiCall<T, U>(
 
                 const res = await fn(args).then(
                     (res) => res,
-                    (res) => res
+                    (res) => res,
                 );
                 if (res.status === 'ok') {
                     setApiResult(RemoteData.success(res.data));
@@ -96,7 +96,7 @@ export function useApiCall<T, U>(
                 }
             }
         },
-        [apiResult, fn]
+        [apiResult, fn],
     );
 
     const resetToInitial = React.useCallback(() => {
@@ -107,7 +107,7 @@ export function useApiCall<T, U>(
 }
 
 export function useBrevForhåndsvisning<T>(
-    fetchBrev: (args: T) => Promise<ApiClientResult<Blob>>
+    fetchBrev: (args: T) => Promise<ApiClientResult<Blob>>,
 ): [ApiResult<Blob>, (args: T) => void, () => void] {
     const [status, forhåndsvisBrev, resetToInitial] = useApiCall(fetchBrev);
 

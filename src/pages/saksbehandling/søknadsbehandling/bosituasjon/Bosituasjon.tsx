@@ -36,12 +36,12 @@ const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => 
 
     const initialValues = bosituasjongrunnlagTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
-        props.behandling.stønadsperiode!.periode
+        props.behandling.stønadsperiode!.periode,
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } =
         useSøknadsbehandlingDraftContextFor<BosituasjonGrunnlagFormData>(Vilkårtype.Bosituasjon, (values) =>
-            eqBosituasjonGrunnlagFormData.equals(values, initialValues)
+            eqBosituasjonGrunnlagFormData.equals(values, initialValues),
         );
 
     const form = useForm<BosituasjonGrunnlagFormData>({
@@ -68,7 +68,7 @@ const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => 
             (behandling) => {
                 clearDraft();
                 onSuccess(behandling as Søknadsbehandling);
-            }
+            },
         );
     };
 

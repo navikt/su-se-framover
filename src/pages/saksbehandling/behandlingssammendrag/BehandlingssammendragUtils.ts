@@ -18,13 +18,13 @@ export enum BehandlingssammendragKolonne {
 export const sortTabell = (
     behandlingssammendrag: Behandlingssammendrag[],
     kolonne: BehandlingssammendragKolonne,
-    sortVerdi: AriaSortVerdi
+    sortVerdi: AriaSortVerdi,
 ) => {
     return pipe(behandlingssammendrag, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)]));
 
     function kolonneOgRetning(
         kolonne: BehandlingssammendragKolonne,
-        sortVerdi: AriaSortVerdi
+        sortVerdi: AriaSortVerdi,
     ): Ord.Ord<Behandlingssammendrag> {
         return pipe(
             sortVerdi === 'ascending' ? Ord.reverse(S.Ord) : S.Ord,
@@ -33,8 +33,8 @@ export const sortTabell = (
                     ? r.periode
                         ? formatPeriode(r.periode)
                         : ''
-                    : r[kolonne] || ''
-            )
+                    : r[kolonne] || '',
+            ),
         );
     }
 };

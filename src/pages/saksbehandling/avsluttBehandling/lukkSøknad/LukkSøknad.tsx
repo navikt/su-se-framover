@@ -35,7 +35,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
     const { formatMessage } = useI18n({ messages: nb });
     const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(SøknadActions.lukkSøknad);
     const [avslagManglendeDokStatus, avslåPgaManglendeDok, resetAvslagManglendeDokStatus] = useAsyncActionCreator(
-        SøknadActions.avslagManglendeDokSøknad
+        SøknadActions.avslagManglendeDokSøknad,
     );
 
     const submitStatus = pickRemoteData(søknadLukketStatus, avslagManglendeDokStatus);
@@ -54,7 +54,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 () => {
                     const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
                     return Routes.navigateToSakIntroWithMessage(navigate, message, props.sakId);
-                }
+                },
             );
         } else {
             lukkSøknad(
@@ -65,7 +65,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 () => {
                     const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
                     Routes.navigateToSakIntroWithMessage(navigate, message, props.sakId);
-                }
+                },
             );
         }
     };

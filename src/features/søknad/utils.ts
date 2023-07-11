@@ -37,7 +37,7 @@ export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): S�
 
 export const toFellessøknadsinnsending = (
     søknad: AlderssøknadState | UføresøknadState,
-    fnr: string
+    fnr: string,
 ): SøknadInnholdFelles => {
     const erAlderssøknad = (s: AlderssøknadState | UføresøknadState): s is AlderssøknadState =>
         'harSøktAlderspensjon' in s && s.harSøktAlderspensjon !== null;

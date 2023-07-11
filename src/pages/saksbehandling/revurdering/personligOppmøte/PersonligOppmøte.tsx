@@ -29,7 +29,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
     const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
     const initialValues = personligOppmøteVilkårTilFormDataEllerNy(
-        props.revurdering.grunnlagsdataOgVilkårsvurderinger.personligOppmøte
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.personligOppmøte,
     );
     const form = useForm<PersonligOppmøteVilkårFormData>({
         resolver: yupResolver(personligOppmøteFormSchema),
@@ -38,7 +38,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
 
     const lagrePersonligOppmøte = (
         values: PersonligOppmøteVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqPersonligOppmøteVilkårFormData.equals(initialValues, values)) {
             navigate(props.nesteUrl);
@@ -58,7 +58,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -82,7 +82,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                         }}
                         tilbake={{

@@ -51,7 +51,7 @@ const VurderingsperiodePersonligOppmøteOppsummering = (props: {
             <OppsummeringPar
                 label={formatMessage('personligOppmøte.vilkår.text')}
                 verdi={formatMessage(
-                    `bool.${props.vurderingsperiodePersonligOppmøte.vurdering === PersonligOppmøteÅrsak.MøttPersonlig}`
+                    `bool.${props.vurderingsperiodePersonligOppmøte.vurdering === PersonligOppmøteÅrsak.MøttPersonlig}`,
                 )}
             />
             {props.vurderingsperiodePersonligOppmøte.vurdering !== PersonligOppmøteÅrsak.MøttPersonlig && (

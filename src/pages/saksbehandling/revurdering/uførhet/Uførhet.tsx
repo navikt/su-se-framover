@@ -33,7 +33,7 @@ const Uførhet = (props: RevurderingStegProps) => {
 
     const initialValues = {
         grunnlag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((u) =>
-            vurderingsperiodeTilFormData(u)
+            vurderingsperiodeTilFormData(u),
         ) ?? [lagTomUføreperiode()],
     };
     const form = useForm<UførhetFormData>({
@@ -70,7 +70,7 @@ const Uførhet = (props: RevurderingStegProps) => {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -86,7 +86,7 @@ const Uførhet = (props: RevurderingStegProps) => {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                             savingState: status,
                             url: props.nesteUrl,

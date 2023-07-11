@@ -21,10 +21,10 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [iverksettStatus, attesteringIverksett] = useAsyncActionCreator(
-        SøknadsbehandlingActions.attesteringIverksett
+        SøknadsbehandlingActions.attesteringIverksett,
     );
     const [underkjennStatus, attesteringUnderkjent] = useAsyncActionCreator(
-        SøknadsbehandlingActions.attesteringUnderkjenn
+        SøknadsbehandlingActions.attesteringUnderkjenn,
     );
     const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const redirectTilSaksoversikt = (message: string) => {
@@ -48,7 +48,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
             },
             () => {
                 redirectTilSaksoversikt(formatMessage('status.sendtTilbake'));
-            }
+            },
         );
 
     if (!erTilAttestering(props.søknadsbehandling) && !erIverksatt(props.søknadsbehandling)) {

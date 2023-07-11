@@ -20,7 +20,7 @@ export const useFeatureToggle = (feature: FeatureToggle): boolean => {
     return pipe(
         ctx.data,
         RemoteData.map((d) => d[feature]),
-        RemoteData.getOrElse<ApiError, boolean>(() => false)
+        RemoteData.getOrElse<ApiError, boolean>(() => false),
     );
 };
 
@@ -84,9 +84,12 @@ export const FeatureToggleProvider: React.FC<React.PropsWithChildren> = ({ child
         if (RemoteData.isInitial(data) || RemoteData.isPending(data)) {
             return;
         }
-        const timer = setInterval(() => {
-            update();
-        }, 1000 * 60 * 5);
+        const timer = setInterval(
+            () => {
+                update();
+            },
+            1000 * 60 * 5,
+        );
         return () => clearInterval(timer);
     }, [data._tag]);
 

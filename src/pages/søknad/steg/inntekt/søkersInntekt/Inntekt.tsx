@@ -253,8 +253,8 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                                       type: val.type,
                                                       valuta: val.valuta,
                                                   }
-                                                : el
-                                        )
+                                                : el,
+                                        ),
                                     )
                                 }
                             />
@@ -302,8 +302,8 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                 onChange={(val) =>
                                     field.onChange(
                                         field.value.map((el, i) =>
-                                            val.index === i ? { beløp: val.beløp, ordning: val.ordning } : el
-                                        )
+                                            val.index === i ? { beløp: val.beløp, ordning: val.ordning } : el,
+                                        ),
                                     )
                                 }
                             />

@@ -34,7 +34,7 @@ export const erSøknadLukket = (s: Søknad): s is Søknad & { lukket: Lukket } =
 export const erSøknadÅpen = (s: Søknad): s is Søknad & { lukket: null } => s.lukket === null;
 
 export const erPapirSøknad = (
-    s: Søknad
+    s: Søknad,
 ): s is Søknad & { søknadInnhold: SøknadInnhold } & { søknadInnhold: { forNav: ForNavPapirsøknad } } =>
     erSøknadInnholdPapirSøknad(s.søknadInnhold);
 

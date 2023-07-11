@@ -78,7 +78,7 @@ const Alderspensjon = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl:
                 previous={{
                     onClick: () => {
                         dispatch(
-                            søknadSlice.actions.harSøktAlderspensjonUpdated(form.getValues().harSøktAlderspensjon)
+                            søknadSlice.actions.harSøktAlderspensjonUpdated(form.getValues().harSøktAlderspensjon),
                         );
                         navigate(props.forrigeUrl);
                     },

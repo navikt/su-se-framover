@@ -73,7 +73,7 @@ const OppsummeringAvSøknadsbehandling = (props: {
                                 onClick={() =>
                                     hentBrevutkast(
                                         { sakId: props.medBrevutkast!.sakId, behandlingId: props.behandling.id },
-                                        (b: Blob) => window.open(URL.createObjectURL(b))
+                                        (b: Blob) => window.open(URL.createObjectURL(b)),
                                     )
                                 }
                                 loading={RemoteData.isPending(hentBrevutkastStatus)}

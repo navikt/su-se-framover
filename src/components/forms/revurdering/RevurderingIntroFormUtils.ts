@@ -64,7 +64,7 @@ export const revurderingIntroFormSchema = yup.object<RevurderingIntroFormData>({
     begrunnelse: yup.string().nullable().required(),
     informasjonSomRevurderes: yup
         .array<InformasjonSomRevurderes>(
-            yup.mixed<InformasjonSomRevurderes>().oneOf(Object.values(InformasjonSomRevurderes))
+            yup.mixed<InformasjonSomRevurderes>().oneOf(Object.values(InformasjonSomRevurderes)),
         )
         .min(1, 'Du må velge minst en ting å revurdere')
         .required(),

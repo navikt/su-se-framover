@@ -42,7 +42,7 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
                                 onSelectPeriod={() => {
                                     setVedtakIdPåKlikketPeriode(
                                         sorterteVedtaker.find((vPåLinje) => vPåLinje.vedtakId === v.vedtakId)
-                                            ?.vedtakId ?? null
+                                            ?.vedtakId ?? null,
                                     );
                                 }}
                                 aria-controls="timeline-panel"
@@ -73,7 +73,7 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
 export default Vedtakstidslinje;
 
 const periodeStyles = (
-    v: VedtakPåTidslinjeType
+    v: VedtakPåTidslinjeType,
 ): {
     status: 'warning' | 'success' | 'danger' | 'info' | 'neutral';
     ikon: JSX.Element;

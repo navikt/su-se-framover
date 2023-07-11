@@ -29,7 +29,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
 
     const initialValues = flyktningVilkårTilFormDataEllerNy(
-        props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.flyktning,
     );
     const form = useForm<FlyktningVilkårFormData>({
         resolver: yupResolver(flyktningFormSchema),
@@ -38,7 +38,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
 
     const lagreFlyktning = (
         values: FlyktningVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqFlyktningVilkårFormData.equals(initialValues, values)) {
             navigate(props.nesteUrl);
@@ -58,7 +58,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
     const revurderingsperiode = {
@@ -81,7 +81,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                         }}
                         tilbake={{

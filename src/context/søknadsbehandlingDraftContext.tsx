@@ -30,7 +30,7 @@ export const useSøknadsbehandlingDraftContext = () => {
 
     const isDraftDirty = React.useCallback(
         (vilkårtype: Vilkårtype) => typeof value[vilkårtype] !== 'undefined',
-        [value]
+        [value],
     );
 
     return { draft: value, isDraftDirty };
@@ -38,7 +38,7 @@ export const useSøknadsbehandlingDraftContext = () => {
 
 export const useSøknadsbehandlingDraftContextFor = <U extends FieldValues, T extends DraftKey = DraftKey>(
     vilkårtype: T,
-    equalsInitialValues?: (values: U) => boolean
+    equalsInitialValues?: (values: U) => boolean,
 ) => {
     const { value, setValue } = useContext(Context);
 
@@ -46,7 +46,7 @@ export const useSøknadsbehandlingDraftContextFor = <U extends FieldValues, T ex
         debounce((data: U | undefined) => {
             setValue((v) => ({ ...v, [vilkårtype]: data && equalsInitialValues?.(data) ? undefined : data }));
         }, 800),
-        [setValue]
+        [setValue],
     );
 
     const clearDraft = React.useCallback(() => {
@@ -62,7 +62,7 @@ export const useSøknadsbehandlingDraftContextFor = <U extends FieldValues, T ex
                 return () => sub.unsubscribe();
             }, [watch, setDraft]);
         },
-        [setDraft]
+        [setDraft],
     );
 
     return {

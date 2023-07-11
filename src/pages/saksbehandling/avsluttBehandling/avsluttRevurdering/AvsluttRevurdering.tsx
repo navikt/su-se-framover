@@ -56,7 +56,7 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) 
             () => {
                 const message = formatMessage('avslutt.revurderingHarBlittAvsluttet');
                 return Routes.navigateToSakIntroWithMessage(navigate, message, props.sakId);
-            }
+            },
         );
     };
 

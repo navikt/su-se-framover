@@ -27,7 +27,7 @@ import styles from './ferdigeBehandlinger.module.less';
 
 export const FerdigeBehandlinger = () => {
     const [hentFerdigeBehandlingerStatus, hentFerdigeBehandlinger] = useAsyncActionCreator(
-        sakSlice.hentFerdigeBehandlinger
+        sakSlice.hentFerdigeBehandlinger,
     );
 
     useEffect(() => {
@@ -59,18 +59,18 @@ export const FerdigeBehandlinger = () => {
 
         return behandlingssammendrag
             .filter((behandlingssammendrag) =>
-                tilOgMed[0] ? (toDateOrNull(behandlingssammendrag.behandlingStartet) ?? '') <= tilOgMed[0] : true
+                tilOgMed[0] ? (toDateOrNull(behandlingssammendrag.behandlingStartet) ?? '') <= tilOgMed[0] : true,
             )
             .filter((behandlingssammendrag) =>
-                fraOgMed[0] ? (toDateOrNull(behandlingssammendrag.behandlingStartet) ?? '') >= fraOgMed[0] : true
+                fraOgMed[0] ? (toDateOrNull(behandlingssammendrag.behandlingStartet) ?? '') >= fraOgMed[0] : true,
             )
             .filter((behandlingssammendrag) =>
-                typefilter.length ? typefilter.includes(behandlingssammendrag.typeBehandling) : true
+                typefilter.length ? typefilter.includes(behandlingssammendrag.typeBehandling) : true,
             )
             .filter((behandlingssammendrag) =>
                 resultatfilter.length
                     ? resultatfilter.includes(behandlingssammendrag.status as keyof BehandlingssammendragResultatFilter)
-                    : true
+                    : true,
             );
     };
 
@@ -109,8 +109,8 @@ export const FerdigeBehandlinger = () => {
                                 tabelldata={filtrerBehandlingssammendrag(behandlingssammendrag)}
                             />
                         </div>
-                    )
-                )
+                    ),
+                ),
             )}
         </div>
     );

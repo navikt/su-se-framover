@@ -52,7 +52,7 @@ export const uføreErlik = (ny: Nullable<UføreVilkår>, gammel: Nullable<Uføre
             (ny?.vurderinger ?? []).map((vurdering) => ({
                 ...vurdering,
                 grunnlag: pipe(vurdering.grunnlag, trimIdFromObject, trimOpprettetFromObject),
-            }))
+            })),
         ),
     };
     const trimmedGammel = {
@@ -61,7 +61,7 @@ export const uføreErlik = (ny: Nullable<UføreVilkår>, gammel: Nullable<Uføre
             (gammel?.vurderinger ?? []).map((vurdering) => ({
                 ...vurdering,
                 grunnlag: pipe(vurdering.grunnlag, trimIdFromObject, trimOpprettetFromObject),
-            }))
+            })),
         ),
     };
     return isEqual(trimmedNy, trimmedGammel);

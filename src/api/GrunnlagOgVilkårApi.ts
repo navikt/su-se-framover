@@ -92,7 +92,7 @@ export async function lagreFastOppholdVilkår(arg: BehandlingstypeMedApiRequest<
 }
 
 export async function lagreInstitusjonsoppholdVilkår(
-    arg: BehandlingstypeMedApiRequest<InstitusjonsoppholdVilkårRequest>
+    arg: BehandlingstypeMedApiRequest<InstitusjonsoppholdVilkårRequest>,
 ) {
     return apiClient<VilkårOgGrunnlagApiResult>({
         url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/institusjonsopphold`,

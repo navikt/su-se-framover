@@ -52,11 +52,11 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         periode: {
             fraOgMed: nullableMap(
                 props.behandling.stønadsperiode?.periode.fraOgMed ?? null,
-                DateUtils.parseIsoDateOnly
+                DateUtils.parseIsoDateOnly,
             ),
             tilOgMed: nullableMap(
                 props.behandling.stønadsperiode?.periode.tilOgMed ?? null,
-                DateUtils.parseIsoDateOnly
+                DateUtils.parseIsoDateOnly,
             ),
         },
         harSaksbehandlerAvgjort: !!props.behandling.aldersvurdering?.harSaksbehandlerAvgjort,
@@ -64,7 +64,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
 
     const { draft, clearDraft, useDraftFormSubscribe } =
         useSøknadsbehandlingDraftContextFor<VirkningstidspunktFormData>(Vilkårtype.Virkningstidspunkt, (values) =>
-            eqBehandlingsperiode.equals(values, initialValues)
+            eqBehandlingsperiode.equals(values, initialValues),
         );
 
     const form = useForm<VirkningstidspunktFormData>({
@@ -93,7 +93,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             () => {
                 clearDraft();
                 onSuccess();
-            }
+            },
         );
     };
 
@@ -173,7 +173,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                             className={styles.confirmationPanel}
                                                             checked={field.value}
                                                             label={formatMessage(
-                                                                'stønadsperiode.advarsel.checkbox.måBekreftes'
+                                                                'stønadsperiode.advarsel.checkbox.måBekreftes',
                                                             )}
                                                             onChange={() => field.onChange(!field.value)}
                                                         >
@@ -246,8 +246,8 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                 ),
                             }}
                         </ToKolonner>
-                    )
-                )
+                    ),
+                ),
             )}
         </>
     );

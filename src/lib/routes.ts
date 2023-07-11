@@ -276,7 +276,7 @@ export interface SuccessNotificationState {
 
 export const createSakIntroLocation = (
     message: string,
-    sakid: string
+    sakid: string,
 ): { path: string; state: SuccessNotificationState } => {
     return {
         path: Routes.saksoversiktValgtSak.createURL({ sakId: sakid }),

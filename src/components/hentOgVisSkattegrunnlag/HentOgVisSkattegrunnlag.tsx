@@ -62,8 +62,8 @@ const HentOgVisSkattegrunnlag = (props: { søknadsbehandling: Søknadsbehandling
                                 />
                             </>
                         );
-                    }
-                )
+                    },
+                ),
             )}
         </div>
     );

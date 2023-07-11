@@ -56,7 +56,7 @@ const ForhåndsvarselForm = (props: {
     const watch = form.watch();
 
     const [lagreForhåndsvarselStatus, lagreForhåndsvarsel] = useAsyncActionCreator(
-        RevurderingActions.lagreForhåndsvarsel
+        RevurderingActions.lagreForhåndsvarsel,
     );
 
     const nesteUrl = Routes.revurderingSeksjonSteg.createURL({
@@ -76,7 +76,8 @@ const ForhåndsvarselForm = (props: {
                     revurderingId: props.revurdering.id,
                     fritekstTilBrev: values.fritekst!,
                 },
-                () => Routes.navigateToSakIntroWithMessage(navigate, formatMessage('forhåndsvarsel.sendt'), props.sakId)
+                () =>
+                    Routes.navigateToSakIntroWithMessage(navigate, formatMessage('forhåndsvarsel.sendt'), props.sakId),
             );
         }
     };
@@ -125,7 +126,7 @@ const ForhåndsvarselForm = (props: {
                                                 PdfApi.fetchBrevutkastForForhåndsvarsel(
                                                     props.sakId,
                                                     props.revurdering.id,
-                                                    field.value ?? ''
+                                                    field.value ?? '',
                                                 )
                                             }
                                             tekst={field.value ?? ''}

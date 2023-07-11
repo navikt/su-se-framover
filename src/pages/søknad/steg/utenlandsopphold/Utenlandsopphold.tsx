@@ -119,7 +119,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 harReistDatoer: values.harReistTilUtlandetSiste90dager ? values.harReistDatoer : [],
                 skalReiseTilUtlandetNeste12Måneder: values.skalReiseTilUtlandetNeste12Måneder,
                 skalReiseDatoer: values.skalReiseTilUtlandetNeste12Måneder ? values.skalReiseDatoer : [],
-            })
+            }),
         );
     };
 
@@ -169,7 +169,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                             ? form.watch('harReistDatoer').length === 0
                                                 ? [{ innreisedato: '', utreisedato: '' }]
                                                 : form.getValues('harReistDatoer')
-                                            : []
+                                            : [],
                                     );
                                 }}
                             />
@@ -209,8 +209,8 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                                           innreisedato: val.innreisedato,
                                                           utreisedato: val.utreisedato,
                                                       }
-                                                    : periode
-                                            )
+                                                    : periode,
+                                            ),
                                         )
                                     }
                                 />
@@ -234,7 +234,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                             ? form.watch('skalReiseDatoer').length === 0
                                                 ? [{ innreisedato: '', utreisedato: '' }]
                                                 : form.getValues('skalReiseDatoer')
-                                            : []
+                                            : [],
                                     );
                                 }}
                             />
@@ -274,8 +274,8 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                                           innreisedato: val.innreisedato,
                                                           utreisedato: val.utreisedato,
                                                       }
-                                                    : periode
-                                            )
+                                                    : periode,
+                                            ),
                                         )
                                     }
                                 />

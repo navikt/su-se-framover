@@ -36,12 +36,12 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
 
     const initialValues: UførhetFormData = {
         grunnlag: props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger?.map(
-            vurderingsperiodeTilFormData
+            vurderingsperiodeTilFormData,
         ) ?? [lagTomUføreperiode(props.behandling.stønadsperiode?.periode)],
     };
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<UførhetFormData>(
         Vilkårtype.Uførhet,
-        (values) => eqUføreVilkårFormData.equals(values, initialValues)
+        (values) => eqUføreVilkårFormData.equals(values, initialValues),
     );
 
     const form = useForm<UførhetFormData>({
@@ -75,7 +75,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
             () => {
                 clearDraft();
                 onSuccess();
-            }
+            },
         );
     };
 
@@ -97,10 +97,10 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                         }}
                         minOgMaxPeriode={{
                             fraOgMed: DateUtils.parseNonNullableIsoDateOnly(
-                                props.behandling.stønadsperiode!.periode.fraOgMed
+                                props.behandling.stønadsperiode!.periode.fraOgMed,
                             ),
                             tilOgMed: DateUtils.parseNonNullableIsoDateOnly(
-                                props.behandling.stønadsperiode!.periode.tilOgMed
+                                props.behandling.stønadsperiode!.periode.tilOgMed,
                             ),
                         }}
                         form={form}

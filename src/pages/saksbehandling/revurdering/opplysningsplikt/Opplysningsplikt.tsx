@@ -51,7 +51,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
 
     const handleSubmit = async (
         form: OpplysningspliktVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqOpplysningspliktVilkårFormData.equals(initialValues, form)) {
             navigate(props.nesteUrl);
@@ -74,7 +74,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -93,7 +93,7 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                         }}
                         tilbake={{

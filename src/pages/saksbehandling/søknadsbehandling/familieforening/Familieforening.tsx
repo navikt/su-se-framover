@@ -19,7 +19,7 @@ const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: S
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [lagreFamilieforeninggrunnlagStatus, lagreFamilieforeninggrunnlag] = useAsyncActionCreator(
-        GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag
+        GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag,
     );
 
     const handleSave = (values: FamilieforeningFormData, onSuccess: () => void) =>
@@ -29,7 +29,7 @@ const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: S
                 behandlingId: props.behandling.id,
                 vurderinger: [{ status: values.familieforening! }],
             },
-            onSuccess
+            onSuccess,
         );
 
     return (

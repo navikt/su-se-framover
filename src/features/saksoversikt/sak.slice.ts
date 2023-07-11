@@ -49,7 +49,7 @@ export const hentÅpneBehandlinger = createAsyncThunk<Behandlingssammendrag[], v
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export const hentFerdigeBehandlinger = createAsyncThunk<Behandlingssammendrag[], void, { rejectValue: ApiError }>(
@@ -60,7 +60,7 @@ export const hentFerdigeBehandlinger = createAsyncThunk<Behandlingssammendrag[],
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export const hentDokumenter = createAsyncThunk<
@@ -146,7 +146,7 @@ export default createSlice({
                 RemoteData.map((sak) => ({
                     ...sak,
                     behandlinger: [...sak.behandlinger, action.payload],
-                }))
+                })),
             );
         });
 
@@ -196,7 +196,7 @@ export default createSlice({
                         utenlandsopphold: action.payload.utenlandsopphold,
                     },
                     versjon: action.payload.utenlandsopphold[action.payload.utenlandsopphold.length - 1].versjon,
-                }))
+                })),
             );
         });
         builder.addCase(oppdaterRegistrertUtenlandsopphold.fulfilled, (state, action) => {
@@ -267,7 +267,7 @@ export default createSlice({
                 RemoteData.map((s) => ({
                     ...s,
                     klager: [...s.klager, action.payload],
-                }))
+                })),
             );
         });
 
@@ -368,7 +368,7 @@ export default createSlice({
 const oppdaterBehandlingISak = (
     sak: RemoteData.RemoteData<ApiError, Sak>,
     v: VilkårOgGrunnlagApiResult,
-    b: Behandlingstype
+    b: Behandlingstype,
 ) => {
     switch (b) {
         case Behandlingstype.Søknadsbehandling:
@@ -380,14 +380,14 @@ const oppdaterBehandlingISak = (
 
 const oppdaterSøknadsbehandlingISak = (
     sak: RemoteData.RemoteData<ApiError, Sak>,
-    søknadsbehandling: Søknadsbehandling
+    søknadsbehandling: Søknadsbehandling,
 ) =>
     pipe(
         sak,
         RemoteData.map((sak) => ({
             ...sak,
             behandlinger: sak.behandlinger.map((b) => (b.id === søknadsbehandling.id ? søknadsbehandling : b)),
-        }))
+        })),
     );
 
 function opprettEllerOppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revurdering: Revurdering) {
@@ -404,7 +404,7 @@ function opprettEllerOppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError
                 ...s,
                 revurderinger: [...s.revurderinger, revurdering],
             };
-        })
+        }),
     );
 }
 
@@ -414,7 +414,7 @@ function oppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revu
         RemoteData.map((s) => ({
             ...s,
             revurderinger: s.revurderinger.map((r) => (r.id === revurdering.id ? revurdering : r)),
-        }))
+        })),
     );
 }
 
@@ -424,13 +424,13 @@ function oppdaterKlageISak(sak: RemoteData.RemoteData<ApiError, Sak>, klage: Kla
         RemoteData.map((s) => ({
             ...s,
             klager: s.klager.map((k) => (k.id === klage.id ? klage : k)),
-        }))
+        })),
     );
 }
 
 function oppdaterUtenlandsoppholdISak(
     sak: RemoteData.RemoteData<ApiError, Sak>,
-    utenlandsopphold: RegistrerteUtenlandsopphold
+    utenlandsopphold: RegistrerteUtenlandsopphold,
 ) {
     return pipe(
         sak,
@@ -441,6 +441,6 @@ function oppdaterUtenlandsoppholdISak(
                 utenlandsopphold: utenlandsopphold.utenlandsopphold,
                 antallDager: utenlandsopphold.antallDager,
             },
-        }))
+        })),
     );
 }

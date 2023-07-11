@@ -47,7 +47,7 @@ const AvsluttKlage = (props: { sakId: string; klage: Klage }) => {
             () => {
                 const message = formatMessage('avslutt.klageHarBlittAvsluttet');
                 return Routes.navigateToSakIntroWithMessage(navigate, message, props.sakId);
-            }
+            },
         );
     };
 

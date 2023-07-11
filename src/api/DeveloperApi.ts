@@ -20,7 +20,7 @@ export async function sendIverksattSøknadsbehandling(
     stønadsperiode: {
         fraOgMed: string;
         tilOgMed: string;
-    }
+    },
 ): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: '/søknadsbehandling/dev/ny/iverksatt',

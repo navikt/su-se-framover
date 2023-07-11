@@ -123,7 +123,7 @@ const StartUtfylling = () => {
                                 papirsøknad:
                                     søknad.forVeileder.type === Søknadstype.Papirsøknad &&
                                     user.roller.includes(Rolle.Saksbehandler),
-                            })
+                            }),
                         );
                     }}
                 >
@@ -155,7 +155,7 @@ const StartUtfylling = () => {
                                                 routes.soknadsutfylling.createURL({
                                                     step: steg[index - 1].step,
                                                     soknadstema: routes.urlForSakstype(sakstype),
-                                                })
+                                                }),
                                             );
                                         }}
                                     >
@@ -177,8 +177,8 @@ const StartUtfylling = () => {
                                 />
                             </div>
                         </>
-                    )
-                )
+                    ),
+                ),
             )}
         </div>
     );

@@ -45,7 +45,7 @@ const OppdaterRevurdering = (props: {
 
     const save = (
         values: RevurderingIntroFormData,
-        onSuccess: (opprettetRevurdering: OpprettetRevurdering) => void
+        onSuccess: (opprettetRevurdering: OpprettetRevurdering) => void,
     ) => {
         if (eqRevurderingIntroFormData.equals(values, initialValues)) {
             navigate(nesteUrl(props.revurdering));
@@ -59,7 +59,7 @@ const OppdaterRevurdering = (props: {
                     values,
                 }),
             },
-            onSuccess
+            onSuccess,
         );
     };
 

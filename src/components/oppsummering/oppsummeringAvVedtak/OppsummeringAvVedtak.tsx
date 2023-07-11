@@ -128,7 +128,7 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                             loading={RemoteData.isPending(hentDokumenterStatus)}
                             onClick={() =>
                                 hentDokumenter({ id: vedtak.id, idType: DokumentIdType.Vedtak }, (dokumenter) =>
-                                    window.open(URL.createObjectURL(getBlob(dokumenter[0])))
+                                    window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
                                 )
                             }
                         >
@@ -260,8 +260,8 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                             grunnlagsdataOgVilkårsvurderinger={props.r.grunnlagsdataOgVilkårsvurderinger}
                             visesSidestiltMed={snapshot}
                         />
-                    )
-                )
+                    ),
+                ),
             )}
 
             {avkortingsInfo && (
@@ -282,7 +282,7 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                                     </BodyShort>
                                     <BodyShort>
                                         {`${formatCurrency(periode.sumFeilutbetaling)} ${formatMessage(
-                                            'simulering.avkorting.ytelse.imåned'
+                                            'simulering.avkorting.ytelse.imåned',
                                         )}`}
                                     </BodyShort>
                                 </li>

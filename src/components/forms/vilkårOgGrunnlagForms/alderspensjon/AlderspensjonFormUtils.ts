@@ -17,7 +17,7 @@ export const alderspensjonSchema = yup.object<AlderspensjonFormData>({
         .defined()
         .oneOf(
             [PensjonsOpplysningerUtvidetSvar.JA, PensjonsOpplysningerUtvidetSvar.NEI],
-            'Du må velge om bruker har vedtak om alderspensjon'
+            'Du må velge om bruker har vedtak om alderspensjon',
         ),
     andreNorske: yup
         .mixed()
@@ -28,7 +28,7 @@ export const alderspensjonSchema = yup.object<AlderspensjonFormData>({
                 PensjonsOpplysningerUtvidetSvar.NEI,
                 PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT,
             ],
-            'Du må velge om bruker har søkt andre norske pensjonstrygder'
+            'Du må velge om bruker har søkt andre norske pensjonstrygder',
         ),
     utenlandske: yup
         .mixed()
@@ -39,6 +39,6 @@ export const alderspensjonSchema = yup.object<AlderspensjonFormData>({
                 PensjonsOpplysningerUtvidetSvar.NEI,
                 PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT,
             ],
-            'Du må velge om bruker har søkt andre utenlandske pensjonstrygder'
+            'Du må velge om bruker har søkt andre utenlandske pensjonstrygder',
         ),
 });

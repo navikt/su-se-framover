@@ -24,7 +24,7 @@ import {
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 
 export async function opprettRevurdering(
-    arg: OpprettRevurderingRequest
+    arg: OpprettRevurderingRequest,
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
         url: `/saker/${arg.sakId}/revurderinger`,
@@ -126,7 +126,7 @@ export async function iverksettStans(args: {
 }
 
 export async function oppdaterRevurdering(
-    arg: OppdaterRevurderingRequest
+    arg: OppdaterRevurderingRequest,
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}`,
@@ -152,7 +152,7 @@ export async function beregnOgSimuler(
     arg: {
         revurderingId: string;
         periode: Periode<string>;
-    }
+    },
 ): Promise<ApiClientResult<BeregnOgSimuler>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${arg.revurderingId}/beregnOgSimuler`,
@@ -169,7 +169,7 @@ export async function beregnOgSimuler(
 export async function lagreForhåndsvarsel(
     sakId: string,
     revurderingId: string,
-    fritekstTilBrev: string
+    fritekstTilBrev: string,
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsel`,
@@ -185,7 +185,7 @@ export async function lagreBrevvalg(
     revurderingId: string,
     valg: Valg,
     fritekst: Nullable<string>,
-    begrunnelse: Nullable<string>
+    begrunnelse: Nullable<string>,
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/brevvalg`,
@@ -201,7 +201,7 @@ export async function lagreBrevvalg(
 export async function lagreTilbakekrevingsbehandling(
     sakId: string,
     revurderingId: string,
-    tilbakekrevingsbehandling: TilbakekrevingsbehandlingFormData
+    tilbakekrevingsbehandling: TilbakekrevingsbehandlingFormData,
 ): Promise<ApiClientResult<SimulertRevurdering | UnderkjentRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilbakekreving`,
@@ -214,7 +214,7 @@ export async function lagreTilbakekrevingsbehandling(
 
 export async function sendTilAttestering(
     sakId: string,
-    revurderingId: string
+    revurderingId: string,
 ): Promise<ApiClientResult<RevurderingTilAttestering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
@@ -226,7 +226,7 @@ export async function underkjenn(
     sakId: string,
     revurderingId: string,
     grunn: UnderkjennelseGrunn,
-    kommentar?: string
+    kommentar?: string,
 ): Promise<ApiClientResult<UnderkjentRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/underkjenn`,

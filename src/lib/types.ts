@@ -9,6 +9,6 @@ export function keyOf<T>(s: keyof T) {
 
 export function eqNullable<T>(eqT: Eq<T>): Eq<Nullable<T>> {
     return fromEquals<Nullable<T>>(
-        (x, y) => x === y || (x === null && y === null) || (x !== null && y !== null && eqT.equals(x, y))
+        (x, y) => x === y || (x === null && y === null) || (x !== null && y !== null && eqT.equals(x, y)),
     );
 }

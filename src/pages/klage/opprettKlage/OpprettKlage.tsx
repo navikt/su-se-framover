@@ -60,10 +60,10 @@ const OpprettKlage = () => {
                                         sakId: props.sak.id,
                                         klageId: klage.id,
                                         steg: KlageSteg.Formkrav,
-                                    })
+                                    }),
                                 );
-                            }
-                        )
+                            },
+                        ),
                     )}
                 >
                     <div className={styles.opprettelseContainer}>

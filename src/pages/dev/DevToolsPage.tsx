@@ -93,7 +93,7 @@ const NySøknadModal = (props: { åpen: boolean; onClose: () => void }) => {
 
 const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: () => void }) => {
     const [lagNyIverksattSøknadsbehandlingStatus, lagNyIverksattSøknadsbehandling] = useAsyncActionCreator(
-        DeveloperActions.sendIverksattSøknadsbehandling
+        DeveloperActions.sendIverksattSøknadsbehandling,
     );
     const navigate = useNavigate();
     const [fnr, setFnr] = useState<Nullable<string>>(null);
@@ -160,7 +160,7 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
                                 },
                                 (res) => {
                                     navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.søknad.sakId }));
-                                }
+                                },
                             );
                         }}
                     >

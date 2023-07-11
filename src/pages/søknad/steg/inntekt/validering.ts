@@ -47,7 +47,7 @@ export const inntektsValideringSchema = (formueTilhører: 'søker' | 'eps') => {
                             .positive()
                             .required() as unknown as yup.Schema<string>,
                     })
-                    .required()
+                    .required(),
             )
             .defined()
             .when('mottarPensjon', {
@@ -84,7 +84,7 @@ export const inntektsValideringSchema = (formueTilhører: 'søker' | 'eps') => {
             .required(
                 `Fyll ut om ${tilhører} har søkt på andre trygdeytelser som ${
                     tilhører === 'du' ? 'du' : 'hen'
-                } ikke har fått svar på`
+                } ikke har fått svar på`,
             ),
         søktAndreYtelserIkkeBehandletBegrunnelse: yup
             .string()

@@ -35,12 +35,12 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
 
     const initialValues = lovligOppholdVilkårTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.lovligOpphold,
-        props.behandling.stønadsperiode?.periode
+        props.behandling.stønadsperiode?.periode,
     );
 
     const { draft, clearDraft, useDraftFormSubscribe } =
         useSøknadsbehandlingDraftContextFor<LovligOppholdVilkårFormData>(Vilkårtype.LovligOpphold, (values) =>
-            eqLovligOppholdVilkårFormData.equals(values, initialValues)
+            eqLovligOppholdVilkårFormData.equals(values, initialValues),
         );
 
     const save = (values: LovligOppholdVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
@@ -60,7 +60,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             (behandling) => {
                 clearDraft();
                 onSuccess(behandling as Søknadsbehandling);
-            }
+            },
         );
     };
 

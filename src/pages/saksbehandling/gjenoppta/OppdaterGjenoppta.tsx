@@ -51,9 +51,9 @@ const OppdaterGjenoppta = () => {
                     Routes.gjenopptaOppsummeringRoute.createURL({
                         sakId: urlParams.sakId ?? '',
                         revurderingId: arg.id,
-                    })
+                    }),
                 );
-            }
+            },
         );
     };
 

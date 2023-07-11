@@ -43,12 +43,12 @@ export const personligOppmøteVilkårTilFormData = (f: PersonligOppmøteVilkår)
 
 export const personligOppmøteVilkårTilFormDataEllerNy = (
     f: Nullable<PersonligOppmøteVilkår>,
-    p?: Periode<string>
+    p?: Periode<string>,
 ): PersonligOppmøteVilkårFormData =>
     f ? personligOppmøteVilkårTilFormData(f) : nyPersonligOppmøteVilkårMedEllerUtenPeriode(p);
 
 export const personligOppmøteVurderingsperiodeTilFormData = (
-    f: VurderingsperiodePersonligOppmøte
+    f: VurderingsperiodePersonligOppmøte,
 ): VurderingsperiodePersonligOppmøteFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     møttPersonlig:
@@ -65,7 +65,7 @@ export const nyPersonligOppmøteVilkårMedEllerUtenPeriode = (p?: Periode<string
 });
 
 export const nyVurderingsperiodePersonligOppmøteMedEllerUtenPeriode = (
-    p?: Periode<string>
+    p?: Periode<string>,
 ): VurderingsperiodePersonligOppmøteFormData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     møttPersonlig: null,
@@ -90,7 +90,7 @@ export const personligOppmøteFormDataTilRequest = (args: {
 
 export const toPersonligOppmøteÅrsakInnsending = (
     møttPersonlig: Nullable<HarMøttPersonlig>,
-    årsak: Nullable<PersonligOppmøteÅrsak>
+    årsak: Nullable<PersonligOppmøteÅrsak>,
 ): PersonligOppmøteÅrsak => {
     if (møttPersonlig === HarMøttPersonlig.Ja) {
         return PersonligOppmøteÅrsak.MøttPersonlig;
@@ -135,7 +135,7 @@ export const personligOppmøteFormSchema = yup.object<PersonligOppmøteVilkårFo
                                 .required(),
                         }),
                 })
-                .required()
+                .required(),
         )
         .min(1)
         .required(),

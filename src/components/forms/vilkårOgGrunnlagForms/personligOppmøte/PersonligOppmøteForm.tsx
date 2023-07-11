@@ -74,7 +74,7 @@ const PersonligOppmøteForm = (props: Props) => {
                                                 .filter(
                                                     (årsak) =>
                                                         årsak !== PersonligOppmøteÅrsak.MøttPersonlig &&
-                                                        årsak !== PersonligOppmøteÅrsak.Uavklart
+                                                        årsak !== PersonligOppmøteÅrsak.Uavklart,
                                                 )
                                                 .map((årsak) => (
                                                     <Radio key={årsak} value={årsak}>

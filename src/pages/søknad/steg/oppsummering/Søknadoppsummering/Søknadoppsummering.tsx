@@ -241,7 +241,7 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                             label={formatMessage('skalReiseNeste12.label')}
                             verdi={booleanSvar(
                                 søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder,
-                                formatMessage
+                                formatMessage,
                             )}
                         />
                         {søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder && (

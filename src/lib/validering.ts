@@ -135,7 +135,7 @@ const norskLocale: yup.LocaleObject = {
 yup.setLocale(norskLocale);
 
 export function hookFormErrorsTilFeiloppsummering<T extends FieldValues>(
-    errors: FieldErrors<T>
+    errors: FieldErrors<T>,
 ): FeiloppsummeringFeil[] {
     return Object.entries(errors).flatMap(([key, value]) => {
         const k = key as keyof T;
@@ -167,7 +167,7 @@ const withFullPathKeyNames = (basePath: string, x: Record<string, unknown>) =>
             ...acc,
             [`${basePath}.${k}`]: v,
         }),
-        {}
+        {},
     );
 
 // Denne er egentlig litt tullete. Pga typingen i react-hook-form blir feilmeldinger som tilhører Date-felter

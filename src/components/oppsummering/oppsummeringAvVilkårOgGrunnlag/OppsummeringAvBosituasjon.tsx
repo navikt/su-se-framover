@@ -29,7 +29,7 @@ const OppsummeringAvBosituasjongrunnlag = (props: { bosituasjon: Bosituasjon[] }
                             verdi={formatMessage(
                                 b.sats
                                     ? `bosituasjon.${b.sats as `ORDINÆR` | 'HØY'}`
-                                    : 'bosituasjon.harIkkeSatsgrunnlag'
+                                    : 'bosituasjon.harIkkeSatsgrunnlag',
                             )}
                         />
                         <OppsummeringPar label={formatMessage('periode')} verdi={formatPeriode(b.periode)} />
@@ -45,7 +45,7 @@ const OppsummeringAvBosituasjongrunnlag = (props: { bosituasjon: Bosituasjon[] }
                                     verdi={formatMessage(
                                         b.ektemakeEllerSamboerUførFlyktning !== null
                                             ? `bool.${b.ektemakeEllerSamboerUførFlyktning}`
-                                            : 'ubesvart'
+                                            : 'ubesvart',
                                     )}
                                 />
                             </>

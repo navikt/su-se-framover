@@ -110,8 +110,8 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                                 text={formatFnr(eps.fnr)}
                             />
                         </span>
-                    )
-                )
+                    ),
+                ),
             )}
         </span>
     );
@@ -119,7 +119,7 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
 
 const formatSivilstandType = (
     sivilstandType: SivilstandTyper,
-    formatMessage: (string: keyof typeof messages) => string
+    formatMessage: (string: keyof typeof messages) => string,
 ) => {
     switch (sivilstandType) {
         case SivilstandTyper.UOPPGITT:

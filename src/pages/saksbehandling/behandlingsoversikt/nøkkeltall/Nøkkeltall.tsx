@@ -65,8 +65,8 @@ const Nøkkeltall = () => {
                         <Rad label={formatMessage('løpendeSaker')} verdi={nøkkeltall.løpendeSaker} />
                     </ul>
                 </div>
-            )
-        )
+            ),
+        ),
     );
 };
 

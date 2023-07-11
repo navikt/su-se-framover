@@ -39,7 +39,7 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
                           UføreResultat.VilkårIkkeOppfylt,
                           UføreResultat.HarUføresakTilBehandling,
                       ],
-                      'Du må velge om bruker har vedtak om uføretrygd eller uføresak til behandling'
+                      'Du må velge om bruker har vedtak om uføretrygd eller uføresak til behandling',
                   ),
         uføregrad: yup.mixed<string>().when('oppfylt', {
             is: UføreResultat.VilkårOppfylt,
@@ -83,12 +83,12 @@ export const uførhetSchema = (erGRegulering: boolean) =>
                                                 start: v2.periode.fraOgMed ?? DateFns.minTime,
                                                 end: v2.periode.tilOgMed ?? DateFns.maxTime,
                                             },
-                                            { inclusive: true }
-                                        )
-                                )
+                                            { inclusive: true },
+                                        ),
+                                ),
                         );
                         return !harOverlapp;
-                    }
+                    },
                 ),
         })
         .required();

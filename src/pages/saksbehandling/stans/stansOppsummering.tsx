@@ -86,7 +86,7 @@ const StansOppsummering = (props: { revurdering?: Revurdering }) => {
                             Routes.oppdaterStansRoute.createURL({
                                 sakId: contextProps.sak.id,
                                 revurderingId: revurdering.id,
-                            })
+                            }),
                         )
                     }
                 >

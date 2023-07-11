@@ -50,12 +50,12 @@ export const ÅpneBehandlinger = () => {
 
         return behandlingssammendrag
             .filter((behandlingssammendrag) =>
-                typefilter.length ? typefilter.includes(behandlingssammendrag.typeBehandling) : true
+                typefilter.length ? typefilter.includes(behandlingssammendrag.typeBehandling) : true,
             )
             .filter((behandlingssammendrag) =>
                 statusfilter.length
                     ? statusfilter.includes(behandlingssammendrag.status as keyof BehandlingssammendragStatusFilter)
-                    : true
+                    : true,
             );
     };
 
@@ -83,8 +83,8 @@ export const ÅpneBehandlinger = () => {
                                 tabelldata={filterBehandlingssammendrag(behandlingssammendrag)}
                             />
                         </div>
-                    )
-                )
+                    ),
+                ),
             )}
         </div>
     );

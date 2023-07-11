@@ -57,7 +57,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
             navigate(
                 Routes.saksoversiktValgtSak.createURL({
                     sakId: props.sakId,
-                })
+                }),
             );
         });
     };
@@ -68,7 +68,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                 Routes.navigateToSakIntroWithMessage(
                     navigate,
                     formatMessage('avvistKlage.sendtTilAttestering'),
-                    props.sakId
+                    props.sakId,
                 );
             });
         });

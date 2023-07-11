@@ -85,7 +85,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                                         value={IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold}
                                                     >
                                                         {formatMessage(
-                                                            IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold
+                                                            IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold,
                                                         )}
                                                     </option>
                                                 </Select>

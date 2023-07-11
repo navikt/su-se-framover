@@ -196,7 +196,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                                   alder: null,
                                                   eps: null,
                                               }
-                                            : null
+                                            : null,
                                     );
                                 }}
                             >
@@ -249,7 +249,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                         ? form.setValue('ingenAdresseGrunn', val)
                                         : field.onChange(
                                               adresser.find((a) => a.radioValue.adresselinje === val)?.radioValue ??
-                                                  null
+                                                  null,
                                           );
                                 }}
                             >

@@ -54,7 +54,7 @@ const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
                 UNDERSCORE_REGEX,
                 erRevurderingOpphørPgaManglendeDokumentasjon(revurdering)
                     ? 'Du må erstatte _____ med informasjon'
-                    : 'Du må erstatte _____ med tall'
+                    : 'Du må erstatte _____ med tall',
             ),
         begrunnValg: yup.boolean(),
         begrunnelse: yup
@@ -76,7 +76,7 @@ const SendTilAttestering = (props: {
 
     const [lagreBrevStatus, lagreBrev] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
-        RevurderingActions.sendRevurderingTilAttestering
+        RevurderingActions.sendRevurderingTilAttestering,
     );
 
     const handleLagreOgFortsettSenere = (values: BrevvalgFormData) => {
@@ -90,7 +90,7 @@ const SendTilAttestering = (props: {
             },
             () => {
                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-            }
+            },
         );
     };
 
@@ -111,11 +111,11 @@ const SendTilAttestering = (props: {
                         Routes.navigateToSakIntroWithMessage(
                             navigate,
                             formatMessage('notification.sendtTilAttestering'),
-                            props.sakId
+                            props.sakId,
                         );
-                    }
+                    },
                 );
-            }
+            },
         );
     };
 

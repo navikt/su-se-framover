@@ -38,7 +38,7 @@ const SendTilAttesteringPage = () => {
 
     const navigate = useNavigate();
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
-        SøknadsbehandlingActions.sendTilAttestering
+        SøknadsbehandlingActions.sendTilAttestering,
     );
     const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
     const { behandlingId = '' } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
@@ -47,7 +47,7 @@ const SendTilAttesteringPage = () => {
     const initialValues: FormData = { fritekst: behandling?.fritekstTilBrev ?? '' };
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         'SendTilAttesteringPage',
-        ({ fritekst }) => fritekst === initialValues.fritekst
+        ({ fritekst }) => fritekst === initialValues.fritekst,
     );
 
     const vilkårUrl = (vilkårType: Vilkårtype) => {
@@ -82,7 +82,7 @@ const SendTilAttesteringPage = () => {
                 clearDraft();
                 const message = formatMessage('vedtak.sendtTilAttestering');
                 Routes.navigateToSakIntroWithMessage(navigate, message, props.sak.id);
-            }
+            },
         );
     };
 

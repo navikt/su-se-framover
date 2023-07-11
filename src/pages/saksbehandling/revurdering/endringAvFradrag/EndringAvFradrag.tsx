@@ -66,12 +66,12 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     });
     const initialValues = {
         fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
-            props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag
+            props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag,
         ).map((f) =>
             fradragTilFradragFormData(f, {
                 fraOgMed: DateUtils.parseIsoDateOnly(props.revurdering.periode.fraOgMed),
                 tilOgMed: DateUtils.parseIsoDateOnly(props.revurdering.periode.tilOgMed),
-            })
+            }),
         ),
     };
     const form = useForm<EndringAvFradragFormData>({
@@ -81,7 +81,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
 
     const save = async (
         values: EndringAvFradragFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqFradragGrunnlagFormData.equals(initialValues, values)) {
             navigate(props.nesteUrl);
@@ -98,10 +98,10 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                 sakId: props.sakId,
                 behandlingId: props.revurdering.id,
                 fradrag: values.fradrag.map((f) =>
-                    fradragFormdataTilFradrag(f, lagDatePeriodeAvStringPeriode(props.revurdering.periode))
+                    fradragFormdataTilFradrag(f, lagDatePeriodeAvStringPeriode(props.revurdering.periode)),
                 ),
                 behandlingstype: Behandlingstype.Revurdering,
-            })
+            }),
         );
 
         if (GrunnlagOgVilkårActions.lagreFradragsgrunnlag.fulfilled.match(res)) {
@@ -125,13 +125,13 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                 values,
                                 props.onSuccessOverride
                                     ? (r) => props.onSuccessOverride!(r)
-                                    : () => navigate(props.nesteUrl)
-                            )
+                                    : () => navigate(props.nesteUrl),
+                            ),
                         )}
                     >
                         <div>
                             {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
-                                (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold
+                                (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold,
                             ) && (
                                 <Alert variant={'info'}>{intl.formatMessage({ id: 'alert.advarsel.avkorting' })}</Alert>
                             )}
@@ -143,7 +143,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                     control={form.control}
                                     setValue={form.setValue}
                                     harEPS={props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.some(
-                                        bosituasjonHarEps
+                                        bosituasjonHarEps,
                                     )}
                                     beregningsDato={{
                                         fraOgMed: new Date(props.revurdering.periode.fraOgMed),

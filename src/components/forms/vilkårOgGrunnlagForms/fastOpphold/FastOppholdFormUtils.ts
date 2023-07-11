@@ -41,11 +41,11 @@ export const fastOppholdVilkårTilFormData = (f: FastOppholdVilkår): FastOpphol
 
 export const fastOppholdVilkårTilFormDataEllerNy = (
     f: Nullable<FastOppholdVilkår>,
-    p?: Periode<string>
+    p?: Periode<string>,
 ): FastOppholdVilkårFormData => (f ? fastOppholdVilkårTilFormData(f) : nyFastOppholdVilkårMedEllerUtenPeriode(p));
 
 export const fastOppholdVurderingsperiodeTilFormData = (
-    f: VurderingsperiodeFastOpphold
+    f: VurderingsperiodeFastOpphold,
 ): VurderingsperioderFastOppholdFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     resultat: f.resultat,
@@ -56,7 +56,7 @@ export const nyFastOppholdVilkårMedEllerUtenPeriode = (p?: Periode<string>): Fa
 });
 
 export const nyVurderingsperiodeFastOppholdMedEllerUtenPeriode = (
-    p?: Periode<string>
+    p?: Periode<string>,
 ): VurderingsperioderFastOppholdFormData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     resultat: null,
@@ -86,7 +86,7 @@ export const fastOppholdFormSchema = yup.object<FastOppholdVilkårFormData>({
                     periode: validerAtNullablePeriodeErUtfylt,
                     resultat: yup.string().nullable().defined().oneOf(Object.values(Vilkårstatus)).required(),
                 })
-                .required()
+                .required(),
         )
         .min(1)
         .required(),

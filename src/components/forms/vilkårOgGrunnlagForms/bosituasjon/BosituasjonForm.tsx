@@ -188,8 +188,8 @@ const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: 
                             </>
                         );
                     },
-                    () => null
-                )
+                    () => null,
+                ),
             )}
         </div>
     );

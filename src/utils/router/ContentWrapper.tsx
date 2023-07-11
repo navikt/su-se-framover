@@ -39,7 +39,7 @@ export const ContentWrapper: React.FC<PropsWithChildren> = (props) => {
             <SuHeader
                 user={pipe(
                     loggedInUser,
-                    RemoteData.getOrElse<unknown, LoggedInUser | null>(() => null)
+                    RemoteData.getOrElse<unknown, LoggedInUser | null>(() => null),
                 )}
             />
             <main className={styles.contentContainer} id="main-content" tabIndex={-1}>
@@ -63,8 +63,8 @@ export const ContentWrapper: React.FC<PropsWithChildren> = (props) => {
                                 </div>
                             );
                         },
-                        (u) => <UserProvider user={u}>{props.children}</UserProvider>
-                    )
+                        (u) => <UserProvider user={u}>{props.children}</UserProvider>,
+                    ),
                 )}
             </main>
         </div>

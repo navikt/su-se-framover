@@ -165,7 +165,7 @@ export const lagreBrevvalg = createAsyncThunk<
             return res.data;
         }
         return thunkApi.rejectWithValue(res.error);
-    }
+    },
 );
 
 export const lagreTilbakekrevingsbehandling = createAsyncThunk<

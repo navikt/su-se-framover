@@ -53,9 +53,9 @@ const OppdaterStans = () => {
                     Routes.stansOppsummeringRoute.createURL({
                         sakId: urlParams.sakId!,
                         revurderingId: stansAvYtelse.id,
-                    })
+                    }),
                 );
-            }
+            },
         );
     };
 

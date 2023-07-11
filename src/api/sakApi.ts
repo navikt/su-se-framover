@@ -58,7 +58,7 @@ export async function kallInnTilKontrollsamtale(sakId: string) {
     });
 }
 export async function registrerUtenlandsopphold(
-    arg: RegistrerUtenlandsoppholdRequest
+    arg: RegistrerUtenlandsoppholdRequest,
 ): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
         url: `/saker/${arg.sakId}/utenlandsopphold`,
@@ -74,7 +74,7 @@ export async function registrerUtenlandsopphold(
 }
 
 export async function oppdaterRegistrertUtenlandsopphold(
-    arg: OppdaterRegistrertUtenlandsoppholdRequest
+    arg: OppdaterRegistrertUtenlandsoppholdRequest,
 ): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
         url: `/saker/${arg.sakId}/utenlandsopphold/${arg.oppdatererVersjon}`,
@@ -90,7 +90,7 @@ export async function oppdaterRegistrertUtenlandsopphold(
 }
 
 export async function annullerRegistrertUtenlandsopphold(
-    arg: AnnullerRegistrertUtenlandsoppholdRequest
+    arg: AnnullerRegistrertUtenlandsoppholdRequest,
 ): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
     return apiClient({
         url: `/saker/${arg.sakId}/utenlandsopphold/${arg.annullererVersjon}`,

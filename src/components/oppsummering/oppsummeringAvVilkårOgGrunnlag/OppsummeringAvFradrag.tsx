@@ -27,8 +27,8 @@ const OppsummeringAvFradrag = (props: { fradrag: Fradrag[] }) => {
                 groupByEq(
                     pipe(
                         eqNullable(eqStringPeriode),
-                        Eq.contramap((f) => f.periode)
-                    )
+                        Eq.contramap((f) => f.periode),
+                    ),
                 ),
                 A.mapWithIndex((index, fradragsgruppe) => (
                     <li key={index} className={styles.grunnlagsListe}>
@@ -38,7 +38,7 @@ const OppsummeringAvFradrag = (props: { fradrag: Fradrag[] }) => {
                                 A.head(fradragsgruppe),
                                 O.chainNullableK((head) => head.periode),
                                 O.map((periode) => DateUtils.formatPeriode(periode)),
-                                O.getOrElse(() => formatMessage('feil.ukjent.periode'))
+                                O.getOrElse(() => formatMessage('feil.ukjent.periode')),
                             )}
                         />
 
@@ -60,7 +60,7 @@ const OppsummeringAvFradrag = (props: { fradrag: Fradrag[] }) => {
                             ))}
                         </ul>
                     </li>
-                ))
+                )),
             )}
         </ul>
     );

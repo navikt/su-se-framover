@@ -231,7 +231,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 field.onChange(val);
                                 form.setValue(
                                     'kjøretøy',
-                                    form.watch('eierKjøretøy') ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : []
+                                    form.watch('eierKjøretøy') ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : [],
                                 );
                             }}
                         />
@@ -267,8 +267,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                                       verdiPåKjøretøy: val.verdiPåKjøretøy,
                                                       kjøretøyDeEier: val.kjøretøyDeEier,
                                                   }
-                                                : input
-                                        )
+                                                : input,
+                                        ),
                                     )
                                 }
                             />

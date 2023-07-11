@@ -52,7 +52,7 @@ export const nyFradrag = (): FradragFormData => ({
 
 export const fradragTilFradragFormData = (
     fradrag: Fradrag,
-    stønadsperiode: Nullable<NullablePeriode>
+    stønadsperiode: Nullable<NullablePeriode>,
 ): FradragFormData => {
     return {
         kategori: fradrag.type || null,
@@ -138,7 +138,7 @@ export const fradragSchema = yup.object<FradragFormData>({
         .defined()
         .oneOf(
             [...Object.values(VelgbareFradragskategorier), IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold],
-            'Du må velge en fradragstype'
+            'Du må velge en fradragstype',
         ),
     spesifisertkategori: yup.string().defined().when('kategori', {
         is: VelgbareFradragskategorier.Annet,
@@ -163,9 +163,9 @@ export const fradragSchema = yup.object<FradragFormData>({
                         return Boolean(
                             fraOgMed &&
                                 tilOgMed &&
-                                DateFns.isAfter(DateFns.lastDayOfMonth(new Date(tilOgMed)), new Date(fraOgMed))
+                                DateFns.isAfter(DateFns.lastDayOfMonth(new Date(tilOgMed)), new Date(fraOgMed)),
                         );
-                    }
+                    },
                 ),
         })
         .defined(),

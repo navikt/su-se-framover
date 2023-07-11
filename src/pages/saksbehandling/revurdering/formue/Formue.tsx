@@ -33,7 +33,7 @@ const Formue = (props: RevurderingStegProps) => {
 
     const initialValues = formueVilkårTilFormData(
         props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue,
-        props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon
+        props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
     );
     const form = useForm<FormueVilkårFormData>({
         defaultValues: initialValues,
@@ -42,7 +42,7 @@ const Formue = (props: RevurderingStegProps) => {
 
     const lagreFormuegrunnlaget = (
         data: FormueVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
         if (eqFormueVilkårFormData.equals(initialValues, data)) {
             navigate(props.nesteUrl);
@@ -58,7 +58,7 @@ const Formue = (props: RevurderingStegProps) => {
                 if (castedRes.feilmeldinger.length === 0) {
                     onSuccess(castedRes.revurdering, props.nesteUrl);
                 }
-            }
+            },
         );
     };
 
@@ -75,7 +75,7 @@ const Formue = (props: RevurderingStegProps) => {
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
-                                        : () => navigate(props.nesteUrl)
+                                        : () => navigate(props.nesteUrl),
                                 ),
                             url: props.nesteUrl,
                             savingState: lagreFormuegrunnlagStatus,

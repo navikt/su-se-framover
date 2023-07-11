@@ -37,7 +37,7 @@ const tilbakekrevingsSchema = yup
             .defined()
             .oneOf(
                 [TilbakekrevingsAvgjørelse.TILBAKEKREV, TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV],
-                'Aktsomhet må vurderes ved tilbakekreving'
+                'Aktsomhet må vurderes ved tilbakekreving',
             ),
     })
     .required();
@@ -50,7 +50,7 @@ const TilbakekrevingForm = (props: {
     const { formatMessage } = useI18n({ messages });
 
     const [lagreTilbakekrevingsbehandlingState, lagreTilbakekrevingsbehandling] = useAsyncActionCreator(
-        RevurderingActions.lagreTilbakekrevingsbehandling
+        RevurderingActions.lagreTilbakekrevingsbehandling,
     );
 
     const handleSubmit = (values: TilbakekrevingsbehandlingFormData, onSuccess: () => void) => {
@@ -60,7 +60,7 @@ const TilbakekrevingForm = (props: {
                 revurderingId: props.revurdering.id,
                 tilbakekrevingsbehandling: values,
             },
-            () => onSuccess()
+            () => onSuccess(),
         );
     };
 

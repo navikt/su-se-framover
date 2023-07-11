@@ -69,7 +69,7 @@ async function setupSession(app: Express) {
             unset: 'destroy',
             store: redisStore,
             rolling: true,
-        })
+        }),
     );
 }
 
@@ -89,7 +89,7 @@ async function getStrategy(authClient: OpenIdClient.Client) {
         (
             req: http.IncomingMessage,
             tokenSet: OpenIdClient.TokenSet,
-            done: (err: null, user?: Express.User) => void
+            done: (err: null, user?: Express.User) => void,
         ) => {
             if (!tokenSet.expired()) {
                 req.log.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
@@ -101,10 +101,10 @@ async function getStrategy(authClient: OpenIdClient.Client) {
             }
             // Passport kaller bare denne funksjonen for å mappe en ny innlogging til et User-objekt, så man skal ikke havne her.
             req.log.error(
-                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet has already expired.'
+                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet has already expired.',
             );
             done(null, undefined);
-        }
+        },
     );
 }
 
@@ -133,7 +133,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
             }
             next();
         },
-        passport.authenticate(authName, { failureRedirect: '/login-failed' })
+        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
     );
     app.get('/logout', (req, res) => {
         req.logout(() => req.log.warn('Utlogging av bruker feilet.'));

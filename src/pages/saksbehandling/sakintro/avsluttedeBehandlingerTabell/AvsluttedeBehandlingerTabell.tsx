@@ -48,13 +48,13 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
     const sorterTabell = (
         behandlinger: TabellBehandlinger,
         kolonne: AvsluttedeBehandlingerKolonner,
-        sortVerdi: AriaSortVerdi
+        sortVerdi: AriaSortVerdi,
     ) => {
         return pipe(behandlinger, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)]));
 
         function kolonneOgRetning(
             kolonne: AvsluttedeBehandlingerKolonner,
-            sortVerdi: AriaSortVerdi
+            sortVerdi: AriaSortVerdi,
         ): Ord.Ord<TabellBehandling> {
             return pipe(
                 sortVerdi === 'ascending' ? Ord.reverse(S.Ord) : S.Ord,
@@ -68,7 +68,7 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                         case AvsluttedeBehandlingerKolonner.mottatt_opprettet_tidspunkt:
                             return dataCellInfo.mottattOpprettetTidspunkt;
                     }
-                })
+                }),
             );
         }
     };
@@ -160,7 +160,9 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                                                 idType: DokumentIdType.Søknad,
                                                             },
                                                             (dokumenter) =>
-                                                                window.open(URL.createObjectURL(getBlob(dokumenter[0])))
+                                                                window.open(
+                                                                    URL.createObjectURL(getBlob(dokumenter[0])),
+                                                                ),
                                                         );
                                                     }}
                                                 >

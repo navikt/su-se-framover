@@ -38,7 +38,7 @@ enum Knapp {
 const Drift = () => {
     const [knappTrykket, settKnappTrykket] = useState<Nullable<Knapp>>();
     const [statusBakover, setStatusBakover] = React.useState<RemoteData.RemoteData<ApiError, string>>(
-        RemoteData.initial
+        RemoteData.initial,
     );
     React.useEffect(() => {
         const hentStatus = async () => {
@@ -73,10 +73,10 @@ const Drift = () => {
 
     const [grensesnittsavstemmingModalOpen, setGrensesnittsavstemmingModalOpen] = React.useState(false);
     const [grensesnittsavtemmingFraOgMed, setGrensesnittsavtemmingFraOgMed] = React.useState<Nullable<Date>>(
-        new Date()
+        new Date(),
     );
     const [grensesnittsavtemmingTilOgMed, setGrensesnittsavtemmingTilOgMed] = React.useState<Nullable<Date>>(
-        new Date()
+        new Date(),
     );
     const [grensesnittsavstemmingStatus, fetchGrensesnittsavstemming] = useApiCall(grensesnittsavstemming);
     const [grensesnittsavstemmingFagområde, setGrensesnittsavstemmingFagområde] = React.useState<string>('SUUFORE');
@@ -347,7 +347,7 @@ const VilFikseVedtakModal = (props: { open: boolean; onClose: () => void }) => {
 
 const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
     const [søknadsbehandlingVedtakStatistikkStatus, resendSøknadsbehandlingVedtak] = useApiCall(
-        resendstatistikkSøknadsbehandlingVedtak
+        resendstatistikkSøknadsbehandlingVedtak,
     );
     const [spesifikkStatus, resendSpesifikkVedtak] = useApiCall(resendSpesifikkVedtakstatistikk);
 

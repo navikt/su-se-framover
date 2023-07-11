@@ -28,5 +28,5 @@ export interface InstitusjonsoppholdVurderingRequest {
 
 export const institusjonsoppholdErLik = (
     ny: Nullable<InstitusjonsoppholdVilkår>,
-    gammel: Nullable<InstitusjonsoppholdVilkår>
+    gammel: Nullable<InstitusjonsoppholdVilkår>,
 ) => isEqual(ny, gammel);

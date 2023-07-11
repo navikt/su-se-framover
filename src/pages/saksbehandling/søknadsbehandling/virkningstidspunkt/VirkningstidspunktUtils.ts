@@ -22,7 +22,7 @@ export const eqBehandlingsperiode = struct<VirkningstidspunktFormData>({
 
 export const er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned = (
     stønadsperiodeTilOgMed: Date,
-    fødselsdato: Date
+    fødselsdato: Date,
 ) => {
     if (alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) > 67) {
         return true;
@@ -79,7 +79,7 @@ export const virkningstidspunktSchema = yup
                                 return false;
                             }
                             return true;
-                        }
+                        },
                     )
                     .test('isAfterFom', 'Sluttdato må være etter startdato', function (tilOgMed) {
                         const { fraOgMed } = this.parent;

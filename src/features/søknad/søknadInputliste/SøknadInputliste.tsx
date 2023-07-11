@@ -51,7 +51,7 @@ const Listeelement: SøknadInputlisteItemComponent = React.forwardRef(
                 </Button>
             </div>
         </Component>
-    )
+    ),
 );
 
 SøknadInputliste.Item = Listeelement;

@@ -17,7 +17,7 @@ export interface RegisteringAvUtenlandsoppholdFormData {
 }
 
 export const registrertUtenlandsoppholdTilFormDataEllerDefault = (
-    registrertUtenlandsopphold?: RegistrertUtenlandsopphold
+    registrertUtenlandsopphold?: RegistrertUtenlandsopphold,
 ): RegisteringAvUtenlandsoppholdFormData => {
     return {
         periode: {
@@ -77,7 +77,7 @@ export const registeringAvUtenlandsoppholdFormSchema = yup.object<RegisteringAvU
                 .object({
                     journalpostId: yup.string().required().typeError('Feltet må fylles ut'),
                 })
-                .required()
+                .required(),
         )
         .notRequired()
         .defined(),

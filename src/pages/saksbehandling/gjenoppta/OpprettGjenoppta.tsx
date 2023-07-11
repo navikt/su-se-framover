@@ -41,9 +41,9 @@ const OpprettGjenoppta = (props: { sakId: string }) => {
                     Routes.gjenopptaOppsummeringRoute.createURL({
                         sakId: props.sakId,
                         revurderingId: arg.id,
-                    })
+                    }),
                 );
-            }
+            },
         );
     };
 
