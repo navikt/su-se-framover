@@ -4,4 +4,5 @@ export default {
     finnSak: 'Finn sak',
     nøkkeltall: 'Nøkkeltall',
     regulering: 'Saker til G-regulering',
+    skatt: 'Skattegrunnlag',
 };
