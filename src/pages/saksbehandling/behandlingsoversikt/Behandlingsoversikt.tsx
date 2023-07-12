@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Heading } from '@navikt/ds-react';
-import * as Tabs from '@radix-ui/react-tabs';
-import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import { NumberListIcon, CurrencyExchangeIcon, FileCheckmarkIcon, FileIcon } from '@navikt/aksel-icons';
+import { Heading, Tabs } from '@navikt/ds-react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { hentReguleringsstatus } from '~src/api/reguleringApi';
@@ -46,19 +45,6 @@ const Behandlingsoversikt = () => {
         hentReguleringerOgMerknader({});
     }, []);
 
-    const tabsClassnames = (erAktiv: boolean) => {
-        return classNames(
-            styles['nav-frontend-tabs__tab-label'],
-            styles['nav-frontend-tabs__tab-inner'],
-            styles['nav-frontend-tabs__tab-inner--interaktiv'],
-            {
-                [styles['nav-frontend-tabs__tab-inner--aktiv']]: erAktiv,
-            },
-        );
-    };
-
-    const [aktivTab, setAktivTab] = useState<Tab>(Tab.ÅPNE_BEHANDLINGER);
-
     return (
         <div className={styles.saksoversiktForside}>
             <div className={styles.personsøk}>
@@ -86,48 +72,45 @@ const Behandlingsoversikt = () => {
                     }}
                     person={søker}
                 />
-
                 {RemoteData.isFailure(sakStatus) && !RemoteData.isFailure(søker) && (
                     <ApiErrorAlert error={sakStatus.error} className={styles.feilmelding} />
                 )}
             </div>
 
-            <Tabs.Root
-                className={classNames(styles['nav-frontend-tabs'], styles['tab-list'])}
-                defaultValue={aktivTab}
-                onValueChange={(tab) => setAktivTab(tab as Tab)}
-            >
+            <Tabs defaultValue={Tab.ÅPNE_BEHANDLINGER}>
                 <Tabs.List>
-                    <Tabs.Trigger
-                        className={tabsClassnames(aktivTab === Tab.ÅPNE_BEHANDLINGER)}
+                    <Tabs.Tab
                         value={Tab.ÅPNE_BEHANDLINGER}
-                    >
-                        {formatMessage('åpneBehandlinger')}
-                    </Tabs.Trigger>
-                    <Tabs.Trigger
-                        className={tabsClassnames(aktivTab === Tab.FERDIGE_BEHANDLINGER)}
+                        label={formatMessage('åpneBehandlinger')}
+                        icon={<FileIcon />}
+                    />
+                    <Tabs.Tab
                         value={Tab.FERDIGE_BEHANDLINGER}
-                    >
-                        {formatMessage('ferdigeBehandlinger')}
-                    </Tabs.Trigger>
-                    <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.NØKKELTALL)} value={Tab.NØKKELTALL}>
-                        {formatMessage('nøkkeltall')}
-                    </Tabs.Trigger>
-                    {gjenståendeManuelleReguleringer.length > 0 && (
-                        <Tabs.Trigger className={tabsClassnames(aktivTab === Tab.REGULERING)} value={Tab.REGULERING}>
-                            {formatMessage('regulering')}
-                        </Tabs.Trigger>
-                    )}
+                        label={formatMessage('ferdigeBehandlinger')}
+                        icon={<FileCheckmarkIcon />}
+                    />
+                    <Tabs.Tab value={Tab.NØKKELTALL} label={formatMessage('nøkkeltall')} icon={<NumberListIcon />} />
+                    <Tabs.Tab
+                        value={Tab.REGULERING}
+                        label={formatMessage('regulering')}
+                        icon={<CurrencyExchangeIcon />}
+                    />
                 </Tabs.List>
-            </Tabs.Root>
-            <div className={styles.tabcontainer}>
-                {aktivTab === Tab.ÅPNE_BEHANDLINGER && <ÅpneBehandlinger />}
-                {aktivTab === Tab.FERDIGE_BEHANDLINGER && <FerdigeBehandlinger />}
-                {aktivTab === Tab.NØKKELTALL && <Nøkkeltall />}
-                {aktivTab === Tab.REGULERING && (
-                    <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
-                )}
-            </div>
+                <div className={styles.tabcontainer}>
+                    <Tabs.Panel value={Tab.ÅPNE_BEHANDLINGER}>
+                        <ÅpneBehandlinger />
+                    </Tabs.Panel>
+                    <Tabs.Panel value={Tab.FERDIGE_BEHANDLINGER}>
+                        <FerdigeBehandlinger />
+                    </Tabs.Panel>
+                    <Tabs.Panel value={Tab.NØKKELTALL}>
+                        <Nøkkeltall />
+                    </Tabs.Panel>
+                    <Tabs.Panel value={Tab.REGULERING}>
+                        <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
+                    </Tabs.Panel>
+                </div>
+            </Tabs>
         </div>
     );
 };
