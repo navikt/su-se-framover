@@ -52,7 +52,7 @@
         "@navikt/ds-react": "^4.6.1",
         "@navikt/ds-react-internal": "^3.4.3",
         "@reduxjs/toolkit": "^1.9.5",
-        "@sentry/browser": "^7.57.0",
+        "@sentry/browser": "^7.60.0",
         "@sentry/cli": "^2.19.4",
         "@types/jest": "^29.5.2",
         "amplitude-js": "^8.21.9",
