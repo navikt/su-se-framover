@@ -70,6 +70,13 @@ const Behandlingsoversikt = () => {
                             });
                         });
                     }}
+                    onFetchBySakId={(sakId) => {
+                        fetchSak({ sakId }, (res) => {
+                            fetchPerson({ fnr: res.fnr }, () => {
+                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }));
+                            });
+                        });
+                    }}
                     person={søker}
                 />
                 {RemoteData.isFailure(sakStatus) && !RemoteData.isFailure(søker) && (

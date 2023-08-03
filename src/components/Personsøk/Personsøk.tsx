@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Search } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { validate as uuidValidate } from 'uuid';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { pipe } from '~src/lib/fp';
@@ -21,6 +22,7 @@ interface Props {
     person: ApiResult<Person>;
     onFetchByFnr: (fnr: string) => void;
     onFetchBySaksnummer?: (saksnummer: string) => void;
+    onFetchBySakId?: (sakId: string) => void;
     onReset: () => void;
 }
 interface PersonSøkFormData {
@@ -28,11 +30,12 @@ interface PersonSøkFormData {
 }
 
 const personSøkSchema = yup.object<PersonSøkFormData>({
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - integer() er lagt til i validering.ts, men typescript fortår seg ikke på det
-    fnr: yup.string().integer().required().typeError('Ugyldig fødselsnummer'),
+    fnr: yup.string().required().typeError('Ugyldig input'),
 });
 
+/**
+ * Er vel teknisk sett også sakSøk :thinkies: burde endre litt her
+ */
 const Personsøk = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
@@ -44,11 +47,18 @@ const Personsøk = (props: Props) => {
     const submitHandler = (formData: PersonSøkFormData) => {
         props.onReset();
 
-        const strippedSearch = removeSpaces(formData.fnr);
+        //fnr alltid 11 siffer
+        const isFnr = removeSpaces(formData.fnr).length === 11;
+        const isId = uuidValidate(formData.fnr);
 
-        !props.onFetchBySaksnummer || strippedSearch.length === 11
-            ? props.onFetchByFnr(strippedSearch)
-            : props.onFetchBySaksnummer?.(strippedSearch);
+        if (isFnr) {
+            props.onFetchByFnr(formData.fnr);
+        } else if (isId) {
+            props.onFetchBySakId?.(formData.fnr);
+            return;
+        } else {
+            props.onFetchBySaksnummer?.(formData.fnr);
+        }
     };
 
     useEffect(() => {
