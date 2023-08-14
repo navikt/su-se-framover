@@ -79,7 +79,7 @@
         "react-router-dom": "^6.14.1",
         "redux": "^4.2.1",
         "redux-thunk": "^2.4.2",
-        "regenerator-runtime": "^0.13.11",
+        "regenerator-runtime": "^0.14.0",
         "reset-css": "^5.0.2",
         "uuid": "^9.0.0",
         "yup": "^0.29.3"
