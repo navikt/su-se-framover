@@ -49,7 +49,7 @@
         "@navikt/ds-css": "^4.9.0",
         "@navikt/ds-css-internal": "^3.4.3",
         "@navikt/ds-icons": "^3.4.3",
-        "@navikt/ds-react": "^4.6.1",
+        "@navikt/ds-react": "^4.11.0",
         "@navikt/ds-react-internal": "^3.4.3",
         "@reduxjs/toolkit": "^1.9.5",
         "@sentry/browser": "^7.61.1",
