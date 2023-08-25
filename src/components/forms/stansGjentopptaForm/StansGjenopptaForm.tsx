@@ -10,7 +10,7 @@ import { getDateErrorMessage } from '~src/lib/validering';
 import { Gjenopptak, OpprettetRevurderingGrunn, StansAvYtelse } from '~src/types/Revurdering';
 
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
-import { DatePicker } from '../../datePicker/DatePicker';
+import { MonthPicker } from '../../datePicker/DatePicker';
 
 import messages from './StansGjenopptaForm-nb';
 import styles from './StansGjenopptaForm.module.less';
@@ -62,7 +62,7 @@ const StansGjenopptaForm = (props: Props) => {
                         control={props.form.control}
                         name="stansDato"
                         render={({ field, fieldState }) => (
-                            <DatePicker
+                            <MonthPicker
                                 label={formatMessage('stans.fraOgMed')}
                                 value={field.value}
                                 onChange={(date: Date | null) => field.onChange(date)}
