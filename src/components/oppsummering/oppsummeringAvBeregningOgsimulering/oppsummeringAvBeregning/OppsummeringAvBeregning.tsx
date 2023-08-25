@@ -6,9 +6,7 @@ import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import React from 'react';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
 import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
-import { useFeatureToggle } from '~src/lib/featureToggles';
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
@@ -128,7 +126,6 @@ const OppsummeringAvBeregning = (props: {
     eksternGrunnlagSkatt: Nullable<EksternGrunnlagSkatt>;
 }) => {
     const { formatMessage, intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
-    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     return (
         <div className={styles.beregningdetaljer}>
@@ -300,9 +297,7 @@ const OppsummeringAvBeregning = (props: {
                     </div>
                 )),
             )}
-            {props.eksternGrunnlagSkatt && skattemeldingToggle && (
-                <SeSkattegrunnlag eksternGrunnlagSkatt={props.eksternGrunnlagSkatt} />
-            )}
+            {props.eksternGrunnlagSkatt && <SeSkattegrunnlag eksternGrunnlagSkatt={props.eksternGrunnlagSkatt} />}
         </div>
     );
 };

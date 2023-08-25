@@ -4,12 +4,10 @@ import { isEmpty } from 'fp-ts/lib/Array';
 import React, { PropsWithChildren, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Vedtakstidslinje from '~src/components/vedtakstidslinje/VedtaksTidslinje';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -93,9 +91,6 @@ const Sakintro = () => {
 
     const alleÅpneBehandlinger = [...åpneRevurderinger, ...åpneReguleringer, ...åpneSøknader, ...åpneKlager];
 
-    const utenlandsoppholdToggle = useFeatureToggle(FeatureToggle.Utenlandsopphold);
-    const FritekstBrevPåSakToggle = useFeatureToggle(FeatureToggle.FritekstBrevPåSak);
-
     return (
         <div className={styles.sakintroContainer}>
             <SuksessStatuser locationState={locationState} />
@@ -129,19 +124,14 @@ const Sakintro = () => {
                             {formatMessage('link.kontrollsamtale')}
                         </LinkAsButton>
                     )}
-                    {utenlandsoppholdToggle && (
-                        <LinkAsButton
-                            variant="secondary"
-                            href={Routes.utenlandsopphold.createURL({ sakId: props.sak.id })}
-                        >
-                            {formatMessage('link.utenlandsopphold')}
-                        </LinkAsButton>
-                    )}
-                    {FritekstBrevPåSakToggle && (
-                        <LinkAsButton variant="secondary" href={Routes.brevPage.createURL({ sakId: props.sak.id })}>
-                            {formatMessage('link.brev')}
-                        </LinkAsButton>
-                    )}
+
+                    <LinkAsButton variant="secondary" href={Routes.utenlandsopphold.createURL({ sakId: props.sak.id })}>
+                        {formatMessage('link.utenlandsopphold')}
+                    </LinkAsButton>
+
+                    <LinkAsButton variant="secondary" href={Routes.brevPage.createURL({ sakId: props.sak.id })}>
+                        {formatMessage('link.brev')}
+                    </LinkAsButton>
                 </div>
             </div>
 

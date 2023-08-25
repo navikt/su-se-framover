@@ -38,7 +38,4 @@ export const httpLogger = pinoHttp({
     genReqId(req) {
         return req.headers['X-Correlation-ID'] || req.id;
     },
-    autoLogging: {
-        ignore: (req) => /^\/api\/(?!toggles)/.test(req.url ?? ''),
-    },
 });
