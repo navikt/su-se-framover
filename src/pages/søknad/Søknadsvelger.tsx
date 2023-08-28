@@ -1,29 +1,22 @@
-import { BodyLong, GuidePanel, Heading, Ingress, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
-import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
-import { useFeatureToggle } from '~src/lib/featureToggles';
-import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 
-import messages from './nb';
-import * as styles from './søknadsvelger.module.less';
+//import messages from './nb';
 
 const Søknadsvelger = () => {
     const isPapirsøknad = location.search.includes('papirsoknad');
-    const { formatMessage } = useI18n({ messages });
+    //const { formatMessage } = useI18n({ messages });
 
-    if (!useFeatureToggle(FeatureToggle.Alder)) {
-        return (
-            <Navigate
-                replace
-                to={Routes.soknadtema.createURL({ papirsøknad: isPapirsøknad, soknadstema: Routes.URL_TEMA_UFØRE })}
-            />
-        );
-    }
+    return (
+        <Navigate
+            replace
+            to={Routes.soknadtema.createURL({ papirsøknad: isPapirsøknad, soknadstema: Routes.URL_TEMA_UFØRE })}
+        />
+    );
 
+    /*
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -77,6 +70,7 @@ const Søknadsvelger = () => {
             </div>
         </div>
     );
+    */
 };
 
 export default Søknadsvelger;

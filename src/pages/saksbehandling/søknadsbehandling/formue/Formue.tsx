@@ -5,7 +5,6 @@ import { pipe } from 'fp-ts/lib/function';
 import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
 import FormueForm from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueForm';
 import {
@@ -20,7 +19,6 @@ import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSø
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useFeatureToggle } from '~src/lib/featureToggles';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
@@ -36,7 +34,6 @@ import styles from './Formue.module.less';
 const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFormuegrunnlag);
-    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     const initialValues = getInitialFormueVilkårOgDelvisBosituasjon(
         props.behandling.søknad.søknadInnhold,
@@ -120,7 +117,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
                         />
-                        {skattemeldingToggle && <HentOgVisSkattegrunnlag søknadsbehandling={props.behandling} />}
+                        <HentOgVisSkattegrunnlag søknadsbehandling={props.behandling} />
                     </div>
                 ),
             }}

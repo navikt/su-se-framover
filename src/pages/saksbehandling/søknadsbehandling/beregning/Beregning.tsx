@@ -8,7 +8,6 @@ import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -28,7 +27,6 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
-import { useFeatureToggle } from '~src/lib/featureToggles';
 import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -74,7 +72,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
-    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     const [lagreFradragstatus, lagreFradrag] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFradragsgrunnlag);
     const [beregningStatus, beregn] = useAsyncActionCreator(SøknadsbehandlingActions.startBeregning);
@@ -327,12 +324,10 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
                             }}
                         />
 
-                        {skattemeldingToggle && (
-                            <OppsummeringAvEksternGrunnlagSkatt
-                                medTittel
-                                eksternGrunnlagSkatt={props.behandling.eksterneGrunnlag.skatt}
-                            />
-                        )}
+                        <OppsummeringAvEksternGrunnlagSkatt
+                            medTittel
+                            eksternGrunnlagSkatt={props.behandling.eksterneGrunnlag.skatt}
+                        />
                     </div>
                 ),
             }}

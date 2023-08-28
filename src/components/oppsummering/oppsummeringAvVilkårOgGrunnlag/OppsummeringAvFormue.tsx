@@ -2,10 +2,8 @@ import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
-import { FeatureToggle } from '~src/api/featureToggleApi';
 import { regnUtFormuegrunnlagVerdier } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import Formuestatus from '~src/components/formuestatus/Formuestatus';
-import { useFeatureToggle } from '~src/lib/featureToggles';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
@@ -25,7 +23,6 @@ const OppsummeringAvFormueVilkår = (props: {
     visesIVedtak?: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages });
-    const skattemeldingToggle = useFeatureToggle(FeatureToggle.Skattemelding);
 
     return (
         <div>
@@ -55,9 +52,7 @@ const OppsummeringAvFormueVilkår = (props: {
                     })
                 )}
             </ul>
-            {props.eksternGrunnlagSkatt && skattemeldingToggle && (
-                <SeSkattegrunnlag eksternGrunnlagSkatt={props.eksternGrunnlagSkatt} />
-            )}
+            {props.eksternGrunnlagSkatt && <SeSkattegrunnlag eksternGrunnlagSkatt={props.eksternGrunnlagSkatt} />}
         </div>
     );
 };

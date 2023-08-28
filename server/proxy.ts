@@ -31,10 +31,6 @@ export default function setup(authClient: OpenIdClient.Client) {
             },
         });
     router.use('/api', (req, res, next) => {
-        if (req.url.endsWith('/toggles')) {
-            req.log.debug('Skipping auth header for /toggles endpoint');
-            return proxy(req.log)(req, res, next);
-        }
         const user = req.user;
         if (!user) {
             req.log.debug('Missing user in route, waiting for middleware authentication');

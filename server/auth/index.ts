@@ -46,15 +46,12 @@ async function getRedisStore() {
     });
 }
 
-const authEnabledPath = /^(?!\/api\/toggles)/;
-
 async function setupSession(app: Express) {
     app.set('trust proxy', 1);
 
     const redisStore = await getRedisStore();
 
     app.use(
-        authEnabledPath,
         session({
             cookie: {
                 maxAge: SESSION_MAX_AGE_MILLIS,
@@ -111,8 +108,8 @@ async function getStrategy(authClient: OpenIdClient.Client) {
 export default async function setupAuth(app: Express, authClient: OpenIdClient.Client) {
     await setupSession(app);
 
-    app.use(authEnabledPath, passport.initialize());
-    app.use(authEnabledPath, passport.session());
+    app.use(passport.initialize());
+    app.use(passport.session());
 
     const authName = Config.isDev ? 'localAuth' : 'aad';
     const authStrategy = await getStrategy(authClient);

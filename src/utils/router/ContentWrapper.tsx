@@ -4,13 +4,10 @@ import React, { PropsWithChildren, useEffect } from 'react';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { LOGIN_URL } from '~src/api/authUrl';
-import { FeatureToggle } from '~src/api/featureToggleApi';
 import SuHeader from '~src/components/header/SuHeader';
 import { UserProvider } from '~src/context/userContext';
 import * as meSlice from '~src/features/me/me.slice';
-import { useFeatureToggle } from '~src/lib/featureToggles';
 import { pipe } from '~src/lib/fp';
-import enableHotjar from '~src/lib/tracking/hotjar';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import * as styles from '~src/root.module.less';
 import { LoggedInUser } from '~src/types/LoggedInUser';
@@ -25,11 +22,6 @@ export const ContentWrapper: React.FC<PropsWithChildren> = (props) => {
             dispatch(meSlice.fetchMe());
         }
     }, [loggedInUser._tag]);
-
-    const hotjarToggle = useFeatureToggle(FeatureToggle.Hotjar);
-    useEffect(() => {
-        hotjarToggle && enableHotjar();
-    }, [hotjarToggle]);
 
     return (
         <div>

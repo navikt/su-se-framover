@@ -3,7 +3,6 @@ import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
-import { FeatureToggleProvider } from '~src/lib/featureToggles';
 import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
@@ -62,16 +61,14 @@ const ScrollToTop = () => {
 const Root = () => (
     <Provider store={Store}>
         <ErrorBoundary>
-            <FeatureToggleProvider>
-                <BrowserRouter>
-                    <ContentWrapper>
-                        <Suspense fallback={<Loader />}>
-                            <ScrollToTop />
-                            <AppRoutes />
-                        </Suspense>
-                    </ContentWrapper>
-                </BrowserRouter>
-            </FeatureToggleProvider>
+            <BrowserRouter>
+                <ContentWrapper>
+                    <Suspense fallback={<Loader />}>
+                        <ScrollToTop />
+                        <AppRoutes />
+                    </Suspense>
+                </ContentWrapper>
+            </BrowserRouter>
         </ErrorBoundary>
     </Provider>
 );
