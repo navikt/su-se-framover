@@ -7,6 +7,8 @@ export default {
 
     'frioppslag.fødselsnummer': 'Fødselsnummer',
     'frioppslag.år': 'År',
+    'frioppslag.begrunnelse': 'Begrunnelse',
+    'frioppslag.begrunnelse.description': 'Begrunnelsen vil bli lagret med pdf-innholdet',
     'frioppslag.error.fnr': 'Ugyldig fødselsnummer',
     'frioppslag.error.år': 'Ugyldig år',
 };

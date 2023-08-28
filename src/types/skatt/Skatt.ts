@@ -48,3 +48,9 @@ export interface KjøretøySpesifisering {
     antattVerdiSomNytt: Nullable<string>;
     antattMarkedsverdi: Nullable<string>;
 }
+
+export interface FrioppslagSkattRequest {
+    fnr: string;
+    år: number;
+    begrunnelse: string;
+}
