@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Email } from '@navikt/ds-icons';
+import { EnvelopeClosedIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
@@ -166,7 +166,7 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                                         );
                                                     }}
                                                 >
-                                                    <Email />
+                                                    <EnvelopeClosedIcon />
                                                 </Button>
                                             )}
                                     </Table.DataCell>

@@ -1,4 +1,4 @@
-import { WarningColored } from '@navikt/ds-icons';
+import { ExclamationmarkTriangleIcon } from '@navikt/aksel-icons';
 import { Accordion, Alert, Button, Heading, Label, Modal } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
@@ -144,8 +144,9 @@ const DetaljertSimuleringsperiode = (props: { periode: SimuleringsperiodeOppsumm
                         {formatCurrency(props.periode.sumTilUtbetaling, { numDecimals: 0 })}
                     </Label>
                 </div>
+                {/* TODO - color */}
                 {props.periode.sumFeilutbetaling !== 0 || props.periode.sumReduksjonFeilkonto !== 0 ? (
-                    <WarningColored />
+                    <ExclamationmarkTriangleIcon />
                 ) : undefined}
             </Accordion.Header>
             <Accordion.Content>

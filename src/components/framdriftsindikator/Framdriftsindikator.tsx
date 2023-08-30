@@ -1,4 +1,9 @@
-import { SuccessFilled, ErrorFilled, HelptextFilled, Notes } from '@navikt/ds-icons';
+import {
+    CheckmarkCircleFillIcon,
+    XMarkOctagonFillIcon,
+    QuestionmarkDiamondFillIcon,
+    DocPencilIcon,
+} from '@navikt/aksel-icons';
 import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -36,13 +41,14 @@ const Statusikon = (props: { status: Linjestatus }) => {
             case Linjestatus.Ingenting:
                 return [null, null];
             case Linjestatus.Uavklart:
-                return [styles.iconYellow, HelptextFilled];
+                return [styles.iconYellow, QuestionmarkDiamondFillIcon];
             case Linjestatus.IkkeOk:
-                return [styles.iconRed, ErrorFilled];
+                return [styles.iconRed, XMarkOctagonFillIcon];
             case Linjestatus.Ok:
-                return [styles.iconGreen, SuccessFilled];
+                return [styles.iconGreen, CheckmarkCircleFillIcon];
+
             case Linjestatus.Uferdig:
-                return [null, Notes];
+                return [null, DocPencilIcon];
         }
     }, [props.status]);
 

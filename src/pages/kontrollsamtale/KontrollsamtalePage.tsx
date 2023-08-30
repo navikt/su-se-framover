@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Back } from '@navikt/ds-icons';
+import { ChevronLeftIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Button, Heading, Loader, Skeleton } from '@navikt/ds-react';
 import startOfTomorrow from 'date-fns/startOfTomorrow';
 import * as React from 'react';
@@ -164,7 +164,7 @@ const NyKontrollsamtaleDato = (props: { sakId: string }) => {
 
                             <div className={styles.buttonsContainer}>
                                 <Button variant="secondary" onClick={() => navigate(-1)}>
-                                    <Back />
+                                    <ChevronLeftIcon />
                                     {formatMessage('tilbake')}
                                 </Button>
                                 <Button onClick={() => nyDato && handleNyDatoForKontrollsamtaleClick(nyDato)}>

@@ -1,4 +1,4 @@
-import { Calculator } from '@navikt/ds-icons';
+import { CalculatorIcon } from '@navikt/aksel-icons';
 import { Alert, Heading, Table, Tag } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import { contramap } from 'fp-ts/Ord';
@@ -79,7 +79,7 @@ const Reguleringsoversikt = (props: Props) => {
 
             <div>
                 <Heading size="medium" className={styles.heading}>
-                    <CircleWithIcon variant="yellow" icon={<Calculator />} />
+                    <CircleWithIcon variant="yellow" icon={<CalculatorIcon />} />
                     {formatMessage('resultat.startManuell')}
                 </Heading>
                 <Reguleringstabell data={props.reguleringsstatus} />

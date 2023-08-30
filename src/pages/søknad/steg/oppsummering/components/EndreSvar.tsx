@@ -1,4 +1,4 @@
-import { Edit } from '@navikt/ds-icons';
+import { PencilIcon } from '@navikt/aksel-icons';
 import React from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ export const EndreSvar = (props: { path: Søknadssteg }) => {
             to={routes.soknadsutfylling.createURL({ step: props.path, soknadstema: routes.urlForSakstype(sakstype) })}
         >
             <span className={styles.marginRight}>
-                <Edit />
+                <PencilIcon />
             </span>
             <span>{intl.formatMessage({ id: 'oppsummering.endreSvar' })}</span>
         </Link>

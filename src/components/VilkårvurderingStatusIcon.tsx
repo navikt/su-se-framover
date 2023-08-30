@@ -10,7 +10,7 @@ import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurder
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
-const iconWidth = '24px';
+const iconWidth = '30px';
 
 export const VilkårvurderingStatusIcon = (props: {
     status: VilkårVurderingStatus;
@@ -39,7 +39,7 @@ export const VilkårResultatStatusIkon = (props: {
     >;
 }) => {
     if (!props.resultat) {
-        return <WarningIcon width={'1.2em'} />;
+        return <WarningIcon width={'1.8rem'} />;
     }
 
     switch (props?.resultat) {
@@ -49,7 +49,7 @@ export const VilkårResultatStatusIkon = (props: {
         case FormueStatus.VilkårOppfylt:
         case Utenlandsoppholdstatus.SkalHoldeSegINorge:
         case OpplysningspliktBeksrivelse.TilstrekkeligDokumentasjon:
-            return <SuccessIcon width={'1.2em'} />;
+            return <SuccessIcon width={'1.8rem'} />;
 
         case Vilkårstatus.VilkårIkkeOppfylt:
         case UføreResultat.VilkårIkkeOppfylt:
@@ -57,14 +57,14 @@ export const VilkårResultatStatusIkon = (props: {
         case FormueStatus.VilkårIkkeOppfylt:
         case Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet:
         case OpplysningspliktBeksrivelse.UtilstrekkeligDokumentasjon:
-            return <ErrorIcon width={'1.2em'} />;
+            return <ErrorIcon width={'1.8rem'} />;
 
         case Vilkårstatus.Uavklart:
         case UføreResultat.HarUføresakTilBehandling:
         case Aldersresultat.HarAlderssakTilBehandling:
         case FormueStatus.MåInnhenteMerInformasjon:
         case Utenlandsoppholdstatus.Uavklart:
-            return <WarningIcon width={'1.2em'} />;
+            return <WarningIcon width={'1.8rem'} />;
     }
 };
 

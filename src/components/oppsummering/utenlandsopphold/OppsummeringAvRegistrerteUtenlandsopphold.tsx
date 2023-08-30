@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Close } from '@navikt/ds-icons';
+import { XMarkIcon } from '@navikt/aksel-icons';
 import { Accordion, Button, Checkbox, Heading, Label, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
@@ -151,7 +151,7 @@ const OppsummeringAvRegistrertUtenlandsopphold = (props: {
             <Panel border>
                 <div className={styles.avsluttEndringAvUtenlandsoppholdButtonContainer}>
                     <Button variant="tertiary" type="button" onClick={() => setEndrerRegistrertUtenlandsopphold(false)}>
-                        <Close />
+                        <XMarkIcon />
                     </Button>
                 </div>
 

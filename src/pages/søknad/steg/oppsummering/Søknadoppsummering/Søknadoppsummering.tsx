@@ -1,4 +1,11 @@
-import { Calculator, Email, FileContent, Home, Plane, Saving } from '@navikt/ds-icons';
+import {
+    CalculatorIcon,
+    EnvelopeClosedIcon,
+    FileTextIcon,
+    HouseIcon,
+    AirplaneIcon,
+    PiggybankIcon,
+} from '@navikt/aksel-icons';
 import { Accordion } from '@navikt/ds-react';
 import React from 'react';
 import { RawIntlProvider, FormattedDate } from 'react-intl';
@@ -56,7 +63,7 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Home /> {formatMessage(Fellessteg.BoOgOppholdINorge)}
+                            <HouseIcon fontSize={'25px'} /> {formatMessage(Fellessteg.BoOgOppholdINorge)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -149,7 +156,7 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Saving /> {formatMessage(Fellessteg.DinFormue)}
+                            <PiggybankIcon fontSize={'25px'} /> {formatMessage(Fellessteg.DinFormue)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -161,7 +168,7 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Calculator /> {formatMessage(Fellessteg.DinInntekt)}
+                            <CalculatorIcon fontSize={'25px'} /> {formatMessage(Fellessteg.DinInntekt)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -175,7 +182,7 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                         <Accordion.Item>
                             <Accordion.Header type="button">
                                 <div className={styles.headerContent}>
-                                    <Saving /> {formatMessage(Fellessteg.EktefellesFormue)}
+                                    <PiggybankIcon fontSize={'25px'} /> {formatMessage(Fellessteg.EktefellesFormue)}
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
@@ -186,7 +193,7 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                         <Accordion.Item>
                             <Accordion.Header type="button">
                                 <div className={styles.headerContent}>
-                                    <Calculator /> {formatMessage(Fellessteg.EktefellesInntekt)}
+                                    <CalculatorIcon fontSize={'25px'} /> {formatMessage(Fellessteg.EktefellesInntekt)}
                                 </div>
                             </Accordion.Header>
                             <Accordion.Content>
@@ -200,7 +207,7 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                 <Accordion.Item>
                     <Accordion.Header type="button">
                         <div className={styles.headerContent}>
-                            <Plane /> {formatMessage(Fellessteg.ReiseTilUtlandet)}
+                            <AirplaneIcon fontSize={'25px'} /> {formatMessage(Fellessteg.ReiseTilUtlandet)}
                         </div>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -293,7 +300,7 @@ const UføreOppsummering = ({
         <Accordion.Item>
             <Accordion.Header type="button">
                 <div className={styles.headerContent}>
-                    <Email /> {formatMessage(Uføresteg.Uførevedtak)}
+                    <EnvelopeClosedIcon fontSize={'25px'} /> {formatMessage(Uføresteg.Uførevedtak)}
                 </div>
             </Accordion.Header>
             <Accordion.Content>
@@ -308,7 +315,7 @@ const UføreOppsummering = ({
         <Accordion.Item>
             <Accordion.Header type="button">
                 <div className={styles.headerContent}>
-                    <FileContent /> {formatMessage(Uføresteg.FlyktningstatusOppholdstillatelse)}
+                    <FileTextIcon fontSize={'25px'} /> {formatMessage(Uføresteg.FlyktningstatusOppholdstillatelse)}
                 </div>
             </Accordion.Header>
             <Accordion.Content>
@@ -372,7 +379,7 @@ const AlderspensjonOppsummering = ({
         <Accordion.Item>
             <Accordion.Header type="button">
                 <div className={styles.headerContent}>
-                    <Email /> {formatMessage(Alderssteg.Alderspensjon)}
+                    <EnvelopeClosedIcon fontSize={'25px'} /> {formatMessage(Alderssteg.Alderspensjon)}
                 </div>
             </Accordion.Header>
             <Accordion.Content>
@@ -387,7 +394,7 @@ const AlderspensjonOppsummering = ({
         <Accordion.Item>
             <Accordion.Header type="button">
                 <div className={styles.headerContent}>
-                    <FileContent /> {formatMessage(Alderssteg.Oppholdstillatelse)}
+                    <FileTextIcon fontSize={'25px'} /> {formatMessage(Alderssteg.Oppholdstillatelse)}
                 </div>
             </Accordion.Header>
             <Accordion.Content>

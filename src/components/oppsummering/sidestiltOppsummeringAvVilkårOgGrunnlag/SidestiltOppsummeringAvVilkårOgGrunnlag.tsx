@@ -1,4 +1,4 @@
-import { InformationColored } from '@navikt/ds-icons';
+import { InformationSquareIcon } from '@navikt/aksel-icons';
 import { Accordion, Heading } from '@navikt/ds-react';
 import React from 'react';
 
@@ -301,7 +301,7 @@ const AccordionItemUføre = (props: {
                 </div>
                 {harEndretUføre && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -336,7 +336,7 @@ const AccordionItemFlyktning = (props: {
                 </div>
                 {harEndretFlyktning && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -374,7 +374,7 @@ const AccordionItemAldersvilkår = (props: {
                 </div>
                 {harEndretAldersvilkår && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -412,7 +412,7 @@ const AccordionItemFamiliegjenforening = (props: {
                 </div>
                 {harEndretFamiliegjenforening && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -454,7 +454,7 @@ const AccordionItemLovligOpphold = (props: {
                 </div>
                 {harEndretLovligOpphold && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -492,7 +492,7 @@ const AccordionItemFastOpphold = (props: {
                 </div>
                 {harEndretFastOpphold && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -533,7 +533,7 @@ const AccordionItemInstitusjonsopphold = (props: {
                 </div>
                 {harEndretInstitusjonsopphold && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -577,7 +577,7 @@ const AccordionItemUtenlandsopphold = (props: {
                 </div>
                 {harEndretUtenlandsopphold && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -618,7 +618,7 @@ const AccordionItemFormue = (props: {
                 </div>
                 {harEndretFormue && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -659,7 +659,7 @@ const AccordionItemPersonligOppmøte = (props: {
                 </div>
                 {harEndretPersonligOppmøte && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -691,7 +691,7 @@ const AccordionItemBosituasjon = (props: {
                 <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.bosituasjon')}</div>
                 {harEndretBosituasjon && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>
@@ -718,7 +718,7 @@ const AccordionItemFradrag = (props: { fradragFraGrunnlag: Fradrag[]; sidestiltF
                 <div className={styles.accordionHeaderContent}>{formatMessage('accordion.header.inntekt')}</div>
                 {harEndretFradrag && (
                     <div className={styles.accordionHeaderContent}>
-                        <InformationColored width={'1.2em'} height={'1.2em'} />
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
                     </div>
                 )}
             </Accordion.Header>

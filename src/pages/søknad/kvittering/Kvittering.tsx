@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Attachment } from '@navikt/ds-icons';
+import { PaperclipIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -109,7 +109,7 @@ const Kvittering = () => {
                                     </BodyLong>
 
                                     <Heading level="2" size="medium" spacing className={styles.vedleggHeadingContainer}>
-                                        <CircleWithIcon icon={<Attachment />} variant="yellow" />
+                                        <CircleWithIcon icon={<PaperclipIcon />} variant="yellow" />
                                         {formatMessage('vedlegg.huskVedlegg')}
                                     </Heading>
 

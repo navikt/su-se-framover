@@ -1,4 +1,4 @@
-import { Collapse, Expand } from '@navikt/ds-icons';
+import { ChevronUpIcon, ChevronDownIcon } from '@navikt/aksel-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import React, { PropsWithChildren, useState } from 'react';
@@ -201,7 +201,11 @@ const NyBehandlingVelger: React.FC<PropsWithChildren> = (props) => {
                 }}
             >
                 {formatMessage('popover.default')}
-                {anchorEl === null ? <Expand className={styles.chevron} /> : <Collapse className={styles.chevron} />}
+                {anchorEl === null ? (
+                    <ChevronDownIcon className={styles.chevron} />
+                ) : (
+                    <ChevronUpIcon className={styles.chevron} />
+                )}
             </Button>
             <Popover
                 arrow={false}

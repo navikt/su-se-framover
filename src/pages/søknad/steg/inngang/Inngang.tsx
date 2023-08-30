@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Attachment } from '@navikt/ds-icons';
+import { PaperclipIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
@@ -290,7 +290,7 @@ const Inngang = () => {
                     formatMessage('page.tittel.papirSøknad')
                 ) : (
                     <>
-                        <CircleWithIcon icon={<Attachment />} variant="yellow" />
+                        <CircleWithIcon icon={<PaperclipIcon />} variant="yellow" />
                         {formatMessage('page.tittel.digitalSøknad')}
                     </>
                 )}

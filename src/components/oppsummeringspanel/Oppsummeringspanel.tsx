@@ -1,4 +1,12 @@
-import { Calculator, List, FillForms, Task, FileError, Money, Email } from '@navikt/ds-icons';
+import {
+    CalculatorIcon,
+    BulletListIcon,
+    PencilWritingIcon,
+    TasklistIcon,
+    FileXMarkIcon,
+    WalletIcon,
+    EnvelopeClosedIcon,
+} from '@navikt/aksel-icons';
 import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -37,26 +45,26 @@ function fargeklassenavn(farge: Oppsummeringsfarge) {
 const Ikon = (props: { className?: string; ikon: Oppsummeringsikon }) => {
     const iconProps = {
         className: props.className,
-        style: { fontSize: '1.5rem' },
+        style: { fontSize: '1.8rem' },
         role: 'img',
         focusable: false,
     };
 
     switch (props.ikon) {
         case Oppsummeringsikon.Kalkulator:
-            return <Calculator {...iconProps} aria-label="Kalkulatorikon" />;
+            return <CalculatorIcon {...iconProps} aria-label="Kalkulatorikon" />;
         case Oppsummeringsikon.Liste:
-            return <List {...iconProps} aria-label="Listeikon" />;
+            return <BulletListIcon {...iconProps} aria-label="Listeikon" />;
         case Oppsummeringsikon.Blyant:
-            return <FillForms {...iconProps} aria-label="Blyantikon" />;
+            return <PencilWritingIcon {...iconProps} aria-label="Blyantikon" />;
         case Oppsummeringsikon.Task:
-            return <Task {...iconProps} aria-label="Oppgaveliste-ikon" />;
+            return <TasklistIcon {...iconProps} aria-label="Oppgaveliste-ikon" />;
         case Oppsummeringsikon.FilError:
-            return <FileError {...iconProps} aria-label="Fil-error-ikon" />;
+            return <FileXMarkIcon {...iconProps} aria-label="Fil-error-ikon" />;
         case Oppsummeringsikon.Lommebok:
-            return <Money {...iconProps} aria-label="Lommebok-ikon" />;
+            return <WalletIcon {...iconProps} aria-label="Lommebok-ikon" />;
         case Oppsummeringsikon.Email:
-            return <Email {...iconProps} aria-label="brev-ikon" />;
+            return <EnvelopeClosedIcon {...iconProps} aria-label="brev-ikon" />;
     }
 };
 

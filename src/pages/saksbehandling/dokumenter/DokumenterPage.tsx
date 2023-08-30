@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Back, FileContent } from '@navikt/ds-icons';
+import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
 import { Alert, Button, Heading, Ingress, LinkPanel, Loader, Tag } from '@navikt/ds-react';
 import * as React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -52,7 +52,7 @@ const DokumenterPage = () => {
                         variant="secondary"
                         onClick={() => navigate(saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
                     >
-                        <Back />
+                        <ChevronLeftIcon />
                         {formatMessage('knapp.tilbake')}
                     </Button>
                 </div>
@@ -102,7 +102,7 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
                                     border
                                 >
                                     <div className={styles.dokument}>
-                                        <FileContent className={styles.dokumentikon} />
+                                        <FileTextIcon className={styles.dokumentikon} />
                                         <div>
                                             <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
                                             <LinkPanel.Description className={styles.linkPanelBeskrivelse}>

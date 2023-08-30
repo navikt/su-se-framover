@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { InformationFilled } from '@navikt/ds-icons';
+import { InformationSquareIcon } from '@navikt/aksel-icons';
 import { Heading, BodyLong, RadioGroup, Radio, Alert } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -107,7 +107,8 @@ const TilbakekrevingForm = (props: {
                                 {formatMessage('tittel')}
                             </Heading>
                             <div className={styles.undertittel}>
-                                <InformationFilled color="#368DA8" width="24px" height="24px" />
+                                {/* TODO - color */}
+                                <InformationSquareIcon color="#368DA8" width="24px" height="24px" />
                                 <BodyLong>{formatMessage('undertittel')}</BodyLong>
                             </div>
 

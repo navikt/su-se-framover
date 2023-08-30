@@ -1,4 +1,4 @@
-import { Delete } from '@navikt/ds-icons';
+import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, Panel } from '@navikt/ds-react';
 import React from 'react';
 import {
@@ -89,7 +89,7 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                                             size="small"
                                             aria-label={formatMessage('knapp.fjernPeriode')}
                                         >
-                                            <Delete />
+                                            <TrashIcon />
                                         </Button>
                                     )}
                                 </div>

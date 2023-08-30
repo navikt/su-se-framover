@@ -1,4 +1,4 @@
-import { Delete } from '@navikt/ds-icons';
+import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, Checkbox, Label, Panel, Select, TextField } from '@navikt/ds-react';
 import { currencies } from 'country-data-list';
 import React from 'react';
@@ -56,7 +56,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                     <Label>{formatMessage('fradrag.heading')}</Label>
                                     <div className={styles.søppelbøtteContainer}>
                                         <Button variant="secondary" type="button" onClick={() => remove(idx)}>
-                                            <Delete />
+                                            <TrashIcon />
                                         </Button>
                                     </div>
                                 </div>

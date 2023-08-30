@@ -1,26 +1,47 @@
-import { WarningFilled, SuccessFilled, ErrorFilled, InformationFilled } from '@navikt/ds-icons';
+import {
+    ExclamationmarkTriangleFillIcon,
+    CheckmarkCircleFillIcon,
+    XMarkOctagonFillIcon,
+    InformationSquareFillIcon,
+} from '@navikt/aksel-icons';
 import React from 'react';
 
-const iconWidth = '1.5em';
+const iconWidth = '30px';
 interface Props {
     width?: string | number;
     className?: string;
 }
 
 export const SuccessIcon = (props: Props) => (
-    <SuccessFilled className={props.className} fontSize={props.width ?? iconWidth} color="var(--a-surface-success)" />
+    <CheckmarkCircleFillIcon
+        className={props.className}
+        style={{ fontSize: props.width ?? iconWidth }}
+        color="var(--a-surface-success)"
+    />
 );
 
 export const ErrorIcon = (props: Props) => (
-    <ErrorFilled className={props.className} fontSize={props.width ?? iconWidth} color="var(--a-surface-danger)" />
+    <XMarkOctagonFillIcon
+        className={props.className}
+        style={{ fontSize: props.width ?? iconWidth }}
+        color="var(--a-surface-danger)"
+    />
 );
 
 export const WarningIcon = (props: Props) => (
-    <WarningFilled className={props.className} fontSize={props.width ?? iconWidth} color="var(--a-surface-warning)" />
+    <ExclamationmarkTriangleFillIcon
+        className={props.className}
+        style={{ fontSize: props.width ?? iconWidth }}
+        color="var(--a-surface-warning)"
+    />
 );
 
 export const InformationIcon = (props: Props) => (
-    <InformationFilled className={props.className} fontSize={props.width ?? iconWidth} color="var(--a-surface-info)" />
+    <InformationSquareFillIcon
+        className={props.className}
+        style={{ fontSize: props.width ?? iconWidth }}
+        color="var(--a-surface-info)"
+    />
 );
 
 export const KjønnAnnet = () => (

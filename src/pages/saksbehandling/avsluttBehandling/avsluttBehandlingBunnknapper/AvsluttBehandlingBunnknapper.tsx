@@ -1,4 +1,4 @@
-import { Back } from '@navikt/ds-icons';
+import { ChevronLeftIcon } from '@navikt/aksel-icons';
 import { Button, Loader } from '@navikt/ds-react';
 import * as React from 'react';
 
@@ -15,7 +15,7 @@ const AvsluttBehandlingBunnknapper = (props: { submitButtonText: string; isSubmi
     return (
         <div className={styles.container}>
             <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })} variant="secondary">
-                <Back />
+                <ChevronLeftIcon />
                 {formatMessage('link.tilbake')}
             </LinkAsButton>
             <Button variant="danger" type="submit">

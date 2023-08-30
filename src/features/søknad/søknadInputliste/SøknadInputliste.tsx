@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import { DeleteFilled } from '@navikt/ds-icons';
+import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, OverridableComponent, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -47,7 +47,7 @@ const Listeelement: SøknadInputlisteItemComponent = React.forwardRef(
             <div className={styles.itemContent}>{children}</div>
             <div className={styles.slettContainer}>
                 <Button variant="tertiary" type="button" onClick={onFjernClick}>
-                    Fjern <DeleteFilled />
+                    Fjern <TrashIcon />
                 </Button>
             </div>
         </Component>

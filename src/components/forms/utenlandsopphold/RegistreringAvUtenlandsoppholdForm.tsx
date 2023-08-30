@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Delete } from '@navikt/ds-icons';
+import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Select, Textarea, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React, { useEffect, useState } from 'react';
@@ -168,7 +168,7 @@ const JournalpostIderInputs = (props: {
                             size="small"
                             aria-label={formatMessage('registreringAvUtenlandsopphold.form.button.journalpostId.fjern')}
                         >
-                            <Delete />
+                            <TrashIcon />
                         </Button>
                     </div>
                 </li>
