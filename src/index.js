@@ -1,4 +1,3 @@
-import { Modal } from '@navikt/ds-react';
 import * as Sentry from '@sentry/browser';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -19,7 +18,6 @@ polyfill().then(() => {
         });
     }
     const container = document.getElementById('root');
-    Modal.setAppElement(container);
 
     const root = createRoot(container);
     root.render(<Root />);

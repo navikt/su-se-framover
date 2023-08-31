@@ -54,7 +54,7 @@ const NySøknadModal = (props: { åpen: boolean; onClose: () => void }) => {
 
     return (
         <Modal open={props.åpen} onClose={props.onClose}>
-            <Modal.Content>
+            <Modal.Body>
                 <Heading size="medium" spacing>
                     Ny uføre søknad
                 </Heading>
@@ -86,7 +86,7 @@ const NySøknadModal = (props: { åpen: boolean; onClose: () => void }) => {
                     </Button>
                 </form>
                 {RemoteData.isFailure(nySøknadStatus) && <ApiErrorAlert error={nySøknadStatus.error} />}
-            </Modal.Content>
+            </Modal.Body>
         </Modal>
     );
 };
@@ -105,7 +105,7 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
 
     return (
         <Modal open={props.åpen} onClose={props.onClose}>
-            <Modal.Content>
+            <Modal.Body>
                 <Heading size="medium" spacing>
                     Ny iverksatt søknadsbehandling
                 </Heading>
@@ -170,7 +170,7 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
                 {RemoteData.isFailure(lagNyIverksattSøknadsbehandlingStatus) && (
                     <ApiErrorAlert error={lagNyIverksattSøknadsbehandlingStatus.error} />
                 )}
-            </Modal.Content>
+            </Modal.Body>
         </Modal>
     );
 };

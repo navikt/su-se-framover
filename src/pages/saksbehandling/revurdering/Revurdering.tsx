@@ -324,7 +324,7 @@ const MåVurdereAlleStegModal = (props: {
     const { formatMessage } = useI18n({ messages });
     return (
         <Modal open={props.isOpen} onClose={props.onClose}>
-            <Modal.Content className={styles.modalContainer}>
+            <Modal.Body className={styles.modalContainer}>
                 <Heading level="2" size="medium" className={styles.modalTittel} spacing>
                     {formatMessage('modal.tittel')}
                 </Heading>
@@ -342,7 +342,7 @@ const MåVurdereAlleStegModal = (props: {
                             ))}
                     </ol>
                 </div>
-            </Modal.Content>
+            </Modal.Body>
         </Modal>
     );
 };

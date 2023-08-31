@@ -160,7 +160,7 @@ const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: 
                                             return;
                                         }}
                                     >
-                                        <Modal.Content>
+                                        <Modal.Body>
                                             <div className={styles.modalInnhold}>
                                                 <Heading level="2" size="small" spacing>
                                                     {formatMessage('formueOgBosituasjon.modal.skjerming.heading')}
@@ -182,7 +182,7 @@ const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: 
                                                     OK
                                                 </Button>
                                             </div>
-                                        </Modal.Content>
+                                        </Modal.Body>
                                     </Modal>
                                 )}
                             </>

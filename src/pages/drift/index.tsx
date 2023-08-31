@@ -147,7 +147,7 @@ const Drift = () => {
                             setGrensesnittsavstemmingModalOpen(false);
                         }}
                     >
-                        <Modal.Content>
+                        <Modal.Body>
                             <div className={styles.modalContainer}>
                                 <DatePicker
                                     label={''}
@@ -188,7 +188,7 @@ const Drift = () => {
                                     {RemoteData.isPending(grensesnittsavstemmingStatus) && <Loader />}
                                 </Button>
                             </div>
-                        </Modal.Content>
+                        </Modal.Body>
                     </Modal>
                     <Button
                         variant="secondary"
@@ -205,7 +205,7 @@ const Drift = () => {
                             setKonsistensavtemmingModalOpen(false);
                         }}
                     >
-                        <Modal.Content>
+                        <Modal.Body>
                             <div className={styles.modalContainer}>
                                 <DatePicker
                                     label={''}
@@ -238,16 +238,16 @@ const Drift = () => {
                                     {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
                                 </Button>
                             </div>
-                        </Modal.Content>
+                        </Modal.Body>
                     </Modal>
                     <Modal
                         aria-labelledby="Start regulering"
                         open={visReguleringModal}
                         onClose={() => setVisReguleringModal(false)}
                     >
-                        <Modal.Content>
+                        <Modal.Body>
                             <StartGRegulering />
-                        </Modal.Content>
+                        </Modal.Body>
                     </Modal>
                     <Button
                         variant="secondary"
@@ -329,7 +329,7 @@ const VilFikseVedtakModal = (props: { open: boolean; onClose: () => void }) => {
     const [vedtakId, setVedtakId] = useState<string>('');
     return (
         <Modal open={props.open} onClose={props.onClose}>
-            <Modal.Content>
+            <Modal.Body>
                 <div>
                     <Heading size="medium" spacing>
                         Ferdigstill
@@ -340,7 +340,7 @@ const VilFikseVedtakModal = (props: { open: boolean; onClose: () => void }) => {
 
                     {RemoteData.isFailure(ferdigstillStatus) && <ApiErrorAlert error={ferdigstillStatus.error} />}
                 </div>
-            </Modal.Content>
+            </Modal.Body>
         </Modal>
     );
 };
@@ -356,7 +356,7 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
 
     return (
         <Modal open={props.open} onClose={props.onClose}>
-            <Modal.Content>
+            <Modal.Body>
                 <div>
                     <Heading size="medium" spacing>
                         Spesifikk
@@ -397,7 +397,7 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
                         <ApiErrorAlert error={søknadsbehandlingVedtakStatistikkStatus.error} />
                     )}
                 </div>
-            </Modal.Content>
+            </Modal.Body>
         </Modal>
     );
 };
@@ -407,7 +407,7 @@ const StønadsmottakereModal = (props: { open: boolean; onClose: () => void }) =
 
     return (
         <Modal open={props.open} onClose={props.onClose}>
-            <Modal.Content>
+            <Modal.Body>
                 <div>
                     <Heading size="medium" spacing>
                         stønadsmottakere
@@ -427,7 +427,7 @@ const StønadsmottakereModal = (props: { open: boolean; onClose: () => void }) =
                         </div>
                     )}
                 </div>
-            </Modal.Content>
+            </Modal.Body>
         </Modal>
     );
 };

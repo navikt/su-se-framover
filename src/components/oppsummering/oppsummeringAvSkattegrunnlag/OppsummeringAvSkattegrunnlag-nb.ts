@@ -25,6 +25,7 @@ export default {
     'kjøretøySpesifisering.verdiFinnesIkke': 'Verdi finnes ikke',
 
     'seSkattegrunnlag.knapp.seSkatt': 'Se skattegrunnlag',
+    'seSkattegrunnlag.modal.tittel': 'Skattegrunnlag',
 
     // Oversettelser for tekniskNavn
     aarsavgiftForKontoIVerdipapirregister: 'Årsavgift VPS konto',

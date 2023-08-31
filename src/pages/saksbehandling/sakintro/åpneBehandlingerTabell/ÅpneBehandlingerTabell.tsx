@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Modal, Table } from '@navikt/ds-react';
+import { Button, Modal, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as reguleringApi from '~src/api/reguleringApi';
@@ -398,14 +398,14 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
 
 const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
     const { formatMessage } = useI18n({ messages });
-    const [avsluttModal, setAvsluttModal] = useState(false);
     const [avsluttReguleringStatus, avsluttRegulering] = useApiCall(reguleringApi.avsluttRegulering);
+    const ref = useRef<HTMLDialogElement>(null);
 
     return (
         <div>
             {props.r.reguleringstype === Reguleringstype.MANUELL && (
                 <div className={styles.dataCellButtonsContainer}>
-                    <Button variant="secondary" size="small" onClick={() => setAvsluttModal(true)}>
+                    <Button variant="secondary" size="small" onClick={() => ref.current?.showModal()}>
                         {formatMessage('datacell.info.knapp.avsluttBehandling')}
                     </Button>
                     <LinkAsButton
@@ -420,30 +420,26 @@ const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
                     </LinkAsButton>
                 </div>
             )}
-            <Modal open={avsluttModal} onClose={() => setAvsluttModal(false)}>
-                <Modal.Content>
-                    <div className={styles.avsluttReguleringModal}>
-                        <Heading level="2" size="medium">
-                            {formatMessage('dataCell.info.knapp.regulering.modal.tittel')}
-                        </Heading>
-                        {RemoteData.isFailure(avsluttReguleringStatus) && (
-                            <ApiErrorAlert error={avsluttReguleringStatus.error} />
-                        )}
-                        <div className={styles.knapper}>
-                            <Button variant="tertiary" type="button" onClick={() => setAvsluttModal(false)}>
-                                {formatMessage('datacell.info.knapp.avbryt')}
-                            </Button>
-                            <Button
-                                variant="danger"
-                                type="button"
-                                loading={RemoteData.isPending(avsluttReguleringStatus)}
-                                onClick={() => avsluttRegulering({ reguleringId: props.r.id }, () => location.reload())}
-                            >
-                                {formatMessage('datacell.info.knapp.avsluttBehandling')}
-                            </Button>
-                        </div>
-                    </div>
-                </Modal.Content>
+
+            <Modal ref={ref} header={{ heading: formatMessage('dataCell.info.knapp.regulering.modal.tittel') }}>
+                <Modal.Body>
+                    {RemoteData.isFailure(avsluttReguleringStatus) && (
+                        <ApiErrorAlert error={avsluttReguleringStatus.error} />
+                    )}
+                </Modal.Body>
+                <Modal.Footer className={styles.knapper}>
+                    <Button variant="tertiary" type="button" onClick={() => ref.current?.close()}>
+                        {formatMessage('datacell.info.knapp.avbryt')}
+                    </Button>
+                    <Button
+                        variant="danger"
+                        type="button"
+                        loading={RemoteData.isPending(avsluttReguleringStatus)}
+                        onClick={() => avsluttRegulering({ reguleringId: props.r.id }, () => location.reload())}
+                    >
+                        {formatMessage('datacell.info.knapp.avsluttBehandling')}
+                    </Button>
+                </Modal.Footer>
             </Modal>
         </div>
     );

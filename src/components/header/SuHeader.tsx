@@ -1,4 +1,4 @@
-import { Dropdown, Header } from '@navikt/ds-react-internal';
+import { Dropdown, InternalHeader } from '@navikt/ds-react';
 import React from 'react';
 
 import { LOGOUT_URL } from '~src/api/authUrl';
@@ -19,25 +19,27 @@ const SuHeader = (props: Props) => {
 
     const { formatMessage } = useI18n({ messages });
     return (
-        <Header style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <InternalHeader style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex' }}>
-                <Header.Title href="/">{formatMessage('title')}</Header.Title>
-                {isLocal && <Header.Title href="/saksoversikt">Til saksoversikt (local)</Header.Title>}
-                {isLocal && <Header.Title href={Routes.devTools.createURL()}>Dev tools (local)</Header.Title>}
+                <InternalHeader.Title href="/">{formatMessage('title')}</InternalHeader.Title>
+                {isLocal && <InternalHeader.Title href="/saksoversikt">Til saksoversikt (local)</InternalHeader.Title>}
+                {isLocal && (
+                    <InternalHeader.Title href={Routes.devTools.createURL()}>Dev tools (local)</InternalHeader.Title>
+                )}
             </div>
             {props.user && (
                 <div style={{ display: 'flex' }}>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
-                        <Header.Title
+                        <InternalHeader.Title
                             href={Routes.soknadtema.createURL({
                                 papirsøknad: true,
                             })}
                         >
                             {formatMessage('link.papirsøknad')}
-                        </Header.Title>
+                        </InternalHeader.Title>
                     )}
                     <Dropdown>
-                        <Header.UserButton
+                        <InternalHeader.UserButton
                             as={Dropdown.Toggle}
                             name={props.user.navn}
                             description={props.user.navIdent}
@@ -52,7 +54,7 @@ const SuHeader = (props: Props) => {
                     </Dropdown>
                 </div>
             )}
-        </Header>
+        </InternalHeader>
     );
 };
 

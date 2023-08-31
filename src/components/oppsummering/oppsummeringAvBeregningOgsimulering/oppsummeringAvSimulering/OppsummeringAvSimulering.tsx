@@ -3,7 +3,7 @@ import { Accordion, Alert, Button, Heading, Label, Modal } from '@navikt/ds-reac
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { combineOptions, pipe } from '~src/lib/fp';
@@ -28,7 +28,8 @@ export const OppsummeringAvSimulering = (props: { behandling: Søknadsbehandling
 
 export const Utbetalingssimulering = (props: { simulering: Simulering; utenTittel?: boolean }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
-    const [modalÅpen, setModalÅpen] = useState<boolean>(false);
+
+    const ref = useRef<HTMLDialogElement>(null);
 
     return (
         <div>
@@ -42,38 +43,25 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                 className={styles.detaljerKnapp}
                 variant="tertiary"
                 type="button"
-                onClick={() => setModalÅpen(true)}
+                onClick={() => ref.current?.showModal()}
             >
                 {formatMessage('knapp.seDetaljer')}
             </Button>
-            {modalÅpen && (
-                <SimuleringsDetaljerModal
-                    simulering={props.simulering}
-                    open={modalÅpen}
-                    close={() => setModalÅpen(false)}
-                />
-            )}
-        </div>
-    );
-};
-
-const SimuleringsDetaljerModal = (props: { simulering: Simulering; open: boolean; close: () => void }) => {
-    const { formatMessage } = useI18n({ messages: messages });
-    return (
-        <Modal open={props.open} onClose={() => props.close()}>
-            <Modal.Content>
-                <div className={styles.detaljertSimuleringsPeriodeModalContainer}>
+            <Modal ref={ref} header={{ heading: 'Simulering' }} width={'medium'}>
+                <Modal.Body>
+                    <div className={styles.detaljertSimuleringsPeriodeModalContainer}>
+                        <Heading spacing level="2" size="medium">
+                            {formatMessage('modal.heading.total')}
+                        </Heading>
+                        <DetaljertSimuleringsperioder perioder={[props.simulering.totalOppsummering]} />
+                    </div>
                     <Heading spacing level="2" size="medium">
-                        {formatMessage('modal.heading.total')}
+                        {formatMessage('modal.heading.periode')}
                     </Heading>
-                    <DetaljertSimuleringsperioder perioder={[props.simulering.totalOppsummering]} />
-                </div>
-                <Heading spacing level="2" size="medium">
-                    {formatMessage('modal.heading.periode')}
-                </Heading>
-                <SimulertePerioder perioder={props.simulering.periodeOppsummering} detaljert />
-            </Modal.Content>
-        </Modal>
+                    <SimulertePerioder perioder={props.simulering.periodeOppsummering} detaljert />
+                </Modal.Body>
+            </Modal>
+        </div>
     );
 };
 
@@ -124,7 +112,7 @@ const GruppertSimuleringsperioder = (props: { perioder: SimuleringsperiodeOppsum
 
 const DetaljertSimuleringsperioder = (props: { perioder: SimuleringsperiodeOppsummering[] }) => {
     return (
-        <Accordion className={styles.accordion}>
+        <Accordion size="medium">
             {props.perioder.map((periode) => (
                 <DetaljertSimuleringsperiode periode={periode} key={`${periode.fraOgMed} - ${periode.tilOgMed}`} />
             ))}

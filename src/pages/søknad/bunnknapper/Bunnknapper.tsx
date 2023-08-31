@@ -58,7 +58,7 @@ const Bunnknapper = (props: {
                 </Button>
             </div>
             <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-                <Modal.Content>
+                <Modal.Body>
                     <div className={styles.modalContainer}>
                         <Heading level="2" size="medium" spacing>
                             {formatMessage('modal.tittel')}
@@ -76,7 +76,7 @@ const Bunnknapper = (props: {
                             </LinkAsButton>
                         </div>
                     </div>
-                </Modal.Content>
+                </Modal.Body>
             </Modal>
         </div>
     );

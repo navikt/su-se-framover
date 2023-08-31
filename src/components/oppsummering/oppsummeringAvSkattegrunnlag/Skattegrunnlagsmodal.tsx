@@ -1,5 +1,5 @@
 import { Button, Modal } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
@@ -11,35 +11,24 @@ import styles from './Skattegrunnlagsmodal.module.less';
 
 const SeSkattegrunnlag = (props: { eksternGrunnlagSkatt: EksternGrunnlagSkatt }) => {
     const { formatMessage } = useI18n({ messages });
-    const [modalÅpen, setModalÅpen] = useState<boolean>(false);
+    const ref = useRef<HTMLDialogElement>(null);
     return (
         <>
             <Button
                 className={styles.seSkattegrunnlagKnapp}
                 variant="tertiary"
                 type="button"
-                onClick={() => setModalÅpen(true)}
+                onClick={() => ref.current?.showModal()}
             >
                 {formatMessage('seSkattegrunnlag.knapp.seSkatt')}
             </Button>
-            {modalÅpen && (
-                <Skattegrunnlagsmodal
-                    skatt={props.eksternGrunnlagSkatt}
-                    open={modalÅpen}
-                    close={() => setModalÅpen(false)}
-                />
-            )}
-        </>
-    );
-};
 
-const Skattegrunnlagsmodal = (props: { skatt: EksternGrunnlagSkatt; open: boolean; close: () => void }) => {
-    return (
-        <Modal open={props.open} onClose={() => props.close()}>
-            <Modal.Content className={styles.skattegrunnlagsmodal}>
-                <OppsummeringAvEksternGrunnlagSkatt medTittel eksternGrunnlagSkatt={props.skatt} />
-            </Modal.Content>
-        </Modal>
+            <Modal ref={ref} width={800} header={{ heading: formatMessage('seSkattegrunnlag.modal.tittel') }}>
+                <Modal.Body>
+                    <OppsummeringAvEksternGrunnlagSkatt eksternGrunnlagSkatt={props.eksternGrunnlagSkatt} />
+                </Modal.Body>
+            </Modal>
+        </>
     );
 };
 
