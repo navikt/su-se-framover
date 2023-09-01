@@ -10,7 +10,7 @@ import { fetchSkattFor as fetchSkattPdfFor } from '~src/api/skattApi';
 import { hentNySkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
+import yup from '~src/lib/validering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
@@ -43,7 +43,12 @@ interface FrioppslagFormData {
 
 const frioppslagSchema = yup.object<FrioppslagFormData>({
     fnr: yup.string().required().length(11),
-    år: validateStringAsPositiveNumber().length(4),
+    år: yup
+        .string()
+        .test('Tallet må være lik eller høyere enn 2006', `År må være et tall større eller lik 2006`, function (value) {
+            return value ? Number.parseInt(value, 10) > 2005 : false;
+        })
+        .required(),
     begrunnelse: yup.string().required(),
 });
 
