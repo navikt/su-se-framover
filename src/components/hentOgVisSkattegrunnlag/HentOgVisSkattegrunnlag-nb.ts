@@ -9,6 +9,9 @@ export default {
     'frioppslag.år': 'År',
     'frioppslag.begrunnelse': 'Begrunnelse',
     'frioppslag.begrunnelse.description': 'Begrunnelsen vil bli lagret med pdf-innholdet',
+    'frioppslag.fagsystemId': 'Fagsystem-id',
+    'frioppslag.sakstype': 'Sakstype',
+    'frioppslag.knapp.søkOgJournalfør': 'Søk og journalfør',
     'frioppslag.error.fnr': 'Ugyldig fødselsnummer',
     'frioppslag.error.år': 'Ugyldig år',
 };

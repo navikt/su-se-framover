@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ArrowsCirclepathIcon } from '@navikt/aksel-icons';
-import { Button, Heading, TextField, Textarea } from '@navikt/ds-react';
+import { Button, Heading, Select, TextField, Textarea } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import { hentNySkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import yup from '~src/lib/validering';
+import { Sakstype } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
@@ -39,6 +40,8 @@ interface FrioppslagFormData {
     fnr: string;
     år: string;
     begrunnelse: string;
+    sakstype: Sakstype;
+    fagsystemId: string;
 }
 
 const frioppslagSchema = yup.object<FrioppslagFormData>({
@@ -50,6 +53,8 @@ const frioppslagSchema = yup.object<FrioppslagFormData>({
         })
         .required(),
     begrunnelse: yup.string().required(),
+    sakstype: yup.string().oneOf(Object.values(Sakstype)).required(),
+    fagsystemId: yup.string().required(),
 });
 
 export const HentOfVisSkattegrunnlagForFrioppslag = () => {
@@ -58,51 +63,92 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const [skattPdfStatus, hentSkattPdfFor] = useApiCall(fetchSkattPdfFor);
 
     const form = useForm<FrioppslagFormData>({
-        defaultValues: { fnr: '', år: '', begrunnelse: '' },
+        defaultValues: { fnr: '', år: '', begrunnelse: '', sakstype: Sakstype.Alder, fagsystemId: '' },
         resolver: yupResolver(frioppslagSchema),
     });
 
     return (
-        <div className={styles.frioppslagContainer}>
-            <form
-                className={styles.frioppslagForm}
-                onSubmit={form.handleSubmit((data) =>
-                    hentSkattPdfFor({ fnr: data.fnr, år: +data.år, begrunnelse: data.begrunnelse }, (b: Blob) =>
-                        window.open(URL.createObjectURL(b)),
-                    ),
-                )}
-            >
-                <Controller
-                    control={form.control}
-                    name={'fnr'}
-                    render={({ field, fieldState }) => (
-                        <TextField
-                            label={formatMessage('frioppslag.fødselsnummer')}
-                            {...field}
-                            error={fieldState.error?.message}
+        <form
+            onSubmit={form.handleSubmit((data) =>
+                hentSkattPdfFor(
+                    {
+                        fnr: data.fnr,
+                        år: +data.år,
+                        begrunnelse: data.begrunnelse,
+                        sakstype: data.sakstype,
+                        fagsystemId: data.fagsystemId,
+                    },
+                    (b: Blob) => window.open(URL.createObjectURL(b)),
+                ),
+            )}
+        >
+            <div className={styles.formContainer}>
+                <div className={styles.upperFormContainer}>
+                    <div className={styles.formInputContainers}>
+                        <Controller
+                            control={form.control}
+                            name={'fnr'}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    label={formatMessage('frioppslag.fødselsnummer')}
+                                    {...field}
+                                    error={fieldState.error?.message}
+                                />
+                            )}
                         />
-                    )}
-                />
 
-                <Controller
-                    control={form.control}
-                    name={'år'}
-                    render={({ field, fieldState }) => (
-                        <TextField
-                            label={formatMessage('frioppslag.år')}
-                            {...field}
-                            inputMode="numeric"
-                            error={fieldState.error?.message}
+                        <Controller
+                            control={form.control}
+                            name={'år'}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    label={formatMessage('frioppslag.år')}
+                                    {...field}
+                                    inputMode="numeric"
+                                    error={fieldState.error?.message}
+                                />
+                            )}
                         />
-                    )}
-                />
+                    </div>
 
+                    <div className={styles.formInputContainers}>
+                        <Controller
+                            control={form.control}
+                            name={'fagsystemId'}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    label={formatMessage('frioppslag.fagsystemId')}
+                                    {...field}
+                                    error={fieldState.error?.message}
+                                />
+                            )}
+                        />
+
+                        <Controller
+                            control={form.control}
+                            name={'sakstype'}
+                            render={({ field, fieldState }) => (
+                                <Select
+                                    id={field.name}
+                                    label={formatMessage('frioppslag.sakstype')}
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                >
+                                    {Object.entries(Sakstype).map((type) => (
+                                        <option value={type[1]} key={type[1]}>
+                                            {type[0]}
+                                        </option>
+                                    ))}
+                                </Select>
+                            )}
+                        />
+                    </div>
+                </div>
                 <Controller
                     control={form.control}
                     name={'begrunnelse'}
                     render={({ field, fieldState }) => (
                         <Textarea
-                            className={styles.begrunnelse}
                             label={formatMessage('frioppslag.begrunnelse')}
                             description={formatMessage('frioppslag.begrunnelse.description')}
                             {...field}
@@ -110,11 +156,13 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                         />
                     )}
                 />
+            </div>
 
-                <Button loading={RemoteData.isPending(skattPdfStatus)}>Søk</Button>
-                {RemoteData.isFailure(skattPdfStatus) && <ApiErrorAlert error={skattPdfStatus.error} />}
-            </form>
-        </div>
+            <Button className={styles.søkButton} loading={RemoteData.isPending(skattPdfStatus)}>
+                {formatMessage('frioppslag.knapp.søkOgJournalfør')}
+            </Button>
+            {RemoteData.isFailure(skattPdfStatus) && <ApiErrorAlert error={skattPdfStatus.error} />}
+        </form>
     );
 };
 

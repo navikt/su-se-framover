@@ -9,6 +9,8 @@ export async function fetchSkattFor(arg: FrioppslagSkattRequest): Promise<ApiCli
         body: {
             år: arg.år,
             begrunnelse: arg.begrunnelse,
+            sakstype: arg.sakstype,
+            fagsystemId: arg.fagsystemId,
         },
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
         bodyTransformer: (res) => res.blob(),
