@@ -4,13 +4,12 @@ import { ArrowsCirclepathIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Select, TextField, Textarea } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 
-import { fetchSkattFor as fetchSkattPdfFor } from '~src/api/skattApi';
+import { fetchSkattForForhåndsvisning, fetchSkattPdfOgJournalfør } from '~src/api/skattApi';
 import { hentNySkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import yup from '~src/lib/validering';
 import { Sakstype } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
@@ -20,6 +19,7 @@ import OppsummeringAvEksternGrunnlagSkatt from '../oppsummering/oppsummeringAvEk
 
 import messages from './HentOgVisSkattegrunnlag-nb';
 import styles from './HentOgVisSkattegrunnlag.module.less';
+import { FrioppslagFormData, frioppslagSchema } from './HentOgVisSkattegrunnlagUtils';
 
 /**
  * Henting og visning av skatt gjøres på 2 forskjellige måter:
@@ -36,41 +36,43 @@ export const HentOgVisSkattegrunnlag = (props: { søknadsbehandling?: Søknadsbe
     }
 };
 
-interface FrioppslagFormData {
-    fnr: string;
-    år: string;
-    begrunnelse: string;
-    sakstype: Sakstype;
-    fagsystemId: string;
-}
-
-const frioppslagSchema = yup.object<FrioppslagFormData>({
-    fnr: yup.string().required().length(11),
-    år: yup
-        .string()
-        .test('Tallet må være lik eller høyere enn 2006', `År må være et tall større eller lik 2006`, function (value) {
-            return value ? Number.parseInt(value, 10) > 2005 : false;
-        })
-        .required(),
-    begrunnelse: yup.string().required(),
-    sakstype: yup.string().oneOf(Object.values(Sakstype)).required(),
-    fagsystemId: yup.string().required(),
-});
-
 export const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const { formatMessage } = useI18n({ messages });
 
-    const [skattPdfStatus, hentSkattPdfFor] = useApiCall(fetchSkattPdfFor);
+    const [journalførStatus, journalførSkattPdf] = useApiCall(fetchSkattPdfOgJournalfør);
+    const [forhåndsvisStatus, forhåndsvisSkattePdf] = useApiCall(fetchSkattForForhåndsvisning);
 
     const form = useForm<FrioppslagFormData>({
         defaultValues: { fnr: '', år: '', begrunnelse: '', sakstype: Sakstype.Alder, fagsystemId: '' },
         resolver: yupResolver(frioppslagSchema),
     });
 
+    const handleForhåndsvisClick = async (
+        formValues: FrioppslagFormData,
+        trigger: UseFormTrigger<FrioppslagFormData>,
+    ) => {
+        if (formValues.fnr.length !== 11 || isNaN(Number.parseInt(formValues.år))) {
+            await trigger('fnr');
+            await trigger('år');
+            return;
+        }
+
+        forhåndsvisSkattePdf(
+            {
+                fnr: formValues.fnr,
+                år: +formValues.år,
+                begrunnelse: formValues.begrunnelse,
+                sakstype: formValues.sakstype,
+                fagsystemId: formValues.fagsystemId,
+            },
+            (b: Blob) => window.open(URL.createObjectURL(b)),
+        );
+    };
+
     return (
         <form
             onSubmit={form.handleSubmit((data) =>
-                hentSkattPdfFor(
+                journalførSkattPdf(
                     {
                         fnr: data.fnr,
                         år: +data.år,
@@ -158,10 +160,21 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                 />
             </div>
 
-            <Button className={styles.søkButton} loading={RemoteData.isPending(skattPdfStatus)}>
-                {formatMessage('frioppslag.knapp.søkOgJournalfør')}
-            </Button>
-            {RemoteData.isFailure(skattPdfStatus) && <ApiErrorAlert error={skattPdfStatus.error} />}
+            <div className={styles.buttonContainers}>
+                <Button
+                    type="button"
+                    variant="secondary"
+                    loading={RemoteData.isPending(forhåndsvisStatus)}
+                    onClick={() => handleForhåndsvisClick(form.getValues(), form.trigger)}
+                >
+                    {formatMessage('frioppslag.knapp.forhåndsvis')}
+                </Button>
+                <Button loading={RemoteData.isPending(journalførStatus)}>
+                    {formatMessage('frioppslag.knapp.søkOgJournalfør')}
+                </Button>
+            </div>
+            {RemoteData.isFailure(forhåndsvisStatus) && <ApiErrorAlert error={forhåndsvisStatus.error} />}
+            {RemoteData.isFailure(journalførStatus) && <ApiErrorAlert error={journalførStatus.error} />}
         </form>
     );
 };

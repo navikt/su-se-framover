@@ -12,6 +12,7 @@ export default {
     'frioppslag.fagsystemId': 'Fagsystem-id',
     'frioppslag.sakstype': 'Sakstype',
     'frioppslag.knapp.søkOgJournalfør': 'Søk og journalfør',
+    'frioppslag.knapp.forhåndsvis': 'Forhåndsvis',
     'frioppslag.error.fnr': 'Ugyldig fødselsnummer',
     'frioppslag.error.år': 'Ugyldig år',
 };
