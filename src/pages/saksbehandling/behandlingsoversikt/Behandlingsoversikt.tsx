@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { NumberListIcon, CurrencyExchangeIcon, FileCheckmarkIcon, FileIcon } from '@navikt/aksel-icons';
+import { NumberListIcon, CurrencyExchangeIcon, FileCheckmarkIcon, FileIcon, TableIcon } from '@navikt/aksel-icons';
 import { Heading, Tabs } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { hentReguleringsstatus } from '~src/api/reguleringApi';
 import { Person as PersonIkon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { HentOgVisSkattegrunnlag } from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -27,6 +28,7 @@ enum Tab {
     FERDIGE_BEHANDLINGER = 'FERDIGE_BEHANDLINGER',
     NØKKELTALL = 'NØKKELTALL',
     REGULERING = 'REGULERING',
+    SKATT = 'SKATT',
 }
 
 const Behandlingsoversikt = () => {
@@ -102,8 +104,9 @@ const Behandlingsoversikt = () => {
                         label={formatMessage('regulering')}
                         icon={<CurrencyExchangeIcon />}
                     />
+                    <Tabs.Tab value={Tab.SKATT} label={formatMessage('skatt')} icon={<TableIcon />} />
                 </Tabs.List>
-                <div className={styles.tabcontainer}>
+                <div className={styles.panelContainer}>
                     <Tabs.Panel value={Tab.ÅPNE_BEHANDLINGER}>
                         <ÅpneBehandlinger />
                     </Tabs.Panel>
@@ -115,6 +118,9 @@ const Behandlingsoversikt = () => {
                     </Tabs.Panel>
                     <Tabs.Panel value={Tab.REGULERING}>
                         <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
+                    </Tabs.Panel>
+                    <Tabs.Panel value={Tab.SKATT}>
+                        <HentOgVisSkattegrunnlag />
                     </Tabs.Panel>
                 </div>
             </Tabs>

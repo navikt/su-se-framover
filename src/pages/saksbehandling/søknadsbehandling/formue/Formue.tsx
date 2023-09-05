@@ -14,7 +14,7 @@ import {
     formueVilkårFormTilRequest,
     eqFormueVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
-import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
+import HentOgVisSkattegrunnlagForSøknadsbehandling from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -117,7 +117,7 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
                         />
-                        <HentOgVisSkattegrunnlag søknadsbehandling={props.behandling} />
+                        <HentOgVisSkattegrunnlagForSøknadsbehandling søknadsbehandling={props.behandling} />
                     </div>
                 ),
             }}
