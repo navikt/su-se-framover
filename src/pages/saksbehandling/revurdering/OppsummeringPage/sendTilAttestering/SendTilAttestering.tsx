@@ -211,7 +211,6 @@ const SendTilAttestering = (props: {
                                                         ? pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                                                               sakId: props.sakId,
                                                               revurderingId: props.revurdering.id,
-                                                              fritekst: field.value,
                                                           })
                                                         : undefined;
                                                 })

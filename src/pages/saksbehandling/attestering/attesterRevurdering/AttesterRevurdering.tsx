@@ -88,7 +88,7 @@ const AttesterRevurdering = (props: {
     }
 
     const handleShowBrevClick = async () => {
-        hentPdf({ sakId: props.sakInfo.id, revurderingId: props.revurdering.id, fritekst: null }, (data) => {
+        hentPdf({ sakId: props.sakInfo.id, revurderingId: props.revurdering.id }, (data) => {
             window.open(URL.createObjectURL(data));
         });
     };

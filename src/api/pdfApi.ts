@@ -1,5 +1,3 @@
-import { Nullable } from '~src/lib/types';
-
 import apiClient, { ApiClientResult } from './apiClient';
 import { AvslagManglendeDokType } from './søknadApi';
 
@@ -41,15 +39,11 @@ export async function fetchSøknadutskrift(søknadId: string): Promise<ApiClient
 export async function fetchBrevutkastForRevurderingMedPotensieltFritekst(args: {
     sakId: string;
     revurderingId: string;
-    fritekst: Nullable<string>;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkast`,
-        method: 'POST',
+        method: 'GET',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
-        body: {
-            fritekst: args.fritekst,
-        },
         bodyTransformer: (res) => res.blob(),
     });
 }
