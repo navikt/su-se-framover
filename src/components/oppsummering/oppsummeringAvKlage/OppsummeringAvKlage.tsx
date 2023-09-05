@@ -11,6 +11,7 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
@@ -98,6 +99,8 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                         {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                     </div>
                 )}
+
+                <UnderkjenteAttesteringer attesteringer={props.klage.attesteringer} />
             </Oppsummeringspanel>
         </div>
     );
