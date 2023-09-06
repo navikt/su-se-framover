@@ -6,6 +6,8 @@ export default {
     'skattegrunnlag.laster': 'Henter skattegrunnlag',
 
     'frioppslag.fødselsnummer': 'Fødselsnummer',
+    'frioppslag.fødselsnummer.søkers.helpText': 'Skattegrunnlaget vil bli journalført på dette fødselsnummeret',
+    'frioppslag.fødselsnummer.eps': 'fødselsnummer - EPS',
     'frioppslag.år': 'År',
     'frioppslag.begrunnelse': 'Begrunnelse',
     'frioppslag.begrunnelse.description': 'Begrunnelsen vil bli lagret med pdf-innholdet',

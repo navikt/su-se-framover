@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ArrowsCirclepathIcon } from '@navikt/aksel-icons';
-import { Button, Heading, Select, TextField, Textarea } from '@navikt/ds-react';
+import { Button, Heading, HelpText, Select, TextField, Textarea } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
@@ -43,7 +43,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const [forhåndsvisStatus, forhåndsvisSkattePdf] = useApiCall(fetchSkattForForhåndsvisning);
 
     const form = useForm<FrioppslagFormData>({
-        defaultValues: { fnr: '', år: '', begrunnelse: '', sakstype: Sakstype.Alder, fagsystemId: '' },
+        defaultValues: { fnr: '', epsFnr: '', år: '', begrunnelse: '', sakstype: Sakstype.Alder, fagsystemId: '' },
         resolver: yupResolver(frioppslagSchema),
     });
 
@@ -60,6 +60,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
         forhåndsvisSkattePdf(
             {
                 fnr: formValues.fnr,
+                epsFnr: formValues.epsFnr ? formValues.epsFnr : null,
                 år: +formValues.år,
                 begrunnelse: formValues.begrunnelse,
                 sakstype: formValues.sakstype,
@@ -75,6 +76,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                 journalførSkattPdf(
                     {
                         fnr: data.fnr,
+                        epsFnr: data.epsFnr ? data.epsFnr : null,
                         år: +data.år,
                         begrunnelse: data.begrunnelse,
                         sakstype: data.sakstype,
@@ -92,7 +94,25 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                             name={'fnr'}
                             render={({ field, fieldState }) => (
                                 <TextField
-                                    label={formatMessage('frioppslag.fødselsnummer')}
+                                    label={
+                                        <div className={styles.fnrLabel}>
+                                            {formatMessage('frioppslag.fødselsnummer')}
+                                            <HelpText>
+                                                {formatMessage('frioppslag.fødselsnummer.søkers.helpText')}
+                                            </HelpText>
+                                        </div>
+                                    }
+                                    {...field}
+                                    error={fieldState.error?.message}
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name={'epsFnr'}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    label={formatMessage('frioppslag.fødselsnummer.eps')}
                                     {...field}
                                     error={fieldState.error?.message}
                                 />

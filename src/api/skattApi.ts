@@ -7,6 +7,7 @@ export async function fetchSkattPdfOgJournalfør(arg: FrioppslagSkattRequest): P
         url: `/skatt/person/${arg.fnr}`,
         method: 'POST',
         body: {
+            epsFnr: arg.epsFnr,
             år: arg.år,
             begrunnelse: arg.begrunnelse,
             sakstype: arg.sakstype,
@@ -21,6 +22,7 @@ export async function fetchSkattForForhåndsvisning(arg: FrioppslagSkattRequest)
         url: `/skatt/person/${arg.fnr}/forhandsvis`,
         method: 'POST',
         body: {
+            epsFnr: arg.epsFnr,
             år: arg.år,
             begrunnelse: arg.begrunnelse,
             sakstype: arg.sakstype,
