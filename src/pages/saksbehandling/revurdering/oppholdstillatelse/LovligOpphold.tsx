@@ -42,14 +42,10 @@ const LovligOpphold = (props: RevurderingStegProps) => {
         defaultValues: initialValues,
     });
 
-    const lagreLovligOpphold = (
+    const save = (
         data: LovligOppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqLovligOppholdVilkårFormData.equals(initialValues, data)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagre(
             {
                 ...lovligOppholdFormDataTilRequest({
@@ -68,6 +64,28 @@ const LovligOpphold = (props: RevurderingStegProps) => {
         );
     };
 
+    const handleNesteClick = (
+        data: LovligOppholdVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
+    ) => {
+        if (eqLovligOppholdVilkårFormData.equals(initialValues, data)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        save(data, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = (
+        data: LovligOppholdVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
+    ) => {
+        if (eqLovligOppholdVilkårFormData.equals(initialValues, data)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+        save(data, onSuccess);
+    };
+
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
@@ -79,7 +97,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                             savingState: status,
                             url: props.nesteUrl,
                             onClick: (values) =>
-                                lagreLovligOpphold(
+                                handleNesteClick(
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
@@ -91,6 +109,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

@@ -36,14 +36,10 @@ export function FastOppholdPage(props: RevurderingStegProps) {
         defaultValues: initialValues,
     });
 
-    const lagreFastOpphold = (
+    const save = (
         values: FastOppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqFastOppholdVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         return lagre(
             {
                 ...fastOppholdFormDataTilRequest({
@@ -60,6 +56,28 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                 }
             },
         );
+    };
+
+    const handleNesteClick = (
+        values: FastOppholdVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
+    ) => {
+        if (eqFastOppholdVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = (
+        values: FastOppholdVilkårFormData,
+        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
+    ) => {
+        if (eqFastOppholdVilkårFormData.equals(initialValues, values)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+        save(values, onSuccess);
     };
 
     const revurderingsperiode = {
@@ -79,7 +97,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                             savingState: status,
                             url: props.nesteUrl,
                             onClick: (values) =>
-                                lagreFastOpphold(
+                                handleNesteClick(
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
@@ -91,6 +109,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         {...props}

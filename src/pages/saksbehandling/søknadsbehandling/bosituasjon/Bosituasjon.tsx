@@ -52,10 +52,6 @@ const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => 
     useDraftFormSubscribe(form.watch);
 
     const save = (values: BosituasjonGrunnlagFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
-        if (eqBosituasjonGrunnlagFormData.equals(values, initialValues)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagre(
             {
                 ...bosituasjongrunnlagFormDataTilRequest({
@@ -71,6 +67,27 @@ const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => 
             },
         );
     };
+    const handleNesteClick = (
+        values: BosituasjonGrunnlagFormData,
+        onSuccess: (behandling: Søknadsbehandling) => void,
+    ) => {
+        if (eqBosituasjonGrunnlagFormData.equals(values, initialValues)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenere = (
+        values: BosituasjonGrunnlagFormData,
+        onSuccess: (behandling: Søknadsbehandling) => void,
+    ) => {
+        if (eqBosituasjonGrunnlagFormData.equals(values, initialValues)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -83,12 +100,12 @@ const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => 
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         begrensTilEnPeriode
                         neste={{
-                            onClick: save,
+                            onClick: handleNesteClick,
                             savingState: status,
                             url: props.nesteUrl,
                         }}
                         tilbake={{ url: props.forrigeUrl }}
-                        lagreOgfortsettSenere={{ url: props.avsluttUrl }}
+                        lagreOgfortsettSenere={{ onClick: handleLagreOgFortsettSenere, url: props.avsluttUrl }}
                         {...props}
                     />
                 ),

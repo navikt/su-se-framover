@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import FastOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdForm';
@@ -27,6 +28,7 @@ import { VilkårsvurderingBaseProps } from '../types';
 import messages from './fastOppholdINorge-nb';
 
 const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
 
@@ -40,12 +42,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         (values) => eqFastOppholdVilkårFormData.equals(values, initialValues),
     );
 
-    const handleSave = (values: FastOppholdVilkårFormData, onSuccess: () => void) => {
-        if (eqFastOppholdVilkårFormData.equals(values, initialValues)) {
-            clearDraft();
-            onSuccess();
-            return;
-        }
+    const save = (values: FastOppholdVilkårFormData, onSuccess: () => void) => {
         lagre(
             {
                 ...fastOppholdFormDataTilRequest({
@@ -60,6 +57,22 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 onSuccess();
             },
         );
+    };
+
+    const handleNesteClick = (values: FastOppholdVilkårFormData, onSuccess: () => void) => {
+        if (eqFastOppholdVilkårFormData.equals(values, initialValues)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = (values: FastOppholdVilkårFormData, onSuccess: () => void) => {
+        if (eqFastOppholdVilkårFormData.equals(values, initialValues)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+        save(values, onSuccess);
     };
 
     const form = useForm<FastOppholdVilkårFormData>({
@@ -77,7 +90,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
-                            onClick: handleSave,
+                            onClick: handleNesteClick,
                             savingState: status,
                             url: props.nesteUrl,
                         }}
@@ -85,6 +98,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             url: props.forrigeUrl,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
@@ -96,6 +110,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 right: (
                     <>
                         <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+
                         <OppsummeringAvOpphold
                             oppholdstillatelse={props.behandling.søknad.søknadInnhold.oppholdstillatelse}
                         />

@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import UtenlandsoppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdForm';
@@ -27,6 +28,7 @@ import { VilkårsvurderingBaseProps } from '../types';
 import messages from './oppholdIUtlandet-nb';
 
 const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
 
@@ -47,14 +49,8 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
 
     useDraftFormSubscribe(form.watch);
 
-    const handleSave = async (values: UtenlandsoppholdVilkårFormData, onSuccess: () => void) => {
-        if (eqUtenlandsoppholdVilkårFormData.equals(values, initialValues)) {
-            clearDraft();
-            onSuccess();
-            return;
-        }
-
-        await lagre(
+    const save = async (values: UtenlandsoppholdVilkårFormData, onSuccess: () => void) => {
+        lagre(
             {
                 ...utenlandsoppholdFormDataTilRequest({
                     sakId: props.sakId,
@@ -69,6 +65,23 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
             },
         );
     };
+    const handleNesteClick = async (values: UtenlandsoppholdVilkårFormData, onSuccess: () => void) => {
+        if (eqUtenlandsoppholdVilkårFormData.equals(values, initialValues)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+
+        save(values, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = async (values: UtenlandsoppholdVilkårFormData, onSuccess: () => void) => {
+        if (eqUtenlandsoppholdVilkårFormData.equals(values, initialValues)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+
+        save(values, onSuccess);
+    };
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -78,7 +91,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
-                            onClick: handleSave,
+                            onClick: handleNesteClick,
                             url: props.nesteUrl,
                             savingState: status,
                         }}
@@ -86,6 +99,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                             url: props.forrigeUrl,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
