@@ -4,7 +4,7 @@ import { ArrowsCirclepathIcon } from '@navikt/aksel-icons';
 import { Button, Heading, HelpText, Select, TextField, Textarea } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import React, { useMemo } from 'react';
-import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
+import { Controller, UseFormClearErrors, UseFormTrigger, useForm } from 'react-hook-form';
 
 import { fetchSkattForForhåndsvisning, fetchSkattPdfOgJournalfør } from '~src/api/skattApi';
 import { hentNySkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
@@ -50,12 +50,20 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const handleForhåndsvisClick = async (
         formValues: FrioppslagFormData,
         trigger: UseFormTrigger<FrioppslagFormData>,
+        clearErrors: UseFormClearErrors<FrioppslagFormData>,
     ) => {
         if (formValues.fnr.length !== 11 || isNaN(Number.parseInt(formValues.år))) {
             await trigger('fnr');
             await trigger('år');
             return;
         }
+
+        if (formValues.epsFnr && formValues.epsFnr.length !== 11) {
+            await trigger('epsFnr');
+            return;
+        }
+
+        clearErrors(['fnr', 'år', 'epsFnr']);
 
         forhåndsvisSkattePdf(
             {
@@ -185,7 +193,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                     type="button"
                     variant="secondary"
                     loading={RemoteData.isPending(forhåndsvisStatus)}
-                    onClick={() => handleForhåndsvisClick(form.getValues(), form.trigger)}
+                    onClick={() => handleForhåndsvisClick(form.getValues(), form.trigger, form.clearErrors)}
                 >
                     {formatMessage('frioppslag.knapp.forhåndsvis')}
                 </Button>
