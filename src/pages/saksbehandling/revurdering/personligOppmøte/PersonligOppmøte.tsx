@@ -11,7 +11,6 @@ import {
     personligOppmøteFormSchema,
     personligOppmøteVilkårTilFormDataEllerNy,
     personligOppmøteFormDataTilRequest,
-    eqPersonligOppmøteVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -40,10 +39,6 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
         values: PersonligOppmøteVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqPersonligOppmøteVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         return lagre(
             {
                 ...personligOppmøteFormDataTilRequest({

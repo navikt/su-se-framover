@@ -11,7 +11,6 @@ import {
     fastOppholdFormSchema,
     fastOppholdVilkårTilFormDataEllerNy,
     fastOppholdFormDataTilRequest,
-    eqFastOppholdVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
 import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -36,7 +35,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
         defaultValues: initialValues,
     });
 
-    const save = (
+    const handleNesteClick = (
         values: FastOppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
@@ -56,28 +55,6 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                 }
             },
         );
-    };
-
-    const handleNesteClick = (
-        values: FastOppholdVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
-    ) => {
-        if (eqFastOppholdVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
-        save(values, onSuccess);
-    };
-
-    const handleLagreOgFortsettSenereClick = (
-        values: FastOppholdVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
-    ) => {
-        if (eqFastOppholdVilkårFormData.equals(initialValues, values)) {
-            navigate(props.avsluttUrl);
-            return;
-        }
-        save(values, onSuccess);
     };
 
     const revurderingsperiode = {
@@ -109,7 +86,6 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
-                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         {...props}

@@ -11,7 +11,6 @@ import {
     institusjonsoppholdFormDataTilRequest,
     InstitusjonsoppholdVilkårFormData,
     institusjonsoppholdVilkårTilFormDataEllerNy,
-    eqInstitusjonsoppholdFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
 import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -41,10 +40,6 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
         values: InstitusjonsoppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqInstitusjonsoppholdFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         return lagre(
             {
                 ...institusjonsoppholdFormDataTilRequest({
@@ -63,18 +58,16 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
         );
     };
 
-    const revurderingsperiode = {
-        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
-        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
-    };
-
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
                     <InstitusjonsoppholdForm
                         form={form}
-                        minOgMaxPeriode={revurderingsperiode}
+                        minOgMaxPeriode={{
+                            fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+                            tilOgMed: new Date(props.revurdering.periode.tilOgMed),
+                        }}
                         neste={{
                             savingState: status,
                             url: props.nesteUrl,

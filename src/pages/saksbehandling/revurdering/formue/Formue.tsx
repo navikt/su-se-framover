@@ -11,7 +11,6 @@ import {
     formueVilkårTilFormData,
     formueFormSchema,
     formueVilkårFormTilRequest,
-    eqFormueVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -44,10 +43,6 @@ const Formue = (props: RevurderingStegProps) => {
         data: FormueVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqFormueVilkårFormData.equals(initialValues, data)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagreFormuegrunnlagAction(
             {
                 ...formueVilkårFormTilRequest(props.sakId, props.revurdering.id, data),

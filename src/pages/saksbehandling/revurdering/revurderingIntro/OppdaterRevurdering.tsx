@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import RevurderingIntroForm from '~src/components/forms/revurdering/RevurderingIntroForm';
 import {
     RevurderingIntroFormData,
-    eqRevurderingIntroFormData,
     revurderingIntroFormDataTilOppdaterRequest,
     revurderingIntroFormSchema,
 } from '~src/components/forms/revurdering/RevurderingIntroFormUtils';
@@ -47,10 +46,6 @@ const OppdaterRevurdering = (props: {
         values: RevurderingIntroFormData,
         onSuccess: (opprettetRevurdering: OpprettetRevurdering) => void,
     ) => {
-        if (eqRevurderingIntroFormData.equals(values, initialValues)) {
-            navigate(nesteUrl(props.revurdering));
-            return;
-        }
         oppdater(
             {
                 ...revurderingIntroFormDataTilOppdaterRequest({

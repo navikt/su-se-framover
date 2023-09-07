@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OpplysningspliktForm from '~src/components/forms/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktForm';
 import {
-    eqOpplysningspliktVilkårFormData,
     opplysningspliktFormSchema,
     OpplysningspliktVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktFormUtils';
@@ -53,10 +52,6 @@ const Opplysningsplikt = (props: RevurderingStegProps) => {
         form: OpplysningspliktVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqOpplysningspliktVilkårFormData.equals(initialValues, form)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagre(
             {
                 behandlingId: props.revurdering.id,

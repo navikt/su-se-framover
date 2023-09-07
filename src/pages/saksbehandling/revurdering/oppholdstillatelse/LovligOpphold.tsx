@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import LovligOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
 import {
-    eqLovligOppholdVilkårFormData,
     lovligOppholdFormDataTilRequest,
     lovligOppholdFormSchema,
     LovligOppholdVilkårFormData,
@@ -42,7 +41,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
         defaultValues: initialValues,
     });
 
-    const save = (
+    const handleNesteClick = (
         data: LovligOppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
@@ -62,28 +61,6 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                 }
             },
         );
-    };
-
-    const handleNesteClick = (
-        data: LovligOppholdVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
-    ) => {
-        if (eqLovligOppholdVilkårFormData.equals(initialValues, data)) {
-            navigate(props.nesteUrl);
-            return;
-        }
-        save(data, onSuccess);
-    };
-
-    const handleLagreOgFortsettSenereClick = (
-        data: LovligOppholdVilkårFormData,
-        onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
-    ) => {
-        if (eqLovligOppholdVilkårFormData.equals(initialValues, data)) {
-            navigate(props.avsluttUrl);
-            return;
-        }
-        save(data, onSuccess);
     };
 
     return (
@@ -109,7 +86,6 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
-                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

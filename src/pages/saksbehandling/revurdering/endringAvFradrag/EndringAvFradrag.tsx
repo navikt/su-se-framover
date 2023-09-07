@@ -83,11 +83,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
         values: EndringAvFradragFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqFradragGrunnlagFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
-
         if (RemoteData.isPending(savingState)) {
             return;
         }

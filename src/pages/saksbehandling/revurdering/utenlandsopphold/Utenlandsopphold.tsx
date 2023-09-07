@@ -11,7 +11,6 @@ import {
     UtenlandsoppholdVilkårFormData,
     utenlandsoppholdFormDataTilRequest,
     utenlandsoppholdVilkårTilFormDataEllerNy,
-    eqUtenlandsoppholdVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdFormUtils';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -41,10 +40,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         values: UtenlandsoppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqUtenlandsoppholdVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagre(
             {
                 ...utenlandsoppholdFormDataTilRequest({

@@ -8,7 +8,6 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import { UførhetForm } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
     UførhetFormData,
-    eqUføreVilkårFormData,
     lagTomUføreperiode,
     vurderingsperiodeTilFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
@@ -44,10 +43,6 @@ const Uførhet = (props: RevurderingStegProps) => {
     const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreUføregrunnlag);
 
     const handleSave = (values: UførhetFormData, onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void) => {
-        if (eqUføreVilkårFormData.equals(values, initialValues)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         return lagre(
             {
                 sakId: props.sakId,
