@@ -206,7 +206,17 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                                             fraOgMed: formatMessage('datovelger.fom.label'),
                                                         }}
                                                         value={field.value}
-                                                        onChange={field.onChange}
+                                                        onChange={(dato) => {
+                                                            field.onChange({
+                                                                fraOgMed: dato.fraOgMed,
+                                                                tilOgMed:
+                                                                    dato.fraOgMed && !dato.tilOgMed
+                                                                        ? DateFns.endOfMonth(
+                                                                              DateFns.addMonths(dato.fraOgMed, 11),
+                                                                          )
+                                                                        : dato.tilOgMed,
+                                                            });
+                                                        }}
                                                         fromDate={TIDLIGST_MULIG_START_DATO}
                                                         error={{
                                                             fraOgMed: form.formState.errors.periode?.fraOgMed?.message,
