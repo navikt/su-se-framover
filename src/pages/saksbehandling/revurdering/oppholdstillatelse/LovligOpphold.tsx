@@ -86,6 +86,7 @@ const LovligOpphold = (props: RevurderingStegProps) => {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleNesteClick,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

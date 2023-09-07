@@ -84,6 +84,7 @@ const Institusjonsopphold = (props: RevurderingStegProps) => {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: lagreInstitusjonsopphold,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

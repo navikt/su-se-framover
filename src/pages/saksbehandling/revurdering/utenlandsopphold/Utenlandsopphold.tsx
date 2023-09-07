@@ -58,18 +58,16 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         );
     };
 
-    const revurderingsperiode = {
-        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
-        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
-    };
-
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
                     <UtenlandsoppholdForm
                         form={form}
-                        minOgMaxPeriode={revurderingsperiode}
+                        minOgMaxPeriode={{
+                            fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+                            tilOgMed: new Date(props.revurdering.periode.tilOgMed),
+                        }}
                         neste={{
                             onClick: (values) =>
                                 handleSubmit(
@@ -86,6 +84,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleSubmit,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

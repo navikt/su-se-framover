@@ -83,6 +83,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: lagreFlyktning,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

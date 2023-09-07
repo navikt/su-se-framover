@@ -91,6 +91,7 @@ const Uførhet = (props: RevurderingStegProps) => {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleSave,
                             url: props.avsluttUrl,
                         }}
                         minOgMaxPeriode={{

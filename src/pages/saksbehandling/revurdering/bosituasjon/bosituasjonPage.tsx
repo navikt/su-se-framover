@@ -83,7 +83,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
                                 ),
                         }}
                         tilbake={{ url: props.forrigeUrl }}
-                        lagreOgfortsettSenere={{ url: props.avsluttUrl }}
+                        lagreOgfortsettSenere={{ onClick: lagreBosituasjon, url: props.avsluttUrl }}
                         {...props}
                     >
                         {RemoteData.isSuccess(status) && (

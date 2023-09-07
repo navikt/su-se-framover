@@ -57,18 +57,16 @@ export function FastOppholdPage(props: RevurderingStegProps) {
         );
     };
 
-    const revurderingsperiode = {
-        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
-        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
-    };
-
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
                     <FastOppholdForm
                         form={form}
-                        minOgMaxPeriode={revurderingsperiode}
+                        minOgMaxPeriode={{
+                            fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+                            tilOgMed: new Date(props.revurdering.periode.tilOgMed),
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         neste={{
                             savingState: status,
@@ -86,6 +84,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleNesteClick,
                             url: props.avsluttUrl,
                         }}
                         {...props}

@@ -85,6 +85,7 @@ export function PersonligOppmøte(props: RevurderingStegProps) {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: lagrePersonligOppmøte,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
