@@ -11,7 +11,6 @@ import {
     UtenlandsoppholdVilkårFormData,
     utenlandsoppholdFormDataTilRequest,
     utenlandsoppholdVilkårTilFormDataEllerNy,
-    eqUtenlandsoppholdVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdFormUtils';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -41,10 +40,6 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         values: UtenlandsoppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqUtenlandsoppholdVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagre(
             {
                 ...utenlandsoppholdFormDataTilRequest({
@@ -63,18 +58,16 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
         );
     };
 
-    const revurderingsperiode = {
-        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
-        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
-    };
-
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
                     <UtenlandsoppholdForm
                         form={form}
-                        minOgMaxPeriode={revurderingsperiode}
+                        minOgMaxPeriode={{
+                            fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+                            tilOgMed: new Date(props.revurdering.periode.tilOgMed),
+                        }}
                         neste={{
                             onClick: (values) =>
                                 handleSubmit(
@@ -91,6 +84,7 @@ const Utenlandsopphold = (props: RevurderingStegProps) => {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleSubmit,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

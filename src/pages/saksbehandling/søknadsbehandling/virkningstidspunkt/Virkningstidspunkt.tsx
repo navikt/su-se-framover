@@ -75,11 +75,6 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     useDraftFormSubscribe(form.watch);
 
     const save = (data: VirkningstidspunktFormData, onSuccess: () => void) => {
-        if (eqBehandlingsperiode.equals(initialValues, data)) {
-            navigate(props.nesteUrl);
-            return;
-        }
-
         const fraOgMed = DateFns.formatISO(data.periode.fraOgMed!, { representation: 'date' });
         const tilOgMed = DateFns.formatISO(data.periode.tilOgMed!, { representation: 'date' });
         return lagreVirkningstidspunkt(
@@ -95,6 +90,23 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                 onSuccess();
             },
         );
+    };
+
+    const handleNesteClick = (data: VirkningstidspunktFormData, onSuccess: () => void) => {
+        if (eqBehandlingsperiode.equals(initialValues, data)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        return save(data, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = (data: VirkningstidspunktFormData, onSuccess: () => void) => {
+        if (eqBehandlingsperiode.equals(initialValues, data)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+
+        return save(data, onSuccess);
     };
 
     React.useEffect(() => {
@@ -130,7 +142,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     <FormWrapper
                                         form={form}
                                         neste={{
-                                            onClick: save,
+                                            onClick: handleNesteClick,
                                             url: props.nesteUrl,
                                             savingState: status,
                                         }}
@@ -138,6 +150,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                             url: props.forrigeUrl,
                                         }}
                                         lagreOgfortsettSenere={{
+                                            onClick: handleLagreOgFortsettSenereClick,
                                             url: props.avsluttUrl,
                                         }}
                                     >

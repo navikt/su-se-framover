@@ -324,10 +324,12 @@ const MåVurdereAlleStegModal = (props: {
     const { formatMessage } = useI18n({ messages });
     return (
         <Modal open={props.isOpen} onClose={props.onClose}>
-            <Modal.Body className={styles.modalContainer}>
-                <Heading level="2" size="medium" className={styles.modalTittel} spacing>
+            <Modal.Header>
+                <Heading level="2" size="medium">
                     {formatMessage('modal.tittel')}
                 </Heading>
+            </Modal.Header>
+            <Modal.Body className={styles.modalContainer}>
                 <div>
                     <Heading size="small" spacing>
                         {formatMessage('modal.måVurdereAlleSteg')}

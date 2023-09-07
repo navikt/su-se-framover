@@ -50,11 +50,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
     });
     useDraftFormSubscribe(form.watch);
 
-    const handleSave = (values: UførhetFormData, onSuccess: () => void) => {
-        if (eqUføreVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
+    const save = (values: UførhetFormData, onSuccess: () => void) => {
         return lagre(
             {
                 sakId: props.sakId,
@@ -79,13 +75,29 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
         );
     };
 
+    const handleNesteClick = (values: UførhetFormData, onSuccess: () => void) => {
+        if (eqUføreVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        return save(values, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = (values: UførhetFormData, onSuccess: () => void) => {
+        if (eqUføreVilkårFormData.equals(initialValues, values)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+        return save(values, onSuccess);
+    };
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
                     <UførhetForm
                         neste={{
-                            onClick: handleSave,
+                            onClick: handleNesteClick,
                             url: props.nesteUrl,
                             savingState: status,
                         }}
@@ -93,6 +105,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                             url: props.forrigeUrl,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         minOgMaxPeriode={{

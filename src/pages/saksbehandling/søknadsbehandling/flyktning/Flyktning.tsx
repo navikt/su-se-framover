@@ -65,10 +65,6 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
     });
 
     const save = (values: FlyktningVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
-        if (eqFlyktningVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagre(
             {
                 ...flyktningFormDataTilRequest({
@@ -85,6 +81,25 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
         );
     };
 
+    const handleNesteClick = (values: FlyktningVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
+        if (eqFlyktningVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = (
+        values: FlyktningVilkårFormData,
+        onSuccess: (behandling: Søknadsbehandling) => void,
+    ) => {
+        if (eqFlyktningVilkårFormData.equals(initialValues, values)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -98,7 +113,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                         skalIkkeKunneVelgePeriode
                         {...props}
                         neste={{
-                            onClick: save,
+                            onClick: handleNesteClick,
                             savingState: status,
                             url: vilGiTidligAvslag ? vedtakUrl : props.nesteUrl,
                         }}
@@ -106,6 +121,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                             url: props.forrigeUrl,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                     >

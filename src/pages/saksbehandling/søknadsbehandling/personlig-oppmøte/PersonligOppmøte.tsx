@@ -61,10 +61,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
     };
 
     const save = async (values: PersonligOppmøteVilkårFormData, onSuccess: (res: Søknadsbehandling) => void) => {
-        if (eqPersonligOppmøteVilkårFormData.equals(values, initialValues)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagre(
             {
                 ...personligOppmøteFormDataTilRequest({
@@ -80,6 +76,28 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                 onSuccess(oppdatertSøknadsbehandling);
             },
         );
+    };
+
+    const handleNesteClick = async (
+        values: PersonligOppmøteVilkårFormData,
+        onSuccess: (res: Søknadsbehandling) => void,
+    ) => {
+        if (eqPersonligOppmøteVilkårFormData.equals(values, initialValues)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = async (
+        values: PersonligOppmøteVilkårFormData,
+        onSuccess: (res: Søknadsbehandling) => void,
+    ) => {
+        if (eqPersonligOppmøteVilkårFormData.equals(values, initialValues)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+        save(values, onSuccess);
     };
 
     const onSuccess = (res: Søknadsbehandling) => {
@@ -105,7 +123,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
-                            onClick: (values) => save(values, onSuccess),
+                            onClick: (values) => handleNesteClick(values, onSuccess),
                             url: props.nesteUrl,
                             savingState: status,
                         }}
@@ -113,6 +131,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                             url: props.forrigeUrl,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}

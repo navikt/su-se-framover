@@ -11,7 +11,6 @@ import {
     flyktningFormSchema,
     flyktningFormDataTilRequest,
     flyktningVilkårTilFormDataEllerNy,
-    eqFlyktningVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -40,10 +39,6 @@ export function FlyktningPage(props: RevurderingStegProps) {
         values: FlyktningVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqFlyktningVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         return lagre(
             {
                 ...flyktningFormDataTilRequest({
@@ -61,10 +56,6 @@ export function FlyktningPage(props: RevurderingStegProps) {
             },
         );
     };
-    const revurderingsperiode = {
-        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
-        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
-    };
 
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
@@ -72,7 +63,10 @@ export function FlyktningPage(props: RevurderingStegProps) {
                 left: (
                     <FlyktningForm
                         form={form}
-                        minOgMaxPeriode={revurderingsperiode}
+                        minOgMaxPeriode={{
+                            fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+                            tilOgMed: new Date(props.revurdering.periode.tilOgMed),
+                        }}
                         neste={{
                             savingState: status,
                             url: props.nesteUrl,
@@ -89,6 +83,7 @@ export function FlyktningPage(props: RevurderingStegProps) {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: lagreFlyktning,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}

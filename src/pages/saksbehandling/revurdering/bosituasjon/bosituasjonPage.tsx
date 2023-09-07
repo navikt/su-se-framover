@@ -12,7 +12,6 @@ import {
     BosituasjonGrunnlagFormData,
     bosituasjongrunnlagFormDataTilRequest,
     bosituasjongrunnlagTilFormDataEllerNy,
-    eqBosituasjonGrunnlagFormDataUtenEpsAlder,
 } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -47,10 +46,6 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
         data: BosituasjonGrunnlagFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqBosituasjonGrunnlagFormDataUtenEpsAlder.equals(initialValues, data)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         return lagre(
             {
                 ...bosituasjongrunnlagFormDataTilRequest({
@@ -88,7 +83,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
                                 ),
                         }}
                         tilbake={{ url: props.forrigeUrl }}
-                        lagreOgfortsettSenere={{ url: props.avsluttUrl }}
+                        lagreOgfortsettSenere={{ onClick: lagreBosituasjon, url: props.avsluttUrl }}
                         {...props}
                     >
                         {RemoteData.isSuccess(status) && (

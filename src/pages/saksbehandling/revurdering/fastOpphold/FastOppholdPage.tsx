@@ -11,7 +11,6 @@ import {
     fastOppholdFormSchema,
     fastOppholdVilkårTilFormDataEllerNy,
     fastOppholdFormDataTilRequest,
-    eqFastOppholdVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
 import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -36,14 +35,10 @@ export function FastOppholdPage(props: RevurderingStegProps) {
         defaultValues: initialValues,
     });
 
-    const lagreFastOpphold = (
+    const handleNesteClick = (
         values: FastOppholdVilkårFormData,
         onSuccess: (r: InformasjonsRevurdering, nesteUrl: string) => void,
     ) => {
-        if (eqFastOppholdVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         return lagre(
             {
                 ...fastOppholdFormDataTilRequest({
@@ -62,24 +57,22 @@ export function FastOppholdPage(props: RevurderingStegProps) {
         );
     };
 
-    const revurderingsperiode = {
-        fraOgMed: new Date(props.revurdering.periode.fraOgMed),
-        tilOgMed: new Date(props.revurdering.periode.tilOgMed),
-    };
-
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
                     <FastOppholdForm
                         form={form}
-                        minOgMaxPeriode={revurderingsperiode}
+                        minOgMaxPeriode={{
+                            fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+                            tilOgMed: new Date(props.revurdering.periode.tilOgMed),
+                        }}
                         søknadsbehandlingEllerRevurdering={'Revurdering'}
                         neste={{
                             savingState: status,
                             url: props.nesteUrl,
                             onClick: (values) =>
-                                lagreFastOpphold(
+                                handleNesteClick(
                                     values,
                                     props.onSuccessOverride
                                         ? (r) => props.onSuccessOverride!(r)
@@ -91,6 +84,7 @@ export function FastOppholdPage(props: RevurderingStegProps) {
                             onClick: props.onTilbakeClickOverride,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleNesteClick,
                             url: props.avsluttUrl,
                         }}
                         {...props}
