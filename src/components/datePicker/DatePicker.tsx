@@ -96,27 +96,28 @@ export const RangePickerMonth = (props: {
     error?: { fraOgMed?: string; tilOgMed?: string };
 }) => {
     const { formatMessage } = useI18n({ messages });
-    const [fraOgMed, setFraOgMed] = React.useState<Nullable<Date>>(props.value.fraOgMed);
-    const [tilOgMed, setTilOgMed] = React.useState<Nullable<Date>>(props.value.tilOgMed);
-
-    React.useEffect(() => {
-        props.onChange({ fraOgMed, tilOgMed });
-    }, [fraOgMed, tilOgMed]);
 
     return (
         <div className={styles.rangePickerContainer}>
             <MonthPicker
                 {...props}
+                key={props.value.fraOgMed?.toString()}
                 label={props.label?.fraOgMed ?? formatMessage('date.fraOgMed')}
-                value={fraOgMed}
-                onChange={setFraOgMed}
+                value={props.value.fraOgMed}
+                onChange={(d) => props.onChange({ fraOgMed: d, tilOgMed: props.value.tilOgMed })}
                 error={props.error?.fraOgMed}
             />
             <MonthPicker
                 {...props}
+                key={props.value.tilOgMed?.toString()}
                 label={props.label?.tilOgMed ?? formatMessage('date.tilOgMed')}
-                value={tilOgMed}
-                onChange={(d) => (d ? setTilOgMed(DateFns.endOfMonth(d)) : d)}
+                value={props.value.tilOgMed}
+                onChange={(d) =>
+                    props.onChange({
+                        fraOgMed: props.value.fraOgMed,
+                        tilOgMed: d ? DateFns.endOfMonth(d) : d,
+                    })
+                }
                 error={props.error?.tilOgMed}
             />
         </div>
