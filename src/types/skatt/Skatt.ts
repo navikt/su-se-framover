@@ -1,6 +1,8 @@
 import { ErrorMessage } from '~src/api/apiClient';
 import { Nullable } from '~src/lib/types';
 
+import { Sakstype } from '../Sak';
+
 export interface Skattegrunnlag {
     fnr: string;
     hentetTidspunkt: string;
@@ -51,6 +53,9 @@ export interface KjøretøySpesifisering {
 
 export interface FrioppslagSkattRequest {
     fnr: string;
+    epsFnr: Nullable<string>;
     år: number;
     begrunnelse: string;
+    sakstype: Sakstype;
+    fagsystemId: string;
 }
