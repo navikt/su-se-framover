@@ -2,7 +2,7 @@ import { ChevronUpIcon, ChevronDownIcon } from '@navikt/aksel-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import React, { PropsWithChildren, useState } from 'react';
-import { Link, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -169,7 +169,6 @@ const Sakintro = () => {
                     <div>
                         <LinkPanel
                             href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
-                            as={({ href, ...props }) => <Link to={href ?? ''} {...props} />}
                             className={styles.dokumenterLinkpanel}
                         >
                             <div className={styles.dokumenterLink}>
