@@ -83,6 +83,11 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
         onSuccess: (res: Søknadsbehandling) => void,
     ) => {
         if (eqPersonligOppmøteVilkårFormData.equals(values, initialValues)) {
+            if (erNoenVilkårVurdertUavklart(props.behandling.grunnlagsdataOgVilkårsvurderinger)) {
+                advarselRef.current?.focus();
+                return;
+            }
+
             navigate(props.nesteUrl);
             return;
         }
