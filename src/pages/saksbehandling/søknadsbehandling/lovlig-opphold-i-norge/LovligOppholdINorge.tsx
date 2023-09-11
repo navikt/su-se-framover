@@ -44,10 +44,6 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         );
 
     const save = (values: LovligOppholdVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {
-        if (eqLovligOppholdVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
         lagreLovligopphold(
             {
                 ...lovligOppholdFormDataTilRequest({
@@ -62,6 +58,28 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 onSuccess(behandling as Søknadsbehandling);
             },
         );
+    };
+
+    const handleNesteClick = (
+        values: LovligOppholdVilkårFormData,
+        onSuccess: (behandling: Søknadsbehandling) => void,
+    ) => {
+        if (eqLovligOppholdVilkårFormData.equals(initialValues, values)) {
+            navigate(props.nesteUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
+
+    const handleLagreOgFortsettSenereClick = (
+        values: LovligOppholdVilkårFormData,
+        onSuccess: (behandling: Søknadsbehandling) => void,
+    ) => {
+        if (eqLovligOppholdVilkårFormData.equals(initialValues, values)) {
+            navigate(props.avsluttUrl);
+            return;
+        }
+        save(values, onSuccess);
     };
 
     const form = useForm<LovligOppholdVilkårFormData>({
@@ -79,7 +97,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
-                            onClick: save,
+                            onClick: handleNesteClick,
                             url: props.nesteUrl,
                             savingState: status,
                         }}
@@ -87,6 +105,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             url: props.forrigeUrl,
                         }}
                         lagreOgfortsettSenere={{
+                            onClick: handleLagreOgFortsettSenereClick,
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
