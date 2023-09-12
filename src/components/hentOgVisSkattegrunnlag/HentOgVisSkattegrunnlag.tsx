@@ -52,7 +52,11 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
         trigger: UseFormTrigger<FrioppslagFormData>,
         clearErrors: UseFormClearErrors<FrioppslagFormData>,
     ) => {
-        if (formValues.fnr.length !== 11 || isNaN(Number.parseInt(formValues.år))) {
+        if (
+            formValues.fnr.length !== 11 ||
+            isNaN(Number.parseInt(formValues.år)) ||
+            Number.parseInt(formValues.år) < 2020
+        ) {
             await trigger('fnr');
             await trigger('år');
             return;
