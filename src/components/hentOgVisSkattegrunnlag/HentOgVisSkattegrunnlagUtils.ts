@@ -20,8 +20,8 @@ export const frioppslagSchema = yup.object<FrioppslagFormData>({
         .defined(),
     år: yup
         .string()
-        .test('År må være 2006 eller etter', `År må være 2006 eller etter`, function (value) {
-            return value ? Number.parseInt(value, 10) > 2005 : false;
+        .test('År må være 2020 eller etter', `År må være 2020 eller etter`, function (value) {
+            return value ? Number.parseInt(value, 10) > 2019 : false;
         })
         .required(),
     begrunnelse: yup.string().required(),
