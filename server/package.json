@@ -20,7 +20,7 @@
         "connect-redis": "^7.0.1",
         "cors": "^2.8.5",
         "express": "^4.17.1",
-        "express-http-proxy": "^1.6.3",
+        "express-http-proxy": "^2.0.0",
         "express-session": "^1.17.2",
         "helmet": "^7.0.0",
         "https-proxy-agent": "^7.0.0",
