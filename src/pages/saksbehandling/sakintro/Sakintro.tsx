@@ -1,7 +1,7 @@
 import { ChevronUpIcon, ChevronDownIcon } from '@navikt/aksel-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
-import React, { PropsWithChildren, useState } from 'react';
+import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';
@@ -38,21 +38,13 @@ const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotifica
 enum NyBehandling {
     REVURDER = 'REVURDER',
     KLAGE = 'KLAGE',
+    TILBAKEKREVING = 'TILBAKEKREVING',
 }
 
 const Sakintro = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const { formatMessage } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
-
-    const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
-        switch (nyBehandling) {
-            case NyBehandling.REVURDER:
-                return Routes.revurderValgtSak.createURL({ sakId: props.sak.id });
-            case NyBehandling.KLAGE:
-                return Routes.klageOpprett.createURL({ sakId: props.sak.id });
-        }
-    };
 
     const iverksatteInnvilgedeSøknader = getIverksatteInnvilgedeSøknader(props.sak);
     const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
@@ -97,24 +89,10 @@ const Sakintro = () => {
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
                     {harVedtak && props.sak.sakstype !== Sakstype.Alder && (
-                        <NyBehandlingVelger>
-                            {iverksatteInnvilgedeSøknader.length > 0 && (
-                                <LinkAsButton
-                                    className={styles.popoverOption}
-                                    variant="tertiary"
-                                    href={nyBehandlingTilRoute(NyBehandling.REVURDER)}
-                                >
-                                    {formatMessage('popover.option.revurder')}
-                                </LinkAsButton>
-                            )}
-                            <LinkAsButton
-                                className={styles.popoverOption}
-                                variant="tertiary"
-                                href={nyBehandlingTilRoute(NyBehandling.KLAGE)}
-                            >
-                                {formatMessage('popover.option.klage')}
-                            </LinkAsButton>
-                        </NyBehandlingVelger>
+                        <NyBehandlingVelger
+                            sakId={props.sak.id}
+                            kanRevurdere={iverksatteInnvilgedeSøknader.length > 0}
+                        />
                     )}
                     {harUtbetalinger && (
                         <LinkAsButton
@@ -187,9 +165,20 @@ const Sakintro = () => {
     );
 };
 
-const NyBehandlingVelger: React.FC<PropsWithChildren> = (props) => {
+const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => {
     const { formatMessage } = useI18n({ messages });
     const [anchorEl, setAnchorEl] = useState<Nullable<HTMLElement>>(null);
+
+    const nyBehandlingTilRoute = (nyBehandling: NyBehandling): string => {
+        switch (nyBehandling) {
+            case NyBehandling.REVURDER:
+                return Routes.revurderValgtSak.createURL({ sakId: props.sakId });
+            case NyBehandling.KLAGE:
+                return Routes.klageOpprett.createURL({ sakId: props.sakId });
+            case NyBehandling.TILBAKEKREVING:
+                return Routes.tilbakekrevValgtSak.createURL({ sakId: props.sakId });
+        }
+    };
 
     return (
         <div className={styles.nyBehandlingVelgerContainer}>
@@ -213,7 +202,31 @@ const NyBehandlingVelger: React.FC<PropsWithChildren> = (props) => {
                 onClose={() => setAnchorEl(null)}
                 open={anchorEl !== null}
             >
-                <div className={styles.popoverOptionsContainer}>{props.children}</div>
+                <div className={styles.popoverOptionsContainer}>
+                    {props.kanRevurdere && (
+                        <LinkAsButton
+                            className={styles.popoverOption}
+                            variant="tertiary"
+                            href={nyBehandlingTilRoute(NyBehandling.REVURDER)}
+                        >
+                            {formatMessage('popover.option.revurder')}
+                        </LinkAsButton>
+                    )}
+                    <LinkAsButton
+                        className={styles.popoverOption}
+                        variant="tertiary"
+                        href={nyBehandlingTilRoute(NyBehandling.KLAGE)}
+                    >
+                        {formatMessage('popover.option.klage')}
+                    </LinkAsButton>
+                    <LinkAsButton
+                        className={styles.popoverOption}
+                        variant="tertiary"
+                        href={nyBehandlingTilRoute(NyBehandling.TILBAKEKREVING)}
+                    >
+                        {formatMessage('popover.option.tilbakekreving')}
+                    </LinkAsButton>
+                </div>
             </Popover>
         </div>
     );

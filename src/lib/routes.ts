@@ -309,3 +309,10 @@ export const brevPage: Route<{ sakId: string }> = {
     absPath: '/saksoversikt/:sakId/brev',
     createURL: (args) => `/saksoversikt/${args.sakId}/brev/`,
 };
+
+//---------------Tilbakekreving-------------------------
+export const tilbakekrevValgtSak: Route<{ sakId: string }> = {
+    path: 'tilbakekreving/',
+    absPath: '/saksoversikt/:sakId/tilbakekreving',
+    createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/`,
+};
