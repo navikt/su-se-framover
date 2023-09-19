@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
+import { Button, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -111,10 +111,13 @@ export const AttesteringsForm = (props: Props) => {
                     >
                         {formatMessage('knapp.tilbake')}
                     </LinkAsButton>
-                    <Button>
+                    <Button
+                        loading={
+                            RemoteData.isPending(props.iverksett.status) ||
+                            RemoteData.isPending(props.underkjenn.status)
+                        }
+                    >
                         {formatMessage('knapp.bekreft')}
-                        {(RemoteData.isPending(props.iverksett.status) ||
-                            RemoteData.isPending(props.underkjenn.status)) && <Loader />}
                     </Button>
                 </div>
                 <div className={styles.apiErrorContainer}>
