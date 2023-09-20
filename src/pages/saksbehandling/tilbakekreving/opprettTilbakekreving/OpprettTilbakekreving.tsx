@@ -2,9 +2,9 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Accordion, Button, Heading, Panel } from '@navikt/ds-react';
 import AccordionItem from '@navikt/ds-react/esm/accordion/AccordionItem';
 import React, { useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { hentSisteFerdigbehandledeKravgrunnlag } from '~src/api/tilbakekrevingApi';
+import { hentSisteFerdigbehandledeKravgrunnlag, opprettNyTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
@@ -18,10 +18,10 @@ import * as routes from '~src/lib/routes';
 import { Grunnlagsperiode, Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 
-import messages from './Tilbakekreving-nb';
-import styles from './Tilbakekreving.module.less';
+import messages from './OpprettTilbakekreving-nb';
+import styles from './OpprettTilbakekreving.module.less';
 
-const Tilbakekreving = () => {
+const OpprettTilbakekreving = () => {
     const { formatMessage } = useI18n({ messages });
     const { sak } = useOutletContext<SaksoversiktContext>();
     const [status, hentKravgrunnlag] = useApiCall(hentSisteFerdigbehandledeKravgrunnlag);
@@ -47,7 +47,9 @@ const Tilbakekreving = () => {
 };
 
 const KanTilbakekreves = (props: { sakId: string; kravgrunnlag: Kravgrunnlag }) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
+    const [opprettStatus, opprett] = useApiCall(opprettNyTilbakekrevingsbehandling);
 
     return (
         <>
@@ -64,7 +66,21 @@ const KanTilbakekreves = (props: { sakId: string; kravgrunnlag: Kravgrunnlag }) 
                     >
                         {formatMessage('knapp.tilbake')}
                     </LinkAsButton>
-                    <Button>{formatMessage('tilbakekreving.kanTilbakekreves.ny')}</Button>
+                    <Button
+                        loading={RemoteData.isPending(opprettStatus)}
+                        onClick={() =>
+                            opprett({ sakId: props.sakId }, (res) => {
+                                navigate(
+                                    routes.tilbakekrevingValgtBehandling.createURL({
+                                        sakId: props.sakId,
+                                        behandlingId: res.id,
+                                    }),
+                                );
+                            })
+                        }
+                    >
+                        {formatMessage('tilbakekreving.kanTilbakekreves.ny')}
+                    </Button>
                 </div>
             </Panel>
             <OppsummeringAvKravgrunnlag kravgrunnlag={props.kravgrunnlag} />
@@ -230,4 +246,4 @@ const KanIkkeTilbakekreves = (props: { sakId: string }) => {
     );
 };
 
-export default Tilbakekreving;
+export default OpprettTilbakekreving;

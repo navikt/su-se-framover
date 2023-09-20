@@ -47,7 +47,9 @@ const ManuellReguleringPage = React.lazy(() => import('~src/pages/saksbehandling
 const Stans = React.lazy(() => import('~src/pages/saksbehandling/stans/Stans'));
 const Gjenoppta = React.lazy(() => import('~src/pages/saksbehandling/gjenoppta/Gjenoppta'));
 const Utenlandsopphold = React.lazy(() => import('~src/pages/saksbehandling/utenlandsopphold/Utenlandsopphold'));
-const Tilbakekreving = React.lazy(() => import('~src/pages/saksbehandling/tilbakekreving/Tilbakekreving'));
+const Tilbakekreving = React.lazy(
+    () => import('~src/pages/saksbehandling/tilbakekreving/opprettTilbakekreving/OpprettTilbakekreving'),
+);
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -113,6 +115,7 @@ const AppRoutes = () => (
             <Route path={routes.brevPage.path} element={<BrevPage />} />
 
             <Route path={routes.tilbakekrevValgtSak.path} element={<Tilbakekreving />} />
+            <Route path={routes.tilbakekrevingValgtBehandling.path} element={<>hei hei</>} />
         </Route>
         <Route
             path={routes.saksoversiktIndex.path}

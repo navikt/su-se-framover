@@ -257,17 +257,18 @@ export const klage: Route<{
     absPath: '/saksoversikt/:sakId/klage/:klageId/:steg/',
     createURL: (args) => `/saksoversikt/${args.sakId}/klage/${args.klageId}/${args.steg}/`,
 };
-//---------------Regulering-------------------------
-export const manuellRegulering: Route<{ sakId: string; reguleringId: string }> = {
-    path: 'reguler/:reguleringId',
-    absPath: '/saksoversikt/:sakId/reguler/:reguleringId',
-    createURL: (args) => `/saksoversikt/${args.sakId}/reguler/${args.reguleringId}`,
-};
 
 export const klageOpprett: Route<{ sakId: string }> = {
     path: 'opprett',
     absPath: 'saksoversikt/:sakId/klage/opprett',
     createURL: ({ sakId }) => `/saksoversikt/${sakId}/klage/opprett`,
+};
+
+//---------------Regulering-------------------------
+export const manuellRegulering: Route<{ sakId: string; reguleringId: string }> = {
+    path: 'reguler/:reguleringId',
+    absPath: '/saksoversikt/:sakId/reguler/:reguleringId',
+    createURL: (args) => `/saksoversikt/${args.sakId}/reguler/${args.reguleringId}`,
 };
 
 export interface SuccessNotificationState {
@@ -312,7 +313,13 @@ export const brevPage: Route<{ sakId: string }> = {
 
 //---------------Tilbakekreving-------------------------
 export const tilbakekrevValgtSak: Route<{ sakId: string }> = {
-    path: 'tilbakekreving/',
-    absPath: '/saksoversikt/:sakId/tilbakekreving',
-    createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/`,
+    path: 'tilbakekreving/opprett',
+    absPath: '/saksoversikt/:sakId/tilbakekreving/opprett',
+    createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/opprett`,
+};
+
+export const tilbakekrevingValgtBehandling: Route<{ sakId: string; behandlingId: string }> = {
+    path: 'tilbakekreving/:behandlingId/',
+    absPath: '/saksoversikt/:sakId/tilbakekreving/:behandlingId',
+    createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/${args.behandlingId}`,
 };
