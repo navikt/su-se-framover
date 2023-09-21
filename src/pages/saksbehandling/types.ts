@@ -14,3 +14,7 @@ export enum KlageSteg {
     Avvisning = 'avvisning',
     Oppsummering = 'oppsummering',
 }
+
+export enum TilbakekrevingSteg {
+    Vurdering = 'vurdering',
+}

@@ -18,6 +18,8 @@ import * as routes from '~src/lib/routes';
 import { Grunnlagsperiode, Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 
+import { TilbakekrevingSteg } from '../../types';
+
 import messages from './OpprettTilbakekreving-nb';
 import styles from './OpprettTilbakekreving.module.less';
 
@@ -74,6 +76,7 @@ const KanTilbakekreves = (props: { sakId: string; kravgrunnlag: Kravgrunnlag }) 
                                     routes.tilbakekrevingValgtBehandling.createURL({
                                         sakId: props.sakId,
                                         behandlingId: res.id,
+                                        steg: TilbakekrevingSteg.Vurdering,
                                     }),
                                 );
                             })
@@ -88,7 +91,7 @@ const KanTilbakekreves = (props: { sakId: string; kravgrunnlag: Kravgrunnlag }) 
     );
 };
 
-const OppsummeringAvKravgrunnlag = (props: { kravgrunnlag: Kravgrunnlag; visSomEnkeltPanel?: boolean }) => {
+export const OppsummeringAvKravgrunnlag = (props: { kravgrunnlag: Kravgrunnlag; visSomEnkeltPanel?: boolean }) => {
     const { formatMessage } = useI18n({ messages });
 
     if (props.visSomEnkeltPanel) {

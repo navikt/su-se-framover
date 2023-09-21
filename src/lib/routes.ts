@@ -1,7 +1,7 @@
 import { NavigateFunction, useParams } from 'react-router-dom';
 
 import * as Routes from '~src/lib/routes';
-import { KlageSteg, SaksbehandlingMenyvalg } from '~src/pages/saksbehandling/types';
+import { KlageSteg, SaksbehandlingMenyvalg, TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
 import { Søknadssteg } from '~src/pages/søknad/types';
 import { RevurderingSeksjoner, RevurderingSteg } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak';
@@ -312,14 +312,22 @@ export const brevPage: Route<{ sakId: string }> = {
 };
 
 //---------------Tilbakekreving-------------------------
+export const tilbakekrevingRoot: Route<{
+    sakId: string;
+}> = {
+    path: 'tilbakekreving/*',
+    absPath: 'saksoversikt/:sakId/tilbakekreving',
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/tilbakekreving`,
+};
+
 export const tilbakekrevValgtSak: Route<{ sakId: string }> = {
-    path: 'tilbakekreving/opprett',
+    path: 'opprett',
     absPath: '/saksoversikt/:sakId/tilbakekreving/opprett',
     createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/opprett`,
 };
 
-export const tilbakekrevingValgtBehandling: Route<{ sakId: string; behandlingId: string }> = {
-    path: 'tilbakekreving/:behandlingId/',
-    absPath: '/saksoversikt/:sakId/tilbakekreving/:behandlingId',
-    createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/${args.behandlingId}`,
+export const tilbakekrevingValgtBehandling: Route<{ sakId: string; behandlingId: string; steg: TilbakekrevingSteg }> = {
+    path: ':behandlingId/:steg',
+    absPath: '/saksoversikt/:sakId/tilbakekreving/:behandlingId/:steg',
+    createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/${args.behandlingId}/${args.steg}`,
 };
