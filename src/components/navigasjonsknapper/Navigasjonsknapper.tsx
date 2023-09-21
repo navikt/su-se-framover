@@ -17,7 +17,7 @@ const Navigasjonsknapper = (props: {
         tekst?: string;
         onClick?: () => void;
     };
-    tilbake?: {
+    tilbake: {
         url?: string;
         onClick?: () => void;
     };
@@ -51,7 +51,7 @@ const Navigasjonsknapper = (props: {
                         variant="secondary"
                         onClick={() => {
                             setKnappTrykket('avslutt');
-                            props.fortsettSenere!.onClick!();
+                            props.fortsettSenere?.onClick?.();
                         }}
                         type="button"
                         loading={props.fortsettSenere?.loading ?? (knappTrykket === 'avslutt' && props.neste?.loading)}
