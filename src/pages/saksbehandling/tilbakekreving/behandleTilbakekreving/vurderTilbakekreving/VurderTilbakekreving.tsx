@@ -15,7 +15,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { KlasseKode, KlasseType, KravgrunnlagStatus } from '~src/types/Kravgrunnlag';
-import { TilbakekrevingsValg } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { ManuellTilbakekrevingsbehandling, TilbakekrevingsValg } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 
 import messages from '../../Tilbakekreving-nb';
@@ -113,13 +113,13 @@ const kravgrunnlag = {
     ],
 };
 
-const VurderTilbakekreving = (props: { sakId: string }) => {
+const VurderTilbakekreving = (props: { sakId: string; tilbakekreving?: ManuellTilbakekrevingsbehandling }) => {
     const fieldName = 'grunnlagsperioder';
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useApiCall(vurderTilbakekrevingsbehandling);
 
     //TODO ta inn behandling som props
-    const behandlingensKravgrunnlag = { ...kravgrunnlag };
+    const behandlingensKravgrunnlag = props.tilbakekreving ? props.tilbakekreving.kravgrunnlag : { ...kravgrunnlag };
 
     const form = useForm<VurderTilbakekrevingFormData>({
         defaultValues: {

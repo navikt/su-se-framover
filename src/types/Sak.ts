@@ -2,6 +2,7 @@ import { Nullable } from '~src/lib/types';
 import { Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
 
 import { Klage } from './Klage';
+import { ManuellTilbakekrevingsbehandling } from './ManuellTilbakekrevingsbehandling';
 import { Periode } from './Periode';
 import { RegistrerteUtenlandsopphold } from './RegistrertUtenlandsopphold';
 import { Regulering } from './Regulering';
@@ -29,6 +30,7 @@ export interface Sak {
     utenlandsopphold: RegistrerteUtenlandsopphold;
     versjon: number;
     uteståendeAvkorting: Nullable<Simulering>;
+    tilbakekrevinger: ManuellTilbakekrevingsbehandling[];
 }
 
 export enum KanStansesEllerGjenopptas {
