@@ -17,7 +17,7 @@ const Navigasjonsknapper = (props: {
         tekst?: string;
         onClick?: () => void;
     };
-    tilbake: {
+    tilbake?: {
         url?: string;
         onClick?: () => void;
     };

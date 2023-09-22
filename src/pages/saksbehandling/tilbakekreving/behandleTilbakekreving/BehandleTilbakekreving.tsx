@@ -19,7 +19,7 @@ const BehandleTilbakekreving = (props: { sakId: string }) => {
                 aktivSteg={TilbakekrevingSteg.Vurdering}
             />
             <div className={styles.contentContainer}>
-                {steg === TilbakekrevingSteg.Vurdering && <VurderTilbakekreving />}
+                {steg === TilbakekrevingSteg.Vurdering && <VurderTilbakekreving sakId={props.sakId} />}
             </div>
         </div>
     );

@@ -6,3 +6,8 @@ export interface ManuellTilbakekrevingsbehandling {
     sakId: string;
     kravgrunnlag: Kravgrunnlag;
 }
+
+export enum TilbakekrevingsValg {
+    SKAL_TILBAKEKREVES = 'SKAL_TILBAKEKREVES',
+    SKAL_IKKE_TILBAKEKREVES = 'SKAL_IKKE_TILBAKEKREVES',
+}
