@@ -8,6 +8,6 @@ export interface ManuellTilbakekrevingsbehandling {
 }
 
 export enum TilbakekrevingsValg {
-    SKAL_TILBAKEKREVES = 'SKAL_TILBAKEKREVES',
-    SKAL_IKKE_TILBAKEKREVES = 'SKAL_IKKE_TILBAKEKREVES',
+    SKAL_TILBAKEKREVES = 'SkalIkkeTilbakekreve',
+    SKAL_IKKE_TILBAKEKREVES = 'SkalTilbakekreve',
 }
