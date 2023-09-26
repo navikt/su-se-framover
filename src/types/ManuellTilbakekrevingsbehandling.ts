@@ -7,7 +7,19 @@ export interface ManuellTilbakekrevingsbehandling {
     kravgrunnlag: Kravgrunnlag;
 }
 
-export enum TilbakekrevingsValg {
-    SKAL_TILBAKEKREVES = 'SkalIkkeTilbakekreve',
-    SKAL_IKKE_TILBAKEKREVES = 'SkalTilbakekreve',
+export enum TilbakekrevingsVurdering {
+    SKAL_TILBAKEKREVES = 'SkalTilbakekreve',
+    SKAL_IKKE_TILBAKEKREVES = 'SkalIkkeTilbakekreve',
+}
+
+export interface OpprettNyTilbakekrevingsbehandlingRequest {
+    sakId: string;
+    saksversjon: number;
+}
+
+export interface VurderTilbakekrevingsbehandlingRequest {
+    sakId: string;
+    saksversjon: number;
+    behandlingId: string;
+    måneder: Array<{ måned: string; vurdering: TilbakekrevingsVurdering }>;
 }

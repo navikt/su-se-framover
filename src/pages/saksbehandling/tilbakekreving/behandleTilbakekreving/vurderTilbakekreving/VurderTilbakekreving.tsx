@@ -4,18 +4,20 @@ import { Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
-import { vurderTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { useApiCall } from '~src/lib/hooks';
+import { vurderTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { KlasseKode, KlasseType, KravgrunnlagStatus } from '~src/types/Kravgrunnlag';
-import { ManuellTilbakekrevingsbehandling, TilbakekrevingsValg } from '~src/types/ManuellTilbakekrevingsbehandling';
+import {
+    ManuellTilbakekrevingsbehandling,
+    TilbakekrevingsVurdering,
+} from '~src/types/ManuellTilbakekrevingsbehandling';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 
 import messages from '../../Tilbakekreving-nb';
@@ -23,109 +25,20 @@ import messages from '../../Tilbakekreving-nb';
 import styles from './VurderTilbakekreving.module.less';
 import { VurderTilbakekrevingFormData, vurderTilbakekrevingSchema } from './VurderTilbakekrevingUtils';
 
-const kravgrunnlag = {
-    eksternKravgrunnlagsId: '123456',
-    eksternVedtakId: '654321',
-    kontrollfelt: '2023-09-19-10.01.03.842916',
-    status: KravgrunnlagStatus.NY,
-    grunnlagsperiode: [
-        {
-            periode: {
-                fraOgMed: '2023-06-01',
-                tilOgMed: '2023-06-30',
-            },
-            beløpSkattMnd: 4395,
-            grunnlagsbeløp: [
-                {
-                    kode: KlasseKode.KL_KODE_FEIL_INNT,
-                    type: KlasseType.FEIL,
-                    beløpTidligereUtbetaling: 0,
-                    beløpNyUtbetaling: 2643,
-                    beløpSkalTilbakekreves: 0,
-                    beløpSkalIkkeTilbakekreves: 0,
-                    skatteProsent: 0,
-                },
-                {
-                    kode: KlasseKode.SUUFORE,
-                    type: KlasseType.YTEL,
-                    beløpTidligereUtbetaling: 16181,
-                    beløpNyUtbetaling: 13538,
-                    beløpSkalTilbakekreves: 2643,
-                    beløpSkalIkkeTilbakekreves: 0,
-                    skatteProsent: 43.9983,
-                },
-            ],
-        },
-        {
-            periode: {
-                fraOgMed: '2023-07-01',
-                tilOgMed: '2023-07-31',
-            },
-            beløpSkattMnd: 4395,
-            grunnlagsbeløp: [
-                {
-                    kode: KlasseKode.KL_KODE_FEIL_INNT,
-                    type: KlasseType.FEIL,
-                    beløpTidligereUtbetaling: 0,
-                    beløpNyUtbetaling: 2643,
-                    beløpSkalTilbakekreves: 0,
-                    beløpSkalIkkeTilbakekreves: 0,
-                    skatteProsent: 0,
-                },
-                {
-                    kode: KlasseKode.SUUFORE,
-                    type: KlasseType.YTEL,
-                    beløpTidligereUtbetaling: 16181,
-                    beløpNyUtbetaling: 13538,
-                    beløpSkalTilbakekreves: 2643,
-                    beløpSkalIkkeTilbakekreves: 0,
-                    skatteProsent: 43.9983,
-                },
-            ],
-        },
-        {
-            periode: {
-                fraOgMed: '2023-08-01',
-                tilOgMed: '2023-08-31',
-            },
-            beløpSkattMnd: 4395,
-            grunnlagsbeløp: [
-                {
-                    kode: KlasseKode.KL_KODE_FEIL_INNT,
-                    type: KlasseType.FEIL,
-                    beløpTidligereUtbetaling: 0,
-                    beløpNyUtbetaling: 2643,
-                    beløpSkalTilbakekreves: 0,
-                    beløpSkalIkkeTilbakekreves: 0,
-                    skatteProsent: 0,
-                },
-                {
-                    kode: KlasseKode.SUUFORE,
-                    type: KlasseType.YTEL,
-                    beløpTidligereUtbetaling: 16181,
-                    beløpNyUtbetaling: 13538,
-                    beløpSkalTilbakekreves: 2643,
-                    beløpSkalIkkeTilbakekreves: 0,
-                    skatteProsent: 43.9983,
-                },
-            ],
-        },
-    ],
-};
-
-const VurderTilbakekreving = (props: { sakId: string; tilbakekreving?: ManuellTilbakekrevingsbehandling }) => {
+const VurderTilbakekreving = (props: {
+    sakId: string;
+    saksversjon: number;
+    tilbakekreving: ManuellTilbakekrevingsbehandling;
+}) => {
     const fieldName = 'grunnlagsperioder';
     const { formatMessage } = useI18n({ messages });
-    const [status, lagre] = useApiCall(vurderTilbakekrevingsbehandling);
-
-    //TODO ta inn behandling som props
-    const behandlingensKravgrunnlag = props.tilbakekreving ? props.tilbakekreving.kravgrunnlag : { ...kravgrunnlag };
+    const [status, lagre] = useAsyncActionCreator(vurderTilbakekrevingsbehandling);
 
     const form = useForm<VurderTilbakekrevingFormData>({
         defaultValues: {
-            grunnlagsperioder: behandlingensKravgrunnlag.grunnlagsperiode.map((periode) => ({
-                periode: periode.periode,
-                skalTilbakekreves: null,
+            grunnlagsperioder: props.tilbakekreving.kravgrunnlag.grunnlagsperiode.map((periode) => ({
+                måned: periode.periode,
+                vurdering: null,
             })),
         },
         resolver: yupResolver(vurderTilbakekrevingSchema),
@@ -136,10 +49,11 @@ const VurderTilbakekreving = (props: { sakId: string; tilbakekreving?: ManuellTi
 
         lagre({
             sakId: props.sakId,
-            behandlingId: '123',
-            vurderinger: values.grunnlagsperioder.map((periode) => ({
-                periode: periode.periode,
-                valg: periode.skalTilbakekreves!,
+            saksversjon: props.saksversjon,
+            behandlingId: props.tilbakekreving.id,
+            måneder: values.grunnlagsperioder.map((periode) => ({
+                måned: `TODO - her må vi sende inn som måned på formatet YYYY-MM`,
+                vurdering: periode.vurdering!,
             })),
         });
     };
@@ -156,16 +70,16 @@ const VurderTilbakekreving = (props: { sakId: string; tilbakekreving?: ManuellTi
                     <form onSubmit={form.handleSubmit(handleSubmit)}>
                         <ul className={styles.grunnlagsperioderContainer}>
                             {fields.map((periode, idx) => (
-                                <li key={`${periode.periode.fraOgMed}-${periode.periode.tilOgMed}`}>
+                                <li key={`${periode.måned.fraOgMed}-${periode.måned.tilOgMed}`}>
                                     <Panel border className={styles.periodePanel}>
                                         <div>
                                             <Heading size="small">
-                                                {formatMonthYear(periode.periode.fraOgMed)}-
-                                                {formatMonthYear(periode.periode.tilOgMed)}
+                                                {formatMonthYear(periode.måned.fraOgMed)}-
+                                                {formatMonthYear(periode.måned.tilOgMed)}
                                             </Heading>
                                             <Controller
                                                 control={form.control}
-                                                name={`${fieldName}.${idx}.skalTilbakekreves`}
+                                                name={`${fieldName}.${idx}.vurdering`}
                                                 render={({ field, fieldState }) => (
                                                     <RadioGroup
                                                         {...field}
@@ -175,10 +89,10 @@ const VurderTilbakekreving = (props: { sakId: string; tilbakekreving?: ManuellTi
                                                         hideLegend
                                                         error={fieldState.error?.message}
                                                     >
-                                                        <Radio value={TilbakekrevingsValg.SKAL_TILBAKEKREVES}>
+                                                        <Radio value={TilbakekrevingsVurdering.SKAL_TILBAKEKREVES}>
                                                             {formatMessage('vurderTilbakekreving.skalTilbakekreve')}
                                                         </Radio>
-                                                        <Radio value={TilbakekrevingsValg.SKAL_IKKE_TILBAKEKREVES}>
+                                                        <Radio value={TilbakekrevingsVurdering.SKAL_IKKE_TILBAKEKREVES}>
                                                             {formatMessage('vurderTilbakekreving.skalIkkeTilbakekreve')}
                                                         </Radio>
                                                     </RadioGroup>
@@ -213,7 +127,7 @@ const VurderTilbakekreving = (props: { sakId: string; tilbakekreving?: ManuellTi
                         </div>
                     </form>
                 ),
-                right: <OppsummeringAvKravgrunnlag kravgrunnlag={kravgrunnlag} />,
+                right: <OppsummeringAvKravgrunnlag kravgrunnlag={props.tilbakekreving.kravgrunnlag} />,
             }}
         </ToKolonner>
     );

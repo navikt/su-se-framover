@@ -9,13 +9,15 @@ import styles from './BehandleTilbakekreving.module.less';
 import TilbakekrevingStegIndikator from './TilbakekrevingStegIndikator';
 import VurderTilbakekreving from './vurderTilbakekreving/VurderTilbakekreving';
 
-const BehandleTilbakekreving = (props: { sakId: string; tilbakekrevinger: ManuellTilbakekrevingsbehandling[] }) => {
+const BehandleTilbakekreving = (props: {
+    sakId: string;
+    saksversjon: number;
+    tilbakekrevinger: ManuellTilbakekrevingsbehandling[];
+}) => {
     const { behandlingId, steg } = routes.useRouteParams<typeof routes.tilbakekrevingValgtBehandling>();
 
     const behandling = props.tilbakekrevinger.find((t) => t.id === behandlingId);
 
-    /*
-    //TODO - uncomment når vi har backend på plass
     if (!behandling) {
         return (
             <div>
@@ -24,7 +26,6 @@ const BehandleTilbakekreving = (props: { sakId: string; tilbakekrevinger: Manuel
             </div>
         );
     }
-    */
 
     return (
         <div className={styles.pageContainer}>
@@ -35,7 +36,11 @@ const BehandleTilbakekreving = (props: { sakId: string; tilbakekrevinger: Manuel
             />
             <div className={styles.contentContainer}>
                 {steg === TilbakekrevingSteg.Vurdering && (
-                    <VurderTilbakekreving sakId={props.sakId} tilbakekreving={behandling} />
+                    <VurderTilbakekreving
+                        sakId={props.sakId}
+                        saksversjon={props.saksversjon}
+                        tilbakekreving={behandling}
+                    />
                 )}
             </div>
         </div>

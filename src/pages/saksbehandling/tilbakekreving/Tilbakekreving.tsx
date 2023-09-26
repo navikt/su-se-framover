@@ -15,7 +15,13 @@ const Tilbakekreving = () => {
             <Route path={routes.tilbakekrevValgtSak.path} element={<OpprettTilbakekreving />} />
             <Route
                 path={routes.tilbakekrevingValgtBehandling.path}
-                element={<BehandleTilbakekreving sakId={sak.id} tilbakekrevinger={sak.tilbakekrevinger} />}
+                element={
+                    <BehandleTilbakekreving
+                        sakId={sak.id}
+                        saksversjon={sak.versjon}
+                        tilbakekrevinger={sak.tilbakekrevinger}
+                    />
+                }
             />
         </Routes>
     );

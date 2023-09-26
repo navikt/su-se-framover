@@ -1,6 +1,9 @@
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
-import { ManuellTilbakekrevingsbehandling, TilbakekrevingsValg } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { Periode } from '~src/types/Periode';
+import {
+    ManuellTilbakekrevingsbehandling,
+    OpprettNyTilbakekrevingsbehandlingRequest,
+    VurderTilbakekrevingsbehandlingRequest,
+} from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -13,25 +16,27 @@ export async function hentSisteFerdigbehandledeKravgrunnlag(arg: {
     });
 }
 
-export async function opprettNyTilbakekrevingsbehandling(arg: {
-    sakId: string;
-}): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+export async function opprettNyTilbakekrevingsbehandling(
+    arg: OpprettNyTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
     return apiClient({
         url: `/saker/${arg.sakId}/tilbakekreving/ny`,
         method: 'POST',
+        body: {
+            saksversjon: arg.saksversjon,
+        },
     });
 }
 
-export async function vurderTilbakekrevingsbehandling(arg: {
-    sakId: string;
-    behandlingId: string;
-    vurderinger: Array<{ periode: Periode<string>; valg: TilbakekrevingsValg }>;
-}): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+export async function vurderTilbakekrevingsbehandling(
+    arg: VurderTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
     return apiClient({
-        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/vurdering`,
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/manedsvurder`,
         method: 'POST',
         body: {
-            vurderinger: arg.vurderinger,
+            versjon: arg.saksversjon,
+            måneder: arg.måneder,
         },
     });
 }

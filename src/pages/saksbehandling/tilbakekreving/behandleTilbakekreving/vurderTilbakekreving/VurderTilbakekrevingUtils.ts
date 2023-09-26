@@ -1,6 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { TilbakekrevingsValg } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { TilbakekrevingsVurdering } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Periode } from '~src/types/Periode';
 
 export interface VurderTilbakekrevingFormData {
@@ -8,8 +8,8 @@ export interface VurderTilbakekrevingFormData {
 }
 
 interface GrunnlagsperiodeFormData {
-    periode: Periode<string>;
-    skalTilbakekreves: Nullable<TilbakekrevingsValg>;
+    måned: Periode<string>;
+    vurdering: Nullable<TilbakekrevingsVurdering>;
 }
 
 export const vurderTilbakekrevingSchema = yup.object<VurderTilbakekrevingFormData>({
@@ -17,15 +17,18 @@ export const vurderTilbakekrevingSchema = yup.object<VurderTilbakekrevingFormDat
         .array<GrunnlagsperiodeFormData>(
             yup
                 .object<GrunnlagsperiodeFormData>({
-                    periode: yup
+                    måned: yup
                         .object<Periode<string>>({
                             fraOgMed: yup.string().required().defined(),
                             tilOgMed: yup.string().required().defined(),
                         })
                         .required(),
-                    skalTilbakekreves: yup
-                        .mixed<TilbakekrevingsValg>()
-                        .oneOf([TilbakekrevingsValg.SKAL_IKKE_TILBAKEKREVES, TilbakekrevingsValg.SKAL_TILBAKEKREVES])
+                    vurdering: yup
+                        .mixed<TilbakekrevingsVurdering>()
+                        .oneOf([
+                            TilbakekrevingsVurdering.SKAL_IKKE_TILBAKEKREVES,
+                            TilbakekrevingsVurdering.SKAL_TILBAKEKREVES,
+                        ])
                         .required(),
                 })
                 .required(),

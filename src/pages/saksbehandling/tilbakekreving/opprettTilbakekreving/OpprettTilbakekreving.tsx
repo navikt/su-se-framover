@@ -3,11 +3,12 @@ import { Button, Heading, Panel } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { hentSisteFerdigbehandledeKravgrunnlag, opprettNyTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
+import { hentSisteFerdigbehandledeKravgrunnlag } from '~src/api/tilbakekrevingApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { useApiCall } from '~src/lib/hooks';
+import { opprettNyTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
@@ -35,17 +36,19 @@ const OpprettTilbakekreving = () => {
             </div>
 
             <div className={styles.mainContentContainer}>
-                {RemoteData.isSuccess(status) && <KanTilbakekreves sakId={sak.id} kravgrunnlag={status.value} />}
+                {RemoteData.isSuccess(status) && (
+                    <KanTilbakekreves sakId={sak.id} saksversjon={sak.versjon} kravgrunnlag={status.value} />
+                )}
                 {RemoteData.isFailure(status) && <KanIkkeTilbakekreves sakId={sak.id} />}
             </div>
         </div>
     );
 };
 
-const KanTilbakekreves = (props: { sakId: string; kravgrunnlag: Kravgrunnlag }) => {
+const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunnlag: Kravgrunnlag }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    const [opprettStatus, opprett] = useApiCall(opprettNyTilbakekrevingsbehandling);
+    const [opprettStatus, opprett] = useAsyncActionCreator(opprettNyTilbakekrevingsbehandling);
 
     return (
         <>
@@ -65,7 +68,7 @@ const KanTilbakekreves = (props: { sakId: string; kravgrunnlag: Kravgrunnlag }) 
                     <Button
                         loading={RemoteData.isPending(opprettStatus)}
                         onClick={() =>
-                            opprett({ sakId: props.sakId }, (res) => {
+                            opprett({ sakId: props.sakId, saksversjon: props.saksversjon }, (res) => {
                                 navigate(
                                     routes.tilbakekrevingValgtBehandling.createURL({
                                         sakId: props.sakId,
