@@ -4,7 +4,7 @@ import * as S from 'fp-ts/string';
 
 import { eqNullable, Nullable } from '~src/lib/types';
 
-//TODO - rename til type til Periode, så kan Periode interfacet få et annet navn (sikkert endringer i et par filer)
+//TODO - rename type til Periode, så kan Periode interfacet få et annet navn (sikkert endringer i et par filer)
 export type PeriodeType = Periode | NullablePeriode;
 
 export interface Periode<T extends string | Date = Date> {
