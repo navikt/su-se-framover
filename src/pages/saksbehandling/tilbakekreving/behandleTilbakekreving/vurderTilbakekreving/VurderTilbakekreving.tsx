@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
+import { BodyShort, Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
@@ -14,6 +14,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { KlasseKode, KlasseType } from '~src/types/Kravgrunnlag';
 import {
     ManuellTilbakekrevingsbehandling,
     TilbakekrevingsVurdering,
@@ -96,8 +97,36 @@ const VurderTilbakekreving = (props: {
                                         </div>
 
                                         <Heading size="small">
-                                            Kan vurdere å vise nøkkelinfo fra perioden her. Resten ser dem på
-                                            oppsummeringen
+                                            {props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx].grunnlagsbeløp
+                                                .filter(
+                                                    (beløp) =>
+                                                        beløp.kode === KlasseKode.SUUFORE &&
+                                                        beløp.type === KlasseType.YTEL,
+                                                )
+                                                .map((beløp, idx) => (
+                                                    <div key={idx}>
+                                                        <div>
+                                                            <BodyShort>Skatteprosent</BodyShort>
+                                                            <BodyShort>{beløp.skatteProsent}</BodyShort>
+                                                        </div>
+                                                        <div>
+                                                            <BodyShort>Tidligere utbetalt</BodyShort>
+                                                            <BodyShort>{beløp.beløpTidligereUtbetaling}</BodyShort>
+                                                        </div>
+                                                        <div>
+                                                            <BodyShort>ny utbetaling</BodyShort>
+                                                            <BodyShort>{beløp.beløpNyUtbetaling}</BodyShort>
+                                                        </div>
+                                                        <div>
+                                                            <BodyShort>beløp skal tilbakekreves</BodyShort>
+                                                            <BodyShort>{beløp.beløpSkalTilbakekreves}</BodyShort>
+                                                        </div>
+                                                        <div>
+                                                            <BodyShort>beløp skal ikke tilbakekreves</BodyShort>
+                                                            <BodyShort>{beløp.beløpSkalIkkeTilbakekreves}</BodyShort>
+                                                        </div>
+                                                    </div>
+                                                ))}
                                         </Heading>
                                     </Panel>
                                 </li>
