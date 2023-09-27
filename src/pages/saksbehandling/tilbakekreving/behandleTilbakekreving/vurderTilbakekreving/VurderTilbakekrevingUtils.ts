@@ -1,14 +1,14 @@
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { TilbakekrevingsVurdering } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { Periode } from '~src/types/Periode';
+import Måned from '~src/types/Måned';
 
 export interface VurderTilbakekrevingFormData {
     grunnlagsperioder: GrunnlagsperiodeFormData[];
 }
 
 interface GrunnlagsperiodeFormData {
-    måned: Periode<string>;
+    måned: Måned;
     vurdering: Nullable<TilbakekrevingsVurdering>;
 }
 
@@ -17,12 +17,7 @@ export const vurderTilbakekrevingSchema = yup.object<VurderTilbakekrevingFormDat
         .array<GrunnlagsperiodeFormData>(
             yup
                 .object<GrunnlagsperiodeFormData>({
-                    måned: yup
-                        .object<Periode<string>>({
-                            fraOgMed: yup.string().required().defined(),
-                            tilOgMed: yup.string().required().defined(),
-                        })
-                        .required(),
+                    måned: yup.object<Måned>().required(),
                     vurdering: yup
                         .mixed<TilbakekrevingsVurdering>()
                         .oneOf([

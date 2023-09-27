@@ -18,7 +18,7 @@ import {
     ManuellTilbakekrevingsbehandling,
     TilbakekrevingsVurdering,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { formatMonthYear } from '~src/utils/date/dateUtils';
+import Måned from '~src/types/Måned';
 
 import messages from '../../Tilbakekreving-nb';
 
@@ -37,7 +37,7 @@ const VurderTilbakekreving = (props: {
     const form = useForm<VurderTilbakekrevingFormData>({
         defaultValues: {
             grunnlagsperioder: props.tilbakekreving.kravgrunnlag.grunnlagsperiode.map((periode) => ({
-                måned: periode.periode,
+                måned: Måned.fromStringPeriode(periode.periode),
                 vurdering: null,
             })),
         },
@@ -45,14 +45,12 @@ const VurderTilbakekreving = (props: {
     });
 
     const handleSubmit = (values: VurderTilbakekrevingFormData) => {
-        console.log('submitted: ', values);
-
         lagre({
             sakId: props.sakId,
             saksversjon: props.saksversjon,
             behandlingId: props.tilbakekreving.id,
             måneder: values.grunnlagsperioder.map((periode) => ({
-                måned: `TODO - her må vi sende inn som måned på formatet YYYY-MM`,
+                måned: periode.måned.toString(),
                 vurdering: periode.vurdering!,
             })),
         });
@@ -70,13 +68,10 @@ const VurderTilbakekreving = (props: {
                     <form onSubmit={form.handleSubmit(handleSubmit)}>
                         <ul className={styles.grunnlagsperioderContainer}>
                             {fields.map((periode, idx) => (
-                                <li key={`${periode.måned.fraOgMed}-${periode.måned.tilOgMed}`}>
+                                <li key={`${periode.måned}`}>
                                     <Panel border className={styles.periodePanel}>
                                         <div>
-                                            <Heading size="small">
-                                                {formatMonthYear(periode.måned.fraOgMed)}-
-                                                {formatMonthYear(periode.måned.tilOgMed)}
-                                            </Heading>
+                                            <Heading size="small">{periode.måned.toFormattedString()}</Heading>
                                             <Controller
                                                 control={form.control}
                                                 name={`${fieldName}.${idx}.vurdering`}
