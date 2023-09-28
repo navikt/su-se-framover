@@ -2,6 +2,8 @@ export default {
     'vurderTilbakekreving.tittel': 'Vurdering av kravgrunnlag',
 
     'stegIndikator.vurdering': 'Vurdering',
+    'stegIndikator.brev': 'Brev',
+
     'vurderTilbakekreving.skalBeløpBliTilbakekrevd': 'Skal beløpet tilbakekreves?',
     'vurderTilbakekreving.skalTilbakekreve': 'Beløpet skal tilbakekreves',
     'vurderTilbakekreving.skalIkkeTilbakekreve': 'Beløpet skal ikke tilbakekreves',

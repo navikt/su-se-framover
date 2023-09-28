@@ -31,7 +31,7 @@ const BehandleTilbakekreving = (props: {
         <div className={styles.pageContainer}>
             <TilbakekrevingStegIndikator
                 sakId={props.sakId}
-                behandlingId={behandling?.id ?? ''}
+                behandling={behandling}
                 aktivSteg={TilbakekrevingSteg.Vurdering}
             />
             <div className={styles.contentContainer}>

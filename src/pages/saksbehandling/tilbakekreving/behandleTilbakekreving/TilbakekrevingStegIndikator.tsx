@@ -3,28 +3,51 @@ import React from 'react';
 import Framdriftsindikator, { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import {
+    erTilbakekrevingsVurdertMedBrevEllerSenere,
+    erTilbakekrevingsVurdertUtenBrevEllerSenere,
+} from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 
 import { TilbakekrevingSteg } from '../../types';
 import messages from '../Tilbakekreving-nb';
 
-const TilbakekrevingStegIndikator = (props: { sakId: string; behandlingId: string; aktivSteg: TilbakekrevingSteg }) => {
+const stegsInformasjon = (behandling: ManuellTilbakekrevingsbehandling, steg: TilbakekrevingSteg) => {
+    switch (steg) {
+        case TilbakekrevingSteg.Vurdering:
+            return erTilbakekrevingsVurdertUtenBrevEllerSenere(behandling)
+                ? { erKlikkbar: true, linjeStatus: Linjestatus.Ok }
+                : { erKlikkbar: false, linjeStatus: Linjestatus.Ingenting };
+        case TilbakekrevingSteg.Brev:
+            return erTilbakekrevingsVurdertMedBrevEllerSenere(behandling)
+                ? { erKlikkbar: true, linjeStatus: Linjestatus.Ok }
+                : { erKlikkbar: false, linjeStatus: Linjestatus.Ingenting };
+    }
+};
+
+const TilbakekrevingStegIndikator = (props: {
+    sakId: string;
+    behandling: ManuellTilbakekrevingsbehandling;
+    aktivSteg: TilbakekrevingSteg;
+}) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <Framdriftsindikator
-            elementer={[
-                {
-                    id: TilbakekrevingSteg.Vurdering,
-                    erKlikkbar: false,
-                    label: formatMessage(`stegIndikator.${TilbakekrevingSteg.Vurdering}`),
-                    status: Linjestatus.Ingenting,
+            elementer={Object.values(TilbakekrevingSteg).map((steg) => {
+                const stegInfo = stegsInformasjon(props.behandling, steg);
+                return {
+                    id: steg,
+                    erKlikkbar: stegInfo.erKlikkbar,
+                    label: formatMessage(`stegIndikator.${steg}`),
+                    status: stegInfo.linjeStatus,
                     url: Routes.tilbakekrevingValgtBehandling.createURL({
                         sakId: props.sakId,
-                        behandlingId: props.behandlingId,
-                        steg: TilbakekrevingSteg.Vurdering,
+                        behandlingId: props.behandling.id,
+                        steg: steg,
                     }),
-                },
-            ]}
+                };
+            })}
             aktivId={props.aktivSteg}
         />
     );
