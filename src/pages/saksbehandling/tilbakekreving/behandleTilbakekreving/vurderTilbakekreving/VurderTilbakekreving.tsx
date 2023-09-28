@@ -2,7 +2,8 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Controller, UseFormTrigger, useFieldArray, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -15,6 +16,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
 import { KlasseKode, KlasseType } from '~src/types/Kravgrunnlag';
 import {
     ManuellTilbakekrevingsbehandling,
@@ -33,29 +35,77 @@ const VurderTilbakekreving = (props: {
     tilbakekreving: ManuellTilbakekrevingsbehandling;
 }) => {
     const fieldName = 'grunnlagsperioder';
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(vurderTilbakekrevingsbehandling);
 
+    const defaultValuesFraBehandling = props.tilbakekreving.månedsvurderinger.map((måned) => ({
+        måned: Måned.fromString(måned.måned),
+        vurdering: måned.vurdering,
+    }));
+
+    const defaultValuesFraKravgunnlag = props.tilbakekreving.kravgrunnlag.grunnlagsperiode.map((periode) => ({
+        måned: Måned.fromStringPeriode(periode.periode),
+        vurdering: null,
+    }));
+
     const form = useForm<VurderTilbakekrevingFormData>({
         defaultValues: {
-            grunnlagsperioder: props.tilbakekreving.kravgrunnlag.grunnlagsperiode.map((periode) => ({
-                måned: Måned.fromStringPeriode(periode.periode),
-                vurdering: null,
-            })),
+            grunnlagsperioder:
+                defaultValuesFraBehandling.length > 0 ? defaultValuesFraBehandling : defaultValuesFraKravgunnlag,
         },
         resolver: yupResolver(vurderTilbakekrevingSchema),
     });
 
-    const handleSubmit = (values: VurderTilbakekrevingFormData) => {
-        lagre({
-            sakId: props.sakId,
-            saksversjon: props.saksversjon,
-            behandlingId: props.tilbakekreving.id,
-            måneder: values.grunnlagsperioder.map((periode) => ({
-                måned: periode.måned.toString(),
-                vurdering: periode.vurdering!,
-            })),
+    const handleLagreOgFortsettSenereClick = async (
+        data: VurderTilbakekrevingFormData,
+        trigger: UseFormTrigger<VurderTilbakekrevingFormData>,
+    ) => {
+        await trigger().then((isValid) => {
+            if (isValid) {
+                lagre(
+                    {
+                        sakId: props.sakId,
+                        saksversjon: props.saksversjon,
+                        behandlingId: props.tilbakekreving.id,
+                        måneder: data.grunnlagsperioder.map((periode) => ({
+                            måned: periode.måned.toString(),
+                            vurdering: periode.vurdering!,
+                        })),
+                    },
+                    () => {
+                        navigate(
+                            routes.saksoversiktValgtSak.createURL({
+                                sakId: props.sakId,
+                            }),
+                        );
+                    },
+                );
+            }
         });
+    };
+
+    const handleSubmit = (values: VurderTilbakekrevingFormData) => {
+        lagre(
+            {
+                sakId: props.sakId,
+                saksversjon: props.saksversjon,
+                behandlingId: props.tilbakekreving.id,
+                måneder: values.grunnlagsperioder.map((periode) => ({
+                    måned: periode.måned.toString(),
+                    vurdering: periode.vurdering!,
+                })),
+            },
+            () => {
+                navigate(
+                    routes.tilbakekrevingValgtBehandling.createURL({
+                        sakId: props.sakId,
+                        behandlingId: props.tilbakekreving.id,
+                        steg: TilbakekrevingSteg.Brev,
+                    }),
+                );
+            },
+        );
     };
 
     const { fields } = useFieldArray({
@@ -162,7 +212,12 @@ const VurderTilbakekreving = (props: {
                                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                             />
                             <Navigasjonsknapper
-                                fortsettSenere={{}}
+                                neste={{
+                                    loading: RemoteData.isPending(status),
+                                }}
+                                fortsettSenere={{
+                                    onClick: () => handleLagreOgFortsettSenereClick(form.getValues(), form.trigger),
+                                }}
                                 tilbake={{
                                     url: routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
                                 }}
