@@ -1,11 +1,24 @@
-import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import {
+    ManuellTilbakekrevingsbehandling,
+    TilbakekrevingsbehandlingStatus,
+} from '~src/types/ManuellTilbakekrevingsbehandling';
 
-export const erTilbakekrevingsbehandlingÅpen = (t: ManuellTilbakekrevingsbehandling): boolean => {
-    console.log(t, 'TODO: Implementer erTilbakekrevingsbehandlingÅpen');
-    return true;
-};
+export const erTilbakekrevingsbehandlingÅpen = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t.status === TilbakekrevingsbehandlingStatus.OPPRETTET ||
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT_UTEN_BREV ||
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
+    t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING;
 
-export const erTilbakekrevingTilAttestering = (t: ManuellTilbakekrevingsbehandling): boolean => {
-    console.log(t, 'TODO: Implementer erTilbakekrevingTilAttestering');
-    return false;
-};
+export const erTilbakekrevingTilAttestering = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING;
+
+export const erTilbakekrevingsVurdertUtenBrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT_UTEN_BREV ||
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
+    t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
+    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;
+
+export const erTilbakekrevingsVurdertMedBrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
+    t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
+    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;
