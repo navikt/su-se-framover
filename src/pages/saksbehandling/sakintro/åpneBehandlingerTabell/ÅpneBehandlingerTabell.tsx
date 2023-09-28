@@ -17,6 +17,7 @@ import SuTabell, { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import {
     getDataCellInfo,
     isKlage,
+    isManuellTilbakekrevingsbehandling,
     isRegulering,
     isRevurdering,
     isSøknadMedEllerUtenBehandling,
@@ -31,11 +32,13 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Klage } from '~src/types/Klage';
+import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering, Reguleringstype } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { erKlageTilAttestering, hentSisteVurderteSteg } from '~src/utils/klage/klageUtils';
+import { erTilbakekrevingTilAttestering } from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 import {
     erInformasjonsRevurdering,
     erRevurderingGjenopptak,
@@ -49,6 +52,7 @@ import {
     kanNavigeresTilOppsummering,
 } from '~src/utils/SøknadsbehandlingUtils';
 
+import { TilbakekrevingSteg } from '../../types';
 import messages from '../sakintro-nb';
 
 import styles from './ÅpneBehandlingerTabell.module.less';
@@ -111,6 +115,9 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                 {isRevurdering(props.b) && <RevurderingKnapper sakId={props.sakId} r={props.b} />}
                 {isKlage(props.b) && <KlageKnapper sakId={props.sakId} k={props.b} />}
                 {isRegulering(props.b) && <ReguleringKnapper sakId={props.sakId} r={props.b} />}
+                {isManuellTilbakekrevingsbehandling(props.b) && (
+                    <TilbakekrevingsKnapper sakId={props.sakId} t={props.b} />
+                )}
             </div>
         );
     };
@@ -441,6 +448,57 @@ const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+        </div>
+    );
+};
+
+const TilbakekrevingsKnapper = (props: { sakId: string; t: ManuellTilbakekrevingsbehandling }) => {
+    const user = useUserContext();
+    const { formatMessage } = useI18n({ messages });
+
+    if (erTilbakekrevingTilAttestering(props.t)) {
+        if (user.isAttestant && user.navIdent !== props.t.opprettetAv) {
+            return (
+                <LinkAsButton
+                    variant="secondary"
+                    size="small"
+                    href={Routes.attestering.createURL({
+                        sakId: props.sakId,
+                        behandlingId: props.t.id,
+                    })}
+                >
+                    {formatMessage('attestering.attester')}
+                </LinkAsButton>
+            );
+        }
+        return <></>;
+    }
+
+    return (
+        <div className={styles.dataCellButtonsContainer}>
+            <LinkAsButton
+                variant="secondary"
+                size="small"
+                href={Routes.avsluttBehandling.createURL({
+                    sakId: props.sakId,
+                    id: props.t.id,
+                })}
+            >
+                {formatMessage('datacell.info.knapp.avsluttBehandling')}
+            </LinkAsButton>
+
+            <LinkAsButton
+                variant="primary"
+                size="small"
+                href={Routes.tilbakekrevingValgtBehandling.createURL({
+                    sakId: props.sakId,
+                    behandlingId: props.t.id,
+                    //TODO - må utlede steg fra behandling
+                    steg: TilbakekrevingSteg.Vurdering,
+                })}
+            >
+                {formatMessage('datacell.info.knapp.fortsettBehandling')}
+            </LinkAsButton>
         </div>
     );
 };

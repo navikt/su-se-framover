@@ -16,6 +16,7 @@ import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
 import { KlageStatus } from '~src/types/Klage';
 import { Sakstype } from '~src/types/Sak';
 import { erKlageAvsluttet, erKlageÅpen } from '~src/utils/klage/klageUtils';
+import { erTilbakekrevingsbehandlingÅpen } from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 import { erReguleringAvsluttet, erReguleringÅpen } from '~src/utils/ReguleringUtils';
 import { erRevurderingAvsluttet, erRevurderingÅpen } from '~src/utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, erSøknadLukket, erSøknadÅpen } from '~src/utils/søknad/søknadUtils';
@@ -81,7 +82,15 @@ const Sakintro = () => {
             return { søknad: åpenSøknad, søknadsbehandling: søknadsbehandling };
         });
 
-    const alleÅpneBehandlinger = [...åpneRevurderinger, ...åpneReguleringer, ...åpneSøknader, ...åpneKlager];
+    const åpneTilbakekrevingsbehandlinger = props.sak.tilbakekrevinger.filter(erTilbakekrevingsbehandlingÅpen);
+
+    const alleÅpneBehandlinger = [
+        ...åpneRevurderinger,
+        ...åpneReguleringer,
+        ...åpneSøknader,
+        ...åpneKlager,
+        ...åpneTilbakekrevingsbehandlinger,
+    ];
 
     return (
         <div className={styles.sakintroContainer}>
