@@ -15,10 +15,16 @@ import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 import messages from './OppsummeringAvKravgrunnlag-nb';
 import styles from './OppsummeringAvKravgrunnlag.module.less';
 
-const OppsummeringAvKravgrunnlag = (props: { kravgrunnlag: Kravgrunnlag; visSomEnkeltPanel?: boolean }) => {
+const OppsummeringAvKravgrunnlag = (props: {
+    kravgrunnlag: Kravgrunnlag;
+    visSomEnkeltPanel?: boolean;
+    bareOppsummerMetaInfo?: boolean;
+}) => {
     const { formatMessage } = useI18n({ messages });
 
-    if (props.visSomEnkeltPanel) {
+    if (props.bareOppsummerMetaInfo) {
+        return <OppsummeringAvKravgrunnlagMetaInfo kravgrunnlag={props.kravgrunnlag} />;
+    } else if (props.visSomEnkeltPanel) {
         return (
             <div>
                 <OppsummeringAvKravgrunnlagMetaInfo kravgrunnlag={props.kravgrunnlag} />

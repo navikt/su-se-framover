@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { BodyShort, Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
+import { Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
@@ -8,6 +8,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { vurderTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -104,26 +105,46 @@ const VurderTilbakekreving = (props: {
                                                         beløp.type === KlasseType.YTEL,
                                                 )
                                                 .map((beløp, idx) => (
-                                                    <div key={idx}>
-                                                        <div>
-                                                            <BodyShort>Skatteprosent</BodyShort>
-                                                            <BodyShort>{beløp.skatteProsent}</BodyShort>
+                                                    <div key={idx} className={styles.kravgrunnlagsInfoContainer}>
+                                                        <OppsummeringPar
+                                                            label={formatMessage(
+                                                                'vurderTilbakekreving.kravgrunnlagsInfo.skatteprosent',
+                                                            )}
+                                                            verdi={beløp.skatteProsent}
+                                                            retning="vertikal"
+                                                        />
+
+                                                        <div className={styles.detalje}>
+                                                            <OppsummeringPar
+                                                                label={formatMessage(
+                                                                    'vurderTilbakekreving.kravgrunnlagsInfo.tidligereUtbetalt',
+                                                                )}
+                                                                verdi={beløp.beløpTidligereUtbetaling}
+                                                                retning="vertikal"
+                                                            />
+                                                            <OppsummeringPar
+                                                                label={formatMessage(
+                                                                    'vurderTilbakekreving.kravgrunnlagsInfo.nyUtbetaling',
+                                                                )}
+                                                                verdi={beløp.beløpNyUtbetaling}
+                                                                retning="vertikal"
+                                                            />
                                                         </div>
-                                                        <div>
-                                                            <BodyShort>Tidligere utbetalt</BodyShort>
-                                                            <BodyShort>{beløp.beløpTidligereUtbetaling}</BodyShort>
-                                                        </div>
-                                                        <div>
-                                                            <BodyShort>ny utbetaling</BodyShort>
-                                                            <BodyShort>{beløp.beløpNyUtbetaling}</BodyShort>
-                                                        </div>
-                                                        <div>
-                                                            <BodyShort>beløp skal tilbakekreves</BodyShort>
-                                                            <BodyShort>{beløp.beløpSkalTilbakekreves}</BodyShort>
-                                                        </div>
-                                                        <div>
-                                                            <BodyShort>beløp skal ikke tilbakekreves</BodyShort>
-                                                            <BodyShort>{beløp.beløpSkalIkkeTilbakekreves}</BodyShort>
+                                                        <div className={styles.detalje}>
+                                                            <OppsummeringPar
+                                                                label={formatMessage(
+                                                                    'vurderTilbakekreving.kravgrunnlagsInfo.skalTilbakekreves',
+                                                                )}
+                                                                verdi={beløp.beløpSkalTilbakekreves}
+                                                                retning="vertikal"
+                                                            />
+                                                            <OppsummeringPar
+                                                                label={formatMessage(
+                                                                    'vurderTilbakekreving.kravgrunnlagsInfo.skalIkkeTilbakekreves',
+                                                                )}
+                                                                verdi={beløp.beløpSkalIkkeTilbakekreves}
+                                                                retning="vertikal"
+                                                            />
                                                         </div>
                                                     </div>
                                                 ))}
@@ -151,7 +172,12 @@ const VurderTilbakekreving = (props: {
                         </div>
                     </form>
                 ),
-                right: <OppsummeringAvKravgrunnlag kravgrunnlag={props.tilbakekreving.kravgrunnlag} />,
+                right: (
+                    <OppsummeringAvKravgrunnlag
+                        kravgrunnlag={props.tilbakekreving.kravgrunnlag}
+                        bareOppsummerMetaInfo
+                    />
+                ),
             }}
         </ToKolonner>
     );
