@@ -5,7 +5,6 @@ import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRev
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Periode } from '~src/types/Periode';
 import {
     Gjenopptak,
     IverksattRevurdering,
@@ -151,17 +150,14 @@ export async function beregnOgSimuler(
     sakId: string,
     arg: {
         revurderingId: string;
-        periode: Periode<string>;
+        skalUtsetteTilbakekreving: boolean;
     },
 ): Promise<ApiClientResult<BeregnOgSimuler>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${arg.revurderingId}/beregnOgSimuler`,
         method: 'POST',
         body: {
-            periode: {
-                fraOgMed: formatISO(new Date(arg.periode.fraOgMed), { representation: 'date' }),
-                tilOgMed: formatISO(new Date(arg.periode.tilOgMed), { representation: 'date' }),
-            },
+            skalUtsetteTilbakekreving: arg.skalUtsetteTilbakekreving,
         },
     });
 }

@@ -12,7 +12,7 @@ import * as styles from './navigasjonsknapper.module.less';
  * Bruk heller bare et av verdiene istedenfor
  */
 const Navigasjonsknapper = (props: {
-    neste: {
+    neste?: {
         loading?: boolean;
         tekst?: string;
         onClick?: () => void;
@@ -54,7 +54,7 @@ const Navigasjonsknapper = (props: {
                             props.fortsettSenere!.onClick!();
                         }}
                         type="button"
-                        loading={props.fortsettSenere?.loading ?? (knappTrykket === 'avslutt' && props.neste.loading)}
+                        loading={props.fortsettSenere?.loading ?? (knappTrykket === 'avslutt' && props.neste?.loading)}
                     >
                         {props.fortsettSenere?.tekst ?? formatMessage('knapp.lagreOgfortsettSenere')}
                     </Button>
@@ -64,12 +64,12 @@ const Navigasjonsknapper = (props: {
                 <Button
                     onClick={() => {
                         setKnappTrykket('neste');
-                        props.neste.onClick?.();
+                        props.neste?.onClick?.();
                     }}
-                    type={props.neste.onClick ? 'button' : 'submit'}
-                    loading={knappTrykket === 'neste' && props.neste.loading}
+                    type={props.neste?.onClick ? 'button' : 'submit'}
+                    loading={knappTrykket === 'neste' && props.neste?.loading}
                 >
-                    {props.neste.tekst ? props.neste.tekst : formatMessage('knapp.neste')}
+                    {props.neste?.tekst ? props.neste?.tekst : formatMessage('knapp.neste')}
                 </Button>
             </div>
             <div className={styles.navigationButtonContainer}>{props.fortsettSenere && <Tilbake />}</div>

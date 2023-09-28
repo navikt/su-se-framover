@@ -1,13 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button } from '@navikt/ds-react';
-import { pipe } from 'fp-ts/lib/function';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Alert, Button, HelpText } from '@navikt/ds-react';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { BeregnOgSimuler } from '~src/api/revurderingApi';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
-import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import Beregningblokk from '~src/components/oppsummering/oppsummeringAvRevurdering/beregningblokk/Beregningblokk';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -32,6 +32,7 @@ import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøtte
 
 import messages from './RevurderingBeregnOgsimuler-nb';
 import styles from './RevurderingBeregnOgSimuler.module.less';
+import { BeregnOgSimulerFormData, beregnOgSimulerSchema } from './RevurderingBeregnOgSimulerUtils';
 
 const RevurderingBeregnOgSimuler = (props: {
     informasjonsRevurdering: InformasjonsRevurdering;
@@ -40,7 +41,7 @@ const RevurderingBeregnOgSimuler = (props: {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const forrigeUrl = props.seksjoner[1].linjer.at(-1)?.url;
-
+    const [needsBeregning, setNeedsBeregning] = React.useState(false);
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
 
     const beregningStatus = harBeregninger(props.informasjonsRevurdering)
@@ -50,16 +51,6 @@ const RevurderingBeregnOgSimuler = (props: {
               varselmeldinger: [],
           })
         : beregnOgSimulerStatus;
-
-    React.useEffect(() => {
-        if (RemoteData.isInitial(beregningStatus)) {
-            beregnOgSimuler({
-                sakId: props.informasjonsRevurdering.sakId,
-                periode: props.informasjonsRevurdering.periode,
-                revurderingId: props.informasjonsRevurdering.id,
-            });
-        }
-    }, [props.informasjonsRevurdering.id]);
 
     const getNesteUrl = (beregnetOgSimulertRevurdering: InformasjonsRevurdering) => {
         if (erRevurderingTilbakekrevingsbehandling(beregnetOgSimulertRevurdering)) {
@@ -79,65 +70,94 @@ const RevurderingBeregnOgSimuler = (props: {
         }
     };
 
+    const form = useForm<BeregnOgSimulerFormData>({
+        defaultValues: {
+            skalUtsetteTilbakekreving:
+                RemoteData.isSuccess(beregningStatus) &&
+                beregningStatus.value.revurdering.tilbakekrevingsbehandling !== null
+                    ? false
+                    : RemoteData.isSuccess(beregningStatus) &&
+                      beregningStatus.value.revurdering.tilbakekrevingsbehandling === null
+                    ? true
+                    : null,
+        },
+        resolver: yupResolver(beregnOgSimulerSchema),
+    });
+
+    const handleBeregnOgSimuler = (data: BeregnOgSimulerFormData) => {
+        if (data.skalUtsetteTilbakekreving === null) {
+            form.trigger('skalUtsetteTilbakekreving');
+            return;
+        } else {
+            beregnOgSimuler({
+                sakId: props.informasjonsRevurdering.sakId,
+                revurderingId: props.informasjonsRevurdering.id,
+                skalUtsetteTilbakekreving: data.skalUtsetteTilbakekreving,
+            });
+        }
+    };
+
+    const handleSubmit = () => {
+        if (!RemoteData.isSuccess(beregningStatus)) {
+            setNeedsBeregning(true);
+            return;
+        }
+        navigate(getNesteUrl(beregningStatus.value.revurdering));
+    };
+
     return (
-        <div className={styles.container}>
-            {pipe(
-                beregningStatus,
-                RemoteData.fold3(
-                    () => <SpinnerMedTekst text={formatMessage('beregnOgSimuler.beregner')} />,
-                    (err) => (
-                        <div className={styles.content}>
-                            <ApiErrorAlert error={err} />
-                            <Button variant="secondary" onClick={() => navigate(forrigeUrl!)}>
-                                {formatMessage('knapp.tilbake')}
-                            </Button>
-                        </div>
-                    ),
-                    (res) => (
-                        <div className={styles.successContainer}>
-                            {harSimulering(res.revurdering) &&
-                                periodenInneholderTilbakekrevingOgAndreTyper(
-                                    res.revurdering.simulering,
-                                    res.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT,
-                                ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
-                            <Beregningblokk revurdering={res.revurdering} />
-                            {res.feilmeldinger.length > 0 && <UtfallSomIkkeStøttes feilmeldinger={res.feilmeldinger} />}
-                            {res.varselmeldinger.length > 0 && (
-                                <UtfallSomIkkeStøttes feilmeldinger={res.varselmeldinger} infoMelding />
-                            )}
+        <form className={styles.container} onSubmit={form.handleSubmit(handleSubmit)}>
+            <HelpText className={styles.helpText}>{formatMessage('beregnOgSimuler.helpText')}</HelpText>
 
-                            <Button
-                                variant="secondary"
-                                loading={RemoteData.isPending(beregnOgSimulerStatus)}
-                                onClick={() =>
-                                    beregnOgSimuler({
-                                        sakId: props.informasjonsRevurdering.sakId,
-                                        periode: props.informasjonsRevurdering.periode,
-                                        revurderingId: props.informasjonsRevurdering.id,
-                                    })
-                                }
-                            >
-                                {formatMessage('beregnOgSimuler.ny')}
-                            </Button>
+            <div className={styles.inputContainer}>
+                <Controller
+                    control={form.control}
+                    name={'skalUtsetteTilbakekreving'}
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('beregnOgSimuler.utsettTilbakekreving')}
+                            error={fieldState.error?.message}
+                            {...field}
+                        />
+                    )}
+                />
+            </div>
 
-                            <Navigasjonsknapper
-                                neste={{
-                                    onClick: () =>
-                                        navigate(
-                                            getNesteUrl(
-                                                RemoteData.isSuccess(beregnOgSimulerStatus)
-                                                    ? beregnOgSimulerStatus.value.revurdering
-                                                    : props.informasjonsRevurdering,
-                                            ),
-                                        ),
-                                }}
-                                tilbake={{ url: forrigeUrl }}
-                            />
-                        </div>
-                    ),
-                ),
+            {RemoteData.isSuccess(beregningStatus) && (
+                <div className={styles.successContainer}>
+                    {harSimulering(beregningStatus.value.revurdering) &&
+                        periodenInneholderTilbakekrevingOgAndreTyper(
+                            beregningStatus.value.revurdering.simulering,
+                            beregningStatus.value.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT,
+                        ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
+                    <Beregningblokk revurdering={beregningStatus.value.revurdering} />
+                    {beregningStatus.value.feilmeldinger.length > 0 && (
+                        <UtfallSomIkkeStøttes feilmeldinger={beregningStatus.value.feilmeldinger} />
+                    )}
+                    {beregningStatus.value.varselmeldinger.length > 0 && (
+                        <UtfallSomIkkeStøttes feilmeldinger={beregningStatus.value.varselmeldinger} infoMelding />
+                    )}
+                </div>
             )}
-        </div>
+
+            <div className={styles.beregnKnappContainer}>
+                <Button
+                    variant="secondary"
+                    type="button"
+                    loading={RemoteData.isPending(beregnOgSimulerStatus)}
+                    onClick={() => handleBeregnOgSimuler(form.getValues())}
+                >
+                    {formatMessage('beregnOgSimuler.ny')}
+                </Button>
+                {needsBeregning && (
+                    <div className={styles.advarselKjørBeregning}>
+                        <Alert variant="warning">{formatMessage('alert.advarsel.kjørBeregningFørst')}</Alert>
+                    </div>
+                )}
+            </div>
+
+            <Navigasjonsknapper tilbake={{ url: forrigeUrl }} />
+        </form>
     );
 };
 

@@ -6,7 +6,6 @@ import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { Periode } from '~src/types/Periode';
 import {
     Gjenopptak,
     IverksattRevurdering,
@@ -118,12 +117,12 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 
 export const beregnOgSimuler = createAsyncThunk<
     { revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[]; varselmeldinger: ErrorMessage[] },
-    { sakId: string; revurderingId: string; periode: Periode<string> },
+    { sakId: string; revurderingId: string; skalUtsetteTilbakekreving: boolean },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode }, thunkApi) => {
+>('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, skalUtsetteTilbakekreving }, thunkApi) => {
     const res = await revurderingApi.beregnOgSimuler(sakId, {
         revurderingId,
-        periode,
+        skalUtsetteTilbakekreving,
     });
     if (res.status === 'ok') {
         return res.data;
