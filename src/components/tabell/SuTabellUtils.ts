@@ -44,7 +44,8 @@ export type DatacellStatus =
     | 'Underkjent'
     | 'Iverksatt'
     | 'Avsluttet'
-    | 'Oversendt';
+    | 'Oversendt'
+    | 'Vurdert';
 
 export type DataCellResultat = '-' | 'Avslag' | 'Innvilget' | 'Avvist' | 'Til vurdering' | 'Opphør' | 'Endring';
 
@@ -113,7 +114,21 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
     if (isManuellTilbakekrevingsbehandling(b)) {
         return {
             type: 'tilbakekreving',
-            status: '-',
+            status: (() => {
+                switch (b.status) {
+                    case 'OPPRETTET':
+                        return 'Opprettet';
+                    case 'VURDERT_UTEN_BREV':
+                        return 'Vurdert';
+                    case 'VURDERT_MED_BREV':
+                        return 'Vurdert';
+                    case 'TIL_ATTESTERING':
+                        return 'Til attestering';
+                    case 'IVERKSATT':
+                        return 'Iverksatt';
+                }
+                throw new Error('Ukjent status for tilbakekreving');
+            })(),
             resultat: '-',
             periode: '-',
             mottattOpprettetTidspunkt: b.opprettet,
