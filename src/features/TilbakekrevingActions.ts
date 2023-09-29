@@ -40,7 +40,7 @@ export const brevtekstTilbakekrevingsbehandling = createAsyncThunk<
     ManuellTilbakekrevingsbehandling,
     BrevtekstTilbakekrevingsbehandlingRequest,
     { rejectValue: ApiError }
->('tilbakekreving/vurder', async (args, thunkApi) => {
+>('tilbakekreving/brev', async (args, thunkApi) => {
     const res = await tilbakekrevingsApi.brevtekstTilbakekrevingsbehandling(args);
     if (res.status === 'ok') {
         return res.data;
