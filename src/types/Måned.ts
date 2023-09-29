@@ -1,4 +1,6 @@
 import * as DateFns from 'date-fns';
+import { Eq, contramap } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
 
 import * as DateUtils from '~src/utils/date/dateUtils';
 
@@ -71,6 +73,10 @@ class Måned {
             fraOgMed: DateUtils.toIsoDateOnlyString(DateFns.startOfMonth(referanceDate)),
             tilOgMed: DateUtils.toIsoDateOnlyString(DateFns.endOfMonth(referanceDate)),
         };
+    }
+
+    static eq(): Eq<Måned> {
+        return contramap((måned: Måned) => `${måned.#år}-${måned.#måned}`)(S.Eq);
     }
 
     /**

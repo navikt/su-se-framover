@@ -27,7 +27,11 @@ import Måned from '~src/types/Måned';
 import messages from '../../Tilbakekreving-nb';
 
 import styles from './VurderTilbakekreving.module.less';
-import { VurderTilbakekrevingFormData, vurderTilbakekrevingSchema } from './VurderTilbakekrevingUtils';
+import {
+    VurderTilbakekrevingFormData,
+    eqVurderTilbakekrevingFormData,
+    vurderTilbakekrevingSchema,
+} from './VurderTilbakekrevingUtils';
 
 const VurderTilbakekreving = (props: {
     sakId: string;
@@ -39,6 +43,12 @@ const VurderTilbakekreving = (props: {
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(vurderTilbakekrevingsbehandling);
 
+    const nesteUrl = routes.tilbakekrevingValgtBehandling.createURL({
+        sakId: props.sakId,
+        behandlingId: props.tilbakekreving.id,
+        steg: TilbakekrevingSteg.Brev,
+    });
+
     const defaultValuesFraBehandling = props.tilbakekreving.månedsvurderinger.map((måned) => ({
         måned: Måned.fromString(måned.måned),
         vurdering: måned.vurdering,
@@ -49,69 +59,55 @@ const VurderTilbakekreving = (props: {
         vurdering: null,
     }));
 
+    const initialValues =
+        defaultValuesFraBehandling.length > 0
+            ? { grunnlagsperioder: defaultValuesFraBehandling }
+            : { grunnlagsperioder: defaultValuesFraKravgunnlag };
+
     const form = useForm<VurderTilbakekrevingFormData>({
-        defaultValues: {
-            grunnlagsperioder:
-                defaultValuesFraBehandling.length > 0 ? defaultValuesFraBehandling : defaultValuesFraKravgunnlag,
-        },
+        defaultValues: initialValues,
         resolver: yupResolver(vurderTilbakekrevingSchema),
     });
+    const { fields } = useFieldArray({ name: fieldName, control: form.control });
 
-    const handleLagreOgFortsettSenereClick = async (
-        data: VurderTilbakekrevingFormData,
-        trigger: UseFormTrigger<VurderTilbakekrevingFormData>,
-    ) => {
-        await trigger().then((isValid) => {
-            if (isValid) {
-                lagre(
-                    {
-                        sakId: props.sakId,
-                        saksversjon: props.saksversjon,
-                        behandlingId: props.tilbakekreving.id,
-                        måneder: data.grunnlagsperioder.map((periode) => ({
-                            måned: periode.måned.toString(),
-                            vurdering: periode.vurdering!,
-                        })),
-                    },
-                    () => {
-                        navigate(
-                            routes.saksoversiktValgtSak.createURL({
-                                sakId: props.sakId,
-                            }),
-                        );
-                    },
-                );
-            }
-        });
-    };
-
-    const handleSubmit = (values: VurderTilbakekrevingFormData) => {
+    const save = (data: VurderTilbakekrevingFormData, onSuccess: () => void) => {
         lagre(
             {
                 sakId: props.sakId,
                 saksversjon: props.saksversjon,
                 behandlingId: props.tilbakekreving.id,
-                måneder: values.grunnlagsperioder.map((periode) => ({
+                måneder: data.grunnlagsperioder.map((periode) => ({
                     måned: periode.måned.toString(),
                     vurdering: periode.vurdering!,
                 })),
             },
-            () => {
-                navigate(
-                    routes.tilbakekrevingValgtBehandling.createURL({
-                        sakId: props.sakId,
-                        behandlingId: props.tilbakekreving.id,
-                        steg: TilbakekrevingSteg.Brev,
-                    }),
-                );
-            },
+            onSuccess,
         );
     };
 
-    const { fields } = useFieldArray({
-        name: fieldName,
-        control: form.control,
-    });
+    const handleLagreOgFortsettSenereClick = async (
+        data: VurderTilbakekrevingFormData,
+        trigger: UseFormTrigger<VurderTilbakekrevingFormData>,
+    ) => {
+        if (eqVurderTilbakekrevingFormData.equals(initialValues, data)) {
+            navigate(routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            return;
+        }
+
+        await trigger().then((isValid) => {
+            if (isValid) {
+                save(data, () => navigate(routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })));
+            }
+        });
+    };
+
+    const handleSubmit = (values: VurderTilbakekrevingFormData) => {
+        if (eqVurderTilbakekrevingFormData.equals(initialValues, values)) {
+            navigate(nesteUrl);
+            return;
+        }
+        save(values, () => navigate(nesteUrl));
+    };
 
     return (
         <ToKolonner tittel={formatMessage('vurderTilbakekreving.tittel')}>
