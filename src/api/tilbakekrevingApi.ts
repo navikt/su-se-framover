@@ -1,5 +1,6 @@
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import {
+    BrevtekstTilbakekrevingsbehandlingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
     VurderTilbakekrevingsbehandlingRequest,
@@ -37,6 +38,19 @@ export async function vurderTilbakekrevingsbehandling(
         body: {
             versjon: arg.saksversjon,
             måneder: arg.måneder,
+        },
+    });
+}
+
+export async function brevtekstTilbakekrevingsbehandling(
+    arg: BrevtekstTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/brevtekst`,
+        method: 'POST',
+        body: {
+            versjon: arg.saksversjon,
+            brevtekst: arg.brevtekst,
         },
     });
 }

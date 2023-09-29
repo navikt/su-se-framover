@@ -1,10 +1,17 @@
-import { Nullable } from '~src/lib/types';
+import { struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
+
+import { Nullable, eqNullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
 export interface BrevForTilbakekrevingFormData {
-    fritekstTilBrev: Nullable<string>;
+    brevtekst: Nullable<string>;
 }
 
+export const eqBrevForTilbakekrevingFormData = struct<BrevForTilbakekrevingFormData>({
+    brevtekst: eqNullable(S.Eq),
+});
+
 export const brevForTilbakekrevingSchema = yup.object<BrevForTilbakekrevingFormData>({
-    fritekstTilBrev: yup.string().nullable().required(),
+    brevtekst: yup.string().nullable().required(),
 });

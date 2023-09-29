@@ -1,11 +1,16 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { brevtekstTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
@@ -22,14 +27,28 @@ const BrevForTilbakekreving = (props: {
     saksversjon: number;
     tilbakekreving: ManuellTilbakekrevingsbehandling;
 }) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
+    const [brevStatus, lagreBrev] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
 
     const form = useForm<BrevForTilbakekrevingFormData>({
         resolver: yupResolver(brevForTilbakekrevingSchema),
         defaultValues: {
-            fritekstTilBrev: props.tilbakekreving.fritekst,
+            brevtekst: props.tilbakekreving.fritekst,
         },
     });
+
+    const save = (data: BrevForTilbakekrevingFormData, onSuccess: () => void) => {
+        lagreBrev(
+            {
+                sakId: props.sakId,
+                saksversjon: props.saksversjon,
+                behandlingId: props.tilbakekreving.id,
+                brevtekst: data.brevtekst!,
+            },
+            onSuccess,
+        );
+    };
 
     const handleLagreOgFortsettSenereClick = async (
         data: BrevForTilbakekrevingFormData,
@@ -37,30 +56,20 @@ const BrevForTilbakekreving = (props: {
     ) => {
         await trigger().then((isValid) => {
             if (isValid) {
-                console.log('form is valid', data);
-            } else {
-                console.log('form not valid');
+                save(data, () => navigate(routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })));
             }
         });
     };
 
     const handleSubmit = (data: BrevForTilbakekrevingFormData) => {
-        console.log(data);
+        save(data, () => {
+            console.log('navigering til neste steg');
+        });
     };
 
     const onSeBrevClick = () => {
         console.log('onSeBrevClick');
     };
-
-    /*
-    const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
-
-    const onSeBrevClick = (data: VurderingAvKlageFormData) => {
-        lagreVurderingAvKlage(lagOpprettholdApiBody(data), () => {
-            hentBrev({ sakId: props.sakId, klageId: props.klage.id });
-        });
-    };
-    */
 
     return (
         <ToKolonner tittel={formatMessage('brevForTilbakekreving.tittel')}>
@@ -70,7 +79,7 @@ const BrevForTilbakekreving = (props: {
                         <div className={styles.fritesktOgVisBrevContainer}>
                             <Controller
                                 control={form.control}
-                                name={'fritekstTilBrev'}
+                                name={'brevtekst'}
                                 render={({ field, fieldState }) => (
                                     <Textarea
                                         {...field}
@@ -100,11 +109,9 @@ const BrevForTilbakekreving = (props: {
                                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                             />
                             <Navigasjonsknapper
-                                neste={
-                                    {
-                                        //loading: RemoteData.isPending(status),
-                                    }
-                                }
+                                neste={{
+                                    loading: RemoteData.isPending(brevStatus),
+                                }}
                                 fortsettSenere={{
                                     onClick: () => handleLagreOgFortsettSenereClick(form.getValues(), form.trigger),
                                 }}
@@ -117,7 +124,7 @@ const BrevForTilbakekreving = (props: {
                                 }}
                             />
 
-                            {/* RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} /> */}
+                            {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                         </div>
                     </form>
                 ),

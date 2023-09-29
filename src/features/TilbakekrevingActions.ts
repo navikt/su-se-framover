@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~src/api/apiClient';
 import * as tilbakekrevingsApi from '~src/api/tilbakekrevingApi';
 import {
+    BrevtekstTilbakekrevingsbehandlingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
     VurderTilbakekrevingsbehandlingRequest,
@@ -29,6 +30,18 @@ export const vurderTilbakekrevingsbehandling = createAsyncThunk<
     { rejectValue: ApiError }
 >('tilbakekreving/vurder', async (args, thunkApi) => {
     const res = await tilbakekrevingsApi.vurderTilbakekrevingsbehandling(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const brevtekstTilbakekrevingsbehandling = createAsyncThunk<
+    ManuellTilbakekrevingsbehandling,
+    BrevtekstTilbakekrevingsbehandlingRequest,
+    { rejectValue: ApiError }
+>('tilbakekreving/vurder', async (args, thunkApi) => {
+    const res = await tilbakekrevingsApi.brevtekstTilbakekrevingsbehandling(args);
     if (res.status === 'ok') {
         return res.data;
     }

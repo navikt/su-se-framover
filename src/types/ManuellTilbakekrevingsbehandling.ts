@@ -42,3 +42,10 @@ export interface VurderTilbakekrevingsbehandlingRequest {
     behandlingId: string;
     måneder: Array<{ måned: string; vurdering: TilbakekrevingsVurdering }>;
 }
+
+export interface BrevtekstTilbakekrevingsbehandlingRequest {
+    sakId: string;
+    saksversjon: number;
+    behandlingId: string;
+    brevtekst: string;
+}
