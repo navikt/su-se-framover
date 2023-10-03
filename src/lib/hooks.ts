@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
@@ -134,4 +134,57 @@ export const useExclusiveCombine = <Error, Success>(...args: Array<RemoteData.Re
     return useMemo(() => {
         return args.find((a) => !RemoteData.isInitial(a)) ?? args[0];
     }, [args]);
+};
+
+/**
+ * useAutosave er for bruk dersom du vil kalle på en funksjon etter X sekunder, der endringer i dependencies resetter timeren.
+ *
+ * @param callback - funksjonen som skal kjøres for hver delay
+ * @param delay - tiden i millisekunder autosaven skal kjøres
+ * @param deps - Et set med dependencies som resetter timeren for hver endring
+ */
+export const useAutosave = (callback: () => void, delay = 5000, deps: unknown[] = []) => {
+    React.useEffect(() => {
+        if (delay) {
+            const interval = setInterval(callback, delay);
+
+            return () => clearInterval(interval);
+        }
+
+        return;
+    }, [delay, ...deps]);
+};
+
+/**
+ * useAutosaveOnChange er for bruk dersom du vil kalle på en funksjon hvert X sekund, & dersom data har endret på seg
+ *
+ * @param data - dataen som sjekkes på om ting har endret seg
+ * @param callback - funksjonen som skal kjøres
+ * @param delay - tiden i millisekunder autosaven skal kjøres
+ */
+export const useAutosaveOnChange = <T>(data: T, callback: () => void, delay = 5000) => {
+    const [isSaving, setIsSaving] = React.useState(false);
+    const initialRender = React.useRef(true);
+    const prev = React.useRef(data);
+    const live = React.useRef(data);
+
+    useAutosave(() => {
+        if (prev.current !== live.current) {
+            prev.current = live.current;
+            callback();
+        } else {
+            setIsSaving(false);
+        }
+    }, delay);
+
+    useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false;
+        } else {
+            setIsSaving(true);
+        }
+        live.current = data;
+    }, [data]);
+
+    return { isSaving };
 };

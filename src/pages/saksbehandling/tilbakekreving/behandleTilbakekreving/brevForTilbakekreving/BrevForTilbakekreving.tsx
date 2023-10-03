@@ -1,16 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Textarea } from '@navikt/ds-react';
+import { Button, Loader, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { brevtekstTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useAsyncActionCreator, useAutosaveOnChange } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
@@ -30,6 +31,7 @@ const BrevForTilbakekreving = (props: {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [brevStatus, lagreBrev] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
+    const [autosaveStatus, autosave] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
 
     const form = useForm<BrevForTilbakekrevingFormData>({
         resolver: yupResolver(brevForTilbakekrevingSchema),
@@ -71,6 +73,15 @@ const BrevForTilbakekreving = (props: {
         console.log('onSeBrevClick');
     };
 
+    const { isSaving } = useAutosaveOnChange(form.watch('brevtekst'), () =>
+        autosave({
+            sakId: props.sakId,
+            saksversjon: props.saksversjon,
+            behandlingId: props.tilbakekreving.id,
+            brevtekst: form.watch('brevtekst') ?? '',
+        }),
+    );
+
     return (
         <ToKolonner tittel={formatMessage('brevForTilbakekreving.tittel')}>
             {{
@@ -84,7 +95,20 @@ const BrevForTilbakekreving = (props: {
                                     <Textarea
                                         {...field}
                                         minRows={5}
-                                        label={formatMessage('brevForTilbakekreving.fritekst.label')}
+                                        label={
+                                            <div className={styles.textareaLabel}>
+                                                {formatMessage('brevForTilbakekreving.fritekst.label')}
+                                                <div className="lol">
+                                                    {isSaving ? <Loader size="small" /> : null}
+                                                    {!isSaving && RemoteData.isSuccess(autosaveStatus) ? (
+                                                        <SuccessIcon width={20} />
+                                                    ) : null}
+                                                    {!isSaving && RemoteData.isFailure(autosaveStatus) ? (
+                                                        <ErrorIcon width={20} />
+                                                    ) : null}
+                                                </div>
+                                            </div>
+                                        }
                                         value={field.value ?? ''}
                                         error={fieldState.error?.message}
                                     />
