@@ -1,4 +1,3 @@
-import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import {
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
@@ -8,15 +7,6 @@ import {
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
-
-export async function hentSisteFerdigbehandledeKravgrunnlag(arg: {
-    sakId: string;
-}): Promise<ApiClientResult<Kravgrunnlag>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/tilbakekreving/sisteKravgrunnlag`,
-        method: 'GET',
-    });
-}
 
 export async function opprettNyTilbakekrevingsbehandling(
     arg: OpprettNyTilbakekrevingsbehandlingRequest,

@@ -1,16 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Heading, Panel } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { hentSisteFerdigbehandledeKravgrunnlag } from '~src/api/tilbakekrevingApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
-import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { opprettNyTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
-import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 
 import { TilbakekrevingSteg } from '../../types';
@@ -18,14 +17,12 @@ import { TilbakekrevingSteg } from '../../types';
 import messages from './OpprettTilbakekreving-nb';
 import styles from './OpprettTilbakekreving.module.less';
 
-const OpprettTilbakekreving = () => {
+const OpprettTilbakekreving = (props: {
+    sakId: string;
+    sakVersjon: number;
+    uteståendeKravgrunnlag: Nullable<Kravgrunnlag>;
+}) => {
     const { formatMessage } = useI18n({ messages });
-    const { sak } = useOutletContext<SaksoversiktContext>();
-    const [status, hentKravgrunnlag] = useApiCall(hentSisteFerdigbehandledeKravgrunnlag);
-
-    useEffect(() => {
-        hentKravgrunnlag({ sakId: sak.id });
-    }, []);
 
     return (
         <div className={styles.pageContainer}>
@@ -36,10 +33,15 @@ const OpprettTilbakekreving = () => {
             </div>
 
             <div className={styles.mainContentContainer}>
-                {RemoteData.isSuccess(status) && (
-                    <KanTilbakekreves sakId={sak.id} saksversjon={sak.versjon} kravgrunnlag={status.value} />
+                {props.uteståendeKravgrunnlag ? (
+                    <KanTilbakekreves
+                        sakId={props.sakId}
+                        saksversjon={props.sakVersjon}
+                        kravgrunnlag={props.uteståendeKravgrunnlag}
+                    />
+                ) : (
+                    <KanIkkeTilbakekreves sakId={props.sakId} />
                 )}
-                {RemoteData.isFailure(status) && <KanIkkeTilbakekreves sakId={sak.id} />}
             </div>
         </div>
     );
