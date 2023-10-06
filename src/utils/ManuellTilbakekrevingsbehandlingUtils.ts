@@ -12,13 +12,19 @@ export const erTilbakekrevingsbehandlingÅpen = (t: ManuellTilbakekrevingsbehand
 export const erTilbakekrevingTilAttestering = (t: ManuellTilbakekrevingsbehandling): boolean =>
     t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING;
 
-export const erTilbakekrevingsVurdertUtenBrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
+export const erTilbakekrevingVurdertUtenBrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
     t.status === TilbakekrevingsbehandlingStatus.VURDERT_UTEN_BREV ||
     t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
     t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
     t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;
 
-export const erTilbakekrevingsVurdertMedBrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
+export const erTilbakekrevingForhåndsvarsletEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t?.dokumenter?.length > 0 ||
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
+    t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
+    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;
+
+export const erTilbakekrevingVurdertMedBrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
     t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
     t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
     t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;

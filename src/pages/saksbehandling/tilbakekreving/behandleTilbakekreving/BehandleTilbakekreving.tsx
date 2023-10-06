@@ -10,6 +10,7 @@ import messages from '../Tilbakekreving-nb';
 
 import styles from './BehandleTilbakekreving.module.less';
 import BrevForTilbakekreving from './brevForTilbakekreving/BrevForTilbakekreving';
+import ForhåndsvarsleTilbakekreving from './forhåndsvarsleTilbakekreving/ForhåndsvarsleTilbakekreving';
 import TilbakekrevingStegIndikator from './TilbakekrevingStegIndikator';
 import VurderTilbakekreving from './vurderTilbakekreving/VurderTilbakekreving';
 
@@ -26,7 +27,7 @@ const BehandleTilbakekreving = (props: {
     if (!behandling) {
         return (
             <div>
-                Her skulle det visst være en behandling, men var ingenting. Er URLen i riktig format, men en
+                Her skulle det visst vært en behandling, men var ingenting. Er URLen i riktig format, men en
                 eksisterende id?
             </div>
         );
@@ -41,10 +42,17 @@ const BehandleTilbakekreving = (props: {
                 <TilbakekrevingStegIndikator
                     sakId={props.sakId}
                     behandling={behandling}
-                    aktivSteg={TilbakekrevingSteg.Vurdering}
+                    aktivSteg={steg ?? TilbakekrevingSteg.Vurdering}
                 />
                 {steg === TilbakekrevingSteg.Vurdering && (
                     <VurderTilbakekreving
+                        sakId={props.sakId}
+                        saksversjon={props.saksversjon}
+                        tilbakekreving={behandling}
+                    />
+                )}
+                {steg === TilbakekrevingSteg.Forhåndsvarsling && (
+                    <ForhåndsvarsleTilbakekreving
                         sakId={props.sakId}
                         saksversjon={props.saksversjon}
                         tilbakekreving={behandling}

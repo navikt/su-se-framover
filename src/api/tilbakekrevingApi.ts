@@ -1,6 +1,7 @@
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import {
     BrevtekstTilbakekrevingsbehandlingRequest,
+    ForhåndsvarsleTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
     VurderTilbakekrevingsbehandlingRequest,
@@ -38,6 +39,19 @@ export async function vurderTilbakekrevingsbehandling(
         body: {
             versjon: arg.saksversjon,
             måneder: arg.måneder,
+        },
+    });
+}
+
+export async function sendForhåndsvarsel(
+    arg: ForhåndsvarsleTilbakekrevingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/forhandsvarsel`,
+        method: 'POST',
+        body: {
+            versjon: arg.saksversjon,
+            fritekst: arg.fritekst,
         },
     });
 }

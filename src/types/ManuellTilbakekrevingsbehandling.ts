@@ -10,6 +10,7 @@ export interface ManuellTilbakekrevingsbehandling {
     kravgrunnlag: Kravgrunnlag;
     status: TilbakekrevingsbehandlingStatus;
     månedsvurderinger: Månedsvurdering[];
+    dokumenter: string[];
     fritekst: Nullable<string>;
 }
 
@@ -41,6 +42,13 @@ export interface VurderTilbakekrevingsbehandlingRequest {
     saksversjon: number;
     behandlingId: string;
     måneder: Array<{ måned: string; vurdering: TilbakekrevingsVurdering }>;
+}
+
+export interface ForhåndsvarsleTilbakekrevingRequest {
+    sakId: string;
+    saksversjon: number;
+    behandlingId: string;
+    fritekst: string;
 }
 
 export interface BrevtekstTilbakekrevingsbehandlingRequest {
