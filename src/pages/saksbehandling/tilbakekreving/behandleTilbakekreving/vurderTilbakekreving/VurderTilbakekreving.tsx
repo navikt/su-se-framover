@@ -46,7 +46,7 @@ const VurderTilbakekreving = (props: {
     const nesteUrl = routes.tilbakekrevingValgtBehandling.createURL({
         sakId: props.sakId,
         behandlingId: props.tilbakekreving.id,
-        steg: TilbakekrevingSteg.Brev,
+        steg: TilbakekrevingSteg.Forhåndsvarsling,
     });
 
     const defaultValuesFraBehandling = props.tilbakekreving.månedsvurderinger.map((måned) => ({
