@@ -23,32 +23,13 @@ export enum KravgrunnlagStatus {
 export interface Grunnlagsperiode {
     periode: Periode<string>;
     beløpSkattMnd: number;
-    grunnlagsbeløp: Grunnlagsbeløp[];
+    ytelse: Grunnlagsbeløp;
 }
 
 export interface Grunnlagsbeløp {
-    kode: KlasseKode;
-    type: KlasseType;
     beløpTidligereUtbetaling: number;
     beløpNyUtbetaling: number;
     beløpSkalTilbakekreves: number;
     beløpSkalIkkeTilbakekreves: number;
     skatteProsent: number;
-}
-
-export enum KlasseKode {
-    SUUFORE = 'SUUFORE',
-    KL_KODE_FEIL_INNT = 'KL_KODE_FEIL_INNT',
-    TBMOTOBS = 'TBMOTOBS',
-    FSKTSKAT = 'FSKTSKAT',
-    UFOREUT = 'UFOREUT',
-    SUALDER = 'SUALDER',
-    KL_KODE_FEIL = 'KL_KODE_FEIL',
-}
-
-export enum KlasseType {
-    YTEL = 'YTEL',
-    SKAT = 'SKAT',
-    FEIL = 'FEIL',
-    MOTP = 'MOTP',
 }

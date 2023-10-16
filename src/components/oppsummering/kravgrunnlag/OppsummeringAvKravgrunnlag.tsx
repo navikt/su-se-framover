@@ -98,63 +98,46 @@ const OppsummeringAvGrunnlagsPerioder = (props: { grunnlagsperiode: Grunnlagsper
                                 />
                             </div>
                             <hr></hr>
-                            {periode.grunnlagsbeløp.map((beløp, i) => (
-                                <li key={i} className={styles.grunnlagsbeløperContainer}>
-                                    <div className={styles.grunnlagsbeløpContainer}>
-                                        <OppsummeringPar
-                                            label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.kode')}
-                                            verdi={beløp.kode}
-                                            retning="vertikal"
-                                        />
-                                        <OppsummeringPar
-                                            label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.type')}
-                                            verdi={beløp.type}
-                                            retning="vertikal"
-                                        />
-                                    </div>
+                            <div className={styles.grunnlagsbeløperContainer}>
+                                <div className={styles.grunnlagsbeløpContainer}>
+                                    <OppsummeringPar
+                                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.skatteProsent')}
+                                        verdi={periode.ytelse.skatteProsent}
+                                        retning="vertikal"
+                                    />
+                                </div>
 
-                                    <div className={styles.grunnlagsbeløpContainer}>
-                                        <OppsummeringPar
-                                            label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.skatteProsent')}
-                                            verdi={beløp.skatteProsent}
-                                            retning="vertikal"
-                                        />
-                                    </div>
-
-                                    <div className={styles.grunnlagsbeløpContainer}>
-                                        <OppsummeringPar
-                                            label={formatMessage(
-                                                'kravgrunnlag.grunnlagsperiode.beløp.beløpNyUtbetaling',
-                                            )}
-                                            verdi={beløp.beløpNyUtbetaling}
-                                            retning="vertikal"
-                                        />
-                                        <OppsummeringPar
-                                            label={formatMessage(
-                                                'kravgrunnlag.grunnlagsperiode.beløp.beløpTidligereUtbetaling',
-                                            )}
-                                            verdi={beløp.beløpTidligereUtbetaling}
-                                            retning="vertikal"
-                                        />
-                                    </div>
-                                    <div className={styles.grunnlagsbeløpContainer}>
-                                        <OppsummeringPar
-                                            label={formatMessage(
-                                                'kravgrunnlag.grunnlagsperiode.beløp.beløpSkalTilbakekreves',
-                                            )}
-                                            verdi={beløp.beløpSkalTilbakekreves}
-                                            retning="vertikal"
-                                        />
-                                        <OppsummeringPar
-                                            label={formatMessage(
-                                                'kravgrunnlag.grunnlagsperiode.beløp.beløpSkalIkkeTilbakekreves',
-                                            )}
-                                            verdi={beløp.beløpSkalIkkeTilbakekreves}
-                                            retning="vertikal"
-                                        />
-                                    </div>
-                                </li>
-                            ))}
+                                <div className={styles.grunnlagsbeløpContainer}>
+                                    <OppsummeringPar
+                                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpNyUtbetaling')}
+                                        verdi={periode.ytelse.beløpNyUtbetaling}
+                                        retning="vertikal"
+                                    />
+                                    <OppsummeringPar
+                                        label={formatMessage(
+                                            'kravgrunnlag.grunnlagsperiode.beløp.beløpTidligereUtbetaling',
+                                        )}
+                                        verdi={periode.ytelse.beløpTidligereUtbetaling}
+                                        retning="vertikal"
+                                    />
+                                </div>
+                                <div className={styles.grunnlagsbeløpContainer}>
+                                    <OppsummeringPar
+                                        label={formatMessage(
+                                            'kravgrunnlag.grunnlagsperiode.beløp.beløpSkalTilbakekreves',
+                                        )}
+                                        verdi={periode.ytelse.beløpSkalTilbakekreves}
+                                        retning="vertikal"
+                                    />
+                                    <OppsummeringPar
+                                        label={formatMessage(
+                                            'kravgrunnlag.grunnlagsperiode.beløp.beløpSkalIkkeTilbakekreves',
+                                        )}
+                                        verdi={periode.ytelse.beløpSkalIkkeTilbakekreves}
+                                        retning="vertikal"
+                                    />
+                                </div>
+                            </div>
                         </Accordion.Content>
                     </AccordionItem>
                 ))}

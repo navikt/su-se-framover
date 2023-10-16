@@ -17,7 +17,6 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
-import { KlasseKode, KlasseType } from '~src/types/Kravgrunnlag';
 import {
     ManuellTilbakekrevingsbehandling,
     TilbakekrevingsVurdering,
@@ -144,56 +143,63 @@ const VurderTilbakekreving = (props: {
                                         </div>
 
                                         <Heading size="small">
-                                            {props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx].grunnlagsbeløp
-                                                .filter(
-                                                    (beløp) =>
-                                                        beløp.kode === KlasseKode.SUUFORE &&
-                                                        beløp.type === KlasseType.YTEL,
-                                                )
-                                                .map((beløp, idx) => (
-                                                    <div key={idx} className={styles.kravgrunnlagsInfoContainer}>
-                                                        <OppsummeringPar
-                                                            label={formatMessage(
-                                                                'vurderTilbakekreving.kravgrunnlagsInfo.skatteprosent',
-                                                            )}
-                                                            verdi={beløp.skatteProsent}
-                                                            retning="vertikal"
-                                                        />
+                                            <div key={idx} className={styles.kravgrunnlagsInfoContainer}>
+                                                <OppsummeringPar
+                                                    label={formatMessage(
+                                                        'vurderTilbakekreving.kravgrunnlagsInfo.skatteprosent',
+                                                    )}
+                                                    verdi={
+                                                        props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx].ytelse
+                                                            .skatteProsent
+                                                    }
+                                                    retning="vertikal"
+                                                />
 
-                                                        <div className={styles.detalje}>
-                                                            <OppsummeringPar
-                                                                label={formatMessage(
-                                                                    'vurderTilbakekreving.kravgrunnlagsInfo.tidligereUtbetalt',
-                                                                )}
-                                                                verdi={beløp.beløpTidligereUtbetaling}
-                                                                retning="vertikal"
-                                                            />
-                                                            <OppsummeringPar
-                                                                label={formatMessage(
-                                                                    'vurderTilbakekreving.kravgrunnlagsInfo.nyUtbetaling',
-                                                                )}
-                                                                verdi={beløp.beløpNyUtbetaling}
-                                                                retning="vertikal"
-                                                            />
-                                                        </div>
-                                                        <div className={styles.detalje}>
-                                                            <OppsummeringPar
-                                                                label={formatMessage(
-                                                                    'vurderTilbakekreving.kravgrunnlagsInfo.skalTilbakekreves',
-                                                                )}
-                                                                verdi={beløp.beløpSkalTilbakekreves}
-                                                                retning="vertikal"
-                                                            />
-                                                            <OppsummeringPar
-                                                                label={formatMessage(
-                                                                    'vurderTilbakekreving.kravgrunnlagsInfo.skalIkkeTilbakekreves',
-                                                                )}
-                                                                verdi={beløp.beløpSkalIkkeTilbakekreves}
-                                                                retning="vertikal"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                                <div className={styles.detalje}>
+                                                    <OppsummeringPar
+                                                        label={formatMessage(
+                                                            'vurderTilbakekreving.kravgrunnlagsInfo.tidligereUtbetalt',
+                                                        )}
+                                                        verdi={
+                                                            props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx]
+                                                                .ytelse.beløpTidligereUtbetaling
+                                                        }
+                                                        retning="vertikal"
+                                                    />
+                                                    <OppsummeringPar
+                                                        label={formatMessage(
+                                                            'vurderTilbakekreving.kravgrunnlagsInfo.nyUtbetaling',
+                                                        )}
+                                                        verdi={
+                                                            props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx]
+                                                                .ytelse.beløpNyUtbetaling
+                                                        }
+                                                        retning="vertikal"
+                                                    />
+                                                </div>
+                                                <div className={styles.detalje}>
+                                                    <OppsummeringPar
+                                                        label={formatMessage(
+                                                            'vurderTilbakekreving.kravgrunnlagsInfo.skalTilbakekreves',
+                                                        )}
+                                                        verdi={
+                                                            props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx]
+                                                                .ytelse.beløpSkalTilbakekreves
+                                                        }
+                                                        retning="vertikal"
+                                                    />
+                                                    <OppsummeringPar
+                                                        label={formatMessage(
+                                                            'vurderTilbakekreving.kravgrunnlagsInfo.skalIkkeTilbakekreves',
+                                                        )}
+                                                        verdi={
+                                                            props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx]
+                                                                .ytelse.beløpSkalIkkeTilbakekreves
+                                                        }
+                                                        retning="vertikal"
+                                                    />
+                                                </div>
+                                            </div>
                                         </Heading>
                                     </Panel>
                                 </li>
