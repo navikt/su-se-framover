@@ -26,7 +26,7 @@ interface Props<T extends FieldValues, U> {
         savingState: ApiResult<unknown>;
         onSuccess?: (res: U) => void;
     };
-    tilbake?: {
+    tilbake: {
         url?: string;
         onClick?: () => void;
     };

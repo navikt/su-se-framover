@@ -1,5 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import { Klage } from '~src/types/Klage';
+import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Søknad } from '~src/types/Søknad';
@@ -20,9 +21,16 @@ export const isRegulering = (b: TabellBehandling): b is Regulering => 'regulerin
 export const isSøknadMedEllerUtenBehandling = (b: TabellBehandling): b is SøknadMedEllerUtenBehandling => 'søknad' in b;
 export const isRevurdering = (b: TabellBehandling): b is Revurdering => 'årsak' in b;
 export const isKlage = (b: TabellBehandling): b is Klage => 'klagevedtakshistorikk' in b;
+export const isManuellTilbakekrevingsbehandling = (b: TabellBehandling): b is ManuellTilbakekrevingsbehandling =>
+    'kravgrunnlag' in b;
 
 export type SøknadMedEllerUtenBehandling = { søknad: Søknad; søknadsbehandling?: Søknadsbehandling };
-export type TabellBehandling = SøknadMedEllerUtenBehandling | Revurdering | Klage | Regulering;
+export type TabellBehandling =
+    | SøknadMedEllerUtenBehandling
+    | Revurdering
+    | Klage
+    | Regulering
+    | ManuellTilbakekrevingsbehandling;
 export type TabellBehandlinger = TabellBehandling[];
 
 export type DatacellStatus =
@@ -36,12 +44,13 @@ export type DatacellStatus =
     | 'Underkjent'
     | 'Iverksatt'
     | 'Avsluttet'
-    | 'Oversendt';
+    | 'Oversendt'
+    | 'Vurdert';
 
 export type DataCellResultat = '-' | 'Avslag' | 'Innvilget' | 'Avvist' | 'Til vurdering' | 'Opphør' | 'Endring';
 
 export interface DataCellInfo {
-    type: 'søknad' | 'regulering' | 'revurdering' | 'klage' | 'stans' | 'gjenopptak';
+    type: 'søknad' | 'regulering' | 'revurdering' | 'klage' | 'stans' | 'gjenopptak' | 'tilbakekreving';
     status: DatacellStatus;
     resultat: DataCellResultat;
     periode: string;
@@ -101,5 +110,31 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             avsluttetTidspunkt: b.avsluttetTidspunkt,
         };
     }
+
+    if (isManuellTilbakekrevingsbehandling(b)) {
+        return {
+            type: 'tilbakekreving',
+            status: (() => {
+                switch (b.status) {
+                    case 'OPPRETTET':
+                        return 'Opprettet';
+                    case 'VURDERT_UTEN_BREV':
+                        return 'Vurdert';
+                    case 'VURDERT_MED_BREV':
+                        return 'Vurdert';
+                    case 'TIL_ATTESTERING':
+                        return 'Til attestering';
+                    case 'IVERKSATT':
+                        return 'Iverksatt';
+                }
+                throw new Error('Ukjent status for tilbakekreving');
+            })(),
+            resultat: '-',
+            periode: '-',
+            mottattOpprettetTidspunkt: b.opprettet,
+            avsluttetTidspunkt: null,
+        };
+    }
+
     throw new Error('Feil ved mapping av behandling til dataCellInfo');
 };

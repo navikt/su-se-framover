@@ -1,4 +1,6 @@
 import * as DateFns from 'date-fns';
+import { Eq, contramap } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
 
 import * as DateUtils from '~src/utils/date/dateUtils';
 
@@ -18,12 +20,22 @@ class Måned {
         return new Måned(år, måned);
     }
 
-    static fromDate(input: Date) {
+    static fromDate(input: Date): Måned {
         if (!Måned.isStringInputValid(`${input.getFullYear()}-${input.getMonth() + 1}`)) {
-            throw new Error('Invalid input for måned');
+            throw new Error('Invalid date input for måned');
         }
 
         return new Måned(input.getFullYear().toString(), (input.getMonth() + 1).toString());
+    }
+
+    static fromStringPeriode(periode: Periode<string>): Måned {
+        if (!Måned.isStringPeriodeValid(periode)) {
+            throw new Error('Invalid periode input for måned');
+        }
+
+        const [år, måned] = periode.fraOgMed.split('-');
+
+        return new Måned(år, måned);
     }
 
     private constructor(år: string, måned: string) {
@@ -41,6 +53,14 @@ class Måned {
 
     /**
      *
+     * @returns måned på format MM-yyyy
+     */
+    toFormattedString(): string {
+        return `${this.#måned}.${this.#år}`;
+    }
+
+    /**
+     *
      * @returns Returnerer en periode for måneden
      *
      * @note fraOgMed er første dag i måneden
@@ -53,6 +73,10 @@ class Måned {
             fraOgMed: DateUtils.toIsoDateOnlyString(DateFns.startOfMonth(referanceDate)),
             tilOgMed: DateUtils.toIsoDateOnlyString(DateFns.endOfMonth(referanceDate)),
         };
+    }
+
+    static eq(): Eq<Måned> {
+        return contramap((måned: Måned) => `${måned.#år}-${måned.#måned}`)(S.Eq);
     }
 
     /**
@@ -77,6 +101,21 @@ class Måned {
             values[0] <= 2100 &&
             values[1] >= 1 &&
             values[1] <= 12
+        );
+    }
+
+    /**
+     * @note året, og måneden i perioden må være den samme
+     */
+    private static isStringPeriodeValid(periode: Periode<string>): boolean {
+        const splitFraOgMed = periode.fraOgMed.split('-');
+        const splitTilOgMed = periode.tilOgMed.split('-');
+
+        return (
+            Måned.isStringInputValid(periode.fraOgMed) &&
+            Måned.isStringInputValid(periode.tilOgMed) &&
+            splitFraOgMed[0] === splitTilOgMed[0] &&
+            splitFraOgMed[1] === splitTilOgMed[1]
         );
     }
 }

@@ -1,7 +1,7 @@
 import { NavigateFunction, useParams } from 'react-router-dom';
 
 import * as Routes from '~src/lib/routes';
-import { KlageSteg, SaksbehandlingMenyvalg } from '~src/pages/saksbehandling/types';
+import { KlageSteg, SaksbehandlingMenyvalg, TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
 import { Søknadssteg } from '~src/pages/søknad/types';
 import { RevurderingSeksjoner, RevurderingSteg } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak';
@@ -257,17 +257,18 @@ export const klage: Route<{
     absPath: '/saksoversikt/:sakId/klage/:klageId/:steg/',
     createURL: (args) => `/saksoversikt/${args.sakId}/klage/${args.klageId}/${args.steg}/`,
 };
-//---------------Regulering-------------------------
-export const manuellRegulering: Route<{ sakId: string; reguleringId: string }> = {
-    path: 'reguler/:reguleringId',
-    absPath: '/saksoversikt/:sakId/reguler/:reguleringId',
-    createURL: (args) => `/saksoversikt/${args.sakId}/reguler/${args.reguleringId}`,
-};
 
 export const klageOpprett: Route<{ sakId: string }> = {
     path: 'opprett',
     absPath: 'saksoversikt/:sakId/klage/opprett',
     createURL: ({ sakId }) => `/saksoversikt/${sakId}/klage/opprett`,
+};
+
+//---------------Regulering-------------------------
+export const manuellRegulering: Route<{ sakId: string; reguleringId: string }> = {
+    path: 'reguler/:reguleringId',
+    absPath: '/saksoversikt/:sakId/reguler/:reguleringId',
+    createURL: (args) => `/saksoversikt/${args.sakId}/reguler/${args.reguleringId}`,
 };
 
 export interface SuccessNotificationState {
@@ -308,4 +309,25 @@ export const brevPage: Route<{ sakId: string }> = {
     path: 'brev/',
     absPath: '/saksoversikt/:sakId/brev',
     createURL: (args) => `/saksoversikt/${args.sakId}/brev/`,
+};
+
+//---------------Tilbakekreving-------------------------
+export const tilbakekrevingRoot: Route<{
+    sakId: string;
+}> = {
+    path: 'tilbakekreving/*',
+    absPath: 'saksoversikt/:sakId/tilbakekreving',
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/tilbakekreving`,
+};
+
+export const tilbakekrevValgtSak: Route<{ sakId: string }> = {
+    path: 'opprett',
+    absPath: '/saksoversikt/:sakId/tilbakekreving/opprett',
+    createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/opprett`,
+};
+
+export const tilbakekrevingValgtBehandling: Route<{ sakId: string; behandlingId: string; steg: TilbakekrevingSteg }> = {
+    path: ':behandlingId/:steg',
+    absPath: '/saksoversikt/:sakId/tilbakekreving/:behandlingId/:steg',
+    createURL: (args) => `/saksoversikt/${args.sakId}/tilbakekreving/${args.behandlingId}/${args.steg}`,
 };

@@ -1,0 +1,19 @@
+@import '~/src/styles/variables.less';
+
+.kravgrunnlagOppsummeringContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: @spacing-s;
+    margin-bottom: @spacing;
+}
+
+.grunnlagsbeløperContainer {
+    list-style-type: none;
+    margin-bottom: @spacing-s;
+
+    .grunnlagsbeløpContainer {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: @spacing-xxs;
+    }
+}

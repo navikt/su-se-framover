@@ -10,11 +10,13 @@ import * as klageActions from '~src/features/klage/klageActions';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
+import * as tilbakekrevingActions from '~src/features/TilbakekrevingActions';
 import { pipe } from '~src/lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
+import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import {
     OppdaterRegistrertUtenlandsoppholdRequest,
     RegistrerteUtenlandsopphold,
@@ -362,6 +364,24 @@ export default createSlice({
         builder.addCase(GrunnlagOgVilkårActions.lagreOpplysningsplikt.fulfilled, (state, action) => {
             state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
+
+        //---------------Tilbakekreving-----------------//
+        builder.addCase(tilbakekrevingActions.opprettNyTilbakekrevingsbehandling.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((s) => ({
+                    ...s,
+                    tilbakekrevinger: [...s.tilbakekrevinger, action.payload],
+                })),
+            );
+        });
+
+        builder.addCase(tilbakekrevingActions.vurderTilbakekrevingsbehandling.fulfilled, (state, action) => {
+            state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
+        });
+        builder.addCase(tilbakekrevingActions.brevtekstTilbakekrevingsbehandling.fulfilled, (state, action) => {
+            state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
+        });
     },
 });
 
@@ -441,6 +461,19 @@ function oppdaterUtenlandsoppholdISak(
                 utenlandsopphold: utenlandsopphold.utenlandsopphold,
                 antallDager: utenlandsopphold.antallDager,
             },
+        })),
+    );
+}
+
+function oppdaterTilbakekrevingPåSak(
+    sak: RemoteData.RemoteData<ApiError, Sak>,
+    tilbakekreving: ManuellTilbakekrevingsbehandling,
+) {
+    return pipe(
+        sak,
+        RemoteData.map((s) => ({
+            ...s,
+            tilbakekrevinger: s.tilbakekrevinger.map((t) => (t.id === tilbakekreving.id ? tilbakekreving : t)),
         })),
     );
 }

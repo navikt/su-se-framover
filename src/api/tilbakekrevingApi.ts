@@ -1,0 +1,60 @@
+import {
+    BrevtekstTilbakekrevingsbehandlingRequest,
+    ForhåndsvarsleTilbakekrevingRequest,
+    ManuellTilbakekrevingsbehandling,
+    OpprettNyTilbakekrevingsbehandlingRequest,
+    VurderTilbakekrevingsbehandlingRequest,
+} from '~src/types/ManuellTilbakekrevingsbehandling';
+
+import apiClient, { ApiClientResult } from './apiClient';
+
+export async function opprettNyTilbakekrevingsbehandling(
+    arg: OpprettNyTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/ny`,
+        method: 'POST',
+        body: {
+            saksversjon: arg.saksversjon,
+        },
+    });
+}
+
+export async function vurderTilbakekrevingsbehandling(
+    arg: VurderTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/manedsvurder`,
+        method: 'POST',
+        body: {
+            versjon: arg.saksversjon,
+            måneder: arg.måneder,
+        },
+    });
+}
+
+export async function sendForhåndsvarsel(
+    arg: ForhåndsvarsleTilbakekrevingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/forhandsvarsel`,
+        method: 'POST',
+        body: {
+            versjon: arg.saksversjon,
+            fritekst: arg.fritekst,
+        },
+    });
+}
+
+export async function brevtekstTilbakekrevingsbehandling(
+    arg: BrevtekstTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/brevtekst`,
+        method: 'POST',
+        body: {
+            versjon: arg.saksversjon,
+            brevtekst: arg.brevtekst,
+        },
+    });
+}

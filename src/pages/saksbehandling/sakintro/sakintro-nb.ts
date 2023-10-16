@@ -16,6 +16,7 @@ export default {
     'popover.default': 'Velg behandling',
     'popover.option.klage': 'Klage',
     'popover.option.revurder': 'Revurder',
+    'popover.option.tilbakekreving': 'Tilbakekreving',
 
     'link.dokumenter': 'Brev sendt fra SU',
     'link.kontrollsamtale': 'Kontrollsamtale',
@@ -55,6 +56,7 @@ export default {
     'datacell.behandlingstype.klage': 'Klage',
     'datacell.behandlingstype.stans': 'Stans',
     'datacell.behandlingstype.gjenopptak': 'Gjenopptak',
+    'datacell.behandlingstype.tilbakekreving': 'Tilbakekreving',
 
     'datacell.status.-': '-',
     'datacell.status.nySøknad': 'Ny søknad',
@@ -67,6 +69,7 @@ export default {
     'datacell.status.Iverksatt': 'Iverksatt',
     'datacell.status.Avsluttet': 'Avsluttet',
     'datacell.status.Oversendt': 'Oversendt',
+    'datacell.status.Vurdert': 'Vurdert',
 
     'datacell.resultat.-': '-',
     'datacell.resultat.Avslag': 'Avslag',

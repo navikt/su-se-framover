@@ -1,0 +1,37 @@
+@import '~/src/styles/variables.less';
+
+.pageContainer {
+    width: 100%;
+}
+
+.headingContainer {
+    border-bottom: 1px solid black;
+    margin-bottom: @spacing-s;
+
+    .tilbakekrevingHeading {
+        margin-top: @spacing-s;
+        margin-left: 10rem;
+        margin-bottom: @spacing-s;
+    }
+}
+
+.mainContentContainer {
+    display: flex;
+    gap: @spacing-xxl;
+    margin: 0 10rem;
+    flex-wrap: wrap;
+}
+
+.panelContentContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+    align-items: flex-start;
+    height: max-content;
+    width: 35%;
+}
+
+.knappContainer {
+    display: flex;
+    gap: @spacing-s;
+}
