@@ -3,6 +3,7 @@ import { Button, Heading, Panel } from '@navikt/ds-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import { opprettNyTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
@@ -84,6 +85,7 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                         {formatMessage('tilbakekreving.kanTilbakekreves.ny')}
                     </Button>
                 </div>
+                {RemoteData.isFailure(opprettStatus) && <ApiErrorAlert error={opprettStatus.error} />}
             </Panel>
             <OppsummeringAvKravgrunnlag kravgrunnlag={props.kravgrunnlag} />
         </>
