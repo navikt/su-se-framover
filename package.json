@@ -51,7 +51,7 @@
         "@navikt/ds-react": "5.7.4",
         "@reduxjs/toolkit": "^1.9.6",
         "@sentry/browser": "^7.74.0",
-        "@sentry/cli": "^2.21.1",
+        "@sentry/cli": "^2.21.2",
         "@types/jest": "^29.5.5",
         "amplitude-js": "^8.21.9",
         "autoprefixer": "^10.4.16",
