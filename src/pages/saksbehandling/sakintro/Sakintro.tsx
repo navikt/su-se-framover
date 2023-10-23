@@ -63,8 +63,8 @@ const BekreftFnrEndringModal = (props: {
             header={{ heading: 'Bekreft fødselsnummerendring' }}
         >
             <Modal.Body>
-                <OppsummeringPar label={'Nytt fødselsnummer'} verdi={'123'} />
-                <OppsummeringPar label={'Forrige fødselsnummer'} verdi={'456'} />
+                <OppsummeringPar label={'Nytt fødselsnummer'} verdi={props.nyttFnr} />
+                <OppsummeringPar label={'Forrige fødselsnummer'} verdi={props.forrigeFnr} />
             </Modal.Body>
             <Modal.Footer>
                 <div className={styles.modalFooterButtonsContainer}>
