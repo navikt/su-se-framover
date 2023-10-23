@@ -7,6 +7,7 @@ import {
     ForhåndsvarsleTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
+    SendTilbakekrevingTilAttesteringRequest,
     VurderTilbakekrevingsbehandlingRequest,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
@@ -55,6 +56,18 @@ export const brevtekstTilbakekrevingsbehandling = createAsyncThunk<
     { rejectValue: ApiError }
 >('tilbakekreving/brev', async (args, thunkApi) => {
     const res = await tilbakekrevingsApi.brevtekstTilbakekrevingsbehandling(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const sendTilbakekrevingTilAttestering = createAsyncThunk<
+    ManuellTilbakekrevingsbehandling,
+    SendTilbakekrevingTilAttesteringRequest,
+    { rejectValue: ApiError }
+>('tilbakekreving/tilAttestering', async (args, thunkApi) => {
+    const res = await tilbakekrevingsApi.sendTilbakekrevingTilAttestering(args);
     if (res.status === 'ok') {
         return res.data;
     }

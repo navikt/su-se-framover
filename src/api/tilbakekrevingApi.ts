@@ -4,6 +4,7 @@ import {
     ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
+    SendTilbakekrevingTilAttesteringRequest,
     VurderTilbakekrevingsbehandlingRequest,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
@@ -71,6 +72,18 @@ export async function brevtekstTilbakekrevingsbehandling(
         body: {
             versjon: arg.saksversjon,
             brevtekst: arg.brevtekst,
+        },
+    });
+}
+
+export async function sendTilbakekrevingTilAttestering(
+    arg: SendTilbakekrevingTilAttesteringRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/tilAttestering`,
+        method: 'POST',
+        body: {
+            versjon: arg.versjon,
         },
     });
 }

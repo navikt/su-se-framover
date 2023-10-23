@@ -385,6 +385,9 @@ export default createSlice({
         builder.addCase(tilbakekrevingActions.brevtekstTilbakekrevingsbehandling.fulfilled, (state, action) => {
             state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
         });
+        builder.addCase(tilbakekrevingActions.sendTilbakekrevingTilAttestering.fulfilled, (state, action) => {
+            state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
+        });
     },
 });
 

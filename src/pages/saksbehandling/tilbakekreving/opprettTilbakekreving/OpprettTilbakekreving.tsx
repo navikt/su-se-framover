@@ -14,8 +14,8 @@ import { Nullable } from '~src/lib/types';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 
 import { TilbakekrevingSteg } from '../../types';
+import messages from '../Tilbakekreving-nb';
 
-import messages from './OpprettTilbakekreving-nb';
 import styles from './OpprettTilbakekreving.module.less';
 
 const OpprettTilbakekreving = (props: {
@@ -29,7 +29,7 @@ const OpprettTilbakekreving = (props: {
         <div className={styles.pageContainer}>
             <div className={styles.headingContainer}>
                 <Heading className={styles.tilbakekrevingHeading} size="large">
-                    {formatMessage('page.heading')}
+                    {formatMessage('tilbakekreving.tittel')}
                 </Heading>
             </div>
 
@@ -57,8 +57,8 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
         <>
             <Panel className={styles.panelContentContainer}>
                 <div>
-                    <Heading size="medium">{formatMessage('tilbakekreving.kanTilbakekreves.heading')}</Heading>
-                    <Heading size="small">{formatMessage('tilbakekreving.kanTilbakekreves.text')}</Heading>
+                    <Heading size="medium">{formatMessage('opprettelse.kanTilbakekreves.heading')}</Heading>
+                    <Heading size="small">{formatMessage('opprettelse.kanTilbakekreves.text')}</Heading>
                 </div>
 
                 <div className={styles.knappContainer}>
@@ -82,7 +82,7 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                             })
                         }
                     >
-                        {formatMessage('tilbakekreving.kanTilbakekreves.ny')}
+                        {formatMessage('opprettelse.kanTilbakekreves.ny')}
                     </Button>
                 </div>
                 {RemoteData.isFailure(opprettStatus) && <ApiErrorAlert error={opprettStatus.error} />}
@@ -97,8 +97,8 @@ const KanIkkeTilbakekreves = (props: { sakId: string }) => {
     return (
         <Panel border className={styles.panelContentContainer}>
             <div>
-                <Heading size="medium">{formatMessage('tilbakekreving.kanIkkeTilbakekreves.heading')}</Heading>
-                <Heading size="small">{formatMessage('tilbakekreving.kanIkkeTilbakekreves.text')}</Heading>
+                <Heading size="medium">{formatMessage('opprettelse.kanIkkeTilbakekreves.heading')}</Heading>
+                <Heading size="small">{formatMessage('opprettelse.kanIkkeTilbakekreves.text')}</Heading>
             </div>
 
             <LinkAsButton variant="secondary" href={routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>

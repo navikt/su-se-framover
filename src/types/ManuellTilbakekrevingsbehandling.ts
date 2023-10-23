@@ -67,3 +67,9 @@ export interface ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest {
     behandlingId: string;
     brevtekst: Nullable<string>;
 }
+
+export interface SendTilbakekrevingTilAttesteringRequest {
+    versjon: number;
+    sakId: string;
+    behandlingId: string;
+}

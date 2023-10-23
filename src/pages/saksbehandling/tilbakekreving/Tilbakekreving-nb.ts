@@ -5,6 +5,13 @@ export default {
     'stegIndikator.brev': 'Brev',
     'stegIndikator.forhandsvarsling': 'Forhåndsvarsel',
 
+    'opprettelse.kanTilbakekreves.ny': 'Start tilbakekrevingsbehandling',
+    'opprettelse.kanTilbakekreves.heading': 'Saken har en aktiv kravgrunnlag som kan tilbakekreves',
+    'opprettelse.kanTilbakekreves.text': 'Du kan starte en ny tilbakekrevingsbehandling',
+
+    'opprettelse.kanIkkeTilbakekreves.heading': 'Kan ikke tilbakekreves',
+    'opprettelse.kanIkkeTilbakekreves.text': 'Saken har ikke en aktiv kravgrunnlag som kan tilbakekreves.',
+
     'vurderTilbakekreving.tittel': 'Vurdering av kravgrunnlag',
     'vurderTilbakekreving.skalBeløpBliTilbakekrevd': 'Skal beløpet tilbakekreves?',
     'vurderTilbakekreving.skalTilbakekreve': 'Beløpet skal tilbakekreves',
@@ -26,6 +33,9 @@ export default {
 
     'brevForTilbakekreving.tittel': 'Brev',
     'brevForTilbakekreving.fritekst.label': 'Fritekst til brev',
+    'brevForTilbakekreving.sendtTilAttestering':
+        'Behandlingen er sendt til attestering og oppgave i Gosys er schedulert til oppdatering',
 
     'knapp.seBrev': 'Se brev',
+    'knapp.tilbake': 'Tilbake',
 };

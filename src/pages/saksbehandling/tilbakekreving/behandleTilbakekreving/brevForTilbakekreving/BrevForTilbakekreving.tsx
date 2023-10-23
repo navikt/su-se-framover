@@ -10,7 +10,10 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import { brevtekstTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
+import {
+    brevtekstTilbakekrevingsbehandling,
+    sendTilbakekrevingTilAttestering,
+} from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator, useAutosaveOnChange } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
@@ -30,8 +33,8 @@ const BrevForTilbakekreving = (props: {
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    const [brevStatus, lagreBrev] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
     const [autosaveStatus, autosave] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
+    const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(sendTilbakekrevingTilAttestering);
 
     const form = useForm<BrevForTilbakekrevingFormData>({
         resolver: yupResolver(brevForTilbakekrevingSchema),
@@ -41,7 +44,7 @@ const BrevForTilbakekreving = (props: {
     });
 
     const save = (data: BrevForTilbakekrevingFormData, onSuccess: () => void) => {
-        lagreBrev(
+        autosave(
             {
                 sakId: props.sakId,
                 saksversjon: props.saksversjon,
@@ -65,7 +68,20 @@ const BrevForTilbakekreving = (props: {
 
     const handleSubmit = (data: BrevForTilbakekrevingFormData) => {
         save(data, () => {
-            console.log('navigering til neste steg');
+            sendTilAttestering(
+                {
+                    versjon: props.saksversjon,
+                    sakId: props.sakId,
+                    behandlingId: props.tilbakekreving.id,
+                },
+                () => {
+                    routes.navigateToSakIntroWithMessage(
+                        navigate,
+                        formatMessage('brevForTilbakekreving.sendtTilAttestering'),
+                        props.sakId,
+                    );
+                },
+            );
         });
     };
 
@@ -134,7 +150,7 @@ const BrevForTilbakekreving = (props: {
                             />
                             <Navigasjonsknapper
                                 neste={{
-                                    loading: RemoteData.isPending(brevStatus),
+                                    loading: RemoteData.isPending(sendTilAttesteringStatus),
                                 }}
                                 fortsettSenere={{
                                     onClick: () => handleLagreOgFortsettSenereClick(form.getValues(), form.trigger),
@@ -148,7 +164,9 @@ const BrevForTilbakekreving = (props: {
                                 }}
                             />
 
-                            {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
+                            {RemoteData.isFailure(sendTilAttesteringStatus) && (
+                                <ApiErrorAlert error={sendTilAttesteringStatus.error} />
+                            )}
                         </div>
                     </form>
                 ),
