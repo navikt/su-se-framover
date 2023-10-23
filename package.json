@@ -87,7 +87,7 @@
         "@parcel/transformer-less": "^2.9.3",
         "@parcel/utils": "^2.9.3",
         "@testing-library/react": "^14.0.0",
-        "@types/amplitude-js": "^8.16.3",
+        "@types/amplitude-js": "^8.16.4",
         "@types/lodash.debounce": "^4.0.6",
         "@types/lodash.isequal": "^4.5.6",
         "@types/react": "^18.2.28",
