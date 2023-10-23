@@ -16,7 +16,7 @@ export enum KlageSteg {
 }
 
 export enum TilbakekrevingSteg {
-    Vurdering = 'vurdering',
     Forhåndsvarsling = 'forhandsvarsling',
-    Brev = 'brev',
+    Vurdering = 'vurdering',
+    Vedtaksbrev = 'brev',
 }

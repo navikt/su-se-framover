@@ -16,10 +16,13 @@ export interface ManuellTilbakekrevingsbehandling {
 
 export enum TilbakekrevingsbehandlingStatus {
     OPPRETTET = 'OPPRETTET',
-    VURDERT_UTEN_BREV = 'VURDERT_UTEN_BREV',
-    VURDERT_MED_BREV = 'VURDERT_MED_BREV',
+    FORHÅNDSVARSLET = 'FORHÅNDSVARSLET',
+    VURDERT = 'VURDERT',
+    VEDTAKSBREV = 'VEDTAKSBREV',
     TIL_ATTESTERING = 'TIL_ATTESTERING',
     IVERKSATT = 'IVERKSATT',
+    AVBRUTT = 'AVBRUTT',
+    UNDERKJENT = 'UNDERKJENT',
 }
 
 export interface Månedsvurdering {
@@ -29,7 +32,7 @@ export interface Månedsvurdering {
 
 export interface OpprettNyTilbakekrevingsbehandlingRequest {
     sakId: string;
-    saksversjon: number;
+    versjon: number;
 }
 
 export enum TilbakekrevingsVurdering {
@@ -39,7 +42,7 @@ export enum TilbakekrevingsVurdering {
 
 export interface VurderTilbakekrevingsbehandlingRequest {
     sakId: string;
-    saksversjon: number;
+    versjon: number;
     behandlingId: string;
     måneder: Array<{ måned: string; vurdering: TilbakekrevingsVurdering }>;
 }
@@ -56,4 +59,11 @@ export interface BrevtekstTilbakekrevingsbehandlingRequest {
     saksversjon: number;
     behandlingId: string;
     brevtekst: string;
+}
+
+export interface ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest {
+    sakId: string;
+    saksversjon: number;
+    behandlingId: string;
+    brevtekst: Nullable<string>;
 }

@@ -45,7 +45,10 @@ export type DatacellStatus =
     | 'Iverksatt'
     | 'Avsluttet'
     | 'Oversendt'
-    | 'Vurdert';
+    | 'Vurdert'
+    | 'Vedtaksbrev'
+    | 'Forhåndsvarslet'
+    | 'Avbrutt';
 
 export type DataCellResultat = '-' | 'Avslag' | 'Innvilget' | 'Avvist' | 'Til vurdering' | 'Opphør' | 'Endring';
 
@@ -118,14 +121,20 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
                 switch (b.status) {
                     case 'OPPRETTET':
                         return 'Opprettet';
-                    case 'VURDERT_UTEN_BREV':
+                    case 'FORHÅNDSVARSLET':
+                        return 'Forhåndsvarslet';
+                    case 'VURDERT':
                         return 'Vurdert';
-                    case 'VURDERT_MED_BREV':
-                        return 'Vurdert';
+                    case 'VEDTAKSBREV':
+                        return 'Vedtaksbrev';
                     case 'TIL_ATTESTERING':
                         return 'Til attestering';
                     case 'IVERKSATT':
                         return 'Iverksatt';
+                    case 'UNDERKJENT':
+                        return 'Underkjent';
+                    case 'AVBRUTT':
+                        return 'Avbrutt';
                 }
                 throw new Error('Ukjent status for tilbakekreving');
             })(),

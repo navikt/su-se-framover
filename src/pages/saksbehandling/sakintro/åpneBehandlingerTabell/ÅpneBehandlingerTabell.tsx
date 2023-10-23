@@ -494,7 +494,7 @@ const TilbakekrevingsKnapper = (props: { sakId: string; t: ManuellTilbakekreving
                     sakId: props.sakId,
                     behandlingId: props.t.id,
                     //TODO - må utlede steg fra behandling
-                    steg: TilbakekrevingSteg.Vurdering,
+                    steg: TilbakekrevingSteg.Forhåndsvarsling,
                 })}
             >
                 {formatMessage('datacell.info.knapp.fortsettBehandling')}

@@ -1,6 +1,7 @@
 import {
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
+    ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
     VurderTilbakekrevingsbehandlingRequest,
@@ -15,7 +16,7 @@ export async function opprettNyTilbakekrevingsbehandling(
         url: `/saker/${arg.sakId}/tilbakekreving/ny`,
         method: 'POST',
         body: {
-            saksversjon: arg.saksversjon,
+            versjon: arg.versjon,
         },
     });
 }
@@ -24,12 +25,27 @@ export async function vurderTilbakekrevingsbehandling(
     arg: VurderTilbakekrevingsbehandlingRequest,
 ): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
     return apiClient({
-        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/manedsvurder`,
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/vurder`,
         method: 'POST',
         body: {
-            versjon: arg.saksversjon,
+            versjon: arg.versjon,
             måneder: arg.måneder,
         },
+    });
+}
+
+export async function forhåndsvisForhåndsvarsel(
+    arg: ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/forhandsvarsel/forhandsvis`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        body: {
+            versjon: arg.saksversjon,
+            fritekst: arg.brevtekst,
+        },
+        bodyTransformer: (res) => res.blob(),
     });
 }
 

@@ -45,7 +45,7 @@ const VurderTilbakekreving = (props: {
     const nesteUrl = routes.tilbakekrevingValgtBehandling.createURL({
         sakId: props.sakId,
         behandlingId: props.tilbakekreving.id,
-        steg: TilbakekrevingSteg.Forhåndsvarsling,
+        steg: TilbakekrevingSteg.Vedtaksbrev,
     });
 
     const defaultValuesFraBehandling = props.tilbakekreving.månedsvurderinger.map((måned) => ({
@@ -73,7 +73,7 @@ const VurderTilbakekreving = (props: {
         lagre(
             {
                 sakId: props.sakId,
-                saksversjon: props.saksversjon,
+                versjon: props.saksversjon,
                 behandlingId: props.tilbakekreving.id,
                 måneder: data.grunnlagsperioder.map((periode) => ({
                     måned: periode.måned.toString(),
@@ -221,7 +221,11 @@ const VurderTilbakekreving = (props: {
                                     onClick: () => handleLagreOgFortsettSenereClick(form.getValues(), form.trigger),
                                 }}
                                 tilbake={{
-                                    url: routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                                    url: routes.tilbakekrevingValgtBehandling.createURL({
+                                        sakId: props.sakId,
+                                        behandlingId: props.tilbakekreving.id,
+                                        steg: TilbakekrevingSteg.Forhåndsvarsling,
+                                    }),
                                 }}
                             />
 

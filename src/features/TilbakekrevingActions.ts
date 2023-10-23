@@ -14,10 +14,10 @@ export const opprettNyTilbakekrevingsbehandling = createAsyncThunk<
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
     { rejectValue: ApiError }
->('tilbakekreving/opprett', async ({ sakId, saksversjon }, thunkApi) => {
+>('tilbakekreving/opprett', async ({ sakId, versjon: saksversjon }, thunkApi) => {
     const res = await tilbakekrevingsApi.opprettNyTilbakekrevingsbehandling({
         sakId,
-        saksversjon,
+        versjon: saksversjon,
     });
     if (res.status === 'ok') {
         return res.data;

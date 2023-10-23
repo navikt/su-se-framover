@@ -58,7 +58,7 @@ const BehandleTilbakekreving = (props: {
                         tilbakekreving={behandling}
                     />
                 )}
-                {steg === TilbakekrevingSteg.Brev && (
+                {steg === TilbakekrevingSteg.Vedtaksbrev && (
                     <BrevForTilbakekreving
                         sakId={props.sakId}
                         saksversjon={props.saksversjon}

@@ -70,6 +70,9 @@ export default {
     'datacell.status.Avsluttet': 'Avsluttet',
     'datacell.status.Oversendt': 'Oversendt',
     'datacell.status.Vurdert': 'Vurdert',
+    'datacell.status.Vedtaksbrev': 'Vedtaksbrev',
+    'datacell.status.Forhåndsvarslet': 'Forhåndsvarslet',
+    'datacell.status.Avbrutt': 'Avbrutt',
 
     'datacell.resultat.-': '-',
     'datacell.resultat.Avslag': 'Avslag',

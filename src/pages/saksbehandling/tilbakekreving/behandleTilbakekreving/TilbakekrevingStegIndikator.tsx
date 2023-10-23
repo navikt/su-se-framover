@@ -6,8 +6,8 @@ import * as Routes from '~src/lib/routes';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import {
     erTilbakekrevingForhåndsvarsletEllerSenere,
-    erTilbakekrevingVurdertMedBrevEllerSenere,
-    erTilbakekrevingVurdertUtenBrevEllerSenere,
+    erTilbakekrevingVedtaksbrevEllerSenere,
+    erTilbakekrevingVurdertEllerSenere,
 } from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 
 import { TilbakekrevingSteg } from '../../types';
@@ -16,15 +16,15 @@ import messages from '../Tilbakekreving-nb';
 const stegsInformasjon = (behandling: ManuellTilbakekrevingsbehandling, steg: TilbakekrevingSteg) => {
     switch (steg) {
         case TilbakekrevingSteg.Vurdering:
-            return erTilbakekrevingVurdertUtenBrevEllerSenere(behandling)
+            return erTilbakekrevingVurdertEllerSenere(behandling)
                 ? { erKlikkbar: true, linjeStatus: Linjestatus.Ok }
                 : { erKlikkbar: false, linjeStatus: Linjestatus.Ingenting };
         case TilbakekrevingSteg.Forhåndsvarsling:
             return erTilbakekrevingForhåndsvarsletEllerSenere(behandling)
                 ? { erKlikkbar: true, linjeStatus: Linjestatus.Ok }
                 : { erKlikkbar: false, linjeStatus: Linjestatus.Ingenting };
-        case TilbakekrevingSteg.Brev:
-            return erTilbakekrevingVurdertMedBrevEllerSenere(behandling)
+        case TilbakekrevingSteg.Vedtaksbrev:
+            return erTilbakekrevingVedtaksbrevEllerSenere(behandling)
                 ? { erKlikkbar: true, linjeStatus: Linjestatus.Ok }
                 : { erKlikkbar: false, linjeStatus: Linjestatus.Ingenting };
     }

@@ -71,12 +71,12 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                     <Button
                         loading={RemoteData.isPending(opprettStatus)}
                         onClick={() =>
-                            opprett({ sakId: props.sakId, saksversjon: props.saksversjon }, (res) => {
+                            opprett({ sakId: props.sakId, versjon: props.saksversjon }, (res) => {
                                 navigate(
                                     routes.tilbakekrevingValgtBehandling.createURL({
                                         sakId: props.sakId,
                                         behandlingId: res.id,
-                                        steg: TilbakekrevingSteg.Vurdering,
+                                        steg: TilbakekrevingSteg.Forhåndsvarsling,
                                     }),
                                 );
                             })

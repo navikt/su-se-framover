@@ -5,7 +5,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import * as PdfApi from '~src/api/pdfApi';
+import * as TilbakekrevingApi from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -46,6 +46,17 @@ const ForhåndsvarsleTilbakekreving = (props: {
     });
 
     const handleSubmit = (data: ForhåndsvarsleTilbakekrevingFormData) => {
+        if (!data.skalForhåndsvarsle) {
+            navigate(
+                Routes.tilbakekrevingValgtBehandling.createURL({
+                    sakId: props.sakId,
+                    behandlingId: props.tilbakekreving.id,
+                    steg: TilbakekrevingSteg.Vurdering,
+                }),
+            );
+            return;
+        }
+
         lagreForhåndsvarsel(
             {
                 sakId: props.sakId,
@@ -90,10 +101,11 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                     <BrevInput
                                         tittel={formatMessage('forhåndsvarsleTilbakekreving.fritekst.label')}
                                         onVisBrevClick={() =>
-                                            PdfApi.fetchBrevutkastForForhåndsvarselTilbakekreving({
+                                            TilbakekrevingApi.forhåndsvisForhåndsvarsel({
                                                 sakId: props.sakId,
                                                 behandlingId: props.tilbakekreving.id,
-                                                fritekst: field.value ?? '',
+                                                saksversjon: props.saksversjon,
+                                                brevtekst: field.value ?? '',
                                             })
                                         }
                                         tekst={field.value ?? ''}
@@ -120,11 +132,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                     tekst: formatMessage('forhåndsvarsleTilbakekreving.navigering.fortsettSenere'),
                                 }}
                                 tilbake={{
-                                    url: Routes.tilbakekrevingValgtBehandling.createURL({
-                                        sakId: props.sakId,
-                                        behandlingId: props.tilbakekreving.id,
-                                        steg: TilbakekrevingSteg.Vurdering,
-                                    }),
+                                    url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
                                 }}
                             />
 

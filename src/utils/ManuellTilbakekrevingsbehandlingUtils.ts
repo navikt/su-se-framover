@@ -5,26 +5,32 @@ import {
 
 export const erTilbakekrevingsbehandlingÅpen = (t: ManuellTilbakekrevingsbehandling): boolean =>
     t.status === TilbakekrevingsbehandlingStatus.OPPRETTET ||
-    t.status === TilbakekrevingsbehandlingStatus.VURDERT_UTEN_BREV ||
-    t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
-    t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING;
+    t.status === TilbakekrevingsbehandlingStatus.FORHÅNDSVARSLET ||
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT ||
+    t.status === TilbakekrevingsbehandlingStatus.VEDTAKSBREV ||
+    t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
+    t.status === TilbakekrevingsbehandlingStatus.UNDERKJENT;
 
 export const erTilbakekrevingTilAttestering = (t: ManuellTilbakekrevingsbehandling): boolean =>
     t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING;
 
-export const erTilbakekrevingVurdertUtenBrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
-    t.status === TilbakekrevingsbehandlingStatus.VURDERT_UTEN_BREV ||
-    t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
+export const erTilbakekrevingVurdertEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT ||
+    t.status === TilbakekrevingsbehandlingStatus.VEDTAKSBREV ||
     t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
-    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;
+    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT ||
+    t.status === TilbakekrevingsbehandlingStatus.UNDERKJENT;
 
 export const erTilbakekrevingForhåndsvarsletEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
-    t?.dokumenter?.length > 0 ||
-    t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
+    t.status === TilbakekrevingsbehandlingStatus.FORHÅNDSVARSLET ||
+    t.status === TilbakekrevingsbehandlingStatus.VURDERT ||
+    t.status === TilbakekrevingsbehandlingStatus.VEDTAKSBREV ||
     t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
-    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;
+    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT ||
+    t.status === TilbakekrevingsbehandlingStatus.UNDERKJENT;
 
-export const erTilbakekrevingVurdertMedBrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
-    t.status === TilbakekrevingsbehandlingStatus.VURDERT_MED_BREV ||
+export const erTilbakekrevingVedtaksbrevEllerSenere = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t.status === TilbakekrevingsbehandlingStatus.VEDTAKSBREV ||
     t.status === TilbakekrevingsbehandlingStatus.TIL_ATTESTERING ||
-    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;
+    t.status === TilbakekrevingsbehandlingStatus.IVERKSATT ||
+    t.status === TilbakekrevingsbehandlingStatus.UNDERKJENT;
