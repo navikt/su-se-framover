@@ -154,8 +154,8 @@ const Sakintro = () => {
                 open={bekrefterFnrEndring}
                 onClose={() => setBekrefterFnrEndring(false)}
                 sakId={props.sak.id}
-                nyttFnr={'123'}
-                forrigeFnr={'456'}
+                nyttFnr={props.søker.fnr}
+                forrigeFnr={props.sak.fnr}
             />
 
             <SuksessStatuser locationState={locationState} />
