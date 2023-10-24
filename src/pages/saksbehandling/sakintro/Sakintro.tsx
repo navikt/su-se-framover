@@ -141,7 +141,7 @@ const Sakintro = () => {
 
     return (
         <div className={styles.sakintroContainer}>
-            {props.sak.fnr === props.søker.fnr && (
+            {props.sak.fnr !== props.søker.fnr && (
                 <Alert variant={'warning'} className={styles.fnrEndringsAlert}>
                     Det er registrert en fødselsnummersendring.
                     <Button variant="tertiary" className={styles.button} onClick={() => setBekrefterFnrEndring(true)}>
