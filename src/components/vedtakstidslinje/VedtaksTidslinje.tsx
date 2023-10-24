@@ -26,7 +26,9 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
     return (
         <div>
             <Timeline>
-                <Timeline.Pin date={new Date()} />
+                {new Date() > new Date(sorterteVedtaker[sorterteVedtaker.length - 1].periode.tilOgMed) ? null : (
+                    <Timeline.Pin date={new Date()} />
+                )}
                 <Timeline.Row label=" ">
                     {sorterteVedtaker.map((v) => {
                         const props = periodeStyles(v.vedtakType);
