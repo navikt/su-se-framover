@@ -66,7 +66,7 @@ const BekreftFnrEndringModal = (props: {
                 <OppsummeringPar label={'Nytt fødselsnummer'} verdi={props.nyttFnr} />
                 <OppsummeringPar label={'Forrige fødselsnummer'} verdi={props.forrigeFnr} />
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className={styles.modalFooter}>
                 <div className={styles.modalFooterButtonsContainer}>
                     <Button variant="secondary" onClick={props.onClose}>
                         Bekreft senere
@@ -141,7 +141,7 @@ const Sakintro = () => {
 
     return (
         <div className={styles.sakintroContainer}>
-            {props.sak.fnr !== props.søker.fnr && (
+            {props.sak.fnr === props.søker.fnr && (
                 <Alert variant={'warning'} className={styles.fnrEndringsAlert}>
                     Det er registrert en fødselsnummersendring.
                     <Button variant="tertiary" className={styles.button} onClick={() => setBekrefterFnrEndring(true)}>
