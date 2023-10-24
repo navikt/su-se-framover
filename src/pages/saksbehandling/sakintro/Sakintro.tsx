@@ -43,7 +43,6 @@ const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotifica
 enum NyBehandling {
     REVURDER = 'REVURDER',
     KLAGE = 'KLAGE',
-    TILBAKEKREVING = 'TILBAKEKREVING',
 }
 
 const BekreftFnrEndringModal = (props: {
@@ -246,8 +245,6 @@ const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => 
                 return Routes.revurderValgtSak.createURL({ sakId: props.sakId });
             case NyBehandling.KLAGE:
                 return Routes.klageOpprett.createURL({ sakId: props.sakId });
-            case NyBehandling.TILBAKEKREVING:
-                return Routes.tilbakekrevValgtSak.createURL({ sakId: props.sakId });
         }
     };
 
@@ -289,13 +286,6 @@ const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => 
                         href={nyBehandlingTilRoute(NyBehandling.KLAGE)}
                     >
                         {formatMessage('popover.option.klage')}
-                    </LinkAsButton>
-                    <LinkAsButton
-                        className={styles.popoverOption}
-                        variant="tertiary"
-                        href={nyBehandlingTilRoute(NyBehandling.TILBAKEKREVING)}
-                    >
-                        {formatMessage('popover.option.tilbakekreving')}
                     </LinkAsButton>
                 </div>
             </Popover>
