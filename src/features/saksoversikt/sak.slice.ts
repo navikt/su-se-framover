@@ -408,6 +408,9 @@ export default createSlice({
         builder.addCase(tilbakekrevingActions.sendTilbakekrevingTilAttestering.fulfilled, (state, action) => {
             state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
         });
+        builder.addCase(tilbakekrevingActions.iverksettTilbakekreving.fulfilled, (state, action) => {
+            state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
+        });
     },
 });
 
@@ -500,6 +503,7 @@ function oppdaterTilbakekrevingPåSak(
         RemoteData.map((s) => ({
             ...s,
             tilbakekrevinger: s.tilbakekrevinger.map((t) => (t.id === tilbakekreving.id ? tilbakekreving : t)),
+            versjon: tilbakekreving.versjon,
         })),
     );
 }

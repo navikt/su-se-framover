@@ -2,9 +2,11 @@ import {
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
     ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
+    IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
     SendTilbakekrevingTilAttesteringRequest,
+    UnderkjennTilbakekrevingRequest,
     VurderTilbakekrevingsbehandlingRequest,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
@@ -84,6 +86,32 @@ export async function sendTilbakekrevingTilAttestering(
         method: 'POST',
         body: {
             versjon: arg.versjon,
+        },
+    });
+}
+
+export async function iverksettTilbakekreving(
+    arg: IverksettTilbakekrevingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/iverksett`,
+        method: 'POST',
+        body: {
+            versjon: arg.versjon,
+        },
+    });
+}
+
+export async function underkjennTilbakekreving(
+    arg: UnderkjennTilbakekrevingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/underkjenn`,
+        method: 'POST',
+        body: {
+            versjon: arg.versjon,
+            kommentar: arg.kommentar,
+            grunn: arg.grunn,
         },
     });
 }

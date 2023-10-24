@@ -244,6 +244,7 @@ export enum ApiErrorCode {
     UKJENT_FRADRAGSTYPE = 'ukjent_fradragstype',
     UFORVENTET_FEIL_MOT_SKATT = 'uforventet_feil_mot_skatt',
     USPESIFISIERT_FRADRAG_KREVER_BESKRIVELSE = 'uspesifisiert_fradrag_krever_beskrivelse',
+    UTDATERT_VERSJON = 'utdatert_versjon',
     UTBETALING_ALLEREDE_OPPHØRT = 'utbetaling_allerede_opphørt',
     UTBETALING_ALLEREDE_STANSET = 'utbetaling_allerede_stanset',
     UTENLANDSK_INNTEKT_MANGLER_VALUTA = 'utenlandsk_inntekt_mangler_valuta',

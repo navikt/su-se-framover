@@ -457,7 +457,7 @@ const TilbakekrevingsKnapper = (props: { sakId: string; t: ManuellTilbakekreving
     const { formatMessage } = useI18n({ messages });
 
     if (erTilbakekrevingTilAttestering(props.t)) {
-        if (user.isAttestant && user.navIdent !== props.t.opprettetAv) {
+        if (user.isAttestant && user.navIdent !== props.t.sendtTilAttesteringAv) {
             return (
                 <LinkAsButton
                     variant="secondary"

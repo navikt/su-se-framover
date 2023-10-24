@@ -12,6 +12,7 @@ import styles from './Attestering.module.less';
 import AttesterKlage from './attesterKlage/AttesterKlage';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
 import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';
+import AttesterTilbakekreving from './attesterTilbakekreving/AttesterTilbakekreving';
 
 const Attestering = () => {
     const { formatMessage } = useI18n({ messages });
@@ -21,8 +22,9 @@ const Attestering = () => {
     const søknadsbehandling = sak.behandlinger.find((s) => s.id === urlParams.behandlingId);
     const revurdering = sak.revurderinger.find((r) => r.id === urlParams.behandlingId);
     const klage = sak.klager.find((k) => k.id === urlParams.behandlingId);
+    const tilbakekreving = sak.tilbakekrevinger.find((t) => t.id === urlParams.behandlingId);
 
-    if (!søknadsbehandling && !revurdering && !klage) {
+    if (!søknadsbehandling && !revurdering && !klage && !tilbakekreving) {
         return (
             <div className={styles.fantIkkevedtakFeilContainer}>
                 <Alert variant="error">
@@ -57,6 +59,7 @@ const Attestering = () => {
                     klagensVedtak={sak.vedtak.find((v) => v.id === klage.vedtakId)!}
                 />
             )}
+            {tilbakekreving && <AttesterTilbakekreving saksversjon={sak.versjon} behandling={tilbakekreving} />}
         </div>
     );
 };

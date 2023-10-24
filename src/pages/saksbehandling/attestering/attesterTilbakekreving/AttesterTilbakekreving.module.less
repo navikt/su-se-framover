@@ -1,0 +1,13 @@
+@import '~/src/styles/variables.less';
+
+.mainContentContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: @spacing-xl;
+    margin: 0 10vw;
+
+    > :first-child {
+        position: sticky;
+        top: 20px;
+    }
+}

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Loader, Textarea } from '@navikt/ds-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,6 +33,7 @@ const BrevForTilbakekreving = (props: {
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
+    const saksversjonRef = React.useRef(props.saksversjon);
     const [autosaveStatus, autosave] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(sendTilbakekrevingTilAttestering);
 
@@ -43,11 +44,15 @@ const BrevForTilbakekreving = (props: {
         },
     });
 
+    useEffect(() => {
+        saksversjonRef.current = props.saksversjon;
+    }, [props.saksversjon]);
+
     const save = (data: BrevForTilbakekrevingFormData, onSuccess: () => void) => {
         autosave(
             {
                 sakId: props.sakId,
-                saksversjon: props.saksversjon,
+                saksversjon: saksversjonRef.current,
                 behandlingId: props.tilbakekreving.id,
                 brevtekst: data.brevtekst!,
             },
@@ -70,7 +75,7 @@ const BrevForTilbakekreving = (props: {
         save(data, () => {
             sendTilAttestering(
                 {
-                    versjon: props.saksversjon,
+                    versjon: saksversjonRef.current,
                     sakId: props.sakId,
                     behandlingId: props.tilbakekreving.id,
                 },
@@ -89,14 +94,9 @@ const BrevForTilbakekreving = (props: {
         console.log('onSeBrevClick');
     };
 
-    const { isSaving } = useAutosaveOnChange(form.watch('brevtekst'), () =>
-        autosave({
-            sakId: props.sakId,
-            saksversjon: props.saksversjon,
-            behandlingId: props.tilbakekreving.id,
-            brevtekst: form.watch('brevtekst') ?? '',
-        }),
-    );
+    const { isSaving } = useAutosaveOnChange(form.watch('brevtekst'), () => {
+        save({ brevtekst: form.watch('brevtekst') ?? '' }, () => void 0);
+    });
 
     return (
         <ToKolonner tittel={formatMessage('brevForTilbakekreving.tittel')}>

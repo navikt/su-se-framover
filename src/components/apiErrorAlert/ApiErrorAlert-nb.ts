@@ -300,6 +300,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UKJENT_FRADRAGSTYPE]: 'Ukjent fradragstype',
     [ApiErrorCode.UFORVENTET_FEIL_MOT_SKATT]: 'Kunne ikke hente skattemelding; uforventet feil',
     [ApiErrorCode.USPESIFISIERT_FRADRAG_KREVER_BESKRIVELSE]: 'Et fradrag som er "Annet" må spesifiseres',
+    [ApiErrorCode.UTDATERT_VERSJON]: 'Saksversjonen er utdatert. Vennligst prøv å refreshe siden.',
     [ApiErrorCode.UTBETALING_ALLEREDE_OPPHØRT]: 'Utbetaling allerede opphørt',
     [ApiErrorCode.UTBETALING_ALLEREDE_STANSET]: 'Utbetaling allerede stanset',
     [ApiErrorCode.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'Fradrag mangler valuta',

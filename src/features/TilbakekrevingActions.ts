@@ -5,9 +5,11 @@ import * as tilbakekrevingsApi from '~src/api/tilbakekrevingApi';
 import {
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
+    IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
     SendTilbakekrevingTilAttesteringRequest,
+    UnderkjennTilbakekrevingRequest,
     VurderTilbakekrevingsbehandlingRequest,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
@@ -68,6 +70,30 @@ export const sendTilbakekrevingTilAttestering = createAsyncThunk<
     { rejectValue: ApiError }
 >('tilbakekreving/tilAttestering', async (args, thunkApi) => {
     const res = await tilbakekrevingsApi.sendTilbakekrevingTilAttestering(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const iverksettTilbakekreving = createAsyncThunk<
+    ManuellTilbakekrevingsbehandling,
+    IverksettTilbakekrevingRequest,
+    { rejectValue: ApiError }
+>('tilbakekreving/iverksett', async (args, thunkApi) => {
+    const res = await tilbakekrevingsApi.iverksettTilbakekreving(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const underkjennTilbakekreving = createAsyncThunk<
+    ManuellTilbakekrevingsbehandling,
+    UnderkjennTilbakekrevingRequest,
+    { rejectValue: ApiError }
+>('tilbakekreving/iverksett', async (args, thunkApi) => {
+    const res = await tilbakekrevingsApi.underkjennTilbakekreving(args);
     if (res.status === 'ok') {
         return res.data;
     }

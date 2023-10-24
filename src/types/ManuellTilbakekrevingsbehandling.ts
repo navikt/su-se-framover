@@ -1,5 +1,6 @@
 import { Nullable } from '~src/lib/types';
 
+import { UnderkjennelseGrunn } from './Behandling';
 import { Kravgrunnlag } from './Kravgrunnlag';
 
 export interface ManuellTilbakekrevingsbehandling {
@@ -12,6 +13,8 @@ export interface ManuellTilbakekrevingsbehandling {
     månedsvurderinger: Månedsvurdering[];
     dokumenter: string[];
     fritekst: Nullable<string>;
+    versjon: number;
+    sendtTilAttesteringAv: Nullable<string>;
 }
 
 export enum TilbakekrevingsbehandlingStatus {
@@ -72,4 +75,18 @@ export interface SendTilbakekrevingTilAttesteringRequest {
     versjon: number;
     sakId: string;
     behandlingId: string;
+}
+
+export interface IverksettTilbakekrevingRequest {
+    versjon: number;
+    sakId: string;
+    behandlingId: string;
+}
+
+export interface UnderkjennTilbakekrevingRequest {
+    versjon: number;
+    sakId: string;
+    behandlingId: string;
+    kommentar: string;
+    grunn: UnderkjennelseGrunn;
 }
