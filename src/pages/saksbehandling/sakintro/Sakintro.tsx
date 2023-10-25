@@ -53,6 +53,7 @@ const BekreftFnrEndringModal = (props: {
     nyttFnr: string;
     forrigeFnr: string;
 }) => {
+    const { formatMessage } = useI18n({ messages });
     const [bekreftStatus, bekreft] = useAsyncActionCreator(bekreftFnrEndring);
 
     return (
@@ -69,19 +70,23 @@ const BekreftFnrEndringModal = (props: {
             <Modal.Footer className={styles.modalFooter}>
                 <div className={styles.modalFooterButtonsContainer}>
                     <Button variant="secondary" onClick={props.onClose}>
-                        Bekreft senere
+                        {formatMessage('fnrEndring.bekreftSenere')}
                     </Button>
                     <Button
                         variant="primary"
                         onClick={() =>
                             bekreft({ sakId: props.sakId, nyttFnr: props.nyttFnr, forrigeFnr: props.forrigeFnr })
                         }
+                        loading={RemoteData.isPending(bekreftStatus)}
                     >
-                        Bekreft
+                        {formatMessage('fnrEndring.bekreft')}
                     </Button>
                 </div>
 
                 {RemoteData.isFailure(bekreftStatus) && <ApiErrorAlert error={bekreftStatus.error} />}
+                {RemoteData.isSuccess(bekreftStatus) && (
+                    <Alert variant="success">{formatMessage('fnrEndring.fnrBekreftet')}</Alert>
+                )}
             </Modal.Footer>
         </Modal>
     );
@@ -143,9 +148,9 @@ const Sakintro = () => {
         <div className={styles.sakintroContainer}>
             {props.sak.fnr !== props.søker.fnr && (
                 <Alert variant={'warning'} className={styles.fnrEndringsAlert}>
-                    Det er registrert en fødselsnummersendring.
+                    {formatMessage('fnrEndring.registrertAnnetFnr')}
                     <Button variant="tertiary" className={styles.button} onClick={() => setBekrefterFnrEndring(true)}>
-                        Klikk meg for å bekrefte endringen
+                        {formatMessage('fnrEndring.klikkForBekrefte')}
                     </Button>
                 </Alert>
             )}

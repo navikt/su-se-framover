@@ -184,6 +184,7 @@ export enum ApiErrorCode {
 
     //S
     SAKSNUMMER_IKKE_GYLDIG = 'saksnummer_ikke_gyldig',
+    SAK_HAR_ALLEREDE_SISTE_FØDSELSNUMMER = 'sak_har_allerede_siste_fødselsnummer',
     SENERE_STØNADSPERIODE_EKSISTERER = 'senere_stønadsperiode',
     SISTE_MÅNED_I_REVURDERINGSPERIODE_KAN_IKKE_VÆRE_UTBETALT_VED_OPPHØR_AVKORTING = 'siste_måned_i_revurderingsperiode_kan_ikke_være_utbetalt_ved_opphør_avkorting',
     SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
