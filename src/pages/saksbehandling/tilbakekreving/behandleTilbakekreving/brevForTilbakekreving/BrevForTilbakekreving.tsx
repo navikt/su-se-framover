@@ -134,12 +134,10 @@ const BrevForTilbakekreving = (props: {
                                 type="button"
                                 className={styles.seBrevButton}
                                 variant="secondary"
-                                //loading={RemoteData.isPending(brevStatus)}
                                 onClick={onSeBrevClick}
                             >
                                 {formatMessage('knapp.seBrev')}
                             </Button>
-                            {/* RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} /> */}
                         </div>
                         <div>
                             <Feiloppsummering
@@ -151,6 +149,7 @@ const BrevForTilbakekreving = (props: {
                             <Navigasjonsknapper
                                 neste={{
                                     loading: RemoteData.isPending(sendTilAttesteringStatus),
+                                    tekst: formatMessage('knapp.sendTilAttestering'),
                                 }}
                                 fortsettSenere={{
                                     onClick: () => handleLagreOgFortsettSenereClick(form.getValues(), form.trigger),

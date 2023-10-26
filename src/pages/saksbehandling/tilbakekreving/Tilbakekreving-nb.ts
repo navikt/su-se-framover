@@ -33,6 +33,7 @@ export default {
 
     'brevForTilbakekreving.tittel': 'Brev',
     'brevForTilbakekreving.fritekst.label': 'Fritekst til brev',
+    'knapp.sendTilAttestering': 'Send til attestering',
     'brevForTilbakekreving.sendtTilAttestering':
         'Behandlingen er sendt til attestering og oppgave i Gosys er schedulert til oppdatering',
 
