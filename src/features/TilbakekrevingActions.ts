@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~src/api/apiClient';
 import * as tilbakekrevingsApi from '~src/api/tilbakekrevingApi';
 import {
+    AvsluttTilbakekrevingRequest,
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
     IverksettTilbakekrevingRequest,
@@ -94,6 +95,18 @@ export const underkjennTilbakekreving = createAsyncThunk<
     { rejectValue: ApiError }
 >('tilbakekreving/iverksett', async (args, thunkApi) => {
     const res = await tilbakekrevingsApi.underkjennTilbakekreving(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const avsluttTilbakekreving = createAsyncThunk<
+    ManuellTilbakekrevingsbehandling,
+    AvsluttTilbakekrevingRequest,
+    { rejectValue: ApiError }
+>('tilbakekreving/avslutt', async (args, thunkApi) => {
+    const res = await tilbakekrevingsApi.avsluttTilbakekreving(args);
     if (res.status === 'ok') {
         return res.data;
     }

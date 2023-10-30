@@ -10,6 +10,7 @@ import messages from './avsluttBehandling-nb';
 import * as styles from './avsluttBehandling.module.less';
 import AvsluttKlage from './avsluttKlage/AvsluttKlage';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
+import AvsluttTilbakekreving from './avsluttTilbakekreving/AvsluttTilbakekreving';
 import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad';
 
 const AvsluttBehandling = () => {
@@ -21,8 +22,9 @@ const AvsluttBehandling = () => {
     const søknadsbehandling = props.sak.behandlinger.find((s) => s.id === urlParams.id);
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.id);
     const klage = props.sak.klager.find((k) => k.id === urlParams.id);
+    const tilbakekreving = props.sak.tilbakekrevinger.find((t) => t.id === urlParams.id);
 
-    if (!søknad && !søknadsbehandling && !revurdering && !klage) {
+    if (!søknad && !søknadsbehandling && !revurdering && !klage && !tilbakekreving) {
         return (
             <div>
                 <Alert variant="error">
@@ -51,6 +53,9 @@ const AvsluttBehandling = () => {
                     )}
                     {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
                     {klage && <AvsluttKlage sakId={props.sak.id} klage={klage} />}
+                    {tilbakekreving && (
+                        <AvsluttTilbakekreving saksversjon={props.sak.versjon} behandling={tilbakekreving} />
+                    )}
                 </div>
             </Panel>
         </div>

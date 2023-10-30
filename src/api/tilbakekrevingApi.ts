@@ -1,4 +1,5 @@
 import {
+    AvsluttTilbakekrevingRequest,
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
     ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
@@ -112,6 +113,21 @@ export async function underkjennTilbakekreving(
             versjon: arg.versjon,
             kommentar: arg.kommentar,
             grunn: arg.grunn,
+        },
+    });
+}
+
+export async function avsluttTilbakekreving(
+    arg: AvsluttTilbakekrevingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/avbryt`,
+        method: 'POST',
+        body: {
+            versjon: arg.versjon,
+            skalSendeBrev: arg.skalSendeBrev,
+            fritekst: arg.fritekst,
+            begrunnelse: arg.begrunnelse,
         },
     });
 }

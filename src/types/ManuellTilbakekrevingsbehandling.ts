@@ -1,4 +1,5 @@
 import { Nullable } from '~src/lib/types';
+import { BrevvalgAvsluttTilbakekreving } from '~src/pages/saksbehandling/avsluttBehandling/avsluttTilbakekreving/AvsluttTilbakekrevingUtils';
 
 import { UnderkjennelseGrunn } from './Behandling';
 import { Kravgrunnlag } from './Kravgrunnlag';
@@ -89,4 +90,12 @@ export interface UnderkjennTilbakekrevingRequest {
     behandlingId: string;
     kommentar: string;
     grunn: UnderkjennelseGrunn;
+}
+export interface AvsluttTilbakekrevingRequest {
+    versjon: number;
+    sakId: string;
+    behandlingId: string;
+    skalSendeBrev: BrevvalgAvsluttTilbakekreving;
+    fritekst: Nullable<string>;
+    begrunnelse: string;
 }
