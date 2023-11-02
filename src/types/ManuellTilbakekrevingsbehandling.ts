@@ -65,6 +65,11 @@ export interface BrevtekstTilbakekrevingsbehandlingRequest {
     brevtekst: string;
 }
 
+export interface ForhåndsvisVedtaksbrevTilbakekrevingsbehandlingRequest {
+    sakId: string;
+    behandlingId: string;
+}
+
 export interface ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest {
     sakId: string;
     saksversjon: number;

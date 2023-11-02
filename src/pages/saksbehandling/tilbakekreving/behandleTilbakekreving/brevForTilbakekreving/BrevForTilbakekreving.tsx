@@ -1,10 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Loader, Textarea } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { ApiError } from '~src/api/apiClient';
+import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
@@ -36,6 +38,7 @@ const BrevForTilbakekreving = (props: {
     const saksversjonRef = React.useRef(props.saksversjon);
     const [autosaveStatus, autosave] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(sendTilbakekrevingTilAttestering);
+    const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
 
     const form = useForm<BrevForTilbakekrevingFormData>({
         resolver: yupResolver(brevForTilbakekrevingSchema),
@@ -90,8 +93,22 @@ const BrevForTilbakekreving = (props: {
         });
     };
 
-    const onSeBrevClick = () => {
-        console.log('onSeBrevClick');
+    const onSeBrevClick = async () => {
+        if (RemoteData.isPending(hentBrevStatus)) return;
+
+        setHentBrevStatus(RemoteData.pending);
+
+        const res = await forhåndsvisVedtaksbrevTilbakekrevingsbehandling({
+            sakId: props.sakId,
+            behandlingId: props.tilbakekreving.id,
+        });
+
+        if (res.status === 'ok') {
+            setHentBrevStatus(RemoteData.success(null));
+            window.open(URL.createObjectURL(res.data));
+        } else {
+            setHentBrevStatus(RemoteData.failure(res.error));
+        }
     };
 
     const { isSaving } = useAutosaveOnChange(form.watch('brevtekst'), () => {
@@ -135,10 +152,12 @@ const BrevForTilbakekreving = (props: {
                                 className={styles.seBrevButton}
                                 variant="secondary"
                                 onClick={onSeBrevClick}
+                                loading={RemoteData.isPending(hentBrevStatus)}
                             >
                                 {formatMessage('knapp.seBrev')}
                             </Button>
                         </div>
+                        {RemoteData.isFailure(hentBrevStatus) && <ApiErrorAlert error={hentBrevStatus.error} />}
                         <div>
                             <Feiloppsummering
                                 tittel={formatMessage('vurderTilbakekreving.feiloppsummering')}

@@ -3,6 +3,7 @@ import {
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
     ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
+    ForhåndsvisVedtaksbrevTilbakekrevingsbehandlingRequest,
     IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
@@ -63,6 +64,16 @@ export async function sendForhåndsvarsel(
             versjon: arg.saksversjon,
             fritekst: arg.fritekst,
         },
+    });
+}
+
+export async function forhåndsvisVedtaksbrevTilbakekrevingsbehandling(
+    arg: ForhåndsvisVedtaksbrevTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/vedtaksbrev/forhandsvis`,
+        method: 'GET',
+        bodyTransformer: (res) => res.blob(),
     });
 }
 
