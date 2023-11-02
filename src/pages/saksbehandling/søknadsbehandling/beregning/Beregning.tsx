@@ -36,7 +36,6 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { Fradrag } from '~src/types/Fradrag';
 import { NullablePeriode } from '~src/types/Periode';
 import { Person } from '~src/types/Person';
-import { Simulering } from '~src/types/Simulering';
 import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erIGyldigStatusForÅKunneBeregne } from '~src/utils/BeregningUtils';
@@ -67,8 +66,8 @@ const getInitialValues = (
 });
 
 type Søker = { søker: Person };
-type UteståendeAvkorting = { uteståendeAvkorting: Nullable<Simulering> };
-const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkorting) => {
+
+const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
@@ -199,11 +198,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker & UteståendeAvkor
             {{
                 left: (
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        {props.uteståendeAvkorting && (
-                            <Alert variant={'info'} className={styles.avkortingAlert}>
-                                {formatMessage('alert.advarsel.avkorting')}
-                            </Alert>
-                        )}
                         <Heading level="2" size="medium">
                             Fradrag
                         </Heading>

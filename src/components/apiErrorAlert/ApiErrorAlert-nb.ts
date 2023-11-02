@@ -6,8 +6,6 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Systemet kan ikke garantere at angitt stønadsperiode og aldersvurdering henger sammen. Dette kan være fordi søker er 67 eller over ved angitt stønadsperiode, eller mangler fødslesinformasjon for å kunne gi et definitivt svar. Mulighet for å overstyre vurdering åpnes',
     [ApiErrorCode.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]: 'Kan ikke attestere egen saksbehandling',
     [ApiErrorCode.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',
-    [ApiErrorCode.AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG]:
-        'Tilgjengelig restbeløp etter fradrag er for lavt til å kunne gjennomføre avkorting innenfor valgt stønadsperiode. Delvis avkorting på tvers av stønadsperioder støttes ikke.',
     [ApiErrorCode.AVSTEMMING_FEILET]: 'Avstemming feilet',
 
     //B
@@ -195,7 +193,6 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Simulering feilet. Oppdraget finnes ikke, brukerens transaksjoner er sannsynligvis fjernet fra Oppdrag',
     [ApiErrorCode.OPPHOLDSTILLATELSE_ER_IKKE_UTFYLT]: 'Fyll ut om søker har oppholdstillatelse',
     [ApiErrorCode.OPPHØR_AV_FLERE_VILKÅR]: 'Opphør av flere vilkår i kombinasjon støttes ikke',
-    [ApiErrorCode.OPPHØR_AV_YTELSE_SOM_SKAL_AVKORTES]: 'Opphør av avkorting støttes ikke',
     [ApiErrorCode.OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE]:
         'Opphørsdato er ikke lik fra-dato for revurderingsperioden. Revurdering må gjennomføres i flere steg.',
     [ApiErrorCode.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]:
@@ -214,8 +211,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     //R
     [ApiErrorCode.REGULERING_AVVENTER_KRAVGRUNNLAG]:
         'Saken avventer kravgrunnlag. Regulering kan kjøres når vi fått svar fra oppdrag.',
-    [ApiErrorCode.REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING]:
-        'Saken har pågående eller behov for fremtidig avkorting. Reguleringen må håndteres gjennom revurdering.',
     [ApiErrorCode.REGULERING_UGYLDIG_TILSTAND]: 'Reguleringen er i ett ugyldigt tilstand',
     [ApiErrorCode.REKONSTRUERT_UTBETALINGSHISTORIKK_ULIK_ORIGINAL]:
         'Rekonstruert utbetalingsistorikk er ulik original.',
@@ -231,8 +226,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.SAKSNUMMER_IKKE_GYLDIG]: 'Saksnummer er ikke gyldig',
     [ApiErrorCode.SAK_HAR_ALLEREDE_SISTE_FØDSELSNUMMER]: 'Siste fødselsnummeret er allerede registrert på saken',
     [ApiErrorCode.SENERE_STØNADSPERIODE_EKSISTERER]: 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
-    [ApiErrorCode.SISTE_MÅNED_I_REVURDERINGSPERIODE_KAN_IKKE_VÆRE_UTBETALT_VED_OPPHØR_AVKORTING]:
-        'Opphør med avkorting: Siste måned i revurderingsperioden kan ikke være utbetalt.',
     [ApiErrorCode.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]:
         'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     [ApiErrorCode.SISTE_UTBETALING_ER_IKKE_STANS]:
@@ -250,8 +243,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.STØNADSPERIODE_MAX_12MND]: 'En stønadsperiode kan være maks 12 måneder',
     [ApiErrorCode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]:
         'Stønadsperioden overlapper med en eksisterende stønadsperiode',
-    [ApiErrorCode.STØNADSPERIODEN_OVERLAPPER_FULLFØRTE_UTBETALINGER_SOM_SKAL_AVKORTES]:
-        'Stønadsperioden overlapper med fullførte utbetalinger som skal avkortes i ny stønadsperiode. Virkningstidspunkt for ny stønadsperiode må være senere enn siste måned som har blitt utbetalt.',
     [ApiErrorCode.SØKNAD_ALLEREDE_LUKKET]: 'Søknaden er allerede lukket',
     [ApiErrorCode.SØKNAD_ER_LUKKET]: 'Søknad er lukket',
     [ApiErrorCode.SØKNAD_HAR_BEHANDLING]: 'Søknad har allerede en behandling',
@@ -309,8 +300,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIVT_BELØP]: 'Fradrag har negativt utenlandsbeløp',
     [ApiErrorCode.UTENLANDSOPPHOLD_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]:
         'Utenlandsopphold som fører til opphør må revurderes',
-    [ApiErrorCode.UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE]:
-        'Saken inneholder en utestående avkorting som enten må håndteres i ny stønadsperiode eller revurderes i sin helhet. Håndter i ny periode eller utvid revurderingsperioden til å inkludere perioden for avkortingen.',
 
     //V
     [ApiErrorCode.VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING]:

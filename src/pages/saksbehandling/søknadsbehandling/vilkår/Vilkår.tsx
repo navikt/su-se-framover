@@ -204,7 +204,6 @@ const Vilkår = () => {
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             søker={props.søker}
-                            uteståendeAvkorting={props.sak.uteståendeAvkorting}
                         />
                     )}
                 </div>

@@ -242,8 +242,6 @@ const hentTekstForManuellÅrsak = (
         case ÅrsakForManuell.DelvisOpphør:
         case ÅrsakForManuell.VedtakstidslinjeErIkkeSammenhengende:
             return formatMessage('manuell.årsak.hull');
-        case ÅrsakForManuell.PågåendeAvkortingEllerBehovForFremtidigAvkorting:
-            return formatMessage('manuell.årsak.avkorting');
         case ÅrsakForManuell.AvventerKravgrunnlag:
             return formatMessage('manuell.årsak.avventarKravgrunnlag');
         case ÅrsakForManuell.UtbetalingFeilet:

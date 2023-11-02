@@ -3,7 +3,6 @@ export enum ApiErrorCode {
     ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE = 'aldersvurdering_gir_ikke_rett_på_uføre',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
     ATTESTANT_SAMME_SOM_SAKSBEHANDLER = 'attestant_samme_som_saksbehandler',
-    AVKORTING_UTENLANDSOPPHOLD_ER_UFULLSTENDIG = 'avkorting_er_ufullstendig',
     AVSTEMMING_FEILET = 'avstemming_feilet',
 
     //B
@@ -158,7 +157,6 @@ export enum ApiErrorCode {
     OPPDRAGET_FINNES_IKKE = 'simulering_feilet_oppdraget_finnes_ikke',
     OPPHOLDSTILLATELSE_ER_IKKE_UTFYLT = 'oppholdstillatelse_er_ikke_utfylt',
     OPPHØR_AV_FLERE_VILKÅR = 'opphør_av_flere_vilkår',
-    OPPHØR_AV_YTELSE_SOM_SKAL_AVKORTES = 'opphør_av_ytelse_som_skal_avkortes',
     OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE = 'opphør_ikke_tidligste_dato',
     OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',
     OVERLAPPENDE_PERIODER = 'overlappende_perioder',
@@ -172,7 +170,6 @@ export enum ApiErrorCode {
     //R
     PERSONEN_HAR_INGEN_SAK = 'fant_ikke_sak_for_person',
     REGULERING_AVVENTER_KRAVGRUNNLAG = 'regulering_avventer_kravgrunnlag',
-    REGULERING_HAR_PÅGÅENDE_ELLER_BEHOV_FOR_AVKORTING = 'regulering_har_pågående_eller_behov_for_avkorting',
     REGULERING_UGYLDIG_TILSTAND = 'regulering_ugyldig_tilstand',
     REKONSTRUERT_UTBETALINGSHISTORIKK_ULIK_ORIGINAL = 'rekonstruert_utbetalingshistorikk_ulik_original',
     REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV = 'revurdering_er_ikke_forhåndsvarslet_for_å_vise_brev',
@@ -186,7 +183,6 @@ export enum ApiErrorCode {
     SAKSNUMMER_IKKE_GYLDIG = 'saksnummer_ikke_gyldig',
     SAK_HAR_ALLEREDE_SISTE_FØDSELSNUMMER = 'sak_har_allerede_siste_fødselsnummer',
     SENERE_STØNADSPERIODE_EKSISTERER = 'senere_stønadsperiode',
-    SISTE_MÅNED_I_REVURDERINGSPERIODE_KAN_IKKE_VÆRE_UTBETALT_VED_OPPHØR_AVKORTING = 'siste_måned_i_revurderingsperiode_kan_ikke_være_utbetalt_ved_opphør_avkorting',
     SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
     SISTE_UTBETALING_ER_IKKE_STANS = 'siste_utbetaling_er_ikke_stans',
     SISTE_VEDTAK_IKKE_STANS = 'siste_vedtak_ikke_stans',
@@ -199,7 +195,6 @@ export enum ApiErrorCode {
     STØNADSPERIODE_FØR_2021 = 'stønadsperiode_før_2021',
     STØNADSPERIODE_MAX_12MND = 'stønadsperiode_max_12mnd',
     STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE = 'stønadsperioden_overlapper_med_eksisterende_søknadsbehandling',
-    STØNADSPERIODEN_OVERLAPPER_FULLFØRTE_UTBETALINGER_SOM_SKAL_AVKORTES = 'stønadsperiode_inneholder_avkorting_utenlandsopphold',
     SØKNAD_ALLEREDE_LUKKET = 'søknad_allerede_lukket',
     SØKNAD_ER_LUKKET = 'søknad_er_lukket',
     SØKNAD_HAR_BEHANDLING = 'søknad_har_behandling',
@@ -252,7 +247,6 @@ export enum ApiErrorCode {
     UTENLANDSK_INNTEKT_NEGATIV_KURS = 'utenlandsk_inntekt_negativ_kurs',
     UTENLANDSK_INNTEKT_NEGATIVT_BELØP = 'utenlandsk_inntekt_negativt_beløp',
     UTENLANDSOPPHOLD_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'utenlandsopphold_som_fører_til_opphør_må_revurderes',
-    UTESTÅENDE_AVKORTING_MÅ_REVURDERES_ELLER_AVKORTES_I_NY_PERIODE = 'utestående_avkorting_må_revurderes_eller_avkortes_i_ny_periode',
 
     //V
     VEDTAK_MANLGER_EN_ELLER_FLERE_MÅNEDER_REVURDERING = 'vedtak_mangler_i_en_eller_flere_måneder_av_revurderingsperiode',

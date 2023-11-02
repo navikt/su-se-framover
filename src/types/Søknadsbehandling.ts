@@ -16,7 +16,6 @@ export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus>
     saksbehandler: Nullable<string>;
     stønadsperiode: Nullable<Stønadsperiode>;
     fritekstTilBrev: string;
-    simuleringForAvkortingsvarsel: Nullable<Simulering>;
     erLukket: boolean;
     aldersvurdering: Nullable<Aldersvurdering>;
     eksterneGrunnlag: EksterneGrunnlag;

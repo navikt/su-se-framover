@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Button, Heading, Label, Loader } from '@navikt/ds-react';
+import { Button, Label, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
@@ -27,13 +27,11 @@ import { Vedtak } from '~src/types/Vedtak';
 import { erBehandlingRevurdering, erBehandlingSøknadsbehandling } from '~src/utils/behandling/BehandlingUtils';
 import { formatDate, formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
-import { formatCurrency } from '~src/utils/format/formatUtils';
 import { splitStatusOgResultatFraKlage } from '~src/utils/klage/klageUtils';
 import {
     erInformasjonsRevurdering,
     erRevurderingTilbakekreving,
     erRevurderingTilbakekrevingsbehandling,
-    hentAvkortingFraRevurdering,
     splitStatusOgResultatFraRevurdering,
 } from '~src/utils/revurdering/revurderingUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
@@ -210,7 +208,6 @@ const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling 
 const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: Revurdering }) => {
     const { formatMessage } = useI18n({ messages });
     const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
-    const avkortingsInfo = hentAvkortingFraRevurdering(props.r);
 
     useEffect(() => {
         if (erInformasjonsRevurdering(props.r)) {
@@ -262,34 +259,6 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                         />
                     ),
                 ),
-            )}
-
-            {avkortingsInfo && (
-                <div className={styles.avkorting}>
-                    <Heading level="3" size="small" spacing>
-                        {formatMessage('simulering.avkorting')}
-                    </Heading>
-                    <div className={styles.avkortingContent}>
-                        <OppsummeringPar
-                            label={formatMessage('simulering.avkorting.total')}
-                            verdi={formatCurrency(avkortingsInfo.totalOppsummering.sumFeilutbetaling)}
-                        />
-                        <ul className={styles.avkortingListe}>
-                            {avkortingsInfo.periodeOppsummering.map((periode) => (
-                                <li key={periode.fraOgMed}>
-                                    <BodyShort>
-                                        {formatPeriode({ fraOgMed: periode.fraOgMed, tilOgMed: periode.tilOgMed })}
-                                    </BodyShort>
-                                    <BodyShort>
-                                        {`${formatCurrency(periode.sumFeilutbetaling)} ${formatMessage(
-                                            'simulering.avkorting.ytelse.imåned',
-                                        )}`}
-                                    </BodyShort>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
             )}
         </div>
     );

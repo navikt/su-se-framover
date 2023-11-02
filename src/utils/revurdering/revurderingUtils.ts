@@ -1,6 +1,5 @@
 import { Linjestatus, Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types';
 import { Beregning } from '~src/types/Beregning';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
@@ -25,7 +24,6 @@ import {
     RevurderingOppsummeringSteg,
     RevurderingSeksjoner,
     RevurderingTilAttestering,
-    SimuleringForAvkortingsvarsel,
     SimulertRevurdering,
     StansAvYtelse,
     TilbakekrevingsAvgjørelse,
@@ -52,14 +50,6 @@ export const erUtbetalingsrevurdering = (r: Revurdering): r is UtbetalingsRevurd
 
 export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering =>
     r.status === InformasjonsRevurderingStatus.OPPRETTET;
-
-export const hentAvkortingFraRevurdering = (r: Revurdering): Nullable<SimuleringForAvkortingsvarsel> =>
-    erRevurderingSimulert(r) ||
-    erRevurderingIverksatt(r) ||
-    erRevurderingUnderkjent(r) ||
-    erRevurderingTilAttestering(r)
-        ? r.simuleringForAvkortingsvarsel
-        : null;
 
 export const erRevurderingBeregnet = (r: Revurdering): r is BeregnetInnvilget =>
     r.status === InformasjonsRevurderingStatus.BEREGNET_INNVILGET;

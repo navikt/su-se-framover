@@ -8,7 +8,6 @@ import { Periode } from './Periode';
 import { RegistrerteUtenlandsopphold } from './RegistrertUtenlandsopphold';
 import { Regulering } from './Regulering';
 import { Revurdering } from './Revurdering';
-import { Simulering } from './Simulering';
 import { Søknad } from './Søknad';
 import { Søknadsbehandling } from './Søknadsbehandling';
 import { Vedtak } from './Vedtak';
@@ -30,7 +29,6 @@ export interface Sak {
     vedtakPåTidslinje: VedtakPåTidslinje[];
     utenlandsopphold: RegistrerteUtenlandsopphold;
     versjon: number;
-    uteståendeAvkorting: Nullable<Simulering>;
     tilbakekrevinger: ManuellTilbakekrevingsbehandling[];
     uteståendeKravgrunnlag: Nullable<Kravgrunnlag>;
 }

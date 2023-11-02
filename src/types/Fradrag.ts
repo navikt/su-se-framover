@@ -78,7 +78,6 @@ export enum IkkeVelgbareFradragskategorier {
     ForventetInntekt = 'ForventetInntekt',
     BeregnetFradragEPS = 'BeregnetFradragEPS',
     UnderMinstenivå = 'UnderMinstenivå',
-    AvkortingUtenlandsopphold = 'AvkortingUtenlandsopphold',
 }
 
 /**
@@ -115,7 +114,6 @@ export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
         case IkkeVelgbareFradragskategorier.ForventetInntekt:
         case IkkeVelgbareFradragskategorier.BeregnetFradragEPS:
         case IkkeVelgbareFradragskategorier.UnderMinstenivå:
-        case IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold:
             return false;
     }
 };

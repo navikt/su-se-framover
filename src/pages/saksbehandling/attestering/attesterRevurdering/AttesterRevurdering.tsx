@@ -33,7 +33,6 @@ import {
     erRevurderingTilAttestering,
     erRevurderingTilbakekrevingsbehandling,
     harSimulering,
-    hentAvkortingFraRevurdering,
     periodenInneholderTilbakekrevingOgAndreTyper,
 } from '~src/utils/revurdering/revurderingUtils';
 
@@ -214,9 +213,7 @@ const hentWarnings = (revurdering: InformasjonsRevurdering): Array<keyof typeof 
     } else if (tilbakekreving) {
         warnings.push('tilbakekreving');
     } else if (opphør) {
-        hentAvkortingFraRevurdering(revurdering)
-            ? warnings.push('info.opphør.og.avkorting')
-            : warnings.push('info.opphør');
+        warnings.push('info.opphør');
     }
     if (tilbakekreving) {
         warnings.push('tilbakereving.alert.brutto.netto');

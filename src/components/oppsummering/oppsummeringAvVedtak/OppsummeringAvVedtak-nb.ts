@@ -24,10 +24,6 @@ export default {
     'vedtak.simulering': 'Simulering',
     'vedtak.simulering.ingen': 'Ingen simulering',
 
-    'simulering.avkorting': 'Avkorting',
-    'simulering.avkorting.total': 'Totalt avkortingsbeløp',
-    'simulering.avkorting.ytelse.imåned': 'i mnd',
-
     'behandling.resultat': 'Resultat',
 
     'søknadsbehandling.søknadsdato': 'Søknadsdato',

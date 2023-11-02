@@ -16,7 +16,7 @@ export default {
     'manuell.årsak.stans': 'Denne saken må reguleres manuelt fordi den var stanset da vi kjørte automatisk regulering.',
     'manuell.årsak.hull':
         'Reguleringsperioden innehåller perioder med delvis opphør og/eller hull i tidslinjen. Denne saken må revurderes.',
-    'manuell.årsak.avkorting': 'Denne brukern har måneder med avkorting. Saken må revurderes.',
+
     'manuell.årsak.avventarKravgrunnlag':
         'Denne saken må reguleres manuelt fordi saken avventet kravgrunnlag da vi kjørte automatisk regulering.',
     'manuell.årsak.utbetalingFeilet':

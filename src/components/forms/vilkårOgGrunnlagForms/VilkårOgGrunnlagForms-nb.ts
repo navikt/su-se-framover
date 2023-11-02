@@ -33,7 +33,6 @@ export const ikkeVelgbareFradragskategoriMessages: { [key in IkkeVelgbareFradrag
     [IkkeVelgbareFradragskategorier.ForventetInntekt]: 'Forventet inntekt etter uførhet',
     [IkkeVelgbareFradragskategorier.BeregnetFradragEPS]: 'Ektefelle/samboer totalt',
     [IkkeVelgbareFradragskategorier.UnderMinstenivå]: 'Beløp under minstegrense for utbetaling',
-    [IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold]: 'Avkorting for utenlandsopphold',
 };
 
 export default {

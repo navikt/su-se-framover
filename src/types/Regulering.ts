@@ -47,7 +47,7 @@ export enum ÅrsakForManuell {
     ForventetInntektErStørreEnn0 = 'ForventetInntektErStørreEnn0',
     DelvisOpphør = 'DelvisOpphør',
     VedtakstidslinjeErIkkeSammenhengende = 'VedtakstidslinjeErIkkeSammenhengende',
-    PågåendeAvkortingEllerBehovForFremtidigAvkorting = 'PågåendeAvkortingEllerBehovForFremtidigAvkorting',
+
     AvventerKravgrunnlag = 'AvventerKravgrunnlag',
     UtbetalingFeilet = 'UtbetalingFeilet',
 }

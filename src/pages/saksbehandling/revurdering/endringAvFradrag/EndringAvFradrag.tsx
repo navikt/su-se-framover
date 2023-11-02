@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Heading } from '@navikt/ds-react';
+import { Heading } from '@navikt/ds-react';
 import { getEq } from 'fp-ts/lib/Array';
 import { struct } from 'fp-ts/lib/Eq';
 import React from 'react';
@@ -27,7 +27,6 @@ import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import fradragMessages from '~src/pages/saksbehandling/søknadsbehandling/beregning/beregning-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { InformasjonsRevurdering, Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -124,13 +123,6 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                             ),
                         )}
                     >
-                        <div>
-                            {props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.some(
-                                (fradrag) => fradrag.type === IkkeVelgbareFradragskategorier.AvkortingUtenlandsopphold,
-                            ) && (
-                                <Alert variant={'info'}>{intl.formatMessage({ id: 'alert.advarsel.avkorting' })}</Alert>
-                            )}
-                        </div>
                         <div>
                             <div className={styles.fradragInputsContainer}>
                                 <FradragForm

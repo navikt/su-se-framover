@@ -14,8 +14,6 @@ export default {
     'accordion.forhåndsvarsling': 'Forhåndsvarsel',
 
     'info.opphør': 'Denne revurderingen fører til opphør for bruker',
-    'info.opphør.og.avkorting':
-        'Denne revurderingen fører til opphør og avkorting. Avkorting skjer automatisk når bruker får ny stønadsperiode.',
 
     'attester.iverksatt': 'Revurdering er iverksatt',
     'attester.iverksatt.med.tilbakekreving':

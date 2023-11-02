@@ -4,7 +4,7 @@ import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Periode } from './Periode';
-import { SimuleringsperiodeOppsummering, Simulering } from './Simulering';
+import { Simulering } from './Simulering';
 
 //Dette er feltene som deles av backends 'abstrakte' revurdering. Hadde vært fint å skille på dem litt mer, både bak og fram
 export interface Revurdering<T extends RevurderingStatus = RevurderingStatus> extends Behandling<RevurderingStatus> {
@@ -65,11 +65,6 @@ export interface InformasjonsRevurdering<T extends InformasjonsRevurderingStatus
 
 export type OpprettetRevurdering = InformasjonsRevurdering<InformasjonsRevurderingStatus.OPPRETTET>;
 
-export type SimuleringForAvkortingsvarsel = {
-    totalOppsummering: SimuleringsperiodeOppsummering;
-    periodeOppsummering: SimuleringsperiodeOppsummering[];
-};
-
 export interface BeregnetInnvilget extends InformasjonsRevurdering<InformasjonsRevurderingStatus.BEREGNET_INNVILGET> {
     beregning: Beregning;
 }
@@ -80,7 +75,7 @@ export interface SimulertRevurdering
     > {
     beregning: Beregning;
     simulering: Simulering;
-    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
+
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
@@ -90,7 +85,6 @@ export interface RevurderingTilAttestering
     > {
     beregning: Beregning;
     simulering: Nullable<Simulering>;
-    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
@@ -100,7 +94,6 @@ export interface IverksattRevurdering
     > {
     beregning: Beregning;
     simulering: Nullable<Simulering>;
-    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
@@ -110,7 +103,6 @@ export interface UnderkjentRevurdering
     > {
     beregning: Beregning;
     simulering: Nullable<Simulering>;
-    simuleringForAvkortingsvarsel: Nullable<SimuleringForAvkortingsvarsel>;
     tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
