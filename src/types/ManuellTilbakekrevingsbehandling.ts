@@ -62,7 +62,7 @@ export interface BrevtekstTilbakekrevingsbehandlingRequest {
     sakId: string;
     saksversjon: number;
     behandlingId: string;
-    brevtekst: string;
+    brevtekst: Nullable<string>;
 }
 
 export interface ForhåndsvisVedtaksbrevTilbakekrevingsbehandlingRequest {

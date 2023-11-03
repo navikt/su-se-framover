@@ -1,3 +1,4 @@
+import * as B from 'fp-ts/lib/boolean';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 
@@ -5,13 +6,22 @@ import { Nullable, eqNullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
 export interface BrevForTilbakekrevingFormData {
+    skalSendeBrev: boolean;
     brevtekst: Nullable<string>;
 }
 
 export const eqBrevForTilbakekrevingFormData = struct<BrevForTilbakekrevingFormData>({
+    skalSendeBrev: B.Eq,
     brevtekst: eqNullable(S.Eq),
 });
 
 export const brevForTilbakekrevingSchema = yup.object<BrevForTilbakekrevingFormData>({
-    brevtekst: yup.string().nullable().required(),
+    skalSendeBrev: yup.boolean().required(),
+    brevtekst: yup
+        .string()
+        .when('skalSendeBrev', {
+            is: true,
+            then: yup.string().required(),
+        })
+        .defined(),
 });

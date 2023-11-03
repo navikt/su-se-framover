@@ -32,6 +32,9 @@ export default {
     'forhåndsvarsleTilbakekreving.navigering.fortsettSenere': 'Fortsett senere',
 
     'brevForTilbakekreving.tittel': 'Brev',
+    'brevForTilbakekreving.skalSendeBrev': 'Skal det sendes brev?',
+    'brevForTilbakekreving.skalSendeBrev.ja': 'Ja',
+    'brevForTilbakekreving.skalSendeBrev.nei': 'Nei',
     'brevForTilbakekreving.fritekst.label': 'Fritekst til brev',
     'knapp.sendTilAttestering': 'Send til attestering',
     'brevForTilbakekreving.sendtTilAttestering':

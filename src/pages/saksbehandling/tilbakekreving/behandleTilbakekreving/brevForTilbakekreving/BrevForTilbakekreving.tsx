@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Loader, Textarea } from '@navikt/ds-react';
+import { Button, Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +43,7 @@ const BrevForTilbakekreving = (props: {
     const form = useForm<BrevForTilbakekrevingFormData>({
         resolver: yupResolver(brevForTilbakekrevingSchema),
         defaultValues: {
+            skalSendeBrev: props.tilbakekreving.fritekst !== null,
             brevtekst: props.tilbakekreving.fritekst,
         },
     });
@@ -57,7 +58,7 @@ const BrevForTilbakekreving = (props: {
                 sakId: props.sakId,
                 saksversjon: saksversjonRef.current,
                 behandlingId: props.tilbakekreving.id,
-                brevtekst: data.brevtekst!,
+                brevtekst: data.skalSendeBrev ? data.brevtekst : null,
             },
             onSuccess,
         );
@@ -112,7 +113,12 @@ const BrevForTilbakekreving = (props: {
     };
 
     const { isSaving } = useAutosaveOnChange(form.watch('brevtekst'), () => {
-        save({ brevtekst: form.watch('brevtekst') ?? '' }, () => void 0);
+        if (form.watch('skalSendeBrev')) {
+            save(
+                { skalSendeBrev: form.watch('skalSendeBrev'), brevtekst: form.watch('brevtekst') ?? '' },
+                () => void 0,
+            );
+        }
     });
 
     return (
@@ -120,43 +126,63 @@ const BrevForTilbakekreving = (props: {
             {{
                 left: (
                     <form onSubmit={form.handleSubmit(handleSubmit)}>
-                        <div className={styles.fritesktOgVisBrevContainer}>
-                            <Controller
-                                control={form.control}
-                                name={'brevtekst'}
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        {...field}
-                                        minRows={5}
-                                        label={
-                                            <div className={styles.textareaLabel}>
-                                                {formatMessage('brevForTilbakekreving.fritekst.label')}
-                                                <div className="lol">
-                                                    {isSaving ? <Loader size="small" /> : null}
-                                                    {!isSaving && RemoteData.isSuccess(autosaveStatus) ? (
-                                                        <SuccessIcon width={20} />
-                                                    ) : null}
-                                                    {!isSaving && RemoteData.isFailure(autosaveStatus) ? (
-                                                        <ErrorIcon width={20} />
-                                                    ) : null}
+                        <Controller
+                            name={'skalSendeBrev'}
+                            control={form.control}
+                            render={({ field }) => (
+                                <RadioGroup
+                                    className={styles.radiougroup}
+                                    legend={formatMessage('brevForTilbakekreving.skalSendeBrev')}
+                                    {...field}
+                                >
+                                    <Radio value={true}>
+                                        {formatMessage('brevForTilbakekreving.skalSendeBrev.ja')}
+                                    </Radio>
+                                    <Radio value={false}>
+                                        {formatMessage('brevForTilbakekreving.skalSendeBrev.nei')}
+                                    </Radio>
+                                </RadioGroup>
+                            )}
+                        />
+                        {form.watch('skalSendeBrev') && (
+                            <div className={styles.fritesktOgVisBrevContainer}>
+                                <Controller
+                                    control={form.control}
+                                    name={'brevtekst'}
+                                    render={({ field, fieldState }) => (
+                                        <Textarea
+                                            {...field}
+                                            minRows={5}
+                                            label={
+                                                <div className={styles.textareaLabel}>
+                                                    {formatMessage('brevForTilbakekreving.fritekst.label')}
+                                                    <div>
+                                                        {isSaving ? <Loader size="small" /> : null}
+                                                        {!isSaving && RemoteData.isSuccess(autosaveStatus) ? (
+                                                            <SuccessIcon width={20} />
+                                                        ) : null}
+                                                        {!isSaving && RemoteData.isFailure(autosaveStatus) ? (
+                                                            <ErrorIcon width={20} />
+                                                        ) : null}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        }
-                                        value={field.value ?? ''}
-                                        error={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                            <Button
-                                type="button"
-                                className={styles.seBrevButton}
-                                variant="secondary"
-                                onClick={onSeBrevClick}
-                                loading={RemoteData.isPending(hentBrevStatus)}
-                            >
-                                {formatMessage('knapp.seBrev')}
-                            </Button>
-                        </div>
+                                            }
+                                            value={field.value ?? ''}
+                                            error={fieldState.error?.message}
+                                        />
+                                    )}
+                                />
+                                <Button
+                                    type="button"
+                                    className={styles.seBrevButton}
+                                    variant="secondary"
+                                    onClick={onSeBrevClick}
+                                    loading={RemoteData.isPending(hentBrevStatus)}
+                                >
+                                    {formatMessage('knapp.seBrev')}
+                                </Button>
+                            </div>
+                        )}
                         {RemoteData.isFailure(hentBrevStatus) && <ApiErrorAlert error={hentBrevStatus.error} />}
                         <div>
                             <Feiloppsummering
