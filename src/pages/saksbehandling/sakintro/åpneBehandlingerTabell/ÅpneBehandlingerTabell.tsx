@@ -38,7 +38,10 @@ import { Revurdering } from '~src/types/Revurdering';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { erKlageTilAttestering, hentSisteVurderteSteg } from '~src/utils/klage/klageUtils';
-import { erTilbakekrevingTilAttestering } from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
+import {
+    erTilbakekrevingTilAttestering,
+    finnNesteTilbakekrevingsstegForSaksbehandling,
+} from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 import {
     erInformasjonsRevurdering,
     erRevurderingGjenopptak,
@@ -52,7 +55,6 @@ import {
     kanNavigeresTilOppsummering,
 } from '~src/utils/SøknadsbehandlingUtils';
 
-import { TilbakekrevingSteg } from '../../types';
 import messages from '../sakintro-nb';
 
 import styles from './ÅpneBehandlingerTabell.module.less';
@@ -487,16 +489,7 @@ const TilbakekrevingsKnapper = (props: { sakId: string; t: ManuellTilbakekreving
                 {formatMessage('datacell.info.knapp.avsluttBehandling')}
             </LinkAsButton>
 
-            <LinkAsButton
-                variant="primary"
-                size="small"
-                href={Routes.tilbakekrevingValgtBehandling.createURL({
-                    sakId: props.sakId,
-                    behandlingId: props.t.id,
-                    //TODO - må utlede steg fra behandling
-                    steg: TilbakekrevingSteg.Forhåndsvarsling,
-                })}
-            >
+            <LinkAsButton variant="primary" size="small" href={finnNesteTilbakekrevingsstegForSaksbehandling(props.t)}>
                 {formatMessage('datacell.info.knapp.fortsettBehandling')}
             </LinkAsButton>
         </div>
