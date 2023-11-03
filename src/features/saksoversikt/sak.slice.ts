@@ -392,6 +392,7 @@ export default createSlice({
                 RemoteData.map((s) => ({
                     ...s,
                     tilbakekrevinger: [...s.tilbakekrevinger, action.payload],
+                    versjon: action.payload.versjon,
                 })),
             );
         });
