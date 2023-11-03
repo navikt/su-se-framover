@@ -1,5 +1,6 @@
 export default {
     'kravgrunnlag.tittel': 'Oppsummering av kravgrunnlag',
+    'kravgrunnlag.utestående.tittel': 'Utestående kravgrunnlag på sak',
     'kravgrunnlag.id': 'OS kravgrunnlags-id',
     'kravgrunnlag.vedtakId': 'OS vedtak-id',
     'kravgrunnlag.status': 'Status',

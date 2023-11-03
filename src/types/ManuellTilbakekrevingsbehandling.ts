@@ -1,7 +1,7 @@
 import { Nullable } from '~src/lib/types';
 import { BrevvalgAvsluttTilbakekreving } from '~src/pages/saksbehandling/avsluttBehandling/avsluttTilbakekreving/AvsluttTilbakekrevingUtils';
 
-import { UnderkjennelseGrunn } from './Behandling';
+import { Attestering, UnderkjennelseGrunn } from './Behandling';
 import { Kravgrunnlag } from './Kravgrunnlag';
 
 export interface ManuellTilbakekrevingsbehandling {
@@ -12,10 +12,11 @@ export interface ManuellTilbakekrevingsbehandling {
     kravgrunnlag: Kravgrunnlag;
     status: TilbakekrevingsbehandlingStatus;
     månedsvurderinger: Månedsvurdering[];
-    dokumenter: string[];
+    forhåndsvarselDokumenter: string[];
     fritekst: Nullable<string>;
     versjon: number;
     sendtTilAttesteringAv: Nullable<string>;
+    attesteringer: Attestering[];
 }
 
 export enum TilbakekrevingsbehandlingStatus {

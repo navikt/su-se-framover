@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AttesteringsForm from '~src/components/forms/attesteringForm/AttesteringsForm';
+import OppsummeringAvTilbakekrevingsbehandling from '~src/components/oppsummering/oppsummeringAvTilbakekrevingsbehandling/OppsummeringAvTilbakekrevingsbehandling';
 import { iverksettTilbakekreving, underkjennTilbakekreving } from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -57,7 +58,7 @@ const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehan
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                 underkjenn={{ fn: underkjennCallback, status: underkjennStatus }}
             />
-            <p>Her skal det vises oppsummering av behandlingen</p>
+            <OppsummeringAvTilbakekrevingsbehandling behandling={props.behandling} />
         </div>
     );
 };

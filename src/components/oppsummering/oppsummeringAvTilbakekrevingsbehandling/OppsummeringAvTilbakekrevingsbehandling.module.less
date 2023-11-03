@@ -1,0 +1,41 @@
+@import '~/src/styles/variables.less';
+
+.oppsummeringspageContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+}
+
+.oppsummeringspanel {
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+}
+
+.metaInfoContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: @spacing-s;
+    margin-bottom: @spacing;
+}
+
+.accordionHeader {
+    > :last-child {
+        width: 100%;
+    }
+}
+
+.detalje {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.kravgrunnlagsInfoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+}
+
+.brevButton {
+    width: @knappBredde;
+}

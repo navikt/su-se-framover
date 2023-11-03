@@ -8,6 +8,7 @@ import Oppsummeringspanel, {
 } from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import { Kravgrunnlag, Grunnlagsperiode } from '~src/types/Kravgrunnlag';
+import Måned from '~src/types/Måned';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
@@ -17,18 +18,26 @@ import styles from './OppsummeringAvKravgrunnlag.module.less';
 
 const OppsummeringAvKravgrunnlag = (props: {
     kravgrunnlag: Kravgrunnlag;
-    visSomEnkeltPanel?: boolean;
-    bareOppsummerMetaInfo?: boolean;
+    bareOppsummerMetaInfo?: { medTittel?: boolean };
+    basicOppsummeringAvHeleKravgrunnlaget?: { medTittel?: boolean };
 }) => {
     const { formatMessage } = useI18n({ messages });
 
     if (props.bareOppsummerMetaInfo) {
-        return <OppsummeringAvKravgrunnlagMetaInfo kravgrunnlag={props.kravgrunnlag} />;
-    } else if (props.visSomEnkeltPanel) {
+        return (
+            <OppsummeringAvMetaInfo
+                kravgrunnlag={props.kravgrunnlag}
+                medTittel={props.bareOppsummerMetaInfo.medTittel}
+            />
+        );
+    } else if (props.basicOppsummeringAvHeleKravgrunnlaget) {
         return (
             <div>
-                <OppsummeringAvKravgrunnlagMetaInfo kravgrunnlag={props.kravgrunnlag} />
-                <OppsummeringAvGrunnlagsPerioder grunnlagsperiode={props.kravgrunnlag.grunnlagsperiode} />
+                <OppsummeringAvMetaInfo
+                    kravgrunnlag={props.kravgrunnlag}
+                    medTittel={props.basicOppsummeringAvHeleKravgrunnlaget.medTittel}
+                />
+                <OppsummeringAvGrunnlagsperioderBasic grunnlagsperiode={props.kravgrunnlag.grunnlagsperiode} />
             </div>
         );
     } else {
@@ -38,43 +47,114 @@ const OppsummeringAvKravgrunnlag = (props: {
                 farge={Oppsummeringsfarge.Lilla}
                 tittel={formatMessage('kravgrunnlag.tittel')}
             >
-                <OppsummeringAvKravgrunnlagMetaInfo kravgrunnlag={props.kravgrunnlag} />
-                <OppsummeringAvGrunnlagsPerioder grunnlagsperiode={props.kravgrunnlag.grunnlagsperiode} />
+                <OppsummeringAvMetaInfo kravgrunnlag={props.kravgrunnlag} />
+                <OppsummeringAvGrunnlagsPerioderAccordion grunnlagsperiode={props.kravgrunnlag.grunnlagsperiode} />
             </Oppsummeringspanel>
         );
     }
 };
 
-const OppsummeringAvKravgrunnlagMetaInfo = (props: { kravgrunnlag: Kravgrunnlag }) => {
+const OppsummeringAvMetaInfo = (props: { kravgrunnlag: Kravgrunnlag; medTittel?: boolean }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.kravgrunnlagOppsummeringContainer}>
-            <OppsummeringPar
-                label={formatMessage('kravgrunnlag.id')}
-                verdi={props.kravgrunnlag.eksternKravgrunnlagsId}
-                retning="vertikal"
-            />
+        <div>
+            {props.medTittel && (
+                <Heading className={styles.metaInfoTittel} size="medium">
+                    {formatMessage('kravgrunnlag.utestående.tittel')}
+                </Heading>
+            )}
 
-            <OppsummeringPar
-                label={formatMessage('kravgrunnlag.vedtakId')}
-                verdi={props.kravgrunnlag.eksternVedtakId}
-                retning="vertikal"
-            />
-            <OppsummeringPar
-                label={formatMessage('kravgrunnlag.status')}
-                verdi={props.kravgrunnlag.status}
-                retning="vertikal"
-            />
-            <OppsummeringPar
-                label={formatMessage('kravgrunnlag.kontrollfelt')}
-                verdi={props.kravgrunnlag.kontrollfelt}
-                retning="vertikal"
-            />
+            <div className={styles.kravgrunnlagOppsummeringContainer}>
+                <OppsummeringPar
+                    label={formatMessage('kravgrunnlag.id')}
+                    verdi={props.kravgrunnlag.eksternKravgrunnlagsId}
+                    retning="vertikal"
+                />
+
+                <OppsummeringPar
+                    label={formatMessage('kravgrunnlag.vedtakId')}
+                    verdi={props.kravgrunnlag.eksternVedtakId}
+                    retning="vertikal"
+                />
+                <OppsummeringPar
+                    label={formatMessage('kravgrunnlag.status')}
+                    verdi={props.kravgrunnlag.status}
+                    retning="vertikal"
+                />
+                <OppsummeringPar
+                    label={formatMessage('kravgrunnlag.kontrollfelt')}
+                    verdi={props.kravgrunnlag.kontrollfelt}
+                    retning="vertikal"
+                />
+            </div>
         </div>
     );
 };
 
-const OppsummeringAvGrunnlagsPerioder = (props: { grunnlagsperiode: Grunnlagsperiode[] }) => {
+const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnlagsperiode[] }) => {
+    const { formatMessage } = useI18n({ messages });
+    return (
+        <div>
+            <Heading size="small">{formatMessage('kravgrunnlag.grunnlagsperiode.tittel')}</Heading>
+
+            {props.grunnlagsperiode.map((periode) => (
+                <div key={`${periode.periode.fraOgMed}-${periode.periode.tilOgMed}`}>
+                    <div className={styles.grunnlagsbeløperContainer}>
+                        <div className={styles.grunnlagsbeløpContainer}>
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.periode')}
+                                verdi={`${Måned.fromStringPeriode(periode.periode).toFormattedString()}`}
+                                retning="vertikal"
+                            />
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløpSkattMnd')}
+                                verdi={periode.beløpSkattMnd}
+                                retning="vertikal"
+                            />
+                        </div>
+                    </div>
+                    <hr></hr>
+                    <div className={styles.grunnlagsbeløperContainer}>
+                        <div className={styles.grunnlagsbeløpContainer}>
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.skatteProsent')}
+                                verdi={periode.ytelse.skatteProsent}
+                                retning="vertikal"
+                            />
+                        </div>
+
+                        <div className={styles.grunnlagsbeløpContainer}>
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpNyUtbetaling')}
+                                verdi={periode.ytelse.beløpNyUtbetaling}
+                                retning="vertikal"
+                            />
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpTidligereUtbetaling')}
+                                verdi={periode.ytelse.beløpTidligereUtbetaling}
+                                retning="vertikal"
+                            />
+                        </div>
+                        <div className={styles.grunnlagsbeløpContainer}>
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpSkalTilbakekreves')}
+                                verdi={periode.ytelse.beløpSkalTilbakekreves}
+                                retning="vertikal"
+                            />
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpSkalIkkeTilbakekreves')}
+                                verdi={periode.ytelse.beløpSkalIkkeTilbakekreves}
+                                retning="vertikal"
+                            />
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+const OppsummeringAvGrunnlagsPerioderAccordion = (props: { grunnlagsperiode: Grunnlagsperiode[] }) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div>

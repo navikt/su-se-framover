@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { BeregnOgSimuler } from '~src/api/revurderingApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import Beregningblokk from '~src/components/oppsummering/oppsummeringAvRevurdering/beregningblokk/Beregningblokk';
@@ -154,6 +155,7 @@ const RevurderingBeregnOgSimuler = (props: {
                         <Alert variant="warning">{formatMessage('alert.advarsel.kjørBeregningFørst')}</Alert>
                     </div>
                 )}
+                {RemoteData.isFailure(beregnOgSimulerStatus) && <ApiErrorAlert error={beregnOgSimulerStatus.error} />}
             </div>
 
             <Navigasjonsknapper tilbake={{ url: forrigeUrl }} />

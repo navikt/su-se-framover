@@ -74,6 +74,7 @@ const Oppsummeringspanel = (props: {
     tittel: string;
     children: React.ReactNode;
     className?: string;
+    classNameChildren?: string;
 }) => (
     <div className={classNames(styles.container, props.className)}>
         <div className={classNames(styles.tittel, fargeklassenavn(props.farge))}>
@@ -82,7 +83,7 @@ const Oppsummeringspanel = (props: {
                 {props.tittel}
             </Heading>
         </div>
-        <div className={styles.content}>{props.children}</div>
+        <div className={classNames(styles.content, props.classNameChildren)}>{props.children}</div>
     </div>
 );
 

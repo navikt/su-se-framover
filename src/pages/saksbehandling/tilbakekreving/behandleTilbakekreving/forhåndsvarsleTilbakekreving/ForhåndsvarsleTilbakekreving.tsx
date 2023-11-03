@@ -10,6 +10,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
+import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as TilbakekrevingActions from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -142,7 +143,14 @@ const ForhåndsvarsleTilbakekreving = (props: {
                         </div>
                     </form>
                 ),
-                right: <div>TODO</div>,
+                right: (
+                    <div>
+                        <OppsummeringAvKravgrunnlag
+                            kravgrunnlag={props.tilbakekreving.kravgrunnlag}
+                            basicOppsummeringAvHeleKravgrunnlaget={{ medTittel: true }}
+                        />
+                    </div>
+                ),
             }}
         </ToKolonner>
     );

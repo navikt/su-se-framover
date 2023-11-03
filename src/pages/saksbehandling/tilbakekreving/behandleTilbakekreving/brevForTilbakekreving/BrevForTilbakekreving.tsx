@@ -11,6 +11,7 @@ import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
+import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import {
     brevtekstTilbakekrevingsbehandling,
@@ -214,7 +215,14 @@ const BrevForTilbakekreving = (props: {
                         </div>
                     </form>
                 ),
-                right: <></>,
+                right: (
+                    <>
+                        <OppsummeringAvKravgrunnlag
+                            kravgrunnlag={props.tilbakekreving.kravgrunnlag}
+                            basicOppsummeringAvHeleKravgrunnlaget={{ medTittel: true }}
+                        />
+                    </>
+                ),
             }}
         </ToKolonner>
     );

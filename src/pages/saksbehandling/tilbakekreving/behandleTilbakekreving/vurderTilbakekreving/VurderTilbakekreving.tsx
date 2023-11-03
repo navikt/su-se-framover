@@ -144,16 +144,28 @@ const VurderTilbakekreving = (props: {
 
                                         <Heading size="small">
                                             <div key={idx} className={styles.kravgrunnlagsInfoContainer}>
-                                                <OppsummeringPar
-                                                    label={formatMessage(
-                                                        'vurderTilbakekreving.kravgrunnlagsInfo.skatteprosent',
-                                                    )}
-                                                    verdi={
-                                                        props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx].ytelse
-                                                            .skatteProsent
-                                                    }
-                                                    retning="vertikal"
-                                                />
+                                                <div className={styles.detalje}>
+                                                    <OppsummeringPar
+                                                        label={formatMessage(
+                                                            'vurderTilbakekreving.kravgrunnlagsInfo.skatteBeløp',
+                                                        )}
+                                                        verdi={
+                                                            props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx]
+                                                                .beløpSkattMnd
+                                                        }
+                                                        retning="vertikal"
+                                                    />
+                                                    <OppsummeringPar
+                                                        label={formatMessage(
+                                                            'vurderTilbakekreving.kravgrunnlagsInfo.skatteprosent',
+                                                        )}
+                                                        verdi={
+                                                            props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx]
+                                                                .ytelse.skatteProsent
+                                                        }
+                                                        retning="vertikal"
+                                                    />
+                                                </div>
 
                                                 <div className={styles.detalje}>
                                                     <OppsummeringPar
@@ -236,7 +248,7 @@ const VurderTilbakekreving = (props: {
                 right: (
                     <OppsummeringAvKravgrunnlag
                         kravgrunnlag={props.tilbakekreving.kravgrunnlag}
-                        bareOppsummerMetaInfo
+                        bareOppsummerMetaInfo={{}}
                     />
                 ),
             }}
