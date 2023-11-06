@@ -35,6 +35,7 @@ export const ÅpneBehandlinger = () => {
         [BehandlingssammendragType.REVURDERING]: false,
         [BehandlingssammendragType.KLAGE]: false,
         [BehandlingssammendragType.REGULERING]: false,
+        [BehandlingssammendragType.TILBAKEKREVING]: false,
     });
 
     const [status, setStatus] = useState<BehandlingssammendragStatusFilter>({

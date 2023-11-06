@@ -5,6 +5,7 @@ export const behandlingssammendragTypeMessages: { [key in BehandlingssammendragT
     [BehandlingssammendragType.REVURDERING]: 'Revurdering',
     [BehandlingssammendragType.KLAGE]: 'Klage',
     [BehandlingssammendragType.REGULERING]: 'Regulering',
+    [BehandlingssammendragType.TILBAKEKREVING]: 'Tilbakekreving',
 };
 
 export const behandlingssammendragStatus: { [key in BehandlingssammendragStatus]: string } = {
@@ -18,6 +19,7 @@ export const behandlingssammendragStatus: { [key in BehandlingssammendragStatus]
     [BehandlingssammendragStatus.STANS]: 'Stanset',
     [BehandlingssammendragStatus.GJENOPPTAK]: 'Gjenopptatt',
     [BehandlingssammendragStatus.OVERSENDT]: 'Oversendt',
+    [BehandlingssammendragStatus.IVERKSATT]: 'Iverksatt',
 };
 
 export default {

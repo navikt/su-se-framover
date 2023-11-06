@@ -42,6 +42,7 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragType.REVURDERING]: false,
         [BehandlingssammendragType.KLAGE]: false,
         [BehandlingssammendragType.REGULERING]: false,
+        [BehandlingssammendragType.TILBAKEKREVING]: false,
     });
 
     const [resultat, setResultat] = useState<BehandlingssammendragResultatFilter>({
@@ -51,6 +52,7 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragStatus.STANS]: false,
         [BehandlingssammendragStatus.GJENOPPTAK]: false,
         [BehandlingssammendragStatus.OVERSENDT]: false,
+        [BehandlingssammendragStatus.IVERKSATT]: false,
     });
 
     const filtrerBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {
