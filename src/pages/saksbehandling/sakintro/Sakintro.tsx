@@ -295,13 +295,15 @@ const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => 
                     >
                         {formatMessage('popover.option.klage')}
                     </LinkAsButton>
-                    <LinkAsButton
-                        className={styles.popoverOption}
-                        variant="tertiary"
-                        href={nyBehandlingTilRoute(NyBehandling.TILBAKEKREVING)}
-                    >
-                        {formatMessage('popover.option.tilbakekreving')}
-                    </LinkAsButton>
+                    {process.env.NODE_ENV !== 'production' && (
+                        <LinkAsButton
+                            className={styles.popoverOption}
+                            variant="tertiary"
+                            href={nyBehandlingTilRoute(NyBehandling.TILBAKEKREVING)}
+                        >
+                            {formatMessage('popover.option.tilbakekreving')}
+                        </LinkAsButton>
+                    )}
                 </div>
             </Popover>
         </div>
