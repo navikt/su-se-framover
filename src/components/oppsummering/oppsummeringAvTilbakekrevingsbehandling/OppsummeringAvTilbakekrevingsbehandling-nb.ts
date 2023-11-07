@@ -17,5 +17,10 @@ export default {
     'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skalIkkeTilbakekreves': 'Skal ikke tilbakekreves',
 
     'oppsummering.tilbakekrevingsbehandling.brev.panel.tittel': 'Forhåndsvarsler & Vedtaksbrev',
+    'oppsummering.tilbakekrevingsbehandling.brev.skalIkkeSendeBrev': 'Skal ikke sende vedtaksbrev',
+    'oppsummering.tilbakekrevingsbehandling.brev.vedtaksbrev.heading': 'Vedtaksbrev',
     'oppsummering.tilbakekrevingsbehandling.brev.knapp.seVedtaksbrev': 'Se vedtaksbrev',
+    'oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.heading': 'Forhåndsvarslinger',
+    'oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.ingenSendt': 'Ingen forhåndsvarsel sendt',
+    'oppsummering.tilbakekrevingsbehandling.brev.knapp.seForhåndsvarsel': 'Se forhåndsvarsel',
 };

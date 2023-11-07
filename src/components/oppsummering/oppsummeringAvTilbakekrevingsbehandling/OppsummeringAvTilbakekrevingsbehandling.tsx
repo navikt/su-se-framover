@@ -1,16 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Accordion, Button } from '@navikt/ds-react';
+import { Accordion, Button, Heading, Label } from '@navikt/ds-react';
 import AccordionItem from '@navikt/ds-react/esm/accordion/AccordionItem';
-import React, { useState } from 'react';
+import React from 'react';
 
-import { ApiError } from '~src/api/apiClient';
-import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
+import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Oppsummeringspanel, {
     Oppsummeringsikon,
     Oppsummeringsfarge,
 } from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
+import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import Måned from '~src/types/Måned';
@@ -170,54 +170,99 @@ const OppsummeringAvVurdering = (props: { behandling: ManuellTilbakekrevingsbeha
 const OppsummeringAvBrev = (props: { behandling: ManuellTilbakekrevingsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
-
-    const onSeBrevClick = async () => {
-        if (RemoteData.isPending(hentBrevStatus)) return;
-
-        setHentBrevStatus(RemoteData.pending);
-
-        const res = await forhåndsvisVedtaksbrevTilbakekrevingsbehandling({
-            sakId: props.behandling.sakId,
-            behandlingId: props.behandling.id,
-        });
-
-        if (res.status === 'ok') {
-            setHentBrevStatus(RemoteData.success(null));
-            window.open(URL.createObjectURL(res.data));
-        } else {
-            setHentBrevStatus(RemoteData.failure(res.error));
-        }
-    };
-
     return (
         <Oppsummeringspanel
             ikon={Oppsummeringsikon.Email}
             farge={Oppsummeringsfarge.Limegrønn}
             tittel={formatMessage('oppsummering.tilbakekrevingsbehandling.brev.panel.tittel')}
         >
+            <VisVedtaksbrevKomponent behandling={props.behandling} />
+            <hr />
+            <VisUtsendtForhåndsvarselKomponent behandling={props.behandling} />
+        </Oppsummeringspanel>
+    );
+};
+
+const VisVedtaksbrevKomponent = (props: { behandling: ManuellTilbakekrevingsbehandling }) => {
+    const { formatMessage } = useI18n({ messages });
+
+    const [brevStatus, hentBrev] = useApiCall(forhåndsvisVedtaksbrevTilbakekrevingsbehandling);
+    return (
+        <div>
             {props.behandling.fritekst ? (
                 <div>
+                    <Heading size="small" spacing>
+                        {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.vedtaksbrev.heading')}
+                    </Heading>
                     <Button
-                        variant="secondary"
-                        className={styles.brevButton}
+                        variant="tertiary"
+                        size="small"
                         type="button"
-                        loading={RemoteData.isPending(hentBrevStatus)}
-                        onClick={onSeBrevClick}
+                        loading={RemoteData.isPending(brevStatus)}
+                        onClick={() =>
+                            hentBrev({ sakId: props.behandling.sakId, behandlingId: props.behandling.id }, (res) => {
+                                window.open(URL.createObjectURL(res));
+                            })
+                        }
                     >
                         {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.knapp.seVedtaksbrev')}
                     </Button>
 
-                    {RemoteData.isFailure(hentBrevStatus) && <ApiErrorAlert error={hentBrevStatus.error} />}
+                    {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                 </div>
             ) : (
-                'Skal ikke sende vedtaksbrev'
+                <Heading size="small" spacing>
+                    {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.skalIkkeSendeBrev')}
+                </Heading>
             )}
+        </div>
+    );
+};
 
-            {props.behandling.forhåndsvarselDokumenter.map((dokument) => (
-                <p key={dokument}>{dokument} - knapp for å se denne skal komme snart</p>
-            ))}
-        </Oppsummeringspanel>
+const VisUtsendtForhåndsvarselKomponent = (props: { behandling: ManuellTilbakekrevingsbehandling }) => {
+    const { formatMessage } = useI18n({ messages });
+    const [visForhåndsvarselStatus, visForhåndsvarsel] = useApiCall(visUtsendtForhåndsvarsel);
+
+    return (
+        <div>
+            {props.behandling.forhåndsvarselDokumenter.length > 0 ? (
+                <div>
+                    <Heading size="small" spacing>
+                        {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.heading')}
+                    </Heading>
+                    {props.behandling.forhåndsvarselDokumenter.map((dokumentId) => (
+                        <div key={dokumentId}>
+                            <Button
+                                variant="tertiary"
+                                size="small"
+                                type="button"
+                                loading={RemoteData.isPending(visForhåndsvarselStatus)}
+                                onClick={() =>
+                                    visForhåndsvarsel(
+                                        {
+                                            sakId: props.behandling.sakId,
+                                            behandlingId: props.behandling.id,
+                                            dokumentId: dokumentId,
+                                        },
+                                        (res) => {
+                                            window.open(URL.createObjectURL(res));
+                                        },
+                                    )
+                                }
+                            >
+                                {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.knapp.seForhåndsvarsel')}
+                            </Button>
+
+                            {RemoteData.isFailure(visForhåndsvarselStatus) && (
+                                <ApiErrorAlert error={visForhåndsvarselStatus.error} />
+                            )}
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <Label>{formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.ingenSendt')}</Label>
+            )}
+        </div>
     );
 };
 

@@ -78,6 +78,12 @@ export interface ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest {
     brevtekst: Nullable<string>;
 }
 
+export interface VisUtsendtForhåndsvarselTilbakekrevingsbehandlingRequest {
+    sakId: string;
+    behandlingId: string;
+    dokumentId: string;
+}
+
 export interface SendTilbakekrevingTilAttesteringRequest {
     versjon: number;
     sakId: string;

@@ -9,6 +9,7 @@ import {
     OpprettNyTilbakekrevingsbehandlingRequest,
     SendTilbakekrevingTilAttesteringRequest,
     UnderkjennTilbakekrevingRequest,
+    VisUtsendtForhåndsvarselTilbakekrevingsbehandlingRequest,
     VurderTilbakekrevingsbehandlingRequest,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
@@ -50,6 +51,17 @@ export async function forhåndsvisForhåndsvarsel(
             versjon: arg.saksversjon,
             fritekst: arg.brevtekst,
         },
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
+export async function visUtsendtForhåndsvarsel(
+    arg: VisUtsendtForhåndsvarselTilbakekrevingsbehandlingRequest,
+): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/forhandsvarsel/${arg.dokumentId}`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
         bodyTransformer: (res) => res.blob(),
     });
 }
