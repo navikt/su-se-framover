@@ -12,11 +12,16 @@ export interface ManuellTilbakekrevingsbehandling {
     kravgrunnlag: Kravgrunnlag;
     status: TilbakekrevingsbehandlingStatus;
     månedsvurderinger: Månedsvurdering[];
-    forhåndsvarselDokumenter: string[];
+    forhåndsvarselsInfo: ForhåndsvarselsInfo[];
     fritekst: Nullable<string>;
     versjon: number;
     sendtTilAttesteringAv: Nullable<string>;
     attesteringer: Attestering[];
+}
+
+export interface ForhåndsvarselsInfo {
+    id: string;
+    hendelsestidspunkt: string;
 }
 
 export enum TilbakekrevingsbehandlingStatus {

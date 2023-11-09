@@ -294,13 +294,13 @@ const VisUtsendtForhåndsvarselKomponent = (props: { behandling: ManuellTilbakek
 
     return (
         <div>
-            {props.behandling.forhåndsvarselDokumenter.length > 0 ? (
+            {props.behandling.forhåndsvarselsInfo.length > 0 ? (
                 <div>
                     <Heading size="small" spacing>
                         {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.heading')}
                     </Heading>
-                    {props.behandling.forhåndsvarselDokumenter.map((dokumentId) => (
-                        <div key={dokumentId}>
+                    {props.behandling.forhåndsvarselsInfo.map((info) => (
+                        <div key={info.id}>
                             <Button
                                 variant="tertiary"
                                 size="small"
@@ -311,7 +311,7 @@ const VisUtsendtForhåndsvarselKomponent = (props: { behandling: ManuellTilbakek
                                         {
                                             sakId: props.behandling.sakId,
                                             behandlingId: props.behandling.id,
-                                            dokumentId: dokumentId,
+                                            dokumentId: info.id,
                                         },
                                         (res) => {
                                             window.open(URL.createObjectURL(res));
@@ -319,7 +319,8 @@ const VisUtsendtForhåndsvarselKomponent = (props: { behandling: ManuellTilbakek
                                     )
                                 }
                             >
-                                {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.knapp.seForhåndsvarsel')}
+                                {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.knapp.seForhåndsvarsel')}{' '}
+                                {formatDateTime(info.hendelsestidspunkt)}
                             </Button>
 
                             {RemoteData.isFailure(visForhåndsvarselStatus) && (

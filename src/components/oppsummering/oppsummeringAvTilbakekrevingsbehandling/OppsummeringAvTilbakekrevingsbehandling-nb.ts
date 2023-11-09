@@ -27,5 +27,5 @@ export default {
     'oppsummering.tilbakekrevingsbehandling.brev.knapp.seVedtaksbrev': 'Se vedtaksbrev',
     'oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.heading': 'Forhåndsvarslinger',
     'oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.ingenSendt': 'Ingen forhåndsvarsel sendt',
-    'oppsummering.tilbakekrevingsbehandling.brev.knapp.seForhåndsvarsel': 'Se forhåndsvarsel',
+    'oppsummering.tilbakekrevingsbehandling.brev.knapp.seForhåndsvarsel': 'Se forhåndsvarsel sendt den',
 };
