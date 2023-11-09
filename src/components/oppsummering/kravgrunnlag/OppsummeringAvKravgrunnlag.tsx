@@ -147,6 +147,11 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
                                 retning="vertikal"
                             />
                         </div>
+                        <OppsummeringPar
+                            label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.nettoBeløp')}
+                            verdi={periode.ytelse.nettoBeløp}
+                            retning="vertikal"
+                        />
                     </div>
                 </div>
             ))}
@@ -217,6 +222,11 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: { grunnlagsperiode: Gru
                                         retning="vertikal"
                                     />
                                 </div>
+                                <OppsummeringPar
+                                    label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.nettoBeløp')}
+                                    verdi={periode.ytelse.nettoBeløp}
+                                    retning="vertikal"
+                                />
                             </div>
                         </Accordion.Content>
                     </AccordionItem>

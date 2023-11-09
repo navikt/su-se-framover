@@ -158,10 +158,79 @@ const OppsummeringAvVurdering = (props: { behandling: ManuellTilbakekrevingsbeha
                                         retning="vertikal"
                                     />
                                 </div>
+                                <OppsummeringPar
+                                    label={formatMessage(
+                                        'oppsummering.tilbakekrevingsbehandling.månedsvurdering.nettoBeløp',
+                                    )}
+                                    verdi={månedsvurderingOgGrunnlagsperiode.ytelse.nettoBeløp}
+                                    retning="vertikal"
+                                />
                             </div>
                         </Accordion.Content>
                     </AccordionItem>
                 ))}
+
+                <AccordionItem>
+                    <Accordion.Header>
+                        {formatMessage('oppsummering.tilbakekrevingsbehandling.totalgrunnlagsperiode.heading')}
+                    </Accordion.Header>
+                    <Accordion.Content>
+                        <div className={styles.kravgrunnlagsInfoContainer}>
+                            <OppsummeringPar
+                                label={formatMessage(
+                                    'oppsummering.tilbakekrevingsbehandling.totalgrunnlagsperiode.betaltSkattForYtelsesgruppen',
+                                )}
+                                verdi={
+                                    props.behandling.kravgrunnlag.summertGrunnlagsmåneder.betaltSkattForYtelsesgruppen
+                                }
+                                retning="vertikal"
+                            />
+                            <div className={styles.detalje}>
+                                <OppsummeringPar
+                                    label={formatMessage(
+                                        'oppsummering.tilbakekrevingsbehandling.månedsvurdering.tidligereUtbetalt',
+                                    )}
+                                    verdi={
+                                        props.behandling.kravgrunnlag.summertGrunnlagsmåneder.beløpTidligereUtbetaling
+                                    }
+                                    retning="vertikal"
+                                />
+                                <OppsummeringPar
+                                    label={formatMessage(
+                                        'oppsummering.tilbakekrevingsbehandling.månedsvurdering.nyUtbetaling',
+                                    )}
+                                    verdi={props.behandling.kravgrunnlag.summertGrunnlagsmåneder.beløpNyUtbetaling}
+                                    retning="vertikal"
+                                />
+                            </div>
+                            <div className={styles.detalje}>
+                                <OppsummeringPar
+                                    label={formatMessage(
+                                        'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skalTilbakekreves',
+                                    )}
+                                    verdi={props.behandling.kravgrunnlag.summertGrunnlagsmåneder.beløpSkalTilbakekreves}
+                                    retning="vertikal"
+                                />
+                                <OppsummeringPar
+                                    label={formatMessage(
+                                        'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skalIkkeTilbakekreves',
+                                    )}
+                                    verdi={
+                                        props.behandling.kravgrunnlag.summertGrunnlagsmåneder.beløpSkalIkkeTilbakekreves
+                                    }
+                                    retning="vertikal"
+                                />
+                            </div>
+                            <OppsummeringPar
+                                label={formatMessage(
+                                    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.nettoBeløp',
+                                )}
+                                verdi={props.behandling.kravgrunnlag.summertGrunnlagsmåneder.nettoBeløp}
+                                retning="vertikal"
+                            />
+                        </div>
+                    </Accordion.Content>
+                </AccordionItem>
             </Accordion>
         </div>
     );

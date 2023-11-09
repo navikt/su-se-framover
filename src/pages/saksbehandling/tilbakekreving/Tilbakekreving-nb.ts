@@ -23,6 +23,7 @@ export default {
     'vurderTilbakekreving.kravgrunnlagsInfo.nyUtbetaling': 'Ny utbetaling',
     'vurderTilbakekreving.kravgrunnlagsInfo.skalTilbakekreves': 'Skal tilbakekreves',
     'vurderTilbakekreving.kravgrunnlagsInfo.skalIkkeTilbakekreves': 'Skal ikke tilbakekreves',
+    'vurderTilbakekreving.kravgrunnlagsInfo.nettoBeløp': 'Netto beløp',
 
     'forhåndsvarsleTilbakekreving.tittel': 'Forhåndsvarsling',
     'forhåndsvarsleTilbakekreving.skalForhåndsvarsle': 'Skal det forhåndsvarsles?',

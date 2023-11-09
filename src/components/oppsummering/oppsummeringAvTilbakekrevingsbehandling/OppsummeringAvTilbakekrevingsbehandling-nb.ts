@@ -15,6 +15,11 @@ export default {
     'oppsummering.tilbakekrevingsbehandling.månedsvurdering.nyUtbetaling': 'Ny utbetaling',
     'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skalTilbakekreves': 'Skal tilbakekreves',
     'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skalIkkeTilbakekreves': 'Skal ikke tilbakekreves',
+    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.nettoBeløp': 'Netto beløp',
+
+    'oppsummering.tilbakekrevingsbehandling.totalgrunnlagsperiode.heading': 'Summerte perioder',
+    'oppsummering.tilbakekrevingsbehandling.totalgrunnlagsperiode.betaltSkattForYtelsesgruppen':
+        'Betalt skatt for ytelsesgruppen',
 
     'oppsummering.tilbakekrevingsbehandling.brev.panel.tittel': 'Forhåndsvarsler & Vedtaksbrev',
     'oppsummering.tilbakekrevingsbehandling.brev.skalIkkeSendeBrev': 'Skal ikke sende vedtaksbrev',

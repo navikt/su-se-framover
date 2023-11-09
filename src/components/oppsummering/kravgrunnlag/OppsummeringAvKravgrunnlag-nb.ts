@@ -16,4 +16,5 @@ export default {
     'kravgrunnlag.grunnlagsperiode.beløp.beløpNyUtbetaling': 'Ny utbetaling',
     'kravgrunnlag.grunnlagsperiode.beløp.beløpSkalTilbakekreves': 'Skal tilbakekreves',
     'kravgrunnlag.grunnlagsperiode.beløp.beløpSkalIkkeTilbakekreves': 'Skal ikke tilbakekreves',
+    'kravgrunnlag.grunnlagsperiode.beløp.nettoBeløp': 'Netto beløp',
 };

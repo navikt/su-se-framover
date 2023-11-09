@@ -6,6 +6,7 @@ export interface Kravgrunnlag {
     kontrollfelt: string;
     status: KravgrunnlagStatus;
     grunnlagsperiode: Grunnlagsperiode[];
+    summertGrunnlagsmåneder: SummertGrunnlagsmåneder;
 }
 
 export enum KravgrunnlagStatus {
@@ -22,7 +23,7 @@ export enum KravgrunnlagStatus {
 
 export interface Grunnlagsperiode {
     periode: Periode<string>;
-    beløpSkattMnd: number;
+    beløpSkattMnd: string;
     ytelse: Grunnlagsbeløp;
 }
 
@@ -31,5 +32,15 @@ export interface Grunnlagsbeløp {
     beløpNyUtbetaling: number;
     beløpSkalTilbakekreves: number;
     beløpSkalIkkeTilbakekreves: number;
-    skatteProsent: number;
+    skatteProsent: string;
+    nettoBeløp: number;
+}
+
+export interface SummertGrunnlagsmåneder {
+    betaltSkattForYtelsesgruppen: string;
+    beløpTidligereUtbetaling: string;
+    beløpNyUtbetaling: string;
+    beløpSkalTilbakekreves: string;
+    beløpSkalIkkeTilbakekreves: string;
+    nettoBeløp: string;
 }
