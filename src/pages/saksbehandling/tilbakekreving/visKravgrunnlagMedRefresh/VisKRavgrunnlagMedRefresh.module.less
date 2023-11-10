@@ -1,0 +1,21 @@
+@import '~/src/styles/variables.less';
+
+.refreshButton {
+    padding: 0.5rem;
+}
+
+.arrowIcon {
+    display: flex;
+}
+
+.modalBody {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+
+    .modalBodyButtonContainer {
+        display: flex;
+        justify-content: flex-end;
+        gap: @spacing-s;
+    }
+}

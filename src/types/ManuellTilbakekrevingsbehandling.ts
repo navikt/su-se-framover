@@ -116,3 +116,9 @@ export interface AvsluttTilbakekrevingRequest {
     fritekst: Nullable<string>;
     begrunnelse: string;
 }
+
+export interface HentNyttKravgrunnlagTilbakekrevingRequest {
+    sakId: string;
+    behandlingId: string;
+    versjon: number;
+}

@@ -4,6 +4,7 @@ import {
     ForhåndsvarsleTilbakekrevingRequest,
     ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvisVedtaksbrevTilbakekrevingsbehandlingRequest,
+    HentNyttKravgrunnlagTilbakekrevingRequest,
     IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
@@ -151,6 +152,18 @@ export async function avsluttTilbakekreving(
             skalSendeBrev: arg.skalSendeBrev,
             fritekst: arg.fritekst,
             begrunnelse: arg.begrunnelse,
+        },
+    });
+}
+
+export async function hentNyttKravgrunnlag(
+    arg: HentNyttKravgrunnlagTilbakekrevingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/oppdaterKravgrunnlag`,
+        method: 'POST',
+        body: {
+            versjon: arg.versjon,
         },
     });
 }

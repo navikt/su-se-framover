@@ -10,7 +10,6 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
-import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as TilbakekrevingActions from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -21,6 +20,7 @@ import { TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import messages from '../../Tilbakekreving-nb';
+import VisKravgrunnlagMedRefresh from '../../visKravgrunnlagMedRefresh/VisKravgrunnlagMedRefresh';
 
 import {
     ForhåndsvarsleTilbakekrevingFormData,
@@ -144,12 +144,10 @@ const ForhåndsvarsleTilbakekreving = (props: {
                     </form>
                 ),
                 right: (
-                    <div>
-                        <OppsummeringAvKravgrunnlag
-                            kravgrunnlag={props.tilbakekreving.kravgrunnlag}
-                            basicOppsummeringAvHeleKravgrunnlaget={{ medTittel: true }}
-                        />
-                    </div>
+                    <VisKravgrunnlagMedRefresh
+                        tilbakekreving={props.tilbakekreving}
+                        basicOppsummeringAvHeleKravgrunnlaget={true}
+                    />
                 ),
             }}
         </ToKolonner>

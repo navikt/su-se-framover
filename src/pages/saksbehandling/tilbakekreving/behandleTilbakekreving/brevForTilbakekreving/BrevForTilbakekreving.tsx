@@ -11,7 +11,6 @@ import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
-import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import {
     brevtekstTilbakekrevingsbehandling,
@@ -25,6 +24,7 @@ import { TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import messages from '../../Tilbakekreving-nb';
+import VisKravgrunnlagMedRefresh from '../../visKravgrunnlagMedRefresh/VisKravgrunnlagMedRefresh';
 
 import styles from './BrevForTilbakekreving.module.less';
 import { BrevForTilbakekrevingFormData, brevForTilbakekrevingSchema } from './BrevForTilbakekrevingUtils';
@@ -216,12 +216,10 @@ const BrevForTilbakekreving = (props: {
                     </form>
                 ),
                 right: (
-                    <>
-                        <OppsummeringAvKravgrunnlag
-                            kravgrunnlag={props.tilbakekreving.kravgrunnlag}
-                            basicOppsummeringAvHeleKravgrunnlaget={{ medTittel: true }}
-                        />
-                    </>
+                    <VisKravgrunnlagMedRefresh
+                        tilbakekreving={props.tilbakekreving}
+                        basicOppsummeringAvHeleKravgrunnlaget={true}
+                    />
                 ),
             }}
         </ToKolonner>

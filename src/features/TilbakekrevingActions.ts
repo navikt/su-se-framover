@@ -6,6 +6,7 @@ import {
     AvsluttTilbakekrevingRequest,
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
+    HentNyttKravgrunnlagTilbakekrevingRequest as OppdaterKravgrunnlagTilbakekrevingRequest,
     IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
@@ -107,6 +108,18 @@ export const avsluttTilbakekreving = createAsyncThunk<
     { rejectValue: ApiError }
 >('tilbakekreving/avslutt', async (args, thunkApi) => {
     const res = await tilbakekrevingsApi.avsluttTilbakekreving(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const oppdaterKravgrunnlag = createAsyncThunk<
+    ManuellTilbakekrevingsbehandling,
+    OppdaterKravgrunnlagTilbakekrevingRequest,
+    { rejectValue: ApiError }
+>('tilbakekreving/oppdaterKravgrunnlag', async (args, thunkApi) => {
+    const res = await tilbakekrevingsApi.hentNyttKravgrunnlag(args);
     if (res.status === 'ok') {
         return res.data;
     }

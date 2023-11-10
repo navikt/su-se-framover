@@ -18,8 +18,8 @@ import styles from './OppsummeringAvKravgrunnlag.module.less';
 
 const OppsummeringAvKravgrunnlag = (props: {
     kravgrunnlag: Kravgrunnlag;
-    bareOppsummerMetaInfo?: { medTittel?: boolean };
-    basicOppsummeringAvHeleKravgrunnlaget?: { medTittel?: boolean };
+    bareOppsummerMetaInfo?: { medTittel?: boolean; headerContent?: React.ReactNode };
+    basicOppsummeringAvHeleKravgrunnlaget?: { medTittel?: boolean; headerContent?: React.ReactNode };
 }) => {
     const { formatMessage } = useI18n({ messages });
 
@@ -28,6 +28,7 @@ const OppsummeringAvKravgrunnlag = (props: {
             <OppsummeringAvMetaInfo
                 kravgrunnlag={props.kravgrunnlag}
                 medTittel={props.bareOppsummerMetaInfo.medTittel}
+                headerContent={props.bareOppsummerMetaInfo.headerContent}
             />
         );
     } else if (props.basicOppsummeringAvHeleKravgrunnlaget) {
@@ -36,6 +37,7 @@ const OppsummeringAvKravgrunnlag = (props: {
                 <OppsummeringAvMetaInfo
                     kravgrunnlag={props.kravgrunnlag}
                     medTittel={props.basicOppsummeringAvHeleKravgrunnlaget.medTittel}
+                    headerContent={props.basicOppsummeringAvHeleKravgrunnlaget.headerContent}
                 />
                 <OppsummeringAvGrunnlagsperioderBasic grunnlagsperiode={props.kravgrunnlag.grunnlagsperiode} />
             </div>
@@ -54,15 +56,22 @@ const OppsummeringAvKravgrunnlag = (props: {
     }
 };
 
-const OppsummeringAvMetaInfo = (props: { kravgrunnlag: Kravgrunnlag; medTittel?: boolean }) => {
+const OppsummeringAvMetaInfo = (props: {
+    kravgrunnlag: Kravgrunnlag;
+    medTittel?: boolean;
+    headerContent?: React.ReactNode;
+}) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div>
-            {props.medTittel && (
-                <Heading className={styles.metaInfoTittel} size="medium">
-                    {formatMessage('kravgrunnlag.utestående.tittel')}
-                </Heading>
-            )}
+            <div className={styles.metaHeaderContainer}>
+                {props.medTittel && (
+                    <Heading className={styles.metaInfoTittel} size="medium">
+                        {formatMessage('kravgrunnlag.utestående.tittel')}
+                    </Heading>
+                )}
+                {props.headerContent && props.headerContent}
+            </div>
 
             <div className={styles.kravgrunnlagOppsummeringContainer}>
                 <OppsummeringPar
