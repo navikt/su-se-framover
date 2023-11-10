@@ -4,7 +4,7 @@ import {
     ForhåndsvarsleTilbakekrevingRequest,
     ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvisVedtaksbrevTilbakekrevingsbehandlingRequest,
-    HentNyttKravgrunnlagTilbakekrevingRequest,
+    OppdaterKravgrunnlagTilbakekrevingRequest,
     IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
@@ -156,8 +156,8 @@ export async function avsluttTilbakekreving(
     });
 }
 
-export async function hentNyttKravgrunnlag(
-    arg: HentNyttKravgrunnlagTilbakekrevingRequest,
+export async function oppdaterKravgrunnlag(
+    arg: OppdaterKravgrunnlagTilbakekrevingRequest,
 ): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
     return apiClient({
         url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/oppdaterKravgrunnlag`,

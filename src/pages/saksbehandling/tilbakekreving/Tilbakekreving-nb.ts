@@ -32,6 +32,8 @@ export default {
     'forhåndsvarsleTilbakekreving.fritekst.label': 'Fritekst til brev',
     'forhåndsvarsleTilbakekreving.navigering.sendOgFortsett': 'Send og fortsett til saksoversikt',
     'forhåndsvarsleTilbakekreving.navigering.fortsettSenere': 'Fortsett senere',
+    'forhåndsvarsleTilbakekreving.tidligereSendtForhåndsvarsel.tittel': 'Tidligere sendte forhåndsvarsler',
+    'forhåndsvarsleTilbakekreving.tidligereSendtForhåndsvarsel.knapp.seForhåndsvarsel': 'Se forhåndsvarsel',
 
     'brevForTilbakekreving.tittel': 'Brev',
     'brevForTilbakekreving.skalSendeBrev': 'Skal det sendes brev?',

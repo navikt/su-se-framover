@@ -6,7 +6,7 @@ import {
     AvsluttTilbakekrevingRequest,
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
-    HentNyttKravgrunnlagTilbakekrevingRequest as OppdaterKravgrunnlagTilbakekrevingRequest,
+    OppdaterKravgrunnlagTilbakekrevingRequest as OppdaterKravgrunnlagTilbakekrevingRequest,
     IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
     OpprettNyTilbakekrevingsbehandlingRequest,
@@ -119,7 +119,7 @@ export const oppdaterKravgrunnlag = createAsyncThunk<
     OppdaterKravgrunnlagTilbakekrevingRequest,
     { rejectValue: ApiError }
 >('tilbakekreving/oppdaterKravgrunnlag', async (args, thunkApi) => {
-    const res = await tilbakekrevingsApi.hentNyttKravgrunnlag(args);
+    const res = await tilbakekrevingsApi.oppdaterKravgrunnlag(args);
     if (res.status === 'ok') {
         return res.data;
     }

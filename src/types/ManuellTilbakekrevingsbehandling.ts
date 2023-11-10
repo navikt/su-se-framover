@@ -117,7 +117,7 @@ export interface AvsluttTilbakekrevingRequest {
     begrunnelse: string;
 }
 
-export interface HentNyttKravgrunnlagTilbakekrevingRequest {
+export interface OppdaterKravgrunnlagTilbakekrevingRequest {
     sakId: string;
     behandlingId: string;
     versjon: number;

@@ -3,7 +3,7 @@ import { Accordion, Button, Heading, Label } from '@navikt/ds-react';
 import AccordionItem from '@navikt/ds-react/esm/accordion/AccordionItem';
 import React from 'react';
 
-import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
+import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Oppsummeringspanel, {
     Oppsummeringsikon,
@@ -12,6 +12,7 @@ import Oppsummeringspanel, {
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { TidligereSendtForhåndsvarsler } from '~src/pages/saksbehandling/tilbakekreving/behandleTilbakekreving/forhåndsvarsleTilbakekreving/ForhåndsvarsleTilbakekreving';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import Måned from '~src/types/Måned';
 import { formatDateTime } from '~src/utils/date/dateUtils';
@@ -290,49 +291,23 @@ const VisVedtaksbrevKomponent = (props: { behandling: ManuellTilbakekrevingsbeha
 
 const VisUtsendtForhåndsvarselKomponent = (props: { behandling: ManuellTilbakekrevingsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
-    const [visForhåndsvarselStatus, visForhåndsvarsel] = useApiCall(visUtsendtForhåndsvarsel);
 
-    return (
+    return props.behandling.forhåndsvarselsInfo.length > 0 ? (
         <div>
-            {props.behandling.forhåndsvarselsInfo.length > 0 ? (
-                <div>
-                    <Heading size="small" spacing>
-                        {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.heading')}
-                    </Heading>
-                    {props.behandling.forhåndsvarselsInfo.map((info) => (
-                        <div key={info.id}>
-                            <Button
-                                variant="tertiary"
-                                size="small"
-                                type="button"
-                                loading={RemoteData.isPending(visForhåndsvarselStatus)}
-                                onClick={() =>
-                                    visForhåndsvarsel(
-                                        {
-                                            sakId: props.behandling.sakId,
-                                            behandlingId: props.behandling.id,
-                                            dokumentId: info.id,
-                                        },
-                                        (res) => {
-                                            window.open(URL.createObjectURL(res));
-                                        },
-                                    )
-                                }
-                            >
-                                {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.knapp.seForhåndsvarsel')}{' '}
-                                {formatDateTime(info.hendelsestidspunkt)}
-                            </Button>
-
-                            {RemoteData.isFailure(visForhåndsvarselStatus) && (
-                                <ApiErrorAlert error={visForhåndsvarselStatus.error} />
-                            )}
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <Label>{formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.ingenSendt')}</Label>
-            )}
+            <Heading size="small" spacing>
+                {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.heading')}
+            </Heading>
+            {props.behandling.forhåndsvarselsInfo.map((info) => (
+                <TidligereSendtForhåndsvarsler
+                    key={info.id}
+                    sakId={props.behandling.sakId}
+                    behandlingId={props.behandling.id}
+                    forhåndsvarselInfo={info}
+                />
+            ))}
         </div>
+    ) : (
+        <Label>{formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.ingenSendt')}</Label>
     );
 };
 

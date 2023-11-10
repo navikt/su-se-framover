@@ -1,27 +1,30 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Radio, RadioGroup } from '@navikt/ds-react';
+import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import * as TilbakekrevingApi from '~src/api/tilbakekrevingApi';
+import { visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as TilbakekrevingActions from '~src/features/TilbakekrevingActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
-import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { ForhåndsvarselsInfo, ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from '../../Tilbakekreving-nb';
 import VisKravgrunnlagMedRefresh from '../../visKravgrunnlagMedRefresh/VisKravgrunnlagMedRefresh';
 
+import styles from './ForhåndsvarsleTilbakekreving.module.less';
 import {
     ForhåndsvarsleTilbakekrevingFormData,
     forhåndsvarsleTilbakekrevingFormSchema,
@@ -144,13 +147,66 @@ const ForhåndsvarsleTilbakekreving = (props: {
                     </form>
                 ),
                 right: (
-                    <VisKravgrunnlagMedRefresh
-                        tilbakekreving={props.tilbakekreving}
-                        basicOppsummeringAvHeleKravgrunnlaget={true}
-                    />
+                    <div className={styles.right}>
+                        <VisKravgrunnlagMedRefresh
+                            tilbakekreving={props.tilbakekreving}
+                            basicOppsummeringAvHeleKravgrunnlaget={true}
+                        />
+                        <hr />
+                        {props.tilbakekreving.forhåndsvarselsInfo.length > 0 && (
+                            <div>
+                                <Heading size="medium">
+                                    {formatMessage('forhåndsvarsleTilbakekreving.tidligereSendtForhåndsvarsel.tittel')}
+                                </Heading>
+                                {props.tilbakekreving.forhåndsvarselsInfo.map((forhåndsvarselInfo) => (
+                                    <TidligereSendtForhåndsvarsler
+                                        key={forhåndsvarselInfo.id}
+                                        sakId={props.sakId}
+                                        behandlingId={props.tilbakekreving.id}
+                                        forhåndsvarselInfo={forhåndsvarselInfo}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 ),
             }}
         </ToKolonner>
+    );
+};
+
+export const TidligereSendtForhåndsvarsler = (props: {
+    sakId: string;
+    behandlingId: string;
+    forhåndsvarselInfo: ForhåndsvarselsInfo;
+}) => {
+    const { formatMessage } = useI18n({ messages });
+    const [visForhåndsvarselStatus, visForhåndsvarsel] = useApiCall(visUtsendtForhåndsvarsel);
+    return (
+        <div>
+            <Button
+                variant="tertiary"
+                size="small"
+                type="button"
+                loading={RemoteData.isPending(visForhåndsvarselStatus)}
+                onClick={() =>
+                    visForhåndsvarsel(
+                        {
+                            sakId: props.sakId,
+                            behandlingId: props.behandlingId,
+                            dokumentId: props.forhåndsvarselInfo.id,
+                        },
+                        (res) => {
+                            window.open(URL.createObjectURL(res));
+                        },
+                    )
+                }
+            >
+                {formatMessage('forhåndsvarsleTilbakekreving.tidligereSendtForhåndsvarsel.knapp.seForhåndsvarsel')}{' '}
+                {formatDateTime(props.forhåndsvarselInfo.hendelsestidspunkt)}
+            </Button>
+            {RemoteData.isFailure(visForhåndsvarselStatus) && <ApiErrorAlert error={visForhåndsvarselStatus.error} />}
+        </div>
     );
 };
 
