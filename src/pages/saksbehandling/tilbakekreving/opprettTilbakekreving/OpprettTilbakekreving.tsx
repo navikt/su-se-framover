@@ -12,8 +12,8 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
+import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
 
-import { TilbakekrevingSteg } from '../../types';
 import messages from '../Tilbakekreving-nb';
 
 import styles from './OpprettTilbakekreving.module.less';

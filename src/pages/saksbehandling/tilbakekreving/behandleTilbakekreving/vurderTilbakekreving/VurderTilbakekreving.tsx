@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
+import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { vurderTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
@@ -15,16 +16,15 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
 import { Grunnlagsperiode } from '~src/types/Kravgrunnlag';
 import {
     ManuellTilbakekrevingsbehandling,
+    TilbakekrevingSteg,
     TilbakekrevingsVurdering,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 import Måned from '~src/types/Måned';
 
 import messages from '../../Tilbakekreving-nb';
-import VisKravgrunnlagMedRefresh from '../../visKravgrunnlagMedRefresh/VisKravgrunnlagMedRefresh';
 
 import styles from './VurderTilbakekreving.module.less';
 import {
@@ -177,7 +177,12 @@ const VurderTilbakekreving = (props: {
                         </div>
                     </form>
                 ),
-                right: <VisKravgrunnlagMedRefresh tilbakekreving={props.tilbakekreving} />,
+                right: (
+                    <OppsummeringAvKravgrunnlag
+                        kravgrunnlag={props.tilbakekreving.kravgrunnlag}
+                        bareOppsummerMetaInfo={{ medTittel: true }}
+                    />
+                ),
             }}
         </ToKolonner>
     );

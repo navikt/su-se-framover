@@ -3,9 +3,8 @@ import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
-import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
 
-import { TilbakekrevingSteg } from '../../types';
 import messages from '../Tilbakekreving-nb';
 
 import styles from './BehandleTilbakekreving.module.less';

@@ -11,18 +11,21 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
+import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as TilbakekrevingActions from '~src/features/TilbakekrevingActions';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
-import { ForhåndsvarselsInfo, ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import {
+    ForhåndsvarselsInfo,
+    ManuellTilbakekrevingsbehandling,
+    TilbakekrevingSteg,
+} from '~src/types/ManuellTilbakekrevingsbehandling';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from '../../Tilbakekreving-nb';
-import VisKravgrunnlagMedRefresh from '../../visKravgrunnlagMedRefresh/VisKravgrunnlagMedRefresh';
 
 import styles from './ForhåndsvarsleTilbakekreving.module.less';
 import {
@@ -148,9 +151,11 @@ const ForhåndsvarsleTilbakekreving = (props: {
                 ),
                 right: (
                     <div className={styles.right}>
-                        <VisKravgrunnlagMedRefresh
-                            tilbakekreving={props.tilbakekreving}
-                            basicOppsummeringAvHeleKravgrunnlaget={true}
+                        <OppsummeringAvKravgrunnlag
+                            kravgrunnlag={props.tilbakekreving.kravgrunnlag}
+                            basicOppsummeringAvHeleKravgrunnlaget={{
+                                medTittel: true,
+                            }}
                         />
                         <hr />
                         {props.tilbakekreving.forhåndsvarselsInfo.length > 0 && (

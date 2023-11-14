@@ -4,7 +4,6 @@ import { BodyShort, Button, Modal } from '@navikt/ds-react';
 import React, { useRef } from 'react';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import { oppdaterKravgrunnlag } from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -14,36 +13,7 @@ import messages from '../Tilbakekreving-nb';
 
 import styles from './VisKRavgrunnlagMedRefresh.module.less';
 
-const VisKravgrunnlagMedRefresh = (props: {
-    tilbakekreving: ManuellTilbakekrevingsbehandling;
-    basicOppsummeringAvHeleKravgrunnlaget?: boolean;
-}) => {
-    return (
-        <div>
-            <OppsummeringAvKravgrunnlag
-                kravgrunnlag={props.tilbakekreving.kravgrunnlag}
-                basicOppsummeringAvHeleKravgrunnlaget={
-                    props.basicOppsummeringAvHeleKravgrunnlaget
-                        ? {
-                              medTittel: true,
-                              headerContent: <RefreshKravgrunnlagModal tilbakekreving={props.tilbakekreving} />,
-                          }
-                        : undefined
-                }
-                bareOppsummerMetaInfo={
-                    props.basicOppsummeringAvHeleKravgrunnlaget
-                        ? undefined
-                        : {
-                              medTittel: true,
-                              headerContent: <RefreshKravgrunnlagModal tilbakekreving={props.tilbakekreving} />,
-                          }
-                }
-            />
-        </div>
-    );
-};
-
-const RefreshKravgrunnlagModal = (props: { tilbakekreving: ManuellTilbakekrevingsbehandling }) => {
+export const RefreshKravgrunnlagModal = (props: { tilbakekreving: ManuellTilbakekrevingsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
     const ref = useRef<HTMLDialogElement>(null);
     const [oppdaterStatus, oppdater] = useAsyncActionCreator(oppdaterKravgrunnlag);
@@ -84,5 +54,3 @@ const RefreshKravgrunnlagModal = (props: { tilbakekreving: ManuellTilbakekreving
         </>
     );
 };
-
-export default VisKravgrunnlagMedRefresh;

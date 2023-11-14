@@ -3,14 +3,13 @@ import React from 'react';
 import Framdriftsindikator, { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
 import {
     erTilbakekrevingForhåndsvarsletEllerSenere,
     erTilbakekrevingVedtaksbrevEllerSenere,
     erTilbakekrevingVurdertEllerSenere,
 } from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 
-import { TilbakekrevingSteg } from '../../types';
 import messages from '../Tilbakekreving-nb';
 
 const stegsInformasjon = (behandling: ManuellTilbakekrevingsbehandling, steg: TilbakekrevingSteg) => {

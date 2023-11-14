@@ -1,7 +1,7 @@
 import * as Routes from '~src/lib/routes';
-import { TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
 import {
     ManuellTilbakekrevingsbehandling,
+    TilbakekrevingSteg,
     TilbakekrevingsbehandlingStatus,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 

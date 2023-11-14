@@ -122,3 +122,9 @@ export interface OppdaterKravgrunnlagTilbakekrevingRequest {
     behandlingId: string;
     versjon: number;
 }
+
+export enum TilbakekrevingSteg {
+    Forhåndsvarsling = 'forhandsvarsling',
+    Vurdering = 'vurdering',
+    Vedtaksbrev = 'brev',
+}
