@@ -39,3 +39,13 @@ export enum SøknadsbehandlingStatus {
     IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
     IVERKSATT_AVSLAG = 'IVERKSATT_AVSLAG',
 }
+
+export enum SaksbehandlingMenyvalg {
+    Sak = 'sak',
+    Søknad = 'soknad',
+    Vilkår = 'vilkar',
+    Beregning = 'beregning',
+    Vedtak = 'vedtak',
+    Vedtaksbrev = 'vedtaksbrev',
+    Oppsummering = 'oppsummering',
+}

@@ -8,8 +8,8 @@ import { MessageFormatter } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import klageNb from '~src/pages/klage/klage-nb';
-import { KlageSteg } from '~src/pages/saksbehandling/types';
 import {
+    KlageSteg,
     Klage,
     KlageStatus,
     KlageVurderingType,

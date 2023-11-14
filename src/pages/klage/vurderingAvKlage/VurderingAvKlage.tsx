@@ -31,8 +31,8 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { KlageSteg } from '~src/pages/saksbehandling/types';
 import {
+    KlageSteg,
     Klage,
     OmgjørVedtakUtfall,
     OmgjørVedtakÅrsak,

@@ -14,8 +14,7 @@ import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import yup from '~src/lib/validering';
-import { KlageSteg } from '~src/pages/saksbehandling/types';
-import { Klage, KlageStatus } from '~src/types/Klage';
+import { Klage, KlageStatus, KlageSteg } from '~src/types/Klage';
 import { erKlageAvvist } from '~src/utils/klage/klageUtils';
 
 import * as sharedStyles from '../klage.module.less';

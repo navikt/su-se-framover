@@ -1,10 +1,12 @@
 import { NavigateFunction, useParams } from 'react-router-dom';
 
 import * as Routes from '~src/lib/routes';
-import { KlageSteg, SaksbehandlingMenyvalg, TilbakekrevingSteg } from '~src/pages/saksbehandling/types';
 import { Søknadssteg } from '~src/pages/søknad/types';
+import { KlageSteg } from '~src/types/Klage';
+import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { RevurderingSeksjoner, RevurderingSteg } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak';
+import { SaksbehandlingMenyvalg } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 
 interface Route<T> {

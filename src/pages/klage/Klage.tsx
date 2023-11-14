@@ -6,7 +6,7 @@ import Framdriftsindikator from '~src/components/framdriftsindikator/Framdriftsi
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { KlageSteg } from '~src/pages/saksbehandling/types';
+import { KlageSteg } from '~src/types/Klage';
 import {
     erKlageVilkårsvurdertUtfyltEllerSenere,
     getDefaultFramdriftsindikatorLinjer,

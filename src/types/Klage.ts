@@ -130,3 +130,10 @@ export interface VedtattUtfall {
     utfall: Utfall;
     opprettet: string;
 }
+
+export enum KlageSteg {
+    Formkrav = 'formkrav',
+    Vurdering = 'vurdering',
+    Avvisning = 'avvisning',
+    Oppsummering = 'oppsummering',
+}

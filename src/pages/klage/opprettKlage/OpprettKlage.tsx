@@ -19,7 +19,7 @@ import * as klageActions from '~src/features/klage/klageActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { KlageSteg } from '~src/pages/saksbehandling/types';
+import { KlageSteg } from '~src/types/Klage';
 
 import messages from '../klage-nb';
 
