@@ -114,11 +114,5 @@ export default {
     'datacell.resultat.AVVIST_KLAGE': 'Avvist',
     'datacell.resultat.OVERSENDT': 'Oversendt',
 
-    'fnrEndring.registrertAnnetFnr': 'Det er registrert en fødselsnummersendring.',
-    'fnrEndring.klikkForBekrefte': 'Klikk meg for å bekrefte endringen',
-    'fnrEndring.bekreftSenere': 'Bekreft senere',
-    'fnrEndring.bekreft': 'Bekreft',
-    'fnrEndring.fnrBekreftet': 'Fødselsnummeret er bekreftet',
-
     ...lukketSøknadBegrunnelser,
 };

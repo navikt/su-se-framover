@@ -75,13 +75,17 @@ const Oppsummeringspanel = (props: {
     children: React.ReactNode;
     className?: string;
     classNameChildren?: string;
+    kompakt?: boolean;
 }) => (
     <div className={classNames(styles.container, props.className)}>
-        <div className={classNames(styles.tittel, fargeklassenavn(props.farge))}>
+        <div
+            className={classNames(
+                { [styles.tittel_kompakt]: props.kompakt, [styles.tittel]: !props.kompakt },
+                fargeklassenavn(props.farge),
+            )}
+        >
             <Ikon className={styles.ikon} ikon={props.ikon} />
-            <Heading level="2" size="medium">
-                {props.tittel}
-            </Heading>
+            <Heading size={props.kompakt ? 'xsmall' : 'medium'}>{props.tittel}</Heading>
         </div>
         <div className={classNames(styles.content, props.classNameChildren)}>{props.children}</div>
     </div>

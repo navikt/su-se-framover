@@ -11,13 +11,43 @@
     margin-bottom: @spacing;
 }
 
-.grunnlagsbeløperContainer {
-    list-style-type: none;
-    margin-bottom: @spacing-s;
+.kravgrunnlagOppsummeringContainer_kompakt {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: @spacing-xs;
+    margin-bottom: @spacing;
+}
 
-    .grunnlagsbeløpContainer {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        margin-bottom: @spacing-xxs;
+.grunnlagsbeløpContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: @spacing-xxs;
+
+    .periodeMedBeløpContainer {
+        grid-column-start: 1;
+        grid-column-end: 3;
+
+        > :first-child {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    > :last-child {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+}
+
+.grunnlagsbeløpContainer_kompakt {
+    display: grid;
+    grid-template: 1fr / 1fr 1fr;
+    gap: @spacing-xxs;
+
+    > :first-child,
+    :nth-child(2),
+    :last-child {
+        grid-column-start: 1;
+        grid-column-end: 3;
     }
 }

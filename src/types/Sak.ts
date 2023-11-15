@@ -53,3 +53,8 @@ export enum Sakstype {
     Alder = 'alder',
     Uføre = 'uføre',
 }
+
+export enum SakvarselType {
+    FNR_ENDRING = 'FNR_ENDRING',
+    NYTT_KRAVGRUNNLAG_MED_ÅPEN_TILBAKEKREVING = 'NYTT_KRAVGRUNNLAG_MED_ÅPEN_TILBAKEKREVING',
+}

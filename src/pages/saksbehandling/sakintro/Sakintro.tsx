@@ -1,18 +1,14 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { ChevronUpIcon, ChevronDownIcon } from '@navikt/aksel-icons';
-import { Alert, Button, LinkPanel, Modal, Popover } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
-import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Vedtakstidslinje from '~src/components/vedtakstidslinje/VedtaksTidslinje';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { bekreftFnrEndring } from '~src/features/saksoversikt/sak.slice';
-import { useAsyncActionCreator, useNotificationFromLocation } from '~src/lib/hooks';
+import { useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -45,52 +41,6 @@ enum NyBehandling {
     KLAGE = 'KLAGE',
     TILBAKEKREVING = 'TILBAKEKREVING',
 }
-
-const BekreftFnrEndringModal = (props: {
-    open: boolean;
-    onClose: () => void;
-    sakId: string;
-    nyttFnr: string;
-    forrigeFnr: string;
-}) => {
-    const { formatMessage } = useI18n({ messages });
-    const [bekreftStatus, bekreft] = useAsyncActionCreator(bekreftFnrEndring);
-
-    return (
-        <Modal
-            className={styles.fnrEndringsModal}
-            open={props.open}
-            onClose={props.onClose}
-            header={{ heading: 'Bekreft fødselsnummerendring' }}
-        >
-            <Modal.Body>
-                <OppsummeringPar label={'Nytt fødselsnummer'} verdi={props.nyttFnr} />
-                <OppsummeringPar label={'Forrige fødselsnummer'} verdi={props.forrigeFnr} />
-            </Modal.Body>
-            <Modal.Footer className={styles.modalFooter}>
-                <div className={styles.modalFooterButtonsContainer}>
-                    <Button variant="secondary" onClick={props.onClose}>
-                        {formatMessage('fnrEndring.bekreftSenere')}
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={() =>
-                            bekreft({ sakId: props.sakId, nyttFnr: props.nyttFnr, forrigeFnr: props.forrigeFnr })
-                        }
-                        loading={RemoteData.isPending(bekreftStatus)}
-                    >
-                        {formatMessage('fnrEndring.bekreft')}
-                    </Button>
-                </div>
-
-                {RemoteData.isFailure(bekreftStatus) && <ApiErrorAlert error={bekreftStatus.error} />}
-                {RemoteData.isSuccess(bekreftStatus) && (
-                    <Alert variant="success">{formatMessage('fnrEndring.fnrBekreftet')}</Alert>
-                )}
-            </Modal.Footer>
-        </Modal>
-    );
-};
 
 const Sakintro = () => {
     const props = useOutletContext<SaksoversiktContext>();
@@ -142,27 +92,8 @@ const Sakintro = () => {
         ...åpneTilbakekrevingsbehandlinger,
     ];
 
-    const [bekrefterFnrEndring, setBekrefterFnrEndring] = useState(false);
-
     return (
         <div className={styles.sakintroContainer}>
-            {props.sak.fnr !== props.søker.fnr && (
-                <Alert variant={'warning'} className={styles.fnrEndringsAlert}>
-                    {formatMessage('fnrEndring.registrertAnnetFnr')}
-                    <Button variant="tertiary" className={styles.button} onClick={() => setBekrefterFnrEndring(true)}>
-                        {formatMessage('fnrEndring.klikkForBekrefte')}
-                    </Button>
-                </Alert>
-            )}
-
-            <BekreftFnrEndringModal
-                open={bekrefterFnrEndring}
-                onClose={() => setBekrefterFnrEndring(false)}
-                sakId={props.sak.id}
-                nyttFnr={props.søker.fnr}
-                forrigeFnr={props.sak.fnr}
-            />
-
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>

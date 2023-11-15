@@ -13,6 +13,7 @@ import { Languages } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
+import Saksvarsler from './sakintro/saksvarsler/Saksvarsler';
 import messages from './saksoversikt-nb';
 import * as styles from './saksoversikt.module.less';
 
@@ -53,12 +54,13 @@ const Saksoversikt = () => {
                             RemoteData.isFailure(sak) && <ApiErrorAlert error={sak.error} />
                         ),
                     ([søker, sak]) => (
-                        <>
+                        <div className={styles.saksoversiktContainer}>
                             <Personlinje søker={søker} sakInfo={{ sakId: sak.id, saksnummer: sak.saksnummer }} />
+                            <Saksvarsler sak={sak} søker={søker} />
                             <div className={styles.container}>
                                 <Outlet context={{ sak, søker }} />
                             </div>
-                        </>
+                        </div>
                     ),
                 ),
             )}
