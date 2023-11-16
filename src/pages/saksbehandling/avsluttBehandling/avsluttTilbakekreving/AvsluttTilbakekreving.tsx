@@ -5,6 +5,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { forhåndsvisAvsluttTilbakekreving } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput } from '~src/components/brevInput/BrevInput';
 import { avsluttTilbakekreving } from '~src/features/TilbakekrevingActions';
@@ -90,7 +91,12 @@ const AvsluttTilbakekreving = (props: { saksversjon: number; behandling: Manuell
                             <BrevInput
                                 tekst={field.value}
                                 onVisBrevClick={() =>
-                                    new Promise((resolve) => resolve({ status: 'ok', data: new Blob(), statusCode: 2 }))
+                                    forhåndsvisAvsluttTilbakekreving({
+                                        sakId: props.behandling.sakId,
+                                        behandlingId: props.behandling.id,
+                                        versjon: props.saksversjon,
+                                        fritekst: field.value,
+                                    })
                                 }
                                 onChange={field.onChange}
                                 feil={fieldState.error}

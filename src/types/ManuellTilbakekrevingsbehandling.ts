@@ -119,6 +119,13 @@ export interface AvsluttTilbakekrevingRequest {
     begrunnelse: string;
 }
 
+export interface ForhåndsvisAvsluttTilbakekrevingRequest {
+    versjon: number;
+    sakId: string;
+    behandlingId: string;
+    fritekst: Nullable<string>;
+}
+
 export interface OppdaterKravgrunnlagTilbakekrevingRequest {
     sakId: string;
     behandlingId: string;

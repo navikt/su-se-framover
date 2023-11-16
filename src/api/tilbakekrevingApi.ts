@@ -12,6 +12,7 @@ import {
     UnderkjennTilbakekrevingRequest,
     VisUtsendtForhåndsvarselTilbakekrevingsbehandlingRequest,
     VurderTilbakekrevingsbehandlingRequest,
+    ForhåndsvisAvsluttTilbakekrevingRequest,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -153,6 +154,20 @@ export async function avsluttTilbakekreving(
             fritekst: arg.fritekst,
             begrunnelse: arg.begrunnelse,
         },
+    });
+}
+
+export async function forhåndsvisAvsluttTilbakekreving(
+    arg: ForhåndsvisAvsluttTilbakekrevingRequest,
+): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/avbryt/forhandsvis`,
+        method: 'POST',
+        body: {
+            versjon: arg.versjon,
+            fritekst: arg.fritekst,
+        },
+        bodyTransformer: (res) => res.blob(),
     });
 }
 
