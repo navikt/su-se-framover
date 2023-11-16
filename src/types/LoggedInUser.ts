@@ -9,4 +9,5 @@ export interface LoggedInUser {
     navn: string;
     navIdent: string;
     roller: Rolle[];
+    isProd: boolean;
 }
