@@ -217,7 +217,7 @@ const BrevForTilbakekreving = (props: {
                 right: (
                     <OppsummeringAvKravgrunnlag
                         kravgrunnlag={props.tilbakekreving.kravgrunnlag}
-                        basicOppsummeringAvHeleKravgrunnlaget={{
+                        basicHeleKravgrunnlag={{
                             medTittel: true,
                         }}
                     />

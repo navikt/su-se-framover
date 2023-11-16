@@ -19,9 +19,9 @@ import styles from './OppsummeringAvKravgrunnlag.module.less';
 
 const OppsummeringAvKravgrunnlag = (props: {
     kravgrunnlag: Kravgrunnlag;
-    bareOppsummerMetaInfo?: { medTittel?: boolean };
-    basicOppsummeringAvHeleKravgrunnlaget?: { medTittel?: boolean };
-    oppsummeringMedPanel?: {
+    basicBareMetaInfo?: { medTittel?: boolean };
+    basicHeleKravgrunnlag?: { medTittel?: boolean };
+    medPanel?: {
         tittel?: string;
         farge?: Oppsummeringsfarge;
         ikon?: Oppsummeringsikon;
@@ -30,29 +30,26 @@ const OppsummeringAvKravgrunnlag = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
 
-    if (props.bareOppsummerMetaInfo) {
+    if (props.basicBareMetaInfo) {
         return (
-            <OppsummeringAvMetaInfo
-                kravgrunnlag={props.kravgrunnlag}
-                medTittel={props.bareOppsummerMetaInfo.medTittel}
-            />
+            <OppsummeringAvMetaInfo kravgrunnlag={props.kravgrunnlag} medTittel={props.basicBareMetaInfo.medTittel} />
         );
-    } else if (props.basicOppsummeringAvHeleKravgrunnlaget) {
+    } else if (props.basicHeleKravgrunnlag) {
         return (
             <div>
                 <OppsummeringAvMetaInfo
                     kravgrunnlag={props.kravgrunnlag}
-                    medTittel={props.basicOppsummeringAvHeleKravgrunnlaget.medTittel}
+                    medTittel={props.basicHeleKravgrunnlag.medTittel}
                 />
                 <OppsummeringAvGrunnlagsperioderBasic grunnlagsperiode={props.kravgrunnlag.grunnlagsperiode} />
             </div>
         );
-    } else if (props.oppsummeringMedPanel) {
+    } else if (props.medPanel) {
         return (
             <Oppsummeringspanel
-                ikon={props.oppsummeringMedPanel.ikon ?? Oppsummeringsikon.Task}
-                farge={props.oppsummeringMedPanel.farge ?? Oppsummeringsfarge.Lilla}
-                tittel={props.oppsummeringMedPanel.tittel ?? formatMessage('kravgrunnlag.utestående.tittel')}
+                ikon={props.medPanel.ikon ?? Oppsummeringsikon.Task}
+                farge={props.medPanel.farge ?? Oppsummeringsfarge.Lilla}
+                tittel={props.medPanel.tittel ?? formatMessage('kravgrunnlag.utestående.tittel')}
                 kompakt={props.kompakt}
             >
                 <OppsummeringAvMetaInfo kravgrunnlag={props.kravgrunnlag} kompakt={props.kompakt} />
@@ -64,7 +61,7 @@ const OppsummeringAvKravgrunnlag = (props: {
         );
     }
 
-    return <div>teknisk feil bruk av oppsummering - må velge layout</div>;
+    return <div>teknisk feil - Layout for oppsummering av kravgrunnlag er ikke valgt</div>;
 };
 
 const OppsummeringAvMetaInfo = (props: { kravgrunnlag: Kravgrunnlag; medTittel?: boolean; kompakt?: boolean }) => {

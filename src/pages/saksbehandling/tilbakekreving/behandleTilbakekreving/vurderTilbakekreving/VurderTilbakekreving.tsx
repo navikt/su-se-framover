@@ -180,7 +180,7 @@ const VurderTilbakekreving = (props: {
                 right: (
                     <OppsummeringAvKravgrunnlag
                         kravgrunnlag={props.tilbakekreving.kravgrunnlag}
-                        bareOppsummerMetaInfo={{ medTittel: true }}
+                        basicBareMetaInfo={{ medTittel: true }}
                     />
                 ),
             }}

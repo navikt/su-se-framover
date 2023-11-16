@@ -153,7 +153,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                     <div className={styles.right}>
                         <OppsummeringAvKravgrunnlag
                             kravgrunnlag={props.tilbakekreving.kravgrunnlag}
-                            basicOppsummeringAvHeleKravgrunnlaget={{
+                            basicHeleKravgrunnlag={{
                                 medTittel: true,
                             }}
                         />

@@ -62,7 +62,7 @@ const OppdaterKravgrunnlagModal = (props: {
                 <div className={styles.kravgrunnlagOppsummeringscontainer}>
                     <OppsummeringAvKravgrunnlag
                         kravgrunnlag={props.behandling.kravgrunnlag}
-                        oppsummeringMedPanel={{
+                        medPanel={{
                             tittel: formatMessage(
                                 'saksvarsel.nyttKravgrunnlag.modal.body.oppsummeringAvBehandlingskravgrunnlag.tittel',
                             ),
@@ -71,7 +71,7 @@ const OppdaterKravgrunnlagModal = (props: {
                     />
                     <OppsummeringAvKravgrunnlag
                         kravgrunnlag={props.uteståendeKravgrunnlag}
-                        oppsummeringMedPanel={{
+                        medPanel={{
                             tittel: formatMessage(
                                 'saksvarsel.nyttKravgrunnlag.modal.body.oppsummeringAvUteståendeKravgrunnlagPåSak.tittel',
                             ),

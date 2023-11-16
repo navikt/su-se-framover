@@ -87,7 +87,7 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                 </div>
                 {RemoteData.isFailure(opprettStatus) && <ApiErrorAlert error={opprettStatus.error} />}
             </Panel>
-            <OppsummeringAvKravgrunnlag kravgrunnlag={props.kravgrunnlag} />
+            <OppsummeringAvKravgrunnlag kravgrunnlag={props.kravgrunnlag} medPanel={{}} />
         </>
     );
 };
