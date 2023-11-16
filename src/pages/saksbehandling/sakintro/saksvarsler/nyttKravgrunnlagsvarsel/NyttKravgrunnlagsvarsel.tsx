@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Label, Modal } from '@navikt/ds-react';
+import { Alert, Button, Heading, Modal } from '@navikt/ds-react';
 import React, { useState } from 'react';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -57,7 +57,10 @@ const OppdaterKravgrunnlagModal = (props: {
             header={{ heading: formatMessage('saksvarsel.nyttKravgrunnlag.modal.heading.tittel') }}
         >
             <Modal.Body>
-                <Label>{formatMessage('saksvarsel.nyttKravgrunnlag.modal.body.text.p1')}</Label>
+                <div className={styles.modalBodyHeaderContainer}>
+                    <Heading size="small">{formatMessage('saksvarsel.nyttKravgrunnlag.modal.body.header.p1')}</Heading>
+                    <Heading size="small">{formatMessage('saksvarsel.nyttKravgrunnlag.modal.body.header.p2')}</Heading>
+                </div>
 
                 <div className={styles.kravgrunnlagOppsummeringscontainer}>
                     <OppsummeringAvKravgrunnlag

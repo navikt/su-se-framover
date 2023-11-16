@@ -17,7 +17,7 @@ export const getSakvarsler = (arg: { sak: Sak; søker: Person }): SakvarseltypeM
 
     if (arg.sak.tilbakekrevinger.length > 0) {
         arg.sak.tilbakekrevinger.filter(erTilbakekrevingsbehandlingÅpen).forEach((t) => {
-            if (t.erKravgrunnlagUtdatert) {
+            if (!t.erKravgrunnlagUtdatert) {
                 varsel.push({
                     type: SakvarselType.NYTT_KRAVGRUNNLAG_MED_ÅPEN_TILBAKEKREVING,
                     context: { behandlingId: t.id },

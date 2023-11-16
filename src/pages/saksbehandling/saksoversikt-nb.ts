@@ -24,9 +24,11 @@ export default {
         'Kravgrunnlag på behandlingen',
     'saksvarsel.nyttKravgrunnlag.modal.body.oppsummeringAvUteståendeKravgrunnlagPåSak.tittel':
         'Nytt utestående kravgrunnlag',
-    'saksvarsel.nyttKravgrunnlag.modal.body.text.p1':
-        'For at tilbakekrevingen skal kunne sendes til attestering, eller iverksettes, må den oppdatere kravgrunnlaget.',
-    'saksvarsel.nyttKravgrunnlag.modal.body.text.p2': 'Behandlingen vil kun få vurderingene nullstillt.',
+    'saksvarsel.nyttKravgrunnlag.modal.body.header.p1':
+        'For at tilbakekrevingen skal kunne sendes til attestering eller iverksettes, må den oppdatere kravgrunnlaget.',
+    'saksvarsel.nyttKravgrunnlag.modal.body.header.p2':
+        'Ved oppdatering av kravgrunnlaget vil kun vurderingene bli nullstillt',
+
     'saksvarsel.nyttKravgrunnlag.modal.footer.knapp.oppdaterSenere': 'Oppdater senere',
     'saksvarsel.nyttKravgrunnlag.modal.footer.knapp.oppdater': 'Oppdater',
     'saksvarsel.nyttKravgrunnlag.modal.footer.success': 'Behandlingen er oppdatert med nytt kravgrunnlag',

@@ -22,6 +22,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     margin-bottom: @spacing-xxs;
+    gap: @spacing-xxs;
 
     .periodeMedBeløpContainer {
         grid-column-start: 1;
@@ -41,7 +42,7 @@
 
 .grunnlagsbeløpContainer_kompakt {
     display: grid;
-    grid-template: 1fr / 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: @spacing-xxs;
 
     > :first-child,
