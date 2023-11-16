@@ -141,7 +141,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             resultat: '-',
             periode: '-',
             mottattOpprettetTidspunkt: b.opprettet,
-            avsluttetTidspunkt: null,
+            avsluttetTidspunkt: b.avsluttetTidspunkt,
         };
     }
 
