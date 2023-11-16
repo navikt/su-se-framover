@@ -37,6 +37,9 @@ export const erTilbakekrevingVedtaksbrevEllerSenere = (t: ManuellTilbakekrevings
     t.status === TilbakekrevingsbehandlingStatus.IVERKSATT ||
     t.status === TilbakekrevingsbehandlingStatus.UNDERKJENT;
 
+export const erTilbakekrevingAvbrutt = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t.status === TilbakekrevingsbehandlingStatus.AVBRUTT;
+
 export const finnNesteTilbakekrevingsstegForSaksbehandling = (t: ManuellTilbakekrevingsbehandling) => {
     switch (t.status) {
         case TilbakekrevingsbehandlingStatus.OPPRETTET:

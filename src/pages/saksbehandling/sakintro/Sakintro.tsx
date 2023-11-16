@@ -18,7 +18,10 @@ import { KlageStatus } from '~src/types/Klage';
 import { LoggedInUser } from '~src/types/LoggedInUser';
 import { Sakstype } from '~src/types/Sak';
 import { erKlageAvsluttet, erKlageÅpen } from '~src/utils/klage/klageUtils';
-import { erTilbakekrevingsbehandlingÅpen } from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
+import {
+    erTilbakekrevingAvbrutt,
+    erTilbakekrevingsbehandlingÅpen,
+} from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 import { erReguleringAvsluttet, erReguleringÅpen } from '~src/utils/ReguleringUtils';
 import { erRevurderingAvsluttet, erRevurderingÅpen } from '~src/utils/revurdering/revurderingUtils';
 import { getIverksatteInnvilgedeSøknader, erSøknadLukket, erSøknadÅpen } from '~src/utils/søknad/søknadUtils';
@@ -65,12 +68,14 @@ const Sakintro = () => {
         );
         return { søknad: lukketSøknad, søknadsbehandling: søknadensbehandling };
     });
+    const avsluttedeTilbakekrevinger = props.sak.tilbakekrevinger.filter(erTilbakekrevingAvbrutt);
 
     const alleAvsluttedeBehandlinger = [
         ...avsluttedeKlager,
         ...avsluttedeReguleringer,
         ...avsluttedeRevurderinger,
         ...lukkedeSøknaderMedEllerUtenBehandling,
+        ...avsluttedeTilbakekrevinger,
     ];
 
     const åpneRevurderinger = props.sak.revurderinger.filter(erRevurderingÅpen);
