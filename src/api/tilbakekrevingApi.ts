@@ -36,7 +36,7 @@ export async function vurderTilbakekrevingsbehandling(
         method: 'POST',
         body: {
             versjon: arg.versjon,
-            måneder: arg.måneder,
+            perioder: arg.perioder,
         },
     });
 }

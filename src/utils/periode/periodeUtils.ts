@@ -1,5 +1,6 @@
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
 
 import { eqNullable } from '~src/lib/types';
 import { NullablePeriode, Periode, PeriodeType } from '~src/types/Periode';
@@ -33,4 +34,9 @@ export const periodeTilIsoDateString = (p: Periode | NullablePeriode) => ({
 export const eqPeriode = struct<NullablePeriode>({
     fraOgMed: eqNullable(D.Eq),
     tilOgMed: eqNullable(D.Eq),
+});
+
+export const eqStringPeriode = struct<Periode<string>>({
+    fraOgMed: S.Eq,
+    tilOgMed: S.Eq,
 });

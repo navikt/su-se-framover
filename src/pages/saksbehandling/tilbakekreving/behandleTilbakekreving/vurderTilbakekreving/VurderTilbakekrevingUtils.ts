@@ -5,19 +5,19 @@ import * as S from 'fp-ts/lib/string';
 import { Nullable, eqNullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { TilbakekrevingsVurdering } from '~src/types/ManuellTilbakekrevingsbehandling';
-import Måned from '~src/types/Måned';
+import { Periode, eqStringPeriode } from '~src/types/Periode';
 
 export interface VurderTilbakekrevingFormData {
     grunnlagsperioder: GrunnlagsperiodeFormData[];
 }
 
 interface GrunnlagsperiodeFormData {
-    måned: Måned;
+    periode: Periode<string>;
     vurdering: Nullable<TilbakekrevingsVurdering>;
 }
 
 export const eqGrunnlagsperiodeFormData = struct<GrunnlagsperiodeFormData>({
-    måned: Måned.eq(),
+    periode: eqStringPeriode,
     vurdering: eqNullable(S.Eq),
 });
 
@@ -30,7 +30,12 @@ export const vurderTilbakekrevingSchema = yup.object<VurderTilbakekrevingFormDat
         .array<GrunnlagsperiodeFormData>(
             yup
                 .object<GrunnlagsperiodeFormData>({
-                    måned: yup.object<Måned>().required(),
+                    periode: yup
+                        .object<Periode<string>>({
+                            fraOgMed: yup.string().required(),
+                            tilOgMed: yup.string().required(),
+                        })
+                        .required(),
                     vurdering: yup
                         .mixed<TilbakekrevingsVurdering>()
                         .oneOf([

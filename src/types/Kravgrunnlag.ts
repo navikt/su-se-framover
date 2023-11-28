@@ -1,12 +1,18 @@
 import { Periode } from './Periode';
 
 export interface Kravgrunnlag {
+    hendelseId: string;
     eksternKravgrunnlagsId: string;
     eksternVedtakId: string;
     kontrollfelt: string;
     status: KravgrunnlagStatus;
     grunnlagsperiode: Grunnlagsperiode[];
-    summertGrunnlagsmåneder: SummertGrunnlagsmåneder;
+    summertBetaltSkattForYtelsesgruppen: string;
+    summertBruttoTidligereUtbetalt: number;
+    summertBruttoNyUtbetaling: number;
+    summertBruttoFeilutbetaling: number;
+    summertNettoFeilutbetaling: number;
+    summertSkattFeilutbetaling: number;
 }
 
 export enum KravgrunnlagStatus {
@@ -23,24 +29,9 @@ export enum KravgrunnlagStatus {
 
 export interface Grunnlagsperiode {
     periode: Periode<string>;
-    beløpSkattMnd: string;
-    ytelse: Grunnlagsbeløp;
-}
-
-export interface Grunnlagsbeløp {
-    beløpTidligereUtbetaling: number;
-    beløpNyUtbetaling: number;
-    beløpSkalTilbakekreves: number;
-    beløpSkalIkkeTilbakekreves: number;
-    skatteProsent: string;
-    nettoBeløp: number;
-}
-
-export interface SummertGrunnlagsmåneder {
     betaltSkattForYtelsesgruppen: string;
-    beløpTidligereUtbetaling: string;
-    beløpNyUtbetaling: string;
-    beløpSkalTilbakekreves: string;
-    beløpSkalIkkeTilbakekreves: string;
-    nettoBeløp: string;
+    bruttoTidligereUtbetalt: number;
+    bruttoNyUtbetaling: number;
+    bruttoFeilutbetaling: number;
+    skatteProsent: string;
 }

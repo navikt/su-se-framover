@@ -5,21 +5,29 @@ export default {
     'oppsummering.tilbakekrevingsbehandling.opprettetAv': 'Opprettet av',
     'oppsummering.tilbakekrevingsbehandling.sendtTilAttesteringAv': 'Sendt til attestering av',
 
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.måned': 'Måned',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.vurdering': 'Vurdering',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.vurdering.SkalTilbakekreve': 'Skal tilbakekreve',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.vurdering.SkalIkkeTilbakekreve': 'Skal ikke tilbakekreve',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skatteBeløp': 'Skattebeløp',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skatteprosent': 'Skatteprosent',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.tidligereUtbetalt': 'Tidligere utbetalt',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.nyUtbetaling': 'Ny utbetaling',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skalTilbakekreves': 'Skal tilbakekreves',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.skalIkkeTilbakekreves': 'Skal ikke tilbakekreves',
-    'oppsummering.tilbakekrevingsbehandling.månedsvurdering.nettoBeløp': 'Netto beløp',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.periode': 'Periode',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.vurdering': 'Vurdering',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.vurdering.SkalTilbakekreve': 'Skal tilbakekreve',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.vurdering.SkalIkkeTilbakekreve': 'Skal ikke tilbakekreve',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.betaltSkattForYtelsesgruppen': 'Skattebeløp',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.skatteprosent': 'Skatteprosent',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.bruttoTidligereUtbetalt': 'Brutto tidligere utbetalt',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.bruttoNyUtbetaling': 'Brutto ny utbetaling',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.bruttoSkalTilbakekreve': 'Brutto skal tilbakekreve',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.bruttoSkalIkkeTilbakekreve': 'Brutto skal ikke tilbakekreve',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.nettoSkalTilbakekreve': 'Netto skal tilbakekreve',
 
-    'oppsummering.tilbakekrevingsbehandling.totalgrunnlagsperiode.heading': 'Summerte perioder',
-    'oppsummering.tilbakekrevingsbehandling.totalgrunnlagsperiode.betaltSkattForYtelsesgruppen':
-        'Betalt skatt for ytelsesgruppen',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.summert.heading': 'Summerte perioder',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.summert.betaltSkattForYtelsesgruppen':
+        'Summert skatt for ytelsesgruppen',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.summert.bruttoTidligereUtbetalt':
+        'Summert brutto tidligere utbetalt',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.summert.bruttoNyUtbetaling': 'Summert brutto ny utbetaling',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.summert.bruttoSkalTilbakekreve':
+        'Summert brutto skal tilbakekreve',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.summert.bruttoSkalIkkeTilbakekreve':
+        'Summert brutto skal ikke tilbakekreve',
+    'oppsummering.tilbakekrevingsbehandling.vurdering.summert.nettoSkalTilbakekreve': 'Summert netto skal tilbakekreve',
 
     'oppsummering.tilbakekrevingsbehandling.brev.panel.tittel': 'Forhåndsvarsler & Vedtaksbrev',
     'oppsummering.tilbakekrevingsbehandling.brev.skalIkkeSendeBrev': 'Skal ikke sende vedtaksbrev',

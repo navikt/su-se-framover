@@ -8,13 +8,11 @@ export default {
 
     'kravgrunnlag.grunnlagsperiode.tittel': 'Grunnlagsperioder',
     'kravgrunnlag.grunnlagsperiode.periode': 'Periode',
-    'kravgrunnlag.grunnlagsperiode.beløpSkattMnd': 'Skatt per måned',
+    'kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen': 'Betalt skatt for ytelsesgruppen',
     'kravgrunnlag.grunnlagsperiode.beløp.kode': 'Kode',
     'kravgrunnlag.grunnlagsperiode.beløp.type': 'Type',
     'kravgrunnlag.grunnlagsperiode.beløp.skatteProsent': 'Skatteprosent',
-    'kravgrunnlag.grunnlagsperiode.beløp.beløpTidligereUtbetaling': 'Tidligere utbetalt',
-    'kravgrunnlag.grunnlagsperiode.beløp.beløpNyUtbetaling': 'Ny utbetaling',
-    'kravgrunnlag.grunnlagsperiode.beløp.beløpSkalTilbakekreves': 'Skal tilbakekreves',
-    'kravgrunnlag.grunnlagsperiode.beløp.beløpSkalIkkeTilbakekreves': 'Skal ikke tilbakekreves',
-    'kravgrunnlag.grunnlagsperiode.beløp.nettoBeløp': 'Netto beløp',
+    'kravgrunnlag.grunnlagsperiode.beløp.bruttoTidligereUtbetalt': 'Brutto tidligere utbetalt',
+    'kravgrunnlag.grunnlagsperiode.beløp.bruttoNyUtbetaling': 'Brutto ny utbetaling',
+    'kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling': 'Brutto feilutbetaling',
 };

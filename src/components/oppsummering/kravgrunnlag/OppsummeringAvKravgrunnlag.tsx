@@ -9,8 +9,7 @@ import Oppsummeringspanel, {
 } from '~src/components/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import { Kravgrunnlag, Grunnlagsperiode } from '~src/types/Kravgrunnlag';
-import Måned from '~src/types/Måned';
-import { formatMonthYear } from '~src/utils/date/dateUtils';
+import { formatDate, formatMonthYear } from '~src/utils/date/dateUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
@@ -125,12 +124,14 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
                         <div>
                             <OppsummeringPar
                                 label={formatMessage('kravgrunnlag.grunnlagsperiode.periode')}
-                                verdi={`${Måned.fromStringPeriode(periode.periode).toFormattedString()}`}
+                                verdi={`${formatDate(periode.periode.fraOgMed)} - ${formatDate(
+                                    periode.periode.tilOgMed,
+                                )}`}
                                 retning="vertikal"
                             />
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløpSkattMnd')}
-                                verdi={periode.beløpSkattMnd}
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen')}
+                                verdi={periode.betaltSkattForYtelsesgruppen}
                                 retning="vertikal"
                             />
                         </div>
@@ -139,35 +140,24 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
 
                     <OppsummeringPar
                         label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.skatteProsent')}
-                        verdi={periode.ytelse.skatteProsent}
+                        verdi={periode.skatteProsent}
                         retning="vertikal"
                     />
 
                     <OppsummeringPar
-                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpNyUtbetaling')}
-                        verdi={periode.ytelse.beløpNyUtbetaling}
+                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoNyUtbetaling')}
+                        verdi={periode.bruttoNyUtbetaling}
                         retning="vertikal"
                     />
                     <OppsummeringPar
-                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpTidligereUtbetaling')}
-                        verdi={periode.ytelse.beløpTidligereUtbetaling}
-                        retning="vertikal"
-                    />
-
-                    <OppsummeringPar
-                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpSkalTilbakekreves')}
-                        verdi={periode.ytelse.beløpSkalTilbakekreves}
-                        retning="vertikal"
-                    />
-                    <OppsummeringPar
-                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpSkalIkkeTilbakekreves')}
-                        verdi={periode.ytelse.beløpSkalIkkeTilbakekreves}
+                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoTidligereUtbetalt')}
+                        verdi={periode.bruttoTidligereUtbetalt}
                         retning="vertikal"
                     />
 
                     <OppsummeringPar
-                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.nettoBeløp')}
-                        verdi={periode.ytelse.nettoBeløp}
+                        label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling')}
+                        verdi={periode.bruttoFeilutbetaling}
                         retning="vertikal"
                     />
                 </div>
@@ -203,8 +193,8 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
                         <Accordion.Content className={styles.grunnlagsbeløpContainer_kompakt}>
                             <div className={styles.lol}>
                                 <OppsummeringPar
-                                    label={formatMessage('kravgrunnlag.grunnlagsperiode.beløpSkattMnd')}
-                                    verdi={periode.beløpSkattMnd}
+                                    label={formatMessage('kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen')}
+                                    verdi={periode.betaltSkattForYtelsesgruppen}
                                     retning="vertikal"
                                     textSomSmall={props.kompakt}
                                 />
@@ -212,40 +202,27 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
                             </div>
                             <OppsummeringPar
                                 label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.skatteProsent')}
-                                verdi={periode.ytelse.skatteProsent}
+                                verdi={periode.skatteProsent}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />
 
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpNyUtbetaling')}
-                                verdi={periode.ytelse.beløpNyUtbetaling}
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoNyUtbetaling')}
+                                verdi={periode.bruttoNyUtbetaling}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpTidligereUtbetaling')}
-                                verdi={periode.ytelse.beløpTidligereUtbetaling}
-                                retning="vertikal"
-                                textSomSmall={props.kompakt}
-                            />
-
-                            <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpSkalTilbakekreves')}
-                                verdi={periode.ytelse.beløpSkalTilbakekreves}
-                                retning="vertikal"
-                                textSomSmall={props.kompakt}
-                            />
-                            <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.beløpSkalIkkeTilbakekreves')}
-                                verdi={periode.ytelse.beløpSkalIkkeTilbakekreves}
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoTidligereUtbetalt')}
+                                verdi={periode.bruttoTidligereUtbetalt}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />
 
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.nettoBeløp')}
-                                verdi={periode.ytelse.nettoBeløp}
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling')}
+                                verdi={periode.bruttoFeilutbetaling}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />

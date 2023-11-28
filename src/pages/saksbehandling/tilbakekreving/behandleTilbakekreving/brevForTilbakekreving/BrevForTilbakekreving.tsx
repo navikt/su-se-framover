@@ -94,22 +94,24 @@ const BrevForTilbakekreving = (props: {
         });
     };
 
-    const onSeBrevClick = async () => {
-        if (RemoteData.isPending(hentBrevStatus)) return;
+    const onSeBrevClick = async (data: BrevForTilbakekrevingFormData) => {
+        save(data, async () => {
+            if (RemoteData.isPending(hentBrevStatus)) return;
 
-        setHentBrevStatus(RemoteData.pending);
+            setHentBrevStatus(RemoteData.pending);
 
-        const res = await forhåndsvisVedtaksbrevTilbakekrevingsbehandling({
-            sakId: props.sakId,
-            behandlingId: props.tilbakekreving.id,
+            const res = await forhåndsvisVedtaksbrevTilbakekrevingsbehandling({
+                sakId: props.sakId,
+                behandlingId: props.tilbakekreving.id,
+            });
+
+            if (res.status === 'ok') {
+                setHentBrevStatus(RemoteData.success(null));
+                window.open(URL.createObjectURL(res.data));
+            } else {
+                setHentBrevStatus(RemoteData.failure(res.error));
+            }
         });
-
-        if (res.status === 'ok') {
-            setHentBrevStatus(RemoteData.success(null));
-            window.open(URL.createObjectURL(res.data));
-        } else {
-            setHentBrevStatus(RemoteData.failure(res.error));
-        }
     };
 
     const { isSaving } = useAutosaveOnChange(form.watch('brevtekst'), () => {
@@ -176,7 +178,7 @@ const BrevForTilbakekreving = (props: {
                                     type="button"
                                     className={styles.seBrevButton}
                                     variant="secondary"
-                                    onClick={onSeBrevClick}
+                                    onClick={() => onSeBrevClick(form.getValues())}
                                     loading={RemoteData.isPending(hentBrevStatus)}
                                 >
                                     {formatMessage('knapp.seBrev')}

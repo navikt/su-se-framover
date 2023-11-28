@@ -22,7 +22,7 @@ import {
     TilbakekrevingSteg,
     TilbakekrevingsVurdering,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
-import Måned from '~src/types/Måned';
+import { formatDate } from '~src/utils/date/dateUtils';
 
 import messages from '../../Tilbakekreving-nb';
 
@@ -49,18 +49,20 @@ const VurderTilbakekreving = (props: {
         steg: TilbakekrevingSteg.Vedtaksbrev,
     });
 
-    const defaultValuesFraBehandling = props.tilbakekreving.månedsvurderinger.map((måned) => ({
-        måned: Måned.fromString(måned.måned),
-        vurdering: måned.vurdering,
-    }));
+    const defaultValuesFraBehandling = props.tilbakekreving.vurderinger?.perioder.map((periode) => {
+        return {
+            periode: periode.periode,
+            vurdering: periode.vurdering,
+        };
+    });
 
     const defaultValuesFraKravgunnlag = props.tilbakekreving.kravgrunnlag.grunnlagsperiode.map((periode) => ({
-        måned: Måned.fromStringPeriode(periode.periode),
+        periode: periode.periode,
         vurdering: null,
     }));
 
     const initialValues =
-        defaultValuesFraBehandling.length > 0
+        defaultValuesFraBehandling && defaultValuesFraBehandling.length > 0
             ? { grunnlagsperioder: defaultValuesFraBehandling }
             : { grunnlagsperioder: defaultValuesFraKravgunnlag };
 
@@ -76,8 +78,8 @@ const VurderTilbakekreving = (props: {
                 sakId: props.sakId,
                 versjon: props.saksversjon,
                 behandlingId: props.tilbakekreving.id,
-                måneder: data.grunnlagsperioder.map((periode) => ({
-                    måned: periode.måned.toString(),
+                perioder: data.grunnlagsperioder.map((periode) => ({
+                    periode: periode.periode,
                     vurdering: periode.vurdering!,
                 })),
             },
@@ -116,10 +118,12 @@ const VurderTilbakekreving = (props: {
                     <form onSubmit={form.handleSubmit(handleSubmit)}>
                         <ul className={styles.grunnlagsperioderContainer}>
                             {fields.map((periode, idx) => (
-                                <li key={`${periode.måned}`}>
+                                <li key={`${periode.id}`}>
                                     <Panel border className={styles.periodePanel}>
                                         <div>
-                                            <Heading size="small">{periode.måned.toFormattedString()}</Heading>
+                                            <Heading size="small">{`${formatDate(
+                                                periode.periode.fraOgMed,
+                                            )} - ${formatDate(periode.periode.tilOgMed)}`}</Heading>
                                             <Controller
                                                 control={form.control}
                                                 name={`${fieldName}.${idx}.vurdering`}
@@ -194,44 +198,33 @@ const KravgrunnlagPeriodeInfo = (props: { grunnlagsperiode: Grunnlagsperiode }) 
         <div className={styles.kravgrunnlagsInfoContainer}>
             <div className={styles.detalje}>
                 <OppsummeringPar
-                    label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.skatteBeløp')}
-                    verdi={props.grunnlagsperiode.beløpSkattMnd}
+                    label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.betaltSkattForYtelsesgruppen')}
+                    verdi={props.grunnlagsperiode.betaltSkattForYtelsesgruppen}
                     retning="vertikal"
                 />
                 <OppsummeringPar
                     label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.skatteprosent')}
-                    verdi={props.grunnlagsperiode.ytelse.skatteProsent}
+                    verdi={props.grunnlagsperiode.skatteProsent}
                     retning="vertikal"
                 />
             </div>
 
             <div className={styles.detalje}>
                 <OppsummeringPar
-                    label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.tidligereUtbetalt')}
-                    verdi={props.grunnlagsperiode.ytelse.beløpTidligereUtbetaling}
+                    label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.bruttoTidligereUtbetalt')}
+                    verdi={props.grunnlagsperiode.bruttoTidligereUtbetalt}
                     retning="vertikal"
                 />
                 <OppsummeringPar
-                    label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.nyUtbetaling')}
-                    verdi={props.grunnlagsperiode.ytelse.beløpNyUtbetaling}
+                    label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.bruttoNyUtbetaling')}
+                    verdi={props.grunnlagsperiode.bruttoNyUtbetaling}
                     retning="vertikal"
                 />
             </div>
-            <div className={styles.detalje}>
-                <OppsummeringPar
-                    label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.skalTilbakekreves')}
-                    verdi={props.grunnlagsperiode.ytelse.beløpSkalTilbakekreves}
-                    retning="vertikal"
-                />
-                <OppsummeringPar
-                    label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.skalIkkeTilbakekreves')}
-                    verdi={props.grunnlagsperiode.ytelse.beløpSkalIkkeTilbakekreves}
-                    retning="vertikal"
-                />
-            </div>
+
             <OppsummeringPar
-                label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.nettoBeløp')}
-                verdi={props.grunnlagsperiode.ytelse.nettoBeløp}
+                label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.bruttoFeilutbetaling')}
+                verdi={props.grunnlagsperiode.bruttoFeilutbetaling}
                 retning="vertikal"
             />
         </div>

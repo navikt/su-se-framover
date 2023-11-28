@@ -2,6 +2,7 @@ import { Nullable } from '~src/lib/types';
 
 import { Attestering, UnderkjennelseGrunn } from './Behandling';
 import { Kravgrunnlag } from './Kravgrunnlag';
+import { Periode } from './Periode';
 
 export interface ManuellTilbakekrevingsbehandling {
     id: string;
@@ -10,7 +11,7 @@ export interface ManuellTilbakekrevingsbehandling {
     opprettetAv: string;
     kravgrunnlag: Kravgrunnlag;
     status: TilbakekrevingsbehandlingStatus;
-    månedsvurderinger: Månedsvurdering[];
+    vurderinger: Nullable<VurderingMedKrav>;
     forhåndsvarselsInfo: ForhåndsvarselsInfo[];
     fritekst: Nullable<string>;
     versjon: number;
@@ -36,14 +37,35 @@ export enum TilbakekrevingsbehandlingStatus {
     UNDERKJENT = 'UNDERKJENT',
 }
 
-export interface Månedsvurdering {
-    måned: string;
-    vurdering: TilbakekrevingsVurdering;
+/**
+ * bruttoSkalTilbakekreveSummert, nettoSkalTilbakekreveSummert, bruttoSkalIkkeTilbakekreveSummert er summen av alle periodene
+ */
+export interface VurderingMedKrav {
+    perioder: VurderingMedKravForPeriode[];
+    eksternKravgrunnlagId: string;
+    eksternVedtakId: string;
+    eksternKontrollfelt: string;
+    bruttoSkalTilbakekreveSummert: number;
+    nettoSkalTilbakekreveSummert: number;
+    bruttoSkalIkkeTilbakekreveSummert: number;
+    betaltSkattForYtelsesgruppenSummert: number;
+    bruttoNyUtbetalingSummert: number;
+    bruttoTidligereUtbetaltSummert: number;
 }
 
-export interface OpprettNyTilbakekrevingsbehandlingRequest {
-    sakId: string;
-    versjon: number;
+/**
+ * beløpene + skatt er de samme som man skal finne på kravgrunnlaget
+ */
+export interface VurderingMedKravForPeriode {
+    periode: Periode<string>;
+    vurdering: TilbakekrevingsVurdering;
+    betaltSkattForYtelsesgruppen: number;
+    bruttoTidligereUtbetalt: number;
+    bruttoNyUtbetaling: number;
+    bruttoSkalTilbakekreve: number;
+    nettoSkalTilbakekreve: number;
+    bruttoSkalIkkeTilbakekreve: number;
+    skatteProsent: string;
 }
 
 export enum TilbakekrevingsVurdering {
@@ -51,11 +73,16 @@ export enum TilbakekrevingsVurdering {
     SKAL_IKKE_TILBAKEKREVES = 'SkalIkkeTilbakekreve',
 }
 
+export interface OpprettNyTilbakekrevingsbehandlingRequest {
+    sakId: string;
+    versjon: number;
+}
+
 export interface VurderTilbakekrevingsbehandlingRequest {
     sakId: string;
     versjon: number;
     behandlingId: string;
-    måneder: Array<{ måned: string; vurdering: TilbakekrevingsVurdering }>;
+    perioder: Array<{ periode: Periode<string>; vurdering: TilbakekrevingsVurdering }>;
 }
 
 export interface ForhåndsvarsleTilbakekrevingRequest {
