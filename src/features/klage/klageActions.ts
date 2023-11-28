@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
 import * as klageApi from '~src/api/klageApi';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Klage } from '~src/types/Klage';
 import { FormkravRequest, VurderingRequest } from '~src/utils/klage/klageUtils';
 
@@ -154,7 +154,7 @@ export const iverksattAvvist = createAsyncThunk<Klage, { sakId: string; klageId:
 
 export const underkjenn = createAsyncThunk<
     Klage,
-    { sakId: string; klageId: string; grunn: UnderkjennelseGrunn; kommentar: string },
+    { sakId: string; klageId: string; grunn: UnderkjennelseGrunnBehandling; kommentar: string },
     { rejectValue: ApiError }
 >('klage/underkjenn', async ({ sakId, klageId, grunn, kommentar }, thunkApi) => {
     const res = await klageApi.underkjenn({

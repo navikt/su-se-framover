@@ -1,6 +1,7 @@
 import { Nullable } from '~src/lib/types';
 
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UnderkjennelseGrunnTilbakekreving } from './ManuellTilbakekrevingsbehandling';
 import { RevurderingStatus } from './Revurdering';
 import { Sakstype } from './Sak';
 import { SøknadsbehandlingStatus } from './Søknadsbehandling';
@@ -28,7 +29,9 @@ export interface Underkjennelse {
     kommentar: string;
 }
 
-export enum UnderkjennelseGrunn {
+export type UnderkjennelseGrunn = UnderkjennelseGrunnBehandling | UnderkjennelseGrunnTilbakekreving;
+
+export enum UnderkjennelseGrunnBehandling {
     INNGANGSVILKÅRENE_ER_FEILVURDERT = 'INNGANGSVILKÅRENE_ER_FEILVURDERT',
     BEREGNINGEN_ER_FEIL = 'BEREGNINGEN_ER_FEIL',
     DOKUMENTASJON_MANGLER = 'DOKUMENTASJON_MANGLER',

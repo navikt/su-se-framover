@@ -9,7 +9,7 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Klage } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import {
@@ -97,7 +97,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
             {
                 sakId: props.sakId,
                 klageId: props.klage.id,
-                grunn: grunn,
+                grunn: grunn as UnderkjennelseGrunnBehandling,
                 kommentar: kommentar,
             },
             () => {
@@ -116,6 +116,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
                 underkjenn={{
                     fn: underkjennCallback,
                     status: underkjennStatus,
+                    underkjennelsesgrunner: Object.values(UnderkjennelseGrunnBehandling),
                 }}
                 radioTexts={{
                     bekreftText: erKlageOpprettholdt(props.klage)

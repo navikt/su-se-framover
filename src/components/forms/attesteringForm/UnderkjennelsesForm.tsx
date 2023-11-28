@@ -10,7 +10,10 @@ import { AttesteringFormData } from './AttesteringsForm';
 import messages from './attesteringsForm-nb';
 import * as styles from './attesteringsForm.module.less';
 
-const UnderkjennelsesForm = (props: { control: Control<AttesteringFormData> }) => {
+const UnderkjennelsesForm = (props: {
+    underkjennelsesgrunn: UnderkjennelseGrunn[];
+    control: Control<AttesteringFormData>;
+}) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div className={styles.underkjennelsesFormContainer}>
@@ -25,7 +28,7 @@ const UnderkjennelsesForm = (props: { control: Control<AttesteringFormData> }) =
                         error={fieldState.error?.message}
                     >
                         <option value="">{formatMessage('underkjennelse.select.defaultValue')}</option>
-                        {Object.values(UnderkjennelseGrunn).map((grunn) => (
+                        {props.underkjennelsesgrunn.map((grunn) => (
                             <option value={grunn} key={grunn}>
                                 {underkjennelsesGrunnTextMapper[grunn]}
                             </option>

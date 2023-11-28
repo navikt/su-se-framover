@@ -15,7 +15,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 
 import messages from './attesteringsForm-nb';
 import * as styles from './attesteringsForm.module.less';
@@ -23,7 +23,7 @@ import UnderkjennelsesForm from './UnderkjennelsesForm';
 
 export interface AttesteringFormData {
     beslutning: Nullable<Beslutning>;
-    grunn: Nullable<UnderkjennelseGrunn>;
+    grunn: Nullable<UnderkjennelseGrunnBehandling>;
     kommentar: Nullable<string>;
 }
 
@@ -34,9 +34,9 @@ enum Beslutning {
 
 const schema = yup.object<AttesteringFormData>({
     beslutning: yup.string().nullable().required().oneOf([Beslutning.IVERKSETT, Beslutning.UNDERKJENN]),
-    grunn: yup.string<UnderkjennelseGrunn>().when('beslutning', {
+    grunn: yup.string<UnderkjennelseGrunnBehandling>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
-        then: yup.string().required().oneOf(Object.values(UnderkjennelseGrunn), 'Du må velge en grunn'),
+        then: yup.string().required().oneOf(Object.values(UnderkjennelseGrunnBehandling), 'Du må velge en grunn'),
     }),
     kommentar: yup.mixed<string>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
@@ -53,6 +53,7 @@ interface Props {
     underkjenn: {
         fn: (grunn: UnderkjennelseGrunn, kommentar: string) => void;
         status: ApiResult<unknown>;
+        underkjennelsesgrunner: UnderkjennelseGrunn[];
     };
     radioTexts?: {
         bekreftText?: string;
@@ -103,7 +104,12 @@ export const AttesteringsForm = (props: Props) => {
                         </RadioGroup>
                     )}
                 />
-                {watch('beslutning') === Beslutning.UNDERKJENN && <UnderkjennelsesForm control={control} />}
+                {watch('beslutning') === Beslutning.UNDERKJENN && (
+                    <UnderkjennelsesForm
+                        control={control}
+                        underkjennelsesgrunn={props.underkjenn.underkjennelsesgrunner}
+                    />
+                )}
                 <div className={styles.knapperContainer}>
                     <LinkAsButton
                         variant="secondary"

@@ -1,5 +1,5 @@
 import { Nullable } from '~src/lib/types';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Klage } from '~src/types/Klage';
 import { FormkravRequest, VurderingRequest } from '~src/utils/klage/klageUtils';
 
@@ -100,7 +100,7 @@ export async function iverksettAvvistKlage(arg: { sakId: string; klageId: string
 export async function underkjenn(arg: {
     sakId: string;
     klageId: string;
-    grunn: UnderkjennelseGrunn;
+    grunn: UnderkjennelseGrunnBehandling;
     kommentar: string;
 }): Promise<ApiClientResult<Klage>> {
     return apiClient({

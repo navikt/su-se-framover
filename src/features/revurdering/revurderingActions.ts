@@ -5,7 +5,7 @@ import * as revurderingApi from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import {
     Gjenopptak,
     IverksattRevurdering,
@@ -209,7 +209,7 @@ export const iverksettRevurdering = createAsyncThunk<
 
 export const underkjennRevurdering = createAsyncThunk<
     UnderkjentRevurdering,
-    { sakId: string; revurderingId: string; grunn: UnderkjennelseGrunn; kommentar?: string },
+    { sakId: string; revurderingId: string; grunn: UnderkjennelseGrunnBehandling; kommentar?: string },
     { rejectValue: ApiError }
 >('revurdering/underkjenn', async ({ sakId, revurderingId, grunn, kommentar }, thunkApi) => {
     const res = await revurderingApi.underkjenn(sakId, revurderingId, grunn, kommentar);

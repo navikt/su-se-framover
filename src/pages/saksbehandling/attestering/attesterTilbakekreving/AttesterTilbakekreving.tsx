@@ -8,7 +8,10 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
-import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import {
+    ManuellTilbakekrevingsbehandling,
+    UnderkjennelseGrunnTilbakekreving,
+} from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import messages from '../Attestering-nb';
 
@@ -43,7 +46,7 @@ const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehan
                 versjon: props.saksversjon,
                 sakId: props.behandling.sakId,
                 behandlingId: props.behandling.id,
-                grunn: grunn,
+                grunn: grunn as UnderkjennelseGrunnTilbakekreving,
                 kommentar: kommentar,
             },
             () => {
@@ -56,7 +59,11 @@ const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehan
             <AttesteringsForm
                 sakId={props.behandling.sakId}
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
-                underkjenn={{ fn: underkjennCallback, status: underkjennStatus }}
+                underkjenn={{
+                    fn: underkjennCallback,
+                    status: underkjennStatus,
+                    underkjennelsesgrunner: Object.values(UnderkjennelseGrunnTilbakekreving),
+                }}
             />
             <OppsummeringAvTilbakekrevingsbehandling behandling={props.behandling} />
         </div>

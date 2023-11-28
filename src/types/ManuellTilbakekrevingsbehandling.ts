@@ -1,6 +1,6 @@
 import { Nullable } from '~src/lib/types';
 
-import { Attestering, UnderkjennelseGrunn } from './Behandling';
+import { Attestering } from './Behandling';
 import { Kravgrunnlag } from './Kravgrunnlag';
 import { Periode } from './Periode';
 
@@ -134,7 +134,7 @@ export interface UnderkjennTilbakekrevingRequest {
     sakId: string;
     behandlingId: string;
     kommentar: string;
-    grunn: UnderkjennelseGrunn;
+    grunn: UnderkjennelseGrunnTilbakekreving;
 }
 export interface AvsluttTilbakekrevingRequest {
     versjon: number;
@@ -153,4 +153,15 @@ export enum TilbakekrevingSteg {
     Forhåndsvarsling = 'forhandsvarsling',
     Vurdering = 'vurdering',
     Vedtaksbrev = 'brev',
+}
+
+export enum UnderkjennelseGrunnTilbakekreving {
+    IKKE_GRUNNLAG_FOR_TILBAKEKREVING = 'IKKE_GRUNNLAG_FOR_TILBAKEKREVING',
+    DOKUMENTASJON_MANGLER = 'DOKUMENTASJON_MANGLER',
+    VEDTAKSBREVET_ER_FEIL = 'VEDTAKSBREVET_ER_FEIL',
+    ANDRE_FORHOLD = 'ANDRE_FORHOLD',
+    MANGLER_FORHÅNDSVARSEL = 'MANGLER_FORHÅNDSVARSEL',
+    SKAL_AVKORTES = 'SKAL_AVKORTES',
+    UTDATERT_KRAVGRUNNLAG = 'UTDATERT_KRAVGRUNNLAG',
+    VURDERINGEN_ER_FEIL = 'VURDERINGEN_ER_FEIL',
 }

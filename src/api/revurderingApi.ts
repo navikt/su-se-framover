@@ -3,7 +3,7 @@ import { formatISO } from 'date-fns';
 import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
 import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     Gjenopptak,
@@ -221,7 +221,7 @@ export async function sendTilAttestering(
 export async function underkjenn(
     sakId: string,
     revurderingId: string,
-    grunn: UnderkjennelseGrunn,
+    grunn: UnderkjennelseGrunnBehandling,
     kommentar?: string,
 ): Promise<ApiClientResult<UnderkjentRevurdering>> {
     return apiClient({

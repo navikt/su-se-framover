@@ -1,5 +1,5 @@
 import { Nullable } from '~src/lib/types';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -84,7 +84,7 @@ export async function iverksett(arg: { sakId: string; behandlingId: string }) {
 export async function underkjenn(arg: {
     sakId: string;
     behandlingId: string;
-    grunn: UnderkjennelseGrunn;
+    grunn: UnderkjennelseGrunnBehandling;
     kommentar: string;
 }) {
     return apiClient<Søknadsbehandling>({

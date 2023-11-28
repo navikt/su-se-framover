@@ -4,7 +4,7 @@ import { ApiError } from '~src/api/apiClient';
 import * as behandlingApi from '~src/api/behandlingApi';
 import { Nullable } from '~src/lib/types';
 import { createApiCallAsyncThunk } from '~src/redux/utils';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const startBehandling = createAsyncThunk<
@@ -74,7 +74,7 @@ export const attesteringIverksett = createAsyncThunk<
 
 export const attesteringUnderkjenn = createAsyncThunk<
     Søknadsbehandling,
-    { sakId: string; behandlingId: string; grunn: UnderkjennelseGrunn; kommentar: string },
+    { sakId: string; behandlingId: string; grunn: UnderkjennelseGrunnBehandling; kommentar: string },
     { rejectValue: ApiError }
 >('behandling/underkjenn', async ({ sakId, behandlingId, grunn, kommentar }, thunkApi) => {
     const res = await behandlingApi.underkjenn({ sakId, behandlingId, grunn, kommentar });

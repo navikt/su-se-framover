@@ -1,9 +1,15 @@
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
+import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 export const underkjennelsesGrunnTextMapper: { [key in UnderkjennelseGrunn]: string } = {
-    [UnderkjennelseGrunn.ANDRE_FORHOLD]: 'Andre forhold',
-    [UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL]: 'Beregningen er feil',
-    [UnderkjennelseGrunn.DOKUMENTASJON_MANGLER]: 'Dokumentasjon mangler',
-    [UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT]: 'Inngangsvilkårene er feilvurdert',
-    [UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL]: 'Vedtaksbrev er feil',
+    [UnderkjennelseGrunnBehandling.ANDRE_FORHOLD]: 'Andre forhold',
+    [UnderkjennelseGrunnBehandling.BEREGNINGEN_ER_FEIL]: 'Beregningen er feil',
+    [UnderkjennelseGrunnBehandling.DOKUMENTASJON_MANGLER]: 'Dokumentasjon mangler',
+    [UnderkjennelseGrunnBehandling.INNGANGSVILKÅRENE_ER_FEILVURDERT]: 'Inngangsvilkårene er feilvurdert',
+    [UnderkjennelseGrunnBehandling.VEDTAKSBREVET_ER_FEIL]: 'Vedtaksbrev er feil',
+    [UnderkjennelseGrunnTilbakekreving.IKKE_GRUNNLAG_FOR_TILBAKEKREVING]: 'Ikke grunnlag for tilbakekreving',
+    [UnderkjennelseGrunnTilbakekreving.MANGLER_FORHÅNDSVARSEL]: 'Mangler forhåndsvarsel',
+    [UnderkjennelseGrunnTilbakekreving.SKAL_AVKORTES]: 'Skal avkortes',
+    [UnderkjennelseGrunnTilbakekreving.UTDATERT_KRAVGRUNNLAG]: 'Utdatert kravgrunnlag',
+    [UnderkjennelseGrunnTilbakekreving.VURDERINGEN_ER_FEIL]: 'Vurderingen er feil',
 };

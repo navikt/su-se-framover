@@ -21,7 +21,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { useAppDispatch } from '~src/redux/Store';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import {
     InformasjonsRevurdering,
@@ -107,10 +107,18 @@ const AttesterRevurdering = (props: {
     };
 
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) => {
-        underkjenn({ sakId: props.sakInfo.id, revurderingId: props.revurdering.id, grunn, kommentar }, () => {
-            const message = formatMessage('attester.sendtTilbake');
-            Routes.navigateToSakIntroWithMessage(navigate, message, props.sakInfo.id);
-        });
+        underkjenn(
+            {
+                sakId: props.sakInfo.id,
+                revurderingId: props.revurdering.id,
+                grunn: grunn as UnderkjennelseGrunnBehandling,
+                kommentar,
+            },
+            () => {
+                const message = formatMessage('attester.sendtTilbake');
+                Routes.navigateToSakIntroWithMessage(navigate, message, props.sakInfo.id);
+            },
+        );
     };
 
     const warnings = hentWarnings(props.revurdering);
@@ -126,7 +134,11 @@ const AttesterRevurdering = (props: {
                     <AttesteringsForm
                         sakId={props.sakInfo.id}
                         iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
-                        underkjenn={{ fn: underkjennCallback, status: underkjennStatus }}
+                        underkjenn={{
+                            fn: underkjennCallback,
+                            status: underkjennStatus,
+                            underkjennelsesgrunner: Object.values(UnderkjennelseGrunnBehandling),
+                        }}
                     />
                     <div className={styles.panelerContainer}>
                         <div className={styles.oppsummeringContainer}>

@@ -9,7 +9,7 @@ import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActi
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { UnderkjennelseGrunn } from '~src/types/Behandling';
+import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { erIverksatt, erTilAttestering } from '~src/utils/SøknadsbehandlingUtils';
@@ -43,7 +43,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
             {
                 sakId: props.sak.id,
                 behandlingId: props.søknadsbehandling.id,
-                grunn: grunn,
+                grunn: grunn as UnderkjennelseGrunnBehandling,
                 kommentar: kommentar,
             },
             () => {
@@ -67,7 +67,11 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
             <AttesteringsForm
                 sakId={props.sak.id}
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
-                underkjenn={{ fn: underkjennCallback, status: underkjennStatus }}
+                underkjenn={{
+                    fn: underkjennCallback,
+                    status: underkjennStatus,
+                    underkjennelsesgrunner: Object.values(UnderkjennelseGrunnBehandling),
+                }}
             />
             <OppsummeringAvSøknadsbehandling
                 behandling={props.søknadsbehandling}
