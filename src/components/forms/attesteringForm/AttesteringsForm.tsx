@@ -16,6 +16,7 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
+import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import messages from './attesteringsForm-nb';
 import * as styles from './attesteringsForm.module.less';
@@ -23,7 +24,7 @@ import UnderkjennelsesForm from './UnderkjennelsesForm';
 
 export interface AttesteringFormData {
     beslutning: Nullable<Beslutning>;
-    grunn: Nullable<UnderkjennelseGrunnBehandling>;
+    grunn: Nullable<UnderkjennelseGrunn>;
     kommentar: Nullable<string>;
 }
 
@@ -34,9 +35,15 @@ enum Beslutning {
 
 const schema = yup.object<AttesteringFormData>({
     beslutning: yup.string().nullable().required().oneOf([Beslutning.IVERKSETT, Beslutning.UNDERKJENN]),
-    grunn: yup.string<UnderkjennelseGrunnBehandling>().when('beslutning', {
+    grunn: yup.string<UnderkjennelseGrunn>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
-        then: yup.string().required().oneOf(Object.values(UnderkjennelseGrunnBehandling), 'Du må velge en grunn'),
+        then: yup
+            .string()
+            .required()
+            .oneOf(
+                [...Object.values(UnderkjennelseGrunnBehandling), ...Object.values(UnderkjennelseGrunnTilbakekreving)],
+                'Du må velge en grunn',
+            ),
     }),
     kommentar: yup.mixed<string>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
