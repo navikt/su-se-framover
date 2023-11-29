@@ -237,7 +237,9 @@ const OppsummeringAvSummerteBeløpAccordion = (props: { kravgrunnlag: Kravgrunnl
                     <Accordion.Content className={styles.summerteBeløpContainer_kompakt}>
                         <div>
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen')}
+                                label={formatMessage(
+                                    'kravgrunnlag.summerteperioder.beløp.summertBetaltSkattForYtelsesgruppen',
+                                )}
                                 verdi={props.kravgrunnlag.summertBetaltSkattForYtelsesgruppen}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
@@ -246,13 +248,15 @@ const OppsummeringAvSummerteBeløpAccordion = (props: { kravgrunnlag: Kravgrunnl
                         </div>
                         <div>
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen')}
+                                label={formatMessage(
+                                    'kravgrunnlag.summerteperioder.beløp.summertBruttoTidligereUtbetalt',
+                                )}
                                 verdi={props.kravgrunnlag.summertBruttoTidligereUtbetalt}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen')}
+                                label={formatMessage('kravgrunnlag.summerteperioder.beløp.summertBruttoNyUtbetaling')}
                                 verdi={props.kravgrunnlag.summertBruttoNyUtbetaling}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
@@ -260,13 +264,13 @@ const OppsummeringAvSummerteBeløpAccordion = (props: { kravgrunnlag: Kravgrunnl
                         </div>
                         <div>
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen')}
+                                label={formatMessage('kravgrunnlag.summerteperioder.beløp.summertBruttoFeilutbetaling')}
                                 verdi={props.kravgrunnlag.summertBruttoFeilutbetaling}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />
                             <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen')}
+                                label={formatMessage('kravgrunnlag.summerteperioder.beløp.summertNettoFeilutbetaling')}
                                 verdi={props.kravgrunnlag.summertNettoFeilutbetaling}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
