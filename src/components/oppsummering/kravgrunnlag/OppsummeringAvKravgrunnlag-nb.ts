@@ -15,4 +15,13 @@ export default {
     'kravgrunnlag.grunnlagsperiode.beløp.bruttoTidligereUtbetalt': 'Brutto tidligere utbetalt',
     'kravgrunnlag.grunnlagsperiode.beløp.bruttoNyUtbetaling': 'Brutto ny utbetaling',
     'kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling': 'Brutto feilutbetaling',
+
+    'kravgrunnlag.summerteperioder.tittel': 'Summerte perioder',
+    'kravgrunnlag.summerteperioder.beløp.summertBetaltSkattForYtelsesgruppen':
+        'Summert betalt skatt for ytelsesgruppen',
+    'kravgrunnlag.summerteperioder.beløp.summertBruttoTidligereUtbetalt': 'Summert brutto tidligere utbetalt',
+    'kravgrunnlag.summerteperioder.beløp.summertBruttoNyUtbetaling': 'Summert brutto ny utbetaling',
+    'kravgrunnlag.summerteperioder.beløp.summertBruttoFeilutbetaling': 'Summert brutto feilutbetaling',
+    'kravgrunnlag.summerteperioder.beløp.summertNettoFeilutbetaling': 'Summert netto feilutbetaling',
+    'kravgrunnlag.summerteperioder.beløp.summertSkattFeilutbetaling': 'Summert skatt feilutbetaling',
 };
