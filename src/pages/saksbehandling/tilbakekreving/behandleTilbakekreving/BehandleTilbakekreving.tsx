@@ -10,6 +10,7 @@ import messages from '../Tilbakekreving-nb';
 import styles from './BehandleTilbakekreving.module.less';
 import BrevForTilbakekreving from './brevForTilbakekreving/BrevForTilbakekreving';
 import ForhåndsvarsleTilbakekreving from './forhåndsvarsleTilbakekreving/ForhåndsvarsleTilbakekreving';
+import OppsummeringTilbakekrevingsbehandling from './oppsummeringTilbakekrevingsbehandling/OppsummeringTilbakekrevingsbehandling';
 import TilbakekrevingStegIndikator from './TilbakekrevingStegIndikator';
 import VurderTilbakekreving from './vurderTilbakekreving/VurderTilbakekreving';
 
@@ -34,37 +35,48 @@ const BehandleTilbakekreving = (props: {
 
     return (
         <div className={styles.pageContainer}>
-            <Heading level="1" size="large" className={styles.pageTittel}>
-                {formatMessage('tilbakekreving.tittel')}
-            </Heading>
-            <div className={styles.contentContainerMedFramdriftsindikator}>
-                <TilbakekrevingStegIndikator
+            {steg !== TilbakekrevingSteg.Oppsummering && (
+                <>
+                    <Heading level="1" size="large" className={styles.pageTittel}>
+                        {formatMessage('tilbakekreving.tittel')}
+                    </Heading>
+                    <div className={styles.contentContainerMedFramdriftsindikator}>
+                        <TilbakekrevingStegIndikator
+                            sakId={props.sakId}
+                            behandling={behandling}
+                            aktivSteg={steg ?? TilbakekrevingSteg.Forhåndsvarsling}
+                        />
+                        {steg === TilbakekrevingSteg.Forhåndsvarsling && (
+                            <ForhåndsvarsleTilbakekreving
+                                sakId={props.sakId}
+                                saksversjon={props.saksversjon}
+                                tilbakekreving={behandling}
+                            />
+                        )}
+                        {steg === TilbakekrevingSteg.Vurdering && (
+                            <VurderTilbakekreving
+                                sakId={props.sakId}
+                                saksversjon={props.saksversjon}
+                                tilbakekreving={behandling}
+                            />
+                        )}
+                        {steg === TilbakekrevingSteg.Vedtaksbrev && (
+                            <BrevForTilbakekreving
+                                sakId={props.sakId}
+                                saksversjon={props.saksversjon}
+                                tilbakekreving={behandling}
+                            />
+                        )}
+                    </div>
+                </>
+            )}
+            {steg === TilbakekrevingSteg.Oppsummering && (
+                <OppsummeringTilbakekrevingsbehandling
                     sakId={props.sakId}
-                    behandling={behandling}
-                    aktivSteg={steg ?? TilbakekrevingSteg.Vurdering}
+                    saksversjon={props.saksversjon}
+                    tilbakekreving={behandling}
                 />
-                {steg === TilbakekrevingSteg.Vurdering && (
-                    <VurderTilbakekreving
-                        sakId={props.sakId}
-                        saksversjon={props.saksversjon}
-                        tilbakekreving={behandling}
-                    />
-                )}
-                {steg === TilbakekrevingSteg.Forhåndsvarsling && (
-                    <ForhåndsvarsleTilbakekreving
-                        sakId={props.sakId}
-                        saksversjon={props.saksversjon}
-                        tilbakekreving={behandling}
-                    />
-                )}
-                {steg === TilbakekrevingSteg.Vedtaksbrev && (
-                    <BrevForTilbakekreving
-                        sakId={props.sakId}
-                        saksversjon={props.saksversjon}
-                        tilbakekreving={behandling}
-                    />
-                )}
-            </div>
+            )}
         </div>
     );
 };

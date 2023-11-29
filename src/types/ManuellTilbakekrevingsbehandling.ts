@@ -152,7 +152,8 @@ export interface OppdaterKravgrunnlagTilbakekrevingRequest {
 export enum TilbakekrevingSteg {
     Forhåndsvarsling = 'forhandsvarsling',
     Vurdering = 'vurdering',
-    Vedtaksbrev = 'brev',
+    Vedtaksbrev = 'vedtaksbrev',
+    Oppsummering = 'oppsummering',
 }
 
 export enum UnderkjennelseGrunnTilbakekreving {

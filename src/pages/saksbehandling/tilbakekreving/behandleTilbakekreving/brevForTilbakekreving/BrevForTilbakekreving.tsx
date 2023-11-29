@@ -13,10 +13,7 @@ import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering'
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
-import {
-    brevtekstTilbakekrevingsbehandling,
-    sendTilbakekrevingTilAttestering,
-} from '~src/features/TilbakekrevingActions';
+import { brevtekstTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator, useAutosaveOnChange } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
@@ -37,7 +34,6 @@ const BrevForTilbakekreving = (props: {
     const { formatMessage } = useI18n({ messages });
     const saksversjonRef = React.useRef(props.saksversjon);
     const [autosaveStatus, autosave] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
-    const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(sendTilbakekrevingTilAttestering);
     const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
 
     const form = useForm<BrevForTilbakekrevingFormData>({
@@ -77,19 +73,12 @@ const BrevForTilbakekreving = (props: {
 
     const handleSubmit = (data: BrevForTilbakekrevingFormData) => {
         save(data, () => {
-            sendTilAttestering(
-                {
-                    versjon: saksversjonRef.current,
+            navigate(
+                routes.tilbakekrevingValgtBehandling.createURL({
                     sakId: props.sakId,
                     behandlingId: props.tilbakekreving.id,
-                },
-                () => {
-                    routes.navigateToSakIntroWithMessage(
-                        navigate,
-                        formatMessage('brevForTilbakekreving.sendtTilAttestering'),
-                        props.sakId,
-                    );
-                },
+                    steg: TilbakekrevingSteg.Oppsummering,
+                }),
             );
         });
     };
@@ -195,8 +184,7 @@ const BrevForTilbakekreving = (props: {
                             />
                             <Navigasjonsknapper
                                 neste={{
-                                    loading: RemoteData.isPending(sendTilAttesteringStatus),
-                                    tekst: formatMessage('knapp.sendTilAttestering'),
+                                    loading: RemoteData.isPending(autosaveStatus),
                                 }}
                                 fortsettSenere={{
                                     onClick: () => handleLagreOgFortsettSenereClick(form.getValues(), form.trigger),
@@ -209,10 +197,6 @@ const BrevForTilbakekreving = (props: {
                                     }),
                                 }}
                             />
-
-                            {RemoteData.isFailure(sendTilAttesteringStatus) && (
-                                <ApiErrorAlert error={sendTilAttesteringStatus.error} />
-                            )}
                         </div>
                     </form>
                 ),

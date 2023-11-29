@@ -26,6 +26,10 @@ const stegsInformasjon = (behandling: ManuellTilbakekrevingsbehandling, steg: Ti
             return erTilbakekrevingVedtaksbrevEllerSenere(behandling)
                 ? { erKlikkbar: true, linjeStatus: Linjestatus.Ok }
                 : { erKlikkbar: false, linjeStatus: Linjestatus.Ingenting };
+        case TilbakekrevingSteg.Oppsummering:
+            return erTilbakekrevingVedtaksbrevEllerSenere(behandling)
+                ? { erKlikkbar: true, linjeStatus: Linjestatus.Ok }
+                : { erKlikkbar: false, linjeStatus: Linjestatus.Ingenting };
     }
 };
 

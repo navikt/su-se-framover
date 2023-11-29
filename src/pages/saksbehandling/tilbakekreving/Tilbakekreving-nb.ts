@@ -1,9 +1,10 @@
 export default {
     'tilbakekreving.tittel': 'Tilbakekreving',
 
-    'stegIndikator.vurdering': 'Vurdering',
-    'stegIndikator.brev': 'Brev',
     'stegIndikator.forhandsvarsling': 'Forhåndsvarsel',
+    'stegIndikator.vurdering': 'Vurdering',
+    'stegIndikator.vedtaksbrev': 'Vedtaksbrev',
+    'stegIndikator.oppsummering': 'Oppsummering',
 
     'opprettelse.kanTilbakekreves.ny': 'Start tilbakekrevingsbehandling',
     'opprettelse.kanTilbakekreves.heading': 'Saken har en aktiv kravgrunnlag som kan tilbakekreves',
@@ -33,14 +34,15 @@ export default {
     'forhåndsvarsleTilbakekreving.tidligereSendtForhåndsvarsel.tittel': 'Tidligere sendte forhåndsvarsler',
     'forhåndsvarsleTilbakekreving.tidligereSendtForhåndsvarsel.knapp.seForhåndsvarsel': 'Se forhåndsvarsel',
 
-    'brevForTilbakekreving.tittel': 'Brev',
-    'brevForTilbakekreving.skalSendeBrev': 'Skal det sendes brev?',
+    'brevForTilbakekreving.tittel': 'Vedtaksbrev',
+    'brevForTilbakekreving.skalSendeBrev': 'Skal det sendes vedtaksbrev?',
     'brevForTilbakekreving.skalSendeBrev.ja': 'Ja',
     'brevForTilbakekreving.skalSendeBrev.nei': 'Nei',
     'brevForTilbakekreving.fritekst.label': 'Fritekst til brev',
-    'knapp.sendTilAttestering': 'Send til attestering',
-    'brevForTilbakekreving.sendtTilAttestering':
+
+    'oppsummeringTilbakekreving.sendtTilAttestering':
         'Behandlingen er sendt til attestering og oppgave i Gosys er schedulert til oppdatering',
+    'oppsummeringTilbakekreving.sendTilAttestering': 'Send til attestering',
 
     'visKravgrunnlagMedRefresh.modal.tittel': 'Oppdater kravgrunnlag',
     'visKravgrunnlagMedRefresh.modal.body.text.p1':
