@@ -196,22 +196,31 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
                             retning="vertikal"
                         />
 
-                        <div className={styles.knyttedeBeløpContainer}>
-                            <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoNyUtbetaling')}
-                                verdi={periode.bruttoNyUtbetaling}
-                                retning="vertikal"
-                            />
-                            <OppsummeringPar
-                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoTidligereUtbetalt')}
-                                verdi={periode.bruttoTidligereUtbetalt}
-                                retning="vertikal"
-                            />
-                        </div>
+                        <OppsummeringPar
+                            label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.skattFeilutbetaling')}
+                            verdi={periode.skattFeilutbetaling}
+                            retning="vertikal"
+                        />
+
+                        <OppsummeringPar
+                            label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoNyUtbetaling')}
+                            verdi={periode.bruttoNyUtbetaling}
+                            retning="vertikal"
+                        />
+                        <OppsummeringPar
+                            label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoTidligereUtbetalt')}
+                            verdi={periode.bruttoTidligereUtbetalt}
+                            retning="vertikal"
+                        />
 
                         <OppsummeringPar
                             label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling')}
                             verdi={periode.bruttoFeilutbetaling}
+                            retning="vertikal"
+                        />
+                        <OppsummeringPar
+                            label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.nettoFeilutbetaling')}
+                            verdi={periode.nettoFeilutbetaling}
                             retning="vertikal"
                         />
                     </li>
@@ -317,9 +326,16 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
                                 />
                                 <hr></hr>
                             </div>
+
                             <OppsummeringPar
                                 label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.skatteProsent')}
                                 verdi={periode.skatteProsent}
+                                retning="vertikal"
+                                textSomSmall={props.kompakt}
+                            />
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.skattFeilutbetaling')}
+                                verdi={periode.skattFeilutbetaling}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />
@@ -340,6 +356,12 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
                             <OppsummeringPar
                                 label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling')}
                                 verdi={periode.bruttoFeilutbetaling}
+                                retning="vertikal"
+                                textSomSmall={props.kompakt}
+                            />
+                            <OppsummeringPar
+                                label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.nettoFeilutbetaling')}
+                                verdi={periode.nettoFeilutbetaling}
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />

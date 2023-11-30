@@ -19,21 +19,20 @@
 }
 
 .grunnlagsbeløpContainer {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     margin-bottom: @spacing;
     gap: @spacing-xxs;
 
+    //periode og beløp skal være på egen linje med en hr
     .periodeMedBeløpContainer {
+        grid-column-start: 1;
+        grid-column-end: 3;
+
         > :first-child {
             display: grid;
             grid-template-columns: 1fr 1fr;
         }
-    }
-
-    .knyttedeBeløpContainer {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
     }
 }
 
@@ -42,8 +41,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: @spacing-xxs;
 
-    > :first-child,
-    :nth-child(2) {
+    > :first-child {
         grid-column-start: 1;
         grid-column-end: 3;
     }

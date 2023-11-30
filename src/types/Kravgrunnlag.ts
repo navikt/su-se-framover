@@ -30,8 +30,10 @@ export enum KravgrunnlagStatus {
 export interface Grunnlagsperiode {
     periode: Periode<string>;
     betaltSkattForYtelsesgruppen: string;
-    bruttoTidligereUtbetalt: number;
-    bruttoNyUtbetaling: number;
-    bruttoFeilutbetaling: number;
+    bruttoTidligereUtbetalt: string;
+    bruttoNyUtbetaling: string;
+    bruttoFeilutbetaling: string;
+    nettoFeilutbetaling: string;
     skatteProsent: string;
+    skattFeilutbetaling: string;
 }

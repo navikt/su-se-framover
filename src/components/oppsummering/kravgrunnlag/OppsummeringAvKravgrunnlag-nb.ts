@@ -9,12 +9,12 @@ export default {
     'kravgrunnlag.grunnlagsperiode.tittel': 'Grunnlagsperioder',
     'kravgrunnlag.grunnlagsperiode.periode': 'Periode',
     'kravgrunnlag.grunnlagsperiode.betaltSkattForYtelsesgruppen': 'Betalt skatt for ytelsesgruppen',
-    'kravgrunnlag.grunnlagsperiode.beløp.kode': 'Kode',
-    'kravgrunnlag.grunnlagsperiode.beløp.type': 'Type',
     'kravgrunnlag.grunnlagsperiode.beløp.skatteProsent': 'Skatteprosent',
+    'kravgrunnlag.grunnlagsperiode.beløp.skattFeilutbetaling': 'Skatt feilutbetaling',
     'kravgrunnlag.grunnlagsperiode.beløp.bruttoTidligereUtbetalt': 'Brutto tidligere utbetalt',
     'kravgrunnlag.grunnlagsperiode.beløp.bruttoNyUtbetaling': 'Brutto ny utbetaling',
     'kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling': 'Brutto feilutbetaling',
+    'kravgrunnlag.grunnlagsperiode.beløp.nettoFeilutbetaling': 'Netto feilutbetaling',
 
     'kravgrunnlag.summerteperioder.tittel': 'Summerte perioder',
     'kravgrunnlag.summerteperioder.beløp.summertBetaltSkattForYtelsesgruppen':
