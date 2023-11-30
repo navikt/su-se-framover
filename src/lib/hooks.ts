@@ -156,7 +156,7 @@ export const useAutosave = (callback: () => void, delay = 5000, deps: unknown[] 
 };
 
 /**
- * useAutosaveOnChange er for bruk dersom du vil kalle på en funksjon hvert X sekund, & dersom data har endret på seg
+ * useAutosaveOnChange er for bruk dersom du vil kalle på en funksjon hvert X sekund, & dersom data har endret på seg - Tenk litt som google docs
  *
  * @param data - dataen som sjekkes på om ting har endret seg
  * @param callback - funksjonen som skal kjøres
