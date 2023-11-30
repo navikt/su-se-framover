@@ -83,7 +83,7 @@
         "yup": "^0.29.3"
     },
     "devDependencies": {
-        "@parcel/config-default": "^2.9.1",
+        "@parcel/config-default": "^2.10.3",
         "@parcel/transformer-less": "^2.9.3",
         "@parcel/utils": "^2.10.3",
         "@testing-library/react": "^14.1.2",
