@@ -4,8 +4,8 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { TypeOppholdstillatelse } from '~src/features/søknad/types';

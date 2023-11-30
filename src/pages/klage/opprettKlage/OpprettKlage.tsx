@@ -7,13 +7,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { DatePicker } from '~src/components/datePicker/DatePicker';
 import HentOgVisJournalposter from '~src/components/hentOgVisJournalposter/HentOgVisJournalposter';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as klageActions from '~src/features/klage/klageActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';

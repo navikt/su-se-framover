@@ -2,7 +2,7 @@ import { Checkbox, Label } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import React from 'react';
 
-import { DatePicker } from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { BehandlingssammendragStatus, BehandlingssammendragType } from '~src/types/Behandlingssammendrag';

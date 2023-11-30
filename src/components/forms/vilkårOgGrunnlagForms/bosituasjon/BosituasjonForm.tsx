@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
-import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
+import { FnrInput } from '~src/components/inputs/FnrInput/FnrInput';
+import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
 import personSlice from '~src/features/person/person.slice';
 import sakSliceActions from '~src/features/saksoversikt/sak.slice';
 import { ApiResult } from '~src/lib/hooks';

@@ -2,7 +2,7 @@ import * as DateFns from 'date-fns';
 import { FieldError, FieldErrors, FieldValues } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { FeiloppsummeringFeil } from '~src/components/feiloppsummering/Feiloppsummering';
+import { FeiloppsummeringFeil } from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import { NullablePeriode } from '~src/types/Periode';
 
 import { Nullable } from './types';

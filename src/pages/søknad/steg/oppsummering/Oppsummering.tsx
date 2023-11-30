@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import { useUserContext } from '~src/context/userContext';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
 import { SøknadState } from '~src/features/søknad/søknad.slice';

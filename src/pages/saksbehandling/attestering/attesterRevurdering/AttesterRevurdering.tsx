@@ -12,7 +12,7 @@ import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/Op
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';

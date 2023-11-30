@@ -9,7 +9,7 @@ import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';

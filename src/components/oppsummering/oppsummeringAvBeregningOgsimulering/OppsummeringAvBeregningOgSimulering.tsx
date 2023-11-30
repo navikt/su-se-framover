@@ -4,7 +4,7 @@ import React from 'react';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Beregning } from '~src/types/Beregning';

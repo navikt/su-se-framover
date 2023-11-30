@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
     FradragFormData,
@@ -20,6 +19,7 @@ import {
     fradragSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
+import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvBeregning from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning';
 import OppsummeringAvEksternGrunnlagSkatt from '~src/components/oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 import OppsummeringAvInntektOgPensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';

@@ -4,8 +4,8 @@ import * as React from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { DatePicker } from '~src/components/datePicker/DatePicker';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';

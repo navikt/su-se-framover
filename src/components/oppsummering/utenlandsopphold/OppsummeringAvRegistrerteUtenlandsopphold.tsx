@@ -7,14 +7,14 @@ import React, { useState } from 'react';
 
 import { WarningIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { DatePicker } from '~src/components/datePicker/DatePicker';
 import RegistreringAvUtenlandsoppholdForm from '~src/components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdForm';
 import { registrerUtenlandsoppholdFormDataTilOppdaterRequest } from '~src/components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdFormUtils';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import * as SakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

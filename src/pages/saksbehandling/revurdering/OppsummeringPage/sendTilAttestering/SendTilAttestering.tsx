@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '~src/components/brevInput/BrevInput';
+import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';

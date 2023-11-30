@@ -7,7 +7,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as SakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '~src/components/brevInput/BrevInput';
+import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useApiCall } from '~src/lib/hooks';

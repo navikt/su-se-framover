@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
-import { RangePickerMonth } from '~src/components/datePicker/DatePicker';
+import { RangePickerMonth } from '~src/components/inputs/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';

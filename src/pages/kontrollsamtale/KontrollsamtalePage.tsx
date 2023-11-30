@@ -8,11 +8,11 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { DatePicker } from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';

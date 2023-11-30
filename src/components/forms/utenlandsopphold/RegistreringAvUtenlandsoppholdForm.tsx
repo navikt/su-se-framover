@@ -5,7 +5,7 @@ import * as DateFns from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Control, Controller, useFieldArray, useForm, UseFormReset, UseFormSetValue } from 'react-hook-form';
 
-import { RangePickerDate } from '~src/components/datePicker/DatePicker';
+import { RangePickerDate } from '~src/components/inputs/datePicker/DatePicker';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import {

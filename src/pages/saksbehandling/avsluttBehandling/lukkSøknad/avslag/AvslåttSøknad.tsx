@@ -2,7 +2,7 @@ import React from 'react';
 import { FieldError } from 'react-hook-form';
 
 import * as PdfApi from '~src/api/pdfApi';
-import { BrevInput } from '~src/components/brevInput/BrevInput';
+import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
 import { Nullable } from '~src/lib/types';
 
 import * as styles from './avslåttSøknad.module.less';

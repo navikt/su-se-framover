@@ -14,7 +14,7 @@ import {
 } from 'react-hook-form';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
-import { InputWithFollowText } from '~src/components/inputWithFollowText/InputWithFollowText';
+import { InputWithFollowText } from '~src/components/inputs/inputWithFollowText/InputWithFollowText';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { IkkeVelgbareFradragskategorier, VelgbareFradragskategorier } from '~src/types/Fradrag';

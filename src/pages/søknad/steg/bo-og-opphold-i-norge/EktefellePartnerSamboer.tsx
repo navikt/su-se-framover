@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
-import { FnrInput } from '~src/components/FnrInput/FnrInput';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
+import { FnrInput } from '~src/components/inputs/FnrInput/FnrInput';
 import { EPSFormData } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { keyOf, Nullable } from '~src/lib/types';

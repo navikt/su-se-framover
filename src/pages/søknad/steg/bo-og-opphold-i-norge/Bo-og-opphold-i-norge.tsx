@@ -5,9 +5,9 @@ import * as React from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { DatePicker } from '~src/components/datePicker/DatePicker';
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
+import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { DelerBoligMed, EPSFormData } from '~src/features/søknad/types';

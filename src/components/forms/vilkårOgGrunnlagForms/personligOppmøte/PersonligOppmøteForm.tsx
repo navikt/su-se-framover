@@ -3,7 +3,7 @@ import { Radio, RadioGroup } from '@navikt/ds-react';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 
-import MultiPeriodeVelger from '~src/components/multiPeriodeVelger/MultiPeriodeVelger';
+import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
 import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';

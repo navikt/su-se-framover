@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { hentDokumenter } from '~src/api/dokumentApi';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '~src/components/brevInput/BrevInput';
+import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
 import { avsluttRevurdering } from '~src/features/revurdering/revurderingActions';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

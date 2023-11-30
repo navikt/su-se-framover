@@ -310,9 +310,9 @@ const verdierFormDataValidering = yup
 
 export const formueFormSchema = yup.object<FormueVilkårFormData>({
     formue: yup
-        .array<FormuegrunnlagFormData>(
+        .array(
             yup
-                .object({
+                .object<FormuegrunnlagFormData>({
                     epsFnr: yup.string().nullable().defined(),
                     periode: validerPeriodeTomEtterFom,
                     søkersFormue: verdierFormDataValidering,

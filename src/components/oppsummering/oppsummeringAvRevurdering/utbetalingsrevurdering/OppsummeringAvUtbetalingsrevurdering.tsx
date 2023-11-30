@@ -5,7 +5,7 @@ import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/Op
 import Oppsummeringspanel, {
     Oppsummeringsikon,
     Oppsummeringsfarge,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import { UtbetalingsRevurdering } from '~src/types/Revurdering';
 

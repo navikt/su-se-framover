@@ -11,11 +11,11 @@ import { formatDate, formatPeriode } from '~src/utils/date/dateUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
-import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../../oppsummeringspanel/Oppsummeringspanel';
 import UnderkjenteAttesteringer from '../../underkjenteAttesteringer/UnderkjenteAttesteringer';
 import AldersvurderingAdvarsel from '../OppsummeringAvAldersvurdering/OppsummeringAvAldersvurdering';
 import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
+import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 
 import messages from './OppsummeringAvSøknadsbehandling-nb';

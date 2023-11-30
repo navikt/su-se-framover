@@ -7,7 +7,7 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { NullablePeriode } from '~src/types/Periode';
 
-import { MonthPicker } from '../datePicker/DatePicker';
+import { MonthPicker } from '../inputs/datePicker/DatePicker';
 
 import nb from './formElements-nb';
 import * as styles from './formElements.module.less';

@@ -7,7 +7,7 @@ import { SuccessIcon, WarningIcon } from '~src/assets/Icons';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { KanStansesEllerGjenopptas } from '~src/types/Sak';

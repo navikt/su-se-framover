@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
 import * as reguleringApi from '~src/api/reguleringApi';
-import { MonthPicker } from '~src/components/datePicker/DatePicker';
+import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';

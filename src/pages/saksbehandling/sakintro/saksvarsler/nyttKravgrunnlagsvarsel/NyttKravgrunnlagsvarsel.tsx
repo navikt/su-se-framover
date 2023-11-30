@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
-import { Oppsummeringsfarge } from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+import { Oppsummeringsfarge } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import * as TilbakekrevingActions from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

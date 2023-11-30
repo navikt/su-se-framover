@@ -6,7 +6,7 @@ import React from 'react';
 import Oppsummeringspanel, {
     Oppsummeringsikon,
     Oppsummeringsfarge,
-} from '~src/components/oppsummeringspanel/Oppsummeringspanel';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import { Kravgrunnlag, Grunnlagsperiode } from '~src/types/Kravgrunnlag';
 import { formatDate, formatMonthYear } from '~src/utils/date/dateUtils';

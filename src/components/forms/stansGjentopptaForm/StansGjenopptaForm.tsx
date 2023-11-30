@@ -10,7 +10,7 @@ import { getDateErrorMessage } from '~src/lib/validering';
 import { Gjenopptak, OpprettetRevurderingGrunn, StansAvYtelse } from '~src/types/Revurdering';
 
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
-import { MonthPicker } from '../../datePicker/DatePicker';
+import { MonthPicker } from '../../inputs/datePicker/DatePicker';
 
 import messages from './StansGjenopptaForm-nb';
 import styles from './StansGjenopptaForm.module.less';

@@ -4,7 +4,7 @@ import React from 'react';
 
 import * as søknadApi from '~src/api/søknadApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { DatePicker } from '~src/components/datePicker/DatePicker';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { LukkSøknadBegrunnelse } from '~src/types/Søknad';

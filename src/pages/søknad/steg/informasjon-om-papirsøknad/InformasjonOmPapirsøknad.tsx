@@ -5,8 +5,8 @@ import * as React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { DatePicker } from '~src/components/datePicker/DatePicker';
-import Feiloppsummering from '~src/components/feiloppsummering/Feiloppsummering';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
+import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import { GrunnForPapirinnsending } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
