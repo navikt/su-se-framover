@@ -412,7 +412,16 @@ export default createSlice({
         builder.addCase(tilbakekrevingActions.iverksettTilbakekreving.fulfilled, (state, action) => {
             state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
         });
+        builder.addCase(tilbakekrevingActions.underkjennTilbakekreving.fulfilled, (state, action) => {
+            state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
+        });
         builder.addCase(tilbakekrevingActions.avsluttTilbakekreving.fulfilled, (state, action) => {
+            state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
+        });
+        builder.addCase(tilbakekrevingActions.oppdaterKravgrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
+        });
+        builder.addCase(tilbakekrevingActions.behandlingsnotatTilbakekreving.fulfilled, (state, action) => {
             state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
         });
     },

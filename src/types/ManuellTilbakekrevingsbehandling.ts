@@ -148,6 +148,12 @@ export interface OppdaterKravgrunnlagTilbakekrevingRequest {
     behandlingId: string;
     versjon: number;
 }
+export interface BehandlingsnotatTilbakekrevingRequest {
+    sakId: string;
+    behandlingId: string;
+    versjon: number;
+    notat: string;
+}
 
 export enum TilbakekrevingSteg {
     Forhåndsvarsling = 'forhandsvarsling',

@@ -3,7 +3,6 @@ import { Button, Loader, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
-import { ApiError } from '~src/api/apiClient';
 import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { ApiResult, useAutosaveOnChange } from '~src/lib/hooks';
@@ -17,7 +16,7 @@ const messages = {
 
 const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
     textarea: {
-        name: string;
+        name: Path<U>;
         label: string;
         control: Control<U>;
         value: string;
@@ -28,20 +27,20 @@ const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
     };
     brev?: {
         handleSeBrev: () => void;
-        status: RemoteData.RemoteData<ApiError, null>;
+        status: ApiResult<Blob>;
     };
 }) => {
     const { formatMessage } = useI18n({ messages });
 
     const { isSaving } = useAutosaveOnChange(props.textarea.value, () => {
-        props.save.handleSave();
+        return props.save.handleSave();
     });
 
     return (
         <div className={styles.fritesktOgVisBrevContainer}>
             <Controller
                 control={props.textarea.control}
-                name={props.textarea.name as Path<U>}
+                name={props.textarea.name}
                 render={({ field, fieldState }) => (
                     <Textarea
                         {...field}

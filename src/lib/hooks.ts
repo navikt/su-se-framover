@@ -34,7 +34,7 @@ export function useAsyncActionCreator<Params, Returned>(
         args: Params,
         onSuccess?: (result: Returned) => void | Promise<void>,
         onFailure?: (error: ApiError) => void | Promise<void>,
-    ) => Promise<'ok' | 'error' | 'pending' | void>,
+    ) => Promise<'ok' | 'error' | void>,
     () => void,
 ] {
     const [apiResult, setApiResult] = useState<ApiResult<Returned>>(RemoteData.initial);
@@ -62,7 +62,7 @@ export function useAsyncActionCreator<Params, Returned>(
                     return 'error';
                 }
             }
-            return 'pending';
+            return void 0;
         },
         [apiResult, actionCreator],
     );
@@ -168,20 +168,29 @@ export const useAutosaveOnChange = <T>(data: T, callback: () => void, delay = 50
     const prev = React.useRef(data);
     const live = React.useRef(data);
 
-    useAutosave(() => {
+    useAutosave(async () => {
         if (prev.current !== live.current) {
             prev.current = live.current;
             callback();
-        } else {
-            setIsSaving(false);
         }
     }, delay);
 
     useEffect(() => {
+        const interval = setInterval(() => {
+            if (prev.current !== live.current) {
+                setIsSaving(true);
+            } else {
+                setIsSaving(false);
+            }
+            //tilfeldig tall det blir delt på for at den ikke skal trigges for ofte basert på delayen
+        }, delay / 2);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
-        } else {
-            setIsSaving(true);
         }
         live.current = data;
     }, [data]);

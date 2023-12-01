@@ -12,6 +12,7 @@ import {
     UnderkjennTilbakekrevingRequest,
     VisUtsendtForhåndsvarselTilbakekrevingsbehandlingRequest,
     VurderTilbakekrevingsbehandlingRequest,
+    BehandlingsnotatTilbakekrevingRequest,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -162,6 +163,19 @@ export async function oppdaterKravgrunnlag(
         method: 'POST',
         body: {
             versjon: arg.versjon,
+        },
+    });
+}
+
+export async function behandlingsnotatTilbakekreving(
+    arg: BehandlingsnotatTilbakekrevingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/notat`,
+        method: 'POST',
+        body: {
+            versjon: arg.versjon,
+            notat: arg.notat,
         },
     });
 }

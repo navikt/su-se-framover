@@ -8,11 +8,13 @@ import yup from '~src/lib/validering';
 export interface BrevForTilbakekrevingFormData {
     skalSendeBrev: boolean;
     brevtekst: Nullable<string>;
+    notat: string;
 }
 
 export const eqBrevForTilbakekrevingFormData = struct<BrevForTilbakekrevingFormData>({
     skalSendeBrev: B.Eq,
     brevtekst: eqNullable(S.Eq),
+    notat: S.Eq,
 });
 
 export const brevForTilbakekrevingSchema = yup.object<BrevForTilbakekrevingFormData>({
@@ -24,4 +26,5 @@ export const brevForTilbakekrevingSchema = yup.object<BrevForTilbakekrevingFormD
             then: yup.string().required(),
         })
         .defined(),
+    notat: yup.string(),
 });

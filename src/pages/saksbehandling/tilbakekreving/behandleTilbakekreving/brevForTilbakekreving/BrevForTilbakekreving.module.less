@@ -4,21 +4,15 @@
     margin-bottom: @spacing-s;
 }
 
-.fritesktOgVisBrevContainer {
-    margin-bottom: @spacing;
+.textareaContainer {
+    max-width: 45rem;
 
-    > :not(:last-child) {
-        margin-bottom: @spacing-xs;
+    label {
+        width: 100%;
     }
-}
 
-.textareaLabel {
-    //ganske så statisk verdi som setter loading ikonet på enden av textarea. Må sikkert endres dersom textarea endres
-    width: 400px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.seBrevButton {
-    width: @knappBredde;
+    textarea {
+        width: 100%;
+        max-width: 100%;
+    }
 }
