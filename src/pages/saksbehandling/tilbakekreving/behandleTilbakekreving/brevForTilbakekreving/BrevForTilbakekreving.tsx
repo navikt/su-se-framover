@@ -48,6 +48,7 @@ const BrevForTilbakekreving = (props: {
         defaultValues: {
             skalSendeBrev: props.tilbakekreving.fritekst !== null,
             brevtekst: props.tilbakekreving.fritekst,
+            notat: props.tilbakekreving.notat ?? '',
         },
     });
 
@@ -67,27 +68,29 @@ const BrevForTilbakekreving = (props: {
     };
 
     const handleNesteClick = (data: BrevForTilbakekrevingFormData) => {
-        handleBrevtekstSave(data, () => void 0);
-        handleNotatSave(data);
-
-        if (RemoteData.isSuccess(saveBrevtekstStatus) && RemoteData.isSuccess(saveNotatStatus)) {
-            navigate(
-                routes.tilbakekrevingValgtBehandling.createURL({
-                    sakId: props.sakId,
-                    behandlingId: props.tilbakekreving.id,
-                    steg: TilbakekrevingSteg.Oppsummering,
-                }),
-            );
-        }
+        handleBrevtekstSave(data, () =>
+            handleNotatSave(data, () =>
+                navigate(
+                    routes.tilbakekrevingValgtBehandling.createURL({
+                        sakId: props.sakId,
+                        behandlingId: props.tilbakekreving.id,
+                        steg: TilbakekrevingSteg.Oppsummering,
+                    }),
+                ),
+            ),
+        );
     };
 
-    const handleNotatSave = (data: HandleNotatSave) => {
-        saveNotat({
-            sakId: props.sakId,
-            versjon: saksversjonRef.current,
-            behandlingId: props.tilbakekreving.id,
-            notat: data.notat,
-        });
+    const handleNotatSave = (data: HandleNotatSave, onSuccess: () => void) => {
+        saveNotat(
+            {
+                sakId: props.sakId,
+                versjon: saksversjonRef.current,
+                behandlingId: props.tilbakekreving.id,
+                notat: data.notat,
+            },
+            onSuccess,
+        );
     };
 
     const handleBrevtekstSave = (data: HandleBrevtekstSave, onSuccess: () => void) => {
@@ -169,7 +172,7 @@ const BrevForTilbakekreving = (props: {
                                 save={{
                                     handleSave: () => {
                                         if (form.getValues('notat')) {
-                                            handleNotatSave({ notat: form.getValues('notat') });
+                                            handleNotatSave({ notat: form.getValues('notat') }, () => void 0);
                                         }
                                     },
                                     status: saveNotatStatus,
