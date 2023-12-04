@@ -19,6 +19,7 @@ export interface ManuellTilbakekrevingsbehandling {
     attesteringer: Attestering[];
     erKravgrunnlagUtdatert: boolean;
     avsluttetTidspunkt: string;
+    notat: Nullable<string>;
 }
 
 export interface ForhåndsvarselsInfo {
