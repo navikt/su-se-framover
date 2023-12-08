@@ -61,7 +61,7 @@
         "date-fns": "^2.30.0",
         "dayjs": "^1.11.10",
         "fp-ts": "^2.16.1",
-        "io-ts": "^2.2.20",
+        "io-ts": "^2.2.21",
         "io-ts-types": "^0.5.19",
         "lodash.debounce": "^4.0.8",
         "lodash.isequal": "^4.5.0",
