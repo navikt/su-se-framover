@@ -50,7 +50,7 @@
         "@navikt/ds-css": "5.7.4",
         "@navikt/ds-react": "5.7.4",
         "@reduxjs/toolkit": "^2.0.1",
-        "@sentry/browser": "^7.81.0",
+        "@sentry/browser": "^7.86.0",
         "@sentry/cli": "^2.21.2",
         "@types/jest": "^29.5.10",
         "amplitude-js": "^8.21.9",
