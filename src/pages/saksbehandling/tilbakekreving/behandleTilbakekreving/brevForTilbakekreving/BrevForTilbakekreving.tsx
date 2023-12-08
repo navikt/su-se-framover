@@ -10,7 +10,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
-import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
+import OppsummeringAvVurdering from '~src/components/oppsummering/oppsummeringAvTilbakekrevingsbehandling/vurdering/OppsummeringAvVurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import {
     behandlingsnotatTilbakekreving,
@@ -216,11 +216,9 @@ const BrevForTilbakekreving = (props: {
                     </form>
                 ),
                 right: (
-                    <OppsummeringAvKravgrunnlag
-                        kravgrunnlag={props.tilbakekreving.kravgrunnlag}
-                        basicHeleKravgrunnlag={{
-                            medTittel: true,
-                        }}
+                    <OppsummeringAvVurdering
+                        vurderinger={props.tilbakekreving.vurderinger}
+                        basic={{ medTittel: true }}
                     />
                 ),
             }}

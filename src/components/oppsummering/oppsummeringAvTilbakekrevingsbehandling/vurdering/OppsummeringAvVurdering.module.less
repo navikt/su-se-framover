@@ -1,0 +1,44 @@
+@import '~/src/styles/variables.less';
+
+.eksternInfoContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: @spacing-s;
+    margin-bottom: @spacing;
+}
+
+.perioderContainer {
+    margin-bottom: @spacing-s;
+}
+
+.vurderingsdataContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xxs;
+
+    > :last-child {
+        margin-bottom: @spacing-s;
+    }
+
+    //periode og beløp skal være på egen linje med en hr
+    .detaljeHeading {
+        grid-column-start: 1;
+        grid-column-end: 3;
+
+        > :first-child {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .detalje {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.accordionHeader {
+    > :last-child {
+        width: 100%;
+    }
+}
