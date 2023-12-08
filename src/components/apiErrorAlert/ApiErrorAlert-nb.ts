@@ -139,7 +139,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER]: 'Kan ikke stanste opphørte utbetalinger',
     [ApiErrorCode.KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD]: 'Kan ikke velge både omgjør og oppretthold',
     [ApiErrorCode.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
-        'Kontrollsimuleringen er ulik saksbehandlers simulering',
+        'Kontrollsimuleringen er ulik saksbehandlers simulering. Et klassisk eksempel er at en måned har blitt utbetalt etter saksbehandler simulerte. Underkjenn, slik at saksbehandler kan simulere på nytt.',
     [ApiErrorCode.KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET]:
         'Kryssjekk av utbetalingstidslinje og simulering feilet.',
     [ApiErrorCode.KUN_EN_ADRESSEGRUNN_KAN_VÆRE_UTFYLT]:
