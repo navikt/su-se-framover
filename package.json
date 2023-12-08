@@ -108,7 +108,7 @@
         "less": "^4.2.0",
         "lint-staged": "^15.2.0",
         "mkdirp": "^3.0.1",
-        "nodemon": "^3.0.1",
+        "nodemon": "^3.0.2",
         "parcel": "^2.9.3",
         "path-browserify": "^1.0.1",
         "prettier": "^3.0.3",
