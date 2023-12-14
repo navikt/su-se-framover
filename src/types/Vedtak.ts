@@ -7,9 +7,6 @@ import { Simulering } from './Simulering';
 export interface Vedtak<T extends VedtakType = VedtakType> {
     id: string;
     type: T;
-    sakId: string;
-    saksnummer: string;
-    fnr: string;
     opprettet: string;
     behandlingId: string;
     periode: Nullable<Periode<string>>;
