@@ -103,6 +103,7 @@ export default {
     'datacell.vedtakstype.GJENOPPTAK_AV_YTELSE': 'Gjenopptak',
     'datacell.vedtakstype.AVVIST_KLAGE': 'Klage',
     'datacell.vedtakstype.OVERSENDT': 'Klage',
+    'datacell.vedtakstype.TILBAKEKREVING': 'Tilbakekreving',
 
     'datacell.resultat.SØKNAD': 'Innvilget',
     'datacell.resultat.AVSLAG': 'Avslått',
@@ -113,6 +114,7 @@ export default {
     'datacell.resultat.GJENOPPTAK_AV_YTELSE': '-',
     'datacell.resultat.AVVIST_KLAGE': 'Avvist',
     'datacell.resultat.OVERSENDT': 'Oversendt',
+    'datacell.resultat.TILBAKEKREVING': '-',
 
     ...lukketSøknadBegrunnelser,
 };
