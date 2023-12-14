@@ -293,7 +293,6 @@ const OppsummeringAvVurdering = (props: {
                         </Accordion.Content>
                     </AccordionItem>
                 ))}
-
                 <AccordionItem>
                     <Accordion.Header>
                         {formatMessage('oppsummering.tilbakekrevingsbehandling.vurdering.summert.heading')}

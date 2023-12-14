@@ -19,22 +19,28 @@
     > :last-child {
         margin-bottom: @spacing-s;
     }
+}
 
-    //periode og beløp skal være på egen linje med en hr
-    .detaljeHeading {
-        grid-column-start: 1;
-        grid-column-end: 3;
+.kravgrunnlagsInfoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+}
 
-        > :first-child {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-    }
+//periode og beløp skal være på egen linje med en hr
+.detaljeHeading {
+    grid-column-start: 1;
+    grid-column-end: 3;
 
-    .detalje {
+    > :first-child {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
     }
+}
+
+.detalje {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .accordionHeader {
