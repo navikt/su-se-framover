@@ -52,7 +52,7 @@
         "@reduxjs/toolkit": "^2.0.1",
         "@sentry/browser": "^7.86.0",
         "@sentry/cli": "^2.23.0",
-        "@types/jest": "^29.5.10",
+        "@types/jest": "^29.5.11",
         "amplitude-js": "^8.21.9",
         "autoprefixer": "^10.4.16",
         "classnames": "^2.3.2",
