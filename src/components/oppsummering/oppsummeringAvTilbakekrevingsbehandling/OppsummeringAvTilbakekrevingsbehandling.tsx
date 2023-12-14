@@ -59,7 +59,7 @@ const OppsummeringAvMetaInformasjon = (props: { behandling: ManuellTilbakekrevin
             />
             <OppsummeringPar
                 label={formatMessage('oppsummering.tilbakekrevingsbehandling.sendtTilAttesteringAv')}
-                verdi={props.behandling.sendtTilAttesteringAv}
+                verdi={props.behandling.sendtTilAttesteringAv ?? '-'}
                 retning="vertikal"
             />
         </div>
