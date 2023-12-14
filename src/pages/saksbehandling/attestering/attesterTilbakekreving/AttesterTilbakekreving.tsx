@@ -36,7 +36,7 @@ const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehan
                 versjon: props.saksversjon,
             },
             () => {
-                redirectTilSaksoversikt('status.iverksatt');
+                redirectTilSaksoversikt(formatMessage('status.iverksatt'));
             },
         );
 
