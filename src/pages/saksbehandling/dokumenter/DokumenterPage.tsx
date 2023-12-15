@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
-import { Alert, Button, Heading, Ingress, LinkPanel, Loader, Tag } from '@navikt/ds-react';
+import { Alert, BodyLong, Button, Heading, HelpText, LinkPanel, Loader, Tag } from '@navikt/ds-react';
 import * as React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -25,14 +25,17 @@ const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typ
                 <ÅpentBrev />
             </div>
         </div>
-        <Heading level="1" size="large">
-            {props.formatMessage('undertittel')}
-        </Heading>
-        <Ingress>
+        <div className={styles.undertittel}>
+            <Heading level="1" size="large">
+                {props.formatMessage('undertittel')}
+            </Heading>
+            <HelpText>{props.formatMessage('dokumenter.helpText')}</HelpText>
+        </div>
+        <BodyLong size="large">
             {props.formatMessage('tittel.saksnummer', {
                 saksnummer: props.saksnummer,
             })}
-        </Ingress>
+        </BodyLong>
     </div>
 );
 
