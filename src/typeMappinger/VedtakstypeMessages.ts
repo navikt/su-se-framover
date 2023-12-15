@@ -9,6 +9,7 @@ export const vedtakstypeMessages: { [key in VedtakType]: string } = {
     STANS_AV_YTELSE: 'Stans',
     GJENOPPTAK_AV_YTELSE: 'Gjenopptak',
     AVVIST_KLAGE: 'Klage',
+    TILBAKEKREVING: 'Tilbakekreving',
 };
 
 export const vedtaksResultatMessages: { [key in VedtakType]: string } = {
@@ -20,4 +21,5 @@ export const vedtaksResultatMessages: { [key in VedtakType]: string } = {
     STANS_AV_YTELSE: '-',
     GJENOPPTAK_AV_YTELSE: '-',
     AVVIST_KLAGE: 'Avvist',
+    TILBAKEKREVING: '-',
 };

@@ -1,5 +1,5 @@
 import { Periode } from './Periode';
-import { EndringIYtelseVedtakTyper } from './Vedtak';
+import { EndringIYtelseVedtakTyper, VedtakType } from './Vedtak';
 
 export interface VedtakPåTidslinje {
     periode: Periode<string>;
@@ -7,4 +7,4 @@ export interface VedtakPåTidslinje {
     vedtakType: VedtakPåTidslinjeType;
 }
 
-export type VedtakPåTidslinjeType = EndringIYtelseVedtakTyper;
+export type VedtakPåTidslinjeType = Exclude<EndringIYtelseVedtakTyper, VedtakType.TILBAKEKREVING>;

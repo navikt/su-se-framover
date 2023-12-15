@@ -9,4 +9,5 @@ export const vedtakMessages: { [key in VedtakType]: string } = {
     [VedtakType.GJENOPPTAK_AV_YTELSE]: 'Gjenopptak av ytelse',
     [VedtakType.AVVIST_KLAGE]: 'Avvist klage',
     [VedtakType.REGULERING]: 'Regulering',
+    [VedtakType.TILBAKEKREVING]: 'Tilbakekreving',
 };

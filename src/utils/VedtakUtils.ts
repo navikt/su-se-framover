@@ -1,5 +1,6 @@
 import { Behandling } from '~src/types/Behandling';
 import { Klage } from '~src/types/Klage';
+import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
 import { Sak } from '~src/types/Sak';
 import { Dokumenttilstand, Vedtak, VedtakType } from '~src/types/Vedtak';
@@ -22,10 +23,15 @@ export const getVedtakstype = (v: Vedtak) => {
             return 'stans';
         case VedtakType.SØKNAD:
             return 'søknad';
+        case VedtakType.TILBAKEKREVING:
+            return 'tilbakekreving';
     }
 };
 
-export const getVedtaketsbehandling = (v: Vedtak, sak: Sak): Behandling | Regulering | Klage => {
+export const getVedtaketsbehandling = (
+    v: Vedtak,
+    sak: Sak,
+): Behandling | Regulering | Klage | ManuellTilbakekrevingsbehandling => {
     switch (v.type) {
         case VedtakType.SØKNAD:
         case VedtakType.AVSLAG:
@@ -39,6 +45,8 @@ export const getVedtaketsbehandling = (v: Vedtak, sak: Sak): Behandling | Regule
             return sak.revurderinger.find((r) => r.id === v.behandlingId)!;
         case VedtakType.AVVIST_KLAGE:
             return sak.klager.find((k) => k.id === v.behandlingId)!;
+        case VedtakType.TILBAKEKREVING:
+            return sak.tilbakekrevinger.find((t) => t.id === v.behandlingId)!;
     }
 };
 

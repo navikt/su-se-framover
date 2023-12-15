@@ -20,6 +20,7 @@ import { useI18n } from '~src/lib/i18n';
 import { Behandling } from '~src/types/Behandling';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
+import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -49,12 +50,15 @@ import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsim
 import messages from './OppsummeringAvVedtak-nb';
 import * as styles from './OppsummeringAvVedtak.module.less';
 
-const typeBehandling = (b: Behandling | Klage | Regulering) => {
+const typeBehandling = (b: Behandling | Klage | Regulering | ManuellTilbakekrevingsbehandling) => {
     if ('klagevedtakshistorikk' in b) {
         return 'klage';
     }
     if ('reguleringstype' in b) {
         return 'regulering';
+    }
+    if ('kravgrunnlag' in b) {
+        return 'tilbakekrevingsbehandling';
     }
     if (erBehandlingSøknadsbehandling(b)) {
         return 'søknadsbehandling';
