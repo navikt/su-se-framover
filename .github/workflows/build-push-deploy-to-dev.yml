@@ -9,6 +9,8 @@ on:
 env:
     image: ghcr.io/${{ github.repository }}/su-se-framover:${{ github.sha }}
 
+permissions: { }
+
 jobs:
     build-push-docker-image:
         name: build-push-docker-image
@@ -58,13 +60,15 @@ jobs:
     deploy-to-dev-fss:
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
         name: deploy-to-dev-fss
+        permissions:
+          contents: read
+          id-token: write
         needs: build-push-docker-image
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
             - uses: nais/deploy/actions/deploy@v1
               env:
-                  APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
                   CLUSTER: dev-fss
                   RESOURCE: nais.yml
                   VAR: image=${{ env.image }}
