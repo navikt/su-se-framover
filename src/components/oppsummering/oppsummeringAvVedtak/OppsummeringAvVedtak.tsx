@@ -5,6 +5,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import * as DokumentApi from '~src/api/dokumentApi';
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
+import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
@@ -46,6 +47,9 @@ import {
 } from '~src/utils/VedtakUtils';
 
 import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
+import OppsummeringAvTilbakekrevingsbehandling, {
+    OppsummeringAvTilbakekrevingsbehandlingbrev,
+} from '../oppsummeringAvTilbakekrevingsbehandling/OppsummeringAvTilbakekrevingsbehandling';
 
 import messages from './OppsummeringAvVedtak-nb';
 import * as styles from './OppsummeringAvVedtak.module.less';
@@ -73,6 +77,11 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
     const { formatMessage } = useI18n({ messages });
     const { sak } = useOutletContext<SaksoversiktContext>();
     const [hentDokumenterStatus, hentDokumenter] = useApiCall(DokumentApi.hentDokumenter);
+    //brevet for vedtak på tilbakekreving ligger ikke som et dokument i basen på samme måte som andre vedtak.
+    //og kan derfor ikke hentes gjennom hentDokumenter
+    const [tilbakekrevingsbrevStatus, hentTilbakekrevingsbrev] = useApiCall(
+        forhåndsvisVedtaksbrevTilbakekrevingsbehandling,
+    );
 
     if (!props.vedtakId && !props.vedtak) {
         throw new Error('Feil bruk av komponenten. Send med vedtak-id eller et vedtak');
@@ -127,17 +136,33 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                         <Button
                             className={styles.knapp}
                             variant="secondary"
-                            loading={RemoteData.isPending(hentDokumenterStatus)}
+                            loading={
+                                RemoteData.isPending(hentDokumenterStatus) ||
+                                RemoteData.isPending(tilbakekrevingsbrevStatus)
+                            }
                             onClick={() =>
-                                hentDokumenter({ id: vedtak.id, idType: DokumentIdType.Vedtak }, (dokumenter) =>
-                                    window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
-                                )
+                                behandlingstype === 'tilbakekrevingsbehandling'
+                                    ? hentTilbakekrevingsbrev(
+                                          {
+                                              sakId: (vedtaketsBehandling as ManuellTilbakekrevingsbehandling).sakId,
+                                              behandlingId: vedtaketsBehandling.id,
+                                          },
+                                          (res) => {
+                                              window.open(URL.createObjectURL(res));
+                                          },
+                                      )
+                                    : hentDokumenter({ id: vedtak.id, idType: DokumentIdType.Vedtak }, (dokumenter) =>
+                                          window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
+                                      )
                             }
                         >
                             {formatMessage('knapp.seBrev')}
                         </Button>
                         {RemoteData.isFailure(hentDokumenterStatus) && (
                             <ApiErrorAlert error={hentDokumenterStatus.error} />
+                        )}
+                        {RemoteData.isFailure(tilbakekrevingsbrevStatus) && (
+                            <ApiErrorAlert error={tilbakekrevingsbrevStatus.error} />
                         )}
                     </div>
                 )}
@@ -163,7 +188,19 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                 {behandlingstype === 'klage' && (
                     <PartialOppsummeringAvKlage v={vedtak} k={vedtaketsBehandling as Klage} />
                 )}
+                {behandlingstype === 'tilbakekrevingsbehandling' && (
+                    <OppsummeringAvTilbakekrevingsbehandling
+                        behandling={vedtaketsBehandling as ManuellTilbakekrevingsbehandling}
+                        utenPanel
+                    />
+                )}
             </Oppsummeringspanel>
+            {behandlingstype === 'tilbakekrevingsbehandling' && (
+                <OppsummeringAvTilbakekrevingsbehandlingbrev
+                    behandling={vedtaketsBehandling as ManuellTilbakekrevingsbehandling}
+                    utenVedtaksbrev
+                />
+            )}
 
             <OppsummeringAvBeregningOgSimulering
                 eksterngrunnlagSkatt={

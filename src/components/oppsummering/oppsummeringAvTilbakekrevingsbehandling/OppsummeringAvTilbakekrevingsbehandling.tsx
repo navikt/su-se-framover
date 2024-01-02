@@ -21,24 +21,35 @@ import messages from './OppsummeringAvTilbakekrevingsbehandling-nb';
 import styles from './OppsummeringAvTilbakekrevingsbehandling.module.less';
 import OppsummeringAvVurdering from './vurdering/OppsummeringAvVurdering';
 
-const OppsummeringAvTilbakekrevingsbehandling = (props: { behandling: ManuellTilbakekrevingsbehandling }) => {
+const OppsummeringAvTilbakekrevingsbehandling = (props: {
+    behandling: ManuellTilbakekrevingsbehandling;
+    utenPanel?: boolean;
+}) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <div className={styles.oppsummeringspageContainer}>
-            <Oppsummeringspanel
-                ikon={Oppsummeringsikon.Liste}
-                farge={Oppsummeringsfarge.Lilla}
-                tittel={formatMessage('oppsummering.tilbakekrevingsbehandling.panel.tittel')}
-                classNameChildren={styles.oppsummeringspanel}
-            >
-                <OppsummeringAvMetaInformasjon behandling={props.behandling} />
-
-                <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
-
-                <OppsummeringAvVurdering vurderinger={props.behandling.vurderinger} />
-            </Oppsummeringspanel>
-            <OppsummeringAvBrev behandling={props.behandling} />
+            {props.utenPanel ? (
+                <>
+                    <OppsummeringAvMetaInformasjon behandling={props.behandling} />
+                    <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
+                    <OppsummeringAvVurdering vurderinger={props.behandling.vurderinger} />
+                </>
+            ) : (
+                <>
+                    <Oppsummeringspanel
+                        ikon={Oppsummeringsikon.Liste}
+                        farge={Oppsummeringsfarge.Lilla}
+                        tittel={formatMessage('oppsummering.tilbakekrevingsbehandling.panel.tittel')}
+                        classNameChildren={styles.oppsummeringspanel}
+                    >
+                        <OppsummeringAvMetaInformasjon behandling={props.behandling} />
+                        <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
+                        <OppsummeringAvVurdering vurderinger={props.behandling.vurderinger} />
+                    </Oppsummeringspanel>
+                    <OppsummeringAvTilbakekrevingsbehandlingbrev behandling={props.behandling} />
+                </>
+            )}
         </div>
     );
 };
@@ -66,18 +77,29 @@ const OppsummeringAvMetaInformasjon = (props: { behandling: ManuellTilbakekrevin
     );
 };
 
-const OppsummeringAvBrev = (props: { behandling: ManuellTilbakekrevingsbehandling }) => {
+export const OppsummeringAvTilbakekrevingsbehandlingbrev = (props: {
+    behandling: ManuellTilbakekrevingsbehandling;
+    utenVedtaksbrev?: boolean;
+}) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
         <Oppsummeringspanel
             ikon={Oppsummeringsikon.Email}
             farge={Oppsummeringsfarge.Limegrønn}
-            tittel={formatMessage('oppsummering.tilbakekrevingsbehandling.brev.panel.tittel')}
+            tittel={
+                props.utenVedtaksbrev
+                    ? formatMessage('oppsummering.tilbakekrevingsbehandling.brev.panel.tittel.utenVedtaksbrev')
+                    : formatMessage('oppsummering.tilbakekrevingsbehandling.brev.panel.tittel')
+            }
         >
-            <VisVedtaksbrevKomponent behandling={props.behandling} />
-            <hr />
-            <VisUtsendtForhåndsvarselKomponent behandling={props.behandling} />
+            {!props.utenVedtaksbrev && (
+                <>
+                    <VisVedtaksbrevKomponent behandling={props.behandling} />
+                    <hr />
+                </>
+            )}
+            <VisUtsendtForhåndsvarselKomponent behandling={props.behandling} utenTittel={props.utenVedtaksbrev} />
         </Oppsummeringspanel>
     );
 };
@@ -118,14 +140,19 @@ const VisVedtaksbrevKomponent = (props: { behandling: ManuellTilbakekrevingsbeha
     );
 };
 
-const VisUtsendtForhåndsvarselKomponent = (props: { behandling: ManuellTilbakekrevingsbehandling }) => {
+const VisUtsendtForhåndsvarselKomponent = (props: {
+    behandling: ManuellTilbakekrevingsbehandling;
+    utenTittel?: boolean;
+}) => {
     const { formatMessage } = useI18n({ messages });
 
     return props.behandling.forhåndsvarselsInfo.length > 0 ? (
         <div>
-            <Heading size="small" spacing>
-                {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.heading')}
-            </Heading>
+            {!props.utenTittel && (
+                <Heading size="small" spacing>
+                    {formatMessage('oppsummering.tilbakekrevingsbehandling.brev.forhåndsvarsel.heading')}
+                </Heading>
+            )}
             {props.behandling.forhåndsvarselsInfo.map((info) => (
                 <TidligereSendtForhåndsvarsler
                     key={info.id}

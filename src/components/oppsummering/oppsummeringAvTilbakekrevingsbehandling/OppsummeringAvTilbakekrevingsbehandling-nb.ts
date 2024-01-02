@@ -34,6 +34,7 @@ export default {
     'oppsummering.tilbakekrevingsbehandling.vurdering.summert.nettoSkalTilbakekreve': 'Summert netto skal tilbakekreve',
 
     'oppsummering.tilbakekrevingsbehandling.brev.panel.tittel': 'Forhåndsvarsler & Vedtaksbrev',
+    'oppsummering.tilbakekrevingsbehandling.brev.panel.tittel.utenVedtaksbrev': 'Forhåndsvarsler',
     'oppsummering.tilbakekrevingsbehandling.brev.skalIkkeSendeBrev': 'Skal ikke sende vedtaksbrev',
     'oppsummering.tilbakekrevingsbehandling.brev.vedtaksbrev.heading': 'Vedtaksbrev',
     'oppsummering.tilbakekrevingsbehandling.brev.knapp.seVedtaksbrev': 'Se vedtaksbrev',
