@@ -202,16 +202,18 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                 />
             )}
 
-            <OppsummeringAvBeregningOgSimulering
-                eksterngrunnlagSkatt={
-                    behandlingstype === 'søknadsbehandling'
-                        ? (vedtaketsBehandling as Søknadsbehandling).eksterneGrunnlag.skatt
-                        : null
-                }
-                tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
-                beregning={vedtak.beregning}
-                simulering={vedtak.simulering}
-            />
+            {behandlingstype !== 'tilbakekrevingsbehandling' && (
+                <OppsummeringAvBeregningOgSimulering
+                    eksterngrunnlagSkatt={
+                        behandlingstype === 'søknadsbehandling'
+                            ? (vedtaketsBehandling as Søknadsbehandling).eksterneGrunnlag.skatt
+                            : null
+                    }
+                    tittel={formatMessage('oppsummeringspanel.vedtak.beregningOgSimulering')}
+                    beregning={vedtak.beregning}
+                    simulering={vedtak.simulering}
+                />
+            )}
         </div>
     );
 };
