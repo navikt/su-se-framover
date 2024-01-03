@@ -199,7 +199,10 @@ const BrevForTilbakekreving = (props: {
                                 })()}
                             <Navigasjonsknapper
                                 neste={{
-                                    loading: RemoteData.isPending(saveBrevtekstStatus),
+                                    loading: form.formState.isSubmitting
+                                        ? RemoteData.isPending(saveBrevtekstStatus) ||
+                                          RemoteData.isPending(saveNotatStatus)
+                                        : RemoteData.isPending(saveBrevtekstStatus),
                                 }}
                                 fortsettSenere={{
                                     onClick: () => handleLagreOgFortsettSenereClick(form.getValues(), form.trigger),
