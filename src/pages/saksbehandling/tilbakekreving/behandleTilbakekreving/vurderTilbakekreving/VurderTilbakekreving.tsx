@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading, Panel, Radio, RadioGroup } from '@navikt/ds-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, UseFormTrigger, useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,7 +38,6 @@ const VurderTilbakekreving = (props: {
     saksversjon: number;
     tilbakekreving: ManuellTilbakekrevingsbehandling;
 }) => {
-    const fieldName = 'grunnlagsperioder';
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(vurderTilbakekrevingsbehandling);
@@ -66,11 +65,29 @@ const VurderTilbakekreving = (props: {
             ? { grunnlagsperioder: defaultValuesFraBehandling }
             : { grunnlagsperioder: defaultValuesFraKravgunnlag };
 
+    console.log(initialValues);
     const form = useForm<VurderTilbakekrevingFormData>({
         defaultValues: initialValues,
         resolver: yupResolver(vurderTilbakekrevingSchema),
     });
+
+    const fieldName = 'grunnlagsperioder';
     const { fields } = useFieldArray({ name: fieldName, control: form.control });
+
+    //Oppdatering av kravgrunnlaget får ikke React hook form sin usefieldArray til å rendre på nytt
+    //når initialValues endrer seg. Derfor må vi gjøre det manuelt her.
+    useEffect(() => {
+        //fjerner id fra fields så innholdet blir likt initialValues
+        const fieldsUtenId = fields.map((periode) => ({
+            periode: periode.periode,
+            vurdering: periode.vurdering,
+        }));
+
+        //sammenligner array innholdet med objekter som en lang streng
+        if (JSON.stringify(fieldsUtenId) !== JSON.stringify(initialValues.grunnlagsperioder)) {
+            form.reset(initialValues);
+        }
+    }, [initialValues]);
 
     const save = (data: VurderTilbakekrevingFormData, onSuccess: () => void) => {
         lagre(
