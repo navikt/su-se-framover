@@ -24,6 +24,7 @@ import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import StartGRegulering from './components/StartGRegulering';
 import { SøknadTabellDrift } from './components/SøknadTabell';
+import SendUtbetalingslinjer from './components/utbetalingslinjer/SendUtbetalingslinjer';
 import * as styles from './index.module.less';
 
 enum Knapp {
@@ -295,6 +296,7 @@ const Drift = () => {
                     >
                         Fiks vedtak
                     </Button>
+                    <SendUtbetalingslinjer />
                 </div>
                 {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">
