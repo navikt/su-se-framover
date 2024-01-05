@@ -113,6 +113,7 @@ export enum ApiErrorCode {
     KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER = 'kan_ikke_stanse_opphørte_utbetalinger',
     KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD = 'kan_ikke_velge_både_omgjør_og_oppretthold',
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
+    KRAVGRUNNLAG_SAMSVARER_IKKE_MED_VURDERINGER = 'kravgrunnlag_samsvarer_ikke_med_vurderinger',
     KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET = 'kryssjekk_utbetalingstidslinjer_simulering_feilet',
     KUN_EN_ADRESSEGRUNN_KAN_VÆRE_UTFYLT = 'kun_en_adressegrunn_kan_være_utfylt',
     KUNNE_IKKE_BEKREFTE_JOURNALPOSTER = 'kunne_ikke_bekrefte_journalposter',

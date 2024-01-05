@@ -140,6 +140,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KAN_IKKE_VELGE_BÅDE_OMGJØR_OG_OPPRETTHOLD]: 'Kan ikke velge både omgjør og oppretthold',
     [ApiErrorCode.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
         'Kontrollsimuleringen er ulik saksbehandlers simulering. Et klassisk eksempel er at en måned har blitt utbetalt etter saksbehandler simulerte. Underkjenn, slik at saksbehandler kan simulere på nytt.',
+    [ApiErrorCode.KRAVGRUNNLAG_SAMSVARER_IKKE_MED_VURDERINGER]:
+        'Periodene i kravgrunnlaget samsvarer ikke med vurderingene. Dersom behandling har nylig oppdatert kravgrunnlaget, kan du prøve å refreshe',
     [ApiErrorCode.KRYSSJEKK_UTBETALINGSTIDSLINJE_SIMULERING_FEILET]:
         'Kryssjekk av utbetalingstidslinje og simulering feilet.',
     [ApiErrorCode.KUN_EN_ADRESSEGRUNN_KAN_VÆRE_UTFYLT]:
