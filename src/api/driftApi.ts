@@ -115,49 +115,6 @@ export async function ferdigstillVedtak(args: { vedtakId: string }): Promise<Api
 export async function sendNyeUtbetalingslinjer(args: {
     utbetalingslinjer: string;
 }): Promise<ApiClientResult<NyeUtbetalingslinjerResponse>> {
-    return new Promise((resolve) => {
-        resolve({
-            status: 'ok',
-            statusCode: 200,
-            data: {
-                success: [
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                ],
-                failed: [
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                    { utbetalingId: 'b50063ed-58c6-49f9-b9bf-b4bbd32fcae6' },
-                ],
-            },
-        });
-    });
-
     return apiClient({
         url: `/okonomi/utbetalingslinjer`,
         method: 'POST',
