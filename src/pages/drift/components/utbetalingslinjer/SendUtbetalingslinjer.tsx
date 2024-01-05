@@ -1,46 +1,46 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, HGrid, Heading, Label, Modal, Textarea } from '@navikt/ds-react';
+import { BodyShort, Button, HGrid, Heading, Label, Modal, Textarea } from '@navikt/ds-react';
 import React, { useState } from 'react';
 
-import { sendNyeUtbetalingslinjer } from '~src/api/driftApi';
+import { sendUtbetalingsIder } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useApiCall } from '~src/lib/hooks';
 import { NyeUtbetalingslinjerResponse } from '~src/types/Utbetaling';
 
 import styles from '../../index.module.less';
 
-const SendUtbetalingslinjer = () => {
-    const [vilSendeUtbetalingslinjer, setVilSendeUtbetalingslinjer] = useState<boolean>(false);
+const SendUtbetalingsIder = () => {
+    const [vilSendeUtbetalingsIder, setVilSendeUtbetalingsIder] = useState<boolean>(false);
     return (
         <div>
             <Button
                 variant="secondary"
                 className={styles.knapp}
                 type="button"
-                onClick={() => setVilSendeUtbetalingslinjer(true)}
+                onClick={() => setVilSendeUtbetalingsIder(true)}
             >
-                Send nye utbetalingslinjer
+                Send utbetalingsIder på nytt
             </Button>
-            {vilSendeUtbetalingslinjer && (
-                <VilSendeUtbetalingslinjerModal
-                    open={vilSendeUtbetalingslinjer}
-                    onClose={() => setVilSendeUtbetalingslinjer(false)}
+            {vilSendeUtbetalingsIder && (
+                <VilSendeUtbetalingsIderModal
+                    open={vilSendeUtbetalingsIder}
+                    onClose={() => setVilSendeUtbetalingsIder(false)}
                 />
             )}
         </div>
     );
 };
 
-const VilSendeUtbetalingslinjerModal = (props: { open: boolean; onClose: () => void }) => {
-    const [sendNyeLinjerStatus, sendNyeLinjer] = useApiCall(sendNyeUtbetalingslinjer);
-    const [utbetalingslinjer, setUtbetalingslinjer] = useState<string>('');
+const VilSendeUtbetalingsIderModal = (props: { open: boolean; onClose: () => void }) => {
+    const [sendIderStatus, sendIder] = useApiCall(sendUtbetalingsIder);
+    const [utbetalingsIder, setUtbetalingsIder] = useState<string>('');
 
     return (
         <Modal
             open={props.open}
             onClose={props.onClose}
             header={{
-                heading: 'Send nye utbetalingslinjer',
+                heading: 'Send utbetalingsIder på nytt',
                 size: 'medium',
             }}
         >
@@ -48,18 +48,18 @@ const VilSendeUtbetalingslinjerModal = (props: { open: boolean; onClose: () => v
                 <Textarea
                     label={'Utbetalingslinjer - CSV'}
                     minRows={10}
-                    onChange={(v) => setUtbetalingslinjer(v.target.value)}
+                    onChange={(v) => setUtbetalingsIder(v.target.value)}
                 />
-                <Button onClick={() => sendNyeLinjer({ utbetalingslinjer })}>Send nye linjer</Button>
+                <Button onClick={() => sendIder({ utbetalingslinjer: utbetalingsIder })}>Send utbetalingsIder</Button>
 
-                {RemoteData.isSuccess(sendNyeLinjerStatus) && <NyeLinjerSuccess linjer={sendNyeLinjerStatus.value} />}
-                {RemoteData.isFailure(sendNyeLinjerStatus) && <ApiErrorAlert error={sendNyeLinjerStatus.error} />}
+                {RemoteData.isSuccess(sendIderStatus) && <UtbetalingsIderResponse linjer={sendIderStatus.value} />}
+                {RemoteData.isFailure(sendIderStatus) && <ApiErrorAlert error={sendIderStatus.error} />}
             </Modal.Body>
         </Modal>
     );
 };
 
-const NyeLinjerSuccess = (props: { linjer: NyeUtbetalingslinjerResponse }) => {
+const UtbetalingsIderResponse = (props: { linjer: NyeUtbetalingslinjerResponse }) => {
     return (
         <div>
             <Heading size="small">Resultat</Heading>
@@ -76,7 +76,10 @@ const NyeLinjerSuccess = (props: { linjer: NyeUtbetalingslinjerResponse }) => {
                     <Label>Failed</Label>
                     <ul>
                         {props.linjer.failed.map((it) => (
-                            <li key={it.utbetalingId}>{it.utbetalingId}</li>
+                            <li key={it.utbetalingId}>
+                                <BodyShort>{it.utbetalingId}</BodyShort>
+                                <BodyShort style={{ marginLeft: '1rem' }}>{it.feilmelding}</BodyShort>
+                            </li>
                         ))}
                     </ul>
                 </div>
@@ -85,4 +88,4 @@ const NyeLinjerSuccess = (props: { linjer: NyeUtbetalingslinjerResponse }) => {
     );
 };
 
-export default SendUtbetalingslinjer;
+export default SendUtbetalingsIder;

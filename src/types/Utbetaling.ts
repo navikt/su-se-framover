@@ -17,4 +17,5 @@ export interface UtbetalingslinjeSuccessResponse {
 
 export interface UtbetalingslinjeErrorResponse {
     utbetalingId: string;
+    feilmelding: string;
 }

@@ -1,4 +1,4 @@
-import { NyeUtbetalingslinjerResponse } from '~src/types/Utbetaling';
+import { NyeUtbetalingslinjerResponse as UtbetalingsIderResponse } from '~src/types/Utbetaling';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -112,9 +112,10 @@ export async function ferdigstillVedtak(args: { vedtakId: string }): Promise<Api
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }
-export async function sendNyeUtbetalingslinjer(args: {
+
+export async function sendUtbetalingsIder(args: {
     utbetalingslinjer: string;
-}): Promise<ApiClientResult<NyeUtbetalingslinjerResponse>> {
+}): Promise<ApiClientResult<UtbetalingsIderResponse>> {
     return apiClient({
         url: `/okonomi/utbetalingslinjer`,
         method: 'POST',
