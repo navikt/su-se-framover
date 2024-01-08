@@ -85,7 +85,7 @@
     "devDependencies": {
         "@parcel/config-default": "^2.9.1",
         "@parcel/transformer-less": "^2.9.3",
-        "@parcel/utils": "^2.10.3",
+        "@parcel/utils": "^2.11.0",
         "@testing-library/react": "^14.1.2",
         "@types/amplitude-js": "^8.16.5",
         "@types/lodash.debounce": "^4.0.9",
