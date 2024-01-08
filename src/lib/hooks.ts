@@ -172,25 +172,16 @@ export const useAutosaveOnChange = <T>(data: T, callback: () => void, delay = 50
         if (prev.current !== live.current) {
             prev.current = live.current;
             callback();
+        } else {
+            setIsSaving(false);
         }
     }, delay);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (prev.current !== live.current) {
-                setIsSaving(true);
-            } else {
-                setIsSaving(false);
-            }
-            //tilfeldig tall det blir delt på for at den ikke skal trigges for ofte basert på delayen
-        }, delay / 2);
-
-        return () => clearInterval(interval);
-    }, []);
-
-    useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
+        } else {
+            setIsSaving(true);
         }
         live.current = data;
     }, [data]);

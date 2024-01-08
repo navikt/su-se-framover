@@ -64,13 +64,13 @@ export const finnNesteTilbakekrevingsstegForSaksbehandling = (t: ManuellTilbakek
             return Routes.tilbakekrevingValgtBehandling.createURL({
                 sakId: t.sakId,
                 behandlingId: t.id,
-                steg: TilbakekrevingSteg.Vedtaksbrev,
+                steg: TilbakekrevingSteg.Oppsummering,
             });
         case TilbakekrevingsbehandlingStatus.UNDERKJENT:
             return Routes.tilbakekrevingValgtBehandling.createURL({
                 sakId: t.sakId,
                 behandlingId: t.id,
-                steg: TilbakekrevingSteg.Vedtaksbrev,
+                steg: TilbakekrevingSteg.Oppsummering,
             });
         case TilbakekrevingsbehandlingStatus.TIL_ATTESTERING:
         case TilbakekrevingsbehandlingStatus.IVERKSATT:
