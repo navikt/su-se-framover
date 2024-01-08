@@ -8,14 +8,12 @@ import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Vedtakstidslinje from '~src/components/vedtakstidslinje/VedtaksTidslinje';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { useUserContext } from '~src/context/userContext';
 import { useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
 import { KlageStatus } from '~src/types/Klage';
-import { LoggedInUser } from '~src/types/LoggedInUser';
 import { Sakstype } from '~src/types/Sak';
 import { erKlageAvsluttet, erKlageÅpen } from '~src/utils/klage/klageUtils';
 import {
@@ -49,7 +47,6 @@ enum NyBehandling {
 
 const Sakintro = () => {
     const props = useOutletContext<SaksoversiktContext>();
-    const user = useUserContext();
 
     const { formatMessage } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
@@ -108,7 +105,6 @@ const Sakintro = () => {
                 <div className={styles.headerKnapper}>
                     {harVedtak && props.sak.sakstype !== Sakstype.Alder && (
                         <NyBehandlingVelger
-                            user={user}
                             sakId={props.sak.id}
                             kanRevurdere={iverksatteInnvilgedeSøknader.length > 0}
                         />
@@ -182,7 +178,7 @@ const Sakintro = () => {
     );
 };
 
-const NyBehandlingVelger = (props: { user: LoggedInUser; sakId: string; kanRevurdere: boolean }) => {
+const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => {
     const { formatMessage } = useI18n({ messages });
     const [anchorEl, setAnchorEl] = useState<Nullable<HTMLElement>>(null);
 
@@ -236,15 +232,13 @@ const NyBehandlingVelger = (props: { user: LoggedInUser; sakId: string; kanRevur
                     >
                         {formatMessage('popover.option.klage')}
                     </LinkAsButton>
-                    {!props.user.isProd && (
-                        <LinkAsButton
-                            className={styles.popoverOption}
-                            variant="tertiary"
-                            href={nyBehandlingTilRoute(NyBehandling.TILBAKEKREVING)}
-                        >
-                            {formatMessage('popover.option.tilbakekreving')}
-                        </LinkAsButton>
-                    )}
+                    <LinkAsButton
+                        className={styles.popoverOption}
+                        variant="tertiary"
+                        href={nyBehandlingTilRoute(NyBehandling.TILBAKEKREVING)}
+                    >
+                        {formatMessage('popover.option.tilbakekreving')}
+                    </LinkAsButton>
                 </div>
             </Popover>
         </div>
