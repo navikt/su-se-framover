@@ -1,11 +1,11 @@
 import yup from '~src/lib/validering';
 
-export interface SkattForm {
+export interface SkattFormData {
     fra: string;
     til: string;
 }
 
-export const skattFormSchema = yup.object<SkattForm>({
+export const skattFormSchema = yup.object<SkattFormData>({
     fra: yup
         .string()
         .test({

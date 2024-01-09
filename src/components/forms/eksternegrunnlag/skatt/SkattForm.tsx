@@ -7,17 +7,20 @@ import { useI18n } from '~src/lib/i18n';
 
 import messages from './SkattForm-nb';
 import styles from './SkattForm.module.less';
-import { SkattForm, skattFormSchema } from './SkattFormUtils';
+import { SkattFormData, skattFormSchema } from './SkattFormUtils';
 
+/**
+ * Har kun ansvar for å søke opp skattegrunnlag for en gitt periode.
+ */
 const SkattForm = () => {
     const { formatMessage } = useI18n({ messages });
 
-    const form = useForm<SkattForm>({
+    const form = useForm<SkattFormData>({
         defaultValues: { fra: '', til: '' },
         resolver: yupResolver(skattFormSchema),
     });
 
-    const onSubmit = (values: SkattForm) => {
+    const onSubmit = (values: SkattFormData) => {
         console.log('submit', values);
     };
 
