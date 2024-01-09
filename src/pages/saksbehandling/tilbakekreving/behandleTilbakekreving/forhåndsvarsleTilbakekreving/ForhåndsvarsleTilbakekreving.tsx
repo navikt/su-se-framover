@@ -137,6 +137,8 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                 }}
                                 fortsettSenere={{
                                     tekst: formatMessage('forhåndsvarsleTilbakekreving.navigering.fortsettSenere'),
+                                    onClick: () =>
+                                        navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
                                 }}
                                 tilbake={{
                                     url: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),

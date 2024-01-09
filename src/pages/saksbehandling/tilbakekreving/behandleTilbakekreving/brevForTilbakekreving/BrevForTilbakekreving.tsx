@@ -56,31 +56,6 @@ const BrevForTilbakekreving = (props: {
         saksversjonRef.current = props.saksversjon;
     }, [props.saksversjon]);
 
-    const handleLagreOgFortsettSenereClick = async (
-        data: BrevForTilbakekrevingFormData,
-        trigger: UseFormTrigger<BrevForTilbakekrevingFormData>,
-    ) => {
-        await trigger().then((isValid) => {
-            if (isValid) {
-                handleNesteClick(data);
-            }
-        });
-    };
-
-    const handleNesteClick = (data: BrevForTilbakekrevingFormData) => {
-        handleBrevtekstSave(data, () =>
-            handleNotatSave(data, () =>
-                navigate(
-                    routes.tilbakekrevingValgtBehandling.createURL({
-                        sakId: props.sakId,
-                        behandlingId: props.tilbakekreving.id,
-                        steg: TilbakekrevingSteg.Oppsummering,
-                    }),
-                ),
-            ),
-        );
-    };
-
     const handleNotatSave = (data: HandleNotatSave, onSuccess: () => void) => {
         saveNotat(
             {
@@ -102,6 +77,33 @@ const BrevForTilbakekreving = (props: {
                 brevtekst: data.skalSendeBrev ? data.brevtekst : null,
             },
             onSuccess,
+        );
+    };
+
+    const handleSave = (data: BrevForTilbakekrevingFormData, onSuccess: () => void) => {
+        handleBrevtekstSave(data, () => handleNotatSave(data, () => onSuccess()));
+    };
+
+    const handleLagreOgFortsettSenereClick = async (
+        data: BrevForTilbakekrevingFormData,
+        trigger: UseFormTrigger<BrevForTilbakekrevingFormData>,
+    ) => {
+        await trigger().then((isValid) => {
+            if (isValid) {
+                handleSave(data, () => navigate(routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })));
+            }
+        });
+    };
+
+    const handleNesteClick = (data: BrevForTilbakekrevingFormData) => {
+        handleSave(data, () =>
+            navigate(
+                routes.tilbakekrevingValgtBehandling.createURL({
+                    sakId: props.sakId,
+                    behandlingId: props.tilbakekreving.id,
+                    steg: TilbakekrevingSteg.Oppsummering,
+                }),
+            ),
         );
     };
 
