@@ -153,7 +153,7 @@ export interface BehandlingsnotatTilbakekrevingRequest {
     sakId: string;
     behandlingId: string;
     versjon: number;
-    notat: string;
+    notat: Nullable<string>;
 }
 
 export enum TilbakekrevingSteg {

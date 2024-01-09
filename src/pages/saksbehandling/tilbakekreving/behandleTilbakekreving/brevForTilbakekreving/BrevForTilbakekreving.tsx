@@ -29,7 +29,7 @@ import styles from './BrevForTilbakekreving.module.less';
 import { BrevForTilbakekrevingFormData, brevForTilbakekrevingSchema } from './BrevForTilbakekrevingUtils';
 
 type HandleBrevtekstSave = { skalSendeBrev: boolean; brevtekst: Nullable<string> };
-type HandleNotatSave = { notat: string };
+type HandleNotatSave = { notat: Nullable<string> };
 
 const BrevForTilbakekreving = (props: {
     sakId: string;
@@ -172,11 +172,8 @@ const BrevForTilbakekreving = (props: {
                                     value: form.watch('notat') ?? '',
                                 }}
                                 save={{
-                                    handleSave: () => {
-                                        if (form.getValues('notat')) {
-                                            handleNotatSave({ notat: form.getValues('notat') }, () => void 0);
-                                        }
-                                    },
+                                    handleSave: () =>
+                                        handleNotatSave({ notat: form.getValues('notat') || null }, () => void 0),
                                     status: saveNotatStatus,
                                 }}
                             />
