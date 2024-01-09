@@ -62,7 +62,7 @@ const BrevForTilbakekreving = (props: {
                 sakId: props.sakId,
                 versjon: saksversjonRef.current,
                 behandlingId: props.tilbakekreving.id,
-                notat: data.notat,
+                notat: data.notat || null,
             },
             onSuccess,
         );
