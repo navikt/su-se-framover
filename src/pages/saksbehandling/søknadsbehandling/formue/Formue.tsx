@@ -6,6 +6,7 @@ import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { Behandlingstype, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
+import SkattForm from '~src/components/forms/eksternegrunnlag/skatt/SkattForm';
 import FormueForm from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueForm';
 import {
     FormueVilkårFormData,
@@ -117,6 +118,9 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
                         />
+                        -----------------------------
+                        <SkattForm />
+                        -----------------------------
                         <HentOgVisSkattegrunnlagForSøknadsbehandling søknadsbehandling={props.behandling} />
                     </div>
                 ),
