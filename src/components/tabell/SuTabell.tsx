@@ -13,6 +13,9 @@ interface Props<Kolonner extends Record<string, string>> {
 type ValueOf<T> = T[keyof T];
 export type AriaSortVerdi = 'ascending' | 'descending';
 
+/**
+ * En variant av aksels tabell, der vi har lagt til funksjonalitet for hvilken retning & kolonne skal sorteres etter.
+ */
 const SuTabell = <Kolonner extends Record<string, string>>(props: Props<Kolonner>) => {
     const [sortVerdi, setSortVerdi] = useState<AriaSortVerdi>('descending');
     const [sortertKolonne, setSortertKolonne] = useState<ValueOf<Kolonner>>(

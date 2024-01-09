@@ -8,6 +8,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import * as DokumentApi from '~src/api/dokumentApi';
+import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -43,6 +45,7 @@ type VedtakEllerOversendtKlage = Vedtak | Klage;
 type VedtakOgOversendteKlager = Array<Vedtak | Klage>;
 
 const isOversendtKlage = (v: Vedtak | Klage): v is Klage => !('periode' in v);
+const isVedtak = (v: VedtakEllerOversendtKlage): v is Vedtak => 'periode' in v;
 
 const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakOgOversendteKlager }) => {
     const { formatMessage } = useI18n({ messages });
@@ -115,6 +118,12 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                     <Table.Body>
                         {sorterTabell(props.vedtakOgOversendteKlager, sortertKolonne, sortVerdi).map((vedtak) => {
                             const [hentDokumenterStatus, hentDokumenter] = useApiCall(DokumentApi.hentDokumenter);
+                            //brevet for vedtak på tilbakekreving ligger ikke som et dokument i basen på samme måte som andre vedtak.
+                            //og kan derfor ikke hentes gjennom hentDokumenter
+                            const [tilbakekrevingsbrevStatus, hentTilbakekrevingsbrev] = useApiCall(
+                                forhåndsvisVedtaksbrevTilbakekrevingsbehandling,
+                            );
+
                             return (
                                 <Table.Row key={vedtak.id}>
                                     <Table.DataCell>
@@ -145,7 +154,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                             {formatMessage('dataCell.seOppsummering')}
                                         </Link>
                                     </Table.DataCell>
-                                    <Table.DataCell>
+                                    <Table.DataCell className={styles.vedtaksbrevDataCell}>
                                         {!isOversendtKlage(vedtak) && skalDokumentIkkeGenereres(vedtak) && (
                                             <BodyShort>{formatMessage('datacell.brev.skalIkkeGenerere')}</BodyShort>
                                         )}
@@ -158,22 +167,40 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                                 className={styles.seBrevButton}
                                                 variant="secondary"
                                                 size={'small'}
-                                                loading={RemoteData.isPending(hentDokumenterStatus)}
+                                                loading={
+                                                    RemoteData.isPending(hentDokumenterStatus) ||
+                                                    RemoteData.isPending(tilbakekrevingsbrevStatus)
+                                                }
                                                 onClick={() => {
-                                                    hentDokumenter(
-                                                        {
-                                                            id: vedtak.id,
-                                                            idType: isOversendtKlage(vedtak)
-                                                                ? DokumentIdType.Klage
-                                                                : DokumentIdType.Vedtak,
-                                                        },
-                                                        (dokumenter) =>
-                                                            window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
-                                                    );
+                                                    if (isVedtak(vedtak)) {
+                                                        hentTilbakekrevingsbrev(
+                                                            {
+                                                                sakId: props.sakId,
+                                                                behandlingId: vedtak.behandlingId,
+                                                            },
+                                                            (res) => window.open(URL.createObjectURL(res)),
+                                                        );
+                                                    } else {
+                                                        hentDokumenter(
+                                                            {
+                                                                id: vedtak.id,
+                                                                idType: isOversendtKlage(vedtak)
+                                                                    ? DokumentIdType.Klage
+                                                                    : DokumentIdType.Vedtak,
+                                                            },
+                                                            (dokumenter) =>
+                                                                window.open(
+                                                                    URL.createObjectURL(getBlob(dokumenter[0])),
+                                                                ),
+                                                        );
+                                                    }
                                                 }}
                                             >
                                                 <EnvelopeClosedIcon />
                                             </Button>
+                                        )}
+                                        {RemoteData.isFailure(tilbakekrevingsbrevStatus) && (
+                                            <ApiErrorAlert size="small" error={tilbakekrevingsbrevStatus.error} />
                                         )}
                                     </Table.DataCell>
                                 </Table.Row>
