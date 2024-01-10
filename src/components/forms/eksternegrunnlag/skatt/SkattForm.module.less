@@ -1,5 +1,11 @@
 @import '~/src/styles/variables.less';
 
+.formContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
 .yearRangeInputsContainer {
     display: flex;
     gap: @spacing;

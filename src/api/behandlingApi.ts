@@ -1,6 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { SkattegrunnlagSøknadsbehandlingRequest, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -97,12 +97,15 @@ export async function underkjenn(arg: {
     });
 }
 
-export async function hentNySkattegrunnlag(arg: {
-    sakId: string;
-    behandlingId: string;
-}): Promise<ApiClientResult<Søknadsbehandling>> {
+export async function hentNySkattegrunnlag(
+    arg: SkattegrunnlagSøknadsbehandlingRequest,
+): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/samletSkattegrunnlag`,
-        method: 'GET',
+        method: 'POST',
+        body: {
+            fra: arg.fra,
+            til: arg.til,
+        },
     });
 }

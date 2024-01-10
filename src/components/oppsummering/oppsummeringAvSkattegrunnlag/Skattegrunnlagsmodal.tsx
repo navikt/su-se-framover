@@ -23,7 +23,7 @@ const SeSkattegrunnlag = (props: { eksternGrunnlagSkatt: EksternGrunnlagSkatt })
                 {formatMessage('seSkattegrunnlag.knapp.seSkatt')}
             </Button>
 
-            <Modal ref={ref} width={800} header={{ heading: formatMessage('seSkattegrunnlag.modal.tittel') }}>
+            <Modal ref={ref} width={1000} header={{ heading: formatMessage('seSkattegrunnlag.modal.tittel') }}>
                 <Modal.Body>
                     <OppsummeringAvEksternGrunnlagSkatt eksternGrunnlagSkatt={props.eksternGrunnlagSkatt} />
                 </Modal.Body>

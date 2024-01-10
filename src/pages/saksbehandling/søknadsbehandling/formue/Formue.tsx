@@ -15,11 +15,12 @@ import {
     formueVilkårFormTilRequest,
     eqFormueVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
-import HentOgVisSkattegrunnlagForSøknadsbehandling from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
+import OppsummeringAvEksternGrunnlagSkatt from '~src/components/oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
+import { hentNySkattegrunnlag } from '~src/features/SøknadsbehandlingActions';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
@@ -35,6 +36,7 @@ import styles from './Formue.module.less';
 const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFormuegrunnlag);
+    const [nyStatus, ny] = useAsyncActionCreator(hentNySkattegrunnlag);
 
     const initialValues = getInitialFormueVilkårOgDelvisBosituasjon(
         props.behandling.søknad.søknadInnhold,
@@ -118,10 +120,29 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
                         />
-                        -----------------------------
-                        <SkattForm />
-                        -----------------------------
-                        <HentOgVisSkattegrunnlagForSøknadsbehandling søknadsbehandling={props.behandling} />
+
+                        <SkattForm
+                            medTittel
+                            onSøk={{
+                                fn: (formValues) =>
+                                    ny({
+                                        sakId: props.sakId,
+                                        behandlingId: props.behandling.id,
+                                        fra: formValues.fra,
+                                        til: formValues.til,
+                                    }),
+                                onSøkStatus: nyStatus,
+                            }}
+                            defaultValues={{
+                                fra: props.behandling.eksterneGrunnlag.skatt?.søkers.årSpurtFor.fra.toString(),
+                                til: props.behandling.eksterneGrunnlag.skatt?.søkers.årSpurtFor.til.toString(),
+                            }}
+                        />
+                        {props.behandling.eksterneGrunnlag.skatt && (
+                            <OppsummeringAvEksternGrunnlagSkatt
+                                eksternGrunnlagSkatt={props.behandling.eksterneGrunnlag.skatt}
+                            />
+                        )}
                     </div>
                 ),
             }}

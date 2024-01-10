@@ -18,9 +18,11 @@ export const skattFormSchema = yup.object<SkattFormData>({
                 return parseInt(value, 10) >= 2020;
             },
         })
+        .length(4, 'Fra år må være 4 siffer')
         .defined(),
     til: yup
         .string()
+        .length(4, 'Til år må være 4 siffer')
         .test({
             name: 'til',
             message: 'Til år må være lik fra år, eller etter',
