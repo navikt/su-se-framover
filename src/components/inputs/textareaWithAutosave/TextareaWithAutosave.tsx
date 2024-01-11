@@ -71,7 +71,7 @@ const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
                         className={styles.seBrevButton}
                         variant="secondary"
                         onClick={props.brev?.handleSeBrev}
-                        loading={props.brev && RemoteData.isPending(props.brev.status)}
+                        loading={props.brev && (RemoteData.isPending(props.brev.status) || isSaving)}
                     >
                         {formatMessage('knapp.seBrev')}
                     </Button>
