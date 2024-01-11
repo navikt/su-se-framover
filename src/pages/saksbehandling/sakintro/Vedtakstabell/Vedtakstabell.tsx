@@ -21,7 +21,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, KlageStatus } from '~src/types/Klage';
-import { Vedtak } from '~src/types/Vedtak';
+import { Vedtak, VedtakType } from '~src/types/Vedtak';
 import { formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import {
@@ -172,7 +172,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                                     RemoteData.isPending(tilbakekrevingsbrevStatus)
                                                 }
                                                 onClick={() => {
-                                                    if (isVedtak(vedtak)) {
+                                                    if (isVedtak(vedtak) && vedtak.type === VedtakType.TILBAKEKREVING) {
                                                         hentTilbakekrevingsbrev(
                                                             {
                                                                 sakId: props.sakId,
