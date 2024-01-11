@@ -138,6 +138,7 @@ const BrevForTilbakekreving = (props: {
                                         label: formatMessage('brevForTilbakekreving.fritekst.label'),
                                         control: form.control,
                                         value: form.watch('brevtekst') ?? '',
+                                        description: [formatMessage('brevForTilbakekreving.fritekst.description')],
                                     }}
                                     save={{
                                         handleSave: () => {
@@ -170,6 +171,10 @@ const BrevForTilbakekreving = (props: {
                                     label: formatMessage('brevForTilbakekreving.behandlingsnotat.label'),
                                     control: form.control,
                                     value: form.watch('notat') ?? '',
+                                    description: [
+                                        formatMessage('brevForTilbakekreving.behandlingsnotat.description.p1'),
+                                        formatMessage('brevForTilbakekreving.behandlingsnotat.description.p2'),
+                                    ],
                                 }}
                                 save={{
                                     handleSave: () =>

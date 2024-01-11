@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Loader, Textarea } from '@navikt/ds-react';
+import { BodyShort, Button, Loader, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
@@ -20,6 +20,7 @@ const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
         label: string;
         control: Control<U>;
         value: string;
+        description?: string[];
     };
     save: {
         handleSave: () => void;
@@ -43,20 +44,43 @@ const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
                 name={props.textarea.name}
                 render={({ field, fieldState }) => (
                     <Textarea
+                        className={styles.textarea}
                         {...field}
+                        description={
+                            props.textarea.description && (
+                                <div className={styles.textareaLabel}>
+                                    <div>
+                                        {props.textarea.description.map((desc) => (
+                                            <BodyShort key={desc}>{desc}</BodyShort>
+                                        ))}
+                                    </div>
+                                    <div>
+                                        {isSaving ? <Loader size="small" /> : null}
+                                        {!isSaving && RemoteData.isSuccess(props.save.status) ? (
+                                            <SuccessIcon width={20} />
+                                        ) : null}
+                                        {!isSaving && RemoteData.isFailure(props.save.status) ? (
+                                            <ErrorIcon width={20} />
+                                        ) : null}
+                                    </div>
+                                </div>
+                            )
+                        }
                         minRows={5}
                         label={
                             <div className={styles.textareaLabel}>
                                 {props.textarea.label}
-                                <div>
-                                    {isSaving ? <Loader size="small" /> : null}
-                                    {!isSaving && RemoteData.isSuccess(props.save.status) ? (
-                                        <SuccessIcon width={20} />
-                                    ) : null}
-                                    {!isSaving && RemoteData.isFailure(props.save.status) ? (
-                                        <ErrorIcon width={20} />
-                                    ) : null}
-                                </div>
+                                {!props.textarea.description && (
+                                    <div>
+                                        {isSaving ? <Loader size="small" /> : null}
+                                        {!isSaving && RemoteData.isSuccess(props.save.status) ? (
+                                            <SuccessIcon width={20} />
+                                        ) : null}
+                                        {!isSaving && RemoteData.isFailure(props.save.status) ? (
+                                            <ErrorIcon width={20} />
+                                        ) : null}
+                                    </div>
+                                )}
                             </div>
                         }
                         value={field.value ?? ''}

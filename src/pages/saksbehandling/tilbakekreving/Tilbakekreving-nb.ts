@@ -39,7 +39,10 @@ export default {
     'brevForTilbakekreving.skalSendeBrev.ja': 'Ja',
     'brevForTilbakekreving.skalSendeBrev.nei': 'Nei',
     'brevForTilbakekreving.fritekst.label': 'Fritekst til brev',
+    'brevForTilbakekreving.fritekst.description': 'Brevet blir lagret automatisk',
     'brevForTilbakekreving.behandlingsnotat.label': 'Behandlingsnotat',
+    'brevForTilbakekreving.behandlingsnotat.description.p1': 'Behandlingsnotatet blir lagret automatisk',
+    'brevForTilbakekreving.behandlingsnotat.description.p2': 'Behandlingsnotatet blir ikke journalført ',
 
     'oppsummeringTilbakekreving.sendtTilAttestering':
         'Behandlingen er sendt til attestering og oppgave i Gosys er schedulert til oppdatering',

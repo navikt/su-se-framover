@@ -8,6 +8,13 @@
     }
 }
 
+.textarea {
+    //description på text area får ikke bredden sin satt likt .textareaLabel - konsekvenser av denne er ikke helt kjent...
+    > :nth-child(2) {
+        width: 100%;
+    }
+}
+
 .textareaLabel {
     //ganske så statisk verdi som setter loading ikonet på enden av textarea. Må sikkert endres dersom textarea endres
     width: 100%;
