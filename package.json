@@ -48,7 +48,7 @@
         "@hookform/resolvers": "^3.1.0",
         "@navikt/aksel-icons": "^5.12.4",
         "@navikt/ds-css": "5.11.4",
-        "@navikt/ds-react": "5.11.4",
+        "@navikt/ds-react": "5.13.0",
         "@reduxjs/toolkit": "^2.0.1",
         "@sentry/browser": "^7.92.0",
         "@sentry/cli": "^2.25.0",
