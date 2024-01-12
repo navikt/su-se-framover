@@ -53,6 +53,12 @@ const SkattForm = <T extends ApiResult<unknown>>(props: {
                             {...field}
                             error={fieldState.error?.message}
                             autoComplete="off"
+                            onChange={(e) => {
+                                field.onChange(e);
+                                if (e.target.value.length === 4) {
+                                    form.setValue('til', e.target.value);
+                                }
+                            }}
                         />
                     )}
                 />
