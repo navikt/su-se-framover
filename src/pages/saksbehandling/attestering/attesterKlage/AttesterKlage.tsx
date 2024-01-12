@@ -53,21 +53,15 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
     const avvisCallbackOgStatus = () => {
         return {
             callback: () =>
-                avvis(
-                    {
-                        sakId: props.sakId,
-                        klageId: props.klage.id,
-                    },
-                    () => {
-                        fetchSak({ sakId: props.sakId }, () => {
-                            Routes.navigateToSakIntroWithMessage(
-                                navigate,
-                                formatMessage('notification.avvist'),
-                                props.sakId,
-                            );
-                        });
-                    },
-                ),
+                avvis({ sakId: props.sakId, klageId: props.klage.id }, () => {
+                    fetchSak({ sakId: props.sakId }, () => {
+                        Routes.navigateToSakIntroWithMessage(
+                            navigate,
+                            formatMessage('notification.avvist'),
+                            props.sakId,
+                        );
+                    });
+                }),
             status: avvisStatus,
         };
     };
