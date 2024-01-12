@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { hentReguleringsstatus } from '~src/api/reguleringApi';
 import { Person as PersonIkon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { HentOgVisSkattegrunnlag } from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
+import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';

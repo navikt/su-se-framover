@@ -1,0 +1,19 @@
+@import '~/src/styles/variables.less';
+
+.formContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
+.yearRangeInputsContainer {
+    display: flex;
+    gap: @spacing;
+    align-items: flex-start;
+
+    > :last-child {
+        position: relative;
+        height: 20px;
+        top: 45px;
+    }
+}

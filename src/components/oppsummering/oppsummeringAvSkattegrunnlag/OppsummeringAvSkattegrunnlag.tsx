@@ -23,14 +23,20 @@ import styles from './OppsummeringAvSkattegrunnlag.module.less';
 const OppsummeringAvSkattegrunnlag = (props: { skattegrunnlag: Skattegrunnlag }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.årsgrunnlagMedTittelContainer}>
-            <OppsummeringPar label={formatMessage('skattegrunnlag.fnr')} verdi={props.skattegrunnlag.fnr} />
-            <OppsummeringPar
-                label={formatMessage('skattegrunnlag.tidspunktHentet')}
-                verdi={formatDateTime(props.skattegrunnlag.hentetTidspunkt)}
-            />
+        <div>
+            <div className={styles.skattegrunnlagsInfoContainer}>
+                <OppsummeringPar label={formatMessage('skattegrunnlag.fnr')} verdi={props.skattegrunnlag.fnr} />
+                <OppsummeringPar
+                    label={formatMessage('skattegrunnlag.tidspunktHentet')}
+                    verdi={formatDateTime(props.skattegrunnlag.hentetTidspunkt)}
+                />
+                <hr />
+            </div>
             {props.skattegrunnlag.årsgrunnlag.map((å) => (
-                <OppsummeringAvÅrsgrunnlag key={å.inntektsår} årsgrunnlag={å} />
+                <div key={å.inntektsår} className={styles.årsgrunnlagContainer}>
+                    <OppsummeringAvÅrsgrunnlag årsgrunnlag={å} />
+                    <hr />
+                </div>
             ))}
         </div>
     );

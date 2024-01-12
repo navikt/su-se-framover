@@ -49,3 +49,10 @@ export enum SaksbehandlingMenyvalg {
     Vedtaksbrev = 'vedtaksbrev',
     Oppsummering = 'oppsummering',
 }
+
+export interface SkattegrunnlagSøknadsbehandlingRequest {
+    sakId: string;
+    behandlingId: string;
+    fra: string;
+    til: string;
+}

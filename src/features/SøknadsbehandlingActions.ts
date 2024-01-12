@@ -5,7 +5,7 @@ import * as behandlingApi from '~src/api/behandlingApi';
 import { Nullable } from '~src/lib/types';
 import { createApiCallAsyncThunk } from '~src/redux/utils';
 import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { SkattegrunnlagSøknadsbehandlingRequest, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const startBehandling = createAsyncThunk<
     Søknadsbehandling,
@@ -86,7 +86,7 @@ export const attesteringUnderkjenn = createAsyncThunk<
 
 export const hentNySkattegrunnlag = createAsyncThunk<
     Søknadsbehandling,
-    { sakId: string; behandlingId: string },
+    SkattegrunnlagSøknadsbehandlingRequest,
     { rejectValue: ApiError }
 >('behandling/skatt/ny', async (arg, thunkApi) => {
     const res = await behandlingApi.hentNySkattegrunnlag(arg);
