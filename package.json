@@ -83,9 +83,9 @@
         "yup": "^0.29.3"
     },
     "devDependencies": {
-        "@parcel/config-default": "^2.9.1",
-        "@parcel/transformer-less": "^2.9.3",
-        "@parcel/utils": "^2.11.0",
+        "@parcel/config-default": "2.9.3",
+        "@parcel/transformer-less": "2.9.3",
+        "@parcel/utils": "2.9.3",
         "@testing-library/react": "^14.1.2",
         "@types/amplitude-js": "^8.16.5",
         "@types/lodash.debounce": "^4.0.9",
@@ -109,7 +109,7 @@
         "lint-staged": "^15.2.0",
         "mkdirp": "^3.0.1",
         "nodemon": "^3.0.2",
-        "parcel": "^2.9.3",
+        "parcel": "2.9.3",
         "path-browserify": "^1.0.1",
         "prettier": "^3.0.3",
         "react-test-renderer": "^18.2.0",
