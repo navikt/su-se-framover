@@ -97,7 +97,6 @@ export const AttesteringsForm = (props: Props) => {
                     render={({ field, fieldState }) => (
                         <RadioGroup
                             {...field}
-                            className={styles.radiogroup}
                             legend={formatMessage('beslutning.label')}
                             error={fieldState.error?.message}
                             value={field.value ?? ''}
@@ -133,7 +132,7 @@ export const AttesteringsForm = (props: Props) => {
                         {formatMessage('knapp.bekreft')}
                     </Button>
                 </div>
-                <div className={styles.apiErrorContainer}>
+                <div>
                     {RemoteData.isFailure(props.iverksett.status) && (
                         <ApiErrorAlert error={props.iverksett.status.error} />
                     )}

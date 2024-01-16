@@ -7,7 +7,7 @@ import { getSakvarsler, SakvarseltypeMedContext } from '~src/utils/SakUtils';
 
 import FnrEndringsvarsel from './fnrEndringsvarsel/FnrEndringsvarsel';
 import NyttKravgrunnlagsvarsel from './nyttKravgrunnlagsvarsel/NyttKravgrunnlagsvarsel';
-import styles from './Saksvarsler.module.less';
+import * as styles from './Saksvarsler.module.less';
 
 const Saksvarsler = (props: { sak: Sak; søker: Person }) => {
     const varsler = getSakvarsler({ sak: props.sak, søker: props.søker });

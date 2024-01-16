@@ -30,7 +30,7 @@ import {
 } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './SendTilAttestering-nb';
-import styles from './SendTilAttestering.module.less';
+import * as styles from './SendTilAttestering.module.less';
 
 export interface BrevvalgFormData {
     valg: Valg;

@@ -13,7 +13,7 @@ import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
 import { MonthPicker } from '../../inputs/datePicker/DatePicker';
 
 import messages from './StansGjenopptaForm-nb';
-import styles from './StansGjenopptaForm.module.less';
+import * as styles from './StansGjenopptaForm.module.less';
 import { StansGjenopptaFormData, isStans } from './StansGjenopptaFormUtils';
 
 interface Props<T extends StansGjenopptaFormData = StansGjenopptaFormData> {

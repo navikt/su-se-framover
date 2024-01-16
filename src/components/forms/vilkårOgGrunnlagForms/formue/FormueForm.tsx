@@ -23,7 +23,7 @@ import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import styles from './formueForm.module.less';
+import * as styles from './formueForm.module.less';
 import {
     FormueVilkårFormData,
     nyFormuegrunnlagMedEllerUtenPeriode,
@@ -70,11 +70,7 @@ const FormueForm = (props: Props) => {
                                     control={props.form.control}
                                     name={`${nameAndIdx}.måInnhenteMerInformasjon`}
                                     render={({ field }) => (
-                                        <Checkbox
-                                            className={styles.henteMerInfoCheckbox}
-                                            {...field}
-                                            checked={field.value}
-                                        >
+                                        <Checkbox {...field} checked={field.value}>
                                             {formatMessage('formue.checkbox.henteMerInfo')}
                                         </Checkbox>
                                     )}

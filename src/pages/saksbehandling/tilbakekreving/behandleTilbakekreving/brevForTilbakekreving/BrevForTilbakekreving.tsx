@@ -25,7 +25,7 @@ import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types
 
 import messages from '../../Tilbakekreving-nb';
 
-import styles from './BrevForTilbakekreving.module.less';
+import * as styles from './BrevForTilbakekreving.module.less';
 import { BrevForTilbakekrevingFormData, brevForTilbakekrevingSchema } from './BrevForTilbakekrevingUtils';
 
 type HandleBrevtekstSave = { skalSendeBrev: boolean; brevtekst: Nullable<string> };
@@ -187,7 +187,6 @@ const BrevForTilbakekreving = (props: {
                         <div>
                             <Feiloppsummering
                                 tittel={formatMessage('vurderTilbakekreving.feiloppsummering')}
-                                className={styles.feiloppsummering}
                                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                             />

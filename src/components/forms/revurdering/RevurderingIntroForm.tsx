@@ -10,7 +10,7 @@ import { NullablePeriode } from '~src/types/Periode';
 import { gyldigeÅrsaker, InformasjonSomRevurderes } from '~src/types/Revurdering';
 
 import messages from './RevurderingIntroForm-nb';
-import styles from './RevurderingIntroForm.module.less';
+import * as styles from './RevurderingIntroForm.module.less';
 import { RevurderingIntroFormData, RevurderingIntroFormProps } from './RevurderingIntroFormUtils';
 
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
@@ -89,7 +89,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                         ))}
                                     </div>
                                 </CheckboxGroup>
-                                <div className={styles.informasjonsContainer}>
+                                <div>
                                     {field.value.includes(InformasjonSomRevurderes.Bosituasjon) && (
                                         <Alert variant="info">{formatMessage('info.bosituasjon')}</Alert>
                                     )}

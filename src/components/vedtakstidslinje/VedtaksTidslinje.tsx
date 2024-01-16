@@ -9,7 +9,7 @@ import { parseNonNullableIsoDateOnly } from '~src/utils/date/dateUtils';
 
 import OppsummeringAvVedtak from '../oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak';
 
-import styles from './vedtaksTidslinje.module.less';
+import * as styles from './vedtaksTidslinje.module.less';
 
 const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] }) => {
     const divRef = useRef<HTMLDivElement>(null);
@@ -63,7 +63,7 @@ const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] })
                 arrow={false}
             >
                 <Popover.Content>
-                    <div className={styles.popoverContent}>
+                    <div>
                         {vedtakIdPåKlikketPeriode && <OppsummeringAvVedtak vedtakId={vedtakIdPåKlikketPeriode} />}
                     </div>
                 </Popover.Content>

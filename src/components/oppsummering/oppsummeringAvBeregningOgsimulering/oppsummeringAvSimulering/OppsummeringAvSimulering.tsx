@@ -156,7 +156,7 @@ const PeriodeOppsummering = (props: { oppsummering: SimuleringsperiodeOppsummeri
 const OppsummeringYtelse = (props: { oppsummering: SimuleringsperiodeOppsummering }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <div className={styles.ytelseOppsummering}>
+        <div>
             <Heading size="small" level="1">
                 {formatMessage('kontooversikt.tittel.ytelse')}
             </Heading>

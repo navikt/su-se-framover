@@ -31,7 +31,7 @@ import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 import sharedI18n from '../sharedI18n-nb';
 
 import messages from './formue-nb';
-import styles from './Formue.module.less';
+import * as styles from './Formue.module.less';
 
 const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });

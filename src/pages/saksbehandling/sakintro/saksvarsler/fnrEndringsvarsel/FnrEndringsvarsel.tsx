@@ -11,7 +11,7 @@ import messages from '~src/pages/saksbehandling/saksoversikt-nb';
 import { Person } from '~src/types/Person';
 import { Sak } from '~src/types/Sak';
 
-import styles from './FnrEndringsvarsel.module.less';
+import * as styles from './FnrEndringsvarsel.module.less';
 
 const FnrEndringsvarsel = (props: { sak: Sak; søker: Person }) => {
     const { formatMessage } = useI18n({ messages });

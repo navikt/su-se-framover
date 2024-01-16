@@ -18,7 +18,7 @@ import { useI18n } from '~src/lib/i18n';
 import { NullablePeriode } from '~src/types/Periode';
 
 import messages from './multiPeriodeVelger-nb';
-import styles from './multiPeriodeVelger.module.less';
+import * as styles from './multiPeriodeVelger.module.less';
 
 export type PartialName<T> = `${keyof T & string}.${number}`;
 
@@ -102,7 +102,7 @@ const MultiPeriodeVelger = <T extends FieldValues, U extends FieldArray<T>>(prop
                 })}
             </ul>
             {!props.begrensTilEnPeriode && (
-                <div className={styles.nyPeriodeKnappContainer}>
+                <div>
                     <Button
                         variant="secondary"
                         type="button"

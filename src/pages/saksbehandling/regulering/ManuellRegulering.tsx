@@ -27,7 +27,7 @@ import { formatPeriode, parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
 import messages from './manuellRegulering-nb';
-import styles from './manuellRegulering.module.less';
+import * as styles from './manuellRegulering.module.less';
 
 interface FormData {
     uføre: Uføregrunnlag[];
@@ -205,11 +205,7 @@ const ManuellRegulering = () => {
                             {RemoteData.isFailure(regulerStatus) && <ApiErrorAlert error={regulerStatus.error} />}
                             <div className={styles.knapper}>
                                 <BackButton />
-                                <Button
-                                    type="submit"
-                                    className={styles.submit}
-                                    loading={RemoteData.isPending(regulerStatus)}
-                                >
+                                <Button type="submit" loading={RemoteData.isPending(regulerStatus)}>
                                     {formatMessage('knapper.send')}
                                 </Button>
                             </div>

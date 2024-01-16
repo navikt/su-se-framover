@@ -12,7 +12,7 @@ import { Sakstype } from '~src/types/Sak';
 import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
 
 import messages from './HentOgVisSkattegrunnlag-nb';
-import styles from './HentOgVisSkattegrunnlag.module.less';
+import * as styles from './HentOgVisSkattegrunnlag.module.less';
 import { FrioppslagFormData, frioppslagSchema } from './HentOgVisSkattegrunnlagUtils';
 
 export const HentOfVisSkattegrunnlagForFrioppslag = () => {

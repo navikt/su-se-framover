@@ -8,7 +8,7 @@ import * as Routes from '~src/lib/routes';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './Attestering-nb';
-import styles from './Attestering.module.less';
+import * as styles from './Attestering.module.less';
 import AttesterKlage from './attesterKlage/AttesterKlage';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
 import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';
@@ -26,7 +26,7 @@ const Attestering = () => {
 
     if (!søknadsbehandling && !revurdering && !klage && !tilbakekreving) {
         return (
-            <div className={styles.fantIkkevedtakFeilContainer}>
+            <div>
                 <Alert variant="error">
                     {formatMessage('feil.fantIkkebehandlingMedId')} {urlParams.behandlingId}
                 </Alert>

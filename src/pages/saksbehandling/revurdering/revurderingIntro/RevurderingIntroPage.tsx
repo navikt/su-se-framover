@@ -7,7 +7,7 @@ import * as Routes from '~src/lib/routes';
 import { compareUtbetalingsperiode } from '~src/types/Utbetalingsperiode';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
-import sharedStyles from '../revurdering.module.less';
+import * as sharedStyles from '../revurdering.module.less';
 
 import OppdaterRevurdering from './OppdaterRevurdering';
 import OpprettRevurdering from './OpprettRevurdering';

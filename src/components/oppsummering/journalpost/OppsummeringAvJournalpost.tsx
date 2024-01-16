@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Journalpost } from '~src/types/Journalpost';
 
-import styles from './OppsummeringAvJournalpost.module.less';
+import * as styles from './OppsummeringAvJournalpost.module.less';
 
 const OppsummeringAvJournalpost = (props: { journalpost: Journalpost }) => {
     return (

@@ -32,7 +32,7 @@ import Navigasjonsknapper from '../../../../components/navigasjonsknapper/Naviga
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './RevurderingBeregnOgsimuler-nb';
-import styles from './RevurderingBeregnOgSimuler.module.less';
+import * as styles from './RevurderingBeregnOgSimuler.module.less';
 import { BeregnOgSimulerFormData, beregnOgSimulerSchema } from './RevurderingBeregnOgSimulerUtils';
 
 const RevurderingBeregnOgSimuler = (props: {
@@ -151,7 +151,7 @@ const RevurderingBeregnOgSimuler = (props: {
                     {formatMessage('beregnOgSimuler.ny')}
                 </Button>
                 {needsBeregning && (
-                    <div className={styles.advarselKjørBeregning}>
+                    <div>
                         <Alert variant="warning">{formatMessage('alert.advarsel.kjørBeregningFørst')}</Alert>
                     </div>
                 )}

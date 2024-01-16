@@ -21,7 +21,7 @@ import {
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
 
-import styles from './åpneBehandlinger.module.less';
+import * as styles from './åpneBehandlinger.module.less';
 
 export const ÅpneBehandlinger = () => {
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentÅpneBehandlinger);

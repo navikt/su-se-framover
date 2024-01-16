@@ -133,10 +133,10 @@ const RevurderingSeksjonerWrapper = (props: {
     return pipe(
         gjeldendeData,
         RemoteData.fold(
-            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
-            () => <SpinnerMedTekst className={styles.henterInnholdContainer} />,
+            () => <SpinnerMedTekst />,
+            () => <SpinnerMedTekst />,
             (err) => (
-                <div className={styles.content}>
+                <div>
                     <ApiErrorAlert error={err} />
                     <Button variant="secondary" onClick={() => navigate(seksjoner[0].linjer.at(-1)!.url)}>
                         {formatMessage('knapp.tilbake')}
@@ -329,7 +329,7 @@ const MåVurdereAlleStegModal = (props: {
                     {formatMessage('modal.tittel')}
                 </Heading>
             </Modal.Header>
-            <Modal.Body className={styles.modalContainer}>
+            <Modal.Body>
                 <div>
                     <Heading size="small" spacing>
                         {formatMessage('modal.måVurdereAlleSteg')}

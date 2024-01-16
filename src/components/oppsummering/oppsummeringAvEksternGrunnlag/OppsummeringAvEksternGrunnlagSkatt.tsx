@@ -7,7 +7,7 @@ import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 
 import OppsummeringAvSkattegrunnlag from '../oppsummeringAvSkattegrunnlag/OppsummeringAvSkattegrunnlag';
 
-import styles from './OppsummeringAvEksterneGrunnlagSkatt.module.less';
+import * as styles from './OppsummeringAvEksterneGrunnlagSkatt.module.less';
 import messages from './OppsummeringAvEksternGrunnlagSkatt-nb';
 
 const OppsummeringAvEksternGrunnlagSkatt = (props: {

@@ -12,7 +12,7 @@ import { formatPeriode } from '~src/utils/date/dateUtils';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
-import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import * as styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
 const OppsummeringAvUførevilkår = (props: { uførevilkår: Nullable<UføreVilkår> }) => {
     const { formatMessage } = useI18n({ messages });

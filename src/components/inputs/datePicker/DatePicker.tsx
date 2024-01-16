@@ -14,7 +14,7 @@ import { Nullable } from '~src/lib/types';
 import { NullablePeriode } from '~src/types/Periode';
 
 import messages from './DatePicker-nb';
-import styles from './datePicker.module.less';
+import * as styles from './datePicker.module.less';
 
 export const DatePicker = (props: {
     label: string;

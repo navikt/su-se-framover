@@ -11,7 +11,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 
-import styles from './DevTools.module.less';
+import * as styles from './DevTools.module.less';
 
 const DevToolsPage = () => {
     const [nySøknadModalÅpen, setNySøknadModalÅpen] = useState<boolean>(false);

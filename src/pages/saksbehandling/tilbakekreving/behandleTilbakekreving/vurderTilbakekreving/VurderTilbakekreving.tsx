@@ -26,7 +26,7 @@ import { formatDate } from '~src/utils/date/dateUtils';
 
 import messages from '../../Tilbakekreving-nb';
 
-import styles from './VurderTilbakekreving.module.less';
+import * as styles from './VurderTilbakekreving.module.less';
 import {
     VurderTilbakekrevingFormData,
     eqVurderTilbakekrevingFormData,
@@ -174,7 +174,6 @@ const VurderTilbakekreving = (props: {
                         <div>
                             <Feiloppsummering
                                 tittel={formatMessage('vurderTilbakekreving.feiloppsummering')}
-                                className={styles.feiloppsummering}
                                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                             />

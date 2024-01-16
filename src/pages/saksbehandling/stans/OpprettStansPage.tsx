@@ -13,7 +13,7 @@ import * as revurderingActions from '~src/features/revurdering/revurderingAction
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 
-import styles from './StansStyles.module.less';
+import * as styles from './StansStyles.module.less';
 
 const OpprettStansPage = (props: { sakId: string }) => {
     const navigate = useNavigate();

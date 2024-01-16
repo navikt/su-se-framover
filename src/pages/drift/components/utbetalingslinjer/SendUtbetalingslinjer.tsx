@@ -7,7 +7,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useApiCall } from '~src/lib/hooks';
 import { NyeUtbetalingslinjerResponse } from '~src/types/Utbetaling';
 
-import styles from '../../index.module.less';
+import * as styles from '../../index.module.less';
 
 const SendUtbetalingsIder = () => {
     const [vilSendeUtbetalingsIder, setVilSendeUtbetalingsIder] = useState<boolean>(false);

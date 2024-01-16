@@ -15,7 +15,7 @@ import SeSkattegrunnlag from '../oppsummeringAvSkattegrunnlag/Skattegrunnlagsmod
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
-import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import * as styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
 const OppsummeringAvFormueVilkår = (props: {
     eksternGrunnlagSkatt?: Nullable<EksternGrunnlagSkatt>;

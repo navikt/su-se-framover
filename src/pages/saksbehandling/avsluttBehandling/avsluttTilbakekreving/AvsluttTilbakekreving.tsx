@@ -15,7 +15,7 @@ import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevi
 import messages from '../avsluttBehandling-nb';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
-import styles from './AvsluttTilbakekreving.module.less';
+import * as styles from './AvsluttTilbakekreving.module.less';
 import { AvsluttTilbakekrevingFormData, avsluttTilbakekrevingSchema } from './AvsluttTilbakekrevingUtils';
 
 const AvsluttTilbakekreving = (props: { saksversjon: number; behandling: ManuellTilbakekrevingsbehandling }) => {

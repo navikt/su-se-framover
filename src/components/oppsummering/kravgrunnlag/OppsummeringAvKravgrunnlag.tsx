@@ -14,7 +14,7 @@ import { formatDate, formatMonthYear } from '~src/utils/date/dateUtils';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './OppsummeringAvKravgrunnlag-nb';
-import styles from './OppsummeringAvKravgrunnlag.module.less';
+import * as styles from './OppsummeringAvKravgrunnlag.module.less';
 
 const OppsummeringAvKravgrunnlag = (props: {
     kravgrunnlag: Kravgrunnlag;
@@ -115,7 +115,7 @@ const OppsummeringAvSummerteBeløpBasic = (props: { kravgrunnlag: Kravgrunnlag }
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div className={styles.summerteBeløpMedTittelContainer}>
+        <div>
             <Heading size="small" spacing>
                 {formatMessage('kravgrunnlag.summerteperioder.tittel')}
             </Heading>

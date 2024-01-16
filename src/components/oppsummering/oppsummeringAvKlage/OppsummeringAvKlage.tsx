@@ -72,7 +72,6 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 {erKlageOversendt(props.klage) ? (
                     <div className={styles.seBrevContainer}>
                         <Button
-                            className={styles.knapp}
                             variant="secondary"
                             loading={RemoteData.isPending(hentDokumenterStatus)}
                             onClick={() =>

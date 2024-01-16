@@ -23,7 +23,7 @@ import { RegistrertUtenlandsopphold, UtenlandsoppholdDokumentasjon } from '~src/
 import { formatDate, formatDateTime, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
 
 import messages from './OppsummeringAvRegistrerteUtenlandsopphold-nb';
-import styles from './OppsummeringAvRegistrerteUtenlandsopphold.module.less';
+import * as styles from './OppsummeringAvRegistrerteUtenlandsopphold.module.less';
 
 const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     sakId: string;

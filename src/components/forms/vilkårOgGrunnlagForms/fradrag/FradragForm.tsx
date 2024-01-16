@@ -22,7 +22,7 @@ import { NullablePeriode } from '~src/types/Periode';
 
 import messages from '../VilkårOgGrunnlagForms-nb';
 
-import styles from './FradragForm.module.less';
+import * as styles from './FradragForm.module.less';
 import { nyFradrag } from './FradragFormUtils';
 
 interface Props<T extends FieldValues> {
@@ -193,7 +193,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                     );
                 })}
             </ul>
-            <div className={styles.nyPeriodeKnappContainer}>
+            <div>
                 {/* Ts klager på at vi ikke returnerer en full objekt av typen T, selv om vi bare ønsker at komponentet skal håndtere FradragFormData. */}
                 {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                 {/* @ts-ignore */}

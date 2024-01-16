@@ -18,7 +18,7 @@ import { formatDateTime } from '~src/utils/date/dateUtils';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './OppsummeringAvTilbakekrevingsbehandling-nb';
-import styles from './OppsummeringAvTilbakekrevingsbehandling.module.less';
+import * as styles from './OppsummeringAvTilbakekrevingsbehandling.module.less';
 import OppsummeringAvVurdering from './vurdering/OppsummeringAvVurdering';
 
 const OppsummeringAvTilbakekrevingsbehandling = (props: {

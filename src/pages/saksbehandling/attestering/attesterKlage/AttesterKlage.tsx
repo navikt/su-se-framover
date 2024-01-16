@@ -33,7 +33,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
 
     if (!erKlageTilAttestering(props.klage)) {
         return (
-            <div className={styles.fantIkkevedtakFeilContainer}>
+            <div>
                 <Alert variant="error">{formatMessage('feil.klageErIkkeTilAttestering')}</Alert>
                 <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
                     {formatMessage('knapp.tilbake')}

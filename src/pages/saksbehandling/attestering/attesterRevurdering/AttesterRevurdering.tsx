@@ -188,7 +188,7 @@ const AttesterRevurdering = (props: {
                             </div>
                             <Accordion className={styles.accordion}>
                                 <Accordion.Item>
-                                    <Accordion.Header className={styles.accordionHeader}>
+                                    <Accordion.Header>
                                         <Heading level="3" size="medium">
                                             {formatMessage('accordion.forhåndsvarsling')}
                                         </Heading>

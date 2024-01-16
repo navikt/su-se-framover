@@ -9,7 +9,7 @@ import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 
 import messages from './SkattForm-nb';
-import styles from './SkattForm.module.less';
+import * as styles from './SkattForm.module.less';
 import { SkattFormData, skattFormSchema } from './SkattFormUtils';
 
 /**

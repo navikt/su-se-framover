@@ -118,7 +118,7 @@ Se [./src/index.html](), [./posthtml.config.js](), [./server/config.ts]() og [./
 
 ## Node og npm oppgradering
 
--   Må oppgradere .github/workflows (`branch-deploy.yml`, `branch.yml`, `master.yml`) sin `node-version:`
+-   Må oppgradere .github/workflows (`build-push-deploy-to-dev.yml`) sin `node-version:`
 -   I `package.json` og `server/package.json`: Endre `engines->node`
 -   I `Dockerfile` endre `FROM .*:`
 -   Lokalt, dersom du bruker nvm, `nvm install <version>; nvm use <version>; nvm alias default <version>;` Må muligens også oppdatere paths.

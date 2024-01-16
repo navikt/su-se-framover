@@ -4,7 +4,7 @@ import React from 'react';
 
 import SkjemaelementFeilmelding from '../../formElements/SkjemaelementFeilmelding';
 
-import styles from './inputWithFollowText.module.less';
+import * as styles from './inputWithFollowText.module.less';
 
 export const InputWithFollowText = (props: {
     tittel: string;

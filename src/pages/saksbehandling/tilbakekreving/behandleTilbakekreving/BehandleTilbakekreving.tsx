@@ -7,7 +7,7 @@ import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types
 
 import messages from '../Tilbakekreving-nb';
 
-import styles from './BehandleTilbakekreving.module.less';
+import * as styles from './BehandleTilbakekreving.module.less';
 import BrevForTilbakekreving from './brevForTilbakekreving/BrevForTilbakekreving';
 import ForhåndsvarsleTilbakekreving from './forhåndsvarsleTilbakekreving/ForhåndsvarsleTilbakekreving';
 import OppsummeringTilbakekrevingsbehandling from './oppsummeringTilbakekrevingsbehandling/OppsummeringTilbakekrevingsbehandling';

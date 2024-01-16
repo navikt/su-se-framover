@@ -12,7 +12,6 @@ import {
 import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
 
 import ForhåndsvarselForm from './forhåndsvarsel/ForhåndsvarselForm';
-import * as styles from './RevurderingOppsummeringPage.module.less';
 import SendTilAttestering from './sendTilAttestering/SendTilAttestering';
 import TilbakekrevingForm from './tilbakekreving/TilbakekrevingForm';
 
@@ -24,7 +23,7 @@ const RevurderingOppsummeringPage = (props: {
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     return (
-        <div className={styles.pageContainer}>
+        <div>
             {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.Tilbakekreving && (
                 <TilbakekrevingForm
                     sakId={props.sakId}

@@ -33,7 +33,7 @@ import {
 
 import messages from '../sakintro-nb';
 
-import styles from './AvsluttedeBehandlingerTabell.module.less';
+import * as styles from './AvsluttedeBehandlingerTabell.module.less';
 
 enum AvsluttedeBehandlingerKolonner {
     behandlingstype = 'behandlingstype',

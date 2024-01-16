@@ -5,7 +5,7 @@ import React from 'react';
 import { useI18n } from '~src/lib/i18n';
 
 import messages from './spinnerMedTekst-nb';
-import styles from './spinnerMedTekst.module.less';
+import * as styles from './spinnerMedTekst.module.less';
 
 const SpinnerMedTekst = (props: { className?: string; text?: string }) => {
     const { formatMessage } = useI18n({ messages });

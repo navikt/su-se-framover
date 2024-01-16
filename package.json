@@ -12,7 +12,7 @@
         "test": "jest --passWithNoTests",
         "build": "npm run clean:dist && rimraf ./.parcel-cache && npm run build:client",
         "build:server": "npm run build --prefix ./server",
-        "build:client": "SENTRY_RELEASE=$(git rev-parse --short HEAD) parcel build --no-scope-hoist --no-autoinstall src/index.html",
+        "build:client": "SENTRY_RELEASE=$(git rev-parse --short HEAD) parcel build src/index.html",
         "sentry-release": "SENTRY_RELEASE=$(git rev-parse --short HEAD) node scripts/sentry-release",
         "lint-and-typecheck": "npm run lint && npm run typecheck",
         "lint": "npm run eslint",
@@ -34,8 +34,8 @@
     "author": "supstonad",
     "license": "MIT",
     "engines": {
-        "node": ">=16",
-        "npm": ">=8"
+        "node": ">=18",
+        "npm": ">=10"
     },
     "bugs": {
         "url": "https://github.com/navikt/su-se-framover/issues"
@@ -85,7 +85,6 @@
     "devDependencies": {
         "@parcel/config-default": "2.9.3",
         "@parcel/transformer-less": "2.9.3",
-        "@parcel/utils": "2.9.3",
         "@testing-library/react": "^14.1.2",
         "@types/amplitude-js": "^8.16.5",
         "@types/lodash.debounce": "^4.0.9",

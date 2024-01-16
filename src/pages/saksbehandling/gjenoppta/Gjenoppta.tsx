@@ -7,7 +7,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 
 import messages from './gjenoppta-nb';
-import styles from './Gjenoppta.module.less';
+import * as styles from './Gjenoppta.module.less';
 
 const OpprettGjenoppta = React.lazy(() => import('~src/pages/saksbehandling/gjenoppta/OpprettGjenoppta'));
 const OppdaterGjenoppta = React.lazy(() => import('~src/pages/saksbehandling/gjenoppta/OppdaterGjenoppta'));

@@ -23,7 +23,7 @@ import { showName } from '~src/utils/person/personUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import styles from './BosituasjonForm.module.less';
+import * as styles from './BosituasjonForm.module.less';
 import { BosituasjonGrunnlagFormData, nyBosituasjon } from './BosituasjonFormUtils';
 
 interface Props extends VilkårFormProps<BosituasjonGrunnlagFormData> {
@@ -54,7 +54,7 @@ const BosituasjonForm = (props: Props) => {
                     getChild={(nameAndIdx) => {
                         const watch = props.form.watch(nameAndIdx);
                         return (
-                            <div className={styles.formItemInputContainer}>
+                            <div>
                                 <EpsSkjermingModalOgPersonkort eps={epsStatus} søker={props.søker} />
                                 <Controller
                                     control={props.form.control}
@@ -142,7 +142,7 @@ const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: 
     };
 
     return (
-        <div className={styles.result}>
+        <div>
             {pipe(
                 props.eps,
                 RemoteData.fold(

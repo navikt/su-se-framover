@@ -18,7 +18,7 @@ import { UtbetalingsRevurdering, UtbetalingsRevurderingStatus } from '~src/types
 import { erUtbetalingsrevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './gjenoppta-nb';
-import styles from './Gjenoppta.module.less';
+import * as styles from './Gjenoppta.module.less';
 
 const GjenopptaOppsummering = (props: { revurdering?: UtbetalingsRevurdering }) => {
     const contextProps = useOutletContext<SaksoversiktContext>();
