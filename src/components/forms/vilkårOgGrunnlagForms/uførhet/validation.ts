@@ -1,4 +1,5 @@
 import * as DateFns from 'date-fns';
+import { minTime, maxTime } from 'date-fns/constants';
 
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';
@@ -76,12 +77,12 @@ export const uførhetSchema = (erGRegulering: boolean) =>
                                         DateUtils.isValidInterval(v2.periode.fraOgMed, v2.periode.tilOgMed) &&
                                         DateFns.areIntervalsOverlapping(
                                             {
-                                                start: v1.periode.fraOgMed ?? DateFns.minTime,
-                                                end: v1.periode.tilOgMed ?? DateFns.maxTime,
+                                                start: v1.periode.fraOgMed ?? minTime,
+                                                end: v1.periode.tilOgMed ?? maxTime,
                                             },
                                             {
-                                                start: v2.periode.fraOgMed ?? DateFns.minTime,
-                                                end: v2.periode.tilOgMed ?? DateFns.maxTime,
+                                                start: v2.periode.fraOgMed ?? minTime,
+                                                end: v2.periode.tilOgMed ?? maxTime,
                                             },
                                             { inclusive: true },
                                         ),
