@@ -30,7 +30,7 @@ function setup() {
             },
             defaultTargetOptions: {
                 shouldScopeHoist: false,
-                shouldOptimize: false,
+                shouldOptimize: true,
                 sourceMaps: false,
                 isLibrary: false,
                 engines: {
