@@ -12,7 +12,7 @@ import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import stegSharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
 import { Behandling } from '~src/types/Behandling';
 
-import * as styles from './søknadsbehandlingWrapper.module.less';
+import styles from './søknadsbehandlingWrapper.module.less';
 
 interface Props<T extends FieldValues, U> {
     form: UseFormReturn<T>;
@@ -67,8 +67,8 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
                     props.neste.onSuccess && res
                         ? props.neste.onSuccess(res)
                         : props.neste?.url
-                        ? navigate(props.neste.url)
-                        : undefined;
+                          ? navigate(props.neste.url)
+                          : undefined;
                 });
             })}
         >
@@ -99,11 +99,11 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
                               ),
                           }
                         : props.fortsettSenere
-                        ? {
-                              onClick: props.fortsettSenere.onClick,
-                              tekst: props.fortsettSenere?.tekst,
-                          }
-                        : undefined
+                          ? {
+                                onClick: props.fortsettSenere.onClick,
+                                tekst: props.fortsettSenere?.tekst,
+                            }
+                          : undefined
                 }
             />
         </form>

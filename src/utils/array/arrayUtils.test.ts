@@ -22,17 +22,17 @@ describe('groupByEq', () => {
 });
 
 describe('groupWhile', () => {
-    it('puts all elements in same group when predicate is true', () => {
+    it('puts all elements in the same group when predicate is true', () => {
         const res = pipe(
             [1, 2, 3, 4, 5],
-            groupWhile((_curr, _prev) => true),
+            groupWhile(() => true),
         );
         expect(res).toEqual([[1, 2, 3, 4, 5]]);
     });
     it('puts all elements in separate groups when predicate is false', () => {
         const res = pipe(
             [1, 2, 3, 4, 5],
-            groupWhile((_curr, _prev) => false),
+            groupWhile(() => false),
         );
         expect(res).toEqual([[1], [2], [3], [4], [5]]);
     });
@@ -64,7 +64,7 @@ describe('spanLeftWithIndex', () => {
     it('can split array by index', () => {
         const res = pipe(
             [1, 2, 3, 4],
-            spanLeftWithIndex((idx, _a) => idx < 2),
+            spanLeftWithIndex((idx) => idx < 2),
         );
         expect(res).toEqual({
             init: [1, 2],

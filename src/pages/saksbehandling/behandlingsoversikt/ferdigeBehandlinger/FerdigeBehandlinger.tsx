@@ -23,7 +23,7 @@ import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
 
-import * as styles from './ferdigeBehandlinger.module.less';
+import styles from './ferdigeBehandlinger.module.less';
 
 export const FerdigeBehandlinger = () => {
     const [hentFerdigeBehandlingerStatus, hentFerdigeBehandlinger] = useAsyncActionCreator(

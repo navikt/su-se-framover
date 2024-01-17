@@ -12,7 +12,7 @@ import messages from '~src/pages/saksbehandling/saksoversikt-nb';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 
-import * as styles from './NyttKravgrunnlagsvarsel.module.less';
+import styles from './NyttKravgrunnlagsvarsel.module.less';
 
 const NyttKravgrunnlagsvarsel = (props: {
     saksversjon: number;

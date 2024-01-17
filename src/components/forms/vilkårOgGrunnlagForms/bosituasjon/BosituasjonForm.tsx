@@ -23,7 +23,7 @@ import { showName } from '~src/utils/person/personUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import * as styles from './BosituasjonForm.module.less';
+import styles from './BosituasjonForm.module.less';
 import { BosituasjonGrunnlagFormData, nyBosituasjon } from './BosituasjonFormUtils';
 
 interface Props extends VilkårFormProps<BosituasjonGrunnlagFormData> {
@@ -170,7 +170,7 @@ const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: 
                                                         navn: showName(props.søker.navn),
                                                         fnr: props.søker.fnr,
                                                         b: (chunks) => <b>{chunks}</b>,
-                                                        // eslint-disable-next-line react/display-name
+
                                                         br: () => <br />,
                                                     })}
                                                 </BodyLong>

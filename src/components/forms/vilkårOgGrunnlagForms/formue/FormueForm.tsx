@@ -23,7 +23,7 @@ import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import * as styles from './formueForm.module.less';
+import styles from './formueForm.module.less';
 import {
     FormueVilkårFormData,
     nyFormuegrunnlagMedEllerUtenPeriode,

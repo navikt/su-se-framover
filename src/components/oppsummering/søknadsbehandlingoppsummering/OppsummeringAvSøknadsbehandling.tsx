@@ -18,7 +18,7 @@ import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../op
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 
 import messages from './OppsummeringAvSøknadsbehandling-nb';
-import * as styles from './OppsummeringAvSøknadsbehandling.module.less';
+import styles from './OppsummeringAvSøknadsbehandling.module.less';
 
 const OppsummeringAvSøknadsbehandling = (props: {
     behandling: Søknadsbehandling;

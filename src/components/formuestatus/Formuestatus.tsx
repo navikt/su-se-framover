@@ -6,7 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import { VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 import messages from './formuestatus-nb';
-import * as styles from './formuestatus.module.less';
+import styles from './formuestatus.module.less';
 
 const Formuestatus = (props: {
     bekreftetFormue: number;

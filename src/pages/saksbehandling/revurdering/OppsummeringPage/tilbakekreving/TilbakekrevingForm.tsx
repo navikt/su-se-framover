@@ -22,7 +22,7 @@ import {
 import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './tilbakekrevingForm-nb';
-import * as styles from './tilbakekrevingForm.module.less';
+import styles from './tilbakekrevingForm.module.less';
 
 export interface TilbakekrevingsbehandlingFormData {
     avgjørelse: TilbakekrevingsAvgjørelse;

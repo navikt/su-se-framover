@@ -14,7 +14,7 @@ import {
 
 import messages from '../Attestering-nb';
 
-import * as styles from './AttesterTilbakekreving.module.less';
+import styles from './AttesterTilbakekreving.module.less';
 
 const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehandling; saksversjon: number }) => {
     const navigate = useNavigate();

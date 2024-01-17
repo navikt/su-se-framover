@@ -16,7 +16,7 @@ import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
 import messages from './OppsummeringAvSimulering-nb';
-import * as styles from './OppsummeringAvSimulering.module.less';
+import styles from './OppsummeringAvSimulering.module.less';
 
 export const OppsummeringAvSimulering = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });

@@ -2,7 +2,7 @@ import { Table } from '@navikt/ds-react';
 
 import { SøknadResponse } from '~src/api/driftApi';
 
-import * as styles from '../index.module.less';
+import styles from '../index.module.less';
 
 const Rad = (props: {
     type: 'Journalpost' | 'Oppgave' | 'Brevbestilling';

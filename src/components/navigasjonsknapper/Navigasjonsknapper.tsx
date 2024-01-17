@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useI18n } from '~src/lib/i18n';
 
 import messages from './navigasjonsknapper-nb';
-import * as styles from './navigasjonsknapper.module.less';
+import styles from './navigasjonsknapper.module.less';
 
 /**
  * Navigering til url tar alltid presedens over onClick hvis begge er supplert.

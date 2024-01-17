@@ -17,7 +17,7 @@ import * as Routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import messages from './behandlingsoversikt-nb';
-import * as styles from './behandlingsoversikt.module.less';
+import styles from './behandlingsoversikt.module.less';
 import { FerdigeBehandlinger } from './ferdigeBehandlinger/FerdigeBehandlinger';
 import Nøkkeltall from './nøkkeltall/Nøkkeltall';
 import Reguleringsoversikt from './regulering/reguleringsoversikt';

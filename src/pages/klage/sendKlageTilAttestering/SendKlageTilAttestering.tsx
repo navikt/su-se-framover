@@ -12,10 +12,10 @@ import { KlageSteg, Klage } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import { erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
-import * as sharedStyles from '../klage.module.less';
+import sharedStyles from '../klage.module.less';
 
 import messages from './sendKlageTilAttestering-nb';
-import * as styles from './sendKlageTilAttestering.module.less';
+import styles from './sendKlageTilAttestering.module.less';
 
 const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker: Vedtak[] }) => {
     const navigate = useNavigate();

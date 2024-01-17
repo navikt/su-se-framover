@@ -26,7 +26,7 @@ import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from '../../Tilbakekreving-nb';
 
-import * as styles from './ForhåndsvarsleTilbakekreving.module.less';
+import styles from './ForhåndsvarsleTilbakekreving.module.less';
 import {
     ForhåndsvarsleTilbakekrevingFormData,
     forhåndsvarsleTilbakekrevingFormSchema,

@@ -14,7 +14,7 @@ import { compareUtbetalingsperiode, Utbetalingsperiode } from '~src/types/Utbeta
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 
 import messages from './sakintro-nb';
-import * as styles from './utbetalinger.module.less';
+import styles from './utbetalinger.module.less';
 
 export const Utbetalinger = (props: {
     sakId: string;

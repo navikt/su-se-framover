@@ -16,10 +16,10 @@ import yup from '~src/lib/validering';
 import { Klage, KlageStatus, KlageSteg } from '~src/types/Klage';
 import { erKlageAvvist } from '~src/utils/klage/klageUtils';
 
-import * as sharedStyles from '../klage.module.less';
+import sharedStyles from '../klage.module.less';
 
 import messages from './avvistKlage-nb';
-import * as styles from './avvistKlage.module.less';
+import styles from './avvistKlage.module.less';
 
 interface AvvistKlageFormData {
     fritekstTilBrev: string;

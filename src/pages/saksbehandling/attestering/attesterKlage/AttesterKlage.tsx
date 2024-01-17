@@ -19,7 +19,7 @@ import {
 } from '~src/utils/klage/klageUtils';
 
 import messages from './attesterKlage-nb';
-import * as styles from './attesterKlage.module.less';
+import styles from './attesterKlage.module.less';
 
 const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({ messages });
@@ -115,8 +115,8 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
                     bekreftText: erKlageOpprettholdt(props.klage)
                         ? formatMessage('radio.overførTilKlageinstans')
                         : erKlageINoenFormForAvvist(props.klage)
-                        ? formatMessage('radio.godkjennAvvisning')
-                        : undefined,
+                          ? formatMessage('radio.godkjennAvvisning')
+                          : undefined,
                 }}
             />
             <OppsummeringAvKlage klage={props.klage} klagensVedtak={props.klagensVedtak} />

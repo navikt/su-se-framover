@@ -1,11 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires,no-undef
-const SentryCli = require('@sentry/cli');
+import SentryCli from '@sentry/cli';
 
-async function opprettReleaseTilSentry() {
-    // eslint-disable-next-line no-undef
-    const release = process.env.SENTRY_RELEASE;
-    // eslint-disable-next-line no-undef
-    const authToken = process.env.SENTRY_AUTH_TOKEN;
+async function opprettReleaseTilSentry(): Promise<void> {
+    const release: string | undefined = process.env.SENTRY_RELEASE;
+    const authToken: string | undefined = process.env.SENTRY_AUTH_TOKEN;
 
     if (!release) {
         throw new Error('"SENTRY_RELEASE" er ikke satt');

@@ -7,7 +7,7 @@ import { Nullable } from '~src/lib/types';
 import { BehandlingssammendragStatus, BehandlingssammendragType } from '~src/types/Behandlingssammendrag';
 
 import messages from './filter-nb';
-import * as styles from './filter.module.less';
+import styles from './filter.module.less';
 
 export type BehandlingssammendragTypeFilter = {
     [BehandlingssammendragType.SØKNADSBEHANDLING]: boolean;
@@ -51,9 +51,7 @@ const tilOgMedErGyldig = (fraOgMed: Nullable<Date> | undefined, tilOgMed: Nullab
 };
 
 export const hentFiltrerteVerdier = <T extends Record<string, unknown>>(filter: T): Array<keyof T> =>
-    Object.entries(filter)
-        .filter(([_, value]) => value)
-        .map(([key, _]) => key) as Array<keyof T>;
+    Object.keys(filter).filter((key) => filter[key]) as Array<keyof T>;
 
 export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) => {
     const { formatMessage } = useI18n({ messages });

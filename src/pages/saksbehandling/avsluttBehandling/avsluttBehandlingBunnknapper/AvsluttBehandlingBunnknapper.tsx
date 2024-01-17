@@ -7,7 +7,7 @@ import * as Routes from '~src/lib/routes';
 
 import messages from '../avsluttBehandling-nb';
 
-import * as styles from './avsluttBehandlingBunnknapper.module.less';
+import styles from './avsluttBehandlingBunnknapper.module.less';
 
 const AvsluttBehandlingBunnknapper = (props: { submitButtonText: string; isSubmitPending: boolean; sakId: string }) => {
     const { formatMessage } = useI18n({ messages });

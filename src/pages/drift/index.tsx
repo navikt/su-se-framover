@@ -24,7 +24,7 @@ import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import StartGRegulering from './components/StartGRegulering';
 import { SøknadTabellDrift } from './components/SøknadTabell';
 import SendUtbetalingsIder from './components/utbetalingslinjer/SendUtbetalingslinjer';
-import * as styles from './index.module.less';
+import styles from './index.module.less';
 
 enum Knapp {
     FIX_SØKNADER,

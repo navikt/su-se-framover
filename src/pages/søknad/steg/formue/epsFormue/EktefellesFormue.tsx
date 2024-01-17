@@ -14,7 +14,7 @@ import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../../bunnknapper/Bunnknapper';
-import * as sharedStyles from '../../../steg-shared.module.less';
+import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
 import KjøretøyInputFelter from '../kjøretøyInputfelter/KjøretøyInputFelter';
 import { FormData, formueValideringSchema } from '../validering';

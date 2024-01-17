@@ -3,10 +3,10 @@ import * as OpenIdClient from 'openid-client';
 import { TokenSet } from 'openid-client';
 import { Logger } from 'pino';
 
-import * as Config from '../config';
-import { logger } from '../logger';
+import * as Config from '../config.js';
+import { logger } from '../logger.js';
 
-import { TokenSets } from './index';
+import { TokenSets } from './index.js';
 
 export const tokenSetSelfId = 'self';
 

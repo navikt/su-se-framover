@@ -4,7 +4,7 @@ import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';
 
 import messages from './nullstillRevurderingVarsel-nb';
-import * as styles from './nullstillRevurderingVarsel.module.less';
+import styles from './nullstillRevurderingVarsel.module.less';
 
 const NullstillRevurderingVarsel = (props: { isOpen: boolean; onClose: () => void; førsteStegUrl: string }) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });

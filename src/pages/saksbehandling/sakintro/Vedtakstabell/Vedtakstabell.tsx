@@ -31,7 +31,7 @@ import {
 
 import messages from '../sakintro-nb';
 
-import * as styles from './Vedtakstabell.module.less';
+import styles from './Vedtakstabell.module.less';
 
 enum VedtakstabellKolonner {
     vedtakstype = 'vedtakstype',

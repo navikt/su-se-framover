@@ -15,7 +15,7 @@ import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling'
 
 import messages from '../Tilbakekreving-nb';
 
-import * as styles from './OpprettTilbakekreving.module.less';
+import styles from './OpprettTilbakekreving.module.less';
 
 const OpprettTilbakekreving = (props: {
     sakId: string;

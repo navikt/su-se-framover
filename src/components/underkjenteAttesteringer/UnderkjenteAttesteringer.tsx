@@ -6,7 +6,7 @@ import { Attestering } from '~src/types/Behandling';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import messages from './underkjenteAttestering-nb';
-import * as styles from './underkjenteAttesteringer.module.less';
+import styles from './underkjenteAttesteringer.module.less';
 
 const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
     const underkjenteAttesteringer = props.attesteringer.filter((att) => att.underkjennelse != null);

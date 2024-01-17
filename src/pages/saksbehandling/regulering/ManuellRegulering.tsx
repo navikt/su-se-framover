@@ -27,7 +27,7 @@ import { formatPeriode, parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 
 import messages from './manuellRegulering-nb';
-import * as styles from './manuellRegulering.module.less';
+import styles from './manuellRegulering.module.less';
 
 interface FormData {
     uføre: Uføregrunnlag[];

@@ -7,7 +7,7 @@ import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import OppsummeringAvEksternGrunnlagSkatt from '../oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 
 import messages from './OppsummeringAvSkattegrunnlag-nb';
-import * as styles from './Skattegrunnlagsmodal.module.less';
+import styles from './Skattegrunnlagsmodal.module.less';
 
 const SeSkattegrunnlag = (props: { eksternGrunnlagSkatt: EksternGrunnlagSkatt }) => {
     const { formatMessage } = useI18n({ messages });

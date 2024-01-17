@@ -52,7 +52,7 @@ import OppsummeringAvTilbakekrevingsbehandling, {
 } from '../oppsummeringAvTilbakekrevingsbehandling/OppsummeringAvTilbakekrevingsbehandling';
 
 import messages from './OppsummeringAvVedtak-nb';
-import * as styles from './OppsummeringAvVedtak.module.less';
+import styles from './OppsummeringAvVedtak.module.less';
 
 const typeBehandling = (b: Behandling | Klage | Regulering | ManuellTilbakekrevingsbehandling) => {
     if ('klagevedtakshistorikk' in b) {

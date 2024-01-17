@@ -10,7 +10,7 @@ import { useI18n } from '~src/lib/i18n';
 import { ferdigBehandlet, ikkeFerdigbehandlet, søknader } from '~src/utils/nøkkeltall/nøkkeltallUtils';
 
 import messages from './nøkkeltall-nb';
-import * as styles from './nøkkeltall.module.less';
+import styles from './nøkkeltall.module.less';
 
 const Rad = ({ label, verdi, bold = false }: { label: string; verdi: undefined | number; bold?: boolean }) => (
     <li className={styles.item}>

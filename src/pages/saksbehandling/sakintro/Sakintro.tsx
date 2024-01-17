@@ -27,7 +27,7 @@ import { erSøknadsbehandlingÅpen } from '~src/utils/SøknadsbehandlingUtils';
 
 import AvsluttedeBehandlingerTabell from './avsluttedeBehandlingerTabell/AvsluttedeBehandlingerTabell';
 import messages from './sakintro-nb';
-import * as styles from './sakintro.module.less';
+import styles from './sakintro.module.less';
 import Vedtakstabell from './Vedtakstabell/Vedtakstabell';
 import ÅpneBehandlingerTabell from './åpneBehandlingerTabell/ÅpneBehandlingerTabell';
 

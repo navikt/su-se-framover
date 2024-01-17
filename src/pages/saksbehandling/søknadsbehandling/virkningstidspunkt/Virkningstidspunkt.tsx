@@ -28,7 +28,7 @@ import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './virkningstidspunkt-nb';
-import * as styles from './virkningstidspunkt.module.less';
+import styles from './virkningstidspunkt.module.less';
 import {
     eqBehandlingsperiode,
     er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned,

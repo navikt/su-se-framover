@@ -9,7 +9,7 @@ import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 
 import messages from './brevInput-nb';
-import * as styles from './brevInput.module.less';
+import styles from './brevInput.module.less';
 
 export interface BrevInputProps {
     tekst: Nullable<string>;

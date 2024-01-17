@@ -25,7 +25,7 @@ import Oppsummeringspanel, {
 } from '../../../oppsummeringspanel/Oppsummeringspanel';
 
 import messages from './oppsummeringsblokk-nb';
-import * as styles from './oppsummeringsblokk.module.less';
+import styles from './oppsummeringsblokk.module.less';
 
 const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });

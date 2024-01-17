@@ -1,4 +1,4 @@
-import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 

@@ -13,7 +13,7 @@ import { formatDate, formatMonthYear } from '~src/utils/date/dateUtils';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './OppsummeringAvKravgrunnlag-nb';
-import * as styles from './OppsummeringAvKravgrunnlag.module.less';
+import styles from './OppsummeringAvKravgrunnlag.module.less';
 
 const OppsummeringAvKravgrunnlag = (props: {
     kravgrunnlag: Kravgrunnlag;

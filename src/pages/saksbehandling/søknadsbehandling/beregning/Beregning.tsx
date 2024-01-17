@@ -47,7 +47,7 @@ import { kanSimuleres } from '~src/utils/SøknadsbehandlingUtils';
 import sharedI18n from '../sharedI18n-nb';
 
 import messages from './beregning-nb';
-import * as styles from './beregning.module.less';
+import styles from './beregning.module.less';
 
 interface FormData {
     fradrag: FradragFormData[];

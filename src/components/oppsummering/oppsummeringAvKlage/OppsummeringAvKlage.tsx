@@ -13,19 +13,19 @@ import Oppsummeringspanel, {
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import formkravMessages from '~src/pages/klage/vurderFormkrav/vurderFormkrav-nb';
+import vurderingMessages from '~src/pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, KlageStatus, KlageVurderingType } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
+import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import { erKlageOmgjort, erKlageOpprettholdt, erKlageOversendt } from '~src/utils/klage/klageUtils';
 
-import formkravMessages from '../../../pages/klage/vurderFormkrav/vurderFormkrav-nb';
-import vurderingMessages from '../../../pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
-import * as DateUtils from '../../../utils/date/dateUtils';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
-import * as styles from './oppsummeringAvKlage.module.less';
+import styles from './oppsummeringAvKlage.module.less';
 
 const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({ messages: oppsummeringMessages });

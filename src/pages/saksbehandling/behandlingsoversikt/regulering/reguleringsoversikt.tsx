@@ -11,7 +11,7 @@ import { useI18n } from '~src/lib/i18n';
 import { ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import messages from './regulering-nb';
-import * as styles from './regulering.module.less';
+import styles from './regulering.module.less';
 
 interface Props {
     reguleringsstatus: ReguleringOversiktsstatus[];

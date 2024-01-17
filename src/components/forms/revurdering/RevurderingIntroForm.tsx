@@ -9,7 +9,7 @@ import { NullablePeriode } from '~src/types/Periode';
 import { gyldigeÅrsaker, InformasjonSomRevurderes } from '~src/types/Revurdering';
 
 import messages from './RevurderingIntroForm-nb';
-import * as styles from './RevurderingIntroForm.module.less';
+import styles from './RevurderingIntroForm.module.less';
 import { RevurderingIntroFormData, RevurderingIntroFormProps } from './RevurderingIntroFormUtils';
 
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {

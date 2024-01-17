@@ -26,7 +26,7 @@ import { formatDate } from '~src/utils/date/dateUtils';
 
 import messages from '../../Tilbakekreving-nb';
 
-import * as styles from './VurderTilbakekreving.module.less';
+import styles from './VurderTilbakekreving.module.less';
 import {
     VurderTilbakekrevingFormData,
     eqVurderTilbakekrevingFormData,

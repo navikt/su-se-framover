@@ -30,7 +30,7 @@ import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './flyktning-nb';
-import * as styles from './flyktning.module.less';
+import styles from './flyktning.module.less';
 
 const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
     const navigate = useNavigate();

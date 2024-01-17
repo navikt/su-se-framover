@@ -20,7 +20,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVi
 import { InformasjonsRevurdering, RevurderingOppsummeringSteg, RevurderingSeksjoner } from '~src/types/Revurdering';
 
 import messages from './ForhåndsvarselForm-nb';
-import * as styles from './ForhåndsvarselForm.module.less';
+import styles from './ForhåndsvarselForm.module.less';
 
 interface ForhåndsvarselFormData {
     oppretterNyttForhåndsvarsel: boolean;

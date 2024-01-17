@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Saksvarsler from './sakintro/saksvarsler/Saksvarsler';
 import messages from './saksoversikt-nb';
-import * as styles from './saksoversikt.module.less';
+import styles from './saksoversikt.module.less';
 
 const Saksoversikt = () => {
     const urlParams = routes.useRouteParams<typeof routes.saksoversiktValgtSak>();

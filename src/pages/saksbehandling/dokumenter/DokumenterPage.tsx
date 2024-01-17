@@ -16,7 +16,7 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 
 import messages from './dokumenterPage-nb';
-import * as styles from './dokumenterPage.module.less';
+import styles from './dokumenterPage.module.less';
 
 const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typeof messages> }) => (
     <div className={styles.headerContainer}>

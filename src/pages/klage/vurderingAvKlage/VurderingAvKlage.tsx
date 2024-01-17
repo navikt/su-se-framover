@@ -41,10 +41,10 @@ import {
 } from '~src/types/Klage';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
-import * as sharedStyles from '../klage.module.less';
+import sharedStyles from '../klage.module.less';
 
 import messages from './VurderingAvKlage-nb';
-import * as styles from './vurderingAvKlage.module.less';
+import styles from './vurderingAvKlage.module.less';
 
 interface OmgjørFormData {
     årsak: Nullable<OmgjørVedtakÅrsak>;

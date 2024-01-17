@@ -5,7 +5,7 @@ import { Periode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 import messages from './revurderingsperiodeheader-nb';
-import * as styles from './revurderingsperiodeheader.module.less';
+import styles from './revurderingsperiodeheader.module.less';
 
 const RevurderingsperiodeHeader = (props: { periode: Periode<string> }) => {
     const { formatMessage } = useI18n({ messages });

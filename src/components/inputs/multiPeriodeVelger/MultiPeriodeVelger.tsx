@@ -18,7 +18,7 @@ import { useI18n } from '~src/lib/i18n';
 import { NullablePeriode } from '~src/types/Periode';
 
 import messages from './multiPeriodeVelger-nb';
-import * as styles from './multiPeriodeVelger.module.less';
+import styles from './multiPeriodeVelger.module.less';
 
 export type PartialName<T> = `${keyof T & string}.${number}`;
 

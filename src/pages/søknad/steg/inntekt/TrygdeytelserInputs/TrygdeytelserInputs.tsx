@@ -4,7 +4,7 @@ import { FieldError } from 'react-hook-form';
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
 import { useI18n } from '~src/lib/i18n';
 
-import * as styles from './trygdeytelserInputs.module.less';
+import styles from './trygdeytelserInputs.module.less';
 
 export const trygdeytelserMessages = {
     'trygdeytelserIUtlandet.beløp': 'Hvor mye får du i lokal valuta i måneden?',

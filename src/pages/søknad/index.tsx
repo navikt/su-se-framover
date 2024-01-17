@@ -6,7 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
 import { Sakstype } from '~src/types/Sak';
 
-import * as styles from './index.module.less';
+import styles from './index.module.less';
 import messages from './nb';
 
 export interface SøknadContext {

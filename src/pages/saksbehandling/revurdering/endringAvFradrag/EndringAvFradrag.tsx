@@ -39,7 +39,7 @@ import RevurderingsperiodeHeader from '../revurderingsperiodeheader/Revurderings
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './endringAvFradrag-nb';
-import * as styles from './endringAvFradrag.module.less';
+import styles from './endringAvFradrag.module.less';
 
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];

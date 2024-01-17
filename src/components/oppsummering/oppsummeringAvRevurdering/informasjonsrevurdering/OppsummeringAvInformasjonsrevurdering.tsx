@@ -2,7 +2,7 @@ import Beregningblokk from '~src/components/oppsummering/oppsummeringAvRevurderi
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering } from '~src/types/Revurdering';
 
-import * as styles from './OppsummeringAvInformasjonsrevurdering.module.less';
+import styles from './OppsummeringAvInformasjonsrevurdering.module.less';
 import Oppsummeringsblokk from './oppsummeringsblokk/Oppsummeringsblokk';
 
 const OppsummeringAvInformasjonsrevurdering = (props: {

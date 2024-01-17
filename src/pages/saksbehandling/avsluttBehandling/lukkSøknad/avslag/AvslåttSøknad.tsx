@@ -4,7 +4,7 @@ import * as PdfApi from '~src/api/pdfApi';
 import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
 import { Nullable } from '~src/lib/types';
 
-import * as styles from './avslåttSøknad.module.less';
+import styles from './avslåttSøknad.module.less';
 
 interface Props {
     søknadId: string;

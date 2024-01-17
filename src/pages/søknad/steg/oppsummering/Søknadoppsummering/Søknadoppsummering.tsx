@@ -24,7 +24,7 @@ import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
 import { Sakstype } from '~src/types/Sak';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 
-import * as sharedStyles from '../../../steg-shared.module.less';
+import sharedStyles from '../../../steg-shared.module.less';
 import { EndreSvar } from '../components/EndreSvar';
 import { FormueOppsummering } from '../components/FormueOppsummering';
 import InntektsOppsummering from '../components/InntektsOppsummering';
@@ -32,7 +32,7 @@ import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
 import { ingenAdresseGrunnTekst } from './OppsummeringUtils';
 import oppsummeringMessages from './søknadsoppsummering-nb';
-import * as styles from './søknadsoppsummering.module.less';
+import styles from './søknadsoppsummering.module.less';
 
 const booleanSvar = (bool: Nullable<boolean>, formatMessage: MessageFormatter<typeof oppsummeringMessages>) =>
     bool ? formatMessage('ja') : bool === false ? formatMessage('nei') : formatMessage('ubesvart');
@@ -81,8 +81,8 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                                     søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
                                         ? formatMessage('delerBoligMed.eps')
                                         : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.VOKSNE_BARN
-                                        ? formatMessage('delerBoligMed.voksneBarn')
-                                        : formatMessage('delerBoligMed.andreVoksne')
+                                          ? formatMessage('delerBoligMed.voksneBarn')
+                                          : formatMessage('delerBoligMed.andreVoksne')
                                 }
                             />
                         )}

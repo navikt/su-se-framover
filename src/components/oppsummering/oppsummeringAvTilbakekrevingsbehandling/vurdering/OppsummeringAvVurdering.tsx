@@ -9,7 +9,7 @@ import { formatDate } from '~src/utils/date/dateUtils';
 import { OppsummeringPar } from '../../oppsummeringpar/OppsummeringPar';
 import messages from '../OppsummeringAvTilbakekrevingsbehandling-nb';
 
-import * as styles from './OppsummeringAvVurdering.module.less';
+import styles from './OppsummeringAvVurdering.module.less';
 
 const OppsummeringAvVurderingBasic = (props: { vurderinger: VurderingMedKrav; medTittel?: boolean }) => {
     const { formatMessage } = useI18n({ messages });

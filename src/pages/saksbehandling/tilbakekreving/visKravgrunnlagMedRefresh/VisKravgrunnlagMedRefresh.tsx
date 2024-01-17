@@ -11,7 +11,7 @@ import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevi
 
 import messages from '../Tilbakekreving-nb';
 
-import * as styles from './VisKRavgrunnlagMedRefresh.module.less';
+import styles from './VisKRavgrunnlagMedRefresh.module.less';
 
 export const RefreshKravgrunnlagModal = (props: { tilbakekreving: ManuellTilbakekrevingsbehandling }) => {
     const { formatMessage } = useI18n({ messages });

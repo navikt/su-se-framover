@@ -9,7 +9,7 @@ import { parseNonNullableIsoDateOnly } from '~src/utils/date/dateUtils';
 
 import OppsummeringAvVedtak from '../oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak';
 
-import * as styles from './vedtaksTidslinje.module.less';
+import styles from './vedtaksTidslinje.module.less';
 
 const Vedtakstidslinje = (props: { vedtakerPåTidslinje: VedtakPåTidslinje[] }) => {
     const divRef = useRef<HTMLDivElement>(null);

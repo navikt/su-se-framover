@@ -12,7 +12,7 @@ import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uf
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
-import * as styles from './uførhet.module.less';
+import styles from './uførhet.module.less';
 import { UførhetFormData, lagTomUføreperiode } from './UførhetFormUtils';
 
 export const UførhetForm = ({ form, ...props }: VilkårFormProps<UførhetFormData>) => {

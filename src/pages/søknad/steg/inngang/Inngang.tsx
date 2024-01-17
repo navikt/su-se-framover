@@ -29,7 +29,7 @@ import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 
 import nb from './inngang-nb';
-import * as styles from './inngang.module.less';
+import styles from './inngang.module.less';
 
 const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
     const { formatMessage } = useI18n({ messages: nb });

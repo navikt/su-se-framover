@@ -9,7 +9,7 @@ import { UserProvider } from '~src/context/userContext';
 import * as meSlice from '~src/features/me/me.slice';
 import { pipe } from '~src/lib/fp';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-import * as styles from '~src/root.module.less';
+import styles from '~src/root.module.less';
 import { LoggedInUser } from '~src/types/LoggedInUser';
 
 export const ContentWrapper: FC<PropsWithChildren> = (props) => {

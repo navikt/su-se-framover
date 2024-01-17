@@ -17,7 +17,7 @@ import { erStadie, erStadieFeil } from '~src/utils/SkattUtils';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './OppsummeringAvSkattegrunnlag-nb';
-import * as styles from './OppsummeringAvSkattegrunnlag.module.less';
+import styles from './OppsummeringAvSkattegrunnlag.module.less';
 
 const OppsummeringAvSkattegrunnlag = (props: { skattegrunnlag: Skattegrunnlag }) => {
     const { formatMessage } = useI18n({ messages });

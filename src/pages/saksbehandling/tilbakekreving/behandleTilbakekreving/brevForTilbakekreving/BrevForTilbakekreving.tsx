@@ -25,7 +25,7 @@ import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types
 
 import messages from '../../Tilbakekreving-nb';
 
-import * as styles from './BrevForTilbakekreving.module.less';
+import styles from './BrevForTilbakekreving.module.less';
 import { BrevForTilbakekrevingFormData, brevForTilbakekrevingSchema } from './BrevForTilbakekrevingUtils';
 
 type HandleBrevtekstSave = { skalSendeBrev: boolean; brevtekst: Nullable<string> };

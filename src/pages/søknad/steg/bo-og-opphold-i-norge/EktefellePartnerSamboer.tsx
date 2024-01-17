@@ -9,7 +9,7 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf, Nullable } from '~src/lib/types';
 
 import messages from './bo-og-opphold-i-norge-nb';
-import * as styles from './ektefelle-partner-samboer.module.less';
+import styles from './ektefelle-partner-samboer.module.less';
 
 interface Props {
     id: string;

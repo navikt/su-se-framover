@@ -7,7 +7,7 @@ import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
 
 import messages from './Behandlingssammendrag-nb';
-import * as styles from './Behandlingssammendrag.module.less';
+import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
 const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[] }) => {

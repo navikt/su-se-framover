@@ -1,6 +1,5 @@
 import { NavigateFunction, useParams } from 'react-router-dom';
 
-import * as Routes from '~src/lib/routes';
 import { Søknadssteg } from '~src/pages/søknad/types';
 import { KlageSteg } from '~src/types/Klage';
 import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
@@ -61,7 +60,7 @@ export function urlForSakstype(sakstype: Sakstype): TemaFraUrl {
 }
 
 export function sakstypeFraTemaIUrl(temaIUrl?: TemaFraUrl): Sakstype {
-    return temaIUrl === Routes.URL_TEMA_ALDER ? Sakstype.Alder : Sakstype.Uføre;
+    return temaIUrl === URL_TEMA_ALDER ? Sakstype.Alder : Sakstype.Uføre;
 }
 
 export const soknadtema: Route<{ soknadstema?: TemaFraUrl; papirsøknad?: boolean }> = {
@@ -282,7 +281,7 @@ export const createSakIntroLocation = (
     sakid: string,
 ): { path: string; state: SuccessNotificationState } => {
     return {
-        path: Routes.saksoversiktValgtSak.createURL({ sakId: sakid }),
+        path: saksoversiktValgtSak.createURL({ sakId: sakid }),
         state: { notification: message },
     };
 };

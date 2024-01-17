@@ -5,7 +5,7 @@ import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';
 
 import messages from './bunnknapper-nb';
-import * as styles from './bunnknapper.module.less';
+import styles from './bunnknapper.module.less';
 
 const Bunnknapper = (props: {
     previous?: {
