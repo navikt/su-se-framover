@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import messages from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/alderspensjon-nb';

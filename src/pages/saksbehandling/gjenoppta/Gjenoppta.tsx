@@ -1,5 +1,5 @@
 import { Heading } from '@navikt/ds-react';
-import React from 'react';
+import { lazy } from 'react';
 import { Route, Routes, useOutletContext } from 'react-router-dom';
 
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
@@ -9,9 +9,9 @@ import * as routes from '~src/lib/routes';
 import messages from './gjenoppta-nb';
 import * as styles from './Gjenoppta.module.less';
 
-const OpprettGjenoppta = React.lazy(() => import('~src/pages/saksbehandling/gjenoppta/OpprettGjenoppta'));
-const OppdaterGjenoppta = React.lazy(() => import('~src/pages/saksbehandling/gjenoppta/OppdaterGjenoppta'));
-const GjenopptaOppsummering = React.lazy(() => import('~src/pages/saksbehandling/gjenoppta/GjenopptaOppsummering'));
+const OpprettGjenoppta = lazy(() => import('~src/pages/saksbehandling/gjenoppta/OpprettGjenoppta'));
+const OppdaterGjenoppta = lazy(() => import('~src/pages/saksbehandling/gjenoppta/OppdaterGjenoppta'));
+const GjenopptaOppsummering = lazy(() => import('~src/pages/saksbehandling/gjenoppta/GjenopptaOppsummering'));
 
 const Gjenoppta = () => {
     const { formatMessage } = useI18n({ messages });

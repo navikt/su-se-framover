@@ -1,5 +1,4 @@
 import { Heading } from '@navikt/ds-react';
-import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';

@@ -1,5 +1,4 @@
 import { Heading } from '@navikt/ds-react';
-import React from 'react';
 
 import { FamilieforeningForm } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningForm';
 import { FamilieforeningFormData } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningFormUtils';

@@ -4,7 +4,7 @@ import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import React from 'react';
+import { Fragment } from 'react';
 
 import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import { combineOptions, pipe } from '~src/lib/fp';
@@ -53,14 +53,14 @@ const DetaljertFradrag = (props: {
         <span className={styles.alignTextRight}>{props.tittel.verdi}</span>
         <>
             {props.detaljer.map((d, index) => (
-                <React.Fragment key={d.label + index}>
+                <Fragment key={d.label + index}>
                     <BodyShort size="small" className={d.epsUtland ? styles.additionalDetails : styles.detailedLinje}>
                         {d.label}
                     </BodyShort>
                     <BodyShort size="small" className={styles.alignTextRight}>
                         {d.verdi}
                     </BodyShort>
-                </React.Fragment>
+                </Fragment>
             ))}
         </>
     </>

@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import * as React from 'react';
-import { ReactElement } from 'react';
+import { useRef, ReactElement } from 'react';
 import { UseFormReturn, FieldValues } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -48,7 +47,7 @@ interface Props<T extends FieldValues, U> {
  */
 export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form, ...props }: Props<T, U>) => {
     const { formatMessage } = useI18n({ messages: stegSharedI18n });
-    const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
+    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
     const lagreOgFortsettSenereMedNeste = (values: T) =>
@@ -68,8 +67,8 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
                     props.neste.onSuccess && res
                         ? props.neste.onSuccess(res)
                         : props.neste?.url
-                        ? navigate(props.neste.url)
-                        : undefined;
+                          ? navigate(props.neste.url)
+                          : undefined;
                 });
             })}
         >
@@ -100,11 +99,11 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
                               ),
                           }
                         : props.fortsettSenere
-                        ? {
-                              onClick: props.fortsettSenere.onClick,
-                              tekst: props.fortsettSenere?.tekst,
-                          }
-                        : undefined
+                          ? {
+                                onClick: props.fortsettSenere.onClick,
+                                tekst: props.fortsettSenere?.tekst,
+                            }
+                          : undefined
                 }
             />
         </form>

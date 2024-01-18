@@ -1,7 +1,6 @@
 import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, Checkbox, Label, Panel, Select, TextField } from '@navikt/ds-react';
 import { currencies } from 'country-data-list';
-import React from 'react';
 import {
     ArrayPath,
     Control,

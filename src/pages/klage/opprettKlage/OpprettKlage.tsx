@@ -2,7 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, HelpText, Loader, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 

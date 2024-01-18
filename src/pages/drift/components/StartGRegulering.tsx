@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, GuidePanel, Heading, Loader, TextField } from '@navikt/ds-react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
 import * as reguleringApi from '~src/api/reguleringApi';

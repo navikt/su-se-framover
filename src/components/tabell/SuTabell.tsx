@@ -1,5 +1,5 @@
 import { Table } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface Props<Kolonner extends Record<string, string>> {
     kolonnerConfig: {

@@ -1,5 +1,4 @@
 import { Heading } from '@navikt/ds-react';
-import * as React from 'react';
 
 import * as styles from './toKolonner.module.less';
 

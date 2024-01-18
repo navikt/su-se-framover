@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -15,7 +15,7 @@ const HomePage = () => {
     const harTilgangTilVeileder = user.roller.includes(Rolle.Veileder);
     const harTilgangTilSaksbehandler = user.roller.includes(Rolle.Saksbehandler);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (user.roller.length === 1 && user.roller[0] === Rolle.Veileder) {
             navigate(Routes.soknad.createURL(), { replace: true });
         } else if (user.roller.every((r) => [Rolle.Saksbehandler, Rolle.Attestant].includes(r))) {

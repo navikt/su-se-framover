@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { TypeOppholdstillatelse } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { IngenAdresseGrunn } from '~src/types/Person';
@@ -55,10 +53,10 @@ const BoforholdsAdresse = (props: { b: Boforhold }) => {
                 props.b.borPåAdresse
                     ? formatAdresse(props.b.borPåAdresse)
                     : props.b.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
-                    ? formatMessage('boforhold.adresse.ingenAdresse.borPåAnnenAdresse')
-                    : props.b.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
-                    ? formatMessage('boforhold.adresse.ingenAdresse.harIkkeFastBosted')
-                    : ''
+                      ? formatMessage('boforhold.adresse.ingenAdresse.borPåAnnenAdresse')
+                      : props.b.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
+                        ? formatMessage('boforhold.adresse.ingenAdresse.harIkkeFastBosted')
+                        : ''
             }
         />
     );

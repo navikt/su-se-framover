@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Label, Heading, Button, Tag } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React from 'react';
 
 import * as DokumentApi from '~src/api/dokumentApi';
 import * as pdfApi from '~src/api/pdfApi';

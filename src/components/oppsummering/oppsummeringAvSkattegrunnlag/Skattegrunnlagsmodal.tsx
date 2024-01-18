@@ -1,5 +1,5 @@
 import { Button, Modal } from '@navikt/ds-react';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';

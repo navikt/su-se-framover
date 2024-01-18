@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import * as Routes from '~src/lib/routes';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';

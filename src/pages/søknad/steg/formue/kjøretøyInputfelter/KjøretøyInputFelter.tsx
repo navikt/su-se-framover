@@ -1,5 +1,4 @@
 import { Fieldset, TextField } from '@navikt/ds-react';
-import * as React from 'react';
 import { FieldError } from 'react-hook-form';
 
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';

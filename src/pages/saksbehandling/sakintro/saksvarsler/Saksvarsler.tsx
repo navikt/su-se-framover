@@ -1,5 +1,4 @@
 import { Alert, BodyShort } from '@navikt/ds-react';
-import React from 'react';
 
 import { Person } from '~src/types/Person';
 import { Sak, SakvarselType } from '~src/types/Sak';

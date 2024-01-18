@@ -2,7 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import React from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { Behandlingstype, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';

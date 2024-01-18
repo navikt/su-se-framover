@@ -1,5 +1,4 @@
 import { Alert, Button } from '@navikt/ds-react';
-import React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';

@@ -3,7 +3,7 @@ import { XMarkIcon } from '@navikt/aksel-icons';
 import { Accordion, Button, Checkbox, Heading, Label, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { WarningIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { FieldError } from 'react-hook-form';
 
 import * as PdfApi from '~src/api/pdfApi';

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useI18n } from '~src/lib/i18n';
 import { Bosituasjon } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { formatPeriode } from '~src/utils/date/dateUtils';

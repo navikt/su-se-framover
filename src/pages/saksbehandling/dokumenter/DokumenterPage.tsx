@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, Button, Heading, HelpText, LinkPanel, Loader, Tag } from '@navikt/ds-react';
-import * as React from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';
@@ -69,7 +69,7 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
 
     const { formatMessage } = useI18n({ messages });
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetchDokumenter({
             id: props.id,
             idType: props.idType,

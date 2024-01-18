@@ -1,6 +1,5 @@
 import { Alert, BodyShort } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React from 'react';
 
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';

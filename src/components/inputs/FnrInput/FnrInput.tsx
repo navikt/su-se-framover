@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader, TextField } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { fetchPerson } from '~src/api/personApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';

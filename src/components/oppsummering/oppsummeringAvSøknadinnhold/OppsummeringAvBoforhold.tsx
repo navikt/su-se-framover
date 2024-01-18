@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { DelerBoligMed } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { Boforhold } from '~src/types/Søknadinnhold';

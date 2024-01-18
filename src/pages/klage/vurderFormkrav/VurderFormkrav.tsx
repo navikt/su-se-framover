@@ -4,7 +4,6 @@ import { Button, Select, Loader, RadioGroup, Radio, Alert } from '@navikt/ds-rea
 import { struct } from 'fp-ts/Eq';
 import * as B from 'fp-ts/lib/boolean';
 import * as S from 'fp-ts/string';
-import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 

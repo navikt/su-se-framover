@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Outlet, useNavigate } from 'react-router-dom';
 

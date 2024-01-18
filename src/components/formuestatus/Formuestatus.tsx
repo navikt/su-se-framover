@@ -1,6 +1,5 @@
 import { BodyShort, Heading, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import VilkårvurderingStatusIcon from '~src/components/VilkårvurderingStatusIcon';
 import { useI18n } from '~src/lib/i18n';

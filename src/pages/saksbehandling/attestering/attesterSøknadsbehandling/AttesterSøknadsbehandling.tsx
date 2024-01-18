@@ -1,5 +1,4 @@
 import { Alert } from '@navikt/ds-react';
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { AttesteringsForm } from '~src/components/forms/attesteringForm/AttesteringsForm';

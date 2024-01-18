@@ -1,7 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader, Modal, Heading, BodyLong, Button } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 

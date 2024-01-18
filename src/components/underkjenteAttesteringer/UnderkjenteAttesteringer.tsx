@@ -1,5 +1,4 @@
 import { Alert, BodyShort, Label } from '@navikt/ds-react';
-import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { underkjennelsesGrunnTextMapper } from '~src/typeMappinger/UnderkjennelseGrunn';

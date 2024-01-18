@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, HelpText } from '@navikt/ds-react';
-import * as React from 'react';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,7 +42,7 @@ const RevurderingBeregnOgSimuler = (props: {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const forrigeUrl = props.seksjoner[1].linjer.at(-1)?.url;
-    const [needsBeregning, setNeedsBeregning] = React.useState(false);
+    const [needsBeregning, setNeedsBeregning] = useState(false);
     const [beregnOgSimulerStatus, beregnOgSimuler] = useAsyncActionCreator(RevurderingActions.beregnOgSimuler);
 
     const beregningStatus = harBeregninger(props.informasjonsRevurdering)
@@ -78,9 +78,9 @@ const RevurderingBeregnOgSimuler = (props: {
                 beregningStatus.value.revurdering.tilbakekrevingsbehandling !== null
                     ? false
                     : RemoteData.isSuccess(beregningStatus) &&
-                      beregningStatus.value.revurdering.tilbakekrevingsbehandling === null
-                    ? true
-                    : null,
+                        beregningStatus.value.revurdering.tilbakekrevingsbehandling === null
+                      ? true
+                      : null,
         },
         resolver: yupResolver(beregnOgSimulerSchema),
     });

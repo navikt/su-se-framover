@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { RemoteSuccess } from '@devexperts/remote-data-ts';
 import { Accordion, BodyShort, Button, Checkbox, Label, Loader, TextField } from '@navikt/ds-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Control, Controller, UseFormTrigger, useWatch } from 'react-hook-form';
 
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';

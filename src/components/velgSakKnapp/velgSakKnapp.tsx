@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button } from '@navikt/ds-react';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as personSlice from '~src/features/person/person.slice';

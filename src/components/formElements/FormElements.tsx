@@ -1,6 +1,7 @@
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import { endOfMonth } from 'date-fns';
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
+import * as React from 'react';
 import { FieldErrorsImpl } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';

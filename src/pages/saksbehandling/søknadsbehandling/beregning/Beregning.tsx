@@ -4,7 +4,7 @@ import { Alert, Button, Heading, Loader, Textarea } from '@navikt/ds-react';
 import { getEq } from 'fp-ts/Array';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 

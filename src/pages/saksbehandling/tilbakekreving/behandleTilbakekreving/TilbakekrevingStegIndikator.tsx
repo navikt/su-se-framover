@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Framdriftsindikator, { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';

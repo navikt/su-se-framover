@@ -1,7 +1,6 @@
 import { Heading, Accordion } from '@navikt/ds-react';
 import AccordionItem from '@navikt/ds-react/esm/accordion/AccordionItem';
 import classNames from 'classnames';
-import React from 'react';
 
 import Oppsummeringspanel, {
     Oppsummeringsikon,

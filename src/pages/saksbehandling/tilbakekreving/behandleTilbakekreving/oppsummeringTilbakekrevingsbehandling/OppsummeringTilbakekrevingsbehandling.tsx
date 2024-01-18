@@ -1,5 +1,4 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';

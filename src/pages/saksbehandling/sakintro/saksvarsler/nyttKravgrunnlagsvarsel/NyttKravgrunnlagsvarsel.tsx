@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Modal } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';

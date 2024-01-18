@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import * as React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 

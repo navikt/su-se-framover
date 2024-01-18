@@ -1,6 +1,5 @@
 import { Heading, Ingress } from '@navikt/ds-react';
-import * as React from 'react';
-import { useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
@@ -33,7 +32,7 @@ export const Steg = (props: {
     erSaksbehandler: boolean;
     hjelpetekst?: string;
 }) => {
-    const sectionRef = React.useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (sectionRef.current) {

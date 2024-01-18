@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { ErrorIcon, SuccessIcon, WarningIcon } from '~src/assets/Icons';
 import { Nullable } from '~src/lib/types';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useI18n } from '~src/lib/i18n';
 import { Alderspensjon } from '~src/types/Søknadinnhold';
 

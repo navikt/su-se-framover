@@ -4,7 +4,6 @@ import {
     XMarkOctagonFillIcon,
     InformationSquareFillIcon,
 } from '@navikt/aksel-icons';
-import React from 'react';
 
 const iconWidth = '30px';
 interface Props {

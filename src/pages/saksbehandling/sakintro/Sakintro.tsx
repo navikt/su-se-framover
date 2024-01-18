@@ -1,7 +1,7 @@
 import { ChevronUpIcon, ChevronDownIcon } from '@navikt/aksel-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
 import { isEmpty } from 'fp-ts/lib/Array';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { ÅpentBrev } from '~src/assets/Illustrations';

@@ -1,5 +1,4 @@
 import { Button, Modal, Heading, BodyShort } from '@navikt/ds-react';
-import React from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';

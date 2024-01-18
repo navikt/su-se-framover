@@ -3,7 +3,7 @@ import { Button, Modal, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as reguleringApi from '~src/api/reguleringApi';

@@ -1,5 +1,4 @@
 import { Alert, Checkbox, CheckboxGroup, Heading, Select, Textarea } from '@navikt/ds-react';
-import React from 'react';
 import { Controller, FieldErrors } from 'react-hook-form';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';

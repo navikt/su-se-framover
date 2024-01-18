@@ -6,7 +6,7 @@ import {
 } from '@navikt/aksel-icons';
 import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as styles from './framdriftsindikator.module.less';
@@ -36,7 +36,7 @@ export interface Seksjon {
 const erSeksjon = (arg: Linje | Seksjon): arg is Seksjon => 'tittel' in arg && 'linjer' in arg;
 
 const Statusikon = (props: { status: Linjestatus }) => {
-    const [className, Ikon] = React.useMemo(() => {
+    const [className, Ikon] = useMemo(() => {
         switch (props.status) {
             case Linjestatus.Ingenting:
                 return [null, null];

@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyShort, Button, Heading, Modal } from '@navikt/ds-react';
-import React from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
@@ -37,17 +37,17 @@ import { PersonligOppmøte } from './personligOppmøte/PersonligOppmøte';
 import messages from './revurdering-nb';
 import * as styles from './revurdering.module.less';
 
-const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
-const RevurderingIntroPage = React.lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
-const BosituasjonPage = React.lazy(() => import('./bosituasjon/bosituasjonPage'));
-const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
-const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
-const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
-const Opplysningsplikt = React.lazy(() => import('./opplysningsplikt/Opplysningsplikt'));
-const Oppholdstillatelse = React.lazy(() => import('./oppholdstillatelse/LovligOpphold'));
-const FastOppholdPage = React.lazy(() => import('./fastOpphold/FastOppholdPage'));
-const FlyktningPage = React.lazy(() => import('./flyktning/FlyktningPage'));
-const Institusjonsopphold = React.lazy(() => import('./institusjonsopphold/Institusjonsopphold'));
+const UtenlandsoppholdPage = lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
+const RevurderingIntroPage = lazy(() => import('./revurderingIntro/RevurderingIntroPage'));
+const BosituasjonPage = lazy(() => import('./bosituasjon/bosituasjonPage'));
+const EndringAvFradrag = lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
+const RevurderingOppsummeringPage = lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
+const Uførhet = lazy(() => import('./uførhet/Uførhet'));
+const Opplysningsplikt = lazy(() => import('./opplysningsplikt/Opplysningsplikt'));
+const Oppholdstillatelse = lazy(() => import('./oppholdstillatelse/LovligOpphold'));
+const FastOppholdPage = lazy(() => import('./fastOpphold/FastOppholdPage'));
+const FlyktningPage = lazy(() => import('./flyktning/FlyktningPage'));
+const Institusjonsopphold = lazy(() => import('./institusjonsopphold/Institusjonsopphold'));
 
 const RevurderingPage = () => {
     const { sak } = useOutletContext<SaksoversiktContext>();
@@ -118,7 +118,7 @@ const RevurderingSeksjonerWrapper = (props: {
     const { formatMessage } = useI18n({ messages: messages });
     const [gjeldendeData, hentGjeldendeData] = useApiCall(hentgjeldendeGrunnlagsdataOgVilkårsvurderinger);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (RemoteData.isInitial(gjeldendeData)) {
             hentGjeldendeData({
                 sakId: props.sakId,
@@ -184,7 +184,7 @@ const FramdriftsIndikatorRevurdering = (props: {
     aktiveSteg: RevurderingSteg;
     listeElementer: Seksjon[];
 }) => {
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
     return (
         <div>
             <Framdriftsindikator
@@ -219,9 +219,9 @@ const GrunnlagOgVilkårSteg = (props: {
 }) => {
     const { søker } = useOutletContext<SaksoversiktContext>();
     const navigate = useNavigate();
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [navigererTilOppsummeringMedVilkårIkkeVurdert, setNavigererTilOppsummeringMedVilkårIkkeVurdert] =
-        React.useState<boolean>(false);
+        useState<boolean>(false);
 
     const seksjonIdx = props.seksjoner.findIndex((s) => s.id === props.seksjonOgSteg.seksjon);
     const idx = props.seksjoner[seksjonIdx].linjer.findIndex((l) => l.id === props.seksjonOgSteg.steg);

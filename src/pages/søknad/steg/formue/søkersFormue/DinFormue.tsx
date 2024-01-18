@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from '@navikt/ds-react';
-import * as React from 'react';
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
     return (
         <form

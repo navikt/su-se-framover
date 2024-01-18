@@ -1,5 +1,5 @@
 import { Button } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useI18n } from '~src/lib/i18n';

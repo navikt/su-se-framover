@@ -1,5 +1,5 @@
 import { Heading } from '@navikt/ds-react';
-import React from 'react';
+import { lazy } from 'react';
 import { Route, Routes, useOutletContext } from 'react-router-dom';
 
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
@@ -9,9 +9,9 @@ import * as routes from '~src/lib/routes';
 import messages from './stans-nb';
 import * as styles from './StansStyles.module.less';
 
-const OpprettStansPage = React.lazy(() => import('~src/pages/saksbehandling/stans/OpprettStansPage'));
-const OppdaterStans = React.lazy(() => import('~src/pages/saksbehandling/stans/OppdaterStans'));
-const StansOppsummering = React.lazy(() => import('~src/pages/saksbehandling/stans/stansOppsummering'));
+const OpprettStansPage = lazy(() => import('~src/pages/saksbehandling/stans/OpprettStansPage'));
+const OppdaterStans = lazy(() => import('~src/pages/saksbehandling/stans/OppdaterStans'));
+const StansOppsummering = lazy(() => import('~src/pages/saksbehandling/stans/stansOppsummering'));
 
 const Stans = () => {
     const { formatMessage } = useI18n({ messages });

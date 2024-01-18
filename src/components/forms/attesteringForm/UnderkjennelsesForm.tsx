@@ -1,5 +1,4 @@
 import { Select, Textarea } from '@navikt/ds-react';
-import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';

@@ -1,6 +1,5 @@
 import { Accordion, Heading, Label } from '@navikt/ds-react';
 import AccordionItem from '@navikt/ds-react/esm/accordion/AccordionItem';
-import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';

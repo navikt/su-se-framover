@@ -1,7 +1,6 @@
 import { Tag, TagProps } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
-import * as React from 'react';
 
 import { Person, Adressebeskyttelse } from '~src/types/Person';
 

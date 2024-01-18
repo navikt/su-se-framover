@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert } from '@navikt/ds-react';
-import * as React from 'react';
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
     });
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
     return (
         <form

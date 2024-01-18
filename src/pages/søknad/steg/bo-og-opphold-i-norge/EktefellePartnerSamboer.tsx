@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';

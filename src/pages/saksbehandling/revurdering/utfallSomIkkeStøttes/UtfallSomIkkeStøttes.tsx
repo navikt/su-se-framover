@@ -1,5 +1,4 @@
 import { Alert } from '@navikt/ds-react';
-import React from 'react';
 
 import { ErrorMessage } from '~src/api/apiClient';
 import messages from '~src/components/apiErrorAlert/ApiErrorAlert-nb';

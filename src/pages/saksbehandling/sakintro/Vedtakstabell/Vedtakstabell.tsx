@@ -4,7 +4,6 @@ import { BodyShort, Button, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 import * as DokumentApi from '~src/api/dokumentApi';

@@ -3,7 +3,6 @@ import { Alert, Heading, Table, Tag } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import { contramap } from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import React from 'react';
 
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import VelgSakKnapp from '~src/components/velgSakKnapp/velgSakKnapp';

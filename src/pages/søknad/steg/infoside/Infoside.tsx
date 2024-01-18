@@ -1,5 +1,4 @@
 import { BodyLong, GuidePanel, Heading, Ingress, Link } from '@navikt/ds-react';
-import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';

@@ -1,5 +1,4 @@
 import { PencilIcon } from '@navikt/aksel-icons';
-import React from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 
 import { useI18n } from '~src/lib/i18n';

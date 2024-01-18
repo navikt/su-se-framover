@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import * as PdfApi from '~src/api/pdfApi';
 import { useApiCall } from '~src/lib/hooks';

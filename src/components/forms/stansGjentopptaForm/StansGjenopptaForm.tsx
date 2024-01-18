@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Select, Textarea } from '@navikt/ds-react';
-import React from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,5 +1,4 @@
 import { Table } from '@navikt/ds-react';
-import React from 'react';
 
 import { SøknadResponse } from '~src/api/driftApi';
 

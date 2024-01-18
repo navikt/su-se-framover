@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 export const ÅpentBrev = () => (
     <svg width="35" height="37" viewBox="0 0 35 37" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path

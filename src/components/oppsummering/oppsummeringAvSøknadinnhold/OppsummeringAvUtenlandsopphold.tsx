@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useI18n } from '~src/lib/i18n';
 import { Utenlandsopphold } from '~src/types/Søknadinnhold';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~src/utils/date/dateUtils';

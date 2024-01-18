@@ -1,6 +1,5 @@
 import { ChevronLeftIcon } from '@navikt/aksel-icons';
 import { Button, Loader } from '@navikt/ds-react';
-import * as React from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';

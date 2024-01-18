@@ -1,6 +1,5 @@
 import { Ingress } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { KjønnUkjent } from '~src/assets/Icons';
 import { Person } from '~src/types/Person';

@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Loader } from '@navikt/ds-react';
-import React from 'react';
 
 import * as søknadApi from '~src/api/søknadApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';

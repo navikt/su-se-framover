@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyShort, CopyButton, Loader } from '@navikt/ds-react';
-import * as React from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
@@ -73,7 +73,7 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
 
     const [status, hentPerson] = useApiCall(fetchPerson);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (props.sivilstand.relatertVedSivilstand) {
             hentPerson(props.sivilstand.relatertVedSivilstand);
         }
@@ -95,8 +95,8 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                             {err?.statusCode === ErrorCode.Unauthorized
                                 ? formatMessage('feilmelding.ikkeTilgang')
                                 : err?.statusCode === ErrorCode.NotFound
-                                ? formatMessage('feilmelding.ikkeFunnet')
-                                : formatMessage('feilmelding.ukjent')}
+                                  ? formatMessage('feilmelding.ikkeFunnet')
+                                  : formatMessage('feilmelding.ukjent')}
                         </Alert>
                     ),
                     (eps) => (

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Button, Heading, Modal, Radio, RadioGroup, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';

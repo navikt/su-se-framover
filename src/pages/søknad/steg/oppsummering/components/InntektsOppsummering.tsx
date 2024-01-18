@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { useI18n } from '~src/lib/i18n';
 import epsInntektMessages from '~src/pages/søknad/steg/inntekt/epsInntekt/inntekt-nb';
@@ -58,8 +56,8 @@ const InntektsOppsummering = ({
                     inntekt.søktAndreYtelserIkkeBehandlet
                         ? 'Ja'
                         : inntekt.søktAndreYtelserIkkeBehandlet === false
-                        ? 'Nei'
-                        : 'Ubesvart'
+                          ? 'Nei'
+                          : 'Ubesvart'
                 }
             />
 
@@ -80,8 +78,8 @@ const InntektsOppsummering = ({
                     inntekt.harTrygdeytelserIUtlandet
                         ? 'Ja'
                         : inntekt.harTrygdeytelserIUtlandet === false
-                        ? 'Nei'
-                        : 'Ubesvart'
+                          ? 'Nei'
+                          : 'Ubesvart'
                 }
             />
             {inntekt.harTrygdeytelserIUtlandet && (

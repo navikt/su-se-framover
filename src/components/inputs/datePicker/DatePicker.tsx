@@ -7,7 +7,7 @@ import {
     useRangeDatepicker,
 } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import * as React from 'react';
+import { useEffect } from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
@@ -34,7 +34,7 @@ export const DatePicker = (props: {
         defaultSelected: props.value ?? undefined,
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         setSelected(props.value ?? undefined);
     }, [props.value?.toDateString()]);
 

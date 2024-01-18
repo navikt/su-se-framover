@@ -1,5 +1,4 @@
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import React from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';

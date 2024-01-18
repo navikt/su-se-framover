@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/browser';
-import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import polyfill from './polyfills';

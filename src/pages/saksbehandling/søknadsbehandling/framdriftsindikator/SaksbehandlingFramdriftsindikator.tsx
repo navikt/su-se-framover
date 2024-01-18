@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Framdriftsindikator, { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { useSøknadsbehandlingDraftContext } from '~src/context/søknadsbehandlingDraftContext';
 import { useI18n } from '~src/lib/i18n';
@@ -71,8 +69,8 @@ const SaksbehandlingFramdriftsindikator = (props: {
                     status: isDraftDirty(Vilkårtype.Virkningstidspunkt)
                         ? Linjestatus.Uferdig
                         : props.behandling.stønadsperiode
-                        ? Linjestatus.Ok
-                        : Linjestatus.Ingenting,
+                          ? Linjestatus.Ok
+                          : Linjestatus.Ingenting,
                     url: vilkårUrl(Vilkårtype.Virkningstidspunkt),
                 },
                 {

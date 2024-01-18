@@ -1,5 +1,4 @@
 import { BodyShort } from '@navikt/ds-react';
-import React from 'react';
 
 import { Journalpost } from '~src/types/Journalpost';
 

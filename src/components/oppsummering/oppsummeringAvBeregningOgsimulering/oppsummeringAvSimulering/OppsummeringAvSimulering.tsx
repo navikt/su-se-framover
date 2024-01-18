@@ -3,7 +3,7 @@ import { Accordion, Alert, Button, Heading, Label, Modal } from '@navikt/ds-reac
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { combineOptions, pipe } from '~src/lib/fp';

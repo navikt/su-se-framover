@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyShort, Label, Radio, RadioGroup } from '@navikt/ds-react';
-import * as React from 'react';
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
     const navigate = useNavigate();
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const feiloppsummeringref = useRef<HTMLDivElement>(null);
     const søker: Person = props.søker;
     const telefonnummerPdl = søker.telefonnummer
         ? `${søker.telefonnummer.landskode} ${søker.telefonnummer.nummer}`

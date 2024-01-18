@@ -1,7 +1,6 @@
 import * as A from 'fp-ts/Array';
 import * as Eq from 'fp-ts/Eq';
 import * as O from 'fp-ts/Option';
-import React from 'react';
 
 import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';

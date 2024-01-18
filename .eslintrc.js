@@ -14,6 +14,7 @@ module.exports = {
         'plugin:import/typescript',
         'plugin:@typescript-eslint/recommended',
         'plugin:jsx-a11y/recommended',
+        'plugin:react/jsx-runtime',
     ],
     globals: {
         Atomics: 'readonly',

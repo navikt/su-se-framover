@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from '@navikt/ds-react';
-import * as React from 'react';
+import { useRef } from 'react';
 import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -58,7 +58,7 @@ interface InntektFormInterface {
 
 export const InntektForm = ({ form, save, formatMessage, ...props }: InntektFormInterface) => {
     const navigate = useNavigate();
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const feiloppsummeringref = useRef<HTMLDivElement>(null);
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
 
     return (

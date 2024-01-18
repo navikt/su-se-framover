@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
-import * as React from 'react';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -44,7 +44,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const [søknadFraStore, innsending] = useAppSelector((s) => [s.soknad, s.innsending.søknad]);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
     const dispatch = useAppDispatch();
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
     const alderssøknadsschema = yup.object({
         ...alderspensjonSchema.fields,

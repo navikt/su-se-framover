@@ -2,8 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { ChevronLeftIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Button, Heading, Loader, Skeleton } from '@navikt/ds-react';
 import startOfTomorrow from 'date-fns/startOfTomorrow';
-import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
@@ -48,7 +47,7 @@ const OppsummeringAvKontrollsamtaler = (props: { sakId: string }) => {
     const { formatMessage } = useI18n({ messages });
     const [kontrollsamtaler, hentKontrollsamtaler] = useApiCall(kontrollsamtaleApi.hentKontrollsamtaler);
 
-    React.useEffect(() => {
+    useEffect(() => {
         hentKontrollsamtaler({ sakId: props.sakId });
     }, []);
 
@@ -125,7 +124,7 @@ const NyKontrollsamtaleDato = (props: { sakId: string }) => {
         );
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetchNesteKontrollsamtale(props.sakId);
     }, []);
 

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { ArrowsCirclepathIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, Modal } from '@navikt/ds-react';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { oppdaterKravgrunnlag } from '~src/features/TilbakekrevingActions';

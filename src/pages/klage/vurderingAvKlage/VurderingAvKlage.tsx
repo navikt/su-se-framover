@@ -17,7 +17,6 @@ import {
 import { struct } from 'fp-ts/Eq';
 import * as A from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
-import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 

@@ -1,5 +1,4 @@
 import { Alert, Table } from '@navikt/ds-react';
-import React from 'react';
 
 import SuTabell from '~src/components/tabell/SuTabell';
 import VelgSakKnapp from '~src/components/velgSakKnapp/velgSakKnapp';

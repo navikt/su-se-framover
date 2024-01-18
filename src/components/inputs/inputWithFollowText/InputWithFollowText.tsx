@@ -1,6 +1,6 @@
 import { BodyShort, Label, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React from 'react';
+import * as React from 'react';
 
 import SkjemaelementFeilmelding from '../../formElements/SkjemaelementFeilmelding';
 

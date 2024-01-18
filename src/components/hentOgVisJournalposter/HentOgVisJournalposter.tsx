@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { hentJournalposter } from '~src/api/sakApi';
 import { useApiCall } from '~src/lib/hooks';

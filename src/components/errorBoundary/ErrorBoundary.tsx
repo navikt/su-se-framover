@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/browser';
-import React, { ErrorInfo, PropsWithChildren } from 'react';
+import { Component, ErrorInfo, PropsWithChildren } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 
@@ -7,7 +7,7 @@ import SkjemaelementFeilmelding from '../formElements/SkjemaelementFeilmelding';
 
 import * as styles from './errorBoundary.module.less';
 
-class ErrorBoundary extends React.Component<PropsWithChildren, { hasError: boolean; error?: Error; eventId?: string }> {
+class ErrorBoundary extends Component<PropsWithChildren, { hasError: boolean; error?: Error; eventId?: string }> {
     constructor(props: PropsWithChildren) {
         super(props);
         this.state = { hasError: false };

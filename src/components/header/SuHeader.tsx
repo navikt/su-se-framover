@@ -1,5 +1,4 @@
 import { Dropdown, InternalHeader } from '@navikt/ds-react';
-import React from 'react';
 
 import { LOGOUT_URL } from '~src/api/authUrl';
 import { useI18n } from '~src/lib/i18n';

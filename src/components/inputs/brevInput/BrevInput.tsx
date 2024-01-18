@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Textarea } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { FieldError } from 'react-hook-form';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';

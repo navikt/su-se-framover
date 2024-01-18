@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes, useOutletContext } from 'react-router-dom';
 
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';

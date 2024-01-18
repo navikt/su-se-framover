@@ -1,5 +1,6 @@
 import debounce from 'lodash.debounce';
-import React, { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import * as React from 'react';
 import { FieldValues, UseFormWatch } from 'react-hook-form';
 
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';

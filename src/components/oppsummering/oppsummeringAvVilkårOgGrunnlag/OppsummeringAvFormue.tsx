@@ -1,6 +1,5 @@
 import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React from 'react';
 
 import { regnUtFormuegrunnlagVerdier } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import Formuestatus from '~src/components/formuestatus/Formuestatus';

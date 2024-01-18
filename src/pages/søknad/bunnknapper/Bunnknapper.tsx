@@ -1,5 +1,5 @@
 import { BodyLong, Button, Heading, Modal } from '@navikt/ds-react';
-import * as React from 'react';
+import { useState } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';
@@ -21,7 +21,7 @@ const Bunnknapper = (props: {
         toRoute: string;
     };
 }) => {
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
     const { formatMessage } = useI18n({ messages });
 
     return (

@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, ConfirmationPanel, Heading, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import * as React from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -109,7 +109,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         return save(data, onSuccess);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (
             erAldersvurderingAvgjortOgHarEndretPåStønadsperioden({
                 s: props.behandling,

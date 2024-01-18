@@ -1,5 +1,4 @@
 import { Alert } from '@navikt/ds-react';
-import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 import { Aldersvurdering, MaskinellVurderingsresultat } from '~src/types/Aldersvurdering';

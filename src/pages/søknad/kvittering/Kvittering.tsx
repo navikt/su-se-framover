@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Panel } from '@navikt/ds-react';
-import * as React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ApiError } from '~src/api/apiClient';
@@ -28,7 +28,7 @@ const Kvittering = () => {
     const søknad = useAppSelector((state) => state.innsending.søknad);
     const søker = useAppSelector((state) => state.personopplysninger.søker);
     const søknadstype = useAppSelector((state) => state.soknad.forVeileder.type);
-    const [fetchSøknadPdfState, setFetchSøknadPdfState] = React.useState<RemoteData.RemoteData<ApiError, null>>(
+    const [fetchSøknadPdfState, setFetchSøknadPdfState] = useState<RemoteData.RemoteData<ApiError, null>>(
         RemoteData.initial,
     );
     const { formatMessage } = useI18n({ messages });

@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button } from '@navikt/ds-react';
-import React from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as revurderingApi from '~src/api/revurderingApi';

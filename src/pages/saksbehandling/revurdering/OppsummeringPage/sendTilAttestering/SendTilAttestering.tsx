@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, RadioGroup, Radio, Checkbox, Textarea } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -125,10 +125,10 @@ const SendTilAttestering = (props: {
             fritekst: props.revurdering.brevvalg.fritekst
                 ? props.revurdering.brevvalg.fritekst
                 : erRevurderingTilbakekreving(props.revurdering)
-                ? formatMessage('tilbakekreving.forhåndstekst')
-                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
-                ? formatMessage('opplysningsplikt.forhåndstekst')
-                : null,
+                  ? formatMessage('tilbakekreving.forhåndstekst')
+                  : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                    ? formatMessage('opplysningsplikt.forhåndstekst')
+                    : null,
             begrunnValg:
                 props.revurdering.brevvalg.begrunnelse && props.revurdering.brevvalg.begrunnelse.length > 0
                     ? true

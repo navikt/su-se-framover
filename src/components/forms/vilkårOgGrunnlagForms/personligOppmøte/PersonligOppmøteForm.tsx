@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import React from 'react';
+import * as React from 'react';
 import { Controller } from 'react-hook-form';
 
 import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';

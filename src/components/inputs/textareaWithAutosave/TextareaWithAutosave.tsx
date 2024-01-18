@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Button, Loader, Textarea } from '@navikt/ds-react';
-import React from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';

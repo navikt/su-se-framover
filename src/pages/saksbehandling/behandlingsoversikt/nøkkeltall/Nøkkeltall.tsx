@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Label, Loader } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { hentNøkkeltall } from '~src/api/nøkkeltallApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';

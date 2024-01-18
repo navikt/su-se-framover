@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import { getEq } from 'fp-ts/lib/Array';
 import { struct } from 'fp-ts/lib/Eq';
-import React from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -56,7 +56,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
     });
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [savingState, setSavingState] = React.useState<
+    const [savingState, setSavingState] = useState<
         RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
     >(RemoteData.initial);
 

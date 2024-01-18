@@ -2,7 +2,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Select, Textarea, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { Control, Controller, useFieldArray, useForm, UseFormReset, UseFormSetValue } from 'react-hook-form';
 
 import { RangePickerDate } from '~src/components/inputs/datePicker/DatePicker';

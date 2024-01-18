@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InformationSquareIcon } from '@navikt/aksel-icons';
 import { Heading, BodyLong, RadioGroup, Radio, Alert } from '@navikt/ds-react';
-import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';

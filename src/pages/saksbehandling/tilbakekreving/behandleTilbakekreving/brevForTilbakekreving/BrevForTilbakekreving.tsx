@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,7 +38,7 @@ const BrevForTilbakekreving = (props: {
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    const saksversjonRef = React.useRef(props.saksversjon);
+    const saksversjonRef = useRef(props.saksversjon);
     const [saveBrevtekstStatus, saveBrevtekst] = useAsyncActionCreator(brevtekstTilbakekrevingsbehandling);
     const [saveNotatStatus, saveNotat] = useAsyncActionCreator(behandlingsnotatTilbakekreving);
     const [forhåndsvisStatus, forhåndsvis] = useBrevForhåndsvisning(forhåndsvisVedtaksbrevTilbakekrevingsbehandling);

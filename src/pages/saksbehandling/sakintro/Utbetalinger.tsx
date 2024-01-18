@@ -1,6 +1,5 @@
 import { BodyShort, Button, Heading } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SuccessIcon, WarningIcon } from '~src/assets/Icons';

@@ -1,5 +1,4 @@
 import { Label } from '@navikt/ds-react';
-import React from 'react';
 
 import { ErrorMessageAlert } from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useI18n } from '~src/lib/i18n';

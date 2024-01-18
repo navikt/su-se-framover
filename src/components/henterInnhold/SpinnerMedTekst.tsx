@@ -1,6 +1,5 @@
 import { Heading, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React from 'react';
 
 import { useI18n } from '~src/lib/i18n';
 

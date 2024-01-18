@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup, ReadMore, TextField } from '@navikt/ds-react';
-import * as React from 'react';
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
         defaultValues: flyktningstatusFraStore,
         resolver: yupResolver(schema),
     });
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 

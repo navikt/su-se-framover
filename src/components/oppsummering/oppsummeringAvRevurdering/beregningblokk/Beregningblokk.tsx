@@ -1,5 +1,5 @@
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
-import * as React from 'react';
+import { useMemo } from 'react';
 
 import simulertUtbetaling from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvSimulering/OppsummeringAvSimulering-nb';
 import { useI18n } from '~src/lib/i18n';
@@ -14,7 +14,7 @@ import * as styles from './beregningblokk.module.less';
 const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...simulertUtbetaling } });
 
-    const alert = React.useMemo(() => {
+    const alert = useMemo(() => {
         if (revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT) {
             return {
                 tittel: formatMessage('revurdering.opphør.advarsel.tittel'),

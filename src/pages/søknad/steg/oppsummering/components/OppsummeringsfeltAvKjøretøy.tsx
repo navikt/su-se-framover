@@ -1,5 +1,5 @@
 import { BodyShort, Label } from '@navikt/ds-react';
-import React from 'react';
+import * as React from 'react';
 
 import * as styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 

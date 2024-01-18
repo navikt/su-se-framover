@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Fieldset } from '@navikt/ds-react';
-import * as React from 'react';
+import { useRef, useMemo } from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -135,9 +135,9 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
-    const antallDagerIUtlandet = React.useMemo(() => {
+    const antallDagerIUtlandet = useMemo(() => {
         return form.getValues('skalReiseTilUtlandetNeste12Måneder')
             ? kalkulerTotaltAntallDagerIUtlandet(form.getValues('skalReiseDatoer'))
             : 0;

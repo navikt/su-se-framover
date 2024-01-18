@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { NumberListIcon, CurrencyExchangeIcon, FileCheckmarkIcon, FileIcon, TableIcon } from '@navikt/aksel-icons';
 import { Heading, Tabs } from '@navikt/ds-react';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { hentReguleringsstatus } from '~src/api/reguleringApi';

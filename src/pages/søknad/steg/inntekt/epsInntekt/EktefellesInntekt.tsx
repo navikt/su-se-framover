@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
 import søknadSlice from '~src/features/søknad/søknad.slice';
