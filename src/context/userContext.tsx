@@ -1,5 +1,4 @@
-import { createContext, useContext } from 'react';
-import * as React from 'react';
+import { FC, ReactNode, createContext, useContext } from 'react';
 
 import { LoggedInUser, Rolle } from '../types/LoggedInUser';
 
@@ -17,7 +16,7 @@ Dette fordrer da at vi aldri rendrer noen komponenter som bruker `UserContext` u
 const UserContext = createContext<UserContext>({} as UserContext);
 UserContext.displayName = 'UserContext';
 
-export const UserProvider: React.FC<{ user: LoggedInUser; children: React.ReactNode }> = (props) => {
+export const UserProvider: FC<{ user: LoggedInUser; children: ReactNode }> = (props) => {
     return (
         <UserContext.Provider
             value={{

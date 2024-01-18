@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import * as React from 'react';
+import { ReactNode } from 'react';
 import { Controller } from 'react-hook-form';
 
 import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
@@ -21,7 +21,7 @@ import {
 interface Props extends VilkårFormProps<PersonligOppmøteVilkårFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 const PersonligOppmøteForm = (props: Props) => {

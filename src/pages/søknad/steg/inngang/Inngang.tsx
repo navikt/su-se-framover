@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import * as React from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as sakApi from '~src/api/sakApi';
@@ -214,12 +214,12 @@ const Inngang = () => {
     const { søker } = useAppSelector((s) => s.personopplysninger);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);
-    const [erBekreftet, setErBekreftet] = React.useState<boolean>(false);
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const [erBekreftet, setErBekreftet] = useState<boolean>(false);
 
     const { formatMessage } = useI18n({ messages: nb });
 
-    React.useEffect(() => {
+    useEffect(() => {
         dispatch(søknadSlice.actions.resetSøknad());
     }, [søker]);
 
@@ -320,7 +320,7 @@ const Inngang = () => {
                                 søkerAlder={fødsel?.alder ?? null}
                             />
                         )),
-                        RemoteData.getOrElse(() => null as React.ReactNode),
+                        RemoteData.getOrElse(() => null as ReactNode),
                     )}
                     {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
                     {RemoteData.isSuccess(hentPersonStatus) &&

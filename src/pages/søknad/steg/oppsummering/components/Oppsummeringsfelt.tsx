@@ -1,9 +1,9 @@
 import { BodyShort, Label } from '@navikt/ds-react';
-import * as React from 'react';
+import { ReactNode } from 'react';
 
 export const Oppsummeringsfelt = (props: {
-    label: React.ReactNode;
-    verdi: string | React.ReactNode;
+    label: ReactNode;
+    verdi: string | ReactNode;
     size?: 'small' | 'medium';
 }) => (
     <div>

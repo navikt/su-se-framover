@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import * as React from 'react';
+import { ReactNode } from 'react';
 
 import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
@@ -13,7 +13,7 @@ import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 import { FlyktningVilkårFormData, nyVurderingsperiodeFlyktningMedEllerUtenPeriode } from './FlyktningFormUtils';
 
 interface Props extends VilkårFormProps<FlyktningVilkårFormData> {
-    children?: React.ReactNode;
+    children?: ReactNode;
     nesteknappTekst?: string;
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;

@@ -1,11 +1,11 @@
 import { BodyShort, Label } from '@navikt/ds-react';
-import * as React from 'react';
+import { ReactNode } from 'react';
 
 import * as styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 
 export const OppsummeringsfeltAvKjøretøy = (props: {
-    labelFirstEl: React.ReactNode;
-    labelScndEl: React.ReactNode;
+    labelFirstEl: ReactNode;
+    labelScndEl: ReactNode;
     arr: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
 }) => {
     return (

@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Textarea } from '@navikt/ds-react';
-import { useState } from 'react';
-import * as React from 'react';
+import { ChangeEvent, useState } from 'react';
 import { FieldError } from 'react-hook-form';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
@@ -15,7 +14,7 @@ import * as styles from './brevInput.module.less';
 export interface BrevInputProps {
     tekst: Nullable<string>;
     onVisBrevClick: () => Promise<ApiClientResult<Blob> | undefined>;
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
     tittel?: string;
     knappLabel?: string;
     placeholder?: string;

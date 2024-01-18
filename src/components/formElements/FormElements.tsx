@@ -1,7 +1,6 @@
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import { endOfMonth } from 'date-fns';
-import { forwardRef } from 'react';
-import * as React from 'react';
+import { ForwardRefExoticComponent, RefAttributes, forwardRef } from 'react';
 import { FieldErrorsImpl } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
@@ -27,19 +26,22 @@ interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChan
 /**
  * Første radioboks (true-alternativet) vil få `id = props.id ?? props.name`, og ref vil også bli gitt til denne.
  */
-export const BooleanRadioGroup: React.ForwardRefExoticComponent<
-    BooleanRadioGroupProps & React.RefAttributes<HTMLInputElement>
-> = forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, ...props }, ref) => {
-    const { formatMessage } = useI18n({ messages: nb });
-    return (
-        <RadioGroup {...props} value={value?.toString() ?? ''} onChange={(val) => onChange(val === true.toString())}>
-            <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
-                {labels?.true ?? formatMessage('label.ja')}
-            </Radio>
-            <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>
-        </RadioGroup>
-    );
-});
+export const BooleanRadioGroup: ForwardRefExoticComponent<BooleanRadioGroupProps & RefAttributes<HTMLInputElement>> =
+    forwardRef<HTMLInputElement, BooleanRadioGroupProps>(({ labels, value, onChange, ...props }, ref) => {
+        const { formatMessage } = useI18n({ messages: nb });
+        return (
+            <RadioGroup
+                {...props}
+                value={value?.toString() ?? ''}
+                onChange={(val) => onChange(val === true.toString())}
+            >
+                <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
+                    {labels?.true ?? formatMessage('label.ja')}
+                </Radio>
+                <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>
+            </RadioGroup>
+        );
+    });
 BooleanRadioGroup.displayName = 'BooleanRadioGroup';
 
 export const PeriodeForm = (props: {

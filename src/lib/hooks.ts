@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
-import { useEffect, useMemo, useState } from 'react';
-import * as React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
@@ -10,7 +9,7 @@ import { useAppDispatch } from '~src/redux/Store';
 import { SuccessNotificationState } from './routes';
 
 export const useDocTitle = (title: string) => {
-    React.useEffect(() => {
+    useEffect(() => {
         document.title = `${title} – Supplerende Stønad`;
     }, [title]);
 };
@@ -19,7 +18,7 @@ export const useNotificationFromLocation = () => {
     const [locationState, setLocationState] = useState<SuccessNotificationState | null>(null);
     const navigate = useNavigate();
     const location = useLocation();
-    React.useEffect(() => {
+    useEffect(() => {
         setLocationState(location.state as SuccessNotificationState);
         navigate(location.pathname, { replace: true, state: null });
     }, []);
@@ -41,7 +40,7 @@ export function useAsyncActionCreator<Params, Returned>(
     const [apiResult, setApiResult] = useState<ApiResult<Returned>>(RemoteData.initial);
     const dispatch = useAppDispatch();
 
-    const callFn = React.useCallback(
+    const callFn = useCallback(
         async (
             args: Params,
             onSuccess?: (result: Returned) => void | Promise<void>,
@@ -68,7 +67,7 @@ export function useAsyncActionCreator<Params, Returned>(
         [apiResult, actionCreator],
     );
 
-    const resetToInitial = React.useCallback(() => {
+    const resetToInitial = useCallback(() => {
         setApiResult(RemoteData.initial);
     }, [setApiResult]);
 
@@ -80,7 +79,7 @@ export function useApiCall<T, U>(
 ): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void, () => void] {
     const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
 
-    const callFn = React.useCallback(
+    const callFn = useCallback(
         async (args: T, onSuccess?: (result: U) => void) => {
             if (!RemoteData.isPending(apiResult)) {
                 setApiResult(RemoteData.pending);
@@ -100,7 +99,7 @@ export function useApiCall<T, U>(
         [apiResult, fn],
     );
 
-    const resetToInitial = React.useCallback(() => {
+    const resetToInitial = useCallback(() => {
         setApiResult(RemoteData.initial);
     }, [setApiResult]);
 
@@ -145,7 +144,7 @@ export const useExclusiveCombine = <Error, Success>(...args: Array<RemoteData.Re
  * @param deps - Et set med dependencies som resetter timeren for hver endring
  */
 export const useAutosave = (callback: () => void, delay = 5000, deps: unknown[] = []) => {
-    React.useEffect(() => {
+    useEffect(() => {
         if (delay) {
             const interval = setInterval(callback, delay);
 
@@ -164,10 +163,10 @@ export const useAutosave = (callback: () => void, delay = 5000, deps: unknown[] 
  * @param delay - tiden i millisekunder autosaven skal kjøres
  */
 export const useAutosaveOnChange = <T>(data: T, callback: () => void, delay = 5000) => {
-    const [isSaving, setIsSaving] = React.useState(false);
-    const initialRender = React.useRef(true);
-    const prev = React.useRef(data);
-    const live = React.useRef(data);
+    const [isSaving, setIsSaving] = useState(false);
+    const initialRender = useRef(true);
+    const prev = useRef(data);
+    const live = useRef(data);
 
     useAutosave(async () => {
         if (prev.current !== live.current) {

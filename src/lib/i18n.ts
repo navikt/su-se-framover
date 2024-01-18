@@ -1,5 +1,5 @@
 import { PrimitiveType, FormatXMLElementFn } from 'intl-messageformat';
-import * as React from 'react';
+import { ReactNode, useMemo, useCallback } from 'react';
 import { createIntlCache, createIntl, IntlShape } from 'react-intl';
 
 export enum Languages {
@@ -18,7 +18,7 @@ export class DateFormats {
 export interface UseI18N<T extends Record<string, string> | void> {
     intl: IntlShape;
     formatMessage(id: keyof T, values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>): string;
-    formatMessage<X = React.ReactNode>(
+    formatMessage<X = ReactNode>(
         id: keyof T,
         values?: Record<string, PrimitiveType | FormatXMLElementFn<string, X>>,
     ): X;
@@ -29,18 +29,18 @@ export type MessageFormatter<T extends Record<string, string>> = UseI18N<T>['for
 export type DateFormatter<T extends void = void> = UseI18N<T>['formatDate'];
 
 export const useI18n = <T extends Record<string, string>>(args: { messages: T }): UseI18N<T> => {
-    const intl = React.useMemo(() => {
+    const intl = useMemo(() => {
         const cache = createIntlCache();
         return createIntl({ locale: 'nb-NO', messages: args.messages }, cache);
     }, [args.messages]);
 
-    const formatMessage = React.useCallback<UseI18N<T>['formatMessage']>(
+    const formatMessage = useCallback<UseI18N<T>['formatMessage']>(
         (id: keyof T, values: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>): string =>
             intl.formatMessage({ id: id as string }, values),
         [intl],
     );
 
-    const formatDate = React.useCallback(
+    const formatDate = useCallback(
         (date: string | Date, dateFormat: DateFormats) => {
             return intl.formatDate(date, dateFormat);
         },

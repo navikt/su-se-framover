@@ -1,6 +1,6 @@
 import { BodyShort, Label, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
+import { ChangeEvent } from 'react';
 
 import SkjemaelementFeilmelding from '../../formElements/SkjemaelementFeilmelding';
 
@@ -11,7 +11,7 @@ export const InputWithFollowText = (props: {
     inputName: string;
     inputTekst: string;
     value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
     disabled?: boolean;
 }) => (

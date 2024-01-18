@@ -2,34 +2,34 @@
 import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, OverridableComponent, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
+import { ReactNode, ForwardRefExoticComponent, RefAttributes, forwardRef, Children } from 'react';
 
 import * as styles from './søknadInputliste.module.less';
 
 interface SøknadInputlisteProps {
-    children: React.ReactNode[];
-    leggTilLabel: React.ReactNode;
+    children: ReactNode[];
+    leggTilLabel: ReactNode;
     className?: string;
     onLeggTilClick(): void;
 }
 
 type SøknadInputlisteItemComponent = OverridableComponent<
     {
-        children: React.ReactNode;
+        children: ReactNode;
         onFjernClick(): void;
     },
     HTMLDivElement
 >;
 
 interface SøknadInputlisteComponent
-    extends React.ForwardRefExoticComponent<SøknadInputlisteProps & React.RefAttributes<HTMLDivElement>> {
+    extends ForwardRefExoticComponent<SøknadInputlisteProps & RefAttributes<HTMLDivElement>> {
     Item: SøknadInputlisteItemComponent;
 }
 
-const SøknadInputliste = React.forwardRef((props, ref) => (
+const SøknadInputliste = forwardRef((props, ref) => (
     <div ref={ref} className={props.className}>
         <ol className={styles.liste}>
-            {React.Children.map(props.children, (c, idx) => (
+            {Children.map(props.children, (c, idx) => (
                 <Panel as="li" key={idx} border>
                     {c}
                 </Panel>
@@ -41,7 +41,7 @@ const SøknadInputliste = React.forwardRef((props, ref) => (
     </div>
 )) as SøknadInputlisteComponent;
 
-const Listeelement: SøknadInputlisteItemComponent = React.forwardRef(
+const Listeelement: SøknadInputlisteItemComponent = forwardRef(
     ({ as: Component = 'div', children, onFjernClick, className, ...rest }, ref) => (
         <Component ref={ref} className={classNames(styles.itemContainer, className)} {...rest}>
             <div className={styles.itemContent}>{children}</div>

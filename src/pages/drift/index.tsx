@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Label, Loader, Modal, Select, Textarea, TextField } from '@navikt/ds-react';
-import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ApiError } from '~src/api/apiClient';
 import {
@@ -38,10 +37,8 @@ enum Knapp {
 
 const Drift = () => {
     const [knappTrykket, settKnappTrykket] = useState<Nullable<Knapp>>();
-    const [statusBakover, setStatusBakover] = React.useState<RemoteData.RemoteData<ApiError, string>>(
-        RemoteData.initial,
-    );
-    React.useEffect(() => {
+    const [statusBakover, setStatusBakover] = useState<RemoteData.RemoteData<ApiError, string>>(RemoteData.initial);
+    useEffect(() => {
         const hentStatus = async () => {
             const resultat = await fetchBakoverStatus();
             if (resultat.status === 'ok') {
@@ -57,10 +54,10 @@ const Drift = () => {
     const [vilFikseVedtak, setVilFikseVedtak] = useState<boolean>(false);
 
     const [stønadsmottakereModal, setStønadsmottakereModal] = useState<boolean>(false);
-    const [visReguleringModal, setVisReguleringModal] = React.useState(false);
-    const [fixSøknaderResponse, setfixSøknaderResponse] = React.useState<
-        RemoteData.RemoteData<ApiError, SøknadResponse>
-    >(RemoteData.initial);
+    const [visReguleringModal, setVisReguleringModal] = useState(false);
+    const [fixSøknaderResponse, setfixSøknaderResponse] = useState<RemoteData.RemoteData<ApiError, SøknadResponse>>(
+        RemoteData.initial,
+    );
 
     const fixSøknader = async () => {
         settKnappTrykket(Knapp.FIX_SØKNADER);
@@ -72,20 +69,16 @@ const Drift = () => {
         }
     };
 
-    const [grensesnittsavstemmingModalOpen, setGrensesnittsavstemmingModalOpen] = React.useState(false);
-    const [grensesnittsavtemmingFraOgMed, setGrensesnittsavtemmingFraOgMed] = React.useState<Nullable<Date>>(
-        new Date(),
-    );
-    const [grensesnittsavtemmingTilOgMed, setGrensesnittsavtemmingTilOgMed] = React.useState<Nullable<Date>>(
-        new Date(),
-    );
+    const [grensesnittsavstemmingModalOpen, setGrensesnittsavstemmingModalOpen] = useState(false);
+    const [grensesnittsavtemmingFraOgMed, setGrensesnittsavtemmingFraOgMed] = useState<Nullable<Date>>(new Date());
+    const [grensesnittsavtemmingTilOgMed, setGrensesnittsavtemmingTilOgMed] = useState<Nullable<Date>>(new Date());
     const [grensesnittsavstemmingStatus, fetchGrensesnittsavstemming] = useApiCall(grensesnittsavstemming);
-    const [grensesnittsavstemmingFagområde, setGrensesnittsavstemmingFagområde] = React.useState<string>('SUUFORE');
+    const [grensesnittsavstemmingFagområde, setGrensesnittsavstemmingFagområde] = useState<string>('SUUFORE');
 
-    const [konsistensavtemmingModalOpen, setKonsistensavtemmingModalOpen] = React.useState(false);
-    const [konsistensavstemmingFraOgMed, setKonsistensavstemmingFraOgMed] = React.useState<Nullable<Date>>(new Date());
+    const [konsistensavtemmingModalOpen, setKonsistensavtemmingModalOpen] = useState(false);
+    const [konsistensavstemmingFraOgMed, setKonsistensavstemmingFraOgMed] = useState<Nullable<Date>>(new Date());
     const [konsistensavstemmingStatus, fetchKonsistensavstemming] = useApiCall(konsistensavstemming);
-    const [konsistensavstemmingFagområde, setKonsistensavstemmingFagområde] = React.useState<string>('SUUFORE');
+    const [konsistensavstemmingFagområde, setKonsistensavstemmingFagområde] = useState<string>('SUUFORE');
 
     return (
         <div className={styles.container}>

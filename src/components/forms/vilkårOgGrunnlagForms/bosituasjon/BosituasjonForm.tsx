@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader, Modal, Heading, BodyLong, Button } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { useState } from 'react';
-import * as React from 'react';
+import { ReactNode, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,7 +30,7 @@ interface Props extends VilkårFormProps<BosituasjonGrunnlagFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
     søker: Person;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 const BosituasjonForm = (props: Props) => {

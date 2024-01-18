@@ -1,12 +1,12 @@
 import { BodyShort, Label } from '@navikt/ds-react';
-import * as React from 'react';
+import { ReactNode } from 'react';
 
 import * as styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 
 export const OppsummeringAvTrygdeytelser = (props: {
-    labelFirstEl: React.ReactNode;
-    labelScndEl: React.ReactNode;
-    labelThirdEl: React.ReactNode;
+    labelFirstEl: ReactNode;
+    labelScndEl: ReactNode;
+    labelThirdEl: ReactNode;
     arr: Array<{ beløp: string; type: string; valuta: string }>;
 }) => {
     return (

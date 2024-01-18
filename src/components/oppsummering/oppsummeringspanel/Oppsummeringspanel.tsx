@@ -9,7 +9,7 @@ import {
 } from '@navikt/aksel-icons';
 import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
+import { ReactNode } from 'react';
 
 import * as styles from './oppsummeringspanel.module.less';
 
@@ -72,7 +72,7 @@ const Oppsummeringspanel = (props: {
     ikon: Oppsummeringsikon;
     farge: Oppsummeringsfarge;
     tittel: string;
-    children: React.ReactNode;
+    children: ReactNode;
     className?: string;
     classNameChildren?: string;
     kompakt?: boolean;

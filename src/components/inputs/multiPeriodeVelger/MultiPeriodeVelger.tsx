@@ -1,6 +1,6 @@
 import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, Panel } from '@navikt/ds-react';
-import * as React from 'react';
+import { ReactNode } from 'react';
 import {
     ArrayPath,
     Control,
@@ -32,7 +32,7 @@ interface Props<T extends FieldValues, U> {
         maxDate: Date;
         size?: 'medium' | 'small';
     };
-    getChild: (nameAndIdx: PartialName<T>) => React.ReactNode;
+    getChild: (nameAndIdx: PartialName<T>) => ReactNode;
     childrenOverDato?: boolean;
     //disse er for å kun opprettholde søknadsbehandling som den er. sjekk om det er greit å periodisere andre vilkår
     begrensTilEnPeriode?: boolean;

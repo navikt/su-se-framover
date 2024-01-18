@@ -2,8 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Select, Textarea, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { useEffect, useState } from 'react';
-import * as React from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Control, Controller, useFieldArray, useForm, UseFormReset, UseFormSetValue } from 'react-hook-form';
 
 import { RangePickerDate } from '~src/components/inputs/datePicker/DatePicker';
@@ -35,7 +34,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
         values: RegisteringAvUtenlandsoppholdFormData,
         formReset: UseFormReset<RegisteringAvUtenlandsoppholdFormData>,
     ) => void;
-    children: React.ReactNode;
+    children: ReactNode;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const [antallDagerIUtlandet, setAntallDagerIUtlandet] = useState<number>(0);

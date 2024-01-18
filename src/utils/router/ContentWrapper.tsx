@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading, Link, Loader } from '@navikt/ds-react';
-import { PropsWithChildren, useEffect } from 'react';
-import * as React from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { LOGIN_URL } from '~src/api/authUrl';
@@ -13,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import * as styles from '~src/root.module.less';
 import { LoggedInUser } from '~src/types/LoggedInUser';
 
-export const ContentWrapper: React.FC<PropsWithChildren> = (props) => {
+export const ContentWrapper: FC<PropsWithChildren> = (props) => {
     const loggedInUser = useAppSelector((s) => s.me.me);
 
     const dispatch = useAppDispatch();

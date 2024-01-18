@@ -1,5 +1,5 @@
 import { Heading, Panel } from '@navikt/ds-react';
-import * as React from 'react';
+import { ReactNode } from 'react';
 
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -23,8 +23,8 @@ const OppsummeringAvBeregningOgSimulering = (props: {
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
     tittel?: string;
-    childrenOverBeregning?: React.ReactNode;
-    childrenUnderBeregning?: React.ReactNode;
+    childrenOverBeregning?: ReactNode;
+    childrenUnderBeregning?: ReactNode;
 }) => {
     const { formatMessage } = useI18n({ messages });
     return (
