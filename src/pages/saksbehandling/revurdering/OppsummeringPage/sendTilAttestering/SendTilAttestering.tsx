@@ -125,10 +125,10 @@ const SendTilAttestering = (props: {
             fritekst: props.revurdering.brevvalg.fritekst
                 ? props.revurdering.brevvalg.fritekst
                 : erRevurderingTilbakekreving(props.revurdering)
-                  ? formatMessage('tilbakekreving.forhåndstekst')
-                  : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
-                    ? formatMessage('opplysningsplikt.forhåndstekst')
-                    : null,
+                ? formatMessage('tilbakekreving.forhåndstekst')
+                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                ? formatMessage('opplysningsplikt.forhåndstekst')
+                : null,
             begrunnValg:
                 props.revurdering.brevvalg.begrunnelse && props.revurdering.brevvalg.begrunnelse.length > 0
                     ? true

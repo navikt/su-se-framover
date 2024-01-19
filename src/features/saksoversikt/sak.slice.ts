@@ -35,8 +35,8 @@ export const fetchSak = createAsyncThunk<
     const res = await ('fnr' in arg
         ? sakApi.fetchSakByFnr(arg.fnr)
         : 'saksnummer' in arg
-          ? sakApi.fetchSakBySaksnummer(arg.saksnummer)
-          : sakApi.fetchSakBySakId(arg.sakId));
+        ? sakApi.fetchSakBySaksnummer(arg.saksnummer)
+        : sakApi.fetchSakBySakId(arg.sakId));
     if (res.status === 'ok') {
         return res.data;
     }

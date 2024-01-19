@@ -230,9 +230,9 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
                 status: erKlageOpprettet(k)
                     ? Linjestatus.Ingenting
                     : k.status === KlageStatus.VILKÅRSVURDERT_PÅBEGYNT ||
-                        k.status === KlageStatus.VILKÅRSVURDERT_UTFYLT_TIL_VURDERING
-                      ? Linjestatus.Uavklart
-                      : Linjestatus.Ok,
+                      k.status === KlageStatus.VILKÅRSVURDERT_UTFYLT_TIL_VURDERING
+                    ? Linjestatus.Uavklart
+                    : Linjestatus.Ok,
                 erKlikkbar: true,
             };
         case KlageSteg.Vurdering:
@@ -241,8 +241,8 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
                     erKlageOpprettet(k) || erKlageVilkårsvurdert(k)
                         ? Linjestatus.Ingenting
                         : k.status === KlageStatus.VURDERT_PÅBEGYNT || k.status === KlageStatus.VURDERT_UTFYLT
-                          ? Linjestatus.Uavklart
-                          : Linjestatus.Ok,
+                        ? Linjestatus.Uavklart
+                        : Linjestatus.Ok,
                 erKlikkbar: erKlageOpprettet(k) || erKlageVilkårsvurdert(k) || erKlageAvvist(k) ? false : true,
             };
         case KlageSteg.Avvisning:
@@ -251,8 +251,8 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
                     erKlageOpprettet(k) || erKlageVilkårsvurdert(k)
                         ? Linjestatus.Ingenting
                         : k.status === KlageStatus.AVVIST
-                          ? Linjestatus.Uavklart
-                          : Linjestatus.Ok,
+                        ? Linjestatus.Uavklart
+                        : Linjestatus.Ok,
                 erKlikkbar: erKlageOpprettet(k) || erKlageVilkårsvurdert(k) || erKlageVurdert(k) ? false : true,
             };
         case KlageSteg.Oppsummering:

@@ -210,24 +210,24 @@ export const finnNesteRevurderingsteg = (r: InformasjonsRevurdering) => {
     return førsteIkkeVurderteSteg
         ? { seksjon: RevurderingSeksjoner.GrunnlagOgVilkår, steg: førsteIkkeVurderteSteg }
         : erRevurderingSimulert(r) || erRevurderingUnderkjent(r)
-          ? erRevurderingTilbakekrevingsbehandling(r)
-              ? erRevurderingTilbakekrevingIkkeAvgjort(r)
-                  ? {
-                        seksjon: RevurderingSeksjoner.Oppsummering,
-                        steg: RevurderingOppsummeringSteg.Tilbakekreving,
-                    }
-                  : {
-                        seksjon: RevurderingSeksjoner.Oppsummering,
-                        steg: RevurderingOppsummeringSteg.SendTilAttestering,
-                    }
-              : {
-                    seksjon: RevurderingSeksjoner.Oppsummering,
-                    steg: RevurderingOppsummeringSteg.SendTilAttestering,
-                }
-          : {
-                seksjon: RevurderingSeksjoner.BeregningOgSimulering,
-                steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
-            };
+        ? erRevurderingTilbakekrevingsbehandling(r)
+            ? erRevurderingTilbakekrevingIkkeAvgjort(r)
+                ? {
+                      seksjon: RevurderingSeksjoner.Oppsummering,
+                      steg: RevurderingOppsummeringSteg.Tilbakekreving,
+                  }
+                : {
+                      seksjon: RevurderingSeksjoner.Oppsummering,
+                      steg: RevurderingOppsummeringSteg.SendTilAttestering,
+                  }
+            : {
+                  seksjon: RevurderingSeksjoner.Oppsummering,
+                  steg: RevurderingOppsummeringSteg.SendTilAttestering,
+              }
+        : {
+              seksjon: RevurderingSeksjoner.BeregningOgSimulering,
+              steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
+          };
 };
 
 export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simulering, erOpphør: boolean) =>
@@ -326,9 +326,9 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                             r.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat === Vilkårstatus.VilkårOppfylt
                                 ? Linjestatus.Ok
                                 : r.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat ===
-                                    Vilkårstatus.VilkårIkkeOppfylt
-                                  ? Linjestatus.IkkeOk
-                                  : Linjestatus.Ingenting,
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.fastOpphold,
                     };
                 case RevurderingGrunnlagOgVilkårSteg.Flyktning:
@@ -338,9 +338,9 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                             r.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat === Vilkårstatus.VilkårOppfylt
                                 ? Linjestatus.Ok
                                 : r.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat ===
-                                    Vilkårstatus.VilkårIkkeOppfylt
-                                  ? Linjestatus.IkkeOk
-                                  : Linjestatus.Ingenting,
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.flyktning,
                     };
                 case RevurderingGrunnlagOgVilkårSteg.Formue:
@@ -350,8 +350,8 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                             r.grunnlagsdataOgVilkårsvurderinger.formue.resultat === FormueStatus.VilkårOppfylt
                                 ? Linjestatus.Ok
                                 : r.grunnlagsdataOgVilkårsvurderinger.formue.resultat === FormueStatus.VilkårIkkeOppfylt
-                                  ? Linjestatus.IkkeOk
-                                  : Linjestatus.Ingenting,
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.formue,
                     };
                 case RevurderingGrunnlagOgVilkårSteg.Institusjonsopphold:
@@ -362,9 +362,9 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                             Vilkårstatus.VilkårOppfylt
                                 ? Linjestatus.Ok
                                 : r.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.resultat ===
-                                    Vilkårstatus.VilkårIkkeOppfylt
-                                  ? Linjestatus.IkkeOk
-                                  : Linjestatus.Ingenting,
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold,
                     };
                 case RevurderingGrunnlagOgVilkårSteg.Oppholdstillatelse:
@@ -374,9 +374,9 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                             r.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat === Vilkårstatus.VilkårOppfylt
                                 ? Linjestatus.Ok
                                 : r.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat ===
-                                    Vilkårstatus.VilkårIkkeOppfylt
-                                  ? Linjestatus.IkkeOk
-                                  : Linjestatus.Ingenting,
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.lovligOpphold,
                     };
                 case RevurderingGrunnlagOgVilkårSteg.Opplysningsplikt:
@@ -385,10 +385,10 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                         status: !r.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt?.vurderinger
                             ? Linjestatus.Ingenting
                             : r.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt.vurderinger.some(
-                                    (o) => o.beskrivelse === OpplysningspliktBeksrivelse.UtilstrekkeligDokumentasjon,
-                                )
-                              ? Linjestatus.IkkeOk
-                              : Linjestatus.Ok,
+                                  (o) => o.beskrivelse === OpplysningspliktBeksrivelse.UtilstrekkeligDokumentasjon,
+                              )
+                            ? Linjestatus.IkkeOk
+                            : Linjestatus.Ok,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt,
                     };
                 case RevurderingGrunnlagOgVilkårSteg.PersonligOppmøte:
@@ -399,9 +399,9 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                             Vilkårstatus.VilkårOppfylt
                                 ? Linjestatus.Ok
                                 : r.grunnlagsdataOgVilkårsvurderinger.personligOppmøte?.resultat ===
-                                    Vilkårstatus.VilkårIkkeOppfylt
-                                  ? Linjestatus.IkkeOk
-                                  : Linjestatus.Ingenting,
+                                  Vilkårstatus.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.personligOppmøte,
                     };
                 case RevurderingGrunnlagOgVilkårSteg.Uførhet:
@@ -411,9 +411,9 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                             r.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårOppfylt
                                 ? Linjestatus.Ok
                                 : r.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat ===
-                                    UføreResultat.VilkårIkkeOppfylt
-                                  ? Linjestatus.IkkeOk
-                                  : Linjestatus.Ingenting,
+                                  UføreResultat.VilkårIkkeOppfylt
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.uføre,
                     };
                 case RevurderingGrunnlagOgVilkårSteg.Utenlandsopphold:
@@ -424,9 +424,9 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                             Utenlandsoppholdstatus.SkalHoldeSegINorge
                                 ? Linjestatus.Ok
                                 : r.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
-                                    Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet
-                                  ? Linjestatus.IkkeOk
-                                  : Linjestatus.Ingenting,
+                                  Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet
+                                ? Linjestatus.IkkeOk
+                                : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold,
                     };
             }
@@ -537,8 +537,8 @@ export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevu
             ? true
             : false
         : erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r)
-          ? true
-          : false;
+        ? true
+        : false;
 
     const defaultLinjer = [
         {

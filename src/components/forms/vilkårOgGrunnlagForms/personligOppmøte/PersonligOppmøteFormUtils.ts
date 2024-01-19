@@ -55,8 +55,8 @@ export const personligOppmøteVurderingsperiodeTilFormData = (
         f.vurdering === PersonligOppmøteÅrsak.MøttPersonlig
             ? HarMøttPersonlig.Ja
             : f.vurdering === PersonligOppmøteÅrsak.Uavklart
-              ? HarMøttPersonlig.Uavklart
-              : HarMøttPersonlig.Nei,
+            ? HarMøttPersonlig.Uavklart
+            : HarMøttPersonlig.Nei,
     årsakForManglendePersonligOppmøte: f.vurdering,
 });
 

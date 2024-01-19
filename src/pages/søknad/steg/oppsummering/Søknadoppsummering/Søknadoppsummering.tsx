@@ -81,8 +81,8 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                                     søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
                                         ? formatMessage('delerBoligMed.eps')
                                         : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.VOKSNE_BARN
-                                          ? formatMessage('delerBoligMed.voksneBarn')
-                                          : formatMessage('delerBoligMed.andreVoksne')
+                                        ? formatMessage('delerBoligMed.voksneBarn')
+                                        : formatMessage('delerBoligMed.andreVoksne')
                                 }
                             />
                         )}

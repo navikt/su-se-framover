@@ -78,9 +78,9 @@ const RevurderingBeregnOgSimuler = (props: {
                 beregningStatus.value.revurdering.tilbakekrevingsbehandling !== null
                     ? false
                     : RemoteData.isSuccess(beregningStatus) &&
-                        beregningStatus.value.revurdering.tilbakekrevingsbehandling === null
-                      ? true
-                      : null,
+                      beregningStatus.value.revurdering.tilbakekrevingsbehandling === null
+                    ? true
+                    : null,
         },
         resolver: yupResolver(beregnOgSimulerSchema),
     });

@@ -95,8 +95,8 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                             {err?.statusCode === ErrorCode.Unauthorized
                                 ? formatMessage('feilmelding.ikkeTilgang')
                                 : err?.statusCode === ErrorCode.NotFound
-                                  ? formatMessage('feilmelding.ikkeFunnet')
-                                  : formatMessage('feilmelding.ukjent')}
+                                ? formatMessage('feilmelding.ikkeFunnet')
+                                : formatMessage('feilmelding.ukjent')}
                         </Alert>
                     ),
                     (eps) => (

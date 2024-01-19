@@ -115,8 +115,8 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
                     bekreftText: erKlageOpprettholdt(props.klage)
                         ? formatMessage('radio.overførTilKlageinstans')
                         : erKlageINoenFormForAvvist(props.klage)
-                          ? formatMessage('radio.godkjennAvvisning')
-                          : undefined,
+                        ? formatMessage('radio.godkjennAvvisning')
+                        : undefined,
                 }}
             />
             <OppsummeringAvKlage klage={props.klage} klagensVedtak={props.klagensVedtak} />

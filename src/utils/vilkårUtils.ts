@@ -208,8 +208,8 @@ export const vilkårsinformasjonForBeregningssteg = (b: Søknadsbehandling): Vil
                 b.beregning === null
                     ? VilkårVurderingStatus.IkkeVurdert
                     : b.status === SøknadsbehandlingStatus.BEREGNET_AVSLAG
-                      ? VilkårVurderingStatus.IkkeOk
-                      : VilkårVurderingStatus.Ok,
+                    ? VilkårVurderingStatus.IkkeOk
+                    : VilkårVurderingStatus.Ok,
             vilkårtype: Vilkårtype.Beregning,
             erStartet: b.beregning !== null,
         },

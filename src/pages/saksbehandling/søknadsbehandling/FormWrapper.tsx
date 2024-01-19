@@ -67,8 +67,8 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
                     props.neste.onSuccess && res
                         ? props.neste.onSuccess(res)
                         : props.neste?.url
-                          ? navigate(props.neste.url)
-                          : undefined;
+                        ? navigate(props.neste.url)
+                        : undefined;
                 });
             })}
         >
@@ -99,11 +99,11 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
                               ),
                           }
                         : props.fortsettSenere
-                          ? {
-                                onClick: props.fortsettSenere.onClick,
-                                tekst: props.fortsettSenere?.tekst,
-                            }
-                          : undefined
+                        ? {
+                              onClick: props.fortsettSenere.onClick,
+                              tekst: props.fortsettSenere?.tekst,
+                          }
+                        : undefined
                 }
             />
         </form>
