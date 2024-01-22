@@ -33,6 +33,7 @@ export default {
     'revurdering.årsakForRevurdering': 'Årsak for revurdering',
     'revurdering.begrunnelse': 'Revurderingsbegrunnelse',
     'revurdering.skalTilbakekreves': 'Skal tilbakekreves',
+    'revurdering.brevvalg.begrunnelse': 'Begrunnelse av vedtaksbrev',
 
     'regulering.utført': 'Utført',
 

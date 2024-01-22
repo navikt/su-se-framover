@@ -23,7 +23,7 @@ import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
-import { Revurdering } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, Revurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erBehandlingRevurdering, erBehandlingSøknadsbehandling } from '~src/utils/behandling/BehandlingUtils';
@@ -166,7 +166,19 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                         )}
                     </div>
                 )}
+
+                {behandlingstype === 'revurdering' &&
+                    (vedtaketsBehandling as Revurdering) &&
+                    erInformasjonsRevurdering(vedtaketsBehandling as Revurdering) && (
+                        <OppsummeringPar
+                            className={styles.brevvalgBegrunnelse}
+                            label={formatMessage('revurdering.brevvalg.begrunnelse')}
+                            verdi={(vedtaketsBehandling as InformasjonsRevurdering).brevvalg.begrunnelse}
+                            retning={'vertikal'}
+                        />
+                    )}
             </Oppsummeringspanel>
+
             <Oppsummeringspanel
                 ikon={Oppsummeringsikon.Task}
                 farge={Oppsummeringsfarge.Blå}
