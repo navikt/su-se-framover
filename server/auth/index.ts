@@ -7,9 +7,9 @@ import * as OpenIdClient from 'openid-client';
 import passport from 'passport';
 import { createClient } from 'redis';
 
-import * as Config from '../config';
+import * as Config from '../config.js';
 
-import * as AuthUtils from './utils';
+import * as AuthUtils from './utils.js';
 
 declare module 'express-session' {
     interface SessionData {

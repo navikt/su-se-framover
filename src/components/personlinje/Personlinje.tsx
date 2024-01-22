@@ -16,7 +16,7 @@ import { showName, formatFnr } from '~src/utils/person/personUtils';
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
 import messages from './personlinje-nb';
-import * as styles from './personlinje.module.less';
+import styles from './personlinje.module.less';
 
 const Separator = () => (
     <BodyShort as="span" className={styles.separator}>
@@ -95,8 +95,8 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                             {err?.statusCode === ErrorCode.Unauthorized
                                 ? formatMessage('feilmelding.ikkeTilgang')
                                 : err?.statusCode === ErrorCode.NotFound
-                                ? formatMessage('feilmelding.ikkeFunnet')
-                                : formatMessage('feilmelding.ukjent')}
+                                  ? formatMessage('feilmelding.ikkeFunnet')
+                                  : formatMessage('feilmelding.ukjent')}
                         </Alert>
                     ),
                     (eps) => (

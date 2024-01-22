@@ -14,7 +14,7 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { erIverksatt, erTilAttestering } from '~src/utils/SøknadsbehandlingUtils';
 
 import messages from './attesterSøknadsbehandling-nb';
-import * as styles from './attesterSøknadsbehandling.module.less';
+import styles from './attesterSøknadsbehandling.module.less';
 
 const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søknadsbehandling }) => {
     const navigate = useNavigate();

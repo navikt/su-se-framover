@@ -19,7 +19,7 @@ import { Revurdering } from '~src/types/Revurdering';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
 import messages from './avsluttRevurdering-nb';
-import * as styles from './avsluttRevurdering.module.less';
+import styles from './avsluttRevurdering.module.less';
 import { AvsluttRevurderingFormData, Brevvalg, avsluttRevurderingSchema } from './avsluttRevurderingUtils';
 
 const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) => {

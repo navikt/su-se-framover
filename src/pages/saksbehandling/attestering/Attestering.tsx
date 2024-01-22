@@ -7,7 +7,7 @@ import * as Routes from '~src/lib/routes';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './Attestering-nb';
-import * as styles from './Attestering.module.less';
+import styles from './Attestering.module.less';
 import AttesterKlage from './attesterKlage/AttesterKlage';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
 import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';

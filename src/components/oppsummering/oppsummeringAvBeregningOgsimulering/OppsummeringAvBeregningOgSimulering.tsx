@@ -15,7 +15,7 @@ import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import OppsummeringAvBeregning from './oppsummeringAvBeregning/OppsummeringAvBeregning';
 import messages from './OppsummeringAvBeregningOgSimulering-nb';
-import * as styles from './OppsummeringAvBeregningOgSimulering.module.less';
+import styles from './OppsummeringAvBeregningOgSimulering.module.less';
 import { Utbetalingssimulering } from './oppsummeringAvSimulering/OppsummeringAvSimulering';
 
 const OppsummeringAvBeregningOgSimulering = (props: {

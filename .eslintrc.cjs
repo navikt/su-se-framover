@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-undef
 module.exports = {
     root: true,
+    ignorePatterns: ['**/dist', '**/node_modules', '.idea'],
     parser: '@typescript-eslint/parser',
     env: {
         browser: true,
@@ -36,8 +37,9 @@ module.exports = {
     },
     plugins: ['react', '@typescript-eslint', 'jsx-a11y'],
     rules: {
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
         '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
-        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
         'react/prop-types': 'off',

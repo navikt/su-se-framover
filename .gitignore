@@ -1,8 +1,8 @@
 node_modules
 .cache
-.parcel-cache
 dist
 server/dist
+scripts/dist
 .idea/
 .eslintcache
 .DS_STORE

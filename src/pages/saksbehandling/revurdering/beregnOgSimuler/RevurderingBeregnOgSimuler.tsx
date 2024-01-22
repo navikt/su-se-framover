@@ -32,7 +32,7 @@ import Navigasjonsknapper from '../../../../components/navigasjonsknapper/Naviga
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './RevurderingBeregnOgsimuler-nb';
-import * as styles from './RevurderingBeregnOgSimuler.module.less';
+import styles from './RevurderingBeregnOgSimuler.module.less';
 import { BeregnOgSimulerFormData, beregnOgSimulerSchema } from './RevurderingBeregnOgSimulerUtils';
 
 const RevurderingBeregnOgSimuler = (props: {
@@ -78,9 +78,9 @@ const RevurderingBeregnOgSimuler = (props: {
                 beregningStatus.value.revurdering.tilbakekrevingsbehandling !== null
                     ? false
                     : RemoteData.isSuccess(beregningStatus) &&
-                      beregningStatus.value.revurdering.tilbakekrevingsbehandling === null
-                    ? true
-                    : null,
+                        beregningStatus.value.revurdering.tilbakekrevingsbehandling === null
+                      ? true
+                      : null,
         },
         resolver: yupResolver(beregnOgSimulerSchema),
     });

@@ -3,7 +3,7 @@ import { useI18n } from '~src/lib/i18n';
 import epsInntektMessages from '~src/pages/søknad/steg/inntekt/epsInntekt/inntekt-nb';
 import inntektMessages from '~src/pages/søknad/steg/inntekt/søkersInntekt/inntekt-nb';
 
-import * as sharedStyles from '../../../steg-shared.module.less';
+import sharedStyles from '../../../steg-shared.module.less';
 import { pensjonsinntekterMessages } from '../../inntekt/pensonsinntekter/Pensjonsinntekter';
 import { trygdeytelserMessages } from '../../inntekt/TrygdeytelserInputs/TrygdeytelserInputs';
 
@@ -56,8 +56,8 @@ const InntektsOppsummering = ({
                     inntekt.søktAndreYtelserIkkeBehandlet
                         ? 'Ja'
                         : inntekt.søktAndreYtelserIkkeBehandlet === false
-                        ? 'Nei'
-                        : 'Ubesvart'
+                          ? 'Nei'
+                          : 'Ubesvart'
                 }
             />
 
@@ -78,8 +78,8 @@ const InntektsOppsummering = ({
                     inntekt.harTrygdeytelserIUtlandet
                         ? 'Ja'
                         : inntekt.harTrygdeytelserIUtlandet === false
-                        ? 'Nei'
-                        : 'Ubesvart'
+                          ? 'Nei'
+                          : 'Ubesvart'
                 }
             />
             {inntekt.harTrygdeytelserIUtlandet && (

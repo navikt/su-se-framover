@@ -14,7 +14,7 @@ import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { soknadsutfylling, useRouteParams } from '~src/lib/routes';
-import * as styles from '~src/pages/søknad/index.module.less';
+import styles from '~src/pages/søknad/index.module.less';
 import messages from '~src/pages/søknad/nb';
 import { Steg } from '~src/pages/søknad/steg/Steg';
 import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';

@@ -5,7 +5,7 @@ import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 
 import SkjemaelementFeilmelding from '../formElements/SkjemaelementFeilmelding';
 
-import * as styles from './errorBoundary.module.less';
+import styles from './errorBoundary.module.less';
 
 class ErrorBoundary extends Component<PropsWithChildren, { hasError: boolean; error?: Error; eventId?: string }> {
     constructor(props: PropsWithChildren) {

@@ -1,7 +1,8 @@
 import { v4 as uuid } from 'uuid';
 
-import { LOGIN_URL } from '~src/api/authUrl';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
+
+import { LOGIN_URL } from './authUrl';
 
 export enum ErrorCode {
     Unauthorized = 403,
@@ -69,7 +70,7 @@ export default async function apiClient<TSuccess>(arg: {
         window.location.href = `${LOGIN_URL}?redirectTo=${window.location.pathname}`;
     }
 
-    const errorBody: ErrorMessage = await res.json().catch((_err) => ({}));
+    const errorBody: ErrorMessage = await res.json().catch(() => ({}));
 
     return error({ statusCode: res.status, correlationId, body: errorBody });
 }

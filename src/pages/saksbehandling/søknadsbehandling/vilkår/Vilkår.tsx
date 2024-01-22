@@ -24,7 +24,7 @@ import PersonligOppmøte from '../personlig-oppmøte/PersonligOppmøte';
 import Uførhet from '../uførhet/Uførhet';
 import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
 
-import * as styles from './vilkår.module.less';
+import styles from './vilkår.module.less';
 
 const Vilkår = () => {
     const props = useOutletContext<SaksoversiktContext>();

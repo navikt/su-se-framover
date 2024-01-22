@@ -4,7 +4,7 @@ import { useRef, useEffect } from 'react';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
 import * as routes from '~src/lib/routes';
-import * as styles from '~src/pages/søknad/index.module.less';
+import styles from '~src/pages/søknad/index.module.less';
 import Alderspensjon from '~src/pages/søknad/steg/alderspensjon/Alderspensjon';
 import BoOgOppholdINorge from '~src/pages/søknad/steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
 import FlyktningstatusOppholdstillatelse from '~src/pages/søknad/steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';

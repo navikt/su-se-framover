@@ -29,10 +29,10 @@ import {
     erKlageVurdert,
 } from '~src/utils/klage/klageUtils';
 
-import * as sharedStyles from '../klage.module.less';
+import sharedStyles from '../klage.module.less';
 
 import messages from './vurderFormkrav-nb';
-import * as styles from './vurderFormkrav.module.less';
+import styles from './vurderFormkrav.module.less';
 
 const eqFormData = struct<FormData>({
     vedtakId: eqNullable(S.Eq),

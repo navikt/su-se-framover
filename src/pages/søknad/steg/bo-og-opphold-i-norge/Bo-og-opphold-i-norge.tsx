@@ -21,11 +21,11 @@ import { toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import { formatAdresse } from '~src/utils/format/formatUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import * as sharedStyles from '../../steg-shared.module.less';
+import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './bo-og-opphold-i-norge-nb';
-import * as styles from './bo-og-opphold-i-norge.module.less';
+import styles from './bo-og-opphold-i-norge.module.less';
 import EktefellePartnerSamboer from './EktefellePartnerSamboer';
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {

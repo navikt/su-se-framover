@@ -4,7 +4,7 @@ import { FieldError } from 'react-hook-form';
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
 import { useI18n } from '~src/lib/i18n';
 
-import * as styles from './pensjonsinntekter.module.less';
+import styles from './pensjonsinntekter.module.less';
 
 export const pensjonsinntekterMessages = {
     'mottarPensjon.fra': 'Hvem får du pengene fra?',

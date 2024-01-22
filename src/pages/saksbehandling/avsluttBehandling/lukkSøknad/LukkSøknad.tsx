@@ -19,7 +19,7 @@ import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/Avslut
 import AvslåttSøknad from './avslag/AvslåttSøknad';
 import Avvist from './Avvist';
 import nb from './lukkSøknad-nb';
-import * as styles from './lukkSøknad.module.less';
+import styles from './lukkSøknad.module.less';
 import {
     lukkSøknadInitialValues,
     LukkSøknadOgAvsluttSøknadsbehandlingFormData,

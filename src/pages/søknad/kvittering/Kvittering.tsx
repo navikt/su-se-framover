@@ -20,7 +20,7 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 import { showName } from '~src/utils/person/personUtils';
 
 import messages from './kvittering-nb';
-import * as styles from './kvittering.module.less';
+import styles from './kvittering.module.less';
 
 const Kvittering = () => {
     const dispatch = useAppDispatch();

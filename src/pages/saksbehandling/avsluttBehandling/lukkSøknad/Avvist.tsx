@@ -11,7 +11,7 @@ import { Nullable } from '~src/lib/types';
 import { LukkSøknadBegrunnelse } from '~src/types/Søknad';
 
 import nb from './lukkSøknad-nb';
-import * as styles from './lukkSøknad.module.less';
+import styles from './lukkSøknad.module.less';
 import { AvvistBrevtyper } from './lukkSøknadUtils';
 
 export interface AvvistFormData {

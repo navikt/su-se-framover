@@ -8,7 +8,7 @@ import { useI18n } from '~src/lib/i18n';
 import { UtbetalingsRevurdering } from '~src/types/Revurdering';
 
 import messages from './OppsummeringAvUtbetalingsrevurdering-nb';
-import * as styles from './OppsummeringAvUtbetalingsrevurdering.module.less';
+import styles from './OppsummeringAvUtbetalingsrevurdering.module.less';
 
 const OppsummeringAvUtbetalingsrevurdering = (props: { revurdering: UtbetalingsRevurdering }) => {
     const { formatMessage } = useI18n({ messages });

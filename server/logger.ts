@@ -1,7 +1,7 @@
-import pino from 'pino';
-import pinoHttp from 'pino-http';
+import { pino } from 'pino';
+import { pinoHttp } from 'pino-http';
 
-import * as Config from './config';
+import * as Config from './config.js';
 
 const fnrReplacePattern = [/^(\/api\/(?:person|skatt|saker\/info)\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/];
 export const logger: pino.Logger = pino({
@@ -17,7 +17,7 @@ export const logger: pino.Logger = pino({
           }
         : {}),
     formatters: {
-        level(level, _number) {
+        level(level) {
             return { level };
         },
     },

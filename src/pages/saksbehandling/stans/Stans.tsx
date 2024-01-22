@@ -7,7 +7,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 
 import messages from './stans-nb';
-import * as styles from './StansStyles.module.less';
+import styles from './StansStyles.module.less';
 
 const OpprettStansPage = lazy(() => import('~src/pages/saksbehandling/stans/OpprettStansPage'));
 const OppdaterStans = lazy(() => import('~src/pages/saksbehandling/stans/OppdaterStans'));

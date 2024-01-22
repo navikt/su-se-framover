@@ -39,7 +39,7 @@ import {
 import { VisDokumenter } from '../../dokumenter/DokumenterPage';
 
 import messages from './attesterRevurdering-nb';
-import * as styles from './attesterRevurdering.module.less';
+import styles from './attesterRevurdering.module.less';
 
 const AttesterRevurdering = (props: {
     sakInfo: {

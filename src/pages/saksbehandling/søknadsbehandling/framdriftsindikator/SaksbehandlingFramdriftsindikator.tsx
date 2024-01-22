@@ -69,8 +69,8 @@ const SaksbehandlingFramdriftsindikator = (props: {
                     status: isDraftDirty(Vilkårtype.Virkningstidspunkt)
                         ? Linjestatus.Uferdig
                         : props.behandling.stønadsperiode
-                        ? Linjestatus.Ok
-                        : Linjestatus.Ingenting,
+                          ? Linjestatus.Ok
+                          : Linjestatus.Ingenting,
                     url: vilkårUrl(Vilkårtype.Virkningstidspunkt),
                 },
                 {

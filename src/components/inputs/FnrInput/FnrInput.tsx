@@ -12,7 +12,7 @@ import { Nullable } from '~src/lib/types';
 import { Person } from '~src/types/Person';
 
 import messages from './FnrInput-nb';
-import * as styles from './FnrInput.module.less';
+import styles from './FnrInput.module.less';
 
 interface FnrInputProps {
     label?: string;

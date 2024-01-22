@@ -17,7 +17,7 @@ import { Revurdering, UtbetalingsRevurderingStatus } from '~src/types/Revurderin
 import { erUtbetalingsrevurdering } from '~src/utils/revurdering/revurderingUtils';
 
 import messages from './stans-nb';
-import * as styles from './StansStyles.module.less';
+import styles from './StansStyles.module.less';
 
 const StansOppsummering = (props: { revurdering?: Revurdering }) => {
     const contextProps = useOutletContext<SaksoversiktContext>();

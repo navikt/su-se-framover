@@ -1,10 +1,8 @@
-import { Parcel } from '@parcel/core';
 import express from 'express';
 
-import * as Config from './config';
-import { logger } from './logger';
+import * as Config from './config.js';
 
-function setup() {
+async function setup() {
     const router = express.Router();
 
     router.get('/isAlive', (_req, res) => {
@@ -15,41 +13,13 @@ function setup() {
         res.send('READY');
     });
     if (Config.isDev) {
-        const bundler = new Parcel({
-            entries: './src/index.html',
-            defaultConfig: '@parcel/config-default',
-            shouldAutoInstall: false,
-            shouldDisableCache: true,
-            logLevel: 'info',
-            env: process.env,
-            serveOptions: {
-                port: 1234,
-            },
-            hmrOptions: {
-                port: 1234,
-            },
-            defaultTargetOptions: {
-                shouldScopeHoist: false,
-                shouldOptimize: true,
-                sourceMaps: false,
-                isLibrary: false,
-                engines: {
-                    browsers: ['> 0.5%, last 2 versions, not dead'],
-                },
-            },
+        console.log('Setting up local development version');
+        const server = await import('vite');
+        const createServer = await server.createServer({
+            configFile: 'vite.config.ts',
         });
-        bundler.watch((err, event) => {
-            if (err) {
-                // fatal error
-                throw err;
-            }
-            if (event && event.type === 'buildSuccess') {
-                const bundles = event.bundleGraph.getBundles();
-                logger.info(`✨ Built ${bundles.length} bundles in ${event.buildTime}ms!`);
-            } else if (event && event.type === 'buildFailure') {
-                logger.info(event.diagnostics);
-            }
-        });
+
+        await createServer.listen();
     } else {
         router.use(express.static(Config.server.frontendDir));
 

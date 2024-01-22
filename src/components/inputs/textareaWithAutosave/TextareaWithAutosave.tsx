@@ -7,7 +7,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { ApiResult, useAutosaveOnChange } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 
-import * as styles from './TextareaWithAutosave.module.less';
+import styles from './TextareaWithAutosave.module.less';
 
 const messages = {
     'knapp.seBrev': 'Se brev',

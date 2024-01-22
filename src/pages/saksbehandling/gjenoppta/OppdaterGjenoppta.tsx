@@ -14,7 +14,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { OpprettetRevurderingGrunn, Revurdering } from '~src/types/Revurdering';
 
-import * as styles from './Gjenoppta.module.less';
+import styles from './Gjenoppta.module.less';
 
 const OppdaterGjenoppta = () => {
     const props = useOutletContext<SaksoversiktContext>();

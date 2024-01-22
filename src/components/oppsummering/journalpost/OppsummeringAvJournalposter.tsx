@@ -6,7 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import { Journalpost } from '~src/types/Journalpost';
 
 import OppsummeringAvJournalpost from './OppsummeringAvJournalpost';
-import * as styles from './OppsummeringAvJournalpost.module.less';
+import styles from './OppsummeringAvJournalpost.module.less';
 import messages from './OppsummeringAvJournalposter-nb';
 
 const OppsummeringAvJournalposter = (props: { journalposter: Journalpost[] }) => {

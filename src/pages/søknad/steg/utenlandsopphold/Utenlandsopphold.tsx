@@ -17,11 +17,11 @@ import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { kalkulerTotaltAntallDagerIUtlandet, toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import * as sharedStyles from '../../steg-shared.module.less';
+import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './utenlandsopphold-nb';
-import * as styles from './utenlandsopphold.module.less';
+import styles from './utenlandsopphold.module.less';
 
 interface Reiseperiode {
     utreisedato: string;
@@ -286,9 +286,8 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 {antallDagerIUtlandet > 90 && (
                     <Alert variant="warning" className={styles.passert90DagerAdvarsel}>
                         {formatMessage('passert90Dager.info', {
-                            // eslint-disable-next-line react/display-name
                             p: (tekst) => <BodyLong>{tekst}</BodyLong>,
-                            // eslint-disable-next-line react/display-name
+
                             br: () => <br />,
                         })}
                     </Alert>

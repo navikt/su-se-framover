@@ -3,12 +3,12 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 
-import setupAuth from './auth';
-import * as AuthUtils from './auth/utils';
-import * as Config from './config';
-import { httpLogger, logger } from './logger';
-import setupProxy from './proxy';
-import routes from './routes';
+import setupAuth from './auth/index.js';
+import * as AuthUtils from './auth/utils.js';
+import * as Config from './config.js';
+import { httpLogger, logger } from './logger.js';
+import setupProxy from './proxy.js';
+import routes from './routes.js';
 
 const hotjarCsp = {
     imgSrc: ['http://*.hotjar.com', 'https://*.hotjar.com', 'http://*.hotjar.io', 'https://*.hotjar.io'],
@@ -74,13 +74,12 @@ export default async function startServer() {
     );
 
     app.use(compression());
-
     const authClient = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
     await setupAuth(app, authClient);
 
     app.use(setupProxy(authClient));
 
-    app.use(routes());
+    app.use(await routes());
 
     const port = Config.server.port;
     app.listen(port, () => {

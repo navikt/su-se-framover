@@ -4,7 +4,7 @@ import { Button, OverridableComponent, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { ReactNode, ForwardRefExoticComponent, RefAttributes, forwardRef, Children } from 'react';
 
-import * as styles from './søknadInputliste.module.less';
+import styles from './søknadInputliste.module.less';
 
 interface SøknadInputlisteProps {
     children: ReactNode[];

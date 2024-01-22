@@ -3,7 +3,7 @@ import { BodyShort, Label } from '@navikt/ds-react';
 import { useI18n } from '~src/lib/i18n';
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 
-import * as styles from './antallBehandlinger.module.less';
+import styles from './antallBehandlinger.module.less';
 
 const messages = {
     behandlinger: 'behandlinger',

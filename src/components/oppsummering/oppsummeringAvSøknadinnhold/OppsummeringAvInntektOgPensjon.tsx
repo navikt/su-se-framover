@@ -5,7 +5,7 @@ import { Nullable } from '~src/lib/types';
 import { InntektOgPensjon } from '~src/types/Søknadinnhold';
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
-import * as styles from './OppsummeringAvSøknadinnhold.module.less';
+import styles from './OppsummeringAvSøknadinnhold.module.less';
 
 const OppsummeringAvInntektOgPensjon = (props: {
     inntektOgPensjon: {

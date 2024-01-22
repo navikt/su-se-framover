@@ -21,7 +21,7 @@ import { NullablePeriode } from '~src/types/Periode';
 
 import messages from '../VilkårOgGrunnlagForms-nb';
 
-import * as styles from './FradragForm.module.less';
+import styles from './FradragForm.module.less';
 import { nyFradrag } from './FradragFormUtils';
 
 interface Props<T extends FieldValues> {

@@ -4,7 +4,7 @@ import * as DateFns from 'date-fns';
 
 import { Person, Adressebeskyttelse } from '~src/types/Person';
 
-import * as styles from './personAdvarsel.module.less';
+import styles from './personAdvarsel.module.less';
 
 type TagVariant = TagProps['variant'] | 'black';
 

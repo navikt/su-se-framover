@@ -1,5 +1,6 @@
-// eslint-disable-next-line no-undef
-module.exports = {
+import type { Config } from 'jest';
+
+const config: Config = {
     preset: 'ts-jest/presets/js-with-ts',
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     moduleNameMapper: {
@@ -12,3 +13,5 @@ module.exports = {
         '^.+\\.tsx?$': 'ts-jest',
     },
 };
+
+export default config;

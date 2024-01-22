@@ -5,7 +5,7 @@ import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 
 import messages from './ApiErrorAlert-nb';
-import * as styles from './apierroralert.module.less';
+import styles from './apierroralert.module.less';
 import { ApiErrorCode } from './apiErrorCode';
 
 type ApiErrorAlertErrorType = Omit<ApiError, 'body'> & { body: ErrorMessage | ErrorMessage[] };

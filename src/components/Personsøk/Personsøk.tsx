@@ -16,7 +16,7 @@ import { removeSpaces } from '~src/utils/format/formatUtils';
 import { Personkort } from '../personkort/Personkort';
 
 import messages from './personsøk-nb';
-import * as styles from './personsøk.module.less';
+import styles from './personsøk.module.less';
 
 interface Props {
     person: ApiResult<Person>;

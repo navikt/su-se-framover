@@ -31,7 +31,7 @@ import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './personligOppmøte-nb';
-import * as styles from './personligOppmøte.module.less';
+import styles from './personligOppmøte.module.less';
 
 const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakstype }) => {
     const navigate = useNavigate();

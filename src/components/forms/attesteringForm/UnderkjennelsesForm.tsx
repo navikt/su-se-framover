@@ -7,7 +7,7 @@ import { UnderkjennelseGrunn } from '~src/types/Behandling';
 
 import { AttesteringFormData } from './AttesteringsForm';
 import messages from './attesteringsForm-nb';
-import * as styles from './attesteringsForm.module.less';
+import styles from './attesteringsForm.module.less';
 
 const UnderkjennelsesForm = (props: {
     underkjennelsesgrunn: UnderkjennelseGrunn[];

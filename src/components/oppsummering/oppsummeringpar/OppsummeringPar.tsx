@@ -1,7 +1,7 @@
 import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 
-import * as styles from './oppsummeringPar.module.less';
+import styles from './oppsummeringPar.module.less';
 
 interface Props {
     label: string;

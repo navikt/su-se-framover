@@ -3,49 +3,48 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
-import Vilkår from '~src/pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
-
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import WithDocTitle from './components/WithDocTitle';
 import * as routes from './lib/routes';
 import BrevPage from './pages/saksbehandling/brev/BrevPage';
+import Vilkår from './pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 import Store from './redux/Store';
 import './externalStyles';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 
-const Attestering = lazy(() => import('~src/pages/saksbehandling/attestering/Attestering'));
-const Kvittering = lazy(() => import('~src/pages/søknad/kvittering/Kvittering'));
-const Infoside = lazy(() => import('~src/pages/søknad/steg/infoside/Infoside'));
-const Inngang = lazy(() => import('~src/pages/søknad/steg/inngang/Inngang'));
-const Søknadsvelger = lazy(() => import('~src/pages/søknad/Søknadsvelger'));
-const StartUtfylling = lazy(() => import('~src/pages/søknad/steg/start-utfylling/StartUtfylling'));
-const Drift = lazy(() => import('~/src/pages/drift'));
-const DevTools = lazy(() => import('~/src/pages/dev/DevToolsPage'));
-const HomePage = lazy(() => import('~/src/pages/HomePage'));
-const Saksoversikt = lazy(() => import('~/src/pages/saksbehandling/Saksoversikt'));
-const Behandlingsoversikt = lazy(() => import('~/src/pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt'));
-const Soknad = lazy(() => import('~/src/pages/søknad'));
+const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attestering'));
+const Kvittering = lazy(() => import('./pages/søknad/kvittering/Kvittering'));
+const Infoside = lazy(() => import('./pages/søknad/steg/infoside/Infoside'));
+const Inngang = lazy(() => import('./pages/søknad/steg/inngang/Inngang'));
+const Søknadsvelger = lazy(() => import('./pages/søknad/Søknadsvelger'));
+const StartUtfylling = lazy(() => import('./pages/søknad/steg/start-utfylling/StartUtfylling'));
+const Drift = lazy(() => import('./pages/drift'));
+const DevTools = lazy(() => import('./pages/dev/DevToolsPage'));
+const HomePage = lazy(() => import('./pages/HomePage'));
+const Saksoversikt = lazy(() => import('./pages/saksbehandling/Saksoversikt'));
+const Behandlingsoversikt = lazy(() => import('./pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt'));
+const Soknad = lazy(() => import('./pages/søknad'));
 const SendTilAttesteringPage = lazy(
-    () => import('~/src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage'),
+    () => import('./pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage'),
 );
 const VedtakEllerOversendtKlageOppsummering = lazy(
-    () => import('~src/pages/saksbehandling/vedtak/VedtakEllerOversendtKlageOppsummering'),
+    () => import('./pages/saksbehandling/vedtak/VedtakEllerOversendtKlageOppsummering'),
 );
-const AvsluttBehandling = lazy(() => import('~/src/pages/saksbehandling/avsluttBehandling/AvsluttBehandling'));
-const Revurdering = lazy(() => import('~/src/pages/saksbehandling/revurdering/Revurdering'));
-const Sakintro = lazy(() => import('~/src/pages/saksbehandling/sakintro/Sakintro'));
-const DokumenterPage = lazy(() => import('~src/pages/saksbehandling/dokumenter/DokumenterPage'));
-const OpprettKlage = lazy(() => import('~src/pages/klage/opprettKlage/OpprettKlage'));
-const Klage = lazy(() => import('~src/pages/klage/Klage'));
-const NyDatoForKontrollsamtale = lazy(() => import('~src/pages/kontrollsamtale/KontrollsamtalePage'));
+const AvsluttBehandling = lazy(() => import('./pages/saksbehandling/avsluttBehandling/AvsluttBehandling'));
+const Revurdering = lazy(() => import('./pages/saksbehandling/revurdering/Revurdering'));
+const Sakintro = lazy(() => import('./pages/saksbehandling/sakintro/Sakintro'));
+const DokumenterPage = lazy(() => import('./pages/saksbehandling/dokumenter/DokumenterPage'));
+const OpprettKlage = lazy(() => import('./pages/klage/opprettKlage/OpprettKlage'));
+const Klage = lazy(() => import('./pages/klage/Klage'));
+const NyDatoForKontrollsamtale = lazy(() => import('./pages/kontrollsamtale/KontrollsamtalePage'));
 const RevurderingIntroPage = lazy(
-    () => import('~src/pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage'),
+    () => import('./pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage'),
 );
-const ManuellReguleringPage = lazy(() => import('~src/pages/saksbehandling/regulering/ManuellRegulering'));
-const Stans = lazy(() => import('~src/pages/saksbehandling/stans/Stans'));
-const Gjenoppta = lazy(() => import('~src/pages/saksbehandling/gjenoppta/Gjenoppta'));
-const Utenlandsopphold = lazy(() => import('~src/pages/saksbehandling/utenlandsopphold/Utenlandsopphold'));
-const Tilbakekreving = lazy(() => import('~src/pages/saksbehandling/tilbakekreving/Tilbakekreving'));
+const ManuellReguleringPage = lazy(() => import('./pages/saksbehandling/regulering/ManuellRegulering'));
+const Stans = lazy(() => import('./pages/saksbehandling/stans/Stans'));
+const Gjenoppta = lazy(() => import('./pages/saksbehandling/gjenoppta/Gjenoppta'));
+const Utenlandsopphold = lazy(() => import('./pages/saksbehandling/utenlandsopphold/Utenlandsopphold'));
+const Tilbakekreving = lazy(() => import('./pages/saksbehandling/tilbakekreving/Tilbakekreving'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();

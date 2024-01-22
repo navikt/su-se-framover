@@ -6,7 +6,7 @@ import { useUserContext } from '~src/context/userContext';
 import * as Routes from '~src/lib/routes';
 import { Rolle } from '~src/types/LoggedInUser';
 
-import * as styles from './homePage.module.less';
+import styles from './homePage.module.less';
 
 const HomePage = () => {
     const navigate = useNavigate();

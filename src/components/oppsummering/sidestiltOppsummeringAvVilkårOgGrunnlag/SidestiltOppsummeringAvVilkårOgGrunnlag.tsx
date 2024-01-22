@@ -83,7 +83,7 @@ import OppsummeringAvUførevilkår from '../oppsummeringAvVilkårOgGrunnlag/Opps
 import OppsummeringAvUtenlandsopphold from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 
 import messages from './SidestiltOppsummeringAvVilkårOgGrunnlag-nb';
-import * as styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
+import styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
 
 const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;

@@ -26,7 +26,7 @@ import {
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~src/utils/vilkårUtils';
 
 import messages from './sendTilAttesteringPage-nb';
-import * as styles from './sendTilAttesteringPage.module.less';
+import styles from './sendTilAttesteringPage.module.less';
 
 interface FormData {
     fritekst: string;

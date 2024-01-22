@@ -22,7 +22,7 @@ import { KlageSteg } from '~src/types/Klage';
 
 import messages from '../klage-nb';
 
-import * as styles from './opprettKlage.module.less';
+import styles from './opprettKlage.module.less';
 import { OpprettKlageFormData, opprettKlageSchema } from './OpprettKlageUtils';
 
 const OpprettKlage = () => {

@@ -11,7 +11,7 @@ import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { ReactNode } from 'react';
 
-import * as styles from './oppsummeringspanel.module.less';
+import styles from './oppsummeringspanel.module.less';
 
 export enum Oppsummeringsikon {
     Liste,

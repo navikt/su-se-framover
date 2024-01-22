@@ -15,7 +15,7 @@ import { Klage } from '~src/types/Klage';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
 import messages from './avsluttKlage-nb';
-import * as styles from './avsluttKlage.module.less';
+import styles from './avsluttKlage.module.less';
 
 interface AvsluttKlageFormData {
     begrunnelse: string;

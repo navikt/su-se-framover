@@ -1,6 +1,6 @@
 import { Heading } from '@navikt/ds-react';
 
-import * as styles from './toKolonner.module.less';
+import styles from './toKolonner.module.less';
 
 const ToKolonner = (props: {
     tittel: string | JSX.Element;

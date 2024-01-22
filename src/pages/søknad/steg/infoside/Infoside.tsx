@@ -9,7 +9,7 @@ import { getSøknadstematekst } from '~src/pages/søknad/utils';
 import { Sakstype } from '~src/types/Sak';
 
 import messages from './infoside-nb';
-import * as styles from './infoside.module.less';
+import styles from './infoside.module.less';
 
 const Infoside = () => {
     const { isPapirsøknad, sakstype } = useOutletContext<SøknadContext>();

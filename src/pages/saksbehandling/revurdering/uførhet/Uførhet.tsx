@@ -48,10 +48,8 @@ const Uførhet = (props: RevurderingStegProps) => {
                 behandlingId: props.revurdering.id,
                 vurderinger: values.grunnlag.map((g) => ({
                     periode: {
-                        /* eslint-disable @typescript-eslint/no-non-null-assertion */
                         fraOgMed: DateUtils.toIsoDateOnlyString(g.periode.fraOgMed!),
                         tilOgMed: DateUtils.toIsoDateOnlyString(g.periode.tilOgMed!),
-                        /* eslint-enable @typescript-eslint/no-non-null-assertion */
                     },
                     forventetInntekt: g.oppfylt ? Number.parseInt(g.forventetInntekt, 10) : null,
                     uføregrad: g.oppfylt ? Number.parseInt(g.uføregrad, 10) : null,

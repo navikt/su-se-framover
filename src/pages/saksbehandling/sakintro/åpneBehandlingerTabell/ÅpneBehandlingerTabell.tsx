@@ -57,7 +57,7 @@ import {
 
 import messages from '../sakintro-nb';
 
-import * as styles from './ÅpneBehandlingerTabell.module.less';
+import styles from './ÅpneBehandlingerTabell.module.less';
 
 enum ÅpneBehandlingerKolonner {
     behandlingstype = 'behandlingstype',

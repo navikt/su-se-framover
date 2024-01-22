@@ -22,7 +22,7 @@ import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
 import messages from './formue-nb';
-import * as styles from './formue.module.less';
+import styles from './formue.module.less';
 
 const Formue = (props: RevurderingStegProps) => {
     const navigate = useNavigate();

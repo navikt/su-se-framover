@@ -15,7 +15,7 @@ import {
 
 import AvvistKlage from './avvistKlage/AvvistKlage';
 import messages from './klage-nb';
-import * as styles from './klage.module.less';
+import styles from './klage.module.less';
 import SendKlageTilAttestering from './sendKlageTilAttestering/SendKlageTilAttestering';
 import VurderFormkrav from './vurderFormkrav/VurderFormkrav';
 import VurderingAvKlage from './vurderingAvKlage/VurderingAvKlage';

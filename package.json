@@ -1,26 +1,30 @@
 {
     "name": "su-se-framover",
     "version": "1.0.0",
+    "private": true,
     "description": "Frontend for saksbehandlingsstøtteverktøy for supplerende stønad",
     "browserslist": [
         "> 0.25%, last 2 versions, not dead"
     ],
-    "source": "src/index.js",
+    "type": "module",
     "scripts": {
-        "postinstall": "cd server && npm install",
-        "start": "rimraf ./.parcel-cache && rimraf ./server/.parcel-cache && nodemon",
-        "test": "jest --passWithNoTests",
-        "build": "npm run clean:dist && rimraf ./.parcel-cache && npm run build:client",
-        "build:server": "npm run build --prefix ./server",
-        "build:client": "SENTRY_RELEASE=$(git rev-parse --short HEAD) parcel build --no-scope-hoist --no-autoinstall src/index.html",
-        "sentry-release": "SENTRY_RELEASE=$(git rev-parse --short HEAD) node scripts/sentry-release",
-        "lint-and-typecheck": "npm run lint && npm run typecheck",
+        "dev": "vite",
+        "eslint": "eslint src scripts --ext .tsx,.ts --report-unused-disable-directives",
         "lint": "npm run eslint",
-        "eslint": "eslint src --ext .tsx,.ts,.jsx,.js",
-        "typecheck": "tsc && cd server && tsc",
+        "preview": "vite preview",
+        "postinstall": "cd server && npm ci",
+        "start": "NODE_ENV=development nodemon --background && vite",
+        "test": "jest --passWithNoTests",
+        "build": "npm run clean:dist && npm run build:client && npm run build:server && npm run build:scripts",
+        "build:server": "npm run build --prefix ./server",
+        "build:client": "SENTRY_RELEASE=$(git rev-parse --short HEAD) tsc && vite build",
+        "build:scripts": "tsc --project ./scripts/tsconfig.scripts.json",
+        "sentry-release": "SENTRY_RELEASE=$(git rev-parse --short HEAD) node scripts/dist/sentry-release",
+        "lint-and-typecheck": "npm run lint && npm run typecheck",
+        "typecheck": "tsc --project tsconfig.json --noEmit && tsc --project server/tsconfig.json --noEmit && tsc --project scripts/tsconfig.scripts.json --noEmit",
         "tdd": "jest --watch",
         "clean:dist": "rimraf dist",
-        "prettier": "prettier --write src server",
+        "prettier": "prettier --write src server scripts",
         "prepare": "npx husky install"
     },
     "lint-staged": {
@@ -83,8 +87,6 @@
         "yup": "^0.29.3"
     },
     "devDependencies": {
-        "@parcel/config-default": "2.9.3",
-        "@parcel/transformer-less": "2.9.3",
         "@testing-library/react": "^14.1.2",
         "@types/amplitude-js": "^8.16.5",
         "@types/lodash.debounce": "^4.0.9",
@@ -95,6 +97,7 @@
         "@types/yup": "^0.29.13",
         "@typescript-eslint/eslint-plugin": "^5.61.0",
         "@typescript-eslint/parser": "^5.62.0",
+        "@vitejs/plugin-react": "^4.2.1",
         "eslint": "^8.56.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-import-resolver-typescript": "^3.6.1",
@@ -108,14 +111,15 @@
         "lint-staged": "^15.2.0",
         "mkdirp": "^3.0.1",
         "nodemon": "^3.0.2",
-        "parcel": "2.9.3",
         "path-browserify": "^1.0.1",
         "prettier": "^3.0.3",
         "react-test-renderer": "^18.2.0",
         "rimraf": "^5.0.5",
         "ts-jest": "^29.1.1",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.3.3"
+        "tsx": "^4.7.0",
+        "typescript": "^5.3.3",
+        "vite": "^5.0.8",
+        "vite-tsconfig-paths": "^4.3.1"
     },
     "overrides": {
         "yaml@<2.2.2": "2.2.2"

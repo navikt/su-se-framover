@@ -16,11 +16,11 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 import { toDateOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import * as sharedStyles from '../../steg-shared.module.less';
+import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './informasjonOmPapirsøknad-nb';
-import * as styles from './informasjonOmPapirsøknad.module.less';
+import styles from './informasjonOmPapirsøknad.module.less';
 
 const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const navigate = useNavigate();

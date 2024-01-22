@@ -16,7 +16,7 @@ import { FormData, schema } from '~src/pages/søknad/steg/flyktningstatus-opphol
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import * as sharedStyles from '../../steg-shared.module.less';
+import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './flyktningstatus-oppholdstillatelse-nb';

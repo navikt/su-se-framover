@@ -13,7 +13,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { Revurdering } from '~src/types/Revurdering';
 
-import * as styles from './Gjenoppta.module.less';
+import styles from './Gjenoppta.module.less';
 
 const OpprettGjenoppta = (props: { sakId: string }) => {
     const navigate = useNavigate();

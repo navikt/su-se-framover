@@ -20,7 +20,7 @@ $ npm start
 
 `docker compose up` kjører opp Redis og [#mock-oauth2-server](#mock-oauth2-server).
 
-`npm start` starter opp `express`-serveren med `parcel`-middleware som ordner med bygging av frontenden.
+`npm start` starter opp `express`-serveren med `vite`-middleware som ordner med bygging av frontenden.
 
 ## Redis
 
@@ -110,7 +110,7 @@ Brukes for å signere session-cookies. Se: http://expressjs.com/en/resources/mid
 
 Det er satt opp slik at denne konfigurasjonen settes i en `script`-tag av typen `application/json`, som så lastes inn og parses runtime (i frontend).
 
-Under lokalutvikling gjøres dette av `posthtml` (med `posthtml-expressions`) som en del av Parcel-bygget.
+Under lokalutvikling gjøres dette av `posthtml` (med `posthtml-expressions`) som en del av Vite-bygget.
 Ute i miljøene gjøres det gjennom bruk av `handlebars`.
 Vi utnytter at både `posthtml-expressions` og `handlebars` har samme syntax for å sette inn "unescaped" verdier (`{{{verdi}}}`).
 

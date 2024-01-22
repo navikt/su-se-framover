@@ -1,7 +1,16 @@
 {
-    "extends": "@tsconfig/node12/tsconfig.json",
     "compilerOptions": {
+        "lib": ["ESNext"],
         "outDir": "./dist",
-        "typeRoots": ["./node_modules/@types", "./typings"]
-    }
+        "typeRoots": ["./node_modules/@types", "./typings"],
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "NodeNext",
+        "module": "NodeNext",
+        "target": "ESNext",
+        "composite": true,
+        "esModuleInterop": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+    },
 }

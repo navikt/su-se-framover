@@ -10,7 +10,7 @@ import { LukkSøknadBegrunnelse } from '~src/types/Søknad';
 import { toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import nb from './lukkSøknad-nb';
-import * as styles from './lukkSøknad.module.less';
+import styles from './lukkSøknad.module.less';
 
 interface TrukketProps {
     søknadOpprettet: string;

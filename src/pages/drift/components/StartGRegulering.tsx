@@ -10,7 +10,7 @@ import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import { toIsoMonthOrNull } from '~src/utils/date/dateUtils';
 
-import * as styles from '../index.module.less';
+import styles from '../index.module.less';
 
 const StartGRegulering = () => {
     const [reguleringsstatus, reguler] = useApiCall(startRegulering);

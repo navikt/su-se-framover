@@ -16,7 +16,7 @@ import * as Routes from '~src/lib/routes';
 import RegistreringAvUtenlandsoppholdForm from '../../../../components/forms/utenlandsopphold/RegistreringAvUtenlandsoppholdForm';
 import messages from '../Utenlandsopphold-nb';
 
-import * as styles from './RegistreringAvUtenlandsopphold.module.less';
+import styles from './RegistreringAvUtenlandsopphold.module.less';
 
 const RegistreringAvUtenlandsopphold = (props: { sakId: string; saksversjon: number }) => {
     const { formatMessage } = useI18n({ messages });

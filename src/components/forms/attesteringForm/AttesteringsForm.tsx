@@ -18,7 +18,7 @@ import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/B
 import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import messages from './attesteringsForm-nb';
-import * as styles from './attesteringsForm.module.less';
+import styles from './attesteringsForm.module.less';
 import UnderkjennelsesForm from './UnderkjennelsesForm';
 
 export interface AttesteringFormData {

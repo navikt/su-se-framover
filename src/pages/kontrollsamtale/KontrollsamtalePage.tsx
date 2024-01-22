@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { ChevronLeftIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Button, Heading, Loader, Skeleton } from '@navikt/ds-react';
-import startOfTomorrow from 'date-fns/startOfTomorrow';
+import { startOfTomorrow } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ import { Nullable } from '~src/lib/types';
 import { Kontrollsamtale } from '~src/types/Kontrollsamtale';
 import { formatDate, toDateOrNull } from '~src/utils/date/dateUtils';
 
-import * as styles from './kontrollsamtalePage.module.less';
+import styles from './kontrollsamtalePage.module.less';
 import messages from './message-nb';
 
 const KontrollsamtalePage = () => {

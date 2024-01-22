@@ -16,7 +16,7 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
 import messages from './DokumentForm-nb';
-import * as styles from './DokumentForm.module.less';
+import styles from './DokumentForm.module.less';
 
 interface DokumentFormData {
     tittel: Nullable<string>;

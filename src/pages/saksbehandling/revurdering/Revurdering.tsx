@@ -35,7 +35,7 @@ import RevurderingBeregnOgSimuler from './beregnOgSimuler/RevurderingBeregnOgSim
 import Formue from './formue/Formue';
 import { PersonligOppmøte } from './personligOppmøte/PersonligOppmøte';
 import messages from './revurdering-nb';
-import * as styles from './revurdering.module.less';
+import styles from './revurdering.module.less';
 
 const UtenlandsoppholdPage = lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
 const RevurderingIntroPage = lazy(() => import('./revurderingIntro/RevurderingIntroPage'));

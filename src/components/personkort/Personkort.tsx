@@ -7,7 +7,7 @@ import { showName, formatFnr } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
-import * as styles from './personkort.module.less';
+import styles from './personkort.module.less';
 
 //TODO: tekstfil :thinkies:
 

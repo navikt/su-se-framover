@@ -9,7 +9,7 @@ import * as Routes from '~src/lib/routes';
 import { erKlageOversendt } from '~src/utils/klage/klageUtils';
 
 import messages from './VedtakEllerOversendtKlageOppsummering-nb';
-import * as styles from './VedtakEllerOversendtKlageOppsummering.module.less';
+import styles from './VedtakEllerOversendtKlageOppsummering.module.less';
 
 const VedtakEllerOversendtKlageOppsummering = (props: {
     vedtakEllerOversendtKlageId?: string;

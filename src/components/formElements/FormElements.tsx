@@ -10,9 +10,7 @@ import { NullablePeriode } from '~src/types/Periode';
 import { MonthPicker } from '../inputs/datePicker/DatePicker';
 
 import nb from './formElements-nb';
-import * as styles from './formElements.module.less';
-
-import './formElements.module.less';
+import styles from './formElements.module.less';
 
 interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChange' | 'children' | 'disabled'> {
     value: Nullable<boolean> | undefined;

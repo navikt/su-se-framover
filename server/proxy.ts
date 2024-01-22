@@ -3,8 +3,8 @@ import expressHttpProxy from 'express-http-proxy';
 import * as OpenIdClient from 'openid-client';
 import { Logger } from 'pino';
 
-import * as AuthUtils from './auth/utils';
-import * as Config from './config';
+import * as AuthUtils from './auth/utils.js';
+import * as Config from './config.js';
 
 export default function setup(authClient: OpenIdClient.Client) {
     const router = express.Router();

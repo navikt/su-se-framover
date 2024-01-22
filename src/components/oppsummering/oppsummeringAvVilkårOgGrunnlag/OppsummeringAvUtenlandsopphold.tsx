@@ -11,7 +11,7 @@ import { formatPeriode } from '~src/utils/date/dateUtils';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
 import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
-import * as styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
 const OppsummeringAvUtenlandsopphold = (props: { utenlandsopphold: Nullable<UtenlandsoppholdVilkår> }) => {
     const { formatMessage } = useI18n({ messages });

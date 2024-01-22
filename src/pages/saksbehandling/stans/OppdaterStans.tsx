@@ -14,7 +14,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { OpprettetRevurderingGrunn } from '~src/types/Revurdering';
 
-import * as styles from './StansStyles.module.less';
+import styles from './StansStyles.module.less';
 
 const OppdaterStans = () => {
     const props = useOutletContext<SaksoversiktContext>();

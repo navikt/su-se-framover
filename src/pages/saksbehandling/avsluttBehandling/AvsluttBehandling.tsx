@@ -6,7 +6,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 
 import messages from './avsluttBehandling-nb';
-import * as styles from './avsluttBehandling.module.less';
+import styles from './avsluttBehandling.module.less';
 import AvsluttKlage from './avsluttKlage/AvsluttKlage';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 import AvsluttTilbakekreving from './avsluttTilbakekreving/AvsluttTilbakekreving';

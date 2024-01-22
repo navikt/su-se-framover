@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-import * as styles from './framdriftsindikator.module.less';
+import styles from './framdriftsindikator.module.less';
 
 export enum Linjestatus {
     Ok,
