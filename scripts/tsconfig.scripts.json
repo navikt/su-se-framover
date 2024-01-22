@@ -4,7 +4,7 @@
         "outDir": "./dist",
         "rootDir": "./",
         "noEmit": false,
-        "allowImportingTsExtensions": false,
+        "allowImportingTsExtensions": false
     },
     "include": ["./"]
 }
