@@ -88,7 +88,7 @@ const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
                 )}
             />
             {props.brev && (
-                <div>
+                <div className={styles.buttonOgApiErrorContainer}>
                     <Button
                         type="button"
                         className={styles.seBrevButton}

@@ -16,6 +16,7 @@ export default {
     'knapp.sendTilAttestering': 'Send til attestering',
     'knapp.seBrev': 'Se brev',
     'knapp.tilbake': 'Tilbake',
+    'knapp.brev.fritekst.description': 'Brevet blir lagret automatisk',
 
     'periode.overskrift': 'Periode',
     'revurdering.tittel': 'Revurdering',

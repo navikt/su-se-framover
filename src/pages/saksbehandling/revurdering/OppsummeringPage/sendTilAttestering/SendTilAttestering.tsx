@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom';
 
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
+import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -28,6 +28,8 @@ import {
     erRevurderingOpphørPgaManglendeDokumentasjon,
     erRevurderingTilbakekreving,
 } from '~src/utils/revurdering/revurderingUtils';
+
+import revurderingMessages from '../../revurdering-nb';
 
 import messages from './SendTilAttestering-nb';
 import styles from './SendTilAttestering.module.less';
@@ -72,51 +74,48 @@ const SendTilAttestering = (props: {
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...revurderingMessages } });
 
-    const [lagreBrevStatus, lagreBrev] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
+    const [lagreBrevStatus, lagreAction] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
+    const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
         RevurderingActions.sendRevurderingTilAttestering,
     );
 
-    const handleLagreOgFortsettSenere = (values: BrevvalgFormData) => {
-        lagreBrev(
+    const lagreBrev = (values: BrevvalgFormData, onSuccess: () => void) => {
+        lagreAction(
             {
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 valg: values.valg,
-                fritekst: values.fritekst,
+                fritekst: values.valg === Valg.IKKE_SEND ? null : values.fritekst,
                 begrunnelse: values.begrunnelse,
             },
-            () => {
-                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-            },
+            onSuccess,
         );
     };
 
+    const handleLagreOgFortsettSenere = (values: BrevvalgFormData) => {
+        lagreBrev(values, () => {
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        });
+    };
+
     const handleSubmit = (values: BrevvalgFormData) => {
-        lagreBrev(
-            {
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                ...values,
-            },
-            () => {
-                sendtilAttestering(
-                    {
-                        sakId: props.sakId,
-                        revurderingId: props.revurdering.id,
-                    },
-                    () => {
-                        Routes.navigateToSakIntroWithMessage(
-                            navigate,
-                            formatMessage('notification.sendtTilAttestering'),
-                            props.sakId,
-                        );
-                    },
-                );
-            },
-        );
+        lagreBrev(values, () => {
+            sendtilAttestering(
+                {
+                    sakId: props.sakId,
+                    revurderingId: props.revurdering.id,
+                },
+                () =>
+                    Routes.navigateToSakIntroWithMessage(
+                        navigate,
+                        formatMessage('notification.sendtTilAttestering'),
+                        props.sakId,
+                    ),
+            );
+        });
     };
 
     const form = useForm<BrevvalgFormData>({
@@ -141,8 +140,12 @@ const SendTilAttestering = (props: {
     const watch = form.watch();
 
     useEffect(() => {
-        if (watch.valg === Valg.IKKE_SEND) {
-            form.setValue('fritekst', null);
+        if (
+            watch.valg === Valg.SEND &&
+            watch.fritekst !== null &&
+            watch.fritekst !== props.revurdering.brevvalg.fritekst
+        ) {
+            lagreBrev(watch, () => void 0);
         }
     }, [watch.valg]);
 
@@ -192,66 +195,70 @@ const SendTilAttestering = (props: {
                                 )}
                             />
 
-                            {watch.valg === Valg.SEND && (
-                                <Controller
-                                    control={form.control}
-                                    name="fritekst"
-                                    render={({ field, fieldState }) => (
-                                        <BrevInput
-                                            knappLabel={formatMessage('knapp.seBrev')}
-                                            placeholder={formatMessage('brevInput.innhold.placeholder')}
-                                            tittel={formatMessage('brevtekst')}
-                                            onVisBrevClick={() =>
-                                                lagreBrev({
+                            <div className={styles.textareaContainer}>
+                                {watch.valg === Valg.SEND && (
+                                    <TextareaWithAutosave
+                                        textarea={{
+                                            name: 'fritekst',
+                                            label: formatMessage('brevtekst'),
+                                            control: form.control,
+                                            value: form.watch('fritekst') ?? '',
+                                            description: [formatMessage('knapp.brev.fritekst.description')],
+                                        }}
+                                        save={{
+                                            handleSave: () => {
+                                                if (watch.valg === Valg.SEND) {
+                                                    lagreAction({
+                                                        sakId: props.sakId,
+                                                        revurderingId: props.revurdering.id,
+                                                        ...form.getValues(),
+                                                    });
+                                                }
+                                            },
+                                            status: lagreBrevStatus,
+                                        }}
+                                        brev={{
+                                            handleSeBrev: () =>
+                                                seBrev({
                                                     sakId: props.sakId,
                                                     revurderingId: props.revurdering.id,
-                                                    ...form.getValues(),
-                                                }).then((res) => {
-                                                    return res === 'ok'
-                                                        ? pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
-                                                              sakId: props.sakId,
-                                                              revurderingId: props.revurdering.id,
-                                                          })
-                                                        : undefined;
-                                                })
-                                            }
-                                            tekst={field.value}
-                                            onChange={field.onChange}
-                                            feil={fieldState.error}
-                                        />
-                                    )}
-                                />
-                            )}
-                            <Controller
-                                control={form.control}
-                                name={'begrunnValg'}
-                                render={({ field }) => (
-                                    <Checkbox
-                                        name={field.name}
-                                        checked={field.value}
-                                        onChange={() => {
-                                            form.setValue('begrunnValg', !field.value);
-                                            form.setValue('begrunnelse', null);
+                                                }),
+                                            status: seBrevStatus,
                                         }}
-                                    >
-                                        {formatMessage('begrunnelse.vil.begrunne')}
-                                    </Checkbox>
+                                    />
                                 )}
-                            />
-                            {watch.begrunnValg && (
                                 <Controller
                                     control={form.control}
-                                    name={'begrunnelse'}
-                                    render={({ field, fieldState }) => (
-                                        <Textarea
-                                            {...field}
-                                            label={formatMessage('begrunnelse')}
-                                            value={field.value ?? ''}
-                                            error={fieldState.error?.message}
-                                        />
+                                    name={'begrunnValg'}
+                                    render={({ field }) => (
+                                        <Checkbox
+                                            name={field.name}
+                                            checked={field.value}
+                                            onChange={() => {
+                                                form.setValue('begrunnValg', !field.value);
+                                                form.setValue('begrunnelse', null);
+                                            }}
+                                        >
+                                            {formatMessage('begrunnelse.vil.begrunne')}
+                                        </Checkbox>
                                     )}
                                 />
-                            )}
+                                {watch.begrunnValg && (
+                                    <Controller
+                                        control={form.control}
+                                        name={'begrunnelse'}
+                                        render={({ field, fieldState }) => (
+                                            <Textarea
+                                                {...field}
+                                                label={formatMessage('begrunnelse')}
+                                                value={field.value ?? ''}
+                                                error={fieldState.error?.message}
+                                            />
+                                        )}
+                                    />
+                                )}
+                            </div>
+
                             {RemoteData.isFailure(lagreBrevStatus) && <ApiErrorAlert error={lagreBrevStatus.error} />}
                             {RemoteData.isFailure(sendTilAttesteringStatus) && (
                                 <ApiErrorAlert error={sendTilAttesteringStatus.error} />
