@@ -15,6 +15,7 @@ export type BehandlingssammendragTypeFilter = {
     [BehandlingssammendragType.KLAGE]: boolean;
     [BehandlingssammendragType.REGULERING]: boolean;
     [BehandlingssammendragType.TILBAKEKREVING]: boolean;
+    [BehandlingssammendragType.KRAVGRUNNLAG]: boolean;
 };
 
 export type BehandlingssammendragStatusFilter = {
@@ -22,6 +23,7 @@ export type BehandlingssammendragStatusFilter = {
     [BehandlingssammendragStatus.UNDER_BEHANDLING]: boolean;
     [BehandlingssammendragStatus.TIL_ATTESTERING]: boolean;
     [BehandlingssammendragStatus.UNDERKJENT]: boolean;
+    [BehandlingssammendragStatus.ÅPEN]: boolean;
 };
 
 export type BehandlingssammendragResultatFilter = {

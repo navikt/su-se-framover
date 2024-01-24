@@ -36,6 +36,7 @@ export const ÅpneBehandlinger = () => {
         [BehandlingssammendragType.KLAGE]: false,
         [BehandlingssammendragType.REGULERING]: false,
         [BehandlingssammendragType.TILBAKEKREVING]: false,
+        [BehandlingssammendragType.KRAVGRUNNLAG]: false,
     });
 
     const [status, setStatus] = useState<BehandlingssammendragStatusFilter>({
@@ -43,6 +44,7 @@ export const ÅpneBehandlinger = () => {
         [BehandlingssammendragStatus.UNDER_BEHANDLING]: false,
         [BehandlingssammendragStatus.TIL_ATTESTERING]: false,
         [BehandlingssammendragStatus.UNDERKJENT]: false,
+        [BehandlingssammendragStatus.ÅPEN]: false,
     });
 
     const filterBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {

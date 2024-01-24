@@ -17,6 +17,7 @@ export enum BehandlingssammendragType {
     KLAGE = 'KLAGE',
     REGULERING = 'REGULERING',
     TILBAKEKREVING = 'TILBAKEKREVING',
+    KRAVGRUNNLAG = 'KRAVGRUNNLAG',
 }
 
 export enum BehandlingssammendragStatus {
@@ -31,4 +32,5 @@ export enum BehandlingssammendragStatus {
     GJENOPPTAK = 'GJENOPPTAK',
     OVERSENDT = 'OVERSENDT',
     IVERKSATT = 'IVERKSATT',
+    ÅPEN = 'ÅPEN',
 }
