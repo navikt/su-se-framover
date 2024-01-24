@@ -1,9 +1,18 @@
-import { Alert, Table } from '@navikt/ds-react';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert, Table, Button } from '@navikt/ds-react';
+import { useNavigate } from 'react-router-dom';
 
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import ContextMenu from '~src/components/contextMenu/ContextMenu';
 import SuTabell from '~src/components/tabell/SuTabell';
-import VelgSakKnapp from '~src/components/velgSakKnapp/velgSakKnapp';
+import * as personSlice from '~src/features/person/person.slice';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { useAppDispatch } from '~src/redux/Store';
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
+import { Sak } from '~src/types/Sak';
 import { formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
 
 import messages from './Behandlingssammendrag-nb';
@@ -11,6 +20,8 @@ import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
 const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[] }) => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages });
 
     if (props.tabelldata.length === 0) {
@@ -21,60 +32,112 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
         );
     }
 
+    const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
+
     return (
-        <SuTabell
-            kolonnerConfig={{
-                kolonner: BehandlingssammendragKolonne,
-                defaultKolonneSorteresEtter: BehandlingssammendragKolonne.behandlingStartet,
-            }}
-            tableHeader={() => (
-                <Table.Header>
-                    <Table.Row>
-                        <Table.ColumnHeader sortKey="saksnummer" sortable>
-                            {formatMessage('sak.saksnummer')}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader sortKey="typeBehandling" sortable>
-                            {formatMessage('behandlingssammendrag.typeBehandling')}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader sortKey="status" sortable>
-                            {formatMessage('behandlingssammendrag.status')}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader sortKey="periode" sortable>
-                            {formatMessage('behandlingssammendrag.periode')}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader sortKey="behandlingStartet" sortable>
-                            {formatMessage('behandlingssammendrag.behandling.startet')}
-                        </Table.ColumnHeader>
-                        <Table.HeaderCell />
-                    </Table.Row>
-                </Table.Header>
-            )}
-            tableBody={(sortertKolonne, sortVerdi) => (
-                <Table.Body>
-                    {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
-                        <Table.Row key={behandlingssammendrag.behandlingId}>
-                            <Table.DataCell>{behandlingssammendrag.saksnummer}</Table.DataCell>
-                            <Table.DataCell>{formatMessage(behandlingssammendrag.typeBehandling)}</Table.DataCell>
-                            <Table.DataCell>{formatMessage(behandlingssammendrag.status)}</Table.DataCell>
-                            <Table.DataCell>
-                                {behandlingssammendrag.periode ? formatPeriode(behandlingssammendrag.periode) : ''}
-                            </Table.DataCell>
-                            <Table.DataCell>
-                                {behandlingssammendrag.behandlingStartet
-                                    ? formatDateTime(behandlingssammendrag.behandlingStartet)
-                                    : ''}
-                            </Table.DataCell>
-                            <Table.DataCell>
-                                <VelgSakKnapp
-                                    label={formatMessage('sak.seSak')}
-                                    saksnummer={behandlingssammendrag.saksnummer}
-                                />
-                            </Table.DataCell>
+        <div>
+            <SuTabell
+                kolonnerConfig={{
+                    kolonner: BehandlingssammendragKolonne,
+                    defaultKolonneSorteresEtter: BehandlingssammendragKolonne.behandlingStartet,
+                }}
+                tableHeader={() => (
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.ColumnHeader sortKey="saksnummer" sortable>
+                                {formatMessage('sak.saksnummer')}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader sortKey="typeBehandling" sortable>
+                                {formatMessage('behandlingssammendrag.typeBehandling')}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader sortKey="status" sortable>
+                                {formatMessage('behandlingssammendrag.status')}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader sortKey="periode" sortable>
+                                {formatMessage('behandlingssammendrag.periode')}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader sortKey="behandlingStartet" sortable>
+                                {formatMessage('behandlingssammendrag.behandling.startet')}
+                            </Table.ColumnHeader>
+                            <Table.HeaderCell />
                         </Table.Row>
-                    ))}
-                </Table.Body>
+                    </Table.Header>
+                )}
+                tableBody={(sortertKolonne, sortVerdi) => (
+                    <Table.Body>
+                        {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => {
+                            const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+                            const handleOnClick = async (onSuccess: (sak: Sak) => void) => {
+                                dispatch(personSlice.default.actions.resetSøkerData());
+                                dispatch(sakSlice.default.actions.resetSak());
+                                hentSak({ saksnummer: behandlingssammendrag.saksnummer }, (sak) => {
+                                    onSuccess(sak);
+                                });
+                            };
+
+                            return (
+                                <Table.Row key={behandlingssammendrag.behandlingId}>
+                                    <Table.DataCell>{behandlingssammendrag.saksnummer}</Table.DataCell>
+                                    <Table.DataCell>
+                                        {formatMessage(behandlingssammendrag.typeBehandling)}
+                                    </Table.DataCell>
+                                    <Table.DataCell>{formatMessage(behandlingssammendrag.status)}</Table.DataCell>
+                                    <Table.DataCell>
+                                        {behandlingssammendrag.periode
+                                            ? formatPeriode(behandlingssammendrag.periode)
+                                            : ''}
+                                    </Table.DataCell>
+                                    <Table.DataCell>
+                                        {behandlingssammendrag.behandlingStartet
+                                            ? formatDateTime(behandlingssammendrag.behandlingStartet)
+                                            : ''}
+                                    </Table.DataCell>
+                                    <Table.DataCell
+                                        onContextMenu={(e) => {
+                                            e.preventDefault();
+                                            setContextMenuVariables({
+                                                pos: { x: e.pageX, y: e.pageY },
+                                                toggled: true,
+                                                onMenuClick: () =>
+                                                    handleOnClick((sak) =>
+                                                        window.open(
+                                                            Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }),
+                                                            '_blank',
+                                                        ),
+                                                    ),
+                                            });
+                                        }}
+                                    >
+                                        <Button
+                                            variant="tertiary"
+                                            onClick={() =>
+                                                handleOnClick((sak) =>
+                                                    navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })),
+                                                )
+                                            }
+                                            loading={RemoteData.isPending(hentSakStatus)}
+                                        >
+                                            {formatMessage('sak.seSak')}
+                                        </Button>
+
+                                        {RemoteData.isFailure(hentSakStatus) && (
+                                            <ApiErrorAlert error={hentSakStatus.error} />
+                                        )}
+                                    </Table.DataCell>
+                                </Table.Row>
+                            );
+                        })}
+                    </Table.Body>
+                )}
+            />
+            {contextMenuVariables.toggled && (
+                <Menu>
+                    <button onClick={() => contextMenuVariables.onMenuClick?.()}>
+                        {formatMessage('sak.åpneINyFane')}
+                    </button>
+                </Menu>
             )}
-        />
+        </div>
     );
 };
 
