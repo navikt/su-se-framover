@@ -21,7 +21,7 @@ export const behandlingssammendragStatus: { [key in BehandlingssammendragStatus]
     [BehandlingssammendragStatus.GJENOPPTAK]: 'Gjenopptatt',
     [BehandlingssammendragStatus.OVERSENDT]: 'Oversendt',
     [BehandlingssammendragStatus.IVERKSATT]: 'Iverksatt',
-    [BehandlingssammendragStatus.ÅPEN]: 'ÅPEN',
+    [BehandlingssammendragStatus.ÅPEN]: 'Åpen',
 };
 
 export default {
@@ -35,4 +35,5 @@ export default {
     'behandlingssammendrag.periode': 'Periode',
     'sak.saksnummer': 'Saksnummer',
     'sak.seSak': 'Se sak',
+    'sak.åpneINyFane': 'Åpne sak i ny fane',
 };

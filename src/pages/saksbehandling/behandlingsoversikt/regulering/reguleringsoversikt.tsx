@@ -1,13 +1,20 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { CalculatorIcon } from '@navikt/aksel-icons';
-import { Alert, Heading, Table, Tag } from '@navikt/ds-react';
+import { Alert, Heading, Table, Tag, Button } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import { contramap } from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
+import { useNavigate } from 'react-router-dom';
 
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
-import VelgSakKnapp from '~src/components/velgSakKnapp/velgSakKnapp';
+import * as personSlice from '~src/features/person/person.slice';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
+import { useAppDispatch } from '~src/redux/Store';
 import { ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import messages from './regulering-nb';
@@ -41,15 +48,32 @@ const Reguleringsoversikt = (props: Props) => {
                             data,
                             arr.sortBy([sortByFnr]),
                             arr.mapWithIndex((index, { saksnummer, fnr, merknader }) => {
+                                const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+                                const navigate = useNavigate();
+                                const dispatch = useAppDispatch();
                                 return (
                                     <Table.Row key={index}>
                                         <Table.DataCell>{saksnummer}</Table.DataCell>
                                         <Table.DataCell>{fnr}</Table.DataCell>
                                         <Table.DataCell>
-                                            <VelgSakKnapp
-                                                saksnummer={saksnummer.toString()}
-                                                label={formatMessage('tabell.lenke.knapp')}
-                                            />
+                                            <Button
+                                                variant="tertiary"
+                                                onClick={async () => {
+                                                    dispatch(personSlice.default.actions.resetSøkerData());
+                                                    dispatch(sakSlice.default.actions.resetSak());
+                                                    hentSak({ saksnummer: saksnummer.toString() }, (sak) => {
+                                                        navigate(
+                                                            Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }),
+                                                        );
+                                                    });
+                                                }}
+                                                loading={RemoteData.isPending(hentSakStatus)}
+                                            >
+                                                {formatMessage('tabell.lenke.knapp')}
+                                            </Button>
+                                            {RemoteData.isFailure(hentSakStatus) && (
+                                                <ApiErrorAlert error={hentSakStatus.error} />
+                                            )}
                                         </Table.DataCell>
                                         <Table.DataCell>
                                             {merknader.map((m, index) => (
