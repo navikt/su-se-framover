@@ -34,6 +34,8 @@ export type BehandlingssammendragResultatFilter = {
     [BehandlingssammendragStatus.GJENOPPTAK]: boolean;
     [BehandlingssammendragStatus.OVERSENDT]: boolean;
     [BehandlingssammendragStatus.IVERKSATT]: boolean;
+    [BehandlingssammendragStatus.AVBRUTT]: boolean;
+    [BehandlingssammendragStatus.AVSLUTTET]: boolean;
 };
 
 export interface FilterProps {

@@ -33,4 +33,6 @@ export enum BehandlingssammendragStatus {
     OVERSENDT = 'OVERSENDT',
     IVERKSATT = 'IVERKSATT',
     ÅPEN = 'ÅPEN',
+    AVSLUTTET = 'AVSLUTTET',
+    AVBRUTT = 'AVBRUTT',
 }

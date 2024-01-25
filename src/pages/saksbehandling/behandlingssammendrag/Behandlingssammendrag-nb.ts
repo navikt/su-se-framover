@@ -22,6 +22,8 @@ export const behandlingssammendragStatus: { [key in BehandlingssammendragStatus]
     [BehandlingssammendragStatus.OVERSENDT]: 'Oversendt',
     [BehandlingssammendragStatus.IVERKSATT]: 'Iverksatt',
     [BehandlingssammendragStatus.ÅPEN]: 'Åpen',
+    [BehandlingssammendragStatus.AVBRUTT]: 'Avbrutt',
+    [BehandlingssammendragStatus.AVSLUTTET]: 'Avsluttet',
 };
 
 export default {

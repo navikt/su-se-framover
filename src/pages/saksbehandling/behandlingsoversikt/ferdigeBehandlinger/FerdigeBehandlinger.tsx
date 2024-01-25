@@ -54,6 +54,8 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragStatus.GJENOPPTAK]: false,
         [BehandlingssammendragStatus.OVERSENDT]: false,
         [BehandlingssammendragStatus.IVERKSATT]: false,
+        [BehandlingssammendragStatus.AVBRUTT]: false,
+        [BehandlingssammendragStatus.AVSLUTTET]: false,
     });
 
     const filtrerBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {
