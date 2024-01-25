@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import ContextMenu from '~src/components/contextMenu/ContextMenu';
+import { ContextMenuVariables } from '~src/components/contextMenu/ContextMenuUtils';
 import SuTabell from '~src/components/tabell/SuTabell';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -20,8 +21,6 @@ import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
 const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[] }) => {
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages });
 
     if (props.tabelldata.length === 0) {
@@ -65,68 +64,13 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
                 )}
                 tableBody={(sortertKolonne, sortVerdi) => (
                     <Table.Body>
-                        {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => {
-                            const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
-                            const handleOnClick = async (onSuccess: (sak: Sak) => void) => {
-                                dispatch(personSlice.default.actions.resetSøkerData());
-                                dispatch(sakSlice.default.actions.resetSak());
-                                hentSak({ saksnummer: behandlingssammendrag.saksnummer }, (sak) => {
-                                    onSuccess(sak);
-                                });
-                            };
-
-                            return (
-                                <Table.Row key={behandlingssammendrag.behandlingId}>
-                                    <Table.DataCell>{behandlingssammendrag.saksnummer}</Table.DataCell>
-                                    <Table.DataCell>
-                                        {formatMessage(behandlingssammendrag.typeBehandling)}
-                                    </Table.DataCell>
-                                    <Table.DataCell>{formatMessage(behandlingssammendrag.status)}</Table.DataCell>
-                                    <Table.DataCell>
-                                        {behandlingssammendrag.periode
-                                            ? formatPeriode(behandlingssammendrag.periode)
-                                            : ''}
-                                    </Table.DataCell>
-                                    <Table.DataCell>
-                                        {behandlingssammendrag.behandlingStartet
-                                            ? formatDateTime(behandlingssammendrag.behandlingStartet)
-                                            : ''}
-                                    </Table.DataCell>
-                                    <Table.DataCell
-                                        onContextMenu={(e) => {
-                                            e.preventDefault();
-                                            setContextMenuVariables({
-                                                pos: { x: e.pageX, y: e.pageY },
-                                                toggled: true,
-                                                onMenuClick: () =>
-                                                    handleOnClick((sak) =>
-                                                        window.open(
-                                                            Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }),
-                                                            '_blank',
-                                                        ),
-                                                    ),
-                                            });
-                                        }}
-                                    >
-                                        <Button
-                                            variant="tertiary"
-                                            onClick={() =>
-                                                handleOnClick((sak) =>
-                                                    navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })),
-                                                )
-                                            }
-                                            loading={RemoteData.isPending(hentSakStatus)}
-                                        >
-                                            {formatMessage('sak.seSak')}
-                                        </Button>
-
-                                        {RemoteData.isFailure(hentSakStatus) && (
-                                            <ApiErrorAlert error={hentSakStatus.error} />
-                                        )}
-                                    </Table.DataCell>
-                                </Table.Row>
-                            );
-                        })}
+                        {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
+                            <BehandlingssamendragTableRow
+                                key={behandlingssammendrag.behandlingId}
+                                behandlingssammendrag={behandlingssammendrag}
+                                setContextMenuVariables={setContextMenuVariables}
+                            />
+                        ))}
                     </Table.Body>
                 )}
             />
@@ -138,6 +82,68 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
                 </Menu>
             )}
         </div>
+    );
+};
+
+const BehandlingssamendragTableRow = ({
+    behandlingssammendrag,
+    setContextMenuVariables,
+}: {
+    behandlingssammendrag: Behandlingssammendrag;
+    setContextMenuVariables: (contextMenuVariables: ContextMenuVariables) => void;
+}) => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const { formatMessage } = useI18n({ messages });
+    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const handleOnClick = async (onSuccess: (sak: Sak) => void) => {
+        dispatch(personSlice.default.actions.resetSøkerData());
+        dispatch(sakSlice.default.actions.resetSak());
+        hentSak({ saksnummer: behandlingssammendrag.saksnummer }, (sak) => {
+            onSuccess(sak);
+        });
+    };
+
+    return (
+        <Table.Row key={behandlingssammendrag.behandlingId}>
+            <Table.DataCell>{behandlingssammendrag.saksnummer}</Table.DataCell>
+            <Table.DataCell>{formatMessage(behandlingssammendrag.typeBehandling)}</Table.DataCell>
+            <Table.DataCell>{formatMessage(behandlingssammendrag.status)}</Table.DataCell>
+            <Table.DataCell>
+                {behandlingssammendrag.periode ? formatPeriode(behandlingssammendrag.periode) : ''}
+            </Table.DataCell>
+            <Table.DataCell>
+                {behandlingssammendrag.behandlingStartet ? formatDateTime(behandlingssammendrag.behandlingStartet) : ''}
+            </Table.DataCell>
+            <Table.DataCell
+                onContextMenu={(e) => {
+                    e.preventDefault();
+                    setContextMenuVariables({
+                        pos: { x: e.pageX, y: e.pageY },
+                        toggled: true,
+                        onMenuClick: () => {
+                            return handleOnClick((sak) =>
+                                window.open(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }), '_blank'),
+                            );
+                        },
+                    });
+                }}
+            >
+                <Button
+                    variant="tertiary"
+                    onClick={() => {
+                        return handleOnClick((sak) =>
+                            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })),
+                        );
+                    }}
+                    loading={RemoteData.isPending(hentSakStatus)}
+                >
+                    {formatMessage('sak.seSak')}
+                </Button>
+
+                {RemoteData.isFailure(hentSakStatus) && <ApiErrorAlert error={hentSakStatus.error} />}
+            </Table.DataCell>
+        </Table.Row>
     );
 };
 

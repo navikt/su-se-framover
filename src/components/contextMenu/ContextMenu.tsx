@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import styles from './ContextMenu.module.less';
+import { ContextMenuVariables } from './ContextMenuUtils';
 
 /**
  *
@@ -9,11 +10,7 @@ import styles from './ContextMenu.module.less';
  *  callback. På denne måten vil man kun ha 1 contextMenu åpen på et tidspunkt
  */
 const ContextMenu = () => {
-    const [contextMenuVariables, setContextMenuVariables] = useState<{
-        pos: { x: number; y: number };
-        toggled: boolean;
-        onMenuClick?: () => Promise<void>;
-    }>({
+    const [contextMenuVariables, setContextMenuVariables] = useState<ContextMenuVariables>({
         pos: { x: 0, y: 0 },
         toggled: false,
         onMenuClick: undefined,
