@@ -110,6 +110,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                             </Table.ColumnHeader>
                             <Table.ColumnHeader></Table.ColumnHeader>
                             <Table.ColumnHeader></Table.ColumnHeader>
+                            <Table.ColumnHeader></Table.ColumnHeader>
                         </Table.Row>
                     </Table.Header>
                 )}
@@ -200,6 +201,13 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                         )}
                                         {RemoteData.isFailure(tilbakekrevingsbrevStatus) && (
                                             <ApiErrorAlert size="small" error={tilbakekrevingsbrevStatus.error} />
+                                        )}
+                                    </Table.DataCell>
+                                    <Table.DataCell>
+                                        {isVedtak(vedtak) && vedtak.kanStarteNyBehandling && (
+                                            <Button size="small" variant="tertiary">
+                                                {formatMessage('dataCell.startNyBehandling')}
+                                            </Button>
                                         )}
                                     </Table.DataCell>
                                 </Table.Row>
