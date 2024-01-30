@@ -22,6 +22,7 @@ import { BehandlingssammendragKolonne, sortTabell } from './Behandlingssammendra
 
 const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[] }) => {
     const { formatMessage } = useI18n({ messages });
+    const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
 
     if (props.tabelldata.length === 0) {
         return (
@@ -30,8 +31,6 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
             </Alert>
         );
     }
-
-    const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
 
     return (
         <div>
