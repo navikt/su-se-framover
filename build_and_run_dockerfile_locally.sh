@@ -1,4 +1,7 @@
 #!/bin/bash
+# Forsøk på å starte su-se-framover i en docker-container, på samme måte som den vil starte i nais. 
+# Dette for å kunne verifisere endringer raskere enn å deploye til preprod.
+
 # Be sure to run `docker-compose up -d` first.
 
 # postinstall runs server npm install
