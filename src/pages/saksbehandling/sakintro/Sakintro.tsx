@@ -1,6 +1,6 @@
 import { ChevronUpIcon, ChevronDownIcon } from '@navikt/aksel-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
-import { isEmpty } from 'fp-ts/lib/Array';
+import { partition, isEmpty } from 'fp-ts/Array';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
@@ -80,12 +80,17 @@ const Sakintro = () => {
     const åpneKlager = props.sak.klager.filter(erKlageÅpen);
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
-            const søknadsbehandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-            return erSøknadÅpen(søknad) && (!søknadsbehandling || erSøknadsbehandlingÅpen(søknadsbehandling));
+            const søknadsbehandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === søknad.id);
+            const parts = partition(erSøknadsbehandlingÅpen)(søknadsbehandlinger);
+            return erSøknadÅpen(søknad) && (parts.right.length === 0 || parts.right.length > 0);
         })
-        .map((åpenSøknad) => {
-            const søknadsbehandling = props.sak.behandlinger.find((b) => b.søknad.id === åpenSøknad.id);
-            return { søknad: åpenSøknad, søknadsbehandling: søknadsbehandling };
+        .flatMap((åpenSøknad) => {
+            const søknadsbehandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === åpenSøknad.id);
+            const parts = partition(erSøknadsbehandlingÅpen)(søknadsbehandlinger);
+
+            return parts.right.length > 0
+                ? parts.right.map((b) => ({ søknad: åpenSøknad, søknadsbehandling: b }))
+                : { søknad: åpenSøknad };
         });
 
     const åpneTilbakekrevingsbehandlinger = props.sak.tilbakekrevinger.filter(erTilbakekrevingsbehandlingÅpen);
