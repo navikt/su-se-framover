@@ -78,18 +78,45 @@ const Sakintro = () => {
     const åpneRevurderinger = props.sak.revurderinger.filter(erRevurderingÅpen);
     const åpneReguleringer = props.sak.reguleringer.filter(erReguleringÅpen);
     const åpneKlager = props.sak.klager.filter(erKlageÅpen);
+
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
             const søknadsbehandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === søknad.id);
             const parts = partition(erSøknadsbehandlingÅpen)(søknadsbehandlinger);
-            return erSøknadÅpen(søknad) && (parts.right.length === 0 || parts.right.length > 0);
+
+            const harÅpenSøknad = erSøknadÅpen(søknad);
+            const harÅpenSøknadsbehandling = parts.right.length > 0;
+            const harIkkeÅpenSøknadsbehandling = parts.right.length === 0;
+            const harAvslåttSøknadsbehandling = parts.left.length > 0;
+            const harIkkeAvslåttSøknadsbehandling = parts.left.length === 0;
+            const harIkkeSøknadsbehandling = harIkkeAvslåttSøknadsbehandling && harIkkeÅpenSøknadsbehandling;
+
+            const harSøknadMenIngenBehandling = harÅpenSøknad && harIkkeSøknadsbehandling;
+            const harSøknadMedEnBehandling = harÅpenSøknad && (harÅpenSøknadsbehandling || harAvslåttSøknadsbehandling);
+            const harSøknadMedFlereBehandlinger =
+                harÅpenSøknad && harÅpenSøknadsbehandling && harAvslåttSøknadsbehandling;
+
+            if (harSøknadMenIngenBehandling) {
+                return true;
+            } else if (harSøknadMedEnBehandling) {
+                if (harÅpenSøknadsbehandling) {
+                    return true;
+                } else if (harAvslåttSøknadsbehandling) {
+                    return false;
+                }
+            } else if (harSøknadMedFlereBehandlinger) {
+                return true;
+            }
+
+            return false;
         })
         .flatMap((åpenSøknad) => {
             const søknadsbehandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === åpenSøknad.id);
-            const parts = partition(erSøknadsbehandlingÅpen)(søknadsbehandlinger);
 
-            return parts.right.length > 0
-                ? parts.right.map((b) => ({ søknad: åpenSøknad, søknadsbehandling: b }))
+            const åpneSøknadsbehandlinger = søknadsbehandlinger.filter(erSøknadsbehandlingÅpen);
+
+            return åpneSøknadsbehandlinger.length > 0
+                ? åpneSøknadsbehandlinger.map((b) => ({ søknad: åpenSøknad, søknadsbehandling: b }))
                 : { søknad: åpenSøknad };
         });
 
