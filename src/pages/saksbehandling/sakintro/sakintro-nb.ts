@@ -90,6 +90,7 @@ export default {
     'dataCell.info.knapp.regulering.modal.tittel': 'Er du sikker på at du ønsker å lukke reguleringen?',
 
     'dataCell.seOppsummering': 'Se oppsummering',
+    'dataCell.startNyBehandling': 'Start ny behandling',
 
     'datacell.brev.skalIkkeGenerere': 'Skal ikke sende brev',
     'datacell.brev.ikkeGenerert': 'Ikke generert',

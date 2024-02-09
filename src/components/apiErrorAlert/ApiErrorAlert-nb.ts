@@ -246,7 +246,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]:
         'Stønadsperioden overlapper med en eksisterende stønadsperiode',
     [ApiErrorCode.SØKNAD_ALLEREDE_LUKKET]: 'Søknaden er allerede lukket',
-    [ApiErrorCode.SØKNAD_ER_LUKKET]: 'Søknad er lukket',
     [ApiErrorCode.SØKNAD_HAR_BEHANDLING]: 'Søknad har allerede en behandling',
     [ApiErrorCode.SØKNAD_MANGLER_OPPGAVE]: 'Søknad mangler oppgave',
 

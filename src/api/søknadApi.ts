@@ -1,7 +1,7 @@
 import { Nullable } from '~src/lib/types';
 import { AvvistBrevConfig } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
 import { Sak } from '~src/types/Sak';
-import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
+import { LukkSøknadBegrunnelse, LukkSøknadResponse, Søknad } from '~src/types/Søknad';
 import { SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknadinnhold';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -45,7 +45,10 @@ export async function sendAlderssøknad(søknad: SøknadInnholdAlder): Promise<A
     });
 }
 
-export async function lukkSøknad(arg: { søknadId: string; body: LukkSøknadBodyTypes }): Promise<ApiClientResult<Sak>> {
+export async function lukkSøknad(arg: {
+    søknadId: string;
+    body: LukkSøknadBodyTypes;
+}): Promise<ApiClientResult<LukkSøknadResponse>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/lukk`,
         method: 'POST',

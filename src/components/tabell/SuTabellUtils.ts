@@ -18,15 +18,16 @@ import { erPapirSøknad, erSøknadLukket } from '~src/utils/søknad/søknadUtils
 import { splitStatusOgResultatFraSøkandsbehandling } from '~src/utils/SøknadsbehandlingUtils';
 
 export const isRegulering = (b: TabellBehandling): b is Regulering => 'reguleringsstatus' in b;
-export const isSøknadMedEllerUtenBehandling = (b: TabellBehandling): b is SøknadMedEllerUtenBehandling => 'søknad' in b;
+export const isSøknadMedEllerUtenBehandling = (b: TabellBehandling): b is SøknadMedEllerUtenBehandlinger =>
+    'søknad' in b;
 export const isRevurdering = (b: TabellBehandling): b is Revurdering => 'årsak' in b;
 export const isKlage = (b: TabellBehandling): b is Klage => 'klagevedtakshistorikk' in b;
 export const isManuellTilbakekrevingsbehandling = (b: TabellBehandling): b is ManuellTilbakekrevingsbehandling =>
     'kravgrunnlag' in b;
 
-export type SøknadMedEllerUtenBehandling = { søknad: Søknad; søknadsbehandling?: Søknadsbehandling };
+export type SøknadMedEllerUtenBehandlinger = { søknad: Søknad; søknadsbehandling?: Søknadsbehandling };
 export type TabellBehandling =
-    | SøknadMedEllerUtenBehandling
+    | SøknadMedEllerUtenBehandlinger
     | Revurdering
     | Klage
     | Regulering

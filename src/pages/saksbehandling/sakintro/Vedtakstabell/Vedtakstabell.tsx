@@ -6,6 +6,7 @@ import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 import { Link } from 'react-router-dom';
 
+import * as VedtakActions from 'src/features/VedtakActions';
 import * as DokumentApi from '~src/api/dokumentApi';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -15,7 +16,7 @@ import Oppsummeringspanel, {
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import SuTabell, { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import { pipe } from '~src/lib/fp';
-import { useApiCall } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
@@ -110,6 +111,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                             </Table.ColumnHeader>
                             <Table.ColumnHeader></Table.ColumnHeader>
                             <Table.ColumnHeader></Table.ColumnHeader>
+                            <Table.ColumnHeader></Table.ColumnHeader>
                         </Table.Row>
                     </Table.Header>
                 )}
@@ -121,6 +123,9 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                             //og kan derfor ikke hentes gjennom hentDokumenter
                             const [tilbakekrevingsbrevStatus, hentTilbakekrevingsbrev] = useApiCall(
                                 forhåndsvisVedtaksbrevTilbakekrevingsbehandling,
+                            );
+                            const [startNysøknadsbehandlingStatus, startNySøknadsbehandling] = useAsyncActionCreator(
+                                VedtakActions.startNySøknadsbehandling,
                             );
 
                             return (
@@ -200,6 +205,26 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                         )}
                                         {RemoteData.isFailure(tilbakekrevingsbrevStatus) && (
                                             <ApiErrorAlert size="small" error={tilbakekrevingsbrevStatus.error} />
+                                        )}
+                                    </Table.DataCell>
+                                    <Table.DataCell className={styles.startNyBehandlingDataCellContainer}>
+                                        {isVedtak(vedtak) && vedtak.kanStarteNyBehandling && (
+                                            <Button
+                                                size="small"
+                                                variant="tertiary"
+                                                onClick={() =>
+                                                    startNySøknadsbehandling({
+                                                        sakId: props.sakId,
+                                                        vedtakId: vedtak.id,
+                                                    })
+                                                }
+                                            >
+                                                {formatMessage('dataCell.startNyBehandling')}
+                                            </Button>
+                                        )}
+
+                                        {RemoteData.isFailure(startNysøknadsbehandlingStatus) && (
+                                            <ApiErrorAlert size="small" error={startNysøknadsbehandlingStatus.error} />
                                         )}
                                     </Table.DataCell>
                                 </Table.Row>

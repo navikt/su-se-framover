@@ -196,8 +196,7 @@ export enum ApiErrorCode {
     STØNADSPERIODE_FØR_2021 = 'stønadsperiode_før_2021',
     STØNADSPERIODE_MAX_12MND = 'stønadsperiode_max_12mnd',
     STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE = 'stønadsperioden_overlapper_med_eksisterende_søknadsbehandling',
-    SØKNAD_ALLEREDE_LUKKET = 'søknad_allerede_lukket',
-    SØKNAD_ER_LUKKET = 'søknad_er_lukket',
+    SØKNAD_ALLEREDE_LUKKET = 'søknad_er_allerede_lukket',
     SØKNAD_HAR_BEHANDLING = 'søknad_har_behandling',
     SØKNAD_MANGLER_OPPGAVE = 'søknad_mangler_oppgave',
 

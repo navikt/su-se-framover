@@ -11,6 +11,7 @@ import * as revurderingActions from '~src/features/revurdering/revurderingAction
 import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import * as tilbakekrevingActions from '~src/features/TilbakekrevingActions';
+import * as VedtakActions from '~src/features/VedtakActions';
 import { pipe } from '~src/lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
@@ -201,7 +202,20 @@ export default createSlice({
         });
 
         builder.addCase(SøknadActions.lukkSøknad.fulfilled, (state, action) => {
-            state.sak = RemoteData.success(action.payload);
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    søknader: sak.søknader.map((s) =>
+                        s.id === action.payload.lukketSøknad.id ? action.payload.lukketSøknad : s,
+                    ),
+                    behandlinger: sak.behandlinger.map((b) =>
+                        b.id === action.payload.lukketSøknadsbehandling?.id
+                            ? action.payload.lukketSøknadsbehandling
+                            : b,
+                    ),
+                })),
+            );
         });
 
         builder.addCase(SøknadActions.avslagManglendeDokSøknad.fulfilled, (state, action) => {
@@ -423,6 +437,17 @@ export default createSlice({
         });
         builder.addCase(tilbakekrevingActions.behandlingsnotatTilbakekreving.fulfilled, (state, action) => {
             state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
+        });
+
+        //---------------Vedtak-----------------//
+        builder.addCase(VedtakActions.startNySøknadsbehandling.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: [...sak.behandlinger, action.payload],
+                })),
+            );
         });
     },
 });

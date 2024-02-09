@@ -1,6 +1,7 @@
 import { Nullable } from '~src/lib/types';
 
 import { SøknadInnhold } from './Søknadinnhold';
+import { Søknadsbehandling } from './Søknadsbehandling';
 import { Dokumenttilstand } from './Vedtak';
 
 export interface Søknad {
@@ -26,4 +27,9 @@ export enum LukkSøknadBegrunnelse {
 
 interface Saksbehandler {
     navIdent: string;
+}
+
+export interface LukkSøknadResponse {
+    lukketSøknad: Søknad;
+    lukketSøknadsbehandling: Nullable<Søknadsbehandling>;
 }

@@ -4,6 +4,7 @@ import { ApiError } from '~src/api/apiClient';
 import * as søknadApi from '~src/api/søknadApi';
 import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~src/api/søknadApi';
 import { Sak } from '~src/types/Sak';
+import { LukkSøknadResponse } from '~src/types/Søknad';
 
 export const hentLukketSøknadBrevutkast = createAsyncThunk<
     { objectUrl: string },
@@ -24,7 +25,7 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
 });
 
 export const lukkSøknad = createAsyncThunk<
-    Sak,
+    LukkSøknadResponse,
     {
         søknadId: string;
         body: LukkSøknadBodyTypes;

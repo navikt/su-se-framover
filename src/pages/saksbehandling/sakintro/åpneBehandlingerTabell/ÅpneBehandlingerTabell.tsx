@@ -21,7 +21,7 @@ import {
     isRegulering,
     isRevurdering,
     isSøknadMedEllerUtenBehandling,
-    SøknadMedEllerUtenBehandling,
+    SøknadMedEllerUtenBehandlinger,
     TabellBehandling,
     TabellBehandlinger,
 } from '~src/components/tabell/SuTabellUtils';
@@ -197,7 +197,7 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
 
 export default ÅpneBehandlingerTabell;
 
-const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMedEllerUtenBehandling }) => {
+const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMedEllerUtenBehandlinger }) => {
     const user = useUserContext();
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });

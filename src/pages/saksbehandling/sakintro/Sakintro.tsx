@@ -1,6 +1,6 @@
 import { ChevronUpIcon, ChevronDownIcon } from '@navikt/aksel-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
-import { isEmpty } from 'fp-ts/lib/Array';
+import { partition, isEmpty } from 'fp-ts/Array';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
@@ -78,14 +78,46 @@ const Sakintro = () => {
     const åpneRevurderinger = props.sak.revurderinger.filter(erRevurderingÅpen);
     const åpneReguleringer = props.sak.reguleringer.filter(erReguleringÅpen);
     const åpneKlager = props.sak.klager.filter(erKlageÅpen);
+
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
-            const søknadsbehandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-            return erSøknadÅpen(søknad) && (!søknadsbehandling || erSøknadsbehandlingÅpen(søknadsbehandling));
+            const søknadsbehandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === søknad.id);
+            const parts = partition(erSøknadsbehandlingÅpen)(søknadsbehandlinger);
+
+            const harÅpenSøknad = erSøknadÅpen(søknad);
+            const harÅpenSøknadsbehandling = parts.right.length > 0;
+            const harIkkeÅpenSøknadsbehandling = parts.right.length === 0;
+            const harAvslåttSøknadsbehandling = parts.left.length > 0;
+            const harIkkeAvslåttSøknadsbehandling = parts.left.length === 0;
+            const harIkkeSøknadsbehandling = harIkkeAvslåttSøknadsbehandling && harIkkeÅpenSøknadsbehandling;
+
+            const harSøknadMenIngenBehandling = harÅpenSøknad && harIkkeSøknadsbehandling;
+            const harSøknadMedEnBehandling = harÅpenSøknad && (harÅpenSøknadsbehandling || harAvslåttSøknadsbehandling);
+            const harSøknadMedFlereBehandlinger =
+                harÅpenSøknad && harÅpenSøknadsbehandling && harAvslåttSøknadsbehandling;
+
+            if (harSøknadMenIngenBehandling) {
+                return true;
+            } else if (harSøknadMedEnBehandling) {
+                if (harÅpenSøknadsbehandling) {
+                    return true;
+                } else if (harAvslåttSøknadsbehandling) {
+                    return false;
+                }
+            } else if (harSøknadMedFlereBehandlinger) {
+                return true;
+            }
+
+            return false;
         })
-        .map((åpenSøknad) => {
-            const søknadsbehandling = props.sak.behandlinger.find((b) => b.søknad.id === åpenSøknad.id);
-            return { søknad: åpenSøknad, søknadsbehandling: søknadsbehandling };
+        .flatMap((åpenSøknad) => {
+            const søknadsbehandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === åpenSøknad.id);
+
+            const åpneSøknadsbehandlinger = søknadsbehandlinger.filter(erSøknadsbehandlingÅpen);
+
+            return åpneSøknadsbehandlinger.length > 0
+                ? åpneSøknadsbehandlinger.map((b) => ({ søknad: åpenSøknad, søknadsbehandling: b }))
+                : { søknad: åpenSøknad };
         });
 
     const åpneTilbakekrevingsbehandlinger = props.sak.tilbakekrevinger.filter(erTilbakekrevingsbehandlingÅpen);
