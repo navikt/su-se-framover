@@ -6,6 +6,7 @@ import person from '~src/features/person/person.slice';
 import sakSlice from '~src/features/saksoversikt/sak.slice';
 import innsending from '~src/features/søknad/innsending.slice';
 import søknadSlice from '~src/features/søknad/søknad.slice';
+import toastsSlice from '~src/features/ToastSlice';
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         sak: sakSlice.reducer,
         innsending: innsending.reducer,
         me: me.reducer,
+        toast: toastsSlice.reducer,
     },
 });
 

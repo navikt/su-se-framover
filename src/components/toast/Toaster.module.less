@@ -1,0 +1,24 @@
+@import '@styles/variables.less';
+
+.toasterContainer {
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+}
+
+.toastContainer {
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+    animation: onEnter 0.35s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+@keyframes onEnter {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}

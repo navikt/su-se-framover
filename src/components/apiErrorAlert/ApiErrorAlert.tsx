@@ -17,6 +17,12 @@ interface Props {
     variant?: 'error' | 'warning' | 'info' | 'success';
 }
 
+export const useApiErrorMessages = () => {
+    const { formatMessage } = useI18n({ messages });
+
+    return (error: ApiErrorAlertErrorType) => konstruerMeldingForAlert(formatMessage, error);
+};
+
 const konstruerMeldingForAlert = (formatMessage: MessageFormatter<typeof messages>, error: ApiErrorAlertErrorType) => {
     try {
         if (error.statusCode === 503) {

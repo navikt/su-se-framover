@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
+import Toaster from './components/toast/Toaster';
 import WithDocTitle from './components/WithDocTitle';
 import * as routes from './lib/routes';
 import BrevPage from './pages/saksbehandling/brev/BrevPage';
@@ -62,6 +63,7 @@ const Root = () => (
             <BrowserRouter>
                 <ContentWrapper>
                     <Suspense fallback={<Loader />}>
+                        <Toaster />
                         <ScrollToTop />
                         <AppRoutes />
                     </Suspense>
