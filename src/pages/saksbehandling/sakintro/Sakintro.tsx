@@ -81,27 +81,27 @@ const Sakintro = () => {
 
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
-            const søknadsbehandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === søknad.id);
+            const søknadsbehandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === søknad.id && !b.erLukket);
             const parts = partition(erSøknadsbehandlingÅpen)(søknadsbehandlinger);
 
             const harÅpenSøknad = erSøknadÅpen(søknad);
             const harÅpenSøknadsbehandling = parts.right.length > 0;
             const harIkkeÅpenSøknadsbehandling = parts.right.length === 0;
-            const harAvslåttSøknadsbehandling = parts.left.length > 0;
-            const harIkkeAvslåttSøknadsbehandling = parts.left.length === 0;
-            const harIkkeSøknadsbehandling = harIkkeAvslåttSøknadsbehandling && harIkkeÅpenSøknadsbehandling;
+            //ferdig i denne betydningen alt som ikke er åpen
+            const harFerdigBehandling = parts.left.length > 0;
+            const harIkkeFerdigBehandling = parts.left.length === 0;
+            const harIkkeSøknadsbehandling = harIkkeFerdigBehandling && harIkkeÅpenSøknadsbehandling;
 
             const harSøknadMenIngenBehandling = harÅpenSøknad && harIkkeSøknadsbehandling;
-            const harSøknadMedEnBehandling = harÅpenSøknad && (harÅpenSøknadsbehandling || harAvslåttSøknadsbehandling);
-            const harSøknadMedFlereBehandlinger =
-                harÅpenSøknad && harÅpenSøknadsbehandling && harAvslåttSøknadsbehandling;
+            const harSøknadMedEnBehandling = harÅpenSøknad && (harÅpenSøknadsbehandling || harFerdigBehandling);
+            const harSøknadMedFlereBehandlinger = harÅpenSøknad && harÅpenSøknadsbehandling && harFerdigBehandling;
 
             if (harSøknadMenIngenBehandling) {
                 return true;
             } else if (harSøknadMedEnBehandling) {
                 if (harÅpenSøknadsbehandling) {
                     return true;
-                } else if (harAvslåttSøknadsbehandling) {
+                } else if (harFerdigBehandling) {
                     return false;
                 }
             } else if (harSøknadMedFlereBehandlinger) {
