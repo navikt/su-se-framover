@@ -17,6 +17,7 @@ export interface Vedtak<T extends VedtakType = VedtakType> {
     utbetalingId: Nullable<string>;
     dokumenttilstand: Dokumenttilstand;
     kanStarteNyBehandling: boolean;
+    skalSendeBrev: boolean;
 }
 
 export interface AvslagVedtak extends Vedtak<VedtakType.AVSLAG> {

@@ -58,7 +58,7 @@ const Klage = () => {
                     <Framdriftsindikator aktivId={urlParams.steg ?? ''} elementer={lagFramdriftsindikatorLinjer()} />
                 )}
                 {urlParams.steg == KlageSteg.Formkrav && (
-                    <VurderFormkrav sakId={props.sak.id} vedtaker={props.sak.vedtak} klage={klage} />
+                    <VurderFormkrav sakId={props.sak.id} vedtak={props.sak.vedtak} klage={klage} />
                 )}
                 {urlParams.steg == KlageSteg.Vurdering && <VurderingAvKlage sakId={props.sak.id} klage={klage} />}
                 {urlParams.steg == KlageSteg.Avvisning && <AvvistKlage sakId={props.sak.id} klage={klage} />}

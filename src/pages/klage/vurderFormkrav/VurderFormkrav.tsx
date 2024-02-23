@@ -43,7 +43,7 @@ const eqFormData = struct<FormData>({
 
 interface Props {
     sakId: string;
-    vedtaker: Vedtak[];
+    vedtak: Vedtak[];
     klage: Klage;
 }
 
@@ -194,11 +194,13 @@ const VurderFormkrav = (props: Props) => {
                                     value={field.value ?? ''}
                                 >
                                     <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
-                                    {props.vedtaker.map((v) => (
-                                        <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
-                                            v.opprettet,
-                                        )}`}</option>
-                                    ))}
+                                    {props.vedtak
+                                        .filter((v) => v.skalSendeBrev)
+                                        .map((v) => (
+                                            <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
+                                                v.opprettet,
+                                            )}`}</option>
+                                        ))}
                                 </Select>
                             )}
                         />
