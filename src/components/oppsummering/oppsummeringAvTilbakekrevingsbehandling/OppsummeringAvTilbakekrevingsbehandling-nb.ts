@@ -1,5 +1,6 @@
 export default {
     'oppsummering.tilbakekrevingsbehandling.panel.tittel': 'Oppsummering av Tilbakekrevingsbehandling',
+    'oppsummering.tilbakekrevingsbehandling.panel.notat.tittel': 'Behandlingsnotat',
     'oppsummering.tilbakekrevingsbehandling.opprettet': 'Opprettet',
     'oppsummering.tilbakekrevingsbehandling.startet': 'Tilbakekrevingsbehandling startet',
     'oppsummering.tilbakekrevingsbehandling.opprettetAv': 'Opprettet av',

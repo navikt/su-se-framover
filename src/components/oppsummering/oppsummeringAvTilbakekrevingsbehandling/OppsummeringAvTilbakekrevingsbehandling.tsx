@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Label } from '@navikt/ds-react';
+import { BodyLong, Button, Heading, Label } from '@navikt/ds-react';
 
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -45,6 +45,19 @@ const OppsummeringAvTilbakekrevingsbehandling = (props: {
                         <OppsummeringAvMetaInformasjon behandling={props.behandling} />
                         <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
                         <OppsummeringAvVurdering vurderinger={props.behandling.vurderinger} />
+
+                        {props.behandling.notat && (
+                            <div>
+                                <Heading size="small" level="6" spacing>
+                                    {formatMessage('oppsummering.tilbakekrevingsbehandling.panel.notat.tittel')}
+                                </Heading>
+                                {
+                                    <BodyLong className={styles.notat} spacing>
+                                        {props.behandling.notat}
+                                    </BodyLong>
+                                }
+                            </div>
+                        )}
                     </Oppsummeringspanel>
                     <OppsummeringAvTilbakekrevingsbehandlingbrev behandling={props.behandling} />
                 </>
