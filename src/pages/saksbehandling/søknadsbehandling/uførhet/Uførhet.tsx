@@ -13,22 +13,31 @@ import {
 } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import { uførhetSchema } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/validation';
 import OppsummeringAvUføre from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUføre';
+import OppsummeringAvUførevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { SøknadInnholdUføre } from '~src/types/Søknadinnhold';
+import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedMessages from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './uførhet-nb';
 
-const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
+const Uførhet = (
+    props: VilkårsvurderingBaseProps & {
+        søknadInnhold: SøknadInnholdUføre;
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreUføregrunnlag);
@@ -118,10 +127,18 @@ const Uførhet = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadI
                     />
                 ),
                 right: (
-                    <>
-                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
-                        <OppsummeringAvUføre uføre={props.søknadInnhold.uførevedtak} />
-                    </>
+                    <div className={sharedStyles.toKollonerRightContainer}>
+                        <div>
+                            <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                            <OppsummeringAvUføre uføre={props.søknadInnhold.uførevedtak} />
+                        </div>
+                        <EksisterendeVedtaksinformasjon
+                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                            onSuccess={(data) => (
+                                <OppsummeringAvUførevilkår uførevilkår={data.grunnlagsdataOgVilkårsvurderinger.uføre} />
+                            )}
+                        />
+                    </div>
                 ),
             }}
         </ToKolonner>

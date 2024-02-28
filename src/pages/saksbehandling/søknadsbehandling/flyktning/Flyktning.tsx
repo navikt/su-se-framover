@@ -13,26 +13,37 @@ import {
     flyktningVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
 import OppsummeringAvFlyktningstatus from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFlyktningstatus';
+import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreFlyktningVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { SøknadInnholdUføre } from '~src/types/Søknadinnhold';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import {
+    EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
+    Søknadsbehandling,
+} from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './flyktning-nb';
 import styles from './flyktning.module.less';
 
-const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdUføre }) => {
+const Flyktning = (
+    props: VilkårsvurderingBaseProps & {
+        søknadInnhold: SøknadInnholdUføre;
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
@@ -132,10 +143,20 @@ const Flyktning = (props: VilkårsvurderingBaseProps & { søknadInnhold: Søknad
                     </FlyktningForm>
                 ),
                 right: (
-                    <>
-                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
-                        <OppsummeringAvFlyktningstatus flyktningstatus={props.søknadInnhold.flyktningsstatus} />
-                    </>
+                    <div className={sharedStyles.toKollonerRightContainer}>
+                        <div>
+                            <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                            <OppsummeringAvFlyktningstatus flyktningstatus={props.søknadInnhold.flyktningsstatus} />
+                        </div>
+                        <EksisterendeVedtaksinformasjon
+                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                            onSuccess={(data) => (
+                                <OppsummeringAvFlyktningvilkår
+                                    flyktning={data.grunnlagsdataOgVilkårsvurderinger.flyktning}
+                                />
+                            )}
+                        />
+                    </div>
                 ),
             }}
         </ToKolonner>

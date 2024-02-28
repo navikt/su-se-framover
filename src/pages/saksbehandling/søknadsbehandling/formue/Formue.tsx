@@ -16,6 +16,7 @@ import {
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import OppsummeringAvEksternGrunnlagSkatt from '~src/components/oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
+import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -24,15 +25,22 @@ import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Person } from '~src/types/Person';
+import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 
 import messages from './formue-nb';
 import styles from './Formue.module.less';
 
-const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
+const Formue = (
+    props: VilkårsvurderingBaseProps & {
+        søker: Person;
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFormuegrunnlag);
     const [nyStatus, ny] = useAsyncActionCreator(hentNySkattegrunnlag);
@@ -118,6 +126,13 @@ const Formue = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
                                 søkers: props.behandling.søknad.søknadInnhold.formue,
                                 eps: props.behandling.søknad.søknadInnhold.ektefelle?.formue,
                             }}
+                        />
+
+                        <EksisterendeVedtaksinformasjon
+                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                            onSuccess={(data) => (
+                                <OppsummeringAvFormueVilkår formue={data.grunnlagsdataOgVilkårsvurderinger.formue} />
+                            )}
                         />
 
                         <SkattForm

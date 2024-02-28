@@ -5,15 +5,21 @@ import { AlderspensjonFormData } from '~src/components/forms/vilkårOgGrunnlagFo
 import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
+import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './alderspensjon-nb';
-const Alderspensjon = (props: VilkårsvurderingBaseProps) => {
+
+const Alderspensjon = (
+    props: VilkårsvurderingBaseProps & {
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [lagreAlderspensjongrunnlagStatus, lagreAlderspensjongrunnlag] = useAsyncActionCreator(

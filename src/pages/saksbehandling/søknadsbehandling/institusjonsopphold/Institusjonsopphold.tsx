@@ -13,20 +13,28 @@ import {
     institusjonsoppholdFormSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
 import OppsummeringAvInnlagtPåInstitusjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon';
+import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreInstitusjonsoppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './institusjonsopphold-nb';
 
-const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
+const Institusjonsopphold = (
+    props: VilkårsvurderingBaseProps & {
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
@@ -113,12 +121,24 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                     />
                 ),
                 right: (
-                    <>
-                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
-                        <OppsummeringAvInnlagtPåInstitusjon
-                            innlagtPåInstitusjon={props.behandling.søknad.søknadInnhold.boforhold.innlagtPåInstitusjon}
+                    <div className={sharedStyles.toKollonerRightContainer}>
+                        <div>
+                            <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                            <OppsummeringAvInnlagtPåInstitusjon
+                                innlagtPåInstitusjon={
+                                    props.behandling.søknad.søknadInnhold.boforhold.innlagtPåInstitusjon
+                                }
+                            />
+                        </div>
+                        <EksisterendeVedtaksinformasjon
+                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                            onSuccess={(data) => (
+                                <OppsummeringAvInstitusjonsoppholdvilkår
+                                    institusjonsopphold={data.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold}
+                                />
+                            )}
                         />
-                    </>
+                    </div>
                 ),
             }}
         </ToKolonner>

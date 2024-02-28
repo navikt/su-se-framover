@@ -13,20 +13,28 @@ import {
     utenlandsoppholdFormDataTilRequest,
 } from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdFormUtils';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUtenlandsopphold';
+import OppsummeringAvUtenlandsoppholdVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreUtenlandsopphold } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './oppholdIUtlandet-nb';
 
-const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
+const OppholdIUtlandet = (
+    props: VilkårsvurderingBaseProps & {
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreUtenlandsopphold);
@@ -108,12 +116,22 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                     />
                 ),
                 right: (
-                    <>
-                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
-                        <OppsummeringAvUtenlandsopphold
-                            utenlandsopphold={props.behandling.søknad.søknadInnhold.utenlandsopphold}
+                    <div className={sharedStyles.toKollonerRightContainer}>
+                        <div>
+                            <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                            <OppsummeringAvUtenlandsopphold
+                                utenlandsopphold={props.behandling.søknad.søknadInnhold.utenlandsopphold}
+                            />
+                        </div>
+                        <EksisterendeVedtaksinformasjon
+                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                            onSuccess={(data) => (
+                                <OppsummeringAvUtenlandsoppholdVilkår
+                                    utenlandsopphold={data.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
+                                />
+                            )}
                         />
-                    </>
+                    </div>
                 ),
             }}
         </ToKolonner>

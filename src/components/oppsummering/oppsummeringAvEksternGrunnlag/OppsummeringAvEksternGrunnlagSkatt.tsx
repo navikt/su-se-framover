@@ -17,7 +17,7 @@ const OppsummeringAvEksternGrunnlagSkatt = (props: {
 
     return (
         <div>
-            {props.medTittel && (
+            {props.medTittel && props.eksternGrunnlagSkatt && (
                 <Heading level="2" size="medium">
                     {formatMessage('skattegrunnlag.tittel')}
                 </Heading>

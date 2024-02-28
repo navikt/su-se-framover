@@ -38,6 +38,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     //F
     [ApiErrorCode.FANT_IKKE_AKTØR_ID]: 'Fant ikke AktørID',
     [ApiErrorCode.FANT_IKKE_BEHANDLING]: 'Fant ikke behandlingen',
+    [ApiErrorCode.FANT_IKKE_GJELDENDE_VEDTAKSDATA_FOR_TIDLIGERE_PERIDOE]: 'Fant ikke data fra tidligere behandlinger',
     [ApiErrorCode.FANT_IKKE_GJELDENDE_STØNADSPERIODE]:
         'Kunne ikke sette innkallingsdato, ettersom vi ikke fant gjeldende stønadsperiode',
     [ApiErrorCode.FANT_IKKE_GJELDENDE_UTBETALING]: 'Kunne ikke hente gjeldende utbetaling',

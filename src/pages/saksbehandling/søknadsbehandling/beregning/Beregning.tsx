@@ -23,12 +23,13 @@ import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feil
 import OppsummeringAvBeregning from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning';
 import OppsummeringAvEksternGrunnlagSkatt from '~src/components/oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 import OppsummeringAvInntektOgPensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInntektOgPensjon';
+import OppsummeringAvFradrag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { pipe } from '~src/lib/fp';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
@@ -36,7 +37,11 @@ import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbe
 import { Fradrag } from '~src/types/Fradrag';
 import { NullablePeriode } from '~src/types/Periode';
 import { Person } from '~src/types/Person';
-import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import {
+    SøknadsbehandlingStatus,
+    Søknadsbehandling,
+    EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
+} from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erIGyldigStatusForÅKunneBeregne } from '~src/utils/BeregningUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
@@ -44,6 +49,7 @@ import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from 
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import { kanSimuleres } from '~src/utils/SøknadsbehandlingUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 
 import messages from './beregning-nb';
@@ -65,9 +71,12 @@ const getInitialValues = (
     begrunnelse: begrunnelse ?? '',
 });
 
-type Søker = { søker: Person };
+type ExtendedBeregningProps = {
+    søker: Person;
+    tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+};
 
-const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
+const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
@@ -310,12 +319,21 @@ const Beregning = (props: VilkårsvurderingBaseProps & Søker) => {
                 ),
                 right: (
                     <div className={styles.høyresideContainer}>
-                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
-                        <OppsummeringAvInntektOgPensjon
-                            inntektOgPensjon={{
-                                søkers: props.behandling.søknad.søknadInnhold.inntektOgPensjon,
-                                eps: props.behandling.søknad.søknadInnhold.ektefelle?.inntektOgPensjon,
-                            }}
+                        <div>
+                            <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                            <OppsummeringAvInntektOgPensjon
+                                inntektOgPensjon={{
+                                    søkers: props.behandling.søknad.søknadInnhold.inntektOgPensjon,
+                                    eps: props.behandling.søknad.søknadInnhold.ektefelle?.inntektOgPensjon,
+                                }}
+                            />
+                        </div>
+
+                        <EksisterendeVedtaksinformasjon
+                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                            onSuccess={(data) => (
+                                <OppsummeringAvFradrag fradrag={data.grunnlagsdataOgVilkårsvurderinger.fradrag} />
+                            )}
                         />
 
                         <OppsummeringAvEksternGrunnlagSkatt

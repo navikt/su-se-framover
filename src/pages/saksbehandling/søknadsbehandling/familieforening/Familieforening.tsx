@@ -5,16 +5,22 @@ import { FamilieforeningFormData } from '~src/components/forms/vilkårOgGrunnlag
 import OppsummeringAvOppholdstillatelseAlder from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOppholdstillatelseAlder';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
+import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './familieforening-nb';
 
-const Familieforening = (props: VilkårsvurderingBaseProps & { søknadInnhold: SøknadInnholdAlder }) => {
+const Familieforening = (
+    props: VilkårsvurderingBaseProps & {
+        søknadInnhold: SøknadInnholdAlder;
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [lagreFamilieforeninggrunnlagStatus, lagreFamilieforeninggrunnlag] = useAsyncActionCreator(
