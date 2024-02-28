@@ -14,26 +14,38 @@ import {
     personligOppmøteVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
 import OppsummeringAvForNav from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvForNav';
+import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagrePersonligOppmøteVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Sakstype } from '~src/types/Sak';
-import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
+import {
+    EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
+    Søknadsbehandling,
+    SøknadsbehandlingStatus,
+} from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 import { erNoenVurdertUavklart, mapToVilkårsinformasjon } from '~src/utils/vilkårUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './personligOppmøte-nb';
 import styles from './personligOppmøte.module.less';
 
-const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakstype }) => {
+const PersonligOppmøte = (
+    props: VilkårsvurderingBaseProps & {
+        sakstype: Sakstype;
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const navigate = useNavigate();
     const advarselRef = useRef<HTMLDivElement>(null);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -158,10 +170,20 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps & { sakstype: Sakst
                     </PersonligOppmøteForm>
                 ),
                 right: (
-                    <>
-                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
-                        <OppsummeringAvForNav forNav={props.behandling.søknad.søknadInnhold.forNav} />
-                    </>
+                    <div className={sharedStyles.toKollonerRightContainer}>
+                        <div>
+                            <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                            <OppsummeringAvForNav forNav={props.behandling.søknad.søknadInnhold.forNav} />
+                        </div>
+                        <EksisterendeVedtaksinformasjon
+                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                            onSuccess={(data) => (
+                                <OppsummeringAvPersonligoppmøtevilkår
+                                    personligoppmøte={data.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
+                                />
+                            )}
+                        />
+                    </div>
                 ),
             }}
         </ToKolonner>

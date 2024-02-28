@@ -1,7 +1,10 @@
+import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
+import { gjeldendeVedtaksdataTidligerePeriode } from '~src/api/behandlingApi';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
+import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspensjon/Alderspensjon';
 import Beregning from '~src/pages/saksbehandling/søknadsbehandling/beregning/Beregning';
@@ -34,6 +37,9 @@ const Vilkår = () => {
         behandlingId,
     } = Routes.useRouteParams<typeof Routes.saksbehandlingVilkårsvurdering>();
     const behandling = props.sak.behandlinger.find((b) => b.id === behandlingId);
+    const [hentGjeldendeVedtaksdataForTidligerePeriodeStatus, hentGjeldendeVedtaksdataForTidligerePeriode] = useApiCall(
+        gjeldendeVedtaksdataTidligerePeriode,
+    );
 
     if (!(behandling && sakId && behandlingId)) {
         return <div>404</div>;
@@ -46,18 +52,18 @@ const Vilkår = () => {
             vilkar: vilkårType,
         });
 
-    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
-        sakId: sakId,
-        behandlingId: behandling.id,
-    });
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({ sakId: sakId, behandlingId: behandling.id });
 
-    const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({
-        sakId: sakId,
-    });
+    const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({ sakId: sakId });
 
     const avsluttUrl = Routes.saksoversiktValgtSak.createURL({ sakId: sakId });
 
-    const sakstype = props.sak.sakstype;
+    useEffect(() => {
+        hentGjeldendeVedtaksdataForTidligerePeriode({
+            sakId: sakId,
+            behandlingId: behandling.id,
+        });
+    }, []);
 
     return (
         <SøknadsbehandlingDraftProvider>
@@ -66,7 +72,7 @@ const Vilkår = () => {
                     sakId={props.sak.id}
                     behandling={behandling}
                     vilkår={vilkar}
-                    sakstype={sakstype}
+                    sakstype={props.sak.sakstype}
                 />
                 <div className={styles.content}>
                     {vilkar === Vilkårtype.Virkningstidspunkt && (
@@ -75,11 +81,12 @@ const Vilkår = () => {
                             forrigeUrl={saksoversiktUrl}
                             avsluttUrl={avsluttUrl}
                             nesteUrl={
-                                sakstype === Sakstype.Uføre
+                                props.sak.sakstype === Sakstype.Uføre
                                     ? vilkårUrl(Vilkårtype.Uførhet)
                                     : vilkårUrl(Vilkårtype.Alderspensjon)
                             }
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === VilkårtypeAlder.Alderspensjon && isAldersøknad(behandling.søknad.søknadInnhold) && (
@@ -89,6 +96,7 @@ const Vilkår = () => {
                             nesteUrl={vilkårUrl(Vilkårtype.Familieforening)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === VilkårtypeAlder.Familieforening && isAldersøknad(behandling.søknad.søknadInnhold) && (
@@ -99,6 +107,7 @@ const Vilkår = () => {
                             avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.Uførhet && isUføresøknad(behandling.søknad.søknadInnhold) && (
@@ -109,6 +118,7 @@ const Vilkår = () => {
                             avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.Flyktning && isUføresøknad(behandling.søknad.søknadInnhold) && (
@@ -119,6 +129,7 @@ const Vilkår = () => {
                             avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.LovligOpphold && (
@@ -132,6 +143,7 @@ const Vilkår = () => {
                             nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.FastOppholdINorge && (
@@ -141,6 +153,7 @@ const Vilkår = () => {
                             nesteUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.Institusjonsopphold && (
@@ -150,6 +163,7 @@ const Vilkår = () => {
                             nesteUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.OppholdIUtlandet && (
@@ -159,6 +173,7 @@ const Vilkår = () => {
                             nesteUrl={vilkårUrl(Vilkårtype.Bosituasjon)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.Bosituasjon && (
@@ -168,6 +183,7 @@ const Vilkår = () => {
                             nesteUrl={vilkårUrl(Vilkårtype.Formue)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                             søker={props.søker}
                         />
                     )}
@@ -179,6 +195,7 @@ const Vilkår = () => {
                             nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.PersonligOppmøte && (
@@ -191,8 +208,9 @@ const Vilkår = () => {
                                     : vilkårUrl(Vilkårtype.Beregning)
                             }
                             avsluttUrl={avsluttUrl}
-                            sakstype={sakstype}
+                            sakstype={props.sak.sakstype}
                             sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                     {vilkar === Vilkårtype.Beregning && (
@@ -203,6 +221,7 @@ const Vilkår = () => {
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             søker={props.søker}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
                 </div>

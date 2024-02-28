@@ -13,18 +13,22 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import { nullableMap, pipe } from '~src/lib/fp';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppSelector } from '~src/redux/Store';
 import { Fødsel } from '~src/types/Person';
+import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
+import { formatPeriodeMonthYear } from '~src/utils/periode/periodeUtils';
 import { alderSomPersonFyllerIÅr } from '~src/utils/person/personUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedMessages from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './virkningstidspunkt-nb';
@@ -42,7 +46,11 @@ import {
 
 //TODO: warning hvis fødselsår i fødselsnummeret er ulik fødseslåret
 
-const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
+const Virkningstidspunkt = (
+    props: VilkårsvurderingBaseProps & {
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const navigate = useNavigate();
 
@@ -229,42 +237,54 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     </FormWrapper>
                                 ),
                                 right: (
-                                    <div>
-                                        <Heading size="small">{formatMessage('søker.personalia')}</Heading>
-                                        <OppsummeringPar
-                                            label={formatMessage('søker.fødselsdato')}
-                                            verdi={
-                                                søker.fødsel?.dato
-                                                    ? formatDate(søker.fødsel?.dato)
-                                                    : formatMessage('feil.harIkkeFødselsdato')
-                                            }
-                                        />
-                                        <OppsummeringPar
-                                            label={formatMessage('søker.fødselsår')}
-                                            verdi={
-                                                søker.fødsel?.år
-                                                    ? søker.fødsel.år
-                                                    : formatMessage('feil.harIkkeFødselsår')
-                                            }
-                                        />
-                                        {søker.fødsel?.alder ? (
+                                    <div className={sharedStyles.toKollonerRightContainer}>
+                                        <div>
+                                            <Heading size="small">{formatMessage('søker.personalia')}</Heading>
                                             <OppsummeringPar
-                                                label={formatMessage('søker.alder')}
-                                                verdi={søker.fødsel.alder}
-                                            />
-                                        ) : (
-                                            <OppsummeringPar
-                                                label={formatMessage('søker.alder')}
+                                                label={formatMessage('søker.fødselsdato')}
                                                 verdi={
-                                                    søker.fødsel?.år
-                                                        ? formatMessage('søker.årSøkerFyller', {
-                                                              år: alderSomPersonFyllerIÅr(søker.fødsel.år),
-                                                              detteÅret: new Date().getFullYear(),
-                                                          })
-                                                        : formatMessage('feil.kunneIkkeAvgjøreAlder')
+                                                    søker.fødsel?.dato
+                                                        ? formatDate(søker.fødsel?.dato)
+                                                        : formatMessage('feil.harIkkeFødselsdato')
                                                 }
                                             />
-                                        )}
+                                            <OppsummeringPar
+                                                label={formatMessage('søker.fødselsår')}
+                                                verdi={
+                                                    søker.fødsel?.år
+                                                        ? søker.fødsel.år
+                                                        : formatMessage('feil.harIkkeFødselsår')
+                                                }
+                                            />
+                                            {søker.fødsel?.alder ? (
+                                                <OppsummeringPar
+                                                    label={formatMessage('søker.alder')}
+                                                    verdi={søker.fødsel.alder}
+                                                />
+                                            ) : (
+                                                <OppsummeringPar
+                                                    label={formatMessage('søker.alder')}
+                                                    verdi={
+                                                        søker.fødsel?.år
+                                                            ? formatMessage('søker.årSøkerFyller', {
+                                                                  år: alderSomPersonFyllerIÅr(søker.fødsel.år),
+                                                                  detteÅret: new Date().getFullYear(),
+                                                              })
+                                                            : formatMessage('feil.kunneIkkeAvgjøreAlder')
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+
+                                        <EksisterendeVedtaksinformasjon
+                                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                                            onSuccess={(data) => (
+                                                <OppsummeringPar
+                                                    label={formatMessage('eksisterendeInformasjon.stønadsperiode')}
+                                                    verdi={formatPeriodeMonthYear(data.periode)}
+                                                />
+                                            )}
+                                        />
                                     </div>
                                 ),
                             }}

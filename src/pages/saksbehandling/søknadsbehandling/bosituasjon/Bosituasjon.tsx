@@ -13,22 +13,33 @@ import {
     eqBosituasjonGrunnlagFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
 import OppsummeringAvBoforhold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
+import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreBosituasjongrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Person } from '~src/types/Person';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import {
+    EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
+    Søknadsbehandling,
+} from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
+import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './Bosituasjon-nb';
 
-const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => {
+const Bosituasjon = (
+    props: VilkårsvurderingBaseProps & {
+        søker: Person;
+        tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    },
+) => {
     const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjongrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
@@ -109,9 +120,19 @@ const Bosituasjon = (props: VilkårsvurderingBaseProps & { søker: Person }) => 
                     />
                 ),
                 right: (
-                    <div>
-                        <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
-                        <OppsummeringAvBoforhold boforhold={props.behandling.søknad.søknadInnhold.boforhold} />
+                    <div className={sharedStyles.toKollonerRightContainer}>
+                        <div>
+                            <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
+                            <OppsummeringAvBoforhold boforhold={props.behandling.søknad.søknadInnhold.boforhold} />
+                        </div>
+                        <EksisterendeVedtaksinformasjon
+                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                            onSuccess={(data) => (
+                                <OppsummeringAvBosituasjongrunnlag
+                                    bosituasjon={data.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                                />
+                            )}
+                        />
                     </div>
                 ),
             }}

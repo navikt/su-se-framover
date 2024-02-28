@@ -6,6 +6,7 @@ import { Aldersvurdering } from './Aldersvurdering';
 import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { EksterneGrunnlag } from './EksterneGrunnlag';
+import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Søknad } from './Søknad';
 
 export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus> {
@@ -55,4 +56,14 @@ export interface SkattegrunnlagSøknadsbehandlingRequest {
     behandlingId: string;
     fra: string;
     til: string;
+}
+
+export interface EksisterendeVedtaksinformasjonTidligerePeriodeRequest {
+    sakId: string;
+    behandlingId: string;
+}
+
+export interface EksisterendeVedtaksinformasjonTidligerePeriodeResponse {
+    periode: Periode<string>;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }

@@ -40,3 +40,6 @@ export const eqStringPeriode = struct<Periode<string>>({
     fraOgMed: S.Eq,
     tilOgMed: S.Eq,
 });
+
+export const formatPeriodeMonthYear = (periode: Periode<string>) =>
+    `${DateUtils.formatMonthYear(periode.fraOgMed)} – ${DateUtils.formatMonthYear(periode.tilOgMed)}`;

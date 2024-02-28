@@ -32,6 +32,7 @@ export enum ApiErrorCode {
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
     FANT_IKKE_GJELDENDE_STØNADSPERIODE = 'fant_ikke_gjeldende_stønadsperiode',
+    FANT_IKKE_GJELDENDE_VEDTAKSDATA_FOR_TIDLIGERE_PERIDOE = 'fant_ikke_gjeldende_vedtaksdata_for_tidligere_peridoe',
     FANT_IKKE_GJELDENDE_UTBETALING = 'kunne_ikke_hente_gjeldende_utbetaling',
     FANT_IKKE_JOURNALPOST = 'fant_ikke_journalpost',
     FANT_IKKE_KLAGE = 'fant_ikke_klage',

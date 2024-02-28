@@ -1,6 +1,11 @@
 import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
-import { SkattegrunnlagSøknadsbehandlingRequest, Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import {
+    EksisterendeVedtaksinformasjonTidligerePeriodeRequest,
+    EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
+    SkattegrunnlagSøknadsbehandlingRequest,
+    Søknadsbehandling,
+} from '~src/types/Søknadsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -107,5 +112,14 @@ export async function hentNySkattegrunnlag(
             fra: arg.fra,
             til: arg.til,
         },
+    });
+}
+
+export async function gjeldendeVedtaksdataTidligerePeriode(
+    arg: EksisterendeVedtaksinformasjonTidligerePeriodeRequest,
+): Promise<ApiClientResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/gjeldendeVedtaksdata/tidligereperiode`,
+        method: 'GET',
     });
 }
