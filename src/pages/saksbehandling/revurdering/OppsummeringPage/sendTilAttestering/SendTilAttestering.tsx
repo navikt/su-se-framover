@@ -150,7 +150,7 @@ const SendTilAttestering = (props: {
     }, [watch.valg]);
 
     return (
-        <ToKolonner tittel={'Vedtaksbrev'}>
+        <ToKolonner tittel={'Vedtaksbrev'} width="40/60">
             {{
                 left: (
                     <FormWrapper

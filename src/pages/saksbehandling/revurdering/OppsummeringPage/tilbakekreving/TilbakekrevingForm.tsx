@@ -73,7 +73,7 @@ const TilbakekrevingForm = (props: {
     });
 
     return (
-        <ToKolonner tittel={formatMessage('tilbakekreving.tittel')}>
+        <ToKolonner tittel={formatMessage('tilbakekreving.tittel')} width="40/60">
             {{
                 left: (
                     <FormWrapper

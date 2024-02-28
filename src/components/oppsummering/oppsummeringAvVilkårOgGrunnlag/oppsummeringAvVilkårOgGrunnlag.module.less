@@ -8,7 +8,13 @@
     > :not(:last-child) {
         margin-bottom: @spacing-xxs;
     }
+
     margin-bottom: @spacing;
+}
+
+.periode {
+    display: grid;
+    grid-template-columns: 10rem 10rem;
 }
 
 .formueGrunnlagContainer {
@@ -16,17 +22,9 @@
 }
 
 .formueTripple {
-    display: flex;
-    justify-content: space-between;
-
-    .verdiPairMedEPS {
-        display: grid;
-        grid-template-columns: 5rem 8rem;
-
-        .verdi {
-            text-align: right;
-        }
-    }
+    display: grid;
+    grid-template-columns: 10rem 4rem 4rem;
+    gap: @spacing-xs;
 }
 
 .utenlandsinntektContainer {

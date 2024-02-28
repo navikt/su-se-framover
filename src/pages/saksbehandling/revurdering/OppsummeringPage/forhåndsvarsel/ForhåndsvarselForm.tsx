@@ -82,7 +82,7 @@ const ForhåndsvarselForm = (props: {
     };
 
     return (
-        <ToKolonner tittel={formatMessage('forhåndsvarsel.tittel')}>
+        <ToKolonner tittel={formatMessage('forhåndsvarsel.tittel')} width="40/60">
             {{
                 left: (
                     <FormWrapper

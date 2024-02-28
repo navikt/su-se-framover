@@ -39,7 +39,11 @@ const OppsummeringAvFormueVilkår = (props: {
                         const bekreftetFormue = søkersFormue + epsFormue;
                         return (
                             <li key={f.id} className={styles.grunnlagsListe}>
-                                <OppsummeringPar label={formatMessage('periode')} verdi={formatPeriode(f.periode)} />
+                                <OppsummeringPar
+                                    className={styles.periode}
+                                    label={formatMessage('periode')}
+                                    verdi={formatPeriode(f.periode)}
+                                />
                                 <OppsummeringAvFormuegrunnlag g={f.grunnlag} />
                                 <Formuestatus
                                     bekreftetFormue={bekreftetFormue}
@@ -60,7 +64,7 @@ const OppsummeringAvFormuegrunnlag = (props: { g: Formuegrunnlag }) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div className={styles.formueGrunnlagContainer}>
-            <FormueTrippel label="" søkersVerdi="Søker" epsverdi={props.g.epsFormue ? 'Ektefelle/Samboer' : null} />
+            <FormueTrippel label="" søkersVerdi="Søker" epsverdi={props.g.epsFormue ? 'EPS' : null} />
             <FormueTrippel
                 label={formatMessage('formue.verdi.bolig')}
                 søkersVerdi={props.g.søkersFormue.verdiIkkePrimærbolig}
@@ -105,6 +109,7 @@ const OppsummeringAvFormuegrunnlag = (props: { g: Formuegrunnlag }) => {
     );
 };
 
+/*
 export const FormueTrippel = (props: {
     label: string;
     søkersVerdi: number | string | JSX.Element;
@@ -123,6 +128,21 @@ export const FormueTrippel = (props: {
                     <Label>{props.epsverdi}</Label>
                 </div>
             </div>
+        </div>
+    );
+};
+*/
+
+export const FormueTrippel = (props: {
+    label: string;
+    søkersVerdi: number | string | JSX.Element;
+    epsverdi?: Nullable<number | string | JSX.Element>;
+}) => {
+    return (
+        <div className={styles.formueTripple}>
+            <BodyShort>{props.label}</BodyShort>
+            <Label>{props.søkersVerdi}</Label>
+            <Label>{props.epsverdi}</Label>
         </div>
     );
 };
