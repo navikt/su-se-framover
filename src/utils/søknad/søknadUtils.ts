@@ -45,16 +45,25 @@ const erForNavPapirSøknad = (f: ForNav): f is ForNavPapirsøknad => f.type === 
 export function getIverksatteInnvilgedeSøknader(sak: Sak) {
     return sak.søknader
         .filter((søknad) => {
-            const behandling = sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-            return søknad.lukket === null && behandling?.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET;
+            const behandlinger = sak.behandlinger.filter((b) => b.søknad.id === søknad.id);
+
+            return (
+                søknad.lukket === null &&
+                behandlinger.some((b) => b.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET)
+            );
         })
         .map((s) => {
-            const behandling = sak.behandlinger.find((b) => b.søknad.id === s.id);
-            const vedtakForBehandling = sak.vedtak.find((v) => v.behandlingId === behandling?.id);
+            const behandling = sak.behandlinger.filter((b) => b.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET);
+
+            if (behandling.length !== 1) {
+                throw new Error('Forventet at en søknad kun av 1 iverksatt innvilget behandling');
+            }
+
+            const vedtakForBehandling = sak.vedtak.find((v) => v.behandlingId === behandling[0].id);
 
             return {
                 iverksattDato: vedtakForBehandling?.opprettet,
-                søknadensBehandlingsId: behandling?.id,
+                søknadensBehandlingsId: behandling[0]?.id,
                 søknad: s,
             };
         });
