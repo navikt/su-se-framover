@@ -53,10 +53,12 @@ export function getIverksatteInnvilgedeSøknader(sak: Sak) {
             );
         })
         .map((s) => {
-            const behandling = sak.behandlinger.filter((b) => b.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET);
+            const behandling = sak.behandlinger.filter(
+                (b) => b.søknad.id === s.id && b.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET,
+            );
 
             if (behandling.length !== 1) {
-                throw new Error('Forventet at en søknad kun av 1 iverksatt innvilget behandling');
+                throw new Error('Forventet at en søknad kun har 1 iverksatt innvilget behandling');
             }
 
             const vedtakForBehandling = sak.vedtak.find((v) => v.behandlingId === behandling[0].id);
