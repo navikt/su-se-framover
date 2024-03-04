@@ -250,6 +250,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                             <Button
                                                 size="small"
                                                 variant="tertiary"
+                                                loading={RemoteData.isPending(startNysøknadsbehandlingStatus)}
                                                 onClick={() =>
                                                     startNySøknadsbehandling({
                                                         sakId: props.sakId,
