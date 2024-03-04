@@ -1,3 +1,4 @@
+import { Label } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
 import * as Eq from 'fp-ts/Eq';
 import * as O from 'fp-ts/Option';
@@ -18,6 +19,14 @@ import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
 
 const OppsummeringAvFradrag = (props: { fradrag: Fradrag[] }) => {
     const { formatMessage } = useI18n({ messages });
+
+    if (props.fradrag.length === 0) {
+        return (
+            <div>
+                <Label>{formatMessage('fradrag.ingenFradrag')}</Label>
+            </div>
+        );
+    }
 
     return (
         <ul>

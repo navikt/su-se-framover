@@ -49,6 +49,7 @@ export default {
     'fradrag.utenlandsk.beløp': 'Beløp i utenlandsk valuta',
     'fradrag.utenlandsk.kurs': 'Kurs',
     'fradrag.suffix.eps': '(ektefelle/samboer)',
+    'fradrag.ingenFradrag': 'Ingen fradrag',
 
     'utenlandsopphold.vilkår.text': 'Skal søkeren oppholde seg mer enn 90 dager i utlandet?',
     'utenlandsopphold.vilkår.erOppfylt.SkalHoldeSegINorge': 'Oppfylt',
