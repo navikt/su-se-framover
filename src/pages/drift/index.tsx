@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Label, Loader, Modal, Select, Textarea, TextField } from '@navikt/ds-react';
+import { Alert, Button, Heading, Label, Loader, Modal, Select, TextField } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 
 import { ApiError } from '~src/api/apiClient';
@@ -10,8 +10,6 @@ import {
     konsistensavstemming,
     grensesnittsavstemming,
     stønadsmottakere,
-    resendstatistikkSøknadsbehandlingVedtak,
-    resendSpesifikkVedtakstatistikk,
     ferdigstillVedtak,
 } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -21,7 +19,8 @@ import { Nullable } from '~src/lib/types';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
-import StartGRegulering from './components/StartGRegulering';
+import Gregulering from './components/G-regulering';
+import ResendStatistikk from './components/statistikk/Statistikk';
 import { SøknadTabellDrift } from './components/SøknadTabell';
 import SendUtbetalingsIder from './components/utbetalingslinjer/SendUtbetalingslinjer';
 import styles from './index.module.less';
@@ -50,11 +49,10 @@ const Drift = () => {
         hentStatus();
     }, []);
 
-    const [vilResendeStatistikk, setVilResendeStatistikk] = useState<boolean>(false);
     const [vilFikseVedtak, setVilFikseVedtak] = useState<boolean>(false);
 
     const [stønadsmottakereModal, setStønadsmottakereModal] = useState<boolean>(false);
-    const [visReguleringModal, setVisReguleringModal] = useState(false);
+
     const [fixSøknaderResponse, setfixSøknaderResponse] = useState<RemoteData.RemoteData<ApiError, SøknadResponse>>(
         RemoteData.initial,
     );
@@ -85,9 +83,7 @@ const Drift = () => {
             {stønadsmottakereModal && (
                 <StønadsmottakereModal open={stønadsmottakereModal} onClose={() => setStønadsmottakereModal(false)} />
             )}
-            {vilResendeStatistikk && (
-                <ResendStatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
-            )}
+
             {vilFikseVedtak && <VilFikseVedtakModal open={vilFikseVedtak} onClose={() => setVilFikseVedtak(false)} />}
 
             <div>
@@ -108,8 +104,8 @@ const Drift = () => {
                     )}
                 </div>
             </div>
+            <h1>Actions</h1>
             <div>
-                <h1>Actions</h1>
                 <div className={styles.actionsContainer}>
                     <Button variant="secondary" className={styles.knapp} type="button" onClick={fixSøknader}>
                         Fix Søknader
@@ -234,26 +230,8 @@ const Drift = () => {
                             </div>
                         </Modal.Body>
                     </Modal>
-                    <Modal
-                        aria-labelledby="Start regulering"
-                        open={visReguleringModal}
-                        onClose={() => setVisReguleringModal(false)}
-                    >
-                        <Modal.Body>
-                            <StartGRegulering />
-                        </Modal.Body>
-                    </Modal>
-                    <Button
-                        variant="secondary"
-                        className={styles.knapp}
-                        type="button"
-                        onClick={() => {
-                            settKnappTrykket(Knapp.G_REGULERING);
-                            setVisReguleringModal(true);
-                        }}
-                    >
-                        G-regulering
-                    </Button>
+                    <Gregulering />
+
                     <Button
                         variant="secondary"
                         className={styles.knapp}
@@ -272,14 +250,7 @@ const Drift = () => {
                         Stønadsmottakere
                     </Button>
 
-                    <Button
-                        variant="secondary"
-                        className={styles.knapp}
-                        type="button"
-                        onClick={() => setVilResendeStatistikk(true)}
-                    >
-                        Resend statistikk
-                    </Button>
+                    <ResendStatistikk />
 
                     <Button
                         variant="secondary"
@@ -334,63 +305,6 @@ const VilFikseVedtakModal = (props: { open: boolean; onClose: () => void }) => {
                     {RemoteData.isSuccess(ferdigstillStatus) && <p>Nice 👍🤌</p>}
 
                     {RemoteData.isFailure(ferdigstillStatus) && <ApiErrorAlert error={ferdigstillStatus.error} />}
-                </div>
-            </Modal.Body>
-        </Modal>
-    );
-};
-
-const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
-    const [søknadsbehandlingVedtakStatistikkStatus, resendSøknadsbehandlingVedtak] = useApiCall(
-        resendstatistikkSøknadsbehandlingVedtak,
-    );
-    const [spesifikkStatus, resendSpesifikkVedtak] = useApiCall(resendSpesifikkVedtakstatistikk);
-
-    const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
-    const [vedtakId, setVedtakId] = useState<string>('');
-
-    return (
-        <Modal open={props.open} onClose={props.onClose}>
-            <Modal.Body>
-                <div>
-                    <Heading size="medium" spacing>
-                        Spesifikk
-                    </Heading>
-
-                    <Textarea label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
-                    <Button onClick={() => resendSpesifikkVedtak({ vedtakIder: vedtakId })}>
-                        Resend spesifikk vedtak statistikk
-                    </Button>
-                    {RemoteData.isSuccess(spesifikkStatus) && <p>Nice 👍🤌</p>}
-
-                    {RemoteData.isFailure(spesifikkStatus) && <ApiErrorAlert error={spesifikkStatus.error} />}
-
-                    <Heading size="medium" spacing>
-                        Alle
-                    </Heading>
-                    <DatePicker
-                        label="Fra og med"
-                        value={fraOgMed}
-                        onChange={(date) => {
-                            setFraOgMed(date);
-                        }}
-                    />
-
-                    <Button
-                        onClick={() =>
-                            resendSøknadsbehandlingVedtak({
-                                fraOgMed: toIsoDateOnlyString(fraOgMed!),
-                            })
-                        }
-                    >
-                        Søknadsbehandling vedtak
-                    </Button>
-
-                    {RemoteData.isSuccess(søknadsbehandlingVedtakStatistikkStatus) && <p>Nice 👍🤌</p>}
-
-                    {RemoteData.isFailure(søknadsbehandlingVedtakStatistikkStatus) && (
-                        <ApiErrorAlert error={søknadsbehandlingVedtakStatistikkStatus.error} />
-                    )}
                 </div>
             </Modal.Body>
         </Modal>
