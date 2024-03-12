@@ -19,8 +19,8 @@ import { Nullable } from '~src/lib/types';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
-import Gregulering from './components/G-regulering';
-import ResendStatistikk from './components/statistikk/Statistikk';
+import Gregulering from './components/regulering/G-regulering';
+import ResendStatistikk from './components/Statistikk';
 import { SøknadTabellDrift } from './components/SøknadTabell';
 import SendUtbetalingsIder from './components/utbetalingslinjer/SendUtbetalingslinjer';
 import styles from './index.module.less';

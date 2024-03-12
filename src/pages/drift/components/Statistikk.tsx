@@ -9,7 +9,7 @@ import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
-import sharedStyles from '../../index.module.less';
+import sharedStyles from '../index.module.less';
 
 const ResendStatistikk = () => {
     const [vilResendeStatistikk, setVilResendeStatistikk] = useState<boolean>(false);
