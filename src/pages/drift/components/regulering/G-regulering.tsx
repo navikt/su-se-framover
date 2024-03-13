@@ -16,7 +16,6 @@ import { useState, useEffect } from 'react';
 
 import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
 import * as reguleringApi from '~src/api/reguleringApi';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
@@ -57,6 +56,7 @@ const GReguleringsModal = (props: { visModa: boolean; onClose: () => void }) => 
 
     const [startDatoDryRun, setStartDatoDryRun] = useState<Nullable<Date>>(null);
     const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
+    const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
 
     return (
         <Modal
@@ -90,7 +90,6 @@ const GReguleringsModal = (props: { visModa: boolean; onClose: () => void }) => 
                     <Tabs.List>
                         <Tabs.Tab value="dry-run" label="Dry-run" />
                         <Tabs.Tab value="regulering" label="Regulering" />
-                        <Tabs.Tab value="supplement" label="Reguleringsupplement" />
                     </Tabs.List>
                     <Tabs.Panel value="dry-run" className={styles.tabPanel}>
                         <div className={styles.panelInnholdContainer}>
@@ -106,12 +105,17 @@ const GReguleringsModal = (props: { visModa: boolean; onClose: () => void }) => 
                                 />
                             </div>
 
+                            <ReguleringsSupplement onSupplementChange={setSupplementValue} />
+
                             <Button
                                 onClick={() =>
+                                    //TODO helst ha som en onSubmit function
                                     startDatoDryRun &&
+                                    supplementValue &&
                                     dryRun({
                                         fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
                                         grunnbeløp: gverdiDryRun,
+                                        supplement: supplementValue!,
                                     })
                                 }
                                 loading={RemoteData.isPending(dryRunStatus)}
@@ -131,20 +135,27 @@ const GReguleringsModal = (props: { visModa: boolean; onClose: () => void }) => 
                                 onChange={(dato) => setStartDato(dato)}
                             />
 
+                            <ReguleringsSupplement onSupplementChange={setSupplementValue} />
+
                             <Button
-                                onClick={() => startDato && reguler({ fraOgMedMåned: toIsoMonthOrNull(startDato)! })}
+                                onClick={() =>
+                                    //TODO helst ha som en onSubmit function
+                                    startDato &&
+                                    supplementValue &&
+                                    reguler({
+                                        fraOgMedMåned: toIsoMonthOrNull(startDato)!,
+                                        supplement: supplementValue!,
+                                    })
+                                }
                                 loading={RemoteData.isPending(reguleringsstatus)}
                                 disabled={!RemoteData.isInitial(reguleringsstatus)}
                             >
                                 Start regulering
                             </Button>
                             {RemoteData.isSuccess(reguleringsstatus) && (
-                                <Alert variant="success">Regulering gjennomført</Alert>
+                                <Alert variant="success">Regulering gjennomført 👍🤌</Alert>
                             )}
                         </div>
-                    </Tabs.Panel>
-                    <Tabs.Panel value="supplement" className={styles.tabPanel}>
-                        <ReguleringsSupplement />
                     </Tabs.Panel>
                 </Tabs>
             </Modal.Body>
@@ -152,18 +163,8 @@ const GReguleringsModal = (props: { visModa: boolean; onClose: () => void }) => 
     );
 };
 
-const ReguleringsSupplement = () => {
+const ReguleringsSupplement = (props: { onSupplementChange: (i: Nullable<string | File>) => void }) => {
     const [supplement, setSupplement] = useState<Nullable<'fil' | 'text'>>(null);
-    const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
-    const [status, sendSupplement] = useApiCall(reguleringApi.reguleringssupplement);
-
-    const onClick = () => {
-        if (!supplementValue) {
-            console.log('du hakke valgt hva du skal sende inn');
-            return;
-        }
-        sendSupplement({ innhold: supplementValue });
-    };
 
     return (
         <div className={styles.supplementContainer}>
@@ -172,30 +173,40 @@ const ReguleringsSupplement = () => {
                 supplement som kjører en del av disse behandlingenene automatisk{' '}
             </Label>
             <RadioGroup legend="Velg supplement">
-                <Radio value={'fil'} onClick={() => setSupplement('fil')}>
+                <Radio
+                    value={'fil'}
+                    onClick={() => {
+                        setSupplement('fil');
+                        props.onSupplementChange(null);
+                    }}
+                >
                     Fil
                 </Radio>
-                <Radio value={'text'} onClick={() => setSupplement('text')}>
+                <Radio
+                    value={'text'}
+                    onClick={() => {
+                        setSupplement('text');
+                        props.onSupplementChange(null);
+                    }}
+                >
                     Text
                 </Radio>
             </RadioGroup>
 
             {supplement === 'fil' && (
-                <input type="file" onChange={(e) => (e.target.files ? setSupplementValue(e.target.files[0]) : null)} />
+                <input
+                    type="file"
+                    onChange={(e) => (e.target.files ? props.onSupplementChange(e.target.files[0]) : null)}
+                />
             )}
             {supplement === 'text' && (
                 <Textarea
                     label={'CSV'}
-                    value={typeof supplementValue === 'string' ? supplementValue : ''}
                     minRows={5}
                     maxRows={10}
-                    onChange={(e) => setSupplementValue(e.target.value)}
+                    onChange={(e) => props.onSupplementChange(e.target.value)}
                 />
             )}
-
-            {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-
-            <Button onClick={onClick}>Oppdater regulering med supplement</Button>
         </div>
     );
 };
