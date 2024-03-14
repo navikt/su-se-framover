@@ -146,19 +146,13 @@ export type BeregnOgSimuler = {
     varselmeldinger: ErrorMessage[];
 };
 
-export async function beregnOgSimuler(
-    sakId: string,
-    arg: {
-        revurderingId: string;
-        skalUtsetteTilbakekreving: boolean;
-    },
-): Promise<ApiClientResult<BeregnOgSimuler>> {
+export async function beregnOgSimuler(arg: {
+    sakId: string;
+    revurderingId: string;
+}): Promise<ApiClientResult<BeregnOgSimuler>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${arg.revurderingId}/beregnOgSimuler`,
+        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/beregnOgSimuler`,
         method: 'POST',
-        body: {
-            skalUtsetteTilbakekreving: arg.skalUtsetteTilbakekreving,
-        },
     });
 }
 

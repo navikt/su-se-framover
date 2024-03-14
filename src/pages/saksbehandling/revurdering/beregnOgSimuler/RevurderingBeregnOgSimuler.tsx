@@ -1,13 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, HelpText } from '@navikt/ds-react';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { BeregnOgSimuler } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import Beregningblokk from '~src/components/oppsummering/oppsummeringAvRevurdering/beregningblokk/Beregningblokk';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
@@ -33,7 +30,6 @@ import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøtte
 
 import messages from './RevurderingBeregnOgsimuler-nb';
 import styles from './RevurderingBeregnOgSimuler.module.less';
-import { BeregnOgSimulerFormData, beregnOgSimulerSchema } from './RevurderingBeregnOgSimulerUtils';
 
 const RevurderingBeregnOgSimuler = (props: {
     informasjonsRevurdering: InformasjonsRevurdering;
@@ -71,31 +67,11 @@ const RevurderingBeregnOgSimuler = (props: {
         }
     };
 
-    const form = useForm<BeregnOgSimulerFormData>({
-        defaultValues: {
-            skalUtsetteTilbakekreving:
-                RemoteData.isSuccess(beregningStatus) &&
-                beregningStatus.value.revurdering.tilbakekrevingsbehandling !== null
-                    ? false
-                    : RemoteData.isSuccess(beregningStatus) &&
-                        beregningStatus.value.revurdering.tilbakekrevingsbehandling === null
-                      ? true
-                      : null,
-        },
-        resolver: yupResolver(beregnOgSimulerSchema),
-    });
-
-    const handleBeregnOgSimuler = (data: BeregnOgSimulerFormData) => {
-        if (data.skalUtsetteTilbakekreving === null) {
-            form.trigger('skalUtsetteTilbakekreving');
-            return;
-        } else {
-            beregnOgSimuler({
-                sakId: props.informasjonsRevurdering.sakId,
-                revurderingId: props.informasjonsRevurdering.id,
-                skalUtsetteTilbakekreving: data.skalUtsetteTilbakekreving,
-            });
-        }
+    const handleBeregnOgSimuler = () => {
+        beregnOgSimuler({
+            sakId: props.informasjonsRevurdering.sakId,
+            revurderingId: props.informasjonsRevurdering.id,
+        });
     };
 
     const handleSubmit = () => {
@@ -107,22 +83,8 @@ const RevurderingBeregnOgSimuler = (props: {
     };
 
     return (
-        <form className={styles.container} onSubmit={form.handleSubmit(handleSubmit)}>
+        <form className={styles.container} onSubmit={handleSubmit}>
             <HelpText className={styles.helpText}>{formatMessage('beregnOgSimuler.helpText')}</HelpText>
-
-            <div className={styles.inputContainer}>
-                <Controller
-                    control={form.control}
-                    name={'skalUtsetteTilbakekreving'}
-                    render={({ field, fieldState }) => (
-                        <BooleanRadioGroup
-                            legend={formatMessage('beregnOgSimuler.utsettTilbakekreving')}
-                            error={fieldState.error?.message}
-                            {...field}
-                        />
-                    )}
-                />
-            </div>
 
             {RemoteData.isSuccess(beregningStatus) && (
                 <div className={styles.successContainer}>
@@ -146,7 +108,7 @@ const RevurderingBeregnOgSimuler = (props: {
                     variant="secondary"
                     type="button"
                     loading={RemoteData.isPending(beregnOgSimulerStatus)}
-                    onClick={() => handleBeregnOgSimuler(form.getValues())}
+                    onClick={() => handleBeregnOgSimuler()}
                 >
                     {formatMessage('beregnOgSimuler.ny')}
                 </Button>

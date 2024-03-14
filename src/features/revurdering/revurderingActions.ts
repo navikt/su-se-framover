@@ -117,13 +117,10 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 
 export const beregnOgSimuler = createAsyncThunk<
     { revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[]; varselmeldinger: ErrorMessage[] },
-    { sakId: string; revurderingId: string; skalUtsetteTilbakekreving: boolean },
+    { sakId: string; revurderingId: string },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, skalUtsetteTilbakekreving }, thunkApi) => {
-    const res = await revurderingApi.beregnOgSimuler(sakId, {
-        revurderingId,
-        skalUtsetteTilbakekreving,
-    });
+>('revurdering/beregnOgSimuler', async (args, thunkApi) => {
+    const res = await revurderingApi.beregnOgSimuler(args);
     if (res.status === 'ok') {
         return res.data;
     }
