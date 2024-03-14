@@ -10,7 +10,6 @@ import {
     RadioGroup,
     Radio,
     Textarea,
-    Label,
 } from '@navikt/ds-react';
 import { useState, useEffect } from 'react';
 
@@ -168,10 +167,6 @@ const ReguleringsSupplement = (props: { onSupplementChange: (i: Nullable<string 
 
     return (
         <div className={styles.supplementContainer}>
-            <Label>
-                Dersom regulering er blitt kjørt, og reguleringsbehandlinger er blitt opprettet, kan du legge til et
-                supplement som kjører en del av disse behandlingenene automatisk{' '}
-            </Label>
             <RadioGroup legend="Velg supplement">
                 <Radio
                     value={'fil'}
