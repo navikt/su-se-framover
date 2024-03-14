@@ -52,7 +52,7 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
         case Vilkårtype.FastOppholdINorge:
             return 'Opphold i Norge';
         case Vilkårtype.Bosituasjon:
-            return 'Bositausjon & Sats';
+            return 'Bosituasjon & Sats';
         case Vilkårtype.OppholdIUtlandet:
             return 'Opphold i utlandet';
         case Vilkårtype.Beregning:
