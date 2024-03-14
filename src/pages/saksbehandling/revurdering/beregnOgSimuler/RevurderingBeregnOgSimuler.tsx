@@ -13,7 +13,6 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import {
     InformasjonsRevurdering,
-    InformasjonsRevurderingStatus,
     RevurderingOppsummeringSteg,
     RevurderingSeksjoner,
     SimulertRevurdering,
@@ -22,7 +21,7 @@ import {
     erRevurderingTilbakekrevingsbehandling,
     harBeregninger,
     harSimulering,
-    periodenInneholderTilbakekrevingOgAndreTyper,
+    simuleringenInneholderFeilutbetaling,
 } from '~src/utils/revurdering/revurderingUtils';
 
 import Navigasjonsknapper from '../../../../components/navigasjonsknapper/Navigasjonsknapper';
@@ -89,10 +88,9 @@ const RevurderingBeregnOgSimuler = (props: {
             {RemoteData.isSuccess(beregningStatus) && (
                 <div className={styles.successContainer}>
                     {harSimulering(beregningStatus.value.revurdering) &&
-                        periodenInneholderTilbakekrevingOgAndreTyper(
-                            beregningStatus.value.revurdering.simulering,
-                            beregningStatus.value.revurdering.status === InformasjonsRevurderingStatus.SIMULERT_OPPHØRT,
-                        ) && <Alert variant={'warning'}>{formatMessage('tilbakekreving.alert')}</Alert>}
+                        simuleringenInneholderFeilutbetaling(beregningStatus.value.revurdering.simulering) && (
+                            <Alert variant={'warning'}>{formatMessage('simulering.feilutbetaling.alert')}</Alert>
+                        )}
                     <Beregningblokk revurdering={beregningStatus.value.revurdering} />
                     {beregningStatus.value.feilmeldinger.length > 0 && (
                         <UtfallSomIkkeStøttes feilmeldinger={beregningStatus.value.feilmeldinger} />

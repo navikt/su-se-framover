@@ -16,18 +16,11 @@ export default {
     'info.opphør': 'Denne revurderingen fører til opphør for bruker',
 
     'attester.iverksatt': 'Revurdering er iverksatt',
-    'attester.iverksatt.med.tilbakekreving':
-        'Vedtak iverksatt. Brev om tilbakekreving sendes automatisk til bruker etter at vi har mottatt informasjon om netto tilbakekreving fra økonomi.',
     'attester.sendtTilbake': 'Revurdering er sendt tilbake til vurdering',
 
     'knapp.brev': 'Vis brev',
-
-    tilbakekreving: 'Denne revurderingen fører til tilbakekreving',
-    tilbakekrevingOgOpphør: 'Denne revurderingen fører til tilbakekreving og opphør for bruker',
-    tilbakekrevingFlereTyper:
-        'Revurderingen fører til tilbakekreving pga en eller flere feilutbetalinger. Varsel og vedtaksbrev vil kun kommunisere tilbakekreving. Endringer i tillegg (som opphør o.l.) må gjøres i separate revurderinger for å få riktig kommunikasjon inn i brev.',
-    'tilbakereving.alert.brutto.netto':
-        'Forhåndsvisningen av brev viser brutto tilbakekreving. Brevet oppdateres med netto tilbakekreving før det sendes til bruker.',
+    'simulering.feilutbetaling.alert':
+        'Simuleringen inneholder feilutbetaling(er) for en eller flere måneder. Noen dager etter iverksettelsen vil vi motta et kravgrunnlag. Man kan da starte en ny tilbakekrevingsbehandling eller sende manuelle posteringer til økonomi.',
 
     'brevvalg.skalSendeBrev': 'Skal det sendes vedtaksbrev?',
     'brevvalg.begrunnelse': 'Begrunnelse',

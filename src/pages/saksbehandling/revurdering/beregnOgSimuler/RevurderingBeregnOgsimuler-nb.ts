@@ -8,6 +8,6 @@ export default {
 
     'alert.advarsel.kjørBeregningFørst': 'Du må beregne og simulere før du kan gå videre',
 
-    'tilbakekreving.alert':
-        'Revurderingen fører til tilbakekreving pga en eller flere feilutbetalinger. Varsel og vedtaksbrev vil kun kommunisere tilbakekreving. Endringer i tillegg (som opphør o.l.) må gjøres i separate revurderinger for å få riktig kommunikasjon inn i brev.',
+    'simulering.feilutbetaling.alert':
+        'Simuleringen inneholder feilutbetaling(er) for en eller flere måneder. Noen dager etter iverksettelsen vil vi motta et kravgrunnlag. Man kan da starte en ny tilbakekrevingsbehandling eller sende manuelle posteringer til økonomi.',
 };

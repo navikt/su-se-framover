@@ -230,12 +230,8 @@ export const finnNesteRevurderingsteg = (r: InformasjonsRevurdering) => {
             };
 };
 
-export const periodenInneholderTilbakekrevingOgAndreTyper = (simulering: Simulering, erOpphør: boolean) =>
-    simulering.periodeOppsummering.some((periode) => periode.sumFeilutbetaling > 0) &&
-    (erOpphør ||
-        !simulering.periodeOppsummering.every(
-            (periode) => periode.sumFeilutbetaling > 0 || periode.sumTilUtbetaling == 0,
-        ));
+export const simuleringenInneholderFeilutbetaling = (simulering: Simulering) =>
+    simulering.totalOppsummering.sumFeilutbetaling > 0;
 
 export const erRevurderingOpphørPgaManglendeDokumentasjon = (r: Revurdering) =>
     erInformasjonsRevurdering(r) &&

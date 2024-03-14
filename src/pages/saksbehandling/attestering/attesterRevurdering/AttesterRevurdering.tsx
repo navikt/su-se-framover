@@ -23,17 +23,11 @@ import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb
 import { useAppDispatch } from '~src/redux/Store';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
-import {
-    InformasjonsRevurdering,
-    InformasjonsRevurderingStatus,
-    TilbakekrevingsAvgjørelse,
-    Valg,
-} from '~src/types/Revurdering';
+import { InformasjonsRevurdering, InformasjonsRevurderingStatus, Valg } from '~src/types/Revurdering';
 import {
     erRevurderingTilAttestering,
-    erRevurderingTilbakekrevingsbehandling,
     harSimulering,
-    periodenInneholderTilbakekrevingOgAndreTyper,
+    simuleringenInneholderFeilutbetaling,
 } from '~src/utils/revurdering/revurderingUtils';
 
 import { VisDokumenter } from '../../dokumenter/DokumenterPage';
@@ -93,16 +87,10 @@ const AttesterRevurdering = (props: {
     };
 
     const iverksettCallback = () => {
-        iverksett({ sakId: props.sakInfo.id, revurderingId: props.revurdering.id }, (iverksatteRevurdering) => {
+        iverksett({ sakId: props.sakInfo.id, revurderingId: props.revurdering.id }, () => {
             dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.nummer.toString() }));
 
-            const message =
-                iverksatteRevurdering.tilbakekrevingsbehandling === null ||
-                !(iverksatteRevurdering.tilbakekrevingsbehandling.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV)
-                    ? formatMessage('attester.iverksatt')
-                    : formatMessage('attester.iverksatt.med.tilbakekreving');
-
-            Routes.navigateToSakIntroWithMessage(navigate, message, props.sakInfo.id);
+            Routes.navigateToSakIntroWithMessage(navigate, formatMessage('attester.iverksatt'), props.sakInfo.id);
         });
     };
 
@@ -213,22 +201,13 @@ const AttesterRevurdering = (props: {
 };
 
 const hentWarnings = (revurdering: InformasjonsRevurdering): Array<keyof typeof messages> => {
-    const tilbakekreving = erRevurderingTilbakekrevingsbehandling(revurdering)
-        ? revurdering.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV
-        : false;
     const opphør = revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT;
     const warnings: Array<keyof typeof messages> = [];
-    if (harSimulering(revurdering) && periodenInneholderTilbakekrevingOgAndreTyper(revurdering.simulering, opphør)) {
-        warnings.push('tilbakekrevingFlereTyper');
-    } else if (tilbakekreving && opphør) {
-        warnings.push('tilbakekrevingOgOpphør');
-    } else if (tilbakekreving) {
-        warnings.push('tilbakekreving');
-    } else if (opphør) {
-        warnings.push('info.opphør');
+    if (harSimulering(revurdering) && simuleringenInneholderFeilutbetaling(revurdering.simulering)) {
+        warnings.push('simulering.feilutbetaling.alert');
     }
-    if (tilbakekreving) {
-        warnings.push('tilbakereving.alert.brutto.netto');
+    if (opphør) {
+        warnings.push('info.opphør');
     }
     return warnings;
 };
