@@ -102,3 +102,26 @@ export async function regulerManuelt({
         },
     });
 }
+
+export async function reguleringssupplement(args: { innhold: File | string }): Promise<ApiClientResult<Regulering>> {
+    const isFile = args.innhold instanceof File;
+
+    if (isFile) {
+        const formData = new FormData();
+        formData.append('file', args.innhold);
+
+        return apiClient({
+            url: `/reguleringer/supplement`,
+            method: 'POST',
+            body: formData,
+        });
+    } else {
+        return apiClient({
+            url: `/reguleringer/supplement`,
+            method: 'POST',
+            body: {
+                csv: args.innhold,
+            },
+        });
+    }
+}
