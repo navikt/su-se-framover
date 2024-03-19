@@ -30,7 +30,7 @@ const Gregulering = () => {
 
     return (
         <div>
-            <GReguleringsModal visModa={visReguleringModal} onClose={() => setVisReguleringModal(false)} />
+            <GReguleringsModal visModal={visReguleringModal} onClose={() => setVisReguleringModal(false)} />
             <Button
                 variant="secondary"
                 type="button"
@@ -44,25 +44,17 @@ const Gregulering = () => {
     );
 };
 
-const GReguleringsModal = (props: { visModa: boolean; onClose: () => void }) => {
-    const [reguleringsstatus, reguler] = useApiCall(startRegulering);
-    const [dryRunStatus, dryRun] = useApiCall(dryRunRegulering);
+const GReguleringsModal = (props: { visModal: boolean; onClose: () => void }) => {
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useApiCall(reguleringApi.hentSakerMedÅpneBehandlinger);
 
     useEffect(() => {
         hentÅpneBehandlinger({});
     }, []);
 
-    const [startDato, setStartDato] = useState<Nullable<Date>>(null);
-
-    const [startDatoDryRun, setStartDatoDryRun] = useState<Nullable<Date>>(null);
-    const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
-    const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
-
     return (
         <Modal
             aria-labelledby="Start regulering"
-            open={props.visModa}
+            open={props.visModal}
             onClose={props.onClose}
             header={{ heading: 'G-regulering' }}
         >
@@ -93,72 +85,9 @@ const GReguleringsModal = (props: { visModa: boolean; onClose: () => void }) => 
                         <Tabs.Tab value="regulering" label="Regulering" />
                         <Tabs.Tab value="supplement" label="Reguleringsupplement" />
                     </Tabs.List>
-                    <Tabs.Panel value="dry-run" className={styles.tabPanel}>
-                        <div className={styles.panelInnholdContainer}>
-                            <div className={styles.datoOgGVerdiContainer}>
-                                <MonthPicker
-                                    label="Velg reguleringsdato"
-                                    value={startDatoDryRun}
-                                    onChange={(dato) => setStartDatoDryRun(dato)}
-                                />
-                                <TextField
-                                    label={'G-verdi'}
-                                    onChange={(v) => setGVerdiDryRun(Number(v.target.value))}
-                                />
-                            </div>
+                    <ReguleringPanel />
+                    <DryRunPanel />
 
-                            <ReguleringsSupplement onSupplementChange={setSupplementValue} />
-
-                            <Button
-                                onClick={() =>
-                                    //TODO helst ha som en onSubmit function
-                                    startDatoDryRun &&
-                                    supplementValue &&
-                                    dryRun({
-                                        fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
-                                        grunnbeløp: gverdiDryRun,
-                                        supplement: supplementValue!,
-                                    })
-                                }
-                                loading={RemoteData.isPending(dryRunStatus)}
-                            >
-                                Start dry-run regulering
-                            </Button>
-                            {RemoteData.isSuccess(dryRunStatus) && (
-                                <Alert variant="success">Nice 👍🤌. Dry run regulering startet. Sjekk logger</Alert>
-                            )}
-                        </div>
-                    </Tabs.Panel>
-                    <Tabs.Panel value="regulering" className={styles.tabPanel}>
-                        <div className={styles.panelInnholdContainer}>
-                            <MonthPicker
-                                label="Velg reguleringsdato"
-                                value={startDato}
-                                onChange={(dato) => setStartDato(dato)}
-                            />
-
-                            <ReguleringsSupplement onSupplementChange={setSupplementValue} />
-
-                            <Button
-                                onClick={() =>
-                                    //TODO helst ha som en onSubmit function
-                                    startDato &&
-                                    supplementValue &&
-                                    reguler({
-                                        fraOgMedMåned: toIsoMonthOrNull(startDato)!,
-                                        supplement: supplementValue!,
-                                    })
-                                }
-                                loading={RemoteData.isPending(reguleringsstatus)}
-                                disabled={!RemoteData.isInitial(reguleringsstatus)}
-                            >
-                                Start regulering
-                            </Button>
-                            {RemoteData.isSuccess(reguleringsstatus) && (
-                                <Alert variant="success">Regulering gjennomført 👍🤌</Alert>
-                            )}
-                        </div>
-                    </Tabs.Panel>
                     <Tabs.Panel value="supplement" className={styles.tabPanel}>
                         <ReguleringsSupplementStandAlone />
                     </Tabs.Panel>
@@ -168,12 +97,93 @@ const GReguleringsModal = (props: { visModa: boolean; onClose: () => void }) => 
     );
 };
 
+const ReguleringPanel = () => {
+    const [startDato, setStartDato] = useState<Nullable<Date>>(null);
+    const [reguleringsstatus, reguler] = useApiCall(startRegulering);
+    const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
+
+    const handleSubmit = () => {
+        if (startDato) {
+            reguler({
+                fraOgMedMåned: toIsoMonthOrNull(startDato)!,
+                supplement: supplementValue,
+            });
+        } else {
+            console.log('du må velge en startdato før du kan regulere');
+        }
+    };
+
+    return (
+        <Tabs.Panel value="regulering" className={styles.tabPanel}>
+            <div className={styles.panelInnholdContainer}>
+                <MonthPicker label="Velg reguleringsdato" value={startDato} onChange={(dato) => setStartDato(dato)} />
+
+                <ReguleringsSupplement onSupplementChange={setSupplementValue} />
+
+                <Button
+                    onClick={handleSubmit}
+                    loading={RemoteData.isPending(reguleringsstatus)}
+                    disabled={!RemoteData.isInitial(reguleringsstatus)}
+                >
+                    Start regulering
+                </Button>
+                {RemoteData.isSuccess(reguleringsstatus) && (
+                    <Alert variant="success">Regulering er startet 👍🤌 Sjekk logger </Alert>
+                )}
+            </div>
+        </Tabs.Panel>
+    );
+};
+
+const DryRunPanel = () => {
+    const [dryRunStatus, dryRun] = useApiCall(dryRunRegulering);
+    const [startDatoDryRun, setStartDatoDryRun] = useState<Nullable<Date>>(null);
+    const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
+    const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
+
+    const handleSubmit = () => {
+        if (startDatoDryRun && gverdiDryRun) {
+            dryRun({
+                fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
+                grunnbeløp: gverdiDryRun,
+                supplement: supplementValue,
+            });
+        } else {
+            console.log('du må velge en startdato & G-verdi før du kan  dry-regulere');
+        }
+    };
+
+    return (
+        <Tabs.Panel value="dry-run" className={styles.tabPanel}>
+            <div className={styles.panelInnholdContainer}>
+                <div className={styles.datoOgGVerdiContainer}>
+                    <MonthPicker
+                        label="Velg reguleringsdato"
+                        value={startDatoDryRun}
+                        onChange={(dato) => setStartDatoDryRun(dato)}
+                    />
+                    <TextField label={'G-verdi'} onChange={(v) => setGVerdiDryRun(Number(v.target.value))} />
+                </div>
+
+                <ReguleringsSupplement onSupplementChange={setSupplementValue} />
+
+                <Button onClick={handleSubmit} loading={RemoteData.isPending(dryRunStatus)}>
+                    Start dry-run regulering
+                </Button>
+                {RemoteData.isSuccess(dryRunStatus) && (
+                    <Alert variant="success">Nice 👍🤌. Dry run regulering startet. Sjekk logger</Alert>
+                )}
+            </div>
+        </Tabs.Panel>
+    );
+};
+
 const ReguleringsSupplement = (props: { onSupplementChange: (i: Nullable<string | File>) => void }) => {
     const [supplement, setSupplement] = useState<Nullable<'fil' | 'text'>>(null);
 
     return (
         <div className={styles.supplementContainer}>
-            <RadioGroup legend="Velg supplement">
+            <RadioGroup legend="Velg supplement" description={'Supplement er ikke påkrevd ved regulering'}>
                 <Radio
                     value={'fil'}
                     onClick={() => {
@@ -191,6 +201,15 @@ const ReguleringsSupplement = (props: { onSupplementChange: (i: Nullable<string 
                     }}
                 >
                     Text
+                </Radio>
+                <Radio
+                    value={'Ingen supplement'}
+                    onClick={() => {
+                        setSupplement(null);
+                        props.onSupplementChange(null);
+                    }}
+                >
+                    Ingen supplement
                 </Radio>
             </RadioGroup>
 
@@ -250,6 +269,9 @@ const ReguleringsSupplementStandAlone = () => {
             )}
 
             {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
+            {RemoteData.isSuccess(status) && (
+                <Alert variant="success">Regulering kjører med supplement 👍🤌 sjekk logger</Alert>
+            )}
 
             <Button onClick={onClick}>Oppdater regulering med supplement</Button>
         </div>

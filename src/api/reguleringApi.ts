@@ -5,7 +5,7 @@ import { Regulering, ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function startRegulering(args: { fraOgMedMåned: string; supplement: File | string }) {
+export async function startRegulering(args: { fraOgMedMåned: string; supplement: Nullable<File | string> }) {
     const url = `/reguleringer/automatisk`;
     const method = 'POST';
 
@@ -34,7 +34,7 @@ export async function startRegulering(args: { fraOgMedMåned: string; supplement
 export async function dryRunRegulering(args: {
     fraOgMedMåned: string;
     grunnbeløp: Nullable<number>;
-    supplement: File | string;
+    supplement: Nullable<File | string>;
 }) {
     const url = `/reguleringer/automatisk/dry`;
     const method = 'POST';
@@ -108,7 +108,7 @@ export async function reguleringssupplement(args: { innhold: File | string }): P
 
     if (isFile) {
         const formData = new FormData();
-        formData.append('file', args.innhold);
+        formData.append('file', args.innhold!);
 
         return apiClient({
             url: `/reguleringer/supplement`,
