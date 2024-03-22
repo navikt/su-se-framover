@@ -125,3 +125,14 @@ export async function sendUtbetalingsIder(args: {
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }
+
+export async function sendPersonhendelser(args: { hendelser: File }): Promise<ApiClientResult<{ status: string }>> {
+    const formData = new FormData();
+    formData.append('file', args.hendelser);
+
+    return apiClient({
+        url: `/drift/personhendelser`,
+        method: 'POST',
+        body: formData,
+    });
+}
