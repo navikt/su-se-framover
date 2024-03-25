@@ -51,7 +51,7 @@ export default async function apiClient<TSuccess>(arg: {
         ...arg.request,
         method: arg.method,
         headers: headers,
-        body: arg.body ? JSON.stringify(arg.body) : undefined,
+        body: arg.body ? (arg.body instanceof FormData ? arg.body : JSON.stringify(arg.body)) : undefined,
     });
 
     if (res.ok) {
