@@ -136,3 +136,14 @@ export async function sendPersonhendelser(args: { hendelser: File }): Promise<Ap
         body: formData,
     });
 }
+
+export async function dryRunPersonhendelser(args: { hendelser: File }): Promise<ApiClientResult<{ status: string }>> {
+    const formData = new FormData();
+    formData.append('file', args.hendelser);
+
+    return apiClient({
+        url: `/drift/personhendelser/dry`,
+        method: 'POST',
+        body: formData,
+    });
+}

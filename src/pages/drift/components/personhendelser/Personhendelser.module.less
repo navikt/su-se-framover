@@ -1,6 +1,16 @@
 @import '@styles/variables.less';
 
 .modalBody {
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+}
+
+.tabPanel {
+    padding: @spacing-s 0;
+}
+
+.panelInnholdContainer {
     display: flex;
     flex-direction: column;
     gap: @spacing-s;
