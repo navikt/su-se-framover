@@ -4,8 +4,10 @@ import { useState } from 'react';
 
 import * as driftApi from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
+import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import styles from './Personhendelser.module.less';
 
@@ -31,6 +33,7 @@ const Personhendelser = () => {
 const PersonhendelserModal = (props: { visModal: boolean; onClose: () => void }) => {
     const [sendPersonhendelserStatus, sendPersonHendelser] = useApiCall(driftApi.sendPersonhendelser);
     const [dryRunStatus, dryRun] = useApiCall(driftApi.dryRunPersonhendelser);
+    const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
     const [personhendelserCSV, setPersonhendelserCSV] = useState<Nullable<File>>(null);
     const [personhendelserCSVDry, setPersonhendelserCSVDry] = useState<Nullable<File>>(null);
 
@@ -39,14 +42,22 @@ const PersonhendelserModal = (props: { visModal: boolean; onClose: () => void })
             console.log('No file selected');
             return;
         }
-        sendPersonHendelser({ hendelser: personhendelserCSV });
+        if (!fraOgMed) {
+            console.log('No date selected');
+            return;
+        }
+        sendPersonHendelser({ fraOgMed: toIsoDateOnlyString(fraOgMed), hendelser: personhendelserCSV });
     };
     const handleDryRun = () => {
         if (!personhendelserCSVDry) {
             console.log('No file selected');
             return;
         }
-        dryRun({ hendelser: personhendelserCSVDry });
+        if (!fraOgMed) {
+            console.log('No date selected');
+            return;
+        }
+        dryRun({ fraOgMed: toIsoDateOnlyString(fraOgMed), hendelser: personhendelserCSVDry });
     };
 
     return (
@@ -60,10 +71,12 @@ const PersonhendelserModal = (props: { visModal: boolean; onClose: () => void })
                 <Tabs defaultValue="dry-run">
                     <Tabs.List>
                         <Tabs.Tab value="dry-run" label="Dry-run" />
+
                         <Tabs.Tab value="personhendelser" label="Innsending av personhendelser" />
                     </Tabs.List>
                     <Tabs.Panel value="dry-run" className={styles.tabPanel}>
                         <div className={styles.panelInnholdContainer}>
+                            <MonthPicker label="Fra og med" value={fraOgMed} onChange={setFraOgMed} />
                             <input
                                 type="file"
                                 onChange={(e) => (e.target.files ? setPersonhendelserCSVDry(e.target.files[0]) : null)}
@@ -78,8 +91,10 @@ const PersonhendelserModal = (props: { visModal: boolean; onClose: () => void })
                             </Button>
                         </div>
                     </Tabs.Panel>
+
                     <Tabs.Panel value="personhendelser" className={styles.tabPanel}>
                         <div className={styles.panelInnholdContainer}>
+                            <MonthPicker label="Fra og med" value={fraOgMed} onChange={setFraOgMed} />
                             <input
                                 type="file"
                                 onChange={(e) => (e.target.files ? setPersonhendelserCSV(e.target.files[0]) : null)}

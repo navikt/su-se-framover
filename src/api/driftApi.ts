@@ -126,8 +126,12 @@ export async function sendUtbetalingsIder(args: {
     });
 }
 
-export async function sendPersonhendelser(args: { hendelser: File }): Promise<ApiClientResult<{ status: string }>> {
+export async function sendPersonhendelser(args: {
+    fraOgMed: string;
+    hendelser: File;
+}): Promise<ApiClientResult<{ status: string }>> {
     const formData = new FormData();
+    formData.append('fraOgMed', args.fraOgMed);
     formData.append('file', args.hendelser);
 
     return apiClient({
@@ -137,8 +141,12 @@ export async function sendPersonhendelser(args: { hendelser: File }): Promise<Ap
     });
 }
 
-export async function dryRunPersonhendelser(args: { hendelser: File }): Promise<ApiClientResult<{ status: string }>> {
+export async function dryRunPersonhendelser(args: {
+    fraOgMed: string;
+    hendelser: File;
+}): Promise<ApiClientResult<{ status: string }>> {
     const formData = new FormData();
+    formData.append('fraOgMed', args.fraOgMed);
     formData.append('file', args.hendelser);
 
     return apiClient({
