@@ -31,7 +31,7 @@
         "passport-jwt": "^4.0.0",
         "pino": "^8.1.0",
         "pino-http": "^9.0.0",
-        "pino-pretty": "^10.0.0",
+        "pino-pretty": "^11.0.0",
         "redis": "^4.1.0"
     },
     "devDependencies": {
