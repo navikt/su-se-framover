@@ -55,7 +55,7 @@
         "@navikt/ds-css": "5.14.0",
         "@navikt/ds-react": "5.13.0",
         "@reduxjs/toolkit": "2.0.1",
-        "@sentry/browser": "7.93.0",
+        "@sentry/browser": "7.110.1",
         "@sentry/cli": "2.25.0",
         "@types/jest": "29.5.11",
         "amplitude-js": "8.21.9",
