@@ -86,7 +86,7 @@
         "reset-css": "5.0.2",
         "ts-node": "10.9.2",
         "uuid": "9.0.1",
-        "yup": "0.29.3"
+        "yup": "1.4.0"
     },
     "devDependencies": {
         "@testing-library/react": "15.0.2",
