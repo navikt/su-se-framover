@@ -8,6 +8,7 @@ updates:
       open-pull-requests-limit: 20
       ignore:
           - dependency-name: 'node'
+          - dependency-name: 'yup'
     - package-ecosystem: 'github-actions'
       directory: '/'
       schedule:
