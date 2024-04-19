@@ -1,5 +1,5 @@
 import { Heading, Accordion } from '@navikt/ds-react';
-import AccordionItem from '@navikt/ds-react/esm/accordion/AccordionItem';
+import { AccordionItem } from '@navikt/ds-react/Accordion';
 import classNames from 'classnames';
 
 import Oppsummeringspanel, {

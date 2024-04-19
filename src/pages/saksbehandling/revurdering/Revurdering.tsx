@@ -323,7 +323,7 @@ const MåVurdereAlleStegModal = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
     return (
-        <Modal open={props.isOpen} onClose={props.onClose}>
+        <Modal open={props.isOpen} onClose={props.onClose} aria-label={formatMessage('modal.tittel')}>
             <Modal.Header>
                 <Heading level="2" size="medium">
                     {formatMessage('modal.tittel')}

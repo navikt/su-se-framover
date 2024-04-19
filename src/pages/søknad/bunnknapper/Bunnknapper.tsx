@@ -1,4 +1,4 @@
-import { BodyLong, Button, Heading, Modal } from '@navikt/ds-react';
+import { BodyShort, Button, Modal } from '@navikt/ds-react';
 import { useState } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -57,18 +57,19 @@ const Bunnknapper = (props: {
                     {formatMessage('steg.avbryt')}
                 </Button>
             </div>
-            <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+            <Modal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                header={{ heading: formatMessage('modal.tittel') }}
+            >
                 <Modal.Body>
                     <div className={styles.modalContainer}>
-                        <Heading level="2" size="medium" spacing>
-                            {formatMessage('modal.tittel')}
-                        </Heading>
-                        <BodyLong as={'div'}>
-                            <p>{formatMessage('modal.infoTekst.p1')}</p>
-                            <p>{formatMessage('modal.infoTekst.p2')}</p>
-                        </BodyLong>
+                        <div>
+                            <BodyShort>{formatMessage('modal.infoTekst.p1')}</BodyShort>
+                            <BodyShort>{formatMessage('modal.infoTekst.p2')}</BodyShort>
+                        </div>
                         <div className={styles.modalKnappContainer}>
-                            <Button variant="tertiary" onClick={() => setModalOpen(false)}>
+                            <Button variant="tertiary" type="button" onClick={() => setModalOpen(false)}>
                                 {formatMessage('steg.avbryt')}
                             </Button>
                             <LinkAsButton variant="danger" href={props.avbryt.toRoute}>

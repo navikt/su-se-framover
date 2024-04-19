@@ -41,7 +41,7 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
     const [vedtakId, setVedtakId] = useState<string>('');
 
     return (
-        <Modal open={props.open} onClose={props.onClose}>
+        <Modal open={props.open} onClose={props.onClose} aria-label={'Statistikk'}>
             <Modal.Body>
                 <div>
                     <Heading size="medium" spacing>

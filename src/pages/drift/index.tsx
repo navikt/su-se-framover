@@ -137,6 +137,7 @@ const Drift = () => {
                         onClose={() => {
                             setGrensesnittsavstemmingModalOpen(false);
                         }}
+                        aria-label=""
                     >
                         <Modal.Body>
                             <div className={styles.modalContainer}>
@@ -195,6 +196,7 @@ const Drift = () => {
                         onClose={() => {
                             setKonsistensavtemmingModalOpen(false);
                         }}
+                        aria-label=""
                     >
                         <Modal.Body>
                             <div className={styles.modalContainer}>
@@ -296,7 +298,7 @@ const VilFikseVedtakModal = (props: { open: boolean; onClose: () => void }) => {
     const [ferdigstillStatus, ferdigstill] = useApiCall(ferdigstillVedtak);
     const [vedtakId, setVedtakId] = useState<string>('');
     return (
-        <Modal open={props.open} onClose={props.onClose}>
+        <Modal open={props.open} onClose={props.onClose} aria-label={'Ferdigstill'}>
             <Modal.Body>
                 <div>
                     <Heading size="medium" spacing>
@@ -317,7 +319,7 @@ const StønadsmottakereModal = (props: { open: boolean; onClose: () => void }) =
     const [stønadsmottakereStatus, hentStønadsmottakere] = useApiCall(stønadsmottakere);
 
     return (
-        <Modal open={props.open} onClose={props.onClose}>
+        <Modal open={props.open} onClose={props.onClose} aria-label={'Stønadsmottakere'}>
             <Modal.Body>
                 <div>
                     <Heading size="medium" spacing>

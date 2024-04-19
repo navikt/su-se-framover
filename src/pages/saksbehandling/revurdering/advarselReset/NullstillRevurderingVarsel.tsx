@@ -9,7 +9,7 @@ import styles from './nullstillRevurderingVarsel.module.less';
 const NullstillRevurderingVarsel = (props: { isOpen: boolean; onClose: () => void; førsteStegUrl: string }) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });
     return (
-        <Modal open={props.isOpen} onClose={props.onClose}>
+        <Modal open={props.isOpen} onClose={props.onClose} aria-label={formatMessage('tittel')}>
             <div className={styles.modalContainer}>
                 <Heading level="2" size="medium" className={styles.modalTittel}>
                     {formatMessage('tittel')}

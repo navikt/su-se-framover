@@ -53,7 +53,7 @@ const NySøknadModal = (props: { åpen: boolean; onClose: () => void }) => {
     const [fnr, setFnr] = useState<Nullable<string>>(null);
 
     return (
-        <Modal open={props.åpen} onClose={props.onClose}>
+        <Modal open={props.åpen} onClose={props.onClose} aria-label="ny uføre søknad">
             <Modal.Body>
                 <Heading size="medium" spacing>
                     Ny uføre søknad
@@ -104,7 +104,7 @@ const NyIverksattSøknadsbehandlingModal = (props: { åpen: boolean; onClose: ()
     const [typeSøknadsbehandling, setTypeSøknadsbehandling] = useState<'avslag' | 'innvilget'>('innvilget');
 
     return (
-        <Modal open={props.åpen} onClose={props.onClose}>
+        <Modal open={props.åpen} onClose={props.onClose} aria-label="Ny iverksatt søknadsbehandling">
             <Modal.Body>
                 <Heading size="medium" spacing>
                     Ny iverksatt søknadsbehandling
