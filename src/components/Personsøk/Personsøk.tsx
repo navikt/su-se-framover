@@ -81,7 +81,7 @@ const Personsøk = (props: Props) => {
                                     : formatMessage('input.fnr.label')
                             }
                             onClear={props.onReset}
-                            type="primary"
+                            variant="primary"
                             error={fieldState.error?.message}
                         >
                             <Search.Button loading={RemoteData.isPending(props.person)}>

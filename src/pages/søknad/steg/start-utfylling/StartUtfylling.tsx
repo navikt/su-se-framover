@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, ContentContainer, Loader, Stepper } from '@navikt/ds-react';
+import { Alert, Button, Loader, Page, Stepper } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -93,19 +93,21 @@ const StartUtfylling = () => {
     }, [aktivtStegIndex]);
 
     const ManglendeData = () => (
-        <ContentContainer className={classNames(styles.content, styles.feilmeldingContainer)}>
-            <Alert variant="error" className={styles.feilmeldingTekst}>
-                {formatMessage('feilmelding.tekst')}
-            </Alert>
-            <LinkAsButton
-                variant="secondary"
-                href={routes.soknadPersonSøk.createURL({
-                    soknadstema: routes.urlForSakstype(sakstype),
-                })}
-            >
-                {formatMessage('feilmelding.knapp')}
-            </LinkAsButton>
-        </ContentContainer>
+        <Page>
+            <Page.Block className={classNames(styles.content, styles.feilmeldingContainer)}>
+                <Alert variant="error" className={styles.feilmeldingTekst}>
+                    {formatMessage('feilmelding.tekst')}
+                </Alert>
+                <LinkAsButton
+                    variant="secondary"
+                    href={routes.soknadPersonSøk.createURL({
+                        soknadstema: routes.urlForSakstype(sakstype),
+                    })}
+                >
+                    {formatMessage('feilmelding.knapp')}
+                </LinkAsButton>
+            </Page.Block>
+        </Page>
     );
 
     const StartSøknadMedDefaultPerson = () => {

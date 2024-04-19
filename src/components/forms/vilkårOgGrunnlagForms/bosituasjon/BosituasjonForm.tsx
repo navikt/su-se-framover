@@ -159,6 +159,7 @@ const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: 
                                         onClose={() => {
                                             return;
                                         }}
+                                        aria-label={formatMessage('formueOgBosituasjon.modal.skjerming.heading')}
                                     >
                                         <Modal.Body>
                                             <div className={styles.modalInnhold}>
