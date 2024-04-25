@@ -128,8 +128,9 @@ const ReguleringPanel = () => {
                     Start regulering
                 </Button>
                 {RemoteData.isSuccess(reguleringsstatus) && (
-                    <Alert variant="success">Regulering er startet 👍🤌 Sjekk logger </Alert>
+                    <Alert variant="success">Regulering er startet 👍🤌 Sjekk logger</Alert>
                 )}
+                {RemoteData.isFailure(reguleringsstatus) && <ApiErrorAlert error={reguleringsstatus.error} />}
             </div>
         </Tabs.Panel>
     );
@@ -142,14 +143,26 @@ const DryRunPanel = () => {
     const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
 
     const handleSubmit = () => {
-        if (startDatoDryRun && gverdiDryRun) {
-            dryRun({
-                fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
-                grunnbeløp: gverdiDryRun,
-                supplement: supplementValue,
-            });
+        if (supplementValue instanceof File) {
+            if (startDatoDryRun && gverdiDryRun) {
+                dryRun({
+                    fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
+                    grunnbeløp: gverdiDryRun,
+                    supplement: supplementValue,
+                });
+            } else {
+                console.log('du må velge en startdato & g-verdi før du kan dry-regulere med supplement');
+            }
         } else {
-            console.log('du må velge en startdato & G-verdi før du kan  dry-regulere');
+            if (startDatoDryRun) {
+                dryRun({
+                    fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
+                    grunnbeløp: gverdiDryRun,
+                    supplement: supplementValue,
+                });
+            } else {
+                console.log('du må velge en startdato før du kan dry-regulere');
+            }
         }
     };
 
@@ -173,6 +186,7 @@ const DryRunPanel = () => {
                 {RemoteData.isSuccess(dryRunStatus) && (
                     <Alert variant="success">Nice 👍🤌. Dry run regulering startet. Sjekk logger</Alert>
                 )}
+                {RemoteData.isFailure(dryRunStatus) && <ApiErrorAlert error={dryRunStatus.error} />}
             </div>
         </Tabs.Panel>
     );
