@@ -44,7 +44,6 @@ export default {
     'formue.noenIGjeld': 'Står noen i gjeld til deg',
     'formue.kontanterOver1000': 'Kontanter over 1000',
     'formue.depositumskonto': 'Depositumskonto',
-    'formue.knapp.seSkattegrunnlag': 'Se skattegrunnlag',
 
     'fradrag.utenlandsk.beløp': 'Beløp i utenlandsk valuta',
     'fradrag.utenlandsk.kurs': 'Kurs',

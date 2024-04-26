@@ -1,13 +1,6 @@
 @import '@styles/variables.less';
 
-.feil {
-    display: flex;
-    padding-top: @spacing;
-    flex-direction: column;
-    gap: @spacing;
-}
-
-.form {
+.pageContainer {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -15,12 +8,26 @@
     > * {
         padding: @spacing-xs @spacing-xxl;
     }
+}
 
-    .tittel {
-        width: 100%;
-        border-bottom: 1px solid @navBorder;
-    }
+.mainContentContainer {
+    display: flex;
+    gap: @spacing;
+}
 
+.feil {
+    display: flex;
+    padding-top: @spacing;
+    flex-direction: column;
+    gap: @spacing;
+}
+
+.tittel {
+    width: 100%;
+    border-bottom: 1px solid @navBorder;
+}
+
+.form {
     .container {
         max-width: @container-sm;
 
@@ -59,4 +66,52 @@
     flex-direction: column;
     gap: @spacing-xxs;
     margin-left: @spacing-xs;
+}
+
+.supplementOversiktInnhold {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+}
+
+.supplementForOversiktContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xxs;
+    align-items: flex-start;
+}
+
+.supplementForInnhold {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+    width: 300px;
+}
+
+.fradragsperiodeContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+}
+
+.vedtaksperiodeData {
+    display: grid;
+    grid-template-columns: 70% 30%;
+}
+
+.eksterneVedtakdataButton {
+    padding: 0;
+    margin: 0;
+}
+
+.eksternDataModal {
+    max-width: 80%;
+    max-height: 50%;
+}
+
+.eksternDataContainer {
+    display: grid;
+    grid-template-columns: [fnr] 7.5rem 4.5rem 6rem 6rem 6rem 7rem 7rem 12rem 13rem 12rem;
+    gap: @spacing-xs;
+    margin-bottom: @spacing-xxs;
 }

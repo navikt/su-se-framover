@@ -22,6 +22,7 @@ export interface Regulering {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     avsluttet: { tidspunkt: string };
     årsakForManuell: ÅrsakForManuell[];
+    supplement: Reguleringssupplement;
     sakstype: Sakstype;
     reguleringsstatus: Reguleringsstatus;
 }
@@ -136,53 +137,42 @@ export interface DelvisOpphør extends ÅrsakForManuell {
     opphørsperioder: Array<Periode<string>>;
 }
 
-export const erÅrsakFradragMåHåndteresManuelt = (årsak: ÅrsakForManuell): årsak is FradragMåHåndteresManuelt =>
-    årsak.type === ÅrsakForManuellType.FradragMåHåndteresManuelt;
+export interface Reguleringssupplement {
+    bruker: Nullable<SupplementFor>;
+    eps: SupplementFor[];
+}
 
-export const erÅrsakUtbetalingFeilet = (årsak: ÅrsakForManuell): årsak is UtbetalingFeilet =>
-    årsak.type === ÅrsakForManuellType.UtbetalingFeilet;
+export interface SupplementFor {
+    fnr: string;
+    fradragsperioder: Fradragsperiode[];
+    eksterneVedtaksdata: Eksterndata[];
+}
 
-export const erÅrsakBrukerManglerSupplement = (årsak: ÅrsakForManuell): årsak is BrukerManglerSupplement =>
-    årsak.type === ÅrsakForManuellType.BrukerManglerSupplement;
+export interface Fradragsperiode {
+    fradragstype: Fradragskategori;
+    vedtaksperiodeEndring: VedtaksperiodeEndring;
+    vedtaksperiodeRegulering: VedtaksperiodeRegulering[];
+}
 
-export const erÅrsakSupplementInneholderIkkeFradraget = (
-    årsak: ÅrsakForManuell,
-): årsak is SupplementInneholderIkkeFradraget => årsak.type === ÅrsakForManuellType.SupplementInneholderIkkeFradraget;
+export interface VedtaksperiodeEndring {
+    måned: Periode<string>;
+    beløp: string;
+}
 
-export const erÅrsakFinnesFlerePerioderAvFradrag = (årsak: ÅrsakForManuell): årsak is FinnesFlerePerioderAvFradrag =>
-    årsak.type === ÅrsakForManuellType.FinnesFlerePerioderAvFradrag;
+export interface VedtaksperiodeRegulering {
+    periode: PeriodeMedOptionalTilOgMed<string>;
+    beløp: string;
+}
 
-export const erÅrsakFradragErUtenlandsinntekt = (årsak: ÅrsakForManuell): årsak is FradragErUtenlandsinntekt =>
-    årsak.type === ÅrsakForManuellType.FradragErUtenlandsinntekt;
-
-export const erÅrsakSupplementHarFlereVedtaksperioderForFradrag = (
-    årsak: ÅrsakForManuell,
-): årsak is SupplementHarFlereVedtaksperioderForFradrag =>
-    årsak.type === ÅrsakForManuellType.SupplementHarFlereVedtaksperioderForFradrag;
-
-export const erÅrsakMismatchMellomBeløpFraSupplementOgFradrag = (
-    årsak: ÅrsakForManuell,
-): årsak is MismatchMellomBeløpFraSupplementOgFradrag =>
-    årsak.type === ÅrsakForManuellType.MismatchMellomBeløpFraSupplementOgFradrag;
-
-export const erÅrsakBeløpErStørreEnForventet = (årsak: ÅrsakForManuell): årsak is BeløpErStørreEnForventet =>
-    årsak.type === ÅrsakForManuellType.BeløpErStørreEnForventet;
-
-export const erÅrsakYtelseErMidlertidigStanset = (årsak: ÅrsakForManuell): årsak is YtelseErMidlertidigStanset =>
-    årsak.type === ÅrsakForManuellType.YtelseErMidlertidigStanset;
-
-export const erÅrsakForventetInntektErStørreEnn0 = (årsak: ÅrsakForManuell): årsak is ForventetInntektErStørreEnn0 =>
-    årsak.type === ÅrsakForManuellType.ForventetInntektErStørreEnn0;
-
-export const erÅrsakAutomatiskSendingTilUtbetalingFeilet = (
-    årsak: ÅrsakForManuell,
-): årsak is AutomatiskSendingTilUtbetalingFeilet =>
-    årsak.type === ÅrsakForManuellType.AutomatiskSendingTilUtbetalingFeilet;
-
-export const erÅrsakVedtakstidslinjeErIkkeSammenhengende = (
-    årsak: ÅrsakForManuell,
-): årsak is VedtakstidslinjeErIkkeSammenhengende =>
-    årsak.type === ÅrsakForManuellType.VedtakstidslinjeErIkkeSammenhengende;
-
-export const erÅrsakDelvisOpphør = (årsak: ÅrsakForManuell): årsak is DelvisOpphør =>
-    årsak.type === ÅrsakForManuellType.DelvisOpphør;
+export interface Eksterndata {
+    fnr: string;
+    sakstype: string;
+    vedtakstype: string;
+    fraOgMed: string;
+    tilOgMed: Nullable<string>;
+    bruttoYtelse: string;
+    nettoYtelse: string;
+    ytelseskomponenttype: string;
+    bruttoYtelseskomponent: string;
+    nettoYtelseskomponent: string;
+}

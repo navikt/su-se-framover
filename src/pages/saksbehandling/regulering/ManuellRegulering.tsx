@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Button, Heading, Label, Loader, TextField } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, Label, Loader, Modal, TextField } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -14,6 +14,7 @@ import {
     fradragFormdataTilFradrag,
     fradragTilFradragFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
@@ -22,13 +23,17 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
+import Måned from '~src/types/Måned';
 import {
     BeløpErStørreEnForventet,
     BrukerManglerSupplement,
     DelvisOpphør,
+    Eksterndata,
     FinnesFlerePerioderAvFradrag,
     FradragErUtenlandsinntekt,
     MismatchMellomBeløpFraSupplementOgFradrag,
+    Reguleringssupplement,
+    SupplementFor,
     SupplementHarFlereVedtaksperioderForFradrag,
     SupplementInneholderIkkeFradraget,
     YtelseErMidlertidigStanset,
@@ -143,83 +148,89 @@ const ManuellRegulering = () => {
                 const harRegulerbarFradrag = fradrag.some((f) => måReguleresManuelt(f.type));
 
                 return (
-                    <form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
+                    <div className={styles.pageContainer}>
                         <Heading level="2" size="large" className={styles.tittel}>
                             {formatMessage('tittel')}
                         </Heading>
+                        <main className={styles.mainContentContainer}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
+                                <div className={styles.container}>
+                                    <ÅrsakForManuellRegulering årsaker={regulering.årsakForManuell} />
+                                    <Heading
+                                        level="3"
+                                        size="medium"
+                                    >{`${formatMessage('periode')}: ${formatPeriode(regulering.periode)}`}</Heading>
 
-                        <div className={styles.container}>
-                            <ÅrsakForManuellRegulering årsaker={regulering.årsakForManuell} />
-                            <Heading
-                                level="3"
-                                size="medium"
-                            >{`${formatMessage('periode')}: ${formatPeriode(regulering.periode)}`}</Heading>
+                                    <div className={styles.regulering}>
+                                        <Heading level="3" size="medium" className={styles.kategoriTittel}>
+                                            {formatMessage('reguler.ieu')}
+                                        </Heading>
 
-                            <div className={styles.regulering}>
-                                <Heading level="3" size="medium" className={styles.kategoriTittel}>
-                                    {formatMessage('reguler.ieu')}
-                                </Heading>
-
-                                {harRegulerbarIEU ? (
-                                    form
-                                        .getValues('uføre')
-                                        .filter((u) => u.forventetInntekt > 0)
-                                        .map((u, index) => (
-                                            <div key={u.id} className={styles.ieu}>
-                                                <p>
-                                                    {`${formatMessage('ieu.verdi.tidligere')}: ${
-                                                        uføregrunnlag[index].forventetInntekt
-                                                    } kr`}
-                                                </p>
-                                                <Controller
-                                                    control={form.control}
-                                                    name={`uføre.${index}.forventetInntekt`}
-                                                    render={({ field }) => (
-                                                        <TextField
-                                                            value={field.value.toString()}
-                                                            size="medium"
-                                                            onChange={field.onChange}
-                                                            label={formatMessage('ieu', {
-                                                                dato: formatPeriode(u.periode),
-                                                            })}
+                                        {harRegulerbarIEU ? (
+                                            form
+                                                .getValues('uføre')
+                                                .filter((u) => u.forventetInntekt > 0)
+                                                .map((u, index) => (
+                                                    <div key={u.id} className={styles.ieu}>
+                                                        <p>
+                                                            {`${formatMessage('ieu.verdi.tidligere')}: ${
+                                                                uføregrunnlag[index].forventetInntekt
+                                                            } kr`}
+                                                        </p>
+                                                        <Controller
+                                                            control={form.control}
+                                                            name={`uføre.${index}.forventetInntekt`}
+                                                            render={({ field }) => (
+                                                                <TextField
+                                                                    value={field.value.toString()}
+                                                                    size="medium"
+                                                                    onChange={field.onChange}
+                                                                    label={formatMessage('ieu', {
+                                                                        dato: formatPeriode(u.periode),
+                                                                    })}
+                                                                />
+                                                            )}
                                                         />
-                                                    )}
-                                                />
-                                            </div>
-                                        ))
-                                ) : (
-                                    <p>{formatMessage('ingen.ieu')}.</p>
-                                )}
-                            </div>
+                                                    </div>
+                                                ))
+                                        ) : (
+                                            <p>{formatMessage('ingen.ieu')}.</p>
+                                        )}
+                                    </div>
 
-                            <div className={styles.regulering}>
-                                <Heading level="3" size="medium" className={styles.kategoriTittel}>
-                                    {formatMessage('reguler.fradrag')}
-                                </Heading>
-                                {harRegulerbarFradrag ? (
-                                    <FradragForm
-                                        name={'fradrag'}
-                                        control={form.control}
-                                        setValue={form.setValue}
-                                        beregningsDato={{
-                                            fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
-                                            tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
-                                        }}
-                                        harEPS={false}
-                                    />
-                                ) : (
-                                    <p>{formatMessage('ingen.fradrag')}.</p>
-                                )}
-                            </div>
-                            {RemoteData.isFailure(regulerStatus) && <ApiErrorAlert error={regulerStatus.error} />}
-                            <div className={styles.knapper}>
-                                <BackButton />
-                                <Button type="submit" loading={RemoteData.isPending(regulerStatus)}>
-                                    {formatMessage('knapper.send')}
-                                </Button>
-                            </div>
-                        </div>
-                    </form>
+                                    <div className={styles.regulering}>
+                                        <Heading level="3" size="medium" className={styles.kategoriTittel}>
+                                            {formatMessage('reguler.fradrag')}
+                                        </Heading>
+                                        {harRegulerbarFradrag ? (
+                                            <FradragForm
+                                                name={'fradrag'}
+                                                control={form.control}
+                                                setValue={form.setValue}
+                                                beregningsDato={{
+                                                    fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
+                                                    tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
+                                                }}
+                                                harEPS={false}
+                                            />
+                                        ) : (
+                                            <p>{formatMessage('ingen.fradrag')}.</p>
+                                        )}
+                                    </div>
+                                    {RemoteData.isFailure(regulerStatus) && (
+                                        <ApiErrorAlert error={regulerStatus.error} />
+                                    )}
+                                    <div className={styles.knapper}>
+                                        <BackButton />
+                                        <Button type="submit" loading={RemoteData.isPending(regulerStatus)}>
+                                            {formatMessage('knapper.send')}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </form>
+                            <SupplementOversikt supplement={regulering.supplement} />
+                        </main>
+                    </div>
                 );
             },
         ),
@@ -233,11 +244,11 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
         <Alert className={styles.advarsel} variant="warning">
             <Label>Reguleringen er til manuell behandling fordi: </Label>
             <ul className={styles.årsaksContainer}>
-                {props.årsaker.map((årsak) => {
+                {props.årsaker.map((årsak, i) => {
                     switch (årsak.type) {
                         case ÅrsakForManuellType.FradragMåHåndteresManuelt: {
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Fradraget må håndteres manuelt av historiske grunner</BodyShort>
                                     <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                 </li>
@@ -245,7 +256,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         }
                         case ÅrsakForManuellType.UtbetalingFeilet: {
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Utbetaling feilet for behandlingen</BodyShort>
                                     <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                 </li>
@@ -255,7 +266,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                             const asserted = årsak as BrukerManglerSupplement;
 
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Bruker mangler supplement for fradrag</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -268,7 +279,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakForManuellType.SupplementInneholderIkkeFradraget: {
                             const asserted = årsak as SupplementInneholderIkkeFradraget;
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Innsendt supplement inneholder ikke fradrag</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -281,7 +292,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakForManuellType.FinnesFlerePerioderAvFradrag: {
                             const asserted = årsak as FinnesFlerePerioderAvFradrag;
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Funnet flere perioder av samme fradrag</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -294,7 +305,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakForManuellType.FradragErUtenlandsinntekt: {
                             const asserted = årsak as FradragErUtenlandsinntekt;
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Fradrag er markert som utenlandsk</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -307,7 +318,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakForManuellType.SupplementHarFlereVedtaksperioderForFradrag: {
                             const asserted = årsak as SupplementHarFlereVedtaksperioderForFradrag;
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>
                                         Supplementet inneholdt flere vedtaksperioder for fradrag som kan reguleres
                                     </BodyShort>
@@ -330,7 +341,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakForManuellType.MismatchMellomBeløpFraSupplementOgFradrag: {
                             const asserted = årsak as MismatchMellomBeløpFraSupplementOgFradrag;
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>
                                         Mismatch mellom beløpet i supplementet, og fra som er i fradraget før regulering
                                     </BodyShort>
@@ -351,7 +362,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakForManuellType.BeløpErStørreEnForventet: {
                             const asserted = årsak as BeløpErStørreEnForventet;
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>
                                         Beløpet i supplementetet er større enn det vi forventet etter regulering
                                     </BodyShort>
@@ -372,7 +383,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakForManuellType.YtelseErMidlertidigStanset: {
                             const asserted = årsak as YtelseErMidlertidigStanset;
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Ytelsen er midlertidig stanset</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{asserted.begrunnelse}</BodyShort>
@@ -382,7 +393,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         }
                         case ÅrsakForManuellType.ForventetInntektErStørreEnn0: {
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Forventet inntekt må justeres</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse}</BodyShort>
@@ -392,7 +403,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         }
                         case ÅrsakForManuellType.AutomatiskSendingTilUtbetalingFeilet: {
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>
                                         Automatisk behandling av reguleringen feilet fordi utbetaling feilet
                                     </BodyShort>
@@ -404,7 +415,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         }
                         case ÅrsakForManuellType.VedtakstidslinjeErIkkeSammenhengende: {
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Vedtakstidslinjen inneholder hull</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse}</BodyShort>
@@ -415,7 +426,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakForManuellType.DelvisOpphør: {
                             const asserted = årsak as DelvisOpphør;
                             return (
-                                <li>
+                                <li key={i}>
                                     <BodyShort>Saken er delvis opphørt</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Opphørte perioder</BodyShort>
@@ -433,5 +444,130 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
         </Alert>
     ) : (
         <></>
+    );
+};
+
+const SupplementOversikt = (props: { supplement: Reguleringssupplement }) => {
+    return (
+        <div>
+            <Heading level="3" size="medium">
+                Reguleringssupplement
+            </Heading>
+            <div className={styles.supplementOversiktInnhold}>
+                {props.supplement.bruker ? (
+                    <SupplementForOversikt overskrift="Søker" supplementFor={props.supplement.bruker} />
+                ) : (
+                    <Label>Supplement for søker finnes ikke</Label>
+                )}
+
+                {props.supplement.eps.length > 0 ? (
+                    props.supplement.eps.map((eps) => (
+                        <SupplementForOversikt key={eps.fnr} overskrift={`EPS - ${eps.fnr}`} supplementFor={eps} />
+                    ))
+                ) : (
+                    <Label>Supplement for EPS finnes ikke</Label>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const SupplementForOversikt = (props: { overskrift: string; supplementFor: SupplementFor }) => {
+    const [visEksternDataModal, setVisEksternDataModal] = useState(false);
+
+    return (
+        <div className={styles.supplementForOversiktContainer}>
+            <Heading level="3" size="medium">
+                {props.overskrift}
+            </Heading>
+            <ul className={styles.supplementForInnhold}>
+                {props.supplementFor.fradragsperioder.map((fradrag, index) => (
+                    <li key={`${fradrag.fradragstype} - ${index}`} className={styles.fradragsperiodeContainer}>
+                        <Heading level="4" size="small">
+                            {fradrag.fradragstype}
+                        </Heading>
+
+                        <div>
+                            <Label>Endringsvedtak</Label>
+                            <div className={styles.vedtaksperiodeData}>
+                                <BodyShort>
+                                    {Måned.fromStringPeriode(fradrag.vedtaksperiodeEndring.måned).toFormattedString()}:
+                                </BodyShort>
+                                <BodyShort>{fradrag.vedtaksperiodeEndring.beløp},-</BodyShort>
+                            </div>
+                        </div>
+
+                        <div>
+                            <Label>Reguleringsvedtak</Label>
+                            <ul>
+                                {fradrag.vedtaksperiodeRegulering.map((periode, index) => (
+                                    <li key={`${periode.periode.fraOgMed} - ${periode.periode.tilOgMed} - ${index}`}>
+                                        <div className={styles.vedtaksperiodeData}>
+                                            <BodyShort>{formatPeriodeMedOptionalTilOgMed(periode.periode)}:</BodyShort>
+                                            <BodyShort>{periode.beløp},-</BodyShort>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+            <Button
+                className={styles.eksterneVedtakdataButton}
+                variant="tertiary"
+                onClick={() => setVisEksternDataModal(true)}
+            >
+                Se eksterne vedtaksdata
+            </Button>
+
+            <EksternDataModal
+                visModal={visEksternDataModal}
+                onClose={() => setVisEksternDataModal(false)}
+                data={props.supplementFor.eksterneVedtaksdata}
+            />
+        </div>
+    );
+};
+
+const EksternDataModal = (props: { visModal: boolean; onClose: () => void; data: Eksterndata[] }) => {
+    return (
+        <Modal
+            className={styles.eksternDataModal}
+            open={props.visModal}
+            onClose={props.onClose}
+            header={{ heading: 'Eksterne data som SU-app har mottatt' }}
+        >
+            <Modal.Body className={styles.eksternDataModalBody}>
+                <ul>
+                    {props.data.map((data, index) => (
+                        <li key={index} className={styles.eksternDataContainer}>
+                            <OppsummeringPar label={'Fødselsnummer'} verdi={data.fnr} retning="vertikal" />
+                            <OppsummeringPar label={'Sakstype'} verdi={data.sakstype} retning="vertikal" />
+                            <OppsummeringPar label={'Vedtakstype'} verdi={data.vedtakstype} retning="vertikal" />
+                            <OppsummeringPar label={'Fra og med'} verdi={data.fraOgMed} retning="vertikal" />
+                            <OppsummeringPar label={'Til og med'} verdi={data.tilOgMed} retning="vertikal" />
+                            <OppsummeringPar label={'Brutto ytelse'} verdi={data.bruttoYtelse} retning="vertikal" />
+                            <OppsummeringPar label={'Netto ytelse'} verdi={data.nettoYtelse} retning="vertikal" />
+                            <OppsummeringPar
+                                label={'Ytelseskomponent type'}
+                                verdi={data.ytelseskomponenttype}
+                                retning="vertikal"
+                            />
+                            <OppsummeringPar
+                                label={'Brutto ytelseskomponent'}
+                                verdi={data.bruttoYtelseskomponent}
+                                retning="vertikal"
+                            />
+                            <OppsummeringPar
+                                label={'Netto ytelseskomponent'}
+                                verdi={data.nettoYtelseskomponent}
+                                retning="vertikal"
+                            />
+                        </li>
+                    ))}
+                </ul>
+            </Modal.Body>
+        </Modal>
     );
 };

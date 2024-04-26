@@ -65,7 +65,6 @@ const VurderTilbakekreving = (props: {
             ? { grunnlagsperioder: defaultValuesFraBehandling }
             : { grunnlagsperioder: defaultValuesFraKravgunnlag };
 
-    console.log(initialValues);
     const form = useForm<VurderTilbakekrevingFormData>({
         defaultValues: initialValues,
         resolver: yupResolver(vurderTilbakekrevingSchema),
