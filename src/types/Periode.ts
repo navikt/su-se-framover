@@ -31,3 +31,8 @@ export const eqNullableDatePeriode = struct<{ fraOgMed: Nullable<Date>; tilOgMed
     fraOgMed: eqNullable(D.Eq),
     tilOgMed: eqNullable(D.Eq),
 });
+
+export interface PeriodeMedOptionalTilOgMed<T extends string | Date = Date> {
+    fraOgMed: T;
+    tilOgMed: Nullable<T>;
+}

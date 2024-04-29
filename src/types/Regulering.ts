@@ -1,8 +1,9 @@
 import { Nullable } from '~src/lib/types';
 
 import { Beregning } from './Beregning';
+import { FradragTilhører, Fradragskategori } from './Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Periode } from './Periode';
+import { Periode, PeriodeMedOptionalTilOgMed } from './Periode';
 import { Sakstype } from './Sak';
 import { Simulering } from './Simulering';
 
@@ -21,6 +22,7 @@ export interface Regulering {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     avsluttet: { tidspunkt: string };
     årsakForManuell: ÅrsakForManuell[];
+    supplement: Reguleringssupplement;
     sakstype: Sakstype;
     reguleringsstatus: Reguleringsstatus;
 }
@@ -41,18 +43,136 @@ export enum ReguleringMerknad {
     Fosterhjemsgodtgjørelse = 'Fosterhjemsgodtgjørelse',
 }
 
-export enum ÅrsakForManuell {
-    FradragMåHåndteresManuelt = 'FradragMåHåndteresManuelt',
-    YtelseErMidlertidigStanset = 'YtelseErMidlertidigStanset',
-    ForventetInntektErStørreEnn0 = 'ForventetInntektErStørreEnn0',
-    DelvisOpphør = 'DelvisOpphør',
-    VedtakstidslinjeErIkkeSammenhengende = 'VedtakstidslinjeErIkkeSammenhengende',
-
-    AvventerKravgrunnlag = 'AvventerKravgrunnlag',
-    UtbetalingFeilet = 'UtbetalingFeilet',
-}
-
 export enum Reguleringstype {
     AUTOMATISK = 'AUTOMATISK',
     MANUELL = 'MANUELL',
+}
+
+export enum ÅrsakForManuellType {
+    FradragMåHåndteresManuelt = 'FradragMåHåndteresManuelt',
+    UtbetalingFeilet = 'UtbetalingFeilet',
+    BrukerManglerSupplement = 'BrukerManglerSupplement',
+    SupplementInneholderIkkeFradraget = 'SupplementInneholderIkkeFradraget',
+    FinnesFlerePerioderAvFradrag = 'FinnesFlerePerioderAvFradrag',
+    FradragErUtenlandsinntekt = 'FradragErUtenlandsinntekt',
+    SupplementHarFlereVedtaksperioderForFradrag = 'SupplementHarFlereVedtaksperioderForFradrag',
+    MismatchMellomBeløpFraSupplementOgFradrag = 'MismatchMellomBeløpFraSupplementOgFradrag',
+    BeløpErStørreEnForventet = 'BeløpErStørreEnForventet',
+    YtelseErMidlertidigStanset = 'YtelseErMidlertidigStanset',
+    ForventetInntektErStørreEnn0 = 'ForventetInntektErStørreEnn0',
+    AutomatiskSendingTilUtbetalingFeilet = 'AutomatiskSendingTilUtbetalingFeilet',
+    VedtakstidslinjeErIkkeSammenhengende = 'VedtakstidslinjeErIkkeSammenhengende',
+    DelvisOpphør = 'DelvisOpphør',
+}
+
+export interface ÅrsakForManuell {
+    begrunnelse: Nullable<string>;
+    type: ÅrsakForManuellType;
+}
+
+export interface FradragMåHåndteresManuelt extends ÅrsakForManuell {
+    begrunnelse: null;
+}
+
+export interface UtbetalingFeilet extends ÅrsakForManuell {
+    begrunnelse: null;
+}
+export interface BrukerManglerSupplement extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+}
+
+export interface SupplementInneholderIkkeFradraget extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+}
+
+export interface FinnesFlerePerioderAvFradrag extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+}
+
+export interface FradragErUtenlandsinntekt extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+}
+
+export interface SupplementHarFlereVedtaksperioderForFradrag extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+    eksterneReguleringsvedtakperioder: Array<PeriodeMedOptionalTilOgMed<string>>;
+}
+
+export interface MismatchMellomBeløpFraSupplementOgFradrag extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+    eksterntBeløpFørRegulering: string;
+    vårtBeløpFørRegulering: string;
+}
+
+export interface BeløpErStørreEnForventet extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+    eksterntBeløpEtterRegulering: string;
+    forventetBeløpEtterRegulering: string;
+}
+
+export interface YtelseErMidlertidigStanset extends ÅrsakForManuell {}
+export interface ForventetInntektErStørreEnn0 extends ÅrsakForManuell {}
+export interface AutomatiskSendingTilUtbetalingFeilet extends ÅrsakForManuell {
+    begrunnelse: string;
+}
+export interface VedtakstidslinjeErIkkeSammenhengende extends ÅrsakForManuell {
+    begrunnelse: string;
+}
+
+export interface DelvisOpphør extends ÅrsakForManuell {
+    opphørsperioder: Array<Periode<string>>;
+}
+
+export interface Reguleringssupplement {
+    bruker: Nullable<SupplementFor>;
+    eps: SupplementFor[];
+}
+
+export interface SupplementFor {
+    fnr: string;
+    fradragsperioder: Fradragsperiode[];
+    eksterneVedtaksdata: Eksterndata[];
+}
+
+export interface Fradragsperiode {
+    fradragstype: Fradragskategori;
+    vedtaksperiodeEndring: VedtaksperiodeEndring;
+    vedtaksperiodeRegulering: VedtaksperiodeRegulering[];
+}
+
+export interface VedtaksperiodeEndring {
+    måned: Periode<string>;
+    beløp: string;
+}
+
+export interface VedtaksperiodeRegulering {
+    periode: PeriodeMedOptionalTilOgMed<string>;
+    beløp: string;
+}
+
+export interface Eksterndata {
+    fnr: string;
+    sakstype: string;
+    vedtakstype: string;
+    fraOgMed: string;
+    tilOgMed: Nullable<string>;
+    bruttoYtelse: string;
+    nettoYtelse: string;
+    ytelseskomponenttype: string;
+    bruttoYtelseskomponent: string;
+    nettoYtelseskomponent: string;
 }

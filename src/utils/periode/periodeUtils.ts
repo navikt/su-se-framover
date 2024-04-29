@@ -3,7 +3,7 @@ import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 
 import { eqNullable } from '~src/lib/types';
-import { NullablePeriode, Periode, PeriodeType } from '~src/types/Periode';
+import { NullablePeriode, Periode, PeriodeMedOptionalTilOgMed, PeriodeType } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
 export const lagTomPeriode = (): PeriodeType => ({ fraOgMed: null, tilOgMed: null });
@@ -43,3 +43,6 @@ export const eqStringPeriode = struct<Periode<string>>({
 
 export const formatPeriodeMonthYear = (periode: Periode<string>) =>
     `${DateUtils.formatMonthYear(periode.fraOgMed)} – ${DateUtils.formatMonthYear(periode.tilOgMed)}`;
+
+export const formatPeriodeMedOptionalTilOgMed = (periode: PeriodeMedOptionalTilOgMed<string>) =>
+    `${DateUtils.formatMonthYear(periode.fraOgMed)} – ${periode.tilOgMed ? DateUtils.formatMonthYear(periode.tilOgMed) : 'Ingen sluttdato'}`;

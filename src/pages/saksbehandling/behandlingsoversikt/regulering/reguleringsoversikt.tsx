@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
+import ContextMenu from '~src/components/contextMenu/ContextMenu';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
@@ -25,6 +26,7 @@ interface Props {
 }
 const Reguleringsoversikt = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
+    const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
 
     const sortByFnr = pipe(
         S.Ord,
@@ -55,7 +57,27 @@ const Reguleringsoversikt = (props: Props) => {
                                     <Table.Row key={index}>
                                         <Table.DataCell>{saksnummer}</Table.DataCell>
                                         <Table.DataCell>{fnr}</Table.DataCell>
-                                        <Table.DataCell>
+                                        <Table.DataCell
+                                            onContextMenu={(e) => {
+                                                e.preventDefault();
+                                                setContextMenuVariables({
+                                                    pos: { x: e.pageX, y: e.pageY },
+                                                    toggled: true,
+                                                    onMenuClick: async () => {
+                                                        dispatch(personSlice.default.actions.resetSøkerData());
+                                                        dispatch(sakSlice.default.actions.resetSak());
+                                                        hentSak({ saksnummer: saksnummer.toString() }, (sak) => {
+                                                            window.open(
+                                                                Routes.saksoversiktValgtSak.createURL({
+                                                                    sakId: sak.id,
+                                                                }),
+                                                                '_blank',
+                                                            );
+                                                        });
+                                                    },
+                                                });
+                                            }}
+                                        >
                                             <Button
                                                 variant="tertiary"
                                                 onClick={async () => {
@@ -88,6 +110,11 @@ const Reguleringsoversikt = (props: Props) => {
                         )}
                     </Table.Body>
                 </Table>
+                {contextMenuVariables.toggled && (
+                    <Menu>
+                        <button onClick={() => contextMenuVariables.onMenuClick?.()}>Åpne sak i ny fane</button>
+                    </Menu>
+                )}
             </div>
         );
     };
