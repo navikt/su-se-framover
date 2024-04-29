@@ -308,24 +308,29 @@ const verdierFormDataValidering = yup
     })
     .required();
 
-export const formueFormSchema = yup.object<FormueVilkårFormData>({
-    formue: yup
-        .array(
-            yup
-                .object<FormuegrunnlagFormData>({
-                    epsFnr: yup.string().nullable().defined(),
-                    periode: validerPeriodeTomEtterFom,
-                    søkersFormue: verdierFormDataValidering,
-                    epsFormue: yup
-                        .object<FormuegrunnlagVerdierFormData>()
-                        .defined()
-                        .when('epsFnr', {
-                            is: (value) => value?.length === 11,
-                            then: verdierFormDataValidering,
-                        }),
-                    måInnhenteMerInformasjon: yup.boolean(),
-                })
-                .required(),
-        )
-        .required(),
-});
+const formuegrunnlagSchema = yup
+    .object<FormuegrunnlagFormData>({
+        epsFnr: yup.string().nullable().defined(),
+        periode: validerPeriodeTomEtterFom,
+        søkersFormue: verdierFormDataValidering,
+        epsFormue: yup
+            .object<FormuegrunnlagVerdierFormData>()
+            .defined()
+            .when('epsFnr', {
+                is: (value) => value?.length === 11,
+                then: verdierFormDataValidering,
+            }),
+        måInnhenteMerInformasjon: yup.boolean(),
+    })
+    .required();
+
+const formuegrunnlagArraySchema = yup.array().of(formuegrunnlagSchema).required().defined() as yup.ArraySchema<
+    FormuegrunnlagFormData,
+    object
+>;
+
+export const formueFormSchema = yup
+    .object<FormueVilkårFormData>({
+        formue: formuegrunnlagArraySchema,
+    })
+    .required() as yup.ObjectSchema<FormueVilkårFormData, object>;
