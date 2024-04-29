@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, RadioGroup, Radio, Checkbox, Textarea } from '@navikt/ds-react';
+import { RadioGroup, Radio, Checkbox, Textarea } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -24,10 +24,7 @@ import {
     RevurderingSeksjoner,
     Valg,
 } from '~src/types/Revurdering';
-import {
-    erRevurderingOpphørPgaManglendeDokumentasjon,
-    erRevurderingTilbakekreving,
-} from '~src/utils/revurdering/revurderingUtils';
+import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
 
 import revurderingMessages from '../../revurdering-nb';
 
@@ -123,11 +120,9 @@ const SendTilAttestering = (props: {
             valg: props.revurdering.brevvalg.valg,
             fritekst: props.revurdering.brevvalg.fritekst
                 ? props.revurdering.brevvalg.fritekst
-                : erRevurderingTilbakekreving(props.revurdering)
-                  ? formatMessage('tilbakekreving.forhåndstekst')
-                  : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
-                    ? formatMessage('opplysningsplikt.forhåndstekst')
-                    : null,
+                : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
+                  ? formatMessage('opplysningsplikt.forhåndstekst')
+                  : null,
             begrunnValg:
                 props.revurdering.brevvalg.begrunnelse && props.revurdering.brevvalg.begrunnelse.length > 0
                     ? true
@@ -176,9 +171,6 @@ const SendTilAttestering = (props: {
                         }}
                     >
                         <div>
-                            {erRevurderingTilbakekreving(props.revurdering) && (
-                                <Alert variant={'warning'}>{formatMessage('tilbakereving.alert.brutto.netto')}</Alert>
-                            )}
                             <Controller
                                 control={form.control}
                                 name="valg"

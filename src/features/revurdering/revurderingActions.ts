@@ -4,7 +4,6 @@ import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import * as revurderingApi from '~src/api/revurderingApi';
 import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
-import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import {
     Gjenopptak,
@@ -163,22 +162,6 @@ export const lagreBrevvalg = createAsyncThunk<
         return thunkApi.rejectWithValue(res.error);
     },
 );
-
-export const lagreTilbakekrevingsbehandling = createAsyncThunk<
-    SimulertRevurdering | UnderkjentRevurdering,
-    {
-        sakId: string;
-        revurderingId: string;
-        tilbakekrevingsbehandling: TilbakekrevingsbehandlingFormData;
-    },
-    { rejectValue: ApiError }
->('revurdering/tilbakekreving', async ({ sakId, revurderingId, tilbakekrevingsbehandling }, thunkApi) => {
-    const res = await revurderingApi.lagreTilbakekrevingsbehandling(sakId, revurderingId, tilbakekrevingsbehandling);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
 
 export const sendRevurderingTilAttestering = createAsyncThunk<
     RevurderingTilAttestering,

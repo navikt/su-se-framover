@@ -2,7 +2,6 @@ import { formatISO } from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
 import { Brevvalg } from '~src/pages/saksbehandling/avsluttBehandling/avsluttRevurdering/avsluttRevurderingUtils';
-import { TilbakekrevingsbehandlingFormData } from '~src/pages/saksbehandling/revurdering/OppsummeringPage/tilbakekreving/TilbakekrevingForm';
 import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
@@ -184,20 +183,6 @@ export async function lagreBrevvalg(
             valg: valg,
             fritekst: fritekst,
             begrunnelse: begrunnelse,
-        },
-    });
-}
-
-export async function lagreTilbakekrevingsbehandling(
-    sakId: string,
-    revurderingId: string,
-    tilbakekrevingsbehandling: TilbakekrevingsbehandlingFormData,
-): Promise<ApiClientResult<SimulertRevurdering | UnderkjentRevurdering>> {
-    return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/tilbakekreving`,
-        method: 'POST',
-        body: {
-            avgjørelse: tilbakekrevingsbehandling.avgjørelse,
         },
     });
 }

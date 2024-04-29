@@ -75,8 +75,6 @@ export interface SimulertRevurdering
     > {
     beregning: Beregning;
     simulering: Simulering;
-
-    tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
 export interface RevurderingTilAttestering
@@ -85,7 +83,6 @@ export interface RevurderingTilAttestering
     > {
     beregning: Beregning;
     simulering: Nullable<Simulering>;
-    tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
 export interface IverksattRevurdering
@@ -103,7 +100,6 @@ export interface UnderkjentRevurdering
     > {
     beregning: Beregning;
     simulering: Nullable<Simulering>;
-    tilbakekrevingsbehandling: Nullable<Tilbakekrevingsbehandling>;
 }
 
 export interface AvsluttetRevurdering extends InformasjonsRevurdering<InformasjonsRevurderingStatus.AVSLUTTET> {
@@ -199,7 +195,6 @@ export enum RevurderingBeregnOgSimulerSteg {
 
 export enum RevurderingOppsummeringSteg {
     Forhåndsvarsel = 'forhåndsvarsel',
-    Tilbakekreving = 'tilbakekreving',
     SendTilAttestering = 'sendTilAttestering',
 }
 
@@ -238,7 +233,6 @@ export interface Tilbakekrevingsbehandling {
 }
 
 export enum TilbakekrevingsAvgjørelse {
-    IKKE_AVGJORT = 'IKKE_AVGJORT',
     TILBAKEKREV = 'TILBAKEKREV',
     IKKE_TILBAKEKREV = 'IKKE_TILBAKEKREV',
 }

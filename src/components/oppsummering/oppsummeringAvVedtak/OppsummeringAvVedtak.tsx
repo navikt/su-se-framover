@@ -23,7 +23,7 @@ import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
-import { InformasjonsRevurdering, Revurdering } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, Revurdering, TilbakekrevingsAvgjørelse } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erBehandlingRevurdering, erBehandlingSøknadsbehandling } from '~src/utils/behandling/BehandlingUtils';
@@ -32,8 +32,7 @@ import { getBlob } from '~src/utils/dokumentUtils';
 import { splitStatusOgResultatFraKlage } from '~src/utils/klage/klageUtils';
 import {
     erInformasjonsRevurdering,
-    erRevurderingTilbakekreving,
-    erRevurderingTilbakekrevingsbehandling,
+    erRevurderingIverksattMedTilbakekreving,
     splitStatusOgResultatFraRevurdering,
 } from '~src/utils/revurdering/revurderingUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
@@ -288,10 +287,12 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                     verdi={formatMessage(props.r.årsak)}
                     retning={'vertikal'}
                 />
-                {erRevurderingTilbakekrevingsbehandling(props.r) && (
+                {erRevurderingIverksattMedTilbakekreving(props.r) && (
                     <OppsummeringPar
                         label={formatMessage('revurdering.skalTilbakekreves')}
-                        verdi={formatMessage(`bool.${erRevurderingTilbakekreving(props.r)}`)}
+                        verdi={formatMessage(
+                            `bool.${props.r.tilbakekrevingsbehandling.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV}`,
+                        )}
                         retning={'vertikal'}
                     />
                 )}

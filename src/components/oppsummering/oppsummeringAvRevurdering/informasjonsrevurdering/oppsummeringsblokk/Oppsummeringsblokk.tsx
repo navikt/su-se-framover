@@ -17,7 +17,7 @@ import {
     UtbetalingsRevurderingStatus,
 } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { erRevurderingTilbakekrevingsbehandling } from '~src/utils/revurdering/revurderingUtils';
+import { erRevurderingIverksattMedTilbakekreving } from '~src/utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -71,7 +71,7 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                 ))}
             </div>
             <div>
-                {erRevurderingTilbakekrevingsbehandling(props.revurdering) && (
+                {erRevurderingIverksattMedTilbakekreving(props.revurdering) && (
                     <OppsummeringPar
                         label={formatMessage('tilbakekreving.skalTilbakekreves')}
                         verdi={formatMessage(

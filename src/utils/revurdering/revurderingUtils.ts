@@ -26,7 +26,6 @@ import {
     RevurderingTilAttestering,
     SimulertRevurdering,
     StansAvYtelse,
-    TilbakekrevingsAvgjørelse,
     Tilbakekrevingsbehandling,
     UnderkjentRevurdering,
     UtbetalingsRevurdering,
@@ -117,37 +116,11 @@ export function harSimulering(r: Revurdering): r is Revurdering & { simulering: 
     return 'simulering' in r && (r as SimulertRevurdering).simulering !== null;
 }
 
-export const erRevurderingTilbakekrevingsbehandling = (
+export const erRevurderingIverksattMedTilbakekreving = (
     r: Revurdering,
-): r is InformasjonsRevurdering & { tilbakekrevingsbehandling: Tilbakekrevingsbehandling } =>
-    erInformasjonsRevurdering(r) && 'tilbakekrevingsbehandling' in r && r['tilbakekrevingsbehandling'] !== null;
-
-export const erRevurderingTilbakekreving = (
-    r: Revurdering,
-): r is InformasjonsRevurdering & {
-    tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.TILBAKEKREV };
-} =>
-    erRevurderingTilbakekrevingsbehandling(r) &&
-    r.tilbakekrevingsbehandling.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV;
-
-export const erRevurderingTilbakekrevingIkkeAvgjort = (
-    r: Revurdering,
-): r is InformasjonsRevurdering & {
-    tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.IKKE_AVGJORT };
-} =>
-    erRevurderingTilbakekrevingsbehandling(r) &&
-    r.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.IKKE_AVGJORT;
-
-export const erRevurderingIkkeTilbakekrev = (
-    r: Revurdering,
-): r is InformasjonsRevurdering & {
-    tilbakekrevingsbehandling: { avgjørelse: TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV };
-} =>
-    erRevurderingTilbakekrevingsbehandling(r) &&
-    r.tilbakekrevingsbehandling?.avgjørelse === TilbakekrevingsAvgjørelse.IKKE_TILBAKEKREV;
-
-export const erRevurderingTilbakekrevingAvgjort = (r: Revurdering) =>
-    erRevurderingTilbakekreving(r) || erRevurderingIkkeTilbakekrev(r);
+): r is IverksattRevurdering & { tilbakekrevingsbehandling: Tilbakekrevingsbehandling } => {
+    return erRevurderingIverksatt(r) && r.tilbakekrevingsbehandling !== null;
+};
 
 /**
  * Dette er det som styrer rekkefølgen på når ting skal revurderes.
@@ -210,20 +183,10 @@ export const finnNesteRevurderingsteg = (r: InformasjonsRevurdering) => {
     return førsteIkkeVurderteSteg
         ? { seksjon: RevurderingSeksjoner.GrunnlagOgVilkår, steg: førsteIkkeVurderteSteg }
         : erRevurderingSimulert(r) || erRevurderingUnderkjent(r)
-          ? erRevurderingTilbakekrevingsbehandling(r)
-              ? erRevurderingTilbakekrevingIkkeAvgjort(r)
-                  ? {
-                        seksjon: RevurderingSeksjoner.Oppsummering,
-                        steg: RevurderingOppsummeringSteg.Tilbakekreving,
-                    }
-                  : {
-                        seksjon: RevurderingSeksjoner.Oppsummering,
-                        steg: RevurderingOppsummeringSteg.SendTilAttestering,
-                    }
-              : {
-                    seksjon: RevurderingSeksjoner.Oppsummering,
-                    steg: RevurderingOppsummeringSteg.SendTilAttestering,
-                }
+          ? {
+                seksjon: RevurderingSeksjoner.Oppsummering,
+                steg: RevurderingOppsummeringSteg.SendTilAttestering,
+            }
           : {
                 seksjon: RevurderingSeksjoner.BeregningOgSimulering,
                 steg: RevurderingBeregnOgSimulerSteg.BeregnOgSimuler,
@@ -528,66 +491,37 @@ export const lagBeregnOgSimulerSeksjon = (arg: { sakId: string; r: InformasjonsR
 };
 
 export const lagOppsummeringSeksjon = (arg: { sakId: string; r: InformasjonsRevurdering }): Seksjon => {
-    const kanSendeTilAttestering = erRevurderingTilbakekrevingsbehandling(arg.r)
-        ? erRevurderingTilbakekrevingAvgjort(arg.r)
-            ? true
-            : false
-        : erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r)
-          ? true
-          : false;
-
-    const defaultLinjer = [
-        {
-            id: RevurderingOppsummeringSteg.Forhåndsvarsel,
-            status:
-                erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r) ? Linjestatus.Ok : Linjestatus.Ingenting,
-            label: 'Forhåndsvarsel',
-            url: Routes.revurderingSeksjonSteg.createURL({
-                sakId: arg.sakId,
-                revurderingId: arg.r.id,
-                seksjon: RevurderingSeksjoner.Oppsummering,
-                steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
-            }),
-            erKlikkbar: erRevurderingTilbakekrevingsbehandling(arg.r)
-                ? erRevurderingTilbakekrevingAvgjort(arg.r)
-                : erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r),
-        },
-        {
-            id: RevurderingOppsummeringSteg.SendTilAttestering,
-            status: Linjestatus.Ingenting,
-            label: 'Send til attestering',
-            url: Routes.revurderingSeksjonSteg.createURL({
-                sakId: arg.sakId,
-                revurderingId: arg.r.id,
-                seksjon: RevurderingSeksjoner.Oppsummering,
-                steg: RevurderingOppsummeringSteg.SendTilAttestering,
-            }),
-            erKlikkbar: kanSendeTilAttestering,
-        },
-    ];
-
-    const faktiskeLinjer = erRevurderingTilbakekrevingsbehandling(arg.r)
-        ? [
-              {
-                  id: RevurderingOppsummeringSteg.Tilbakekreving,
-                  status: erRevurderingTilbakekrevingAvgjort(arg.r) ? Linjestatus.Ok : Linjestatus.Ingenting,
-                  label: 'Tilbakekreving',
-                  url: Routes.revurderingSeksjonSteg.createURL({
-                      sakId: arg.sakId,
-                      revurderingId: arg.r.id,
-                      seksjon: RevurderingSeksjoner.Oppsummering,
-                      steg: RevurderingOppsummeringSteg.Tilbakekreving,
-                  }),
-                  erKlikkbar: erRevurderingTilbakekrevingsbehandling(arg.r),
-              },
-              ...defaultLinjer,
-          ]
-        : defaultLinjer;
+    const kanSendeTilAttestering = erRevurderingSimulert(arg.r) || erRevurderingUnderkjent(arg.r);
 
     return {
         id: RevurderingSeksjoner.Oppsummering,
         tittel: 'Oppsummering',
-        linjer: faktiskeLinjer,
+        linjer: [
+            {
+                id: RevurderingOppsummeringSteg.Forhåndsvarsel,
+                status: kanSendeTilAttestering ? Linjestatus.Ok : Linjestatus.Ingenting,
+                label: 'Forhåndsvarsel',
+                url: Routes.revurderingSeksjonSteg.createURL({
+                    sakId: arg.sakId,
+                    revurderingId: arg.r.id,
+                    seksjon: RevurderingSeksjoner.Oppsummering,
+                    steg: RevurderingOppsummeringSteg.Forhåndsvarsel,
+                }),
+                erKlikkbar: kanSendeTilAttestering,
+            },
+            {
+                id: RevurderingOppsummeringSteg.SendTilAttestering,
+                status: Linjestatus.Ingenting,
+                label: 'Send til attestering',
+                url: Routes.revurderingSeksjonSteg.createURL({
+                    sakId: arg.sakId,
+                    revurderingId: arg.r.id,
+                    seksjon: RevurderingSeksjoner.Oppsummering,
+                    steg: RevurderingOppsummeringSteg.SendTilAttestering,
+                }),
+                erKlikkbar: kanSendeTilAttestering,
+            },
+        ],
     };
 };
 
