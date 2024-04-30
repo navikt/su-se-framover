@@ -1,0 +1,30 @@
+@import '@styles/variables.less';
+
+.modal {
+    max-width: 100%;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+    align-items: flex-start;
+    margin-bottom: @spacing;
+
+    .formInputs {
+        display: flex;
+        gap: @spacing-s;
+        align-items: flex-end;
+    }
+}
+
+.resultContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xxxs;
+}
+
+.result {
+    display: grid;
+    grid-template-columns: repeat(10, 100px);
+}

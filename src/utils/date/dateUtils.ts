@@ -68,6 +68,10 @@ export const toIsoMonthOrNull = (date: Date | null) => {
     return DateFns.format(date, DateFormats.IsoMonthOnly);
 };
 
+export const toIsoMonth = (date: Date) => {
+    return DateFns.format(date, DateFormats.IsoMonthOnly);
+};
+
 // Tipper det ikke blir nødvendig med "overload" for Periode<Date>
 export const formatPeriode = (periode: Periode<string>) =>
     `${formatMonthYear(periode.fraOgMed)} – ${formatMonthYear(periode.tilOgMed)}`;

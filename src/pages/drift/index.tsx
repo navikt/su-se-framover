@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Label, Loader, Modal, Select, TextField } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Modal, Select, TextField } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 
 import { ApiError } from '~src/api/apiClient';
@@ -9,7 +9,6 @@ import {
     SøknadResponse,
     konsistensavstemming,
     grensesnittsavstemming,
-    stønadsmottakere,
     ferdigstillVedtak,
 } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -22,6 +21,7 @@ import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import Personhendelser from './components/personhendelser/Personhendelser';
 import Gregulering from './components/regulering/G-regulering';
 import ResendStatistikk from './components/Statistikk';
+import Stønadsmottakere from './components/stønadsmottakere/Stønadsmottakere';
 import { SøknadTabellDrift } from './components/SøknadTabell';
 import SendUtbetalingsIder from './components/utbetalingslinjer/SendUtbetalingslinjer';
 import styles from './index.module.less';
@@ -52,8 +52,6 @@ const Drift = () => {
 
     const [vilFikseVedtak, setVilFikseVedtak] = useState<boolean>(false);
 
-    const [stønadsmottakereModal, setStønadsmottakereModal] = useState<boolean>(false);
-
     const [fixSøknaderResponse, setfixSøknaderResponse] = useState<RemoteData.RemoteData<ApiError, SøknadResponse>>(
         RemoteData.initial,
     );
@@ -81,10 +79,6 @@ const Drift = () => {
 
     return (
         <div className={styles.container}>
-            {stønadsmottakereModal && (
-                <StønadsmottakereModal open={stønadsmottakereModal} onClose={() => setStønadsmottakereModal(false)} />
-            )}
-
             {vilFikseVedtak && <VilFikseVedtakModal open={vilFikseVedtak} onClose={() => setVilFikseVedtak(false)} />}
 
             <div>
@@ -235,6 +229,7 @@ const Drift = () => {
                     </Modal>
                     <Gregulering />
                     <Personhendelser />
+                    <Stønadsmottakere />
 
                     <Button
                         variant="secondary"
@@ -243,15 +238,6 @@ const Drift = () => {
                         onClick={() => settKnappTrykket(Knapp.NØKKELTALL)}
                     >
                         Nøkkeltall
-                    </Button>
-
-                    <Button
-                        variant="secondary"
-                        className={styles.knapp}
-                        type="button"
-                        onClick={() => setStønadsmottakereModal(true)}
-                    >
-                        Stønadsmottakere
                     </Button>
 
                     <ResendStatistikk />
@@ -309,36 +295,6 @@ const VilFikseVedtakModal = (props: { open: boolean; onClose: () => void }) => {
                     {RemoteData.isSuccess(ferdigstillStatus) && <p>Nice 👍🤌</p>}
 
                     {RemoteData.isFailure(ferdigstillStatus) && <ApiErrorAlert error={ferdigstillStatus.error} />}
-                </div>
-            </Modal.Body>
-        </Modal>
-    );
-};
-
-const StønadsmottakereModal = (props: { open: boolean; onClose: () => void }) => {
-    const [stønadsmottakereStatus, hentStønadsmottakere] = useApiCall(stønadsmottakere);
-
-    return (
-        <Modal open={props.open} onClose={props.onClose} aria-label={'Stønadsmottakere'}>
-            <Modal.Body>
-                <div>
-                    <Heading size="medium" spacing>
-                        stønadsmottakere
-                    </Heading>
-                    <Button onClick={() => hentStønadsmottakere({})}>Hent stønadsmottakere</Button>
-
-                    {RemoteData.isSuccess(stønadsmottakereStatus) && (
-                        <div>
-                            <Label as="p">For dato: {stønadsmottakereStatus.value.dato}</Label>
-                            <Label as="p">Antall: {stønadsmottakereStatus.value.fnr.length}</Label>
-                            <Label as="p">Fødselsnummere: </Label>
-                            <ul>
-                                {stønadsmottakereStatus.value.fnr.map((s) => (
-                                    <li key={s}>{s}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
                 </div>
             </Modal.Body>
         </Modal>

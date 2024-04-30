@@ -1,3 +1,4 @@
+import { Nullable } from '~src/lib/types';
 import { NyeUtbetalingslinjerResponse as UtbetalingsIderResponse } from '~src/types/Utbetaling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -73,10 +74,17 @@ export async function konsistensavstemming(args: {
     });
 }
 
-export async function stønadsmottakere(): Promise<ApiClientResult<{ dato: string; fnr: string[] }>> {
+export async function stønadsmottakere(args: {
+    fraOgMed: Nullable<string>;
+    inkluderEPS: boolean;
+}): Promise<ApiClientResult<{ dato: string; fnr: string[] }>> {
     return apiClient({
         url: `/stønadsmottakere`,
-        method: 'GET',
+        method: 'POST',
+        body: {
+            fraOgMedMåned: args.fraOgMed,
+            inkluderEPS: args.inkluderEPS,
+        },
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }
