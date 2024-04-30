@@ -33,7 +33,9 @@ export async function startRegulering(args: { fraOgMedMåned: string; supplement
 
 export async function dryRunRegulering(args: {
     fraOgMedMåned: string;
-    grunnbeløp: Nullable<number>;
+    grunnbeløp: number;
+    kjøringsdato: string;
+    omregningsfaktor: string;
     supplement: Nullable<File | string>;
 }) {
     const url = `/reguleringer/automatisk/dry`;
@@ -43,13 +45,11 @@ export async function dryRunRegulering(args: {
         const formData = new FormData();
         formData.append('file', args.supplement);
         formData.append('fraOgMedMåned', args.fraOgMedMåned);
-        args.grunnbeløp ? formData.append('grunnbeløp', args.grunnbeløp.toString()) : null;
+        formData.append('omregningsfaktor', args.omregningsfaktor);
+        formData.append('grunnbeløp', args.grunnbeløp.toString());
+        formData.append('kjøringsdato', args.kjøringsdato);
 
-        return apiClient({
-            url: url,
-            method: method,
-            body: formData,
-        });
+        return apiClient({ url: url, method: method, body: formData });
     } else {
         return apiClient({
             url: url,
@@ -57,6 +57,8 @@ export async function dryRunRegulering(args: {
             body: {
                 fraOgMedMåned: args.fraOgMedMåned,
                 grunnbeløp: args.grunnbeløp,
+                omregningsfaktor: args.omregningsfaktor,
+                kjøringsdato: args.kjøringsdato,
                 csv: args.supplement,
             },
         });

@@ -17,11 +17,11 @@ import { useState, useEffect } from 'react';
 import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
+import { DatePicker, MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
-import { toIsoMonthOrNull } from '~src/utils/date/dateUtils';
+import { toIsoDateOnlyString, toIsoMonthOrNull } from '~src/utils/date/dateUtils';
 
 import styles from './G-regulering.module.less';
 
@@ -140,42 +140,45 @@ const DryRunPanel = () => {
     const [dryRunStatus, dryRun] = useApiCall(dryRunRegulering);
     const [startDatoDryRun, setStartDatoDryRun] = useState<Nullable<Date>>(null);
     const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
+    const [omregningsfaktor, setOmregningsfaktor] = useState<Nullable<string>>(null);
+    const [kjøringsdato, setkjøringsdato] = useState<Nullable<Date>>(null);
     const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
 
     const handleSubmit = () => {
-        if (supplementValue instanceof File) {
-            if (startDatoDryRun && gverdiDryRun) {
-                dryRun({
-                    fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
-                    grunnbeløp: gverdiDryRun,
-                    supplement: supplementValue,
-                });
-            } else {
-                console.log('du må velge en startdato & g-verdi før du kan dry-regulere med supplement');
-            }
+        if (startDatoDryRun && gverdiDryRun && omregningsfaktor && kjøringsdato) {
+            dryRun({
+                fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
+                grunnbeløp: gverdiDryRun,
+                omregningsfaktor: omregningsfaktor,
+                kjøringsdato: toIsoDateOnlyString(kjøringsdato),
+                supplement: supplementValue,
+            });
         } else {
-            if (startDatoDryRun) {
-                dryRun({
-                    fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
-                    grunnbeløp: gverdiDryRun,
-                    supplement: supplementValue,
-                });
-            } else {
-                console.log('du må velge en startdato før du kan dry-regulere');
-            }
+            console.log(
+                'reguleringsdato, g-verdi, omregningsfaktor og kjøringsdato må fylles ut før du kan kjøre dry-run',
+            );
         }
     };
 
     return (
         <Tabs.Panel value="dry-run" className={styles.tabPanel}>
             <div className={styles.panelInnholdContainer}>
-                <div className={styles.datoOgGVerdiContainer}>
-                    <MonthPicker
-                        label="Velg reguleringsdato"
-                        value={startDatoDryRun}
-                        onChange={(dato) => setStartDatoDryRun(dato)}
-                    />
-                    <TextField label={'G-verdi'} onChange={(v) => setGVerdiDryRun(Number(v.target.value))} />
+                <div className={styles.inputContainers}>
+                    <div className={styles.datoOgVerdiContainer}>
+                        <MonthPicker
+                            label="Velg reguleringsdato"
+                            value={startDatoDryRun}
+                            onChange={(dato) => setStartDatoDryRun(dato)}
+                        />
+                        <DatePicker label="Kjøringsdato" value={kjøringsdato} onChange={setkjøringsdato} />
+                    </div>
+                    <div className={styles.datoOgVerdiContainer}>
+                        <TextField label="G-verdi" onChange={(v) => setGVerdiDryRun(Number(v.target.value))} />
+                        <TextField
+                            label="Omregningsfaktor (. som desimalltegn)"
+                            onChange={(v) => setOmregningsfaktor(v.target.value)}
+                        />
+                    </div>
                 </div>
 
                 <ReguleringsSupplement onSupplementChange={setSupplementValue} />
