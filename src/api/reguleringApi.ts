@@ -32,36 +32,71 @@ export async function startRegulering(args: { fraOgMedMåned: string; supplement
 }
 
 export async function dryRunRegulering(args: {
-    fraOgMedMåned: string;
-    grunnbeløp: number;
-    kjøringsdato: string;
-    omregningsfaktor: string;
+    startDatoRegulering: string;
+    gjeldendeSatsFraOgMed: string;
     supplement: Nullable<File | string>;
+    nyttGrunnbeløp: Nullable<{
+        virkningstidspunkt: string;
+        ikrafttredelse: Nullable<string>;
+        grunnbeløp: string;
+        omregningsfaktor: string;
+    }>;
 }) {
     const url = `/reguleringer/automatisk/dry`;
     const method = 'POST';
 
-    if (args.supplement instanceof File) {
-        const formData = new FormData();
-        formData.append('file', args.supplement);
-        formData.append('fraOgMedMåned', args.fraOgMedMåned);
-        formData.append('omregningsfaktor', args.omregningsfaktor);
-        formData.append('grunnbeløp', args.grunnbeløp.toString());
-        formData.append('kjøringsdato', args.kjøringsdato);
-
-        return apiClient({ url: url, method: method, body: formData });
+    if (!args.nyttGrunnbeløp) {
+        if (args.supplement instanceof File) {
+            const formData = new FormData();
+            formData.append('startDatoRegulering', args.startDatoRegulering);
+            formData.append('gjeldendeSatsFra', args.gjeldendeSatsFraOgMed);
+            formData.append('file', args.supplement);
+            return apiClient({ url: url, method: method, body: formData });
+        } else {
+            return apiClient({
+                url: url,
+                method: method,
+                body: {
+                    startDatoRegulering: args.startDatoRegulering,
+                    gjeldendeSatsFra: args.gjeldendeSatsFraOgMed,
+                    dryRunGrunnbeløp: null,
+                    supplement: args.supplement,
+                },
+            });
+        }
     } else {
-        return apiClient({
-            url: url,
-            method: method,
-            body: {
-                fraOgMedMåned: args.fraOgMedMåned,
-                grunnbeløp: args.grunnbeløp,
-                omregningsfaktor: args.omregningsfaktor,
-                kjøringsdato: args.kjøringsdato,
-                csv: args.supplement,
-            },
-        });
+        if (args.supplement instanceof File) {
+            const formData = new FormData();
+
+            formData.append('startDatoRegulering', args.startDatoRegulering);
+            formData.append('gjeldendeSatsFra', args.gjeldendeSatsFraOgMed);
+            formData.append('file', args.supplement);
+
+            formData.append('virkningstidspunkt', args.nyttGrunnbeløp.virkningstidspunkt);
+            if (args.nyttGrunnbeløp.ikrafttredelse) {
+                formData.append('ikrafttredelse', args.nyttGrunnbeløp.ikrafttredelse);
+            }
+            formData.append('grunnbeløp', args.nyttGrunnbeløp.grunnbeløp);
+            formData.append('omregningsfaktor', args.nyttGrunnbeløp.omregningsfaktor);
+
+            return apiClient({ url: url, method: method, body: formData });
+        } else {
+            return apiClient({
+                url: url,
+                method: method,
+                body: {
+                    startDatoRegulering: args.startDatoRegulering,
+                    gjeldendeSatsFra: args.gjeldendeSatsFraOgMed,
+                    dryRunGrunnbeløp: {
+                        virkningstidspunkt: args.nyttGrunnbeløp.virkningstidspunkt,
+                        ikrafttredelse: args.nyttGrunnbeløp.ikrafttredelse,
+                        grunnbeløp: args.nyttGrunnbeløp.grunnbeløp,
+                        omregningsfaktor: args.nyttGrunnbeløp.omregningsfaktor,
+                        csv: args.supplement,
+                    },
+                },
+            });
+        }
     }
 }
 

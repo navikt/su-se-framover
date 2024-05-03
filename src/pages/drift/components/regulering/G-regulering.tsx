@@ -11,6 +11,8 @@ import {
     Radio,
     Textarea,
     Label,
+    Checkbox,
+    HelpText,
 } from '@navikt/ds-react';
 import { useState, useEffect } from 'react';
 
@@ -21,7 +23,7 @@ import { DatePicker, MonthPicker } from '~src/components/inputs/datePicker/DateP
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
-import { toIsoDateOnlyString, toIsoMonthOrNull } from '~src/utils/date/dateUtils';
+import { toIsoDateOnlyString, toIsoMonthOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import styles from './G-regulering.module.less';
 
@@ -138,25 +140,41 @@ const ReguleringPanel = () => {
 
 const DryRunPanel = () => {
     const [dryRunStatus, dryRun] = useApiCall(dryRunRegulering);
-    const [startDatoDryRun, setStartDatoDryRun] = useState<Nullable<Date>>(null);
-    const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
-    const [omregningsfaktor, setOmregningsfaktor] = useState<Nullable<string>>(null);
-    const [kjøringsdato, setkjøringsdato] = useState<Nullable<Date>>(null);
+
+    const [startDatoRgulering, setStartDatoRegulering] = useState<Nullable<Date>>(null);
+    const [gjeldendeSatsFra, setGjeldendeSatsFra] = useState<Nullable<Date>>(null);
     const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
 
+    const [nyGrunnbeløp, setNyGrunnbeløp] = useState<boolean>(false);
+    const [virkningstidspunkt, setVirkningstidspunkt] = useState<Nullable<Date>>(null);
+    const [ikrafttredelse, setIkrafttredelse] = useState<Nullable<Date>>(null);
+    const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
+    const [omregningsfaktor, setOmregningsfaktor] = useState<Nullable<string>>(null);
+
     const handleSubmit = () => {
-        if (startDatoDryRun && gverdiDryRun && omregningsfaktor && kjøringsdato) {
+        if (nyGrunnbeløp) {
+            if (virkningstidspunkt && gverdiDryRun && omregningsfaktor && gjeldendeSatsFra) {
+                dryRun({
+                    startDatoRegulering: toIsoMonthOrNull(startDatoRgulering)!,
+                    gjeldendeSatsFraOgMed: toIsoDateOnlyString(gjeldendeSatsFra!),
+                    nyttGrunnbeløp: {
+                        virkningstidspunkt: toIsoDateOnlyString(virkningstidspunkt)!,
+                        ikrafttredelse: toStringDateOrNull(ikrafttredelse),
+                        grunnbeløp: gverdiDryRun.toString(),
+                        omregningsfaktor: omregningsfaktor,
+                    },
+                    supplement: supplementValue,
+                });
+            } else {
+                console.log('du må fylle ut alle feltene før du kan kjøre dry-run');
+            }
+        } else {
             dryRun({
-                fraOgMedMåned: toIsoMonthOrNull(startDatoDryRun)!,
-                grunnbeløp: gverdiDryRun,
-                omregningsfaktor: omregningsfaktor,
-                kjøringsdato: toIsoDateOnlyString(kjøringsdato),
+                startDatoRegulering: toIsoMonthOrNull(startDatoRgulering)!,
+                gjeldendeSatsFraOgMed: toIsoDateOnlyString(gjeldendeSatsFra!),
+                nyttGrunnbeløp: null,
                 supplement: supplementValue,
             });
-        } else {
-            console.log(
-                'reguleringsdato, g-verdi, omregningsfaktor og kjøringsdato må fylles ut før du kan kjøre dry-run',
-            );
         }
     };
 
@@ -166,21 +184,46 @@ const DryRunPanel = () => {
                 <div className={styles.inputContainers}>
                     <div className={styles.datoOgVerdiContainer}>
                         <MonthPicker
-                            label="Velg reguleringsdato"
-                            value={startDatoDryRun}
-                            onChange={(dato) => setStartDatoDryRun(dato)}
+                            label="Start dato for regulering"
+                            value={startDatoRgulering}
+                            onChange={(dato) => setStartDatoRegulering(dato)}
                         />
-                        <DatePicker label="Kjøringsdato" value={kjøringsdato} onChange={setkjøringsdato} />
-                    </div>
-                    <div className={styles.datoOgVerdiContainer}>
-                        <TextField label="G-verdi" onChange={(v) => setGVerdiDryRun(Number(v.target.value))} />
-                        <TextField
-                            label="Omregningsfaktor (. som desimalltegn)"
-                            onChange={(v) => setOmregningsfaktor(v.target.value)}
+                        <DatePicker
+                            label="Gjeldende sats fra og med"
+                            hjelpetekst="Bestemmer hvilken gjelden sats som skal brukes i reguleringen"
+                            value={gjeldendeSatsFra}
+                            onChange={setGjeldendeSatsFra}
                         />
                     </div>
-                </div>
+                    <Checkbox onChange={() => setNyGrunnbeløp(!nyGrunnbeløp)} checked={nyGrunnbeløp}>
+                        Legg til nytt grunnbeløp
+                    </Checkbox>
 
+                    {nyGrunnbeløp && (
+                        <div className={styles.nyGrunnbeløpsForm}>
+                            <DatePicker
+                                label="Virkningstidspunkt"
+                                value={virkningstidspunkt}
+                                onChange={setVirkningstidspunkt}
+                            />
+                            <DatePicker
+                                label="Ikrafttredelse"
+                                hjelpetekst="Settes til virkningstidspunkt dersom den ikke er utfylt"
+                                value={ikrafttredelse}
+                                onChange={setIkrafttredelse}
+                            />
+                            <TextField label="G-verdi" onChange={(v) => setGVerdiDryRun(Number(v.target.value))} />
+                            <TextField
+                                label={
+                                    <div className={styles.omregnignsfaktorLabel}>
+                                        Omregningsfaktor <HelpText>Bruk punktum som desimaltegn</HelpText>
+                                    </div>
+                                }
+                                onChange={(v) => setOmregningsfaktor(v.target.value)}
+                            />
+                        </div>
+                    )}
+                </div>
                 <ReguleringsSupplement onSupplementChange={setSupplementValue} />
 
                 <Button onClick={handleSubmit} loading={RemoteData.isPending(dryRunStatus)}>
