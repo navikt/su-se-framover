@@ -28,7 +28,6 @@ import styles from './index.module.less';
 
 enum Knapp {
     FIX_SØKNADER,
-    KAST_EN_FEIL,
     GRENSESNITTSAVSTEMMING,
     KONSISTENSAVSTEMMING,
     G_REGULERING,
@@ -105,16 +104,6 @@ const Drift = () => {
                     <Button variant="secondary" className={styles.knapp} type="button" onClick={fixSøknader}>
                         Fix Søknader
                         {RemoteData.isPending(fixSøknaderResponse) && <Loader />}
-                    </Button>
-                    <Button
-                        variant="secondary"
-                        className={styles.knapp}
-                        type="button"
-                        onClick={() => {
-                            throw Error('Feil som ble trigget manuelt fra driftssiden');
-                        }}
-                    >
-                        Kast en feil
                     </Button>
 
                     <Button
