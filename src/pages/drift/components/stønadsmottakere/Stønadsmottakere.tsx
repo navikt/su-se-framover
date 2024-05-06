@@ -47,7 +47,12 @@ const StønadsmottakereModal = (props: { open: boolean; onClose: () => void }) =
                 <div>
                     <div className={styles.form}>
                         <div className={styles.formInputs}>
-                            <MonthPicker label="Fra og med" value={fraOgMed} onChange={(dato) => setFraOgMed(dato)} />
+                            <MonthPicker
+                                label="Fra og med"
+                                hjelpetekst="Bruker dagens måned dersom den ikke blir fylt ut"
+                                value={fraOgMed}
+                                onChange={(dato) => setFraOgMed(dato)}
+                            />
                             <Checkbox onChange={() => setMedEps(!medEps)} checked={medEps}>
                                 Med eps
                             </Checkbox>
@@ -60,12 +65,11 @@ const StønadsmottakereModal = (props: { open: boolean; onClose: () => void }) =
                     )}
                     {RemoteData.isSuccess(stønadsmottakereStatus) && (
                         <div className={styles.resultContainer}>
-                            <Label as="p">For dato: {stønadsmottakereStatus.value.dato}</Label>
-                            <Label as="p">Antall: {stønadsmottakereStatus.value.fnr.length}</Label>
+                            <Label as="p">Antall: {stønadsmottakereStatus.value.length}</Label>
                             <Label as="p">Fødselsnummere: </Label>
                             <div>
                                 <ul className={styles.result}>
-                                    {stønadsmottakereStatus.value.fnr.map((s) => (
+                                    {stønadsmottakereStatus.value.map((s) => (
                                         <li key={s}>{s}</li>
                                     ))}
                                 </ul>

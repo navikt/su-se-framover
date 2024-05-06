@@ -59,6 +59,7 @@ export const DatePicker = (props: {
 
 export const MonthPicker = (props: {
     label: string;
+    hjelpetekst?: string;
     value: Nullable<Date>;
     size?: 'medium' | 'small';
     fromDate?: Nullable<Date>;
@@ -76,7 +77,17 @@ export const MonthPicker = (props: {
     return (
         <div>
             <MonthPickerDS {...monthpickerProps} selected={props.value ?? undefined}>
-                <MonthPickerDS.Input {...inputProps} label={props.label} size={props.size} error={props.error} />
+                <MonthPickerDS.Input
+                    {...inputProps}
+                    label={
+                        <div className={styles.datepickerLabelContainer}>
+                            {props.label}
+                            {props.hjelpetekst ? <HelpText placement="bottom">{props.hjelpetekst}</HelpText> : null}
+                        </div>
+                    }
+                    size={props.size}
+                    error={props.error}
+                />
             </MonthPickerDS>
         </div>
     );

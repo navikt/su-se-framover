@@ -77,7 +77,7 @@ export async function konsistensavstemming(args: {
 export async function stønadsmottakere(args: {
     fraOgMed: Nullable<string>;
     inkluderEPS: boolean;
-}): Promise<ApiClientResult<{ dato: string; fnr: string[] }>> {
+}): Promise<ApiClientResult<string[]>> {
     return apiClient({
         url: `/stønadsmottakere`,
         method: 'POST',
