@@ -56,8 +56,8 @@ export enum ÅrsakForManuellType {
     FinnesFlerePerioderAvFradrag = 'FinnesFlerePerioderAvFradrag',
     FradragErUtenlandsinntekt = 'FradragErUtenlandsinntekt',
     SupplementHarFlereVedtaksperioderForFradrag = 'SupplementHarFlereVedtaksperioderForFradrag',
-    DifferenaseFørRegulering = 'DifferenaseFørRegulering',
-    DifferenaseEtterRegulering = 'DifferenaseEtterRegulering',
+    DifferanseFørRegulering = 'DifferanseFørRegulering',
+    DifferanseEtterRegulering = 'DifferanseEtterRegulering',
     YtelseErMidlertidigStanset = 'YtelseErMidlertidigStanset',
     ForventetInntektErStørreEnn0 = 'ForventetInntektErStørreEnn0',
     AutomatiskSendingTilUtbetalingFeilet = 'AutomatiskSendingTilUtbetalingFeilet',
@@ -108,7 +108,7 @@ export interface SupplementHarFlereVedtaksperioderForFradrag extends ÅrsakForMa
     eksterneReguleringsvedtakperioder: Array<PeriodeMedOptionalTilOgMed<string>>;
 }
 
-export interface DifferenaseFørRegulering extends ÅrsakForManuell {
+export interface DifferanseFørRegulering extends ÅrsakForManuell {
     fradragskategori: Fradragskategori;
     fradragTilhører: FradragTilhører;
     begrunnelse: string;
@@ -116,7 +116,7 @@ export interface DifferenaseFørRegulering extends ÅrsakForManuell {
     vårtBeløpFørRegulering: string;
 }
 
-export interface DifferenaseEtterRegulering extends ÅrsakForManuell {
+export interface DifferanseEtterRegulering extends ÅrsakForManuell {
     fradragskategori: Fradragskategori;
     fradragTilhører: FradragTilhører;
     begrunnelse: string;

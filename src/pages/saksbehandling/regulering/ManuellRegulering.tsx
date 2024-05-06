@@ -25,13 +25,13 @@ import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import Måned from '~src/types/Måned';
 import {
-    DifferenaseEtterRegulering,
+    DifferanseEtterRegulering,
     BrukerManglerSupplement,
     DelvisOpphør,
     Eksterndata,
     FinnesFlerePerioderAvFradrag,
     FradragErUtenlandsinntekt,
-    DifferenaseFørRegulering,
+    DifferanseFørRegulering,
     Reguleringssupplement,
     SupplementFor,
     SupplementHarFlereVedtaksperioderForFradrag,
@@ -339,8 +339,8 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.DifferenaseFørRegulering: {
-                            const asserted = årsak as DifferenaseFørRegulering;
+                        case ÅrsakForManuellType.DifferanseFørRegulering: {
+                            const asserted = årsak as DifferanseFørRegulering;
                             return (
                                 <li key={i}>
                                     <BodyShort>
@@ -361,8 +361,8 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.DifferenaseEtterRegulering: {
-                            const asserted = årsak as DifferenaseEtterRegulering;
+                        case ÅrsakForManuellType.DifferanseEtterRegulering: {
+                            const asserted = årsak as DifferanseEtterRegulering;
                             return (
                                 <li key={i}>
                                     <BodyShort>
