@@ -25,13 +25,13 @@ import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import Måned from '~src/types/Måned';
 import {
-    BeløpErStørreEnForventet,
+    DifferenaseEtterRegulering,
     BrukerManglerSupplement,
     DelvisOpphør,
     Eksterndata,
     FinnesFlerePerioderAvFradrag,
     FradragErUtenlandsinntekt,
-    MismatchMellomBeløpFraSupplementOgFradrag,
+    DifferenaseFørRegulering,
     Reguleringssupplement,
     SupplementFor,
     SupplementHarFlereVedtaksperioderForFradrag,
@@ -267,7 +267,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
 
                             return (
                                 <li key={i}>
-                                    <BodyShort>Bruker mangler supplement for fradrag</BodyShort>
+                                    <BodyShort>Bruker har ikke data fra ekstern kilde for fradraget</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
@@ -280,7 +280,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                             const asserted = årsak as SupplementInneholderIkkeFradraget;
                             return (
                                 <li key={i}>
-                                    <BodyShort>Innsendt supplement inneholder ikke fradrag</BodyShort>
+                                    <BodyShort>Data fra ekstern kilde inneholder ikke fradraget</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
@@ -320,7 +320,8 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                             return (
                                 <li key={i}>
                                     <BodyShort>
-                                        Supplementet inneholdt flere vedtaksperioder for fradrag som kan reguleres
+                                        Data fra ekstern kilde inneholdt flere vedtaksperioder for fradrag som kan
+                                        reguleres
                                     </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -338,12 +339,13 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.MismatchMellomBeløpFraSupplementOgFradrag: {
-                            const asserted = årsak as MismatchMellomBeløpFraSupplementOgFradrag;
+                        case ÅrsakForManuellType.DifferenaseFørRegulering: {
+                            const asserted = årsak as DifferenaseFørRegulering;
                             return (
                                 <li key={i}>
                                     <BodyShort>
-                                        Mismatch mellom beløpet i supplementet, og fra som er i fradraget før regulering
+                                        Differanse i beløp mellom eksterne kilde, og beløpet som er i fradraget før
+                                        regulering
                                     </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -352,19 +354,20 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                             Vårt beløp før regulering {asserted.vårtBeløpFørRegulering}
                                         </BodyShort>
                                         <BodyShort>
-                                            Supplert beløp for regulering {asserted.eksterntBeløpFørRegulering}
+                                            Beløp fra ekstern kilde {asserted.eksterntBeløpFørRegulering}
                                         </BodyShort>
                                         <BodyShort>{asserted.begrunnelse}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.BeløpErStørreEnForventet: {
-                            const asserted = årsak as BeløpErStørreEnForventet;
+                        case ÅrsakForManuellType.DifferenaseEtterRegulering: {
+                            const asserted = årsak as DifferenaseEtterRegulering;
                             return (
                                 <li key={i}>
                                     <BodyShort>
-                                        Beløpet i supplementetet er større enn det vi forventet etter regulering
+                                        Differanse i beløp mellom eksterne kilde, og beløpet som er i fradraget etter
+                                        regulering
                                     </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -373,7 +376,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                             Forventet beløp etter regulering {asserted.forventetBeløpEtterRegulering}
                                         </BodyShort>
                                         <BodyShort>
-                                            Supplert beløp etter regulering {asserted.eksterntBeløpEtterRegulering}
+                                            Regulert beløp fra ekstern kilde {asserted.eksterntBeløpEtterRegulering}
                                         </BodyShort>
                                         <BodyShort>{asserted.begrunnelse}</BodyShort>
                                     </div>
@@ -451,13 +454,13 @@ const SupplementOversikt = (props: { supplement: Reguleringssupplement }) => {
     return (
         <div>
             <Heading level="3" size="medium">
-                Reguleringssupplement
+                Data fra ekstern kilde
             </Heading>
             <div className={styles.supplementOversiktInnhold}>
                 {props.supplement.bruker ? (
                     <SupplementForOversikt overskrift="Søker" supplementFor={props.supplement.bruker} />
                 ) : (
-                    <Label>Supplement for søker finnes ikke</Label>
+                    <Label>Data for søker finnes ikke</Label>
                 )}
 
                 {props.supplement.eps.length > 0 ? (
@@ -465,7 +468,7 @@ const SupplementOversikt = (props: { supplement: Reguleringssupplement }) => {
                         <SupplementForOversikt key={eps.fnr} overskrift={`EPS - ${eps.fnr}`} supplementFor={eps} />
                     ))
                 ) : (
-                    <Label>Supplement for EPS finnes ikke</Label>
+                    <Label>Data for EPS finnes ikke</Label>
                 )}
             </div>
         </div>

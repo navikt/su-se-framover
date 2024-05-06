@@ -1,13 +1,13 @@
 import {
     AutomatiskSendingTilUtbetalingFeilet,
-    BeløpErStørreEnForventet,
+    DifferenaseEtterRegulering,
     BrukerManglerSupplement,
     DelvisOpphør,
     FinnesFlerePerioderAvFradrag,
     ForventetInntektErStørreEnn0,
     FradragErUtenlandsinntekt,
     FradragMåHåndteresManuelt,
-    MismatchMellomBeløpFraSupplementOgFradrag,
+    DifferenaseFørRegulering,
     Regulering,
     Reguleringsstatus,
     SupplementHarFlereVedtaksperioderForFradrag,
@@ -48,11 +48,10 @@ export const erÅrsakSupplementHarFlereVedtaksperioderForFradrag = (
 
 export const erÅrsakMismatchMellomBeløpFraSupplementOgFradrag = (
     årsak: ÅrsakForManuell,
-): årsak is MismatchMellomBeløpFraSupplementOgFradrag =>
-    årsak.type === ÅrsakForManuellType.MismatchMellomBeløpFraSupplementOgFradrag;
+): årsak is DifferenaseFørRegulering => årsak.type === ÅrsakForManuellType.DifferenaseFørRegulering;
 
-export const erÅrsakBeløpErStørreEnForventet = (årsak: ÅrsakForManuell): årsak is BeløpErStørreEnForventet =>
-    årsak.type === ÅrsakForManuellType.BeløpErStørreEnForventet;
+export const erÅrsakBeløpErStørreEnForventet = (årsak: ÅrsakForManuell): årsak is DifferenaseEtterRegulering =>
+    årsak.type === ÅrsakForManuellType.DifferenaseEtterRegulering;
 
 export const erÅrsakYtelseErMidlertidigStanset = (årsak: ÅrsakForManuell): årsak is YtelseErMidlertidigStanset =>
     årsak.type === ÅrsakForManuellType.YtelseErMidlertidigStanset;
