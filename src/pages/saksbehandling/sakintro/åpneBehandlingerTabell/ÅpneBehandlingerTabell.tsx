@@ -36,7 +36,6 @@ import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevi
 import { Regulering, Reguleringstype } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
-import { formatDateTime } from '~src/utils/date/dateUtils';
 import { erKlageTilAttestering, hentSisteVurderteSteg } from '~src/utils/klage/klageUtils';
 import {
     erTilbakekrevingTilAttestering,
@@ -179,9 +178,7 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                                     <Table.DataCell>
                                         {formatMessage(`datacell.resultat.${dataCellInfo.resultat}`)}
                                     </Table.DataCell>
-                                    <Table.DataCell>
-                                        {formatDateTime(dataCellInfo.mottattOpprettetTidspunkt)}
-                                    </Table.DataCell>
+                                    <Table.DataCell>{dataCellInfo.mottattOpprettetTidspunkt}</Table.DataCell>
                                     <Table.DataCell>
                                         <DataCellButtons sakId={props.sakId} b={behandling} />
                                     </Table.DataCell>
