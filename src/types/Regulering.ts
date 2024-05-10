@@ -63,6 +63,7 @@ export enum ÅrsakForManuellType {
     AutomatiskSendingTilUtbetalingFeilet = 'AutomatiskSendingTilUtbetalingFeilet',
     VedtakstidslinjeErIkkeSammenhengende = 'VedtakstidslinjeErIkkeSammenhengende',
     DelvisOpphør = 'DelvisOpphør',
+    FantIkkeVedtakForApril = 'FantIkkeVedtakForApril',
 }
 
 export interface ÅrsakForManuell {
@@ -96,6 +97,12 @@ export interface FinnesFlerePerioderAvFradrag extends ÅrsakForManuell {
 }
 
 export interface FradragErUtenlandsinntekt extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+}
+
+export interface FantIkkeVedtakForApril extends ÅrsakForManuell {
     fradragskategori: Fradragskategori;
     fradragTilhører: FradragTilhører;
     begrunnelse: string;

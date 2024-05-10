@@ -39,6 +39,7 @@ import {
     YtelseErMidlertidigStanset,
     ÅrsakForManuell,
     ÅrsakForManuellType,
+    FantIkkeVedtakForApril,
 } from '~src/types/Regulering';
 import { formatPeriode, parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
@@ -307,6 +308,19 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                             return (
                                 <li key={i}>
                                     <BodyShort>Fradrag er markert som utenlandsk</BodyShort>
+                                    <div className={styles.årsaksdetaljer}>
+                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
+                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
+                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
+                                    </div>
+                                </li>
+                            );
+                        }
+                        case ÅrsakForManuellType.FantIkkeVedtakForApril: {
+                            const asserted = årsak as FantIkkeVedtakForApril;
+                            return (
+                                <li key={i}>
+                                    <BodyShort>Fant ikke eksterne vedtaket for april</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
