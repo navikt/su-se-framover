@@ -23,7 +23,6 @@ export interface Utenlandsopphold {
 
 export interface EPSFormData {
     fnr: Nullable<string>;
-    erEpsFylt67: Nullable<boolean>;
     erUførFlyktning: Nullable<boolean>;
 }
 

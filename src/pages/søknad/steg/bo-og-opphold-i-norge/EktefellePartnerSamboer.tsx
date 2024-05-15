@@ -19,7 +19,6 @@ interface Props {
 const EktefellePartnerSamboer = (props: Props) => {
     const epsFormData: EPSFormData = props.value ?? {
         fnr: null,
-        erEpsFylt67: null,
         erUførFlyktning: null,
     };
 
@@ -39,28 +38,16 @@ const EktefellePartnerSamboer = (props: Props) => {
                 feil={props.feil?.fnr?.message}
             />
 
-            <BooleanRadioGroup
-                name={`${props.id}.${keyOf<EPSFormData>('erEpsFylt67')}`}
-                legend={'Er ektefelle eller samboer fylt 67 år?'}
-                error={props.feil?.erEpsFylt67?.message}
-                value={epsFormData.erEpsFylt67}
-                onChange={(val) => {
-                    props.onChange({ ...epsFormData, erEpsFylt67: val });
-                }}
-            />
-
             <div className={styles.ufør}>
-                {props.value?.erEpsFylt67 === false && (
-                    <BooleanRadioGroup
-                        name={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
-                        legend={formatMessage('delerBoligMed.epsUførFlyktning')}
-                        error={props.feil?.erUførFlyktning?.message}
-                        value={epsFormData.erUførFlyktning}
-                        onChange={(val) => {
-                            props.onChange({ ...epsFormData, erUførFlyktning: val });
-                        }}
-                    />
-                )}
+                <BooleanRadioGroup
+                    name={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
+                    legend={formatMessage('delerBoligMed.epsUførFlyktning')}
+                    error={props.feil?.erUførFlyktning?.message}
+                    value={epsFormData.erUførFlyktning}
+                    onChange={(val) => {
+                        props.onChange({ ...epsFormData, erUførFlyktning: val });
+                    }}
+                />
             </div>
             {typeof props.feil === 'string' && (
                 <SkjemaelementFeilmelding>

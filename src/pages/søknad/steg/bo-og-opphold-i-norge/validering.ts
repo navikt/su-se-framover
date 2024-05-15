@@ -11,7 +11,6 @@ export type FormData = SøknadState['boOgOpphold'];
 const epsFormDataSchema = yup
     .object<EPSFormData>({
         fnr: yup.string().nullable().required().length(11).typeError('Ugyldig fødselsnummer'),
-        erEpsFylt67: yup.boolean().nullable().required(),
         erUførFlyktning: yup
             .boolean()
             .when('erEpsFylt67', {
