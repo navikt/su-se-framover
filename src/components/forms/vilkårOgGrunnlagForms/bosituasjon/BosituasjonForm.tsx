@@ -84,7 +84,7 @@ const BosituasjonForm = (props: Props) => {
                                                 />
                                             )}
                                         />
-                                        {watch.epsFnr?.length === 11 && (
+                                        {RemoteData.isSuccess(epsStatus) && (
                                             <Controller
                                                 control={props.form.control}
                                                 name={`${nameAndIdx}.erEpsFylt67`}

@@ -13,7 +13,7 @@ const epsFormDataSchema = yup
         fnr: yup.string().nullable().required().length(11).typeError('Ugyldig fødselsnummer'),
         erUførFlyktning: yup
             .boolean()
-            .when('erEpsFylt67', {
+            .when('fnr', {
                 is: false,
                 then: yup.boolean().required('Fyll ut om ektefelle/samboer er ufør flyktning'),
                 otherwise: yup.boolean().nullable().defined(),
