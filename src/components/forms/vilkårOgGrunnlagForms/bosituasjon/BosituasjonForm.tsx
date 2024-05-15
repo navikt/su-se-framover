@@ -100,6 +100,13 @@ const BosituasjonForm = (props: Props) => {
                                                         legend="Er ektefelle/samboer fylt 67?"
                                                         error={fieldState.error?.message}
                                                         {...field}
+                                                        onChange={(e) => {
+                                                            field.onChange(e);
+                                                            props.form.setValue(
+                                                                `${nameAndIdx}.erEPSUførFlyktning`,
+                                                                null,
+                                                            );
+                                                        }}
                                                     />
                                                 )}
                                             />
