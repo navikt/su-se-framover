@@ -41,7 +41,7 @@ const EktefellePartnerSamboer = (props: Props) => {
 
             <BooleanRadioGroup
                 name={`${props.id}.${keyOf<EPSFormData>('erEpsFylt67')}`}
-                legend={'Er EPS fylt 67 år?'}
+                legend={'Er ektefelle eller samboer fylt 67 år?'}
                 error={props.feil?.erEpsFylt67?.message}
                 value={epsFormData.erEpsFylt67}
                 onChange={(val) => {
