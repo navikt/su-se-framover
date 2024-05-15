@@ -1,7 +1,6 @@
 import { getEq } from 'fp-ts/Array';
 import * as B from 'fp-ts/lib/boolean';
 import { struct } from 'fp-ts/lib/Eq';
-import * as N from 'fp-ts/lib/number';
 import * as S from 'fp-ts/lib/string';
 
 import { eqNullable, Nullable } from '~src/lib/types';
@@ -13,6 +12,7 @@ import {
 import { NullablePeriode, Periode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { eqPeriode, lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils';
+import { erEpsFylt67 } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 export interface BosituasjonGrunnlagFormData {
     bosituasjoner: BosituasjonFormItemData[];
@@ -25,8 +25,8 @@ export interface BosituasjonFormItemData {
     };
     harEPS: Nullable<boolean>;
     epsFnr: Nullable<string>;
-    epsAlder: Nullable<number>;
     delerBolig: Nullable<boolean>;
+    erEpsFylt67: Nullable<boolean>;
     erEPSUførFlyktning: Nullable<boolean>;
 }
 
@@ -34,8 +34,8 @@ export const eqBosituasjonFormItemData = struct<BosituasjonFormItemData>({
     periode: eqNullable(eqPeriode),
     harEPS: eqNullable(B.Eq),
     epsFnr: eqNullable(S.Eq),
-    epsAlder: eqNullable(N.Eq),
     delerBolig: eqNullable(B.Eq),
+    erEpsFylt67: eqNullable(B.Eq),
     erEPSUførFlyktning: eqNullable(B.Eq),
 });
 
@@ -48,6 +48,7 @@ export const eqBosituasjonFormItemDataUtenEpsAlder = struct<Omit<BosituasjonForm
     harEPS: eqNullable(B.Eq),
     epsFnr: eqNullable(S.Eq),
     delerBolig: eqNullable(B.Eq),
+    erEpsFylt67: eqNullable(B.Eq),
     erEPSUførFlyktning: eqNullable(B.Eq),
 });
 
@@ -59,8 +60,8 @@ export const nyBosituasjon = (p?: Periode<string>): BosituasjonFormItemData => (
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     harEPS: null,
     epsFnr: null,
-    epsAlder: null,
     delerBolig: null,
+    erEpsFylt67: null,
     erEPSUførFlyktning: null,
 });
 
@@ -74,9 +75,9 @@ export const bosituasjongrunnlagTilFormDataEllerNy = (
                   periode: lagDatePeriodeAvStringPeriode(bo.periode),
                   harEPS: bo.fnr !== null,
                   epsFnr: bo.fnr,
-                  epsAlder: null,
                   delerBolig: bo.delerBolig,
                   erEPSUførFlyktning: bo.ektemakeEllerSamboerUførFlyktning,
+                  erEpsFylt67: erEpsFylt67(bo),
               }))
             : [nyBosituasjon(p)],
 });
@@ -88,8 +89,8 @@ export const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): Bosituasjo
     },
     harEPS: bosituasjon.fnr !== null,
     epsFnr: bosituasjon.fnr,
-    epsAlder: null,
     delerBolig: bosituasjon.delerBolig,
+    erEpsFylt67: erEpsFylt67(bosituasjon),
     erEPSUførFlyktning: bosituasjon.ektemakeEllerSamboerUførFlyktning,
 });
 
@@ -107,7 +108,8 @@ export const bosituasjongrunnlagFormDataTilRequest = (args: {
         },
         epsFnr: b.harEPS ? b.epsFnr : null,
         delerBolig: b.harEPS ? null : b.delerBolig,
-        erEPSUførFlyktning: b.harEPS && b.epsAlder && b.epsAlder < 67 ? b.erEPSUførFlyktning : null,
+        erEpsFylt67: b.erEpsFylt67,
+        erEPSUførFlyktning: b.erEPSUførFlyktning,
     })),
 });
 
@@ -124,9 +126,9 @@ export const bosituasjonFormSchema = yup
                             })
                             .required(),
                         harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
-                        epsAlder: yup.number().defined().when('harEPS', {
+                        erEpsFylt67: yup.boolean().defined().when('harEPS', {
                             is: true,
-                            then: yup.number().required(),
+                            then: yup.boolean().required(),
                         }),
                         epsFnr: yup
                             .string()

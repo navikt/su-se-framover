@@ -39,3 +39,17 @@ export const hentOmSøkerBorMedEpsOgEpsFnr = (
             return { borSøkerMedEPS: true, epsFnr: b.fnr };
     }
 };
+
+export const erEpsFylt67 = (b: Bosituasjon): boolean => {
+    switch (b.type) {
+        case BosituasjonTyper.EPS_OVER_67:
+            return true;
+        case BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING:
+        case BosituasjonTyper.EPS_UFØR_FLYKTNING:
+        case BosituasjonTyper.DELER_BOLIG_MED_VOKSNE:
+        case BosituasjonTyper.ENSLIG:
+        case BosituasjonTyper.UFULLSTENDIG_HAR_EPS:
+        case BosituasjonTyper.UFULLSTENDIG_HAR_IKKE_EPS:
+            return false;
+    }
+};

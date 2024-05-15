@@ -80,17 +80,25 @@ const BosituasjonForm = (props: Props) => {
                                                     onFnrChange={field.onChange}
                                                     fnr={field.value ?? ''}
                                                     feil={fieldState.error?.message}
-                                                    getHentetPerson={(person) => {
-                                                        props.form.setValue(`${nameAndIdx}`, {
-                                                            ...watch,
-                                                            epsAlder: person?.fødsel?.alder ?? null,
-                                                        });
-                                                    }}
                                                     getPersonStatus={(res) => setEpsStatus(res)}
                                                 />
                                             )}
                                         />
-                                        {watch.epsAlder && watch.epsAlder < 67 && (
+                                        {watch.epsFnr?.length === 11 && (
+                                            <Controller
+                                                control={props.form.control}
+                                                name={`${nameAndIdx}.erEpsFylt67`}
+                                                render={({ field, fieldState }) => (
+                                                    <BooleanRadioGroup
+                                                        legend="Er ektefelle/samboer fylt 67?"
+                                                        error={fieldState.error?.message}
+                                                        {...field}
+                                                    />
+                                                )}
+                                            />
+                                        )}
+
+                                        {watch.erEpsFylt67 === false && (
                                             <Controller
                                                 control={props.form.control}
                                                 name={`${nameAndIdx}.erEPSUførFlyktning`}

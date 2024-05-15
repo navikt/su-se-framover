@@ -193,8 +193,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                             ? {
                                                   fnr: null,
                                                   erUførFlyktning: null,
-                                                  alder: null,
-                                                  eps: null,
+                                                  erEpsFylt67: null,
                                               }
                                             : null,
                                     );

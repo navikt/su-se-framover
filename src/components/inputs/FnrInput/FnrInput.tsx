@@ -21,7 +21,7 @@ interface FnrInputProps {
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
     feil?: string;
-    getHentetPerson: (person: Nullable<Person>) => void;
+    getHentetPerson?: (person: Nullable<Person>) => void;
     getPersonStatus?: (res: ApiResult<Person>) => void;
 }
 export const FnrInput = (props: FnrInputProps) => {
@@ -40,10 +40,10 @@ export const FnrInput = (props: FnrInputProps) => {
         pipe(
             personStatus,
             RemoteData.fold(
-                () => props.getHentetPerson(null),
-                () => props.getHentetPerson(null),
-                () => props.getHentetPerson(null),
-                (data) => props.getHentetPerson(data),
+                () => props.getHentetPerson?.(null),
+                () => props.getHentetPerson?.(null),
+                () => props.getHentetPerson?.(null),
+                (data) => props.getHentetPerson?.(data),
             ),
         );
     }, [personStatus._tag]);

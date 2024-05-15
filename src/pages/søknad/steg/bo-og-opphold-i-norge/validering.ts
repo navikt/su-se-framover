@@ -4,34 +4,22 @@ import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed, EPSFormData } from '~src/features/søknad/types';
 import { keyOf } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { Person, Adresse, IngenAdresseGrunn } from '~src/types/Person';
+import { Adresse, IngenAdresseGrunn } from '~src/types/Person';
 
 export type FormData = SøknadState['boOgOpphold'];
 
 const epsFormDataSchema = yup
     .object<EPSFormData>({
-        fnr: yup.string().nullable().defined().length(11).typeError('Ugyldig fødselsnummer'),
-        alder: yup.number().nullable().defined(),
+        fnr: yup.string().nullable().required().length(11).typeError('Ugyldig fødselsnummer'),
+        erEpsFylt67: yup.boolean().nullable().required(),
         erUførFlyktning: yup
             .boolean()
-            .when('alder', {
-                is: (val) => val < 67,
+            .when('erEpsFylt67', {
+                is: false,
                 then: yup.boolean().required('Fyll ut om ektefelle/samboer er ufør flyktning'),
                 otherwise: yup.boolean().nullable().defined(),
             })
             .defined(),
-        eps: yup.mixed<Person>().test({
-            name: 'skal ha person dersom fnr er utfylt',
-            message: 'Ektefelle / samboer må være hentet av systemet, og tilgjengelig, før du kan fortsette',
-            test: function (val) {
-                const fnr: string = this.parent.fnr;
-
-                if (fnr?.length === 11) {
-                    return val !== null;
-                }
-                return false;
-            },
-        }),
     })
     .defined();
 

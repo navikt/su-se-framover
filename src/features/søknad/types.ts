@@ -1,5 +1,4 @@
 import { Nullable } from '~src/lib/types';
-import { Person } from '~src/types/Person';
 
 export enum TypeOppholdstillatelse {
     Permanent = 'permanent',
@@ -24,9 +23,8 @@ export interface Utenlandsopphold {
 
 export interface EPSFormData {
     fnr: Nullable<string>;
-    alder: Nullable<number>;
+    erEpsFylt67: Nullable<boolean>;
     erUførFlyktning: Nullable<boolean>;
-    eps: Nullable<Person>;
 }
 
 export enum GrunnForPapirinnsending {

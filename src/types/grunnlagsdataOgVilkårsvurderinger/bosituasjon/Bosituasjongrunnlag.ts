@@ -110,20 +110,6 @@ export interface FullstendigBosituasjonRequest {
     bosituasjon: string;
 }
 
-export interface BosituasjonRequest {
-    sakId: string;
-    revurderingId: string;
-    bosituasjoner: Array<{
-        periode: {
-            fraOgMed: string;
-            tilOgMed: string;
-        };
-        epsFnr: Nullable<string>;
-        delerBolig: Nullable<boolean>;
-        erEPSUførFlyktning: Nullable<boolean>;
-    }>;
-}
-
 export interface BosituasjongrunnlagRequest {
     sakId: string;
     behandlingId: string;
@@ -134,6 +120,7 @@ export interface BosituasjonVurderingRequest {
     periode: Periode<string>;
     epsFnr: Nullable<string>;
     delerBolig: Nullable<boolean>;
+    erEpsFylt67: Nullable<boolean>;
     erEPSUførFlyktning: Nullable<boolean>;
 }
 

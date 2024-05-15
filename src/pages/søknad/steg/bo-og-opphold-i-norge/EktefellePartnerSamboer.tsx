@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -20,16 +19,11 @@ interface Props {
 const EktefellePartnerSamboer = (props: Props) => {
     const epsFormData: EPSFormData = props.value ?? {
         fnr: null,
-        alder: null,
+        erEpsFylt67: null,
         erUførFlyktning: null,
-        eps: null,
     };
 
     const { formatMessage } = useI18n({ messages });
-
-    const erEpsUnder67 = useMemo(() => {
-        return epsFormData.alder && epsFormData.alder < 67;
-    }, [epsFormData.fnr, epsFormData.alder]);
 
     return (
         <div>
@@ -43,17 +37,20 @@ const EktefellePartnerSamboer = (props: Props) => {
                     });
                 }}
                 feil={props.feil?.fnr?.message}
-                getHentetPerson={(person) => {
-                    props.onChange({
-                        ...epsFormData,
-                        eps: person,
-                        alder: person?.fødsel?.alder ?? null,
-                    });
+            />
+
+            <BooleanRadioGroup
+                name={`${props.id}.${keyOf<EPSFormData>('erEpsFylt67')}`}
+                legend={'Er EPS fylt 67 år?'}
+                error={props.feil?.erEpsFylt67?.message}
+                value={epsFormData.erEpsFylt67}
+                onChange={(val) => {
+                    props.onChange({ ...epsFormData, erEpsFylt67: val });
                 }}
             />
 
             <div className={styles.ufør}>
-                {erEpsUnder67 && (
+                {props.value?.erEpsFylt67 === false && (
                     <BooleanRadioGroup
                         name={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
                         legend={formatMessage('delerBoligMed.epsUførFlyktning')}
