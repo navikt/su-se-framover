@@ -53,6 +53,7 @@ const BosituasjonForm = (props: Props) => {
                     }}
                     getChild={(nameAndIdx) => {
                         const watch = props.form.watch(nameAndIdx);
+                        console.log(watch.erEpsFylt67);
                         return (
                             <div>
                                 <EpsSkjermingModalOgPersonkort eps={epsStatus} søker={props.søker} />
@@ -61,9 +62,15 @@ const BosituasjonForm = (props: Props) => {
                                     name={`${nameAndIdx}.harEPS`}
                                     render={({ field, fieldState }) => (
                                         <BooleanRadioGroup
+                                            {...field}
                                             legend={formatMessage('bosituasjon.harSøkerEPS')}
                                             error={fieldState.error?.message}
-                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                props.form.setValue(`${nameAndIdx}.epsFnr`, null);
+                                                props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
+                                                props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
+                                            }}
                                         />
                                     )}
                                 />
