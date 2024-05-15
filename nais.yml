@@ -37,7 +37,8 @@ spec:
     port: 8080
     initialDelay: 5
   ingresses:
-    - {{ingress}}
+    - {{ ingress1 }}
+    - {{ ingress2 }}
   vault:
     enabled: true
   env:

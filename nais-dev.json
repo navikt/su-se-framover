@@ -1,5 +1,6 @@
 {
-    "ingress": "https://supplerendestonad.dev.adeo.no",
+    "ingress1": "https://supplerendestonad.dev.adeo.no",
+    "ingress2": "https://supplerendestonad.intern.dev.nav.no",
     "tenant": "trygdeetaten.no",
     "env": {
         "AZURE_GROUP_ATTESTANT": "d75164fa-39e6-4149-956e-8404bc9080b6",
@@ -8,8 +9,8 @@
         "AZURE_GROUP_DRIFT": "5ccd88bd-58d6-41a7-9652-5e0597b00f9b",
         "SU_SE_BAKOVER_AAD_APP_NAME": "dev-fss.supstonad.su-se-bakover",
         "AMPLITUDE_API_KEY": "feb0ead20059b4be531bfa6e076906ab",
-        "AUTH_LOGIN_REDIRECT_URI": "https://supplerendestonad.dev.adeo.no/oauth2/callback",
-        "AUTH_LOGOUT_REDIRECT_URI": "https://supplerendestonad.dev.adeo.no/",
+        "AUTH_LOGIN_REDIRECT_URI": "https://supplerendestonad.intern.dev.nav.no/oauth2/callback",
+        "AUTH_LOGOUT_REDIRECT_URI": "https://supplerendestonad.intern.dev.nav.no",
         "LOG_LEVEL": "debug"
     }
 }
