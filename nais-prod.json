@@ -1,5 +1,6 @@
 {
-    "ingress": "https://supplerendestonad.nais.adeo.no",
+    "ingress1": "https://supplerendestonad.nais.adeo.no",
+    "ingress2": "https://supplerendestonad.intern.nav.no",
     "tenant": "nav.no",
     "env": {
         "AZURE_GROUP_ATTESTANT": "b64af061-f7c4-4d05-907f-b457e23da339",
@@ -8,7 +9,7 @@
         "AZURE_GROUP_DRIFT": "6c5cb261-d91e-40a8-a925-458bfdd9d033",
         "SU_SE_BAKOVER_AAD_APP_NAME": "prod-fss.supstonad.su-se-bakover",
         "AMPLITUDE_API_KEY": "a9a60eb3e832909758c46016e1714d3e",
-        "AUTH_LOGIN_REDIRECT_URI": "https://supplerendestonad.nais.adeo.no/oauth2/callback",
-        "AUTH_LOGOUT_REDIRECT_URI": "https://supplerendestonad.nais.adeo.no/"
+        "AUTH_LOGIN_REDIRECT_URI": "https://supplerendestonad.intern.nav.no/oauth2/callback",
+        "AUTH_LOGOUT_REDIRECT_URI": "https://supplerendestonad.intern.nav.no/"
     }
 }
