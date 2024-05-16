@@ -24,7 +24,7 @@ spec:
           - id: {{ env.AZURE_GROUP_DRIFT }}
       replyURLs:
         - "http://localhost/oauth2/callback"
-        - "{{ingress2}}/oauth2/callback"
+        - "{{ingress}}/oauth2/callback"
   webproxy: true
   replicas:
     min: 2
@@ -37,8 +37,7 @@ spec:
     port: 8080
     initialDelay: 5
   ingresses:
-    - {{ ingress1 }}
-    - {{ ingress2 }}
+    - {{ ingress }}
   vault:
     enabled: true
   env:
