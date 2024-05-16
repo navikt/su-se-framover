@@ -368,7 +368,7 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                             Vårt beløp før regulering {asserted.vårtBeløpFørRegulering}
                                         </BodyShort>
                                         <BodyShort>
-                                            Beløp fra ekstern kilde {asserted.eksterntBeløpFørRegulering}
+                                            Netto beløp fra ekstern kilde {asserted.eksternNettoBeløpFørRegulering}
                                         </BodyShort>
                                         <BodyShort>{asserted.begrunnelse}</BodyShort>
                                     </div>
@@ -390,7 +390,8 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                             Forventet beløp etter regulering {asserted.forventetBeløpEtterRegulering}
                                         </BodyShort>
                                         <BodyShort>
-                                            Regulert beløp fra ekstern kilde {asserted.eksterntBeløpEtterRegulering}
+                                            Regulert netto beløp fra ekstern kilde{' '}
+                                            {asserted.eksternNettoBeløpEtterRegulering}
                                         </BodyShort>
                                         <BodyShort>{asserted.begrunnelse}</BodyShort>
                                     </div>

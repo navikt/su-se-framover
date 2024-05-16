@@ -119,7 +119,8 @@ export interface DifferanseFørRegulering extends ÅrsakForManuell {
     fradragskategori: Fradragskategori;
     fradragTilhører: FradragTilhører;
     begrunnelse: string;
-    eksterntBeløpFørRegulering: string;
+    eksternNettoBeløpFørRegulering: string;
+    eksternBruttoBeløpFørRegulering: string;
     vårtBeløpFørRegulering: string;
 }
 
@@ -127,7 +128,9 @@ export interface DifferanseEtterRegulering extends ÅrsakForManuell {
     fradragskategori: Fradragskategori;
     fradragTilhører: FradragTilhører;
     begrunnelse: string;
-    eksterntBeløpEtterRegulering: string;
+    eksternNettoBeløpEtterRegulering: string;
+    eksternBruttoBeløpEtterRegulering: string;
+    vårtBeløpEtterRegulering: string;
     forventetBeløpEtterRegulering: string;
 }
 
