@@ -252,7 +252,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                                 />
                             )}
                             <Feiloppsummering
-                                tittel={formatMessage('feiloppsummering.title')}
+                                tittel={'For å gå videre må du rette opp følgende:'}
                                 className={styles.feiloppsummering}
                                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}

@@ -1,11 +1,6 @@
 import { SøknadState } from '~src/features/søknad/søknad.slice';
-import { useI18n } from '~src/lib/i18n';
-import epsInntektMessages from '~src/pages/søknad/steg/inntekt/epsInntekt/inntekt-nb';
-import inntektMessages from '~src/pages/søknad/steg/inntekt/søkersInntekt/inntekt-nb';
 
 import sharedStyles from '../../../steg-shared.module.less';
-import { pensjonsinntekterMessages } from '../../inntekt/pensonsinntekter/Pensjonsinntekter';
-import { trygdeytelserMessages } from '../../inntekt/TrygdeytelserInputs/TrygdeytelserInputs';
 
 import { OppsummeringAvTrygdeytelser } from './OppsummeringAvTrygdeytelser';
 import { Oppsummeringsfelt } from './Oppsummeringsfelt';
@@ -17,41 +12,59 @@ const InntektsOppsummering = ({
     inntekt: SøknadState['inntekt'];
     tilhører: 'søker' | 'eps';
 }) => {
-    const { formatMessage } =
-        tilhører === 'søker'
-            ? useI18n({ messages: { ...inntektMessages, ...trygdeytelserMessages, ...pensjonsinntekterMessages } })
-            : useI18n({ messages: { ...epsInntektMessages, ...trygdeytelserMessages, ...pensjonsinntekterMessages } });
-
     return (
         <>
             <Oppsummeringsfelt
-                label={formatMessage('forventerInntekt.label')}
+                label={
+                    tilhører === 'søker'
+                        ? 'Forventer du å ha arbeidsinntekt fremover?'
+                        : 'Forventer ektefelle/samboer å ha arbeidsinntekt fremover?'
+                }
                 verdi={inntekt.harForventetInntekt ? 'Ja' : inntekt.harForventetInntekt === false ? 'Nei' : 'Ubesvart'}
             />
 
             {inntekt.forventetInntekt && Number(inntekt.forventetInntekt) > 0 && (
-                <Oppsummeringsfelt label={formatMessage('forventerInntekt.beløp')} verdi={inntekt.forventetInntekt} />
+                <Oppsummeringsfelt
+                    label={
+                        tilhører === 'søker'
+                            ? 'Hvor mye regner du med å tjene i måneden?'
+                            : 'Hvor mye regner de med å tjene i måneden?'
+                    }
+                    verdi={inntekt.forventetInntekt}
+                />
             )}
 
             <Oppsummeringsfelt
-                label={formatMessage('andreYtelserINAV.label')}
+                label={
+                    tilhører === 'søker'
+                        ? 'Har du andre ytelser i NAV?'
+                        : 'Har ektefelle/samboer andre ytelser fra NAV?'
+                }
                 verdi={inntekt.andreYtelserINav ? 'Ja' : inntekt.andreYtelserINav === false ? 'Nei' : 'Ubesvart'}
             />
             {inntekt.andreYtelserINav && (
                 <Oppsummeringsfelt
-                    label={formatMessage('andreYtelserINAV.ytelse')}
+                    label={'Hvilke ytelser?'}
                     verdi={inntekt.andreYtelserINavYtelse ? inntekt.andreYtelserINavYtelse : 'Ubesvart'}
                 />
             )}
             {inntekt.andreYtelserINav && (
                 <Oppsummeringsfelt
-                    label={formatMessage('andreYtelserINAV.beløp')}
+                    label={
+                        tilhører === 'søker'
+                            ? 'Hvor mye penger får du utbetalt i måneden?'
+                            : 'Hvor mye penger får de utbetalt i måneden?'
+                    }
                     verdi={inntekt.andreYtelserINavBeløp ? inntekt.andreYtelserINavBeløp : 'Ubesvart'}
                 />
             )}
 
             <Oppsummeringsfelt
-                label={formatMessage('søktAndreYtelserIkkeBehandlet.label')}
+                label={
+                    tilhører === 'søker'
+                        ? 'Har du søkt om trygdeytelser som du ikke har fått svar på?'
+                        : 'Har ektefelle/samboer søkt om trygdeytelser som de ikke har fått svar på?'
+                }
                 verdi={
                     inntekt.søktAndreYtelserIkkeBehandlet
                         ? 'Ja'
@@ -63,7 +76,7 @@ const InntektsOppsummering = ({
 
             {inntekt.søktAndreYtelserIkkeBehandlet && (
                 <Oppsummeringsfelt
-                    label={formatMessage('søktAndreYtelserIkkeBehandlet.begrunnelse')}
+                    label={'Hvilke?'}
                     verdi={
                         inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
                             ? inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
@@ -73,7 +86,11 @@ const InntektsOppsummering = ({
             )}
 
             <Oppsummeringsfelt
-                label={formatMessage('trygdeytelserIUtlandet.label')}
+                label={
+                    tilhører === 'søker'
+                        ? 'Har du trygdeytelser fra andre land?'
+                        : 'Har ektfelle/samboer trygdeytelser fra andre land?'
+                }
                 verdi={
                     inntekt.harTrygdeytelserIUtlandet
                         ? 'Ja'
@@ -85,27 +102,27 @@ const InntektsOppsummering = ({
             {inntekt.harTrygdeytelserIUtlandet && (
                 <OppsummeringAvTrygdeytelser
                     arr={inntekt.trygdeytelserIUtlandet}
-                    labelFirstEl={formatMessage('trygdeytelserIUtlandet.beløp')}
-                    labelScndEl={formatMessage('trygdeytelserIUtlandet.valuta')}
-                    labelThirdEl={formatMessage('trygdeytelserIUtlandet.ytelse')}
+                    labelFirstEl={'Hvor mye får du i lokal valuta i måden?'}
+                    labelScndEl={'Valuta'}
+                    labelThirdEl={'Type ytelse'}
                 />
             )}
 
             <Oppsummeringsfelt
-                label={formatMessage('mottarPensjon.label')}
+                label={
+                    tilhører === 'søker'
+                        ? 'Får du tjenestepensjon eller pensjon som ikke er fra NAV?'
+                        : 'Får ektefelle/samboer tjenestepensjon eller pensjon som ikke er fra NAV?'
+                }
                 verdi={inntekt.mottarPensjon ? 'Ja' : inntekt.mottarPensjon === false ? 'Nei' : 'Ubesvart'}
             />
             {inntekt.mottarPensjon && (
                 <ul>
                     {inntekt.pensjonsInntekt.map((item, index) => (
                         <li className={sharedStyles.oppsummeringDetaljrad} key={index}>
+                            <Oppsummeringsfelt label={'Hvem får du pengene fra?'} verdi={item.ordning} size="small" />
                             <Oppsummeringsfelt
-                                label={formatMessage('mottarPensjon.fra')}
-                                verdi={item.ordning}
-                                size="small"
-                            />
-                            <Oppsummeringsfelt
-                                label={formatMessage('mottarPensjon.beløp')}
+                                label={'Hvor mye penger får du i måneden?'}
                                 verdi={item.beløp}
                                 size="small"
                             />

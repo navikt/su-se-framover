@@ -15,7 +15,6 @@ import * as personSlice from '~src/features/person/person.slice';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
-import { useI18n } from '~src/lib/i18n';
 import { soknadsutfylling, urlForSakstype } from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { SøknadContext } from '~src/pages/søknad';
@@ -32,7 +31,6 @@ import nb from './inngang-nb';
 import styles from './inngang.module.less';
 
 const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
-    const { formatMessage } = useI18n({ messages: nb });
     const { sakstype } = useOutletContext<SøknadContext>();
 
     if (!skalViseAldersvarsel(søkerAlder, sakstype)) {
@@ -40,26 +38,38 @@ const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
     }
 
     const suAndreSkjemaLenke = lenkeTilMotsattSkjema(sakstype);
+
+    /*
+    Du kan få supplerende stønad for uføre flyktninger hvis du er under 67 år. Er du over 67 år kan du søke <navLink>Supplerende stønad for personer med kort botid i Norge</navLink>. Har du akkurat fylt 67 år kan du ha rett på etterbetaling for supplerende stønad for uføre flyktninger. Da må du fylle ut to søknader, en som ufør flyktning under 67 år og en som person med kort botid i Norge.
+
+    'Du kan få supplerende stønad for personer med kort botid i Norge hvis du er over 67 år. Er du under 67 år og ufør flyktning kan du søke <navLink>Supplerende stønad for uføre flyktninger</navLink>.',
+    */
+
     return (
         <div>
             <Heading level="2" size="small" spacing>
-                {formatMessage('heading.advarsel.alder')}
+                Alder
             </Heading>
-            <BodyLong>
-                {formatMessage(
-                    getSøknadstematekst(sakstype, {
-                        [Sakstype.Uføre]: 'advarsel.alder.uføre',
-                        [Sakstype.Alder]: 'advarsel.alder.alder',
-                    }),
-                    {
-                        navLink: (tekst) => (
-                            <Link target="_blank" href={suAndreSkjemaLenke}>
-                                {tekst}
-                            </Link>
-                        ),
-                    },
-                )}
-            </BodyLong>
+
+            {sakstype === Sakstype.Uføre ? (
+                <BodyLong>
+                    Du kan få supplerende stønad for personer med kort botid i Norge hvis du er over 67 år. Er du under
+                    67 år og ufør flyktning kan du søke{' '}
+                    <Link target="_blank" href={suAndreSkjemaLenke}>
+                        Supplerende stønad for uføre flyktninger
+                    </Link>
+                    .
+                </BodyLong>
+            ) : (
+                <BodyLong>
+                    Du kan få supplerende stønad for personer med kort botid i Norge hvis du er over 67 år. Er du under
+                    67 år og ufør flyktning kan du søke{' '}
+                    <Link target="_blank" href={suAndreSkjemaLenke}>
+                        Supplerende stønad for uføre flyktninger
+                    </Link>
+                    .
+                </BodyLong>
+            )}
         </div>
     );
 };
@@ -71,28 +81,34 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
     iverksattInnvilgetStønadsperiode: Nullable<Periode<string>>;
     type: Sakstype;
 }) => {
-    const { formatMessage } = useI18n({ messages: nb });
     const { sakstype } = useOutletContext<SøknadContext>();
     if (iverksattInnvilgetStønadsperiode == null) {
         return null;
     }
 
     const typeErSammeSomTema = sakstype === type;
+    const sakstypeText =
+        sakstype === Sakstype.Uføre
+            ? 'Supplerende stønad for uføre flyktninger'
+            : 'Supplerende stønad for personer over 67 år med kort botid i Norge';
     return (
         <div>
             <Heading level="2" size="small" spacing>
-                {formatMessage(`heading.løpendeYtelse.${type}`)}
+                {type === Sakstype.Uføre
+                    ? 'Løpende ytelse uføre flyktninger'
+                    : 'Løpende ytelse personer over 67 år med kort botid'}
             </Heading>
+
             <BodyLong>
-                {formatMessage(`åpenSøknad.løpendeYtelse${typeErSammeSomTema ? '' : '.kort'}`, {
-                    løpendePeriode: `${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
-                        iverksattInnvilgetStønadsperiode.tilOgMed,
-                    )}`,
-                    tidligestNyPeriode: formatDate(
-                        DateFns.startOfMonth(new Date(iverksattInnvilgetStønadsperiode.tilOgMed)).toString(),
-                    ),
-                    type: formatMessage(type),
-                })}
+                {typeErSammeSomTema
+                    ? `Bruker har allerede en løpende ytelse, ${sakstypeText} er innvilget for perioden ${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
+                          iverksattInnvilgetStønadsperiode.tilOgMed,
+                      )}. Bruker kan tidligst søke om ny periode ${formatDate(
+                          DateFns.startOfMonth(new Date(iverksattInnvilgetStønadsperiode.tilOgMed)).toString(),
+                      )}.`
+                    : `Bruker har allerede en løpende ytelse, ${sakstypeText} er innvilget for perioden ${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
+                          iverksattInnvilgetStønadsperiode.tilOgMed,
+                      )}.`}
             </BodyLong>
         </div>
     );
@@ -100,7 +116,6 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
 
 const ÅpenSøknadVarsel = ({ alleredeÅpenSakInfo }: { alleredeÅpenSakInfo: AlleredeGjeldendeSakForBruker }) => {
     const { alder, uføre } = alleredeÅpenSakInfo;
-    const { formatMessage } = useI18n({ messages: nb });
     const { sakstype } = useOutletContext<SøknadContext>();
 
     const suAndreSkjemaLenke = lenkeTilMotsattSkjema(sakstype);

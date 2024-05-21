@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, BodyLong, Fieldset } from '@navikt/ds-react';
+import { Alert, BodyShort, Fieldset } from '@navikt/ds-react';
 import { useRef, useMemo } from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,6 @@ import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { FormData, schema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
@@ -18,9 +17,7 @@ import { kalkulerTotaltAntallDagerIUtlandet, toDateOrNull, toIsoDateOnlyString }
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import sharedI18n from '../steg-shared-i18n';
 
-import messages from './utenlandsopphold-nb';
 import styles from './utenlandsopphold.module.less';
 
 interface Reiseperiode {
@@ -46,10 +43,8 @@ const MultiTidsperiodevelger = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-
     return (
-        <SøknadInputliste leggTilLabel={formatMessage('button.leggTilReiserad')} onLeggTilClick={props.onLeggTilClick}>
+        <SøknadInputliste leggTilLabel={'Legg til et annet utenlandsopphold'} onLeggTilClick={props.onLeggTilClick}>
             {props.perioder.map((periode, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : props.errors;
 
@@ -66,7 +61,7 @@ const MultiTidsperiodevelger = (props: {
                         <div className={styles.reiseItemContainer}>
                             <div>
                                 <DatePicker
-                                    label={formatMessage('utreisedato.label')}
+                                    label={'Utreisedato'}
                                     value={toDateOrNull(periode.utreisedato)}
                                     fromDate={props.limitations?.utreise?.minDate}
                                     toDate={props.limitations?.utreise?.maxDate}
@@ -85,7 +80,7 @@ const MultiTidsperiodevelger = (props: {
                             <div>
                                 <DatePicker
                                     error={errorForLinje?.message}
-                                    label={formatMessage('innreisedato.label')}
+                                    label={'Innreisedato'}
                                     value={toDateOrNull(periode.innreisedato)}
                                     fromDate={props.limitations?.innreise?.minDate}
                                     toDate={props.limitations?.innreise?.maxDate}
@@ -133,8 +128,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
         resolver: yupResolver(schema),
     });
 
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-
     const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
     const antallDagerIUtlandet = useMemo(() => {
@@ -159,7 +152,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         render={({ field, fieldState }) => (
                             <BooleanRadioGroup
                                 {...field}
-                                legend={formatMessage('harReistSiste90.label')}
+                                legend={'Har du reist til utlandet de siste 90 dagene?'}
                                 error={fieldState.error?.message}
                                 onChange={(boolean) => {
                                     field.onChange(boolean);
@@ -182,9 +175,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             name={'harReistDatoer'}
                             render={({ field, fieldState }) => (
                                 <MultiTidsperiodevelger
-                                    legendForNumber={(x) =>
-                                        formatMessage('gruppe.tidligereUtenlandsoppholdX.legend', { x })
-                                    }
+                                    legendForNumber={(x) => `Tidligere utenlandsopphold ${x}`}
                                     perioder={field.value}
                                     limitations={{
                                         utreise: { maxDate: new Date() },
@@ -224,7 +215,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         render={({ field, fieldState }) => (
                             <BooleanRadioGroup
                                 {...field}
-                                legend={formatMessage('skalReiseNeste12.label')}
+                                legend={'Har du planer om å reise til utlandet i de neste 12 månedene?'}
                                 error={fieldState.error?.message}
                                 onChange={(boolean) => {
                                     field.onChange(boolean);
@@ -247,9 +238,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             name={'skalReiseDatoer'}
                             render={({ field, fieldState }) => (
                                 <MultiTidsperiodevelger
-                                    legendForNumber={(x) =>
-                                        formatMessage('gruppe.kommendeUtenlandsoppholdX.legend', { x })
-                                    }
+                                    legendForNumber={(x) => `Kommende utenlandsopphold ${x}`}
                                     perioder={field.value}
                                     limitations={{
                                         utreise: { minDate: new Date() },
@@ -285,11 +274,13 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 </SøknadSpørsmålsgruppe>
                 {antallDagerIUtlandet > 90 && (
                     <Alert variant="warning" className={styles.passert90DagerAdvarsel}>
-                        {formatMessage('passert90Dager.info', {
-                            p: (tekst) => <BodyLong>{tekst}</BodyLong>,
-
-                            br: () => <br />,
-                        })}
+                        <BodyShort>Utreisedagen og innreisedagen regnes som opphold i Norge.</BodyShort>
+                        <BodyShort>Du har planer om å oppholde deg i utlandet i mer enn 90 dager.</BodyShort>
+                        <BodyShort>
+                            For å få supplerende stønad kan du kun oppholde deg 90 dager i utlandet i løpet av
+                            stønadsperioden. Du kan fremdeles søke, men du vil miste retten til stønaden om du oppholder
+                            deg mer enn i 90 dager i utlandet etter at du har fått stønaden.
+                        </BodyShort>
                     </Alert>
                 )}
 

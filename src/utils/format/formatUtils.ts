@@ -1,37 +1,11 @@
-import { createIntl, createIntlCache } from 'react-intl';
-
 import { AdresseFraSøknad } from '~src/features/søknad/søknad.slice';
-import { Languages } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Adresse } from '~src/types/Person';
 
-const cache = createIntlCache();
-const intl = createIntl({ locale: Languages.nb }, cache);
-
-export function formatCurrency(
-    amount: number,
-    options?: {
-        currency?: string;
-        numDecimals?: number;
-    },
-) {
-    const mergedOptions = {
-        currency: 'NOK',
-        numDecimals: 2,
-        ...options,
-    };
-    return mergedOptions.currency === 'NOK'
-        ? intl.formatNumber(amount, {
-              currency: mergedOptions.currency,
-              maximumFractionDigits: mergedOptions.numDecimals,
-              minimumFractionDigits: mergedOptions.numDecimals,
-          }) + ' kr'
-        : intl.formatNumber(amount, {
-              style: 'currency',
-              currency: mergedOptions.currency,
-              maximumFractionDigits: mergedOptions.numDecimals,
-              minimumFractionDigits: mergedOptions.numDecimals,
-          });
+export function formatCurrency(amount: number, currencyNok?: boolean) {
+    return currencyNok
+        ? new Intl.NumberFormat('no-nb', { style: 'currency', currency: 'NOK' }).format(amount)
+        : new Intl.NumberFormat('no-nb').format(amount);
 }
 
 function hentGateadresse(adresse: Adresse | AdresseFraSøknad): string {

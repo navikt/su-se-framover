@@ -1,8 +1,6 @@
 import { shouldPolyfill as shouldPolyfillDateTime } from '@formatjs/intl-datetimeformat/should-polyfill';
 import { shouldPolyfill as shouldPolyfillNumber } from '@formatjs/intl-numberformat/should-polyfill';
 
-import { Languages } from './lib/i18n';
-
 export default async function polyfill() {
     /*
       En bug i Chrome gjør at norsk locale ikke blir lastet inn riktig.
@@ -12,12 +10,12 @@ export default async function polyfill() {
 
       Disse sjekkene skal uansett være trygge å la ligge igjen etter at bugen har blitt fikset.
     */
-    if (shouldPolyfillDateTime(Languages.nb)) {
+    if (shouldPolyfillDateTime('nb')) {
         await import('@formatjs/intl-datetimeformat/polyfill-force');
         await import('@formatjs/intl-datetimeformat/locale-data/nb');
     }
 
-    if (shouldPolyfillNumber(Languages.nb)) {
+    if (shouldPolyfillNumber('nb')) {
         await import('@formatjs/intl-numberformat/polyfill-force');
         await import('@formatjs/intl-numberformat/locale-data/nb');
     }

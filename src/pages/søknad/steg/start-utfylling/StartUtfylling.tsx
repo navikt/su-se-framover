@@ -11,13 +11,11 @@ import { useUserContext } from '~src/context/userContext';
 import * as personSlice from '~src/features/person/person.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
 import { pipe } from '~src/lib/fp';
-import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { soknadsutfylling, useRouteParams } from '~src/lib/routes';
 import styles from '~src/pages/søknad/index.module.less';
-import messages from '~src/pages/søknad/nb';
 import { Steg } from '~src/pages/søknad/steg/Steg';
-import { Alderssteg, Fellessteg, Uføresteg } from '~src/pages/søknad/types';
+import { Alderssteg, Fellessteg, Søknadssteg, Uføresteg } from '~src/pages/søknad/types';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Rolle } from '~src/types/LoggedInUser';
 import { Sakstype } from '~src/types/Sak';
@@ -28,7 +26,7 @@ const StartUtfylling = () => {
     const søknad = useAppSelector((s) => s.soknad);
     const { step, soknadstema } = useRouteParams<typeof soknadsutfylling>();
     const sakstype = routes.sakstypeFraTemaIUrl(soknadstema);
-    const { formatMessage } = useI18n({ messages });
+
     const user = useUserContext();
     const navigate = useNavigate();
     const [sisteStartetSteg, setSisteStartetSteg] = useState(0);
@@ -62,7 +60,7 @@ const StartUtfylling = () => {
         { step: Fellessteg.DinFormue },
         {
             step: Fellessteg.DinInntekt,
-            hjelpetekst: formatMessage('steg.inntekt.hjelpetekst'),
+            hjelpetekst: 'Oppgi brutto beløp (før skatt).',
         },
         {
             step: Fellessteg.EktefellesFormue,
@@ -71,7 +69,7 @@ const StartUtfylling = () => {
         {
             step: Fellessteg.EktefellesInntekt,
             onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
-            hjelpetekst: formatMessage('steg.inntekt.hjelpetekst'),
+            hjelpetekst: 'Oppgi brutto beløp (før skatt).',
         },
         { step: Fellessteg.ReiseTilUtlandet },
         søknad.forVeileder.type === Søknadstype.Papirsøknad && user.roller.includes(Rolle.Saksbehandler)
@@ -79,7 +77,8 @@ const StartUtfylling = () => {
             : { step: Fellessteg.ForVeileder },
         {
             step: Fellessteg.Oppsummering,
-            hjelpetekst: formatMessage('steg.oppsummering.hjelpetekst'),
+            hjelpetekst:
+                'Les gjennom oppsummeringen før du sender inn søknaden. Hvis du trenger å gjøre endringer, kan du gjøre det ved å klikke på lenken under hver del.',
         },
     ].filter((s) => s.onlyIf ?? true);
 
@@ -96,7 +95,7 @@ const StartUtfylling = () => {
         <Page>
             <Page.Block className={classNames(styles.content, styles.feilmeldingContainer)}>
                 <Alert variant="error" className={styles.feilmeldingTekst}>
-                    {formatMessage('feilmelding.tekst')}
+                    En feil oppstod
                 </Alert>
                 <LinkAsButton
                     variant="secondary"
@@ -104,7 +103,7 @@ const StartUtfylling = () => {
                         soknadstema: routes.urlForSakstype(sakstype),
                     })}
                 >
-                    {formatMessage('feilmelding.knapp')}
+                    Start ny søknad
                 </LinkAsButton>
             </Page.Block>
         </Page>
@@ -168,7 +167,7 @@ const StartUtfylling = () => {
                                     </Stepper>
                                 </div>
                                 <Steg
-                                    title={formatMessage(aktivtSteg!.step)}
+                                    title={stegTilTitle(aktivtSteg!.step)}
                                     step={step!}
                                     søknad={søknad}
                                     søker={søker}
@@ -183,6 +182,37 @@ const StartUtfylling = () => {
             )}
         </div>
     );
+};
+
+const stegTilTitle = (steg: Søknadssteg) => {
+    switch (steg) {
+        case Uføresteg.Uførevedtak:
+            return 'Uførevedtak';
+        case Uføresteg.FlyktningstatusOppholdstillatelse:
+            return 'Flyktningstatus';
+        case Alderssteg.Alderspensjon:
+            return 'Alderspensjon';
+        case Alderssteg.Oppholdstillatelse:
+            return 'Oppholdstillatelse';
+        case Fellessteg.BoOgOppholdINorge:
+            return 'Bo og opphold i Norge';
+        case Fellessteg.DinFormue:
+            return 'Din formue';
+        case Fellessteg.DinInntekt:
+            return 'Din inntekt';
+        case Fellessteg.EktefellesFormue:
+            return 'Ektefelle/samboers formue';
+        case Fellessteg.EktefellesInntekt:
+            return 'Ektefelle/samboers inntekt';
+        case Fellessteg.ReiseTilUtlandet:
+            return 'Reise til utlandet';
+        case Fellessteg.ForVeileder:
+            return 'For veileder';
+        case Fellessteg.InformasjonOmPapirsøknad:
+            return 'Informasjon om søknaden';
+        case Fellessteg.Oppsummering:
+            return 'Oppsummering';
+    }
 };
 
 export default StartUtfylling;

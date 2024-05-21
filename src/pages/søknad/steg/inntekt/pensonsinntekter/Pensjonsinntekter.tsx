@@ -2,17 +2,8 @@ import { Fieldset, TextField } from '@navikt/ds-react';
 import { FieldError } from 'react-hook-form';
 
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
-import { useI18n } from '~src/lib/i18n';
 
 import styles from './pensjonsinntekter.module.less';
-
-export const pensjonsinntekterMessages = {
-    'mottarPensjon.fra': 'Hvem får du pengene fra?',
-    'mottarPensjon.beløp': 'Hvor mye penger får du i måneden?',
-    'button.leggTil.pensjonsgiver': 'Legg til annen pensjonsgiver',
-
-    'pensjonsgiver.legend': 'Pensjon {number}',
-};
 
 const PensjonsInntekter = (props: {
     arr: Array<{ ordning: string; beløp: string }>;
@@ -21,13 +12,8 @@ const PensjonsInntekter = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
-    const { formatMessage } = useI18n({ messages: pensjonsinntekterMessages });
-
     return (
-        <SøknadInputliste
-            onLeggTilClick={props.onLeggTilClick}
-            leggTilLabel={formatMessage('button.leggTil.pensjonsgiver')}
-        >
+        <SøknadInputliste onLeggTilClick={props.onLeggTilClick} leggTilLabel={'Legg til annen pensjonsgiver'}>
             {props.arr.map((item, idx) => {
                 const feltId = (key: keyof typeof item) => `pensjonsInntekt[${idx}].${key}`;
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
@@ -41,14 +27,12 @@ const PensjonsInntekter = (props: {
                             props.onFjernClick(idx);
                         }}
                         as={Fieldset}
-                        legend={formatMessage('pensjonsgiver.legend', {
-                            number: idx + 1,
-                        })}
+                        legend={`Pensjon ${idx + 1}`}
                     >
                         <div className={styles.itemContainer}>
                             <TextField
                                 id={feltId('ordning')}
-                                label={formatMessage('mottarPensjon.fra')}
+                                label="Hvem får du pengene fra?"
                                 value={item.ordning}
                                 onChange={(e) =>
                                     props.onChange({
@@ -65,7 +49,7 @@ const PensjonsInntekter = (props: {
                             />
                             <TextField
                                 id={feltId('beløp')}
-                                label={formatMessage('mottarPensjon.beløp')}
+                                label="Hvor mye penger får du i måneden?"
                                 value={item.beløp}
                                 onChange={(e) =>
                                     props.onChange({

@@ -4,10 +4,8 @@ import * as S from 'fp-ts/string';
 
 import { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { pipe, maxBy } from '~src/lib/fp';
-import { MessageFormatter } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
-import klageNb from '~src/pages/klage/klage-nb';
 import {
     KlageSteg,
     Klage,
@@ -175,17 +173,13 @@ const filtrerKlageStegSomIkkeBlirBehandlet = (k: Klage) => {
     return Object.values(KlageSteg).filter((verdi) => skalStegBliBehandlet(verdi, k));
 };
 
-export const getFramdriftsindikatorLinjer = (arg: {
-    sakId: string;
-    klage: Klage;
-    formatMessage: MessageFormatter<typeof klageNb>;
-}) => {
+export const getFramdriftsindikatorLinjer = (arg: { sakId: string; klage: Klage }) => {
     return filtrerKlageStegSomIkkeBlirBehandlet(arg.klage).map((verdi) => {
         const partialLinjeInfo = getPartialFramdriftsindikatorLinjeInfo(verdi, arg.klage);
         return {
             id: verdi,
             status: partialLinjeInfo.status,
-            label: arg.formatMessage(`framdriftsindikator.${verdi}`),
+            label: partialLinjeInfo.label,
             url: Routes.klage.createURL({ sakId: arg.sakId, klageId: arg.klage.id, steg: verdi }),
             erKlikkbar: partialLinjeInfo.erKlikkbar,
         };
@@ -196,27 +190,26 @@ export const getDefaultFramdriftsindikatorLinjer = (arg: {
     sakId: string;
     klageId: string;
     formkravLinjeInfo: { status: Linjestatus; erKlikkbar: boolean };
-    formatMessage: MessageFormatter<typeof klageNb>;
 }) => {
     return [
         {
             id: KlageSteg.Formkrav,
             status: arg.formkravLinjeInfo.status,
-            label: arg.formatMessage(`framdriftsindikator.${KlageSteg.Formkrav}`),
+            label: 'Formkrav',
             url: Routes.klage.createURL({ sakId: arg.sakId, klageId: arg.klageId, steg: KlageSteg.Formkrav }),
             erKlikkbar: arg.formkravLinjeInfo.erKlikkbar,
         },
         {
             id: 'vurderingOgAvvisning',
             status: Linjestatus.Ingenting,
-            label: arg.formatMessage(`framdriftsindikator.vurderingOgAvvisning`),
+            label: 'Vurdering/avvisning',
             url: '',
             erKlikkbar: false,
         },
         {
             id: KlageSteg.Oppsummering,
             status: Linjestatus.Ingenting,
-            label: arg.formatMessage(`framdriftsindikator.${KlageSteg.Oppsummering}`),
+            label: 'Oppsummering',
             url: '',
             erKlikkbar: false,
         },
@@ -234,6 +227,7 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
                       ? Linjestatus.Uavklart
                       : Linjestatus.Ok,
                 erKlikkbar: true,
+                label: 'Formkrav',
             };
         case KlageSteg.Vurdering:
             return {
@@ -244,6 +238,7 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
                           ? Linjestatus.Uavklart
                           : Linjestatus.Ok,
                 erKlikkbar: erKlageOpprettet(k) || erKlageVilkårsvurdert(k) || erKlageAvvist(k) ? false : true,
+                label: 'Vurdering',
             };
         case KlageSteg.Avvisning:
             return {
@@ -254,6 +249,7 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
                           ? Linjestatus.Uavklart
                           : Linjestatus.Ok,
                 erKlikkbar: erKlageOpprettet(k) || erKlageVilkårsvurdert(k) || erKlageVurdert(k) ? false : true,
+                label: 'Avvisning',
             };
         case KlageSteg.Oppsummering:
             return {
@@ -271,6 +267,7 @@ export const getPartialFramdriftsindikatorLinjeInfo = (steg: KlageSteg, k: Klage
                     k.status === KlageStatus.VURDERT_UTFYLT
                         ? false
                         : true,
+                label: 'Oppsummering',
             };
     }
 };

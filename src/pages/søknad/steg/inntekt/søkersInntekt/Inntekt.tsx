@@ -9,24 +9,19 @@ import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feil
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
-import sharedI18n from '../../steg-shared-i18n';
 import PensjonsInntekter from '../pensonsinntekter/Pensjonsinntekter';
 import TrygdeytelserInputFelter from '../TrygdeytelserInputs/TrygdeytelserInputs';
 import { inntektsValideringSchema, FormData } from '../validering';
 
-import messages from './inntekt-nb';
-
 const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const inntektFraStore = useAppSelector((s) => s.soknad.inntekt);
     const dispatch = useAppDispatch();
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const form = useForm<FormData>({
         defaultValues: inntektFraStore,
@@ -42,7 +37,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
             nesteUrl={props.nesteUrl}
             avbrytUrl={props.avbrytUrl}
             forrigeUrl={props.forrigeUrl}
-            formatMessage={formatMessage}
         />
     );
 };
@@ -53,10 +47,9 @@ interface InntektFormInterface {
     avbrytUrl: string;
     forrigeUrl: string;
     nesteUrl: string;
-    formatMessage: MessageFormatter<typeof sharedI18n & typeof messages>;
 }
 
-export const InntektForm = ({ form, save, formatMessage, ...props }: InntektFormInterface) => {
+export const InntektForm = ({ form, save, ...props }: InntektFormInterface) => {
     const navigate = useNavigate();
     const feiloppsummeringref = useRef<HTMLDivElement>(null);
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
@@ -69,7 +62,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
             }, focusAfterTimeout(feiloppsummeringref))}
             className={sharedStyles.container}
         >
-            <SøknadSpørsmålsgruppe legend={formatMessage('legend.fremtidigInntekt')}>
+            <SøknadSpørsmålsgruppe legend={'Fremtidig inntekt'}>
                 <Controller
                     control={form.control}
                     name="harForventetInntekt"
@@ -77,8 +70,8 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                         <BooleanRadioGroup
                             {...field}
                             error={fieldState.error?.message}
-                            legend={formatMessage('forventerInntekt.label')}
-                            description={formatMessage('forventerInntekt.hjelpetekst')}
+                            legend={'Forventer du å ha arbeidsinntekt fremover?'}
+                            description={'Gjelder all inntekt i Norge og utlandet.'}
                             onChange={(val) => {
                                 field.onChange(val);
                                 setFieldsToNull(['forventetInntekt']);
@@ -98,7 +91,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                 className={sharedStyles.narrow}
                                 error={fieldState.error?.message}
                                 value={field.value ?? ''}
-                                label={formatMessage('forventerInntekt.beløp')}
+                                label={'Hvor mye regner du med å tjene i måneden?'}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
                                 // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -109,7 +102,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                 )}
             </SøknadSpørsmålsgruppe>
 
-            <SøknadSpørsmålsgruppe legend={formatMessage('legend.andreUtbetalingerFraNav')}>
+            <SøknadSpørsmålsgruppe legend={'Andre utbetalinger fra NAV'}>
                 <Controller
                     control={form.control}
                     name="andreYtelserINav"
@@ -117,7 +110,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                         <BooleanRadioGroup
                             {...field}
                             name={keyOf<FormData>('andreYtelserINav')}
-                            legend={formatMessage('andreYtelserINAV.label')}
+                            legend={'Har du andre ytelser i NAV?'}
                             error={fieldState.error?.message}
                             onChange={(val) => {
                                 field.onChange(val);
@@ -137,7 +130,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                     {...field}
                                     id={field.name}
                                     className={sharedStyles.narrow}
-                                    label={formatMessage('andreYtelserINAV.ytelse')}
+                                    label={'Hvilke ytelser?'}
                                     value={field.value ?? ''}
                                     error={fieldState.error?.message}
                                     autoComplete="off"
@@ -155,7 +148,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                     {...field}
                                     id={field.name}
                                     className={sharedStyles.narrow}
-                                    label={formatMessage('andreYtelserINAV.beløp')}
+                                    label={'Hvor mye penger får du utbetalt i måneden?'}
                                     value={field.value ?? ''}
                                     error={fieldState.error?.message}
                                     autoComplete="off"
@@ -171,9 +164,11 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             {...field}
-                            legend={formatMessage('søktAndreYtelserIkkeBehandlet.label')}
+                            legend={'Har du søkt om trygdeytelser som du ikke har fått svar på?'}
                             error={fieldState.error?.message}
-                            description={formatMessage('søktAndreYtelserIkkeBehandlet.hjelpetekst')}
+                            description={
+                                'For eksempel alderspensjon, uføretrygd, arbeidsavklaringspenger, sykepenger eller tjenestepensjon.'
+                            }
                             onChange={(val) => {
                                 field.onChange(val);
                                 setFieldsToNull(['søktAndreYtelserIkkeBehandletBegrunnelse']);
@@ -191,7 +186,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                 {...field}
                                 id={field.name}
                                 className={sharedStyles.narrow}
-                                label={formatMessage('søktAndreYtelserIkkeBehandlet.begrunnelse')}
+                                label={'Hvilke?'}
                                 value={field.value ?? ''}
                                 error={fieldState.error?.message}
                                 autoComplete="off"
@@ -203,14 +198,14 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                     />
                 )}
             </SøknadSpørsmålsgruppe>
-            <SøknadSpørsmålsgruppe legend={formatMessage('legend.andreUtbetalinger')}>
+            <SøknadSpørsmålsgruppe legend={'Utbetalinger fra andre steder'}>
                 <Controller
                     control={form.control}
                     name="harTrygdeytelserIUtlandet"
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             {...field}
-                            legend={formatMessage('trygdeytelserIUtlandet.label')}
+                            legend={'Har du trygdeytelser fra andre land?'}
                             error={fieldState.error?.message}
                             onChange={(val) => {
                                 field.onChange(val);
@@ -267,7 +262,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             {...field}
-                            legend={formatMessage('mottarPensjon.label')}
+                            legend={'Får du tjenestepensjon eller pensjom som ikke er fra NAV?'}
                             error={fieldState.error?.message}
                             onChange={(val) => {
                                 field.onChange(val);
@@ -313,7 +308,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
             </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
-                tittel={formatMessage('feiloppsummering.title')}
+                tittel={'For å gå videre må du rette opp følgende:'}
                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                 ref={feiloppsummeringref}

@@ -51,7 +51,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     name="erFlyktning"
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
-                            legend={formatMessage('flyktning.label')}
+                            legend={'Er du registrert som flyktning?'}
                             description={
                                 <ReadMore size="small" header={formatMessage('flyktning.hjelpetekst.tittel')}>
                                     {formatMessage('flyktning.hjelpetekst.body')}
@@ -70,7 +70,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     name="erNorskStatsborger"
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
-                            legend={formatMessage('norsk.statsborger.label')}
+                            legend={'Er du norsk statsborger?'}
                             error={fieldState.error?.message}
                             {...field}
                             onChange={(val) => {
@@ -87,7 +87,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             name="harOppholdstillatelse"
                             render={({ field, fieldState }) => (
                                 <BooleanRadioGroup
-                                    legend={formatMessage('oppholdstillatelse.label')}
+                                    legend={'Har du oppholdstillatelse i Norge?'}
                                     error={fieldState.error?.message}
                                     {...field}
                                     onChange={(val) => {
@@ -105,7 +105,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                     render={({ field, fieldState }) => (
                                         <RadioGroup
                                             error={fieldState.error?.message}
-                                            legend={formatMessage('oppholdstillatelse.type')}
+                                            legend={'Er oppholdstillatelsen din permanent eller midlertidig?'}
                                             {...field}
                                             value={field.value?.toString() ?? ''}
                                         >
@@ -136,7 +136,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     name="statsborgerskapAndreLand"
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
-                            legend={formatMessage('statsborger.andre.land.label')}
+                            legend={'Har du statsborgerskap i andre land enn Norge?'}
                             error={fieldState.error?.message}
                             {...field}
                             onChange={(val) => {
@@ -153,7 +153,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         render={({ field, fieldState }) => (
                             <TextField
                                 className={sharedStyles.narrow}
-                                label={formatMessage('statsborger.andre.land.fritekst')}
+                                label={'Hvilke land har du statsborgerskap i?'}
                                 error={fieldState.error?.message}
                                 {...field}
                                 value={field.value || ''}
@@ -168,7 +168,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
             </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
-                tittel={formatMessage('feiloppsummering.title')}
+                tittel={'For å gå videre må du rette opp følgende:'}
                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                 ref={feiloppsummeringref}

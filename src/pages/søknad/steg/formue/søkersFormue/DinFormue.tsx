@@ -429,7 +429,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
             </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
-                tittel={formatMessage('feiloppsummering.title')}
+                tittel={'For å gå videre må du rette opp følgende:'}
                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                 ref={feiloppsummeringref}

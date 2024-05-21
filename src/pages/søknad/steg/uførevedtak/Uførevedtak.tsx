@@ -9,16 +9,12 @@ import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feil
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/uførevedtak/validering';
 import { useAppSelector, useAppDispatch } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import sharedI18n from '../steg-shared-i18n';
-
-import messages from './uførevedtak-nb';
 
 const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: string }) => {
     const harVedtakFraStore = useAppSelector((s) => s.soknad.harUførevedtak);
@@ -31,7 +27,6 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
             harUførevedtak: harVedtakFraStore,
         },
     });
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
@@ -51,7 +46,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             {...field}
-                            legend={formatMessage('uførevedtak.label')}
+                            legend={'Har du fått svar på søknaden din om uføretrygd?'}
                             error={fieldState.error?.message}
                         />
                     )}
@@ -59,13 +54,14 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
             </SøknadSpørsmålsgruppe>
             {form.watch('harUførevedtak') === false && (
                 <Alert variant="warning" className={sharedStyles.marginBottom}>
-                    {formatMessage('uførevedtak.måSøkeUføretrygd.info')}
+                    For å få supplerende stønad for ufør flyktning, må du søke om uføretrygd og få vedtak. Du kan
+                    fremdeles søke, men du vil sannsynligvis få avslag.
                 </Alert>
             )}
             <div>
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
-                    tittel={formatMessage('feiloppsummering.title')}
+                    tittel={'For å gå videre må du rette opp følgende:'}
                     feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                     hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                     ref={feiloppsummeringref}

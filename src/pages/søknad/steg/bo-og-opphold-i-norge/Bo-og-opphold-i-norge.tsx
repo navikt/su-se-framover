@@ -278,7 +278,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
             </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
-                tittel={formatMessage('feiloppsummering.title')}
+                tittel={'For å gå videre må du rette opp følgende:'}
                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                 ref={feiloppsummeringref}

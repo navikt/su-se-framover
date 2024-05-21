@@ -74,7 +74,7 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
         >
             <div className={styles.containerElement}>{props.children}</div>
             <Feiloppsummering
-                tittel={formatMessage('feiloppsummering.title')}
+                tittel={'For å gå videre må du rette opp følgende:'}
                 className={styles.feiloppsummering}
                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}

@@ -1,36 +1,22 @@
 import * as DateFns from 'date-fns';
-import { createIntl, createIntlCache, FormatDateOptions } from 'react-intl';
 
-import { Languages } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
-
-const cache = createIntlCache();
-const intl = createIntl({ locale: Languages.nb }, cache);
 
 enum DateFormats {
     IsoDateOnly = 'yyyy-MM-dd',
     IsoMonthOnly = 'yyyy-MM',
 }
 
-const formatDateOptions: FormatDateOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-};
-
 export const formatDateTime = (time: string) => {
-    return `${formatDate(time)} ${intl.formatTime(time)}`;
+    return `${formatDate(time)} ${DateFns.format(time, 'HH:mm')}`;
 };
 
-export const formatDate = (date: string) => intl.formatDate(date, formatDateOptions);
+export const formatDate = (date: string) => DateFns.formatDate(date, 'dd.MM.yyyy');
 
-export const formatMonthYear = (date: string | Date) =>
-    intl.formatDate(date, {
-        ...formatDateOptions,
-        day: undefined,
-    });
-export const formatDayMonthYear = (date: string) => intl.formatDate(date, formatDateOptions);
+export const formatMonthYear = (date: string | Date) => DateFns.format(date, 'MM-yyyy');
+
+export const formatDayMonthYear = (date: string) => formatDate(date);
 
 export type Utlandsdatoer = Array<{ utreisedato: string; innreisedato: string }>;
 

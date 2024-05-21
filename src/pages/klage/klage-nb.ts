@@ -10,13 +10,6 @@ export default {
     'opprett.klageMottatt.label': 'Klage mottatt',
     'opprett.klageMottatt.hjelpetekst': 'Fyll inn datoen NAV mottok klagen',
 
-    'framdriftsindikator.formkrav': 'Formkrav',
-    'framdriftsindikator.vurdering': 'Vurdering',
-    'framdriftsindikator.avvisning': 'Avvisning',
-    'framdriftsindikator.oppsummering': 'Oppsummering',
-
-    'framdriftsindikator.vurderingOgAvvisning': 'Vurdering/Avvisning',
-
     'feil.fantIkkeKlage': 'Fant ikke klage',
     'feil.ikkeRiktigTilstandForÅVilkårsvurdere': 'Klagen er ikke i riktig tilstand for å vurdere vilkår',
 };

@@ -2,19 +2,8 @@ import { Fieldset, TextField } from '@navikt/ds-react';
 import { FieldError } from 'react-hook-form';
 
 import SøknadInputliste from '~src/features/søknad/søknadInputliste/SøknadInputliste';
-import { useI18n } from '~src/lib/i18n';
 
 import styles from './trygdeytelserInputs.module.less';
-
-export const trygdeytelserMessages = {
-    'trygdeytelserIUtlandet.beløp': 'Hvor mye får du i lokal valuta i måneden?',
-    'trygdeytelserIUtlandet.ytelse': 'Type ytelse',
-    'trygdeytelserIUtlandet.valuta': 'Valuta',
-    'button.fjern.trygdeytelse': 'Fjern trygdeytelse',
-    'button.leggTil.trygdeytelse': 'Legg til annen trygdeytelse',
-
-    'trygdeytelse.legend': 'Trygdeytelse {number}',
-};
 
 const TrygdeytelserInputFelter = (props: {
     arr: Array<{ beløp: string; type: string; valuta: string }>;
@@ -24,13 +13,8 @@ const TrygdeytelserInputFelter = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
-    const { formatMessage } = useI18n({ messages: trygdeytelserMessages });
-
     return (
-        <SøknadInputliste
-            leggTilLabel={formatMessage('button.leggTil.trygdeytelse')}
-            onLeggTilClick={props.onLeggTilClick}
-        >
+        <SøknadInputliste leggTilLabel={'Legg til annen trygdeytelse'} onLeggTilClick={props.onLeggTilClick}>
             {props.arr.map((input, idx) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
                 const feltId = (felt: keyof typeof input) => `${props.feltnavn}[${idx}].${felt}`;
@@ -44,15 +28,13 @@ const TrygdeytelserInputFelter = (props: {
                             props.onFjernClick(idx);
                         }}
                         as={Fieldset}
-                        legend={formatMessage('trygdeytelse.legend', {
-                            number: idx + 1,
-                        })}
+                        legend={`Trygdeytelse ${idx + 1}`}
                     >
                         <div className={styles.trygdeytelseItemContainer}>
                             <TextField
                                 id={beløpId}
                                 name={beløpId}
-                                label={formatMessage('trygdeytelserIUtlandet.beløp')}
+                                label={'Hvor mye får du i lokal valuta i måneden?'}
                                 value={input.beløp}
                                 onChange={(e) => {
                                     props.onChange({
@@ -73,7 +55,7 @@ const TrygdeytelserInputFelter = (props: {
                             <TextField
                                 id={valutaId}
                                 name={valutaId}
-                                label={formatMessage('trygdeytelserIUtlandet.valuta')}
+                                label={'Valuta'}
                                 value={input.valuta}
                                 onChange={(e) => {
                                     props.onChange({
@@ -91,7 +73,7 @@ const TrygdeytelserInputFelter = (props: {
                             <TextField
                                 id={typeId}
                                 name={typeId}
-                                label={formatMessage('trygdeytelserIUtlandet.ytelse')}
+                                label={'Type ytelse'}
                                 value={input.type}
                                 onChange={(e) => {
                                     props.onChange({

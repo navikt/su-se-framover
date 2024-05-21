@@ -10,7 +10,6 @@ import { useUserContext } from '~src/context/userContext';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
-import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { SøknadContext } from '~src/pages/søknad';
 import { schema as alderspensjonSchema } from '~src/pages/søknad/steg/alderspensjon/validering';
@@ -21,7 +20,6 @@ import { formueValideringSchema } from '~src/pages/søknad/steg/formue/validerin
 import { schema as papirsøknadSchema } from '~src/pages/søknad/steg/informasjon-om-papirsøknad/validering';
 import { inntektsValideringSchema } from '~src/pages/søknad/steg/inntekt/validering';
 import { schema as oppholdstillatelseSchema } from '~src/pages/søknad/steg/oppholdstillatelse/validering';
-import sharedI18n from '~src/pages/søknad/steg/steg-shared-i18n';
 import { schema as uføreSchema } from '~src/pages/søknad/steg/uførevedtak/validering';
 import { schema as utenlandsoppholdSchema } from '~src/pages/søknad/steg/utenlandsopphold/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
@@ -33,7 +31,6 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 
-import messages from './oppsummering-nb';
 import styles from './oppsummering.module.less';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
@@ -42,7 +39,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const { sakstype } = useOutletContext<SøknadContext>();
     const user = useUserContext();
     const [søknadFraStore, innsending] = useAppSelector((s) => [s.soknad, s.innsending.søknad]);
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
+
     const dispatch = useAppDispatch();
     const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
@@ -118,20 +115,25 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
 
                 <Alert variant="info" className={styles.meldFraOmEndringerContainer}>
                     <Heading level="2" size="medium" spacing>
-                        {formatMessage('meldFraOmEndringer.tittel')}
+                        Husk å melde ifra om endringer
                     </Heading>
-                    <BodyLong>{formatMessage('meldFraOmEndringer.tekst')}</BodyLong>
+                    <BodyLong>
+                        Hvis du får supplerende stønad, må du melde fra hvis det skjer endringer som har betydning for
+                        retten din til stønad eller for størrelsen på dette. Slike endringer kan for eksempel være
+                        endringer i hvor du bor eller hvem du bor sammen med, sivilstand, inntekt, formue eller at du
+                        reiser til utlandet.
+                    </BodyLong>
                 </Alert>
 
                 {RemoteData.isFailure(innsending) && (
                     <Alert className={styles.feilmelding} variant="error">
-                        {formatMessage('feilmelding.innsendingFeilet')}
+                        Innsending feilet
                     </Alert>
                 )}
 
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
-                    tittel={formatMessage('feiloppsummering.title')}
+                    tittel={'For å gå videre må du rette opp følgende:'}
                     hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                     feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                     ref={feiloppsummeringref}
@@ -142,7 +144,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                         onClick: () => navigate(props.forrigeUrl),
                     }}
                     next={{
-                        label: formatMessage('steg.sendInn'),
+                        label: 'Send inn søknad',
                         spinner: RemoteData.isPending(innsending),
                     }}
                     avbryt={{

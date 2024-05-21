@@ -10,16 +10,12 @@ import søknadSlice from '~src/features/søknad/søknad.slice';
 import SøknadSpørsmålsgruppe from '~src/features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { TypeOppholdstillatelse } from '~src/features/søknad/types';
 import { focusAfterTimeout } from '~src/lib/formUtils';
-import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/oppholdstillatelse/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import sharedI18n from '../steg-shared-i18n';
-
-import messages from './oppholdstillatelse-nb';
 
 const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: string }) => {
     const harVedtakFraStore = useAppSelector((s) => s.soknad.oppholdstillatelse);
@@ -31,7 +27,6 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
         defaultValues: harVedtakFraStore,
     });
 
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const setFieldsToNull = (keys: Array<keyof FormData>) => keys.map((key) => form.setValue(key, null));
     const feiloppsummeringref = useRef<HTMLDivElement>(null);
 
@@ -51,8 +46,10 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
                             {...field}
-                            description={formatMessage('statsborger.description')}
-                            legend={formatMessage('statsborger.label')}
+                            description={
+                                'Nordiske land er Danmark, Norge, Sverige, Finland og Island, samt Færøyene, Grønland og Åland'
+                            }
+                            legend={'Er du norsk statsborger eller statsborger i et annet nordisk land?'}
                             error={fieldState.error?.message}
                             value={field.value}
                             onChange={(val) => {
@@ -74,7 +71,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                         render={({ field, fieldState }) => (
                             <BooleanRadioGroup
                                 {...field}
-                                legend={formatMessage('eøsborger.label')}
+                                legend={'Er du EØS-borger eller familiemedlem til en EØS-borger?'}
                                 error={fieldState.error?.message}
                                 value={field.value}
                             />
@@ -83,7 +80,8 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                 )}
                 {form.watch('eøsborger') && (
                     <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('eøsborger.info')}
+                        Som EØS-borger må du legge ved varig oppholdsbevis i Norge. Har du kun registreringbevis, må du
+                        søke om varig oppholdbevis ved det lokale politidistriktet ditt.
                     </Alert>
                 )}
                 {form.watch('erNorskStatsborger') === false && (
@@ -93,7 +91,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                         render={({ field, fieldState }) => (
                             <BooleanRadioGroup
                                 {...field}
-                                legend={formatMessage('oppholdstillatelse.label')}
+                                legend={'Har du oppholdstillatelse i Norge?'}
                                 error={fieldState.error?.message}
                                 value={field.value}
                                 onChange={(val) => {
@@ -106,7 +104,8 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                 )}
                 {form.watch('harOppholdstillatelse') === false && (
                     <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('oppholdstillatelse.info')}
+                        For å ha rett til supplerende stønad må du ha norsk statsborgerskap eller oppholdstillatelse i
+                        Norge. Du fremdeles søke, men vil sannsynligvis få avslag.
                     </Alert>
                 )}
 
@@ -118,7 +117,9 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                             render={({ field, fieldState }) => (
                                 <BooleanRadioGroup
                                     {...field}
-                                    legend={formatMessage('familieforening.label')}
+                                    legend={
+                                        'Kom du til Norge på grunn av familiegjenforening med barn, barnebarn, nevø eller niese, og fikk oppholdstillatelse med krav til underhold?'
+                                    }
                                     error={fieldState.error?.message}
                                     value={field.value}
                                 />
@@ -126,7 +127,9 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                         />
                         {form.watch('familieforening') && (
                             <Alert variant="warning" className={sharedStyles.marginBottom}>
-                                {formatMessage('familieforening.info')}
+                                Hvis du kom til Norge på grunn av familiegjenforening med barn, barnebarn, nevø eller
+                                niese og fikk oppholdstillatelse med krav til underhold, vil du ikke ha rett til
+                                supplerende stønad. Du kan fremdeles søke, men vil sannsynligvis få avslag.
                             </Alert>
                         )}
 
@@ -136,23 +139,21 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                             render={({ field, fieldState }) => (
                                 <RadioGroup
                                     {...field}
-                                    legend={formatMessage('typeOppholdstillatelse.label')}
+                                    legend={'Er oppholdstillatelsen din permanent eller midlertidig?'}
                                     error={fieldState.error?.message}
                                     value={field.value}
                                 >
-                                    <Radio value={TypeOppholdstillatelse.Midlertidig}>
-                                        {formatMessage(TypeOppholdstillatelse.Midlertidig)}
-                                    </Radio>
-                                    <Radio value={TypeOppholdstillatelse.Permanent}>
-                                        {formatMessage(TypeOppholdstillatelse.Permanent)}
-                                    </Radio>
+                                    <Radio value={TypeOppholdstillatelse.Midlertidig}>Midlertidig</Radio>
+                                    <Radio value={TypeOppholdstillatelse.Permanent}>Permanent</Radio>
                                 </RadioGroup>
                             )}
                         />
 
                         {form.watch('typeOppholdstillatelse') === TypeOppholdstillatelse.Midlertidig && (
                             <Alert variant="warning" className={sharedStyles.marginBottom}>
-                                {formatMessage('typeOppholdstillatelse.info')}
+                                Hvis den midlertidige oppholdstillatelsen din opphører i løpet av de tre neste månedene
+                                bør du fornye oppholdstillatelsen din. Hvis oppholdstillatelsen din opphører, mister du
+                                retten på supplerende stønad.
                             </Alert>
                         )}
                     </>
@@ -163,7 +164,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                     name="statsborgerskapAndreLand"
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
-                            legend={formatMessage('statsborgerskapAndreLand.label')}
+                            legend={'Har du statsborgerskap i andre land?'}
                             error={fieldState.error?.message}
                             {...field}
                             onChange={(val) => {
@@ -180,7 +181,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                         render={({ field, fieldState }) => (
                             <TextField
                                 className={sharedStyles.narrow}
-                                label={formatMessage('statsborgerskapAndreLandFritekst.label')}
+                                label={'Hvilke land har du statsborgerskap i?'}
                                 error={fieldState.error?.message}
                                 {...field}
                                 value={field.value || ''}
@@ -196,7 +197,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
             <div>
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
-                    tittel={formatMessage('feiloppsummering.title')}
+                    tittel={'For å gå videre må du rette opp følgende:'}
                     feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                     hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
                     ref={feiloppsummeringref}
