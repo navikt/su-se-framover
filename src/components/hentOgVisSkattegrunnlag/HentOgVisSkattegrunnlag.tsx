@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, HelpText, Select, TextField, Textarea } from '@navikt/ds-react';
+import { Alert, Button, HelpText, Select, TextField, Textarea } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 import { Controller, UseFormClearErrors, UseFormTrigger, useForm } from 'react-hook-form';
 
 import { fetchSkattForForhåndsvisning, fetchSkattPdfOgJournalfør } from '~src/api/skattApi';
@@ -17,11 +18,12 @@ import { FrioppslagFormData, frioppslagSchema } from './HentOgVisSkattegrunnlagU
 export const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const { formatMessage } = useI18n({ messages });
 
+    const [warnings, setWarnings] = useState<Array<{ id: number; text: string }>>([]);
     const [journalførStatus, journalførSkattPdf] = useApiCall(fetchSkattPdfOgJournalfør);
     const [forhåndsvisStatus, forhåndsvisSkattePdf] = useApiCall(fetchSkattForForhåndsvisning);
 
     const form = useForm<FrioppslagFormData>({
-        defaultValues: { fnr: '', epsFnr: '', år: '', begrunnelse: '', sakstype: Sakstype.Alder, fagsystemId: '' },
+        defaultValues: { fnr: '', epsFnr: '', år: '', begrunnelse: '', sakstype: null, fagsystemId: '' },
         resolver: yupResolver(frioppslagSchema),
     });
 
@@ -33,10 +35,12 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
         if (
             formValues.fnr.length !== 11 ||
             isNaN(Number.parseInt(formValues.år)) ||
-            Number.parseInt(formValues.år) < 2020
+            Number.parseInt(formValues.år) < 2020 ||
+            formValues.sakstype === null
         ) {
             await trigger('fnr');
             await trigger('år');
+            await trigger('sakstype');
             return;
         }
 
@@ -45,7 +49,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
             return;
         }
 
-        clearErrors(['fnr', 'år', 'epsFnr']);
+        clearErrors(['fnr', 'år', 'epsFnr', 'sakstype']);
 
         forhåndsvisSkattePdf(
             {
@@ -60,6 +64,43 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
         );
     };
 
+    const watch = form.watch();
+
+    useEffect(() => {
+        if (form.formState.touchedFields.fagsystemId && form.formState.touchedFields.sakstype) {
+            if (watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Alder) {
+                setWarnings([
+                    ...warnings.filter((warning) => warning.id !== 1),
+                    { id: 1, text: 'Valgt sakstype alder med fagsystemId som matcher uføre' },
+                ]);
+            }
+
+            if (watch.fagsystemId.length !== 4 && watch.sakstype === Sakstype.Uføre) {
+                setWarnings([
+                    ...warnings.filter((warning) => warning.id !== 2),
+                    { id: 2, text: 'Valgt sakstype uføre med fagsystemId som ikke matcher uføre' },
+                ]);
+            }
+
+            if (watch.fagsystemId.length !== 7 && watch.sakstype === Sakstype.Alder) {
+                setWarnings([
+                    ...warnings.filter((warning) => warning.id !== 3),
+                    {
+                        id: 3,
+                        text: 'Valgt sakstype alder med ukjent format på fagsystemId - vennligst dobbeltsjekk at dette er riktig',
+                    },
+                ]);
+            }
+
+            if (watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Uføre) {
+                setWarnings(warnings.filter((warning) => warning.id !== 2));
+            }
+            if (watch.fagsystemId.length === 7 && watch.sakstype === Sakstype.Alder) {
+                setWarnings(warnings.filter((warning) => warning.id !== 1 && warning.id !== 3));
+            }
+        }
+    }, [watch.begrunnelse, watch.fagsystemId, watch.sakstype, watch.epsFnr, watch.år, watch.fnr]);
+
     return (
         <form
             onSubmit={form.handleSubmit((data) =>
@@ -69,7 +110,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                         epsFnr: data.epsFnr ? data.epsFnr : null,
                         år: +data.år,
                         begrunnelse: data.begrunnelse,
-                        sakstype: data.sakstype,
+                        sakstype: data.sakstype!,
                         fagsystemId: data.fagsystemId,
                     },
                     (b: Blob) => window.open(URL.createObjectURL(b)),
@@ -77,6 +118,15 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
             )}
         >
             <div className={styles.formContainer}>
+                {warnings.length > 0 && (
+                    <Alert className={styles.alert} variant="warning">
+                        <ul>
+                            {warnings.map((warning) => (
+                                <li key={warning.id}>{warning.text}</li>
+                            ))}
+                        </ul>
+                    </Alert>
+                )}
                 <div className={styles.upperFormContainer}>
                     <div className={styles.formInputContainers}>
                         <Controller
@@ -145,7 +195,9 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                                     label={formatMessage('frioppslag.sakstype')}
                                     error={fieldState.error?.message}
                                     {...field}
+                                    value={field.value ?? ''}
                                 >
+                                    <option value="" disabled />
                                     {Object.entries(Sakstype).map((type) => (
                                         <option value={type[1]} key={type[1]}>
                                             {type[0]}

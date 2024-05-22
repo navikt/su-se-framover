@@ -1,3 +1,4 @@
+import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { Sakstype } from '~src/types/Sak';
 
@@ -6,7 +7,7 @@ export interface FrioppslagFormData {
     epsFnr: string;
     år: string;
     begrunnelse: string;
-    sakstype: Sakstype;
+    sakstype: Nullable<Sakstype>;
     fagsystemId: string;
 }
 
@@ -25,6 +26,6 @@ export const frioppslagSchema = yup.object<FrioppslagFormData>({
         })
         .required(),
     begrunnelse: yup.string().required(),
-    sakstype: yup.string().oneOf(Object.values(Sakstype)).required(),
+    sakstype: yup.string().nullable().oneOf(Object.values(Sakstype)).required(),
     fagsystemId: yup.string().required(),
 });
