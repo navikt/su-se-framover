@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, HelpText, Select, TextField, Textarea } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, HelpText, Radio, RadioGroup, Select, TextField, Textarea } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, UseFormClearErrors, UseFormTrigger, useForm } from 'react-hook-form';
 
@@ -13,7 +13,7 @@ import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
 
 import messages from './HentOgVisSkattegrunnlag-nb';
 import styles from './HentOgVisSkattegrunnlag.module.less';
-import { FrioppslagFormData, frioppslagSchema } from './HentOgVisSkattegrunnlagUtils';
+import { FrioppslagFormData, frioppslagSchema, HentSkatteDataFor } from './HentOgVisSkattegrunnlagUtils';
 
 export const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const { formatMessage } = useI18n({ messages });
@@ -33,28 +33,51 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
         clearErrors: UseFormClearErrors<FrioppslagFormData>,
     ) => {
         if (
-            formValues.fnr.length !== 11 ||
+            formValues.henterSkatteDataFor === null ||
             isNaN(Number.parseInt(formValues.år)) ||
             Number.parseInt(formValues.år) < 2020 ||
             formValues.sakstype === null
         ) {
-            await trigger('fnr');
+            await trigger('henterSkatteDataFor');
             await trigger('år');
             await trigger('sakstype');
             return;
         }
 
-        if (formValues.epsFnr && formValues.epsFnr.length !== 11) {
-            await trigger('epsFnr');
-            return;
+        if (
+            formValues.henterSkatteDataFor === HentSkatteDataFor.Søker ||
+            formValues.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+        ) {
+            if (formValues.fnr.length !== 11) {
+                await trigger('fnr');
+                return;
+            }
         }
 
-        clearErrors(['fnr', 'år', 'epsFnr', 'sakstype']);
+        if (
+            formValues.henterSkatteDataFor === HentSkatteDataFor.EPS ||
+            formValues.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+        ) {
+            if (formValues.epsFnr.length !== 11) {
+                await trigger('epsFnr');
+                return;
+            }
+        }
+
+        clearErrors(['henterSkatteDataFor', 'fnr', 'år', 'epsFnr', 'sakstype']);
 
         forhåndsvisSkattePdf(
             {
-                fnr: formValues.fnr,
-                epsFnr: formValues.epsFnr ? formValues.epsFnr : null,
+                fnr:
+                    formValues.henterSkatteDataFor === HentSkatteDataFor.Søker ||
+                    formValues.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+                        ? formValues.fnr
+                        : null,
+                epsFnr:
+                    formValues.henterSkatteDataFor === HentSkatteDataFor.EPS ||
+                    formValues.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+                        ? formValues.epsFnr
+                        : null,
                 år: +formValues.år,
                 begrunnelse: formValues.begrunnelse,
                 sakstype: formValues.sakstype,
@@ -106,8 +129,16 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
             onSubmit={form.handleSubmit((data) =>
                 journalførSkattPdf(
                     {
-                        fnr: data.fnr,
-                        epsFnr: data.epsFnr ? data.epsFnr : null,
+                        fnr:
+                            data.henterSkatteDataFor === HentSkatteDataFor.Søker ||
+                            data.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+                                ? data.fnr
+                                : null,
+                        epsFnr:
+                            data.henterSkatteDataFor === HentSkatteDataFor.EPS ||
+                            data.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+                                ? data.epsFnr
+                                : null,
                         år: +data.år,
                         begrunnelse: data.begrunnelse,
                         sakstype: data.sakstype!,
@@ -127,50 +158,71 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                         </ul>
                     </Alert>
                 )}
+
                 <div className={styles.upperFormContainer}>
-                    <div className={styles.formInputContainers}>
+                    <div className={styles.skatteDataForContainer}>
                         <Controller
                             control={form.control}
-                            name={'fnr'}
+                            name={'henterSkatteDataFor'}
                             render={({ field, fieldState }) => (
-                                <TextField
-                                    label={
+                                <RadioGroup
+                                    {...field}
+                                    legend={
                                         <div className={styles.fnrLabel}>
-                                            {formatMessage('frioppslag.fødselsnummer')}
+                                            Velg hvem du vil hente skatte-data for
                                             <HelpText>
-                                                {formatMessage('frioppslag.fødselsnummer.søkers.helpText')}
+                                                <BodyShort>
+                                                    Dersom du henter skattedata for søker og EPS, vil begge sitt
+                                                    skattegrunnlaget bli journalført på søker
+                                                </BodyShort>
+                                                <BodyShort>
+                                                    Ellers blir skattegrunnlaget journalført på fødselsnummeret du har
+                                                    valgt
+                                                </BodyShort>
                                             </HelpText>
                                         </div>
                                     }
-                                    {...field}
                                     error={fieldState.error?.message}
-                                />
+                                    value={field.value ?? ''}
+                                >
+                                    <Radio id={field.name} value={HentSkatteDataFor.Søker} ref={field.ref}>
+                                        Søker
+                                    </Radio>
+                                    <Radio value={HentSkatteDataFor.EPS}>EPS</Radio>
+                                    <Radio value={HentSkatteDataFor.SøkerOgEPS}>Søker & EPS</Radio>
+                                </RadioGroup>
                             )}
                         />
-                        <Controller
-                            control={form.control}
-                            name={'epsFnr'}
-                            render={({ field, fieldState }) => (
-                                <TextField
-                                    label={formatMessage('frioppslag.fødselsnummer.eps')}
-                                    {...field}
-                                    error={fieldState.error?.message}
+                        <div className={styles.formInputContainers}>
+                            {(watch.henterSkatteDataFor === HentSkatteDataFor.Søker ||
+                                watch.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS) && (
+                                <Controller
+                                    control={form.control}
+                                    name={'fnr'}
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            label="Fødselsnummer - Søker"
+                                            {...field}
+                                            error={fieldState.error?.message}
+                                        />
+                                    )}
                                 />
                             )}
-                        />
-
-                        <Controller
-                            control={form.control}
-                            name={'år'}
-                            render={({ field, fieldState }) => (
-                                <TextField
-                                    label={formatMessage('frioppslag.år')}
-                                    {...field}
-                                    inputMode="numeric"
-                                    error={fieldState.error?.message}
+                            {(watch.henterSkatteDataFor === HentSkatteDataFor.EPS ||
+                                watch.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS) && (
+                                <Controller
+                                    control={form.control}
+                                    name={'epsFnr'}
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            label="Fødselsnummer - EPS"
+                                            {...field}
+                                            error={fieldState.error?.message}
+                                        />
+                                    )}
                                 />
                             )}
-                        />
+                        </div>
                     </div>
 
                     <div className={styles.formInputContainers}>
@@ -192,6 +244,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                             render={({ field, fieldState }) => (
                                 <Select
                                     id={field.name}
+                                    className={styles.select}
                                     label={formatMessage('frioppslag.sakstype')}
                                     error={fieldState.error?.message}
                                     {...field}
@@ -204,6 +257,20 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                                         </option>
                                     ))}
                                 </Select>
+                            )}
+                        />
+                    </div>
+                    <div className={styles.formInputContainers}>
+                        <Controller
+                            control={form.control}
+                            name={'år'}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    label={formatMessage('frioppslag.år')}
+                                    {...field}
+                                    inputMode="numeric"
+                                    error={fieldState.error?.message}
+                                />
                             )}
                         />
                     </div>

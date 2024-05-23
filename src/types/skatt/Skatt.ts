@@ -52,7 +52,7 @@ export interface KjøretøySpesifisering {
 }
 
 export interface FrioppslagSkattRequest {
-    fnr: string;
+    fnr: Nullable<string>;
     epsFnr: Nullable<string>;
     år: number;
     begrunnelse: string;

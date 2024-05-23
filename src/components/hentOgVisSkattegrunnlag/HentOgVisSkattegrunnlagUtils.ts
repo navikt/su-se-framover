@@ -3,6 +3,7 @@ import yup from '~src/lib/validering';
 import { Sakstype } from '~src/types/Sak';
 
 export interface FrioppslagFormData {
+    henterSkatteDataFor: Nullable<HentSkatteDataFor>;
     fnr: string;
     epsFnr: string;
     år: string;
@@ -11,7 +12,14 @@ export interface FrioppslagFormData {
     fagsystemId: string;
 }
 
+export enum HentSkatteDataFor {
+    Søker = 'Søker',
+    EPS = 'EPS',
+    SøkerOgEPS = 'SøkerOgEPS',
+}
+
 export const frioppslagSchema = yup.object<FrioppslagFormData>({
+    henterSkatteDataFor: yup.string().nullable().oneOf(Object.values(HentSkatteDataFor)).required(),
     fnr: yup.string().required().length(11),
     epsFnr: yup
         .string()

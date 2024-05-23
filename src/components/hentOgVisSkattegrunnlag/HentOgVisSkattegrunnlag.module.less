@@ -15,13 +15,20 @@
 
 .upperFormContainer {
     display: flex;
+    flex-direction: column;
     gap: @spacing-s;
     margin-bottom: @spacing-s;
 }
 
+.skatteDataForContainer {
+    > :first-child {
+        margin-bottom: @spacing-s;
+    }
+}
+
 .formInputContainers {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: @spacing-s;
 
     label {
