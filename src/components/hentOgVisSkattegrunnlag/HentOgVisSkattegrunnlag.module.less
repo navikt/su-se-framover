@@ -1,16 +1,12 @@
 @import '@styles/variables.less';
 
-.frioppslagContainer {
-    display: flex;
-    gap: @spacing;
-}
-
 .formContainer {
     margin-bottom: @spacing;
 }
 
 .alert {
     margin-bottom: @spacing-s;
+    max-width: 80%;
 }
 
 .upperFormContainer {
@@ -18,6 +14,7 @@
     flex-direction: column;
     gap: @spacing-s;
     margin-bottom: @spacing-s;
+    max-width: 36rem;
 }
 
 .skatteDataForContainer {
@@ -29,6 +26,7 @@
 .formInputContainers {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    align-items: start;
     gap: @spacing-s;
 
     label {

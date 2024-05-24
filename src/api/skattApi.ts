@@ -4,9 +4,10 @@ import apiClient, { ApiClientResult } from './apiClient';
 
 export async function fetchSkattPdfOgJournalfør(arg: FrioppslagSkattRequest): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/skatt/person/${arg.fnr}`,
+        url: `/skatt`,
         method: 'POST',
         body: {
+            fnr: arg.fnr,
             epsFnr: arg.epsFnr,
             år: arg.år,
             begrunnelse: arg.begrunnelse,
@@ -19,9 +20,10 @@ export async function fetchSkattPdfOgJournalfør(arg: FrioppslagSkattRequest): P
 }
 export async function fetchSkattForForhåndsvisning(arg: FrioppslagSkattRequest): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/skatt/person/${arg.fnr}/forhandsvis`,
+        url: `/skatt/forhandsvis`,
         method: 'POST',
         body: {
+            fnr: arg.fnr,
             epsFnr: arg.epsFnr,
             år: arg.år,
             begrunnelse: arg.begrunnelse,

@@ -20,13 +20,30 @@ export enum HentSkatteDataFor {
 
 export const frioppslagSchema = yup.object<FrioppslagFormData>({
     henterSkatteDataFor: yup.string().nullable().oneOf(Object.values(HentSkatteDataFor)).required(),
-    fnr: yup.string().required().length(11),
+    fnr: yup
+        .string()
+        .defined()
+        .test('Fødselsnummer må være 11 siffer', `Fødselsnummer må være 11 siffer`, function (value) {
+            const henterSkatteDataFor = this.parent.henterSkatteDataFor;
+            if (
+                henterSkatteDataFor === HentSkatteDataFor.Søker ||
+                henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+            ) {
+                return value ? value.length === 11 : false;
+            }
+            return true;
+        }),
     epsFnr: yup
         .string()
-        .test('Fødselsnummer - EPS må være 11 tegn', `EPS-fnr må være 11 tegn`, function (value) {
-            return value ? value.length === 11 : true;
-        })
-        .defined(),
+        .defined()
+        .test('Fødselsnummer må være 11 siffer', `Fødselsnummer må være 11 siffer`, function (value) {
+            const henterSkatteDataFor = this.parent.henterSkatteDataFor;
+            if (henterSkatteDataFor === HentSkatteDataFor.EPS || henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS) {
+                return value ? value.length === 11 : false;
+            }
+            return true;
+        }),
+
     år: yup
         .string()
         .test('År må være 2020 eller etter', `År må være 2020 eller etter`, function (value) {

@@ -18,7 +18,7 @@ import { FrioppslagFormData, frioppslagSchema, HentSkatteDataFor } from './HentO
 export const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const { formatMessage } = useI18n({ messages });
 
-    const [warnings, setWarnings] = useState<Array<{ id: number; text: string }>>([]);
+    const [warning, setWarning] = useState<string>('');
     const [journalførStatus, journalførSkattPdf] = useApiCall(fetchSkattPdfOgJournalfør);
     const [forhåndsvisStatus, forhåndsvisSkattePdf] = useApiCall(fetchSkattForForhåndsvisning);
 
@@ -64,7 +64,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
             }
         }
 
-        clearErrors(['henterSkatteDataFor', 'fnr', 'år', 'epsFnr', 'sakstype']);
+        clearErrors();
 
         forhåndsvisSkattePdf(
             {
@@ -91,35 +91,27 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
 
     useEffect(() => {
         if (form.formState.touchedFields.fagsystemId && form.formState.touchedFields.sakstype) {
-            if (watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Alder) {
-                setWarnings([
-                    ...warnings.filter((warning) => warning.id !== 1),
-                    { id: 1, text: 'Valgt sakstype alder med fagsystemId som matcher uføre' },
-                ]);
+            if (watch.fagsystemId.length !== 0 && watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Alder) {
+                setWarning('Valgt sakstype alder med fagsystemId som matcher uføre');
             }
 
-            if (watch.fagsystemId.length !== 4 && watch.sakstype === Sakstype.Uføre) {
-                setWarnings([
-                    ...warnings.filter((warning) => warning.id !== 2),
-                    { id: 2, text: 'Valgt sakstype uføre med fagsystemId som ikke matcher uføre' },
-                ]);
+            if (watch.fagsystemId.length !== 0 && watch.fagsystemId.length !== 4 && watch.sakstype === Sakstype.Uføre) {
+                setWarning('Valgt sakstype uføre med fagsystemId som ikke matcher uføre');
             }
 
-            if (watch.fagsystemId.length !== 7 && watch.sakstype === Sakstype.Alder) {
-                setWarnings([
-                    ...warnings.filter((warning) => warning.id !== 3),
-                    {
-                        id: 3,
-                        text: 'Valgt sakstype alder med ukjent format på fagsystemId - vennligst dobbeltsjekk at dette er riktig',
-                    },
-                ]);
+            if (watch.fagsystemId.length !== 0 && watch.fagsystemId.length !== 7 && watch.sakstype === Sakstype.Alder) {
+                setWarning(
+                    'Valgt sakstype alder med ukjent format på fagsystemId - vennligst dobbeltsjekk at dette er riktig',
+                );
             }
 
-            if (watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Uføre) {
-                setWarnings(warnings.filter((warning) => warning.id !== 2));
-            }
-            if (watch.fagsystemId.length === 7 && watch.sakstype === Sakstype.Alder) {
-                setWarnings(warnings.filter((warning) => warning.id !== 1 && warning.id !== 3));
+            if (
+                watch.fagsystemId.length === 0 ||
+                (watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Uføre) ||
+                (watch.fagsystemId.length === 7 && watch.sakstype === Sakstype.Alder)
+            ) {
+                setWarning('');
+                return;
             }
         }
     }, [watch.begrunnelse, watch.fagsystemId, watch.sakstype, watch.epsFnr, watch.år, watch.fnr]);
@@ -149,13 +141,9 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
             )}
         >
             <div className={styles.formContainer}>
-                {warnings.length > 0 && (
+                {warning && (
                     <Alert className={styles.alert} variant="warning">
-                        <ul>
-                            {warnings.map((warning) => (
-                                <li key={warning.id}>{warning.text}</li>
-                            ))}
-                        </ul>
+                        {warning}
                     </Alert>
                 )}
 
