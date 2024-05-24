@@ -18,10 +18,10 @@ spec:
         extra:
           - "NAVident"
         groups:
-          - id: {{ env.AZURE_GROUP_ATTESTANT }}
-          - id: {{ env.AZURE_GROUP_SAKSBEHANDLER }}
-          - id: {{ env.AZURE_GROUP_VEILEDER }}
-          - id: {{ env.AZURE_GROUP_DRIFT }}
+          - id: "d75164fa-39e6-4149-956e-8404bc9080b6" # 0000-GA-SU-UFOR-ATTESTANT
+          - id: "0ba009c4-d148-4a51-b501-4b1cf906889d" # 0000-GA-SU-UFOR-VEILEDER
+          - id: "062d4814-8538-4f3a-bcb9-32821af7909a" # 0000-GA-SU-UFOR-SAKSBEHANDLER
+          - id: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b" # 0000-GA-SU-UFOR-DRIFT
       replyURLs:
         - "http://localhost/oauth2/callback"
         - "https://supplerendestonad.dev.adeo.no/oauth2/callback"
