@@ -106,12 +106,24 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
             }
 
             if (
+                watch.fagsystemId.length !== 0 &&
+                watch.fagsystemId.length === 7 &&
+                watch.sakstype === Sakstype.Alder &&
+                watch.fagsystemId.match('[0-9]{7}')
+            ) {
+                setWarning(
+                    'Valgt sakstype alder med fagsystemId som kun inneholder tall. Vennligst dobbeltsjekk at dette er riktig',
+                );
+            }
+
+            if (
                 watch.fagsystemId.length === 0 ||
                 (watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Uføre) ||
-                (watch.fagsystemId.length === 7 && watch.sakstype === Sakstype.Alder)
+                (watch.fagsystemId.length === 7 &&
+                    watch.sakstype === Sakstype.Alder &&
+                    !watch.fagsystemId.match('[0-9]{7}'))
             ) {
                 setWarning('');
-                return;
             }
         }
     }, [watch.begrunnelse, watch.fagsystemId, watch.sakstype, watch.epsFnr, watch.år, watch.fnr]);
