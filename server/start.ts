@@ -9,6 +9,7 @@ import * as Config from './config.js';
 import { httpLogger, logger } from './logger.js';
 import setupProxy from './proxy.js';
 import routes from './routes.js';
+import redirectMiddleware from './redirect.js';
 
 const hotjarCsp = {
     imgSrc: ['http://*.hotjar.com', 'https://*.hotjar.com', 'http://*.hotjar.io', 'https://*.hotjar.io'],
@@ -41,6 +42,8 @@ export default async function startServer() {
 
     app.set('views', Config.server.frontendDir);
     app.set('view engine', '.html');
+
+    app.use(redirectMiddleware);
 
     app.use(
         helmet({
