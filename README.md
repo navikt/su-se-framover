@@ -25,7 +25,7 @@ $ npm start
 ## Redis
 
 Brukes for å cache bruker-sessions.
-Lokalt oppsett ligger i [./docker-compose.yml](), mens nais-oppsettet ligger i [./nais.yml]().
+Lokalt oppsett ligger i [./docker-compose.yml](), mens nais-oppsettet ligger i [.nais/{dev|prod}.yml]().
 
 ### Koble til
 
@@ -92,8 +92,8 @@ Disse styres gjennom `.env` lokalt og på vanlig måte i miljøene.
 
 ### Legge til ny variabel
 
-1. Legg den til i [./.env]() (og [./.env.template]()), [./nais-dev.json]() og [./nais-prod.json]()
-    - **Merk**: Hvis verdien er hemmelig så må man heller legge den inn i `Vault` enn i `nais.json`-filene
+1. Legg den til i [./.env]() (og [./.env.template]()), [./.nais/dev.yaml]() og [./.nais/prod.yaml]()
+    - **Merk**: Hvis verdien er hemmelig så må man heller legge den inn i `Vault` enn i `nais`-filene
 2. Legg den til i [./server/config.ts](); enten i `server`- eller `client`-verdien, avhengig av hvor den skal brukes
 
 ### Hemmelige variabler

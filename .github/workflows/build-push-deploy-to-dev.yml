@@ -70,9 +70,8 @@ jobs:
             - uses: nais/deploy/actions/deploy@v2
               env:
                   CLUSTER: dev-fss
-                  RESOURCE: nais.yml
+                  RESOURCE: .nais/dev.yaml
                   VAR: image=${{ env.image }}
-                  VARS: nais-dev.json
 
     generate-draft-release:
         if: (github.ref == 'refs/heads/master')
