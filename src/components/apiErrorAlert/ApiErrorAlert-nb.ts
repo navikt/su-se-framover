@@ -73,6 +73,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FINNES_ÅPEN_SØKNADSBEHANDLING]: 'Det finnes allerede en åpen søknadsbehandling',
     [ApiErrorCode.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'Formue som fører til opphør må revurderes',
     [ApiErrorCode.FORMUELISTE_KAN_IKKE_VÆRE_TOM]: 'Formuelisten kan ikke være tom',
+    [ApiErrorCode.FORESPURT_FNR_PÅ_SAK_IKKE_LIK_FNR_FRA_PDL]:
+        'Forespurte fødselsnummer registrert på saken matcher ikke fødselsnummeret vi vikk fra PDL ',
     [ApiErrorCode.FORSKJELLIG_RESULTAT]: 'Vurderingsperiode kan ikke inneholde forskjellige resultater',
     [ApiErrorCode.FRADRAG_FOR_EPS_UTEN_EPS]: 'Det finnes fradrag for EPS, men søker har ikke EPS',
     [ApiErrorCode.FRADRAG_MANGLER_PERIODE]: 'Fradrag mangler periode',

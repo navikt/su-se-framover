@@ -60,6 +60,7 @@ export enum ApiErrorCode {
     FINNES_ÅPEN_STANSBEHANDLING = 'finnes_åpen_stansbehandling',
     FINNES_ÅPEN_GJENOPPTAKSBEHANDLING = 'finnes_åpen_gjenopptaksbehandling',
     FINNES_ÅPEN_SØKNADSBEHANDLING = 'finnes_åpen_søknadsbehandling',
+    FORESPURT_FNR_PÅ_SAK_IKKE_LIK_FNR_FRA_PDL = 'forespurt_fnr_på_sak_ikke_lik_fnr_fra_pdl',
     FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'formue_som_fører_til_opphør_må_revurderes',
     FORMUELISTE_KAN_IKKE_VÆRE_TOM = 'formueliste_kan_ikke_være_tom',
     FORSKJELLIG_RESULTAT = 'vurderingsperiode_kan_ikke_inneholde_forskjellige_resultater',
