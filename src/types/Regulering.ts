@@ -64,6 +64,7 @@ export enum ÅrsakForManuellType {
     VedtakstidslinjeErIkkeSammenhengende = 'VedtakstidslinjeErIkkeSammenhengende',
     DelvisOpphør = 'DelvisOpphør',
     FantIkkeVedtakForApril = 'FantIkkeVedtakForApril',
+    MerEnn1Eps = 'MerEnn1Eps',
 }
 
 export interface ÅrsakForManuell {
@@ -85,6 +86,12 @@ export interface BrukerManglerSupplement extends ÅrsakForManuell {
 }
 
 export interface SupplementInneholderIkkeFradraget extends ÅrsakForManuell {
+    fradragskategori: Fradragskategori;
+    fradragTilhører: FradragTilhører;
+    begrunnelse: string;
+}
+
+export interface MerEnn1Eps extends ÅrsakForManuell {
     fradragskategori: Fradragskategori;
     fradragTilhører: FradragTilhører;
     begrunnelse: string;

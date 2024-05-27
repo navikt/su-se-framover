@@ -290,6 +290,19 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
+                        case ÅrsakForManuellType.MerEnn1Eps: {
+                            const asserted = årsak as SupplementInneholderIkkeFradraget;
+                            return (
+                                <li key={i}>
+                                    <BodyShort>Data fra ekstern kilde inneholder flere EPS</BodyShort>
+                                    <div className={styles.årsaksdetaljer}>
+                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
+                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
+                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
+                                    </div>
+                                </li>
+                            );
+                        }
                         case ÅrsakForManuellType.FinnesFlerePerioderAvFradrag: {
                             const asserted = årsak as FinnesFlerePerioderAvFradrag;
                             return (
