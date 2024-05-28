@@ -316,7 +316,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                     {journalførStatus.error.body.code === ApiErrorCode.FANT_IKKE_ALDERSSAK && (
                         <div className={styles.apiErrorContentContainer}>
                             <BodyShort>
-                                Merk at systemet kan ikke garantere knyttning - vil du journalføre? likevel
+                                Merk at systemet kan ikke garantere knyttning - vil du journalføre likevel?
                             </BodyShort>
                             <Button
                                 type="button"
