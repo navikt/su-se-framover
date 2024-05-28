@@ -15,6 +15,7 @@ interface Props {
     className?: string;
     size?: 'medium' | 'small';
     variant?: 'error' | 'warning' | 'info' | 'success';
+    children?: React.ReactNode;
 }
 
 export const useApiErrorMessages = () => {
@@ -40,7 +41,7 @@ const konstruerMeldingForAlert = (formatMessage: MessageFormatter<typeof message
     }
 };
 
-const ApiErrorAlert = ({ error, className, size, variant = 'error' }: Props) => {
+const ApiErrorAlert = ({ error, className, size, variant = 'error', children }: Props) => {
     const { formatMessage } = useI18n({ messages });
 
     const melding = konstruerMeldingForAlert(formatMessage, error);
@@ -52,6 +53,7 @@ const ApiErrorAlert = ({ error, className, size, variant = 'error' }: Props) => 
             ) : (
                 melding.map((err, idx) => <BodyShort key={idx}>{err}</BodyShort>)
             )}
+            {children}
         </Alert>
     );
 };

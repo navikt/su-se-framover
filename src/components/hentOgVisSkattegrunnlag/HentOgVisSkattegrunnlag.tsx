@@ -4,12 +4,17 @@ import { Alert, BodyShort, Button, HelpText, Radio, RadioGroup, Select, TextFiel
 import { useEffect, useState } from 'react';
 import { Controller, UseFormClearErrors, UseFormTrigger, useForm } from 'react-hook-form';
 
-import { fetchSkattForForhåndsvisning, fetchSkattPdfOgJournalfør } from '~src/api/skattApi';
+import {
+    fetchSkattForForhåndsvisning,
+    fetchSkattPdfOgJournalfør,
+    fetchSkattPdfOgJournalførUtenVerifisering,
+} from '~src/api/skattApi';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Sakstype } from '~src/types/Sak';
 
 import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
+import { ApiErrorCode } from '../apiErrorAlert/apiErrorCode';
 
 import messages from './HentOgVisSkattegrunnlag-nb';
 import styles from './HentOgVisSkattegrunnlag.module.less';
@@ -20,6 +25,9 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
 
     const [warning, setWarning] = useState<string>('');
     const [journalførStatus, journalførSkattPdf] = useApiCall(fetchSkattPdfOgJournalfør);
+    const [journalførStatusUtenVerifisering, journalførSkattPdfUtenVerifisering] = useApiCall(
+        fetchSkattPdfOgJournalførUtenVerifisering,
+    );
     const [forhåndsvisStatus, forhåndsvisSkattePdf] = useApiCall(fetchSkattForForhåndsvisning);
 
     const form = useForm<FrioppslagFormData>({
@@ -303,7 +311,52 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                 </Button>
             </div>
             {RemoteData.isFailure(forhåndsvisStatus) && <ApiErrorAlert error={forhåndsvisStatus.error} />}
-            {RemoteData.isFailure(journalførStatus) && <ApiErrorAlert error={journalførStatus.error} />}
+            {RemoteData.isFailure(journalførStatus) && (
+                <ApiErrorAlert error={journalførStatus.error}>
+                    {journalførStatus.error.body.code === ApiErrorCode.FANT_IKKE_ALDERSSAK && (
+                        <div className={styles.apiErrorContentContainer}>
+                            <BodyShort>
+                                Merk at systemet kan ikke garantere knyttning - vil du journalføre? likevel
+                            </BodyShort>
+                            <Button
+                                type="button"
+                                variant="danger"
+                                onClick={async () => {
+                                    await form.trigger().then((isFormValid) => {
+                                        if (isFormValid) {
+                                            const values = form.getValues();
+                                            journalførSkattPdfUtenVerifisering(
+                                                {
+                                                    fnr:
+                                                        values.henterSkatteDataFor === HentSkatteDataFor.Søker ||
+                                                        values.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+                                                            ? values.fnr
+                                                            : null,
+                                                    epsFnr:
+                                                        values.henterSkatteDataFor === HentSkatteDataFor.EPS ||
+                                                        values.henterSkatteDataFor === HentSkatteDataFor.SøkerOgEPS
+                                                            ? values.epsFnr
+                                                            : null,
+                                                    år: +values.år,
+                                                    begrunnelse: values.begrunnelse,
+                                                    sakstype: values.sakstype!,
+                                                    fagsystemId: values.fagsystemId,
+                                                },
+                                                (b: Blob) => window.open(URL.createObjectURL(b)),
+                                            );
+                                        }
+                                    });
+                                }}
+                            >
+                                Journalfør likevel
+                            </Button>
+                        </div>
+                    )}
+                </ApiErrorAlert>
+            )}
+            {RemoteData.isFailure(journalførStatusUtenVerifisering) && (
+                <ApiErrorAlert error={journalførStatusUtenVerifisering.error} />
+            )}
         </form>
     );
 };

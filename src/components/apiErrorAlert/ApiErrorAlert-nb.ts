@@ -36,6 +36,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ER_BESLUTTET]: 'Revurderingen er allerede besluttet',
 
     //F
+    [ApiErrorCode.FANT_IKKE_ALDERSSAK]: 'Kunne ikke finne en knyttning mellom fødselsnummer og fagsak',
     [ApiErrorCode.FANT_IKKE_AKTØR_ID]: 'Fant ikke AktørID',
     [ApiErrorCode.FANT_IKKE_BEHANDLING]: 'Fant ikke behandlingen',
     [ApiErrorCode.FANT_IKKE_GJELDENDE_VEDTAKSDATA_FOR_TIDLIGERE_PERIDOE]: 'Fant ikke data fra tidligere behandlinger',

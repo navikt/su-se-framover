@@ -29,6 +29,7 @@ export enum ApiErrorCode {
     ER_BESLUTTET = 'forhåndsvarslingen_er_allerede_besluttet',
 
     //F
+    FANT_IKKE_ALDERSSAK = 'fant_ikke_alderssak',
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
     FANT_IKKE_GJELDENDE_STØNADSPERIODE = 'fant_ikke_gjeldende_stønadsperiode',
