@@ -5,7 +5,7 @@ import * as S from 'fp-ts/string';
 import { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import { pipe } from '~src/lib/fp';
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
-import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 export enum BehandlingssammendragKolonne {
     saksnummer = 'saksnummer',

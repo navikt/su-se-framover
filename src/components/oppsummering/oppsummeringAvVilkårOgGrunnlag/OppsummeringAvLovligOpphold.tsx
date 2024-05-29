@@ -4,7 +4,7 @@ import {
     LovligOppholdVilkår,
     VurderingsperiodeLovligOpphold,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår';
-import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 

@@ -24,8 +24,9 @@ import * as Routes from '~src/lib/routes';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, KlageStatus } from '~src/types/Klage';
 import { Vedtak, VedtakType } from '~src/types/Vedtak';
-import { formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import {
     erDokumentGenerertEllerSenere,
     erDokumentIkkeGenerertEnda,

@@ -17,6 +17,7 @@ import {
     UtbetalingsRevurderingStatus,
 } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import { erRevurderingIverksattMedTilbakekreving } from '~src/utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, {
@@ -58,7 +59,7 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
                     },
                     {
                         tittel: formatMessage('label.periode'),
-                        verdi: DateUtils.formatPeriode(props.revurdering.periode),
+                        verdi: formatPeriode(props.revurdering.periode),
                     },
                     {
                         tittel: formatMessage('label.årsak'),

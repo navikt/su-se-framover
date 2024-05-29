@@ -14,7 +14,8 @@ import * as Routes from '~src/lib/routes';
 import { useAppDispatch } from '~src/redux/Store';
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { Sak } from '~src/types/Sak';
-import { formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
+import { formatDateTime } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import messages from './Behandlingssammendrag-nb';
 import styles from './Behandlingssammendrag.module.less';

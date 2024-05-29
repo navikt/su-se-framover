@@ -5,7 +5,7 @@ import {
     UføreVilkår,
     VurderingsperiodeUføre,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 

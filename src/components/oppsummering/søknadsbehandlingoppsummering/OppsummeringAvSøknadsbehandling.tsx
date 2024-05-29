@@ -6,7 +6,8 @@ import * as PdfApi from '~src/api/pdfApi';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { formatDate, formatPeriode } from '~src/utils/date/dateUtils';
+import { formatDate } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';

@@ -41,9 +41,9 @@ import {
     ÅrsakForManuellType,
     FantIkkeVedtakForApril,
 } from '~src/types/Regulering';
-import { formatPeriode, parseIsoDateOnly } from '~src/utils/date/dateUtils';
+import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
-import { formatPeriodeMedOptionalTilOgMed } from '~src/utils/periode/periodeUtils';
+import { formatPeriode, formatPeriodeMedOptionalTilOgMed } from '~src/utils/periode/periodeUtils';
 
 import messages from './manuellRegulering-nb';
 import styles from './manuellRegulering.module.less';

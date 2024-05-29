@@ -4,7 +4,7 @@ import {
     FastOppholdVilkår,
     VurderingsperiodeFastOpphold,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår';
-import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 

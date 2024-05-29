@@ -4,7 +4,7 @@ import {
     FlyktningVilkår,
     VurderingsperiodeFlyktning,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår';
-import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 

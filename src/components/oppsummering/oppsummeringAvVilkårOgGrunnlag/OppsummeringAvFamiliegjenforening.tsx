@@ -4,7 +4,7 @@ import {
     Familiegjenforening,
     FamiliegjenforeningVurdering,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
-import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 

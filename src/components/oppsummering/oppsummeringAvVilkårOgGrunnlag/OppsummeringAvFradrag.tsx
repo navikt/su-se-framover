@@ -9,8 +9,8 @@ import { eqNullable } from '~src/lib/types';
 import { Fradrag, FradragTilhører, UtenlandskInntekt } from '~src/types/Fradrag';
 import { eqStringPeriode } from '~src/types/Periode';
 import { groupByEq } from '~src/utils/array/arrayUtils';
-import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 
@@ -45,7 +45,7 @@ const OppsummeringAvFradrag = (props: { fradrag: Fradrag[] }) => {
                             verdi={pipe(
                                 A.head(fradragsgruppe),
                                 O.chainNullableK((head) => head.periode),
-                                O.map((periode) => DateUtils.formatPeriode(periode)),
+                                O.map((periode) => formatPeriode(periode)),
                                 O.getOrElse(() => formatMessage('feil.ukjent.periode')),
                             )}
                         />

@@ -5,6 +5,7 @@ import * as S from 'fp-ts/lib/string';
 import { eqNullable } from '~src/lib/types';
 import { NullablePeriode, Periode, PeriodeMedOptionalTilOgMed, PeriodeType } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
+import { formatDayMonthYear, formatMonthYear } from '~src/utils/date/dateUtils';
 
 export const lagTomPeriode = (): PeriodeType => ({ fraOgMed: null, tilOgMed: null });
 
@@ -46,3 +47,10 @@ export const formatPeriodeMonthYear = (periode: Periode<string>) =>
 
 export const formatPeriodeMedOptionalTilOgMed = (periode: PeriodeMedOptionalTilOgMed<string>) =>
     `${DateUtils.formatMonthYear(periode.fraOgMed)} – ${periode.tilOgMed ? DateUtils.formatMonthYear(periode.tilOgMed) : 'Ingen sluttdato'}`;
+
+// Tipper det ikke blir nødvendig med "overload" for Periode<Date>
+export const formatPeriode = (periode: Periode<string>) =>
+    `${formatMonthYear(periode.fraOgMed)} – ${formatMonthYear(periode.tilOgMed)}`;
+
+export const formatPeriodeMedDager = (periode: Periode<string>) =>
+    `${formatDayMonthYear(periode.fraOgMed)} – ${formatDayMonthYear(periode.tilOgMed)}`;

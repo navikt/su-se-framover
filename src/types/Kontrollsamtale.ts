@@ -5,7 +5,7 @@ export interface Kontrollsamtale {
     opprettet: string;
     innkallingsdato: string;
     status: string;
-    frist: Nullable<string>;
+    frist: string;
     dokumentId: Nullable<string>;
     journalpostIdKontrollnotat: Nullable<string>;
 }
