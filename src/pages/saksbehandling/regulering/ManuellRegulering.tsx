@@ -23,7 +23,6 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
-import Måned from '~src/types/Måned';
 import {
     DifferanseEtterRegulering,
     BrukerManglerSupplement,
@@ -518,15 +517,22 @@ const SupplementForOversikt = (props: { overskrift: string; supplementFor: Suppl
                             {fradrag.fradragstype}
                         </Heading>
 
-                        <div>
-                            <Label>Endringsvedtak</Label>
-                            <div className={styles.vedtaksperiodeData}>
-                                <BodyShort>
-                                    {Måned.fromStringPeriode(fradrag.vedtaksperiodeEndring.måned).toFormattedString()}:
-                                </BodyShort>
-                                <BodyShort>{fradrag.vedtaksperiodeEndring.beløp},-</BodyShort>
+                        {fradrag.vedtaksperiodeEndring === null ? (
+                            'Har ikke endringsvedtak'
+                        ) : (
+                            <div>
+                                <Label>Endringsvedtak</Label>
+                                <div className={styles.vedtaksperiodeData}>
+                                    <BodyShort>
+                                        <BodyShort>
+                                            {formatPeriodeMedOptionalTilOgMed(fradrag.vedtaksperiodeEndring.periode)}:
+                                        </BodyShort>
+                                        :
+                                    </BodyShort>
+                                    <BodyShort>{fradrag.vedtaksperiodeEndring.beløp},-</BodyShort>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div>
                             <Label>Reguleringsvedtak</Label>

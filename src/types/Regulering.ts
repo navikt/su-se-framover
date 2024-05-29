@@ -167,12 +167,12 @@ export interface SupplementFor {
 
 export interface Fradragsperiode {
     fradragstype: Fradragskategori;
-    vedtaksperiodeEndring: VedtaksperiodeEndring;
+    vedtaksperiodeEndring: Nullable<VedtaksperiodeEndring>;
     vedtaksperiodeRegulering: VedtaksperiodeRegulering[];
 }
 
 export interface VedtaksperiodeEndring {
-    måned: Periode<string>;
+    periode: PeriodeMedOptionalTilOgMed<string>;
     beløp: string;
 }
 
