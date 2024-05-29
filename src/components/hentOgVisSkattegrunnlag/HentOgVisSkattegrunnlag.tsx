@@ -348,7 +348,7 @@ export const HentOfVisSkattegrunnlagForFrioppslag = () => {
                                     });
                                 }}
                             >
-                                Journalfør likevel
+                                Journalfør
                             </Button>
                         </div>
                     )}
