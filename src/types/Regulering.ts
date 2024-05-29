@@ -137,7 +137,7 @@ export interface DifferanseEtterRegulering extends ÅrsakForManuell {
     begrunnelse: string;
     eksternNettoBeløpEtterRegulering: string;
     eksternBruttoBeløpEtterRegulering: string;
-    vårtBeløpEtterRegulering: string;
+    vårtBeløpFørRegulering: string;
     forventetBeløpEtterRegulering: string;
 }
 
