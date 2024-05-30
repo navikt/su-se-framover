@@ -52,6 +52,10 @@
     grid-template-columns: repeat(2, 1fr);
 }
 
+.dokumentButton {
+    padding: 0;
+}
+
 ::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 7px;
@@ -80,4 +84,15 @@
     display: flex;
     align-items: flex-start;
     gap: @spacing-s;
+}
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+
+    .buttonsContainer {
+        display: flex;
+        gap: @spacing-s;
+    }
 }

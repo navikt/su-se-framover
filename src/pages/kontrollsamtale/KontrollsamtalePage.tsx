@@ -1,29 +1,35 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { PencilWritingIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, Heading, Modal, Skeleton } from '@navikt/ds-react';
+import { PencilWritingIcon, ExternalLinkIcon } from '@navikt/aksel-icons';
+import { BodyShort, Button, Heading, Modal, Select, Skeleton, TextField } from '@navikt/ds-react';
 import { startOfTomorrow } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useOutletContext } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { getDokument } from '~src/api/dokumentApi';
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import ApiErrorAlert, { useApiErrorMessages } from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import { createToast, ToastType, useToast } from '~src/components/toast/Toast';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
-import { useApiCall } from '~src/lib/hooks';
+import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
+import { navigateToSakIntroWithMessage } from '~src/lib/routes';
 import { Kontrollsamtale } from '~src/types/Kontrollsamtale';
 import { formatDate, parseNonNullableIsoDateOnly, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import styles from './kontrollsamtalePage.module.less';
 import {
+    KontrollsamtaleFormStatus,
+    kontrollsamtaleStatusTextMapper,
+    kontrollsamtalestatusToFormStatus,
     OppdaterKontrollsamtaleFormData,
     OppdaterKontrollsamtaleSchema,
     OpprettNyKontrollsamtaleFormData,
@@ -49,6 +55,7 @@ const KontrollsamtalePage = () => {
 };
 
 const OpprettNyKontrollsamtale = (props: { sakId: string }) => {
+    const navigate = useNavigate();
     const [status, opprett] = useApiCall(kontrollsamtaleApi.opprettNyKontrollsamtale);
 
     const form = useForm<OpprettNyKontrollsamtaleFormData>({
@@ -59,7 +66,9 @@ const OpprettNyKontrollsamtale = (props: { sakId: string }) => {
     });
 
     const onSubmit = (values: OpprettNyKontrollsamtaleFormData) => {
-        opprett({ sakId: props.sakId, dato: toIsoDateOnlyString(values.nyKontrollsamtaleDato!) });
+        opprett({ sakId: props.sakId, dato: toIsoDateOnlyString(values.nyKontrollsamtaleDato!) }, () => {
+            navigateToSakIntroWithMessage(navigate, 'Ny kontrollsamtale har blitt opprettet', props.sakId);
+        });
     };
 
     return (
@@ -77,7 +86,8 @@ const OpprettNyKontrollsamtale = (props: { sakId: string }) => {
                             label={'Velg dato for ny kontrollsamtale'}
                             fromDate={startOfTomorrow()}
                             error={fieldState.error?.message}
-                            {...field}
+                            onChange={field.onChange}
+                            value={field.value}
                         />
                     )}
                 />
@@ -123,7 +133,7 @@ const OppsummeringAvKontrollsamtaler = (props: { sakId: string }) => {
                             <ul className={styles.kontrollsamtalerContainer}>
                                 {kontrollsamtaler.map((k) => (
                                     <li key={k.id}>
-                                        <BasicKontrollsamtaleOppsummering kontrollsamtale={k} />
+                                        <BasicKontrollsamtaleOppsummering sakId={props.sakId} kontrollsamtale={k} />
                                     </li>
                                 ))}
                             </ul>
@@ -134,7 +144,23 @@ const OppsummeringAvKontrollsamtaler = (props: { sakId: string }) => {
     );
 };
 
-const BasicKontrollsamtaleOppsummering = (props: { kontrollsamtale: Kontrollsamtale }) => {
+const BasicKontrollsamtaleOppsummering = (props: { sakId: string; kontrollsamtale: Kontrollsamtale }) => {
+    const { insert } = useToast();
+    const apiErrorMessages = useApiErrorMessages();
+    const [dokumentStatus, hentDokument] = useBrevForhåndsvisning(getDokument);
+
+    useEffect(() => {
+        if (RemoteData.isFailure(dokumentStatus)) {
+            insert(
+                createToast({
+                    type: ToastType.ERROR,
+                    duration: 5000,
+                    message: apiErrorMessages(dokumentStatus.error),
+                }),
+            );
+        }
+    }, [dokumentStatus]);
+
     return (
         <div className={styles.oppsummeringsContainer}>
             <div>
@@ -144,7 +170,7 @@ const BasicKontrollsamtaleOppsummering = (props: { kontrollsamtale: Kontrollsamt
                 </div>
                 <div className={styles.kontrollsamtaleDetalje}>
                     <BodyShort>Status</BodyShort>
-                    <BodyShort>{props.kontrollsamtale.status}</BodyShort>
+                    <BodyShort>{kontrollsamtaleStatusTextMapper(props.kontrollsamtale.status)}</BodyShort>
                 </div>
                 <div className={styles.kontrollsamtaleDetalje}>
                     <BodyShort>Frist</BodyShort>
@@ -156,19 +182,33 @@ const BasicKontrollsamtaleOppsummering = (props: { kontrollsamtale: Kontrollsamt
                 </div>
                 <div className={styles.kontrollsamtaleDetalje}>
                     <BodyShort>Dokument-id</BodyShort>
-                    <BodyShort>{props.kontrollsamtale.dokumentId ?? 'Ikke funnet'}</BodyShort>
+
+                    <BodyShort>
+                        {props.kontrollsamtale.dokumentId ? (
+                            <Button
+                                className={styles.dokumentButton}
+                                type="button"
+                                variant="tertiary"
+                                onClick={() => hentDokument({ dokumentId: props.kontrollsamtale.dokumentId! })}
+                            >
+                                {props.kontrollsamtale.dokumentId} <ExternalLinkIcon />
+                            </Button>
+                        ) : (
+                            'Ikke funnet'
+                        )}
+                    </BodyShort>
                 </div>
                 <div className={styles.kontrollsamtaleDetalje}>
                     <BodyShort>kontrollnotatets journalpost-id</BodyShort>
                     <BodyShort>{props.kontrollsamtale.journalpostIdKontrollnotat ?? 'Ikke funnet'}</BodyShort>
                 </div>
             </div>
-            <KontrollsamtaleModal kontrollsamtale={props.kontrollsamtale} />
+            <KontrollsamtaleModal sakId={props.sakId} kontrollsamtale={props.kontrollsamtale} />
         </div>
     );
 };
 
-const KontrollsamtaleModal = (props: { kontrollsamtale: Kontrollsamtale }) => {
+const KontrollsamtaleModal = (props: { sakId: string; kontrollsamtale: Kontrollsamtale }) => {
     const [visKontrollsamtaleModal, setVisKontrollsamtaleModal] = useState(false);
 
     return (
@@ -176,6 +216,7 @@ const KontrollsamtaleModal = (props: { kontrollsamtale: Kontrollsamtale }) => {
             <EndreKontrollsamtaleModal
                 visModal={visKontrollsamtaleModal}
                 onClose={() => setVisKontrollsamtaleModal(false)}
+                sakId={props.sakId}
                 kontrollsamtaleSomSkalEndres={props.kontrollsamtale}
             />
             <Button
@@ -195,11 +236,18 @@ const KontrollsamtaleModal = (props: { kontrollsamtale: Kontrollsamtale }) => {
 const EndreKontrollsamtaleModal = (props: {
     visModal: boolean;
     onClose: () => void;
+    sakId: string;
     kontrollsamtaleSomSkalEndres: Kontrollsamtale;
 }) => {
+    const navigate = useNavigate();
+    const [annullerStatus, annuller] = useApiCall(kontrollsamtaleApi.annullerKontrollsamtale);
+    const [oppdaterStatus, oppdater] = useApiCall(kontrollsamtaleApi.oppdaterKontrollsamtale);
+
     const form = useForm<OppdaterKontrollsamtaleFormData>({
         defaultValues: {
             nyDato: parseNonNullableIsoDateOnly(props.kontrollsamtaleSomSkalEndres.innkallingsdato),
+            journalpostId: props.kontrollsamtaleSomSkalEndres.journalpostIdKontrollnotat ?? '',
+            status: kontrollsamtalestatusToFormStatus(props.kontrollsamtaleSomSkalEndres.status),
         },
         resolver: yupResolver(OppdaterKontrollsamtaleSchema),
     });
@@ -213,10 +261,46 @@ const EndreKontrollsamtaleModal = (props: {
         >
             <Modal.Body>
                 <form
+                    className={styles.modalForm}
                     onSubmit={form.handleSubmit((values) => {
-                        console.log('TODO', values);
+                        oppdater(
+                            {
+                                sakId: props.sakId,
+                                kontrollsamtaleId: props.kontrollsamtaleSomSkalEndres.id,
+                                dato: toIsoDateOnlyString(values.nyDato),
+                                journalpostId: values.journalpostId,
+                                status: values.status!,
+                            },
+                            () => {
+                                navigateToSakIntroWithMessage(
+                                    navigate,
+                                    'Kontrollsamtale har blitt oppdatert',
+                                    props.sakId,
+                                );
+                            },
+                        );
                     })}
                 >
+                    <Controller
+                        control={form.control}
+                        name={'status'}
+                        render={({ field, fieldState }) => (
+                            <Select
+                                {...field}
+                                label={'Kontrollsamtalestatus'}
+                                error={fieldState.error?.message}
+                                value={field.value ?? ''}
+                            >
+                                <option value="">Velg et alternativ</option>
+                                {Object.values(KontrollsamtaleFormStatus).map((grunn) => (
+                                    <option value={grunn} key={grunn}>
+                                        {kontrollsamtaleStatusTextMapper(grunn)}
+                                    </option>
+                                ))}
+                            </Select>
+                        )}
+                    />
+
                     <Controller
                         control={form.control}
                         name={'nyDato'}
@@ -227,12 +311,50 @@ const EndreKontrollsamtaleModal = (props: {
                                     props.kontrollsamtaleSomSkalEndres.innkallingsdato,
                                 )}
                                 error={fieldState.error?.message}
+                                onChange={field.onChange}
+                                value={field.value}
+                            />
+                        )}
+                    />
+
+                    <Controller
+                        control={form.control}
+                        name={'journalpostId'}
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                label={'Kontrollnotatets journalpost-id'}
+                                error={fieldState.error?.message}
                                 {...field}
                             />
                         )}
                     />
 
-                    <Button>Oppdater kontrollsamtale</Button>
+                    {RemoteData.isFailure(oppdaterStatus) && <ApiErrorAlert error={oppdaterStatus.error} />}
+                    {RemoteData.isFailure(annullerStatus) && <ApiErrorAlert error={annullerStatus.error} />}
+                    <div className={styles.buttonsContainer}>
+                        <Button
+                            type="button"
+                            variant="danger"
+                            onClick={() =>
+                                annuller(
+                                    {
+                                        sakId: props.sakId,
+                                        kontrollsamtaleId: props.kontrollsamtaleSomSkalEndres.id,
+                                    },
+                                    () => {
+                                        navigateToSakIntroWithMessage(
+                                            navigate,
+                                            'Kontrollsamtale har blitt annullert',
+                                            props.sakId,
+                                        );
+                                    },
+                                )
+                            }
+                        >
+                            Annuller
+                        </Button>
+                        <Button>Oppdater kontrollsamtale</Button>
+                    </div>
                 </form>
             </Modal.Body>
         </Modal>
