@@ -24,7 +24,7 @@ export const opprettNyKontrollsamtale = (arg: { sakId: string; innkallingsmåned
 
 export const oppdaterKontrollsamtaleStatusOgJournalpost = (arg: OppdaterKontrollsamtaleStatusOgJournalpostRequest) =>
     apiClient<Kontrollsamtale>({
-        url: `/saker/${arg.sakId}/kontrollsamtaler/${arg.kontrollsamtaleId}/statusogjournalpostid`,
+        url: `/saker/${arg.sakId}/kontrollsamtaler/${arg.kontrollsamtaleId}/status`,
         method: 'PATCH',
         body: {
             status: arg.status,
