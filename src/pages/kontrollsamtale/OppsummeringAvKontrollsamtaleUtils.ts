@@ -14,7 +14,13 @@ export interface OppdaterKontrollsamtaleStatusOgJournalpostIdFormData {
 export const oppdaterKontrollsamtaleStatusOgJournalpostIdFormDataSchema =
     yup.object<OppdaterKontrollsamtaleStatusOgJournalpostIdFormData>({
         status: yup.string().oneOf(Object.values(KontrollsamtaleFormStatus)).required('Status må være satt'),
-        journalpostId: yup.string(),
+        journalpostId: yup
+            .string()
+            .defined()
+            .when('status', {
+                is: KontrollsamtaleFormStatus.GJENNOMFØRT,
+                then: yup.string().required('Journalpost id må være satt dersom status er gjennomført'),
+            }),
     });
 
 export interface OppdaterKontrollsamtaleInnkallingsdato {
