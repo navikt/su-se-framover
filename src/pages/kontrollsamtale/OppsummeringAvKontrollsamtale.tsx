@@ -349,7 +349,7 @@ const EditKontrollsamtaleInnkallingsdato = (props: {
                     })}
                 >
                     {!props.kontrollsamtaleSomSkalEndres.kanOppdatereInnkallingsmåned && (
-                        <Label>Kan ikke oppdatere innkallingsdato</Label>
+                        <Label>Datoen for innkalling kan kun oppdateres dersom kontrollsamtalen er planlagt.</Label>
                     )}
 
                     <Controller
@@ -358,6 +358,7 @@ const EditKontrollsamtaleInnkallingsdato = (props: {
                         render={({ field, fieldState }) => (
                             <MonthPicker
                                 label={'Innkallingsdato'}
+                                hjelpetekst="Innkallingsdatoen må være innenfor ytterpunktene av en eller flere stønadsperioder. I tillegg, må den tidligst være neste måned"
                                 value={field.value}
                                 onChange={field.onChange}
                                 error={fieldState.error?.message}
