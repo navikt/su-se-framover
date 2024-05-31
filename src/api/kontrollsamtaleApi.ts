@@ -21,8 +21,8 @@ export const opprettNyKontrollsamtale = (arg: { sakId: string; dato: string }) =
 
 export const oppdaterKontrollsamtaleStatusOgJournalpost = (arg: OppdaterKontrollsamtaleStatusOgJournalpostRequest) =>
     apiClient<Kontrollsamtale>({
-        url: `/saker/${arg.sakId}/kontrollsamtaler`,
-        method: 'POST',
+        url: `/saker/${arg.sakId}/kontrollsamtaler/${arg.kontrollsamtaleId}/statusogjournalpostid`,
+        method: 'PATCH',
         body: {
             status: arg.status,
             journalpostId: arg.journalpostId,
@@ -31,10 +31,10 @@ export const oppdaterKontrollsamtaleStatusOgJournalpost = (arg: OppdaterKontroll
 
 export const oppdaterKontrollsamtaleInnkallingsdato = (arg: OppdaterKontrollsamtaleInnkallingsdatoRequest) =>
     apiClient<Kontrollsamtale>({
-        url: `/saker/${arg.sakId}/kontrollsamtaler`,
-        method: 'POST',
+        url: `/saker/${arg.sakId}/kontrollsamtaler/${arg.kontrollsamtaleId}/innkallingsmåned`,
+        method: 'PATCH',
         body: {
-            innkallingsdato: arg.innkallingsmåned,
+            innkallingsmåned: arg.innkallingsmåned,
         },
     });
 
