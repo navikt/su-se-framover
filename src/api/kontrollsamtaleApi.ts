@@ -13,10 +13,13 @@ export const hentKontrollsamtaler = (arg: { sakId: string }) =>
         method: 'GET',
     });
 
-export const opprettNyKontrollsamtale = (arg: { sakId: string; dato: string }) =>
+export const opprettNyKontrollsamtale = (arg: { sakId: string; innkallingsmåned: string }) =>
     apiClient<Kontrollsamtale>({
         url: `/saker/${arg.sakId}/kontrollsamtaler`,
         method: 'POST',
+        body: {
+            innkallingsmåned: arg.innkallingsmåned,
+        },
     });
 
 export const oppdaterKontrollsamtaleStatusOgJournalpost = (arg: OppdaterKontrollsamtaleStatusOgJournalpostRequest) =>

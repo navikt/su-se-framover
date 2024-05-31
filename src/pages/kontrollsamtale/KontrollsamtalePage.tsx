@@ -17,7 +17,7 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { navigateToSakIntroWithMessage } from '~src/lib/routes';
-import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
+import { toIsoMonth } from '~src/utils/date/dateUtils';
 
 import HentOgVisKontrollsamtaler from './HentOgVisKontrollsamtaler';
 import styles from './kontrollsamtalePage.module.less';
@@ -53,7 +53,7 @@ const OpprettNyKontrollsamtale = (props: { sakId: string }) => {
     });
 
     const onSubmit = (values: OpprettNyKontrollsamtaleFormData) => {
-        opprett({ sakId: props.sakId, dato: toIsoDateOnlyString(values.nyKontrollsamtaleDato!) }, () => {
+        opprett({ sakId: props.sakId, innkallingsmåned: toIsoMonth(values.nyKontrollsamtaleDato!) }, () => {
             navigateToSakIntroWithMessage(navigate, 'Ny kontrollsamtale har blitt opprettet', props.sakId);
         });
     };
