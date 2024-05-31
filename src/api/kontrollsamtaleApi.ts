@@ -42,7 +42,7 @@ export const oppdaterKontrollsamtaleInnkallingsdato = (arg: OppdaterKontrollsamt
     });
 
 export const annullerKontrollsamtale = (arg: AnnullerKontrollsamtaleRequest) =>
-    apiClient<{ status: 'OK' }>({
+    apiClient<Kontrollsamtale>({
         url: `/saker/${arg.sakId}/kontrollsamtaler/${arg.kontrollsamtaleId}`,
         method: 'DELETE',
     });
