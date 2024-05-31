@@ -1,5 +1,5 @@
 import { Nullable } from '~src/lib/types';
-import { KontrollsamtaleFormStatus } from '~src/pages/kontrollsamtale/KontrollsamtaleUtils';
+import { KontrollsamtaleFormStatus } from '~src/pages/kontrollsamtale/OppsummeringAvKontrollsamtaleUtils';
 
 export interface Kontrollsamtale {
     id: string;
@@ -9,6 +9,8 @@ export interface Kontrollsamtale {
     frist: string;
     dokumentId: Nullable<string>;
     journalpostIdKontrollnotat: Nullable<string>;
+    kanOppdatereInnkallingsmåned: boolean;
+    lovligeStatusovergangerForSaksbehandler: KontrollsamtaleStatus[];
 }
 
 export enum KontrollsamtaleStatus {
@@ -19,12 +21,17 @@ export enum KontrollsamtaleStatus {
     IKKE_MØTT_INNEN_FRIST = 'IKKE_MØTT_INNEN_FRIST',
 }
 
-export interface OppdaterKontrollsamtaleRequest {
+export interface OppdaterKontrollsamtaleStatusOgJournalpostRequest {
     sakId: string;
     kontrollsamtaleId: string;
-    dato: string;
-    journalpostId: Nullable<string>;
     status: KontrollsamtaleFormStatus;
+    journalpostId: Nullable<string>;
+}
+
+export interface OppdaterKontrollsamtaleInnkallingsdatoRequest {
+    sakId: string;
+    kontrollsamtaleId: string;
+    innkallingsmåned: string;
 }
 
 export interface AnnullerKontrollsamtaleRequest {

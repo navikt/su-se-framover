@@ -1,7 +1,8 @@
 import {
     AnnullerKontrollsamtaleRequest,
     Kontrollsamtale,
-    OppdaterKontrollsamtaleRequest,
+    OppdaterKontrollsamtaleInnkallingsdatoRequest,
+    OppdaterKontrollsamtaleStatusOgJournalpostRequest,
 } from '~src/types/Kontrollsamtale';
 
 import apiClient from './apiClient';
@@ -18,11 +19,23 @@ export const opprettNyKontrollsamtale = (arg: { sakId: string; dato: string }) =
         method: 'POST',
     });
 
-export const oppdaterKontrollsamtale = (arg: OppdaterKontrollsamtaleRequest) =>
-    apiClient({
-        url: `/saker/${arg.sakId}/kontrollsamtaler/${arg.kontrollsamtaleId}`,
+export const oppdaterKontrollsamtaleStatusOgJournalpost = (arg: OppdaterKontrollsamtaleStatusOgJournalpostRequest) =>
+    apiClient<Kontrollsamtale>({
+        url: `/saker/${arg.sakId}/kontrollsamtaler`,
         method: 'POST',
-        body: { dato: arg.dato },
+        body: {
+            status: arg.status,
+            journalpostId: arg.journalpostId,
+        },
+    });
+
+export const oppdaterKontrollsamtaleInnkallingsdato = (arg: OppdaterKontrollsamtaleInnkallingsdatoRequest) =>
+    apiClient<Kontrollsamtale>({
+        url: `/saker/${arg.sakId}/kontrollsamtaler`,
+        method: 'POST',
+        body: {
+            innkallingsdato: arg.innkallingsmåned,
+        },
     });
 
 export const annullerKontrollsamtale = (arg: AnnullerKontrollsamtaleRequest) =>

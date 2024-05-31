@@ -2,29 +2,14 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { KontrollsamtaleStatus } from '~src/types/Kontrollsamtale';
 
+import { KontrollsamtaleFormStatus } from './OppsummeringAvKontrollsamtaleUtils';
+
 export interface OpprettNyKontrollsamtaleFormData {
     nyKontrollsamtaleDato: Nullable<Date>;
 }
 
 export const opprettNyKontrollsamtaleSchema = yup.object<OpprettNyKontrollsamtaleFormData>({
     nyKontrollsamtaleDato: yup.date().required('Dato må være satt'),
-});
-
-export enum KontrollsamtaleFormStatus {
-    GJENNOMFØRT = 'GJENNOMFØRT',
-    IKKE_MØTT_INNEN_FRIST = 'IKKE_MØTT_INNEN_FRIST',
-}
-
-export interface OppdaterKontrollsamtaleFormData {
-    nyDato: Date;
-    journalpostId: string;
-    status: Nullable<KontrollsamtaleFormStatus>;
-}
-
-export const OppdaterKontrollsamtaleSchema = yup.object<OppdaterKontrollsamtaleFormData>({
-    nyDato: yup.date().required('Dato må være satt'),
-    journalpostId: yup.string(),
-    status: yup.string().oneOf(Object.values(KontrollsamtaleFormStatus)).required('Status må være satt'),
 });
 
 export const kontrollsamtaleStatusTextMapper = (status: KontrollsamtaleStatus | KontrollsamtaleFormStatus) => {

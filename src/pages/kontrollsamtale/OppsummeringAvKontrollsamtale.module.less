@@ -1,0 +1,67 @@
+@import '@styles/variables.less';
+
+.oppsummeringsContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: @spacing-s;
+}
+
+.kontrollsamtaleDetalje {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.buttonMedIKon {
+    padding: 0;
+    display: flex;
+    justify-self: flex-start;
+
+    span {
+        display: flex;
+        align-items: center;
+    }
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.annullerKontrollsamtaleIkon {
+    display: flex;
+    align-items: flex-end;
+}
+
+.modal {
+    //setter lengen slik at en helpText ikke trigger scrolling på modalen
+    width: 615px;
+}
+
+.modalBody {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+
+    .modalForm {
+        display: flex;
+        flex-direction: column;
+        gap: @spacing-s;
+        align-items: flex-start;
+
+        .journalpostInputLabel {
+            display: flex;
+            gap: @spacing-xxs;
+        }
+
+        .buttonsContainer {
+            display: flex;
+            gap: @spacing-s;
+        }
+    }
+}
