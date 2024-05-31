@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ExternalLinkIcon, PencilWritingIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, HelpText, Modal, Select, TextField } from '@navikt/ds-react';
+import { BodyShort, Button, HelpText, Label, Modal, Select, TextField } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
 import { ToastType, createToast, useToast } from '~src/components/toast/Toast';
 import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { navigateToSakIntroWithMessage } from '~src/lib/routes';
-import { Kontrollsamtale } from '~src/types/Kontrollsamtale';
+import { Kontrollsamtale, KontrollsamtaleStatus } from '~src/types/Kontrollsamtale';
 import { formatDate, parseNonNullableIsoDateOnly, toIsoMonth } from '~src/utils/date/dateUtils';
 
 import { kontrollsamtaleStatusTextMapper, kontrollsamtalestatusToFormStatus } from './KontrollsamtaleUtils';
@@ -132,6 +132,45 @@ const OppsummerKontrollsamtaleStatus = (props: {
     );
 };
 
+const EditStatusTextHelper = (props: { kontrollsamtale: Kontrollsamtale }) => {
+    const kanAnnulleres = props.kontrollsamtale.lovligeStatusovergangerForSaksbehandler.includes(
+        KontrollsamtaleStatus.ANNULLERT,
+    );
+
+    const statuserUtenAnnullering = props.kontrollsamtale.lovligeStatusovergangerForSaksbehandler.filter(
+        (status) => status !== KontrollsamtaleStatus.ANNULLERT,
+    );
+
+    return (
+        <div>
+            {statuserUtenAnnullering.length > 0 ? (
+                <div>
+                    <Label>Kontrollsamtalen kan bli oppdatert til følgende statuser: </Label>
+                    <ul>
+                        {props.kontrollsamtale.lovligeStatusovergangerForSaksbehandler
+                            .filter((status) => status !== KontrollsamtaleStatus.ANNULLERT)
+                            .map((status) => kontrollsamtaleStatusTextMapper(status))}
+                    </ul>
+                    {kanAnnulleres && (
+                        <BodyShort>
+                            Kontrollsamtalen kan også annuleres ved å klikke på annuller knappen i oversikten
+                        </BodyShort>
+                    )}
+                </div>
+            ) : (
+                <div>
+                    <Label>Kontrollsamtalen kan ikke oppdateres til noen nye statuser</Label>
+                    {kanAnnulleres && (
+                        <BodyShort>
+                            Kontrollsamtalen kan annuleres ved å klikke på annuller knappen i oversikten
+                        </BodyShort>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const EditKontrollsamtaleStatusOgJournalpostId = (props: {
     visModal: boolean;
     onClose: () => void;
@@ -178,6 +217,8 @@ const EditKontrollsamtaleStatusOgJournalpostId = (props: {
                         );
                     })}
                 >
+                    <EditStatusTextHelper kontrollsamtale={props.kontrollsamtaleSomSkalEndres} />
+
                     <Controller
                         control={form.control}
                         name={'status'}
@@ -307,6 +348,10 @@ const EditKontrollsamtaleInnkallingsdato = (props: {
                         );
                     })}
                 >
+                    {!props.kontrollsamtaleSomSkalEndres.kanOppdatereInnkallingsmåned && (
+                        <Label>Kan ikke oppdatere innkallingsdato</Label>
+                    )}
+
                     <Controller
                         control={form.control}
                         name={'innkallingsmåned'}
