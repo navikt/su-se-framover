@@ -27,9 +27,10 @@ import { InformasjonsRevurdering, Revurdering, TilbakekrevingsAvgjørelse } from
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erBehandlingRevurdering, erBehandlingSøknadsbehandling } from '~src/utils/behandling/BehandlingUtils';
-import { formatDate, formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
+import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import { splitStatusOgResultatFraKlage } from '~src/utils/klage/klageUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import {
     erInformasjonsRevurdering,
     erRevurderingIverksattMedTilbakekreving,

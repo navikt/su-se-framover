@@ -5,8 +5,9 @@ import { Regulering } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Søknad } from '~src/types/Søknad';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { formatDate, formatDateTime, formatPeriode } from '~src/utils/date/dateUtils';
+import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 import { splitStatusOgResultatFraKlage } from '~src/utils/klage/klageUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import { erReguleringAvsluttet } from '~src/utils/ReguleringUtils';
 import {
     erRevurderingAvsluttet,

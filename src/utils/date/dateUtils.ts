@@ -3,7 +3,6 @@ import { createIntl, createIntlCache, FormatDateOptions } from 'react-intl';
 
 import { Languages } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { Periode } from '~src/types/Periode';
 
 const cache = createIntlCache();
 const intl = createIntl({ locale: Languages.nb }, cache);
@@ -71,13 +70,6 @@ export const toIsoMonthOrNull = (date: Date | null) => {
 export const toIsoMonth = (date: Date) => {
     return DateFns.format(date, DateFormats.IsoMonthOnly);
 };
-
-// Tipper det ikke blir nødvendig med "overload" for Periode<Date>
-export const formatPeriode = (periode: Periode<string>) =>
-    `${formatMonthYear(periode.fraOgMed)} – ${formatMonthYear(periode.tilOgMed)}`;
-
-export const formatPeriodeMedDager = (periode: Periode<string>) =>
-    `${formatDayMonthYear(periode.fraOgMed)} – ${formatDayMonthYear(periode.tilOgMed)}`;
 
 export const toIsoDateOnlyString = (date: Date) => DateFns.format(date, DateFormats.IsoDateOnly);
 

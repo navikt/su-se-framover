@@ -11,3 +11,12 @@ export async function hentDokumenter(arg: {
         method: 'GET',
     });
 }
+
+export const getDokument = (arg: { dokumentId: string }) => {
+    return apiClient<Blob>({
+        url: `/dokumenter/${arg.dokumentId}`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        bodyTransformer: (res) => res.blob(),
+    });
+};

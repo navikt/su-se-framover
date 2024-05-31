@@ -8,7 +8,7 @@ import { Nullable } from '~src/lib/types';
 import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Formuegrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuegrunnlag';
 import { FormueStatus, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { formatPeriode } from '~src/utils/date/dateUtils';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import SeSkattegrunnlag from '../oppsummeringAvSkattegrunnlag/Skattegrunnlagsmodal';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';

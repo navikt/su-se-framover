@@ -20,7 +20,8 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { RegistrertUtenlandsopphold, UtenlandsoppholdDokumentasjon } from '~src/types/RegistrertUtenlandsopphold';
-import { formatDate, formatDateTime, formatPeriodeMedDager } from '~src/utils/date/dateUtils';
+import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
+import { formatPeriodeMedDager } from '~src/utils/periode/periodeUtils';
 
 import messages from './OppsummeringAvRegistrerteUtenlandsopphold-nb';
 import styles from './OppsummeringAvRegistrerteUtenlandsopphold.module.less';
