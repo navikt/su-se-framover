@@ -14,7 +14,7 @@ const OppsummeringAvKontrollsamtaler = (props: { sakId: string; kontrollsamtaler
     const [visAnnullerte, setVisAnnullerte] = useState(false);
 
     const filtrerteUtenlandsopphold = props.kontrollsamtaler
-        .toSorted()
+        .toSorted((k1, k2) => new Date(k1.innkallingsdato).getTime() - new Date(k2.innkallingsdato).getTime())
         .filter((it) => (visAnnullerte ? true : it.status !== KontrollsamtaleStatus.ANNULLERT));
 
     return props.kontrollsamtaler.length === 0 ? (
