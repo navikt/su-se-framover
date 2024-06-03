@@ -16,9 +16,10 @@ import { navigateToSakIntroWithMessage } from '~src/lib/routes';
 import { Kontrollsamtale, KontrollsamtaleStatus } from '~src/types/Kontrollsamtale';
 import { formatDate, parseNonNullableIsoDateOnly, toIsoMonth } from '~src/utils/date/dateUtils';
 
-import { kontrollsamtaleStatusTextMapper, kontrollsamtalestatusToFormStatus } from './KontrollsamtaleUtils';
 import styles from './OppsummeringAvKontrollsamtale.module.less';
 import {
+    kontrollsamtaleStatusTextMapper,
+    kontrollsamtalestatusToFormStatus,
     KontrollsamtaleFormStatus,
     OppdaterKontrollsamtaleInnkallingsdato,
     OppdaterKontrollsamtaleStatusOgJournalpostIdFormData,
@@ -33,6 +34,7 @@ const OppsummeringAvKontrollsamtale = (props: {
 }) => {
     const { insert } = useToast();
     const apiErrorMessages = useApiErrorMessages();
+
     const [dokumentStatus, hentDokument] = useBrevForhåndsvisning(getDokument);
 
     useEffect(() => {

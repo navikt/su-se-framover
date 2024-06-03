@@ -2,14 +2,34 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { KontrollsamtaleStatus } from '~src/types/Kontrollsamtale';
 
-import { KontrollsamtaleFormStatus } from './OppsummeringAvKontrollsamtaleUtils';
-
-export interface OpprettNyKontrollsamtaleFormData {
-    nyKontrollsamtaleDato: Nullable<Date>;
+export enum KontrollsamtaleFormStatus {
+    GJENNOMFØRT = 'GJENNOMFØRT',
+    IKKE_MØTT_INNEN_FRIST = 'IKKE_MØTT_INNEN_FRIST',
 }
 
-export const opprettNyKontrollsamtaleSchema = yup.object<OpprettNyKontrollsamtaleFormData>({
-    nyKontrollsamtaleDato: yup.date().required('Dato må være satt'),
+export interface OppdaterKontrollsamtaleStatusOgJournalpostIdFormData {
+    status: Nullable<KontrollsamtaleFormStatus>;
+    journalpostId: string;
+}
+
+export const oppdaterKontrollsamtaleStatusOgJournalpostIdFormDataSchema =
+    yup.object<OppdaterKontrollsamtaleStatusOgJournalpostIdFormData>({
+        status: yup.string().oneOf(Object.values(KontrollsamtaleFormStatus)).required('Status må være satt'),
+        journalpostId: yup
+            .string()
+            .defined()
+            .when('status', {
+                is: KontrollsamtaleFormStatus.GJENNOMFØRT,
+                then: yup.string().required('Journalpost id må være satt dersom status er gjennomført'),
+            }),
+    });
+
+export interface OppdaterKontrollsamtaleInnkallingsdato {
+    innkallingsmåned: Nullable<Date>;
+}
+
+export const oppdaterKontrollsamtaleInnkallingsdatoSchema = yup.object<OppdaterKontrollsamtaleInnkallingsdato>({
+    innkallingsmåned: yup.date().required('Innkallingsdato må være satt'),
 });
 
 export const kontrollsamtaleStatusTextMapper = (status: KontrollsamtaleStatus | KontrollsamtaleFormStatus) => {

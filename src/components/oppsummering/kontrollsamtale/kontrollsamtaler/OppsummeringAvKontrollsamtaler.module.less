@@ -1,0 +1,48 @@
+@import '@styles/variables.less';
+
+.componentContainer {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: @spacing;
+}
+
+.filterContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+    background: var(--a-gray-200);
+    padding: @spacing-xs @spacing;
+}
+
+.accordion {
+    min-width: 50rem;
+    max-width: 50rem;
+}
+
+.accordionHeader {
+    > :last-child {
+        display: flex;
+        gap: @spacing-xs;
+    }
+}
+
+//hacker inn !important da vi vil mest sannsynlig vise fargen selv om accordion-itemet er åpen
+.grønn {
+    background-color: var(--a-green-100) !important;
+}
+
+.gul {
+    background-color: var(--a-orange-100) !important;
+}
+
+.rød {
+    background-color: var(--a-red-100) !important;
+}
+
+.grå {
+    background-color: var(--a-gray-100) !important;
+}
+
+.blå {
+    background-color: var(--a-blue-100) !important;
+}

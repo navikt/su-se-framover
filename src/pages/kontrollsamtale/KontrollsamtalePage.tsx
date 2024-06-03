@@ -3,7 +3,8 @@ import { useOutletContext } from 'react-router-dom';
 
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 
-import HentOgVisKontrollsamtaler from './HentOgVisKontrollsamtaler';
+import HentOgVisKontrollsamtaler from '../../components/hentOgVisKontrollsamtaler/HentOgVisKontrollsamtaler';
+
 import styles from './kontrollsamtalePage.module.less';
 import OpprettNyKontrollsamtale from './OpprettNyKontrollsamtale';
 

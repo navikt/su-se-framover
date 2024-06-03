@@ -17,8 +17,8 @@ import * as Routes from '~src/lib/routes';
 import { navigateToSakIntroWithMessage } from '~src/lib/routes';
 import { toIsoMonth } from '~src/utils/date/dateUtils';
 
-import { OpprettNyKontrollsamtaleFormData, opprettNyKontrollsamtaleSchema } from './KontrollsamtaleUtils';
 import styles from './OpprettKontrollsamtale.module.less';
+import { OpprettNyKontrollsamtaleFormData, opprettNyKontrollsamtaleSchema } from './OpprettKontrollsamtaleUtils';
 
 const OpprettNyKontrollsamtale = (props: { sakId: string }) => {
     const navigate = useNavigate();

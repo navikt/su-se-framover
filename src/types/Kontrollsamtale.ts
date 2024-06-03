@@ -1,5 +1,5 @@
+import { KontrollsamtaleFormStatus } from '~src/components/oppsummering/kontrollsamtale/OppsummeringAvKontrollsamtaleUtils';
 import { Nullable } from '~src/lib/types';
-import { KontrollsamtaleFormStatus } from '~src/pages/kontrollsamtale/OppsummeringAvKontrollsamtaleUtils';
 
 export interface Kontrollsamtale {
     id: string;
