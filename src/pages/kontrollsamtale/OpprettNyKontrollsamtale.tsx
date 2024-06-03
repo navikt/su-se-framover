@@ -51,6 +51,7 @@ const OpprettNyKontrollsamtale = (props: { sakId: string }) => {
                     render={({ field, fieldState }) => (
                         <MonthPicker
                             label={'Velg dato for ny kontrollsamtale'}
+                            hjelpetekst="Innkallingsdatoen må være innenfor ytterpunktene av en eller flere stønadsperioder. I tillegg, må den tidligst være neste måned"
                             fromDate={(() => {
                                 const today = new Date();
                                 return new Date(today.getFullYear(), today.getMonth() + 1, 1);
