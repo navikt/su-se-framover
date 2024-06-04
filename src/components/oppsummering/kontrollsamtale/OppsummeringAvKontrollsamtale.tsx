@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ExternalLinkIcon, PencilWritingIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
+import { ExternalLinkIcon, PencilWritingIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HelpText, Label, Modal, Select, TextField } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -50,7 +50,7 @@ const OppsummeringAvKontrollsamtale = (props: {
     }, [dokumentStatus]);
 
     return (
-        <div className={styles.oppsummeringsContainer}>
+        <div>
             <div>
                 <div className={styles.kontrollsamtaleDetalje}>
                     <BodyShort>Id</BodyShort>
@@ -419,7 +419,7 @@ const EditKontrollsamtale = (props: { sakId: string; kontrollsamtale: Kontrollsa
     const [visKontrollsamtaleModal, setVisKontrollsamtaleModal] = useState(false);
 
     return (
-        <div>
+        <div className={styles.editControllsamtaleComponentContainer}>
             <EndreKontrollsamtaleModal
                 visModal={visKontrollsamtaleModal}
                 onClose={() => setVisKontrollsamtaleModal(false)}
@@ -427,7 +427,6 @@ const EditKontrollsamtale = (props: { sakId: string; kontrollsamtale: Kontrollsa
                 kontrollsamtaleSomSkalEndres={props.kontrollsamtale}
             />
             <Button
-                className={styles.annullerKontrollsamtaleIkon}
                 variant="secondary"
                 type="button"
                 size="small"
@@ -435,7 +434,7 @@ const EditKontrollsamtale = (props: { sakId: string; kontrollsamtale: Kontrollsa
                     setVisKontrollsamtaleModal(true);
                 }}
             >
-                <XMarkOctagonIcon fontSize={'1rem'} aria-label="Blyantikon" />
+                Annuller
             </Button>
         </div>
     );
