@@ -15,6 +15,11 @@ import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { navigateToSakIntroWithMessage } from '~src/lib/routes';
 import { Kontrollsamtale, KontrollsamtaleStatus } from '~src/types/Kontrollsamtale';
 import { formatDate, parseNonNullableIsoDateOnly, toIsoMonth } from '~src/utils/date/dateUtils';
+import {
+    erKontrollsamtaleAnnullert,
+    erKontrollsamtaleGjennomført,
+    erKontrollsamtaleIkkeMøttInnenFrist,
+} from '~src/utils/KontrollsamtaleUtils';
 
 import styles from './OppsummeringAvKontrollsamtale.module.less';
 import {
@@ -93,7 +98,12 @@ const OppsummeringAvKontrollsamtale = (props: {
                     medEdit={props.medEdit}
                 />
             </div>
-            {props.medEdit && <EditKontrollsamtale sakId={props.sakId} kontrollsamtale={props.kontrollsamtale} />}
+            {props.medEdit &&
+                !(
+                    erKontrollsamtaleIkkeMøttInnenFrist(props.kontrollsamtale) ||
+                    erKontrollsamtaleGjennomført(props.kontrollsamtale) ||
+                    erKontrollsamtaleAnnullert(props.kontrollsamtale)
+                ) && <AnnullerKontrollsamtale sakId={props.sakId} kontrollsamtale={props.kontrollsamtale} />}
         </div>
     );
 };
@@ -415,12 +425,12 @@ const OppsummerKontrollsamtaleJournalpostKontrollnotat = (props: {
     );
 };
 
-const EditKontrollsamtale = (props: { sakId: string; kontrollsamtale: Kontrollsamtale }) => {
+const AnnullerKontrollsamtale = (props: { sakId: string; kontrollsamtale: Kontrollsamtale }) => {
     const [visKontrollsamtaleModal, setVisKontrollsamtaleModal] = useState(false);
 
     return (
         <div className={styles.editControllsamtaleComponentContainer}>
-            <EndreKontrollsamtaleModal
+            <AnnullerKontrollsamtaleModal
                 visModal={visKontrollsamtaleModal}
                 onClose={() => setVisKontrollsamtaleModal(false)}
                 sakId={props.sakId}
@@ -440,7 +450,7 @@ const EditKontrollsamtale = (props: { sakId: string; kontrollsamtale: Kontrollsa
     );
 };
 
-const EndreKontrollsamtaleModal = (props: {
+const AnnullerKontrollsamtaleModal = (props: {
     visModal: boolean;
     onClose: () => void;
     sakId: string;
