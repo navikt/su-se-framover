@@ -59,7 +59,7 @@ export const DatePicker = (props: {
 
 export const MonthPicker = (props: {
     label: string;
-    hjelpetekst?: string;
+    hjelpetekst?: string | React.ReactNode;
     value: Nullable<Date>;
     size?: 'medium' | 'small';
     fromDate?: Nullable<Date>;

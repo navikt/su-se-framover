@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button } from '@navikt/ds-react';
+import { BodyShort, Button } from '@navikt/ds-react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -51,7 +51,18 @@ const OpprettNyKontrollsamtale = (props: { sakId: string }) => {
                     render={({ field, fieldState }) => (
                         <MonthPicker
                             label={'Velg dato for ny kontrollsamtale'}
-                            hjelpetekst="Innkallingsdatoen må være innenfor ytterpunktene av en eller flere stønadsperioder. I tillegg, må den tidligst være neste måned"
+                            hjelpetekst={
+                                <div>
+                                    <BodyShort>
+                                        Innkallingsdatoen må være innenfor ytterpunktene av en eller flere
+                                        stønadsperioder. I tillegg, må den tidligst være neste måned
+                                    </BodyShort>
+                                    <br />
+                                    <BodyShort>
+                                        Innkallingsdatoen må også være i en aktiv måned (ikke opphørt, stanset, etc.)
+                                    </BodyShort>
+                                </div>
+                            }
                             fromDate={(() => {
                                 const today = new Date();
                                 return new Date(today.getFullYear(), today.getMonth() + 1, 1);
