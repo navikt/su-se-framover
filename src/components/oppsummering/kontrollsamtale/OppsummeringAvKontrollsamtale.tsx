@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ExternalLinkIcon, PencilWritingIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, HelpText, Label, Modal, Select, TextField } from '@navikt/ds-react';
+import { BodyShort, Button, Label, Modal, Select, TextField } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -161,7 +161,11 @@ const EditStatusTextHelper = (props: { kontrollsamtale: Kontrollsamtale }) => {
                     <ul>
                         {props.kontrollsamtale.lovligeStatusovergangerForSaksbehandler
                             .filter((status) => status !== KontrollsamtaleStatus.ANNULLERT)
-                            .map((status) => kontrollsamtaleStatusTextMapper(status))}
+                            .map((status, idx) => (
+                                <BodyShort key={`${status}-${idx}`}>
+                                    - {kontrollsamtaleStatusTextMapper(status)}
+                                </BodyShort>
+                            ))}
                     </ul>
                     {kanAnnulleres && (
                         <BodyShort>
@@ -200,6 +204,11 @@ const EditKontrollsamtaleStatusOgJournalpostId = (props: {
         resolver: yupResolver(oppdaterKontrollsamtaleStatusOgJournalpostIdFormDataSchema),
     });
 
+    const kanOppdatereKontrollsamtale =
+        props.kontrollsamtaleSomSkalEndres.lovligeStatusovergangerForSaksbehandler.filter(
+            (status) => status !== KontrollsamtaleStatus.ANNULLERT,
+        ).length > 1;
+
     return (
         <Modal
             aria-labelledby="Endrer status på kontrollsamtale"
@@ -231,50 +240,50 @@ const EditKontrollsamtaleStatusOgJournalpostId = (props: {
                 >
                     <EditStatusTextHelper kontrollsamtale={props.kontrollsamtaleSomSkalEndres} />
 
-                    <Controller
-                        control={form.control}
-                        name={'status'}
-                        render={({ field, fieldState }) => (
-                            <Select
-                                {...field}
-                                label={'Kontrollsamtalestatus'}
-                                error={fieldState.error?.message}
-                                value={field.value ?? ''}
-                            >
-                                <option value="">Velg et alternativ</option>
-                                {Object.values(KontrollsamtaleFormStatus).map((grunn) => (
-                                    <option value={grunn} key={grunn}>
-                                        {kontrollsamtaleStatusTextMapper(grunn)}
-                                    </option>
-                                ))}
-                            </Select>
-                        )}
-                    />
-                    <Controller
-                        control={form.control}
-                        name={'journalpostId'}
-                        render={({ field, fieldState }) => (
-                            <TextField
-                                label={
-                                    <div className={styles.journalpostInputLabel}>
-                                        <BodyShort>Kontrollnotatets journalpost-id</BodyShort>
-                                        <HelpText>
-                                            Journalpost-id er kun påkrevd dersom kontrollsamtale statusen er gjennomført
-                                        </HelpText>
-                                    </div>
-                                }
-                                error={fieldState.error?.message}
-                                {...field}
-                            />
-                        )}
-                    />
+                    {kanOppdatereKontrollsamtale && (
+                        <Controller
+                            control={form.control}
+                            name={'status'}
+                            render={({ field, fieldState }) => (
+                                <Select
+                                    {...field}
+                                    label={'Kontrollsamtalestatus'}
+                                    error={fieldState.error?.message}
+                                    value={field.value ?? ''}
+                                >
+                                    <option value="">Velg et alternativ</option>
+                                    {Object.values(KontrollsamtaleFormStatus).map((grunn) => (
+                                        <option value={grunn} key={grunn}>
+                                            {kontrollsamtaleStatusTextMapper(grunn)}
+                                        </option>
+                                    ))}
+                                </Select>
+                            )}
+                        />
+                    )}
+
+                    {form.watch('status') === KontrollsamtaleFormStatus.GJENNOMFØRT && (
+                        <Controller
+                            control={form.control}
+                            name={'journalpostId'}
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    label="Kontrollnotatets journalpost-id"
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                />
+                            )}
+                        />
+                    )}
                     {RemoteData.isFailure(oppdaterStatus) && <ApiErrorAlert error={oppdaterStatus.error} />}
-                    <div className={styles.buttonsContainer}>
-                        <Button type="button" variant="secondary" onClick={() => props.onClose()}>
-                            Avbryt
-                        </Button>
-                        <Button>Oppdater kontrollsamtale</Button>
-                    </div>
+                    {kanOppdatereKontrollsamtale && (
+                        <div className={styles.buttonsContainer}>
+                            <Button type="button" variant="secondary" onClick={() => props.onClose()}>
+                                Avbryt
+                            </Button>
+                            <Button>Oppdater kontrollsamtale</Button>
+                        </div>
+                    )}
                 </form>
             </Modal.Body>
         </Modal>
@@ -364,26 +373,30 @@ const EditKontrollsamtaleInnkallingsdato = (props: {
                         <Label>Datoen for innkalling kan kun oppdateres dersom kontrollsamtalen er planlagt.</Label>
                     )}
 
-                    <Controller
-                        control={form.control}
-                        name={'innkallingsmåned'}
-                        render={({ field, fieldState }) => (
-                            <MonthPicker
-                                label={'Innkallingsdato'}
-                                hjelpetekst="Innkallingsdatoen må være innenfor ytterpunktene av en eller flere stønadsperioder. I tillegg, må den tidligst være neste måned"
-                                value={field.value}
-                                onChange={field.onChange}
-                                error={fieldState.error?.message}
+                    {!props.kontrollsamtaleSomSkalEndres.kanOppdatereInnkallingsmåned && (
+                        <>
+                            <Controller
+                                control={form.control}
+                                name={'innkallingsmåned'}
+                                render={({ field, fieldState }) => (
+                                    <MonthPicker
+                                        label={'Innkallingsdato'}
+                                        hjelpetekst="Innkallingsdatoen må være innenfor ytterpunktene av en eller flere stønadsperioder. I tillegg, må den tidligst være neste måned"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        error={fieldState.error?.message}
+                                    />
+                                )}
                             />
-                        )}
-                    />
-                    {RemoteData.isFailure(oppdaterStatus) && <ApiErrorAlert error={oppdaterStatus.error} />}
-                    <div className={styles.buttonsContainer}>
-                        <Button type="button" variant="secondary" onClick={() => props.onClose()}>
-                            Avbryt
-                        </Button>
-                        <Button>Oppdater kontrollsamtale</Button>
-                    </div>
+                            {RemoteData.isFailure(oppdaterStatus) && <ApiErrorAlert error={oppdaterStatus.error} />}
+                            <div className={styles.buttonsContainer}>
+                                <Button type="button" variant="secondary" onClick={() => props.onClose()}>
+                                    Avbryt
+                                </Button>
+                                <Button>Oppdater kontrollsamtale</Button>
+                            </div>
+                        </>
+                    )}
                 </form>
             </Modal.Body>
         </Modal>
