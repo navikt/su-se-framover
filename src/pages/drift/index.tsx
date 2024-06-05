@@ -18,6 +18,7 @@ import { Nullable } from '~src/lib/types';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
+import DokumentDistribusjon from './components/dokument/DokumentDistribusjon';
 import Personhendelser from './components/personhendelser/Personhendelser';
 import Gregulering from './components/regulering/G-regulering';
 import ResendStatistikk from './components/Statistikk';
@@ -219,6 +220,7 @@ const Drift = () => {
                     <Gregulering />
                     <Personhendelser />
                     <Stønadsmottakere />
+                    <DokumentDistribusjon />
 
                     <Button
                         variant="secondary"

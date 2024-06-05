@@ -20,8 +20,8 @@
 }
 
 .actionsContainer {
-    display: flex;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
 
     > :not(:last-child) {
         margin-right: @spacing-s;
