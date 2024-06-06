@@ -31,7 +31,7 @@ export const distribuerDokumentSchema = yup.object<DistribuerDokumentFormData>({
 export interface DistribuerDokumentRequest {
     dokumentId: string;
     sakId: string;
-    adressadresselinje1: string | null;
+    adressadresselinje1: string;
     adressadresselinje2: string | null;
     adressadresselinje3: string | null;
     postnummer: string;
