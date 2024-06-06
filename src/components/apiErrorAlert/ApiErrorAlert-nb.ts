@@ -56,6 +56,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FANT_IKKE_VEDTAK]: 'Fant ikke vedtak',
     [ApiErrorCode.FANT_INGEN_UTBETALINGER_ETTER_STANSDATO]: 'Fant ingen utbetalinger etter stansdato',
     [ApiErrorCode.FANT_INGEN_UTBETALINGER]: 'Fant ingen utbetalinger',
+    [ApiErrorCode.FEIL_VED_BESTILLING_AV_BREV]: 'Feil ved bestilling av brev - prøv igjen senere',
     [ApiErrorCode.FEIL_VED_GENERERING_AV_DOKUMENT]: 'Feil ved generering av dokument',
     [ApiErrorCode.FEIL_VED_HENTING_AV_SAKSBEHANDLER_ELLER_ATTESTANT]:
         'Feil ved henting av saksbehandler eller attestant',

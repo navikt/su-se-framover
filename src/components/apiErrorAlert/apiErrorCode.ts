@@ -48,6 +48,7 @@ export enum ApiErrorCode {
     FANT_IKKE_VEDTAK = 'fant_ikke_vedtak',
     FANT_INGEN_UTBETALINGER = 'fant_ingen_utbetalinger',
     FANT_INGEN_UTBETALINGER_ETTER_STANSDATO = 'fant_ingen_utbetalinger_etter_stansdato',
+    FEIL_VED_BESTILLING_AV_BREV = 'feil_ved_bestilling_av_brev',
     FEIL_VED_GENERERING_AV_DOKUMENT = 'feil_ved_generering_av_dokument',
     FEIL_VED_HENTING_AV_SAKSBEHANDLER_ELLER_ATTESTANT = 'feil_ved_henting_av_saksbehandler_eller_attestant',
     FEIL_VED_LAGRING_AV_BREV_OG_KLAGE = 'feil_ved_lagring_av_brev_og_klage',
