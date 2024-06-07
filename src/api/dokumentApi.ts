@@ -1,3 +1,4 @@
+import { DistribuerDokumentRequest } from '~src/pages/drift/components/dokument/DokumentDistribusjonUtils';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -20,3 +21,18 @@ export const getDokument = (arg: { dokumentId: string }) => {
         bodyTransformer: (res) => res.blob(),
     });
 };
+
+export async function distribuerDokument(args: DistribuerDokumentRequest): Promise<ApiClientResult<Dokument>> {
+    return apiClient({
+        url: `sak/${args.sakId}/dokumenter/${args.dokumentId}/distribuer`,
+        method: 'POST',
+        body: {
+            adresselinje1: args.adressadresselinje1,
+            adresselinje2: args.adressadresselinje2,
+            adresselinje3: args.adressadresselinje3,
+            postnummer: args.postnummer,
+            poststed: args.poststed,
+        },
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}

@@ -1,6 +1,4 @@
 import { Nullable } from '~src/lib/types';
-import { DistribuerDokumentRequest } from '~src/pages/drift/components/dokument/DokumentDistribusjonUtils';
-import { Dokument } from '~src/types/dokument/Dokument';
 import { NyeUtbetalingslinjerResponse as UtbetalingsIderResponse } from '~src/types/Utbetaling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -163,20 +161,5 @@ export async function dryRunPersonhendelser(args: {
         url: `/drift/personhendelser/dry`,
         method: 'POST',
         body: formData,
-    });
-}
-
-export async function distribuerDokument(args: DistribuerDokumentRequest): Promise<ApiClientResult<Dokument>> {
-    return apiClient({
-        url: `sak/${args.sakId}/dokumenter/${args.dokumentId}/distribuer`,
-        method: 'POST',
-        body: {
-            adresselinje1: args.adressadresselinje1,
-            adresselinje2: args.adressadresselinje2,
-            adresselinje3: args.adressadresselinje3,
-            postnummer: args.postnummer,
-            poststed: args.poststed,
-        },
-        request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }

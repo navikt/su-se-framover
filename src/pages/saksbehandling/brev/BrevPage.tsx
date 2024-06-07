@@ -1,4 +1,4 @@
-import DokumentForm from '../../../components/forms/dokumentForm/DokumentForm';
+import DokumentForm from '../../../components/forms/dokument/dokumentForm/DokumentForm';
 
 const BrevPage = () => {
     return <DokumentForm />;

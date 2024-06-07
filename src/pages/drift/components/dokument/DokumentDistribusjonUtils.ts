@@ -1,31 +1,19 @@
+import {
+    DokumentDistribusjonFormData,
+    dokumentDistribusjonFormSchema,
+} from '~src/components/forms/dokument/distribusjon/DokumentDistribusjonFormUtils';
 import yup from '~src/lib/validering';
 
 export interface DistribuerDokumentFormData {
-    dokumentId: string;
     sakId: string;
-    adresser: Array<{ adresselinje: string }>;
-    postnummer: string;
-    poststed: string;
+    dokumentId: string;
+    distribusjon: DokumentDistribusjonFormData;
 }
-
-const arraySchema = yup
-    .array()
-    .of(
-        yup
-            .object<{ adresselinje: string }>({
-                adresselinje: yup.string().required(),
-            })
-            .defined(),
-    )
-    .min(1)
-    .required() as yup.ArraySchema<{ adresselinje: string }, object>;
 
 export const distribuerDokumentSchema = yup.object<DistribuerDokumentFormData>({
     dokumentId: yup.string().required(),
     sakId: yup.string().required(),
-    adresser: arraySchema,
-    postnummer: yup.string().required(),
-    poststed: yup.string().required(),
+    distribusjon: dokumentDistribusjonFormSchema.required(),
 });
 
 export interface DistribuerDokumentRequest {
