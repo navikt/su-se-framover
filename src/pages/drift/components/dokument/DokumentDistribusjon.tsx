@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Modal, TextField } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, HelpText, Modal, TextField } from '@navikt/ds-react';
 import { useState } from 'react';
 import { Control, Controller, useFieldArray, useForm } from 'react-hook-form';
 
@@ -98,7 +98,12 @@ const DokumentDistribusjonsModal = (props: { visModal: boolean; onClose: () => v
                                 name={'postnummer'}
                                 render={({ field, fieldState }) => (
                                     <TextField
-                                        label={'Postnummer'}
+                                        label={
+                                            <div className={styles.label}>
+                                                <BodyShort>Postnummer</BodyShort>
+                                                <HelpText>Postnummer blir ikke validert</HelpText>
+                                            </div>
+                                        }
                                         onChange={field.onChange}
                                         error={fieldState.error?.message}
                                     />
@@ -109,7 +114,12 @@ const DokumentDistribusjonsModal = (props: { visModal: boolean; onClose: () => v
                                 name={'poststed'}
                                 render={({ field, fieldState }) => (
                                     <TextField
-                                        label={'Poststed'}
+                                        label={
+                                            <div className={styles.label}>
+                                                <BodyShort>Poststed</BodyShort>
+                                                <HelpText>Poststed blir ikke validert</HelpText>
+                                            </div>
+                                        }
                                         onChange={field.onChange}
                                         error={fieldState.error?.message}
                                     />
