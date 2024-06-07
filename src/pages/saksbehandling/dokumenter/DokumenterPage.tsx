@@ -1,53 +1,42 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
-import { Alert, BodyLong, Button, Heading, HelpText, LinkPanel, Loader, Tag } from '@navikt/ds-react';
+import {
+    Alert,
+    BodyShort,
+    Box,
+    Button,
+    CopyButton,
+    HStack,
+    Heading,
+    Link,
+    Loader,
+    Tag,
+    VStack,
+} from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { ÅpentBrev } from '~src/assets/Illustrations';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
-import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import { saksoversiktValgtSak } from '~src/lib/routes';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 
-import messages from './dokumenterPage-nb';
 import styles from './dokumenterPage.module.less';
-
-const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typeof messages> }) => (
-    <div className={styles.headerContainer}>
-        <div className={styles.illustrasjonContainer}>
-            <div className={styles.illustrasjon}>
-                <ÅpentBrev />
-            </div>
-        </div>
-        <div className={styles.undertittel}>
-            <Heading level="1" size="large">
-                {props.formatMessage('undertittel')}
-            </Heading>
-            <HelpText>{props.formatMessage('dokumenter.helpText')}</HelpText>
-        </div>
-        <BodyLong size="large">
-            {props.formatMessage('tittel.saksnummer', {
-                saksnummer: props.saksnummer,
-            })}
-        </BodyLong>
-    </div>
-);
+import DokumentHeader from './DokumentHeader';
 
 const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages });
 
     return (
         <div className={styles.outerContainer}>
             <div className={styles.container}>
-                <Header saksnummer={props.sak.saksnummer} formatMessage={formatMessage} />
+                <DokumentHeader saksnummer={props.sak.saksnummer} />
                 <div className={styles.contentContainer}>
                     <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
                     <Button
@@ -55,8 +44,10 @@ const DokumenterPage = () => {
                         variant="secondary"
                         onClick={() => navigate(saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
                     >
-                        <ChevronLeftIcon />
-                        {formatMessage('knapp.tilbake')}
+                        <div className={styles.knappInnhold}>
+                            <ChevronLeftIcon />
+                            <BodyShort>Tilbake</BodyShort>
+                        </div>
                     </Button>
                 </div>
             </div>
@@ -66,8 +57,6 @@ const DokumenterPage = () => {
 
 export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingenBrevTekst?: string }) => {
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
-
-    const { formatMessage } = useI18n({ messages });
 
     useEffect(() => {
         fetchDokumenter({
@@ -85,44 +74,58 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
         RemoteData.fold3(
             () => (
                 <div className={styles.loaderContainer}>
-                    <Loader size="large" title={formatMessage('loader.henterBrev')} />
+                    <Loader size="large" title="Henter brev..." />
                 </div>
             ),
-            (err) => <Alert variant="error">{err?.body?.message ?? formatMessage('feil.ukjent')}</Alert>,
+            (err) => <ApiErrorAlert error={err} />,
             (dokumenter) =>
                 dokumenter.length === 0 ? (
-                    <Alert variant="info">{props.ingenBrevTekst ?? formatMessage('feil.ingenBrev')}</Alert>
+                    <Alert variant="info">{props.ingenBrevTekst ?? 'Fant ingen brev'}</Alert>
                 ) : (
-                    <ol className={styles.dokumentliste}>
-                        {dokumenter.map((d) => (
-                            <li key={d.id}>
-                                <LinkPanel
-                                    href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleDokumentClick(d);
-                                    }}
-                                    border
-                                >
-                                    <div className={styles.dokument}>
-                                        <FileTextIcon className={styles.dokumentikon} />
-                                        <div>
-                                            <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
-                                            <LinkPanel.Description className={styles.linkPanelBeskrivelse}>
-                                                {DateUtils.formatDateTime(d.opprettet)}
-                                                <Tag variant={d.journalført ? 'success' : 'error'} size="small">
-                                                    {d.journalført ? 'Journalført' : 'Ikke journalført'}
-                                                </Tag>
-                                                <Tag variant={d.brevErBestilt ? 'success' : 'error'} size="small">
-                                                    {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
-                                                </Tag>
-                                            </LinkPanel.Description>
-                                        </div>
-                                    </div>
-                                </LinkPanel>
-                            </li>
-                        ))}
-                    </ol>
+                    <>
+                        <ol className={styles.dokumentliste}>
+                            {dokumenter.map((d) => (
+                                <li key={`${d.id}-c`}>
+                                    <Box
+                                        background="surface-default"
+                                        padding="6"
+                                        borderWidth="1"
+                                        borderRadius="medium"
+                                        shadow="small"
+                                    >
+                                        <HStack justify="space-between" align="center">
+                                            <HStack align="center">
+                                                <FileTextIcon className={styles.dokumentikon} />
+                                                <VStack gap="1">
+                                                    <Heading size="medium">
+                                                        <Link onClick={() => handleDokumentClick(d)}>{d.tittel}</Link>
+                                                    </Heading>
+
+                                                    <div className={styles.linkPanelBeskrivelse}>
+                                                        <BodyShort>Id: {d.id}</BodyShort>
+                                                        <CopyButton className={styles.copyButton} copyText={d.id} />
+                                                    </div>
+
+                                                    <BodyShort className={styles.linkPanelBeskrivelse}>
+                                                        {DateUtils.formatDateTime(d.opprettet)}
+                                                        <Tag variant={d.journalført ? 'success' : 'error'} size="small">
+                                                            {d.journalført ? 'Journalført' : 'Ikke journalført'}
+                                                        </Tag>
+                                                        <Tag
+                                                            variant={d.brevErBestilt ? 'success' : 'error'}
+                                                            size="small"
+                                                        >
+                                                            {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
+                                                        </Tag>
+                                                    </BodyShort>
+                                                </VStack>
+                                            </HStack>
+                                        </HStack>
+                                    </Box>
+                                </li>
+                            ))}
+                        </ol>
+                    </>
                 ),
         ),
     );
