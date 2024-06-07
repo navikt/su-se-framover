@@ -240,7 +240,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                         <Heading level="2" size="medium">
                             Beregning
                             {props.behandling.beregning &&
-                                ` ${DateUtils.formatMonthYear(props.behandling.beregning.fraOgMed)}-
+                                ` ${DateUtils.formatMonthYear(props.behandling.beregning.fraOgMed)} -
                                 ${DateUtils.formatMonthYear(props.behandling.beregning.tilOgMed)}`}
                         </Heading>
                         <div className={styles.beregningsContainer}>
