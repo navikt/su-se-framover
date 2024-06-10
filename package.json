@@ -85,7 +85,7 @@
         "regenerator-runtime": "0.14.1",
         "reset-css": "5.0.2",
         "ts-node": "10.9.2",
-        "uuid": "9.0.1",
+        "uuid": "10.0.0",
         "yup": "0.29.3"
     },
     "devDependencies": {
