@@ -171,12 +171,15 @@ const DistribueringsModal = (props: { sakId: string; dokumentId: string; visModa
     };
 
     return (
-        <Modal
-            aria-labelledby="Distribuer dokument"
-            open={props.visModal}
-            onClose={props.onClose}
-            header={{ heading: 'Distribuer et dokument' }}
-        >
+        <Modal aria-labelledby="Distribuer dokument" open={props.visModal} onClose={props.onClose}>
+            <Modal.Header>
+                <Heading size="medium">Distribuer et dokument</Heading>
+                <BodyShort>I de fleste tilfeller vil distribuering av brev skje av seg selv.</BodyShort>
+                <BodyShort>
+                    Likevel vil det være et fåtall av tilfeller der brev ikke kan distribueres automatisk, f.eks ved
+                    død. Disse må da distribueres manuelt.
+                </BodyShort>
+            </Modal.Header>
             <Modal.Body className={styles.modalBody}>
                 <form className={styles.formContainer} onSubmit={form.handleSubmit(handleSubmit)}>
                     <DokumentDistribusjonForm control={form.control} />
