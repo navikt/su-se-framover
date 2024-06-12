@@ -17,11 +17,18 @@ export enum DokumentIdType {
     Klage = 'KLAGE',
 }
 
+export enum Distribusjonstype {
+    VIKTIG = 'VIKTIG',
+    VEDTAK = 'VEDTAK',
+    ANNET = 'ANNET',
+}
+
 export interface OpprettDokumentBody {
     sakId: string;
     tittel: string;
     fritekst: string;
     adresse: Nullable<AdresseRequest>;
+    distribusjonstype: Distribusjonstype;
 }
 
 interface AdresseRequest {

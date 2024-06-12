@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Heading, Radio, RadioGroup, TextField } from '@navikt/ds-react';
+import { Box, Button, Heading, Radio, RadioGroup, Select, TextField } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -12,9 +12,10 @@ import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
+import { Distribusjonstype } from '~src/types/dokument/Dokument';
 
 import styles from './BrevPage.module.less';
-import { DokumentFormData, dokumentSchema } from './BrevPageUtils';
+import { DokumentFormData, distribusjonstypeTextMapper, dokumentSchema } from './BrevPageUtils';
 
 const BrevPage = () => {
     const navigate = useNavigate();
@@ -32,6 +33,7 @@ const BrevPage = () => {
                 postnummer: '',
                 poststed: '',
             },
+            distribusjonstype: null,
         },
         resolver: yupResolver(dokumentSchema),
     });
@@ -58,6 +60,7 @@ const BrevPage = () => {
                                   poststed: values.adresse!.poststed,
                               }
                             : null,
+                        distribusjonstype: values.distribusjonstype!,
                     },
                     () => {
                         navigate(Routes.alleDokumenterForSak.createURL({ sakId: context.sak.id }));
@@ -86,6 +89,26 @@ const BrevPage = () => {
 
                 <Controller
                     control={form.control}
+                    name={'distribusjonstype'}
+                    render={({ field, fieldState }) => (
+                        <Select
+                            {...field}
+                            label={'Velg distribusjonstype'}
+                            value={field.value ?? ''}
+                            error={fieldState.error?.message}
+                        >
+                            <option value="">Velg distribusjonstype</option>
+                            {Object.values(Distribusjonstype).map((type) => (
+                                <option value={type} key={type}>
+                                    {distribusjonstypeTextMapper(type)}
+                                </option>
+                            ))}
+                        </Select>
+                    )}
+                />
+
+                <Controller
+                    control={form.control}
                     name={'tittel'}
                     render={({ field, fieldState }) => (
                         <TextField label={'Tittel'} onChange={field.onChange} error={fieldState.error?.message} />
@@ -104,6 +127,8 @@ const BrevPage = () => {
                                     fritekst: form.watch('fritekst'),
                                     //adresse har ikke noe å si for visning av brevet
                                     adresse: null,
+                                    //distibusjonstype har ikke noe å si for visning av brevet
+                                    distribusjonstype: Distribusjonstype.ANNET,
                                 })
                             }
                             feil={fieldState.error}
