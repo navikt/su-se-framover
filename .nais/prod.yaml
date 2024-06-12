@@ -25,6 +25,7 @@ spec:
       replyURLs:
         - "http://localhost/oauth2/callback"
         - "https://supplerendestonad.nais.adeo.no/oauth2/callback"
+        - "https://supplerendestonad.intern.nav.no/oauth2/callback"
   webproxy: true
   replicas:
     min: 2
@@ -38,6 +39,7 @@ spec:
     initialDelay: 5
   ingresses:
     - https://supplerendestonad.nais.adeo.no
+    - https://supplerendestonad.intern.nav.no
   vault:
     enabled: true
   env:
@@ -60,9 +62,9 @@ spec:
       - name: SU_SE_BAKOVER_AAD_APP_NAME
         value: "prod-fss.supstonad.su-se-bakover"
       - name: AUTH_LOGIN_REDIRECT_URI
-        value: "https://supplerendestonad.nais.adeo.no/oauth2/callback"
+        value: "https://supplerendestonad.intern.nav.no/oauth2/callback"
       - name: AUTH_LOGOUT_REDIRECT_URI
-        value: "https://supplerendestonad.nais.adeo.no/"
+        value: "https://supplerendestonad.intern.nav.no/"
   envFrom:
     - secret: redis-password
     - secret: su-se-framover-session-key
