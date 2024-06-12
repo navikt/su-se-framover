@@ -108,6 +108,7 @@ export async function lagreOgSendFritekstDokument(arg: OpprettDokumentBody): Pro
         body: {
             tittel: arg.tittel,
             fritekst: arg.fritekst,
+            adresse: arg.adresse,
         },
     });
 }
@@ -120,6 +121,7 @@ export async function opprettFritekstDokument(arg: OpprettDokumentBody): Promise
         body: {
             tittel: arg.tittel,
             fritekst: arg.fritekst,
+            adresse: arg.adresse,
         },
         bodyTransformer: (res) => res.blob(),
     });

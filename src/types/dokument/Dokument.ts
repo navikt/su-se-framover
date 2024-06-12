@@ -1,3 +1,5 @@
+import { Nullable } from '~src/lib/types';
+
 export interface Dokument {
     id: string;
     tittel: string;
@@ -19,4 +21,13 @@ export interface OpprettDokumentBody {
     sakId: string;
     tittel: string;
     fritekst: string;
+    adresse: Nullable<AdresseRequest>;
+}
+
+interface AdresseRequest {
+    adresselinje1: string;
+    adresselinje2: Nullable<string>;
+    adresselinje3: Nullable<string>;
+    postnummer: string;
+    poststed: string;
 }
