@@ -1,3 +1,5 @@
+import { FileObject } from '@navikt/ds-react';
+
 import {
     DokumentDistribusjonFormData,
     dokumentDistribusjonFormSchema,
@@ -8,7 +10,9 @@ import { Distribusjonstype } from '~src/types/dokument/Dokument';
 
 export interface DokumentFormData {
     tittel: string;
+    vilHellerLasteOppPdf: boolean;
     fritekst: string;
+    fileObject: Nullable<FileObject>;
     skalSendeTilAnnenAdresse: boolean;
     adresse: Nullable<DokumentDistribusjonFormData>;
     distribusjonstype: Nullable<Distribusjonstype>;
@@ -16,7 +20,15 @@ export interface DokumentFormData {
 
 export const dokumentSchema = yup.object<DokumentFormData>({
     tittel: yup.string().required(),
-    fritekst: yup.string().required(),
+    vilHellerLasteOppPdf: yup.boolean().required(),
+    fritekst: yup.string().defined().when('vilHellerLasteOppPdf', {
+        is: false,
+        then: yup.string().required(),
+    }),
+    fileObject: yup.mixed<FileObject>().nullable().when('vilHellerLasteOppPdf', {
+        is: true,
+        then: yup.mixed<FileObject>().required(),
+    }),
     skalSendeTilAnnenAdresse: yup.boolean().required(),
     adresse: yup.object<DokumentDistribusjonFormData>().nullable().defined().when('skalSendeTilAnnenAdresse', {
         is: true,

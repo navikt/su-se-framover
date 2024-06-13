@@ -1,6 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Heading, Radio, RadioGroup, Select, TextField } from '@navikt/ds-react';
+import {
+    Box,
+    Button,
+    Checkbox,
+    Heading,
+    Radio,
+    RadioGroup,
+    Select,
+    TextField,
+    UNSAFE_FileUpload,
+    VStack,
+} from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -27,6 +38,8 @@ const BrevPage = () => {
         defaultValues: {
             tittel: '',
             fritekst: '',
+            vilHellerLasteOppPdf: false,
+            fileObject: null,
             skalSendeTilAnnenAdresse: false,
             adresse: {
                 adresser: [{ adresselinje: '' }],
@@ -46,7 +59,8 @@ const BrevPage = () => {
                     {
                         sakId: context.sak.id,
                         tittel: values.tittel!,
-                        fritekst: values.fritekst!,
+                        fritekst: values.vilHellerLasteOppPdf ? null : values.fritekst!,
+                        pdf: values.vilHellerLasteOppPdf ? values.fileObject!.file : null,
                         adresse: values.skalSendeTilAnnenAdresse
                             ? {
                                   adresselinje1: values.adresse!.adresser[0]!.adresselinje,
@@ -114,28 +128,77 @@ const BrevPage = () => {
                         <TextField label={'Tittel'} onChange={field.onChange} error={fieldState.error?.message} />
                     )}
                 />
+
                 <Controller
                     control={form.control}
-                    name={'fritekst'}
-                    render={({ field, fieldState }) => (
-                        <BrevInput
-                            tekst={field.value}
-                            onVisBrevClick={() =>
-                                SakApi.opprettFritekstDokument({
-                                    sakId: context.sak.id,
-                                    tittel: form.watch('tittel'),
-                                    fritekst: form.watch('fritekst'),
-                                    //adresse har ikke noe å si for visning av brevet
-                                    adresse: null,
-                                    //distibusjonstype har ikke noe å si for visning av brevet
-                                    distribusjonstype: Distribusjonstype.ANNET,
-                                })
-                            }
-                            feil={fieldState.error}
-                            onChange={field.onChange}
-                        />
+                    name={'vilHellerLasteOppPdf'}
+                    render={({ field }) => (
+                        <Checkbox {...field} checked={field.value}>
+                            Jeg vil heller laste opp en PDF-fil
+                        </Checkbox>
                     )}
                 />
+
+                {!form.watch('vilHellerLasteOppPdf') && (
+                    <Controller
+                        control={form.control}
+                        name={'fritekst'}
+                        render={({ field, fieldState }) => (
+                            <BrevInput
+                                tekst={field.value}
+                                onVisBrevClick={() =>
+                                    SakApi.opprettFritekstDokument({
+                                        sakId: context.sak.id,
+                                        tittel: form.watch('tittel'),
+                                        fritekst: form.watch('fritekst'),
+                                        //her er det valgt at dem skal skrive fritekst - da vil vi gjøre genereringen
+                                        pdf: null,
+                                        //adresse har ikke noe å si for visning av brevet
+                                        adresse: null,
+                                        //distibusjonstype har ikke noe å si for visning av brevet
+                                        distribusjonstype: Distribusjonstype.ANNET,
+                                    })
+                                }
+                                feil={fieldState.error}
+                                onChange={field.onChange}
+                            />
+                        )}
+                    />
+                )}
+
+                {form.watch('vilHellerLasteOppPdf') && (
+                    <VStack gap="5">
+                        <Controller
+                            control={form.control}
+                            name={'fileObject'}
+                            render={({ field, fieldState }) => (
+                                <UNSAFE_FileUpload.Dropzone
+                                    label="Last opp brevet"
+                                    description={`Du kan laste opp PDF-filen. Maks 1 fil.`}
+                                    accept=".pdf"
+                                    fileLimit={{ max: 1, current: form.watch('fileObject') ? 1 : 0 }}
+                                    onSelect={(f) => field.onChange(f[0])}
+                                    error={fieldState.error?.message}
+                                />
+                            )}
+                        />
+
+                        {form.watch('fileObject') && (
+                            <VStack gap="2">
+                                <Heading level="3" size="xsmall">
+                                    Vedlegg (1)
+                                </Heading>
+                                <UNSAFE_FileUpload.Item
+                                    file={form.watch('fileObject')!.file}
+                                    button={{
+                                        action: 'delete',
+                                        onClick: () => form.setValue('fileObject', null),
+                                    }}
+                                />
+                            </VStack>
+                        )}
+                    </VStack>
+                )}
             </Box>
 
             {RemoteData.isFailure(sendBrevStatus) && <ApiErrorAlert error={sendBrevStatus.error} />}

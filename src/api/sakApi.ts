@@ -1,5 +1,5 @@
 import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
-import { Dokument, OpprettDokumentBody } from '~src/types/dokument/Dokument';
+import { Dokument, OpprettDokumentRequest } from '~src/types/dokument/Dokument';
 import { Journalpost } from '~src/types/Journalpost';
 import {
     OppdaterRegistrertUtenlandsoppholdRequest,
@@ -101,20 +101,36 @@ export async function annullerRegistrertUtenlandsopphold(
     });
 }
 
-export async function lagreOgSendFritekstDokument(arg: OpprettDokumentBody): Promise<ApiClientResult<Dokument>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/fritekstDokument/lagreOgSend`,
-        method: 'POST',
-        body: {
-            tittel: arg.tittel,
-            fritekst: arg.fritekst,
-            adresse: arg.adresse,
-            distribusjonstype: arg.distribusjonstype,
-        },
-    });
+export async function lagreOgSendFritekstDokument(arg: OpprettDokumentRequest): Promise<ApiClientResult<Dokument>> {
+    if (arg.pdf === null) {
+        //vil sende fritekst
+        return apiClient({
+            url: `/saker/${arg.sakId}/fritekstDokument/lagreOgSend`,
+            method: 'POST',
+            body: {
+                tittel: arg.tittel,
+                fritekst: arg.fritekst,
+                adresse: arg.adresse,
+                distribusjonstype: arg.distribusjonstype,
+            },
+        });
+    } else {
+        //vil sende pdf
+        const formData = new FormData();
+        formData.append('tittel', arg.tittel);
+        formData.append('distribusjonstype', arg.distribusjonstype);
+        formData.append('pdf', arg.pdf!);
+        arg.adresse && formData.append('adresse', JSON.stringify(arg.adresse));
+
+        return apiClient({
+            url: `/saker/${arg.sakId}/fritekstDokument/lagreOgSend`,
+            method: 'POST',
+            body: formData,
+        });
+    }
 }
 
-export async function opprettFritekstDokument(arg: OpprettDokumentBody): Promise<ApiClientResult<Blob>> {
+export async function opprettFritekstDokument(arg: OpprettDokumentRequest): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${arg.sakId}/fritekstDokument`,
         method: 'POST',

@@ -23,10 +23,11 @@ export enum Distribusjonstype {
     ANNET = 'ANNET',
 }
 
-export interface OpprettDokumentBody {
+export interface OpprettDokumentRequest {
     sakId: string;
     tittel: string;
-    fritekst: string;
+    fritekst: Nullable<string>;
+    pdf: Nullable<File>;
     adresse: Nullable<AdresseRequest>;
     distribusjonstype: Distribusjonstype;
 }
