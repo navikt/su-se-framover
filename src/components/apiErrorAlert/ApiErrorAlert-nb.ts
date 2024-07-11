@@ -299,6 +299,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UTDATERT_VERSJON]: 'Saksversjonen er utdatert. Vennligst prøv å refreshe siden.',
     [ApiErrorCode.UTBETALING_ALLEREDE_OPPHØRT]: 'Utbetaling allerede opphørt',
     [ApiErrorCode.UTBETALING_ALLEREDE_STANSET]: 'Utbetaling allerede stanset',
+    [ApiErrorCode.UTDATERT_SAKSVERSJON]:
+        'Saksversjonen er utdatert. Det har muligens skjedd en endring i bakgrunnen. Vennligst refresher nettleseren / hent saken på nytt.',
     [ApiErrorCode.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'Fradrag mangler valuta',
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIV_KURS]: 'Fradrag har negativ kurs',
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIVT_BELØP]: 'Fradrag har negativt utenlandsbeløp',
