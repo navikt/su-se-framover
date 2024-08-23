@@ -127,7 +127,7 @@ export enum Utfall {
 }
 
 export interface VedtattUtfall {
-    utfall: Utfall;
+    utfall: Nullable<Utfall>;
     opprettet: string;
 }
 

@@ -68,6 +68,22 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     </Heading>
                 </div>
 
+                {props.klage.klagevedtakshistorikk.length > 0 && (
+                    <div className={styles.utfallshistorikkContainer}>
+                        <Heading size="xsmall" level="6">
+                            Utfallshistorikk
+                        </Heading>
+                        {props.klage.klagevedtakshistorikk.map((vedtattUtfall, idx) => (
+                            <div key={`${props.klage.id} - ${idx}`}>
+                                <BodyShort>
+                                    {vedtattUtfall.utfall ?? 'Anke'} -{' '}
+                                    {DateUtils.formatDateTime(vedtattUtfall.opprettet)}
+                                </BodyShort>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 {erKlageOversendt(props.klage) ? (
                     <div className={styles.seBrevContainer}>
                         <Button

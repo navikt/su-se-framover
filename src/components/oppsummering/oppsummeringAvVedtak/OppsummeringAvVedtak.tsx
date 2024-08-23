@@ -128,7 +128,6 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                         />
                     )}
                 </div>
-
                 {skalDokumentIkkeGenereres(vedtak) && <Label>{formatMessage('vedtak.brev.ingenBrevSendt')}</Label>}
                 {erDokumentIkkeGenerertEnda(vedtak) && <Label>{formatMessage('vedtak.brev.ikkeGenerertEnda')}</Label>}
                 {erDokumentGenerertEllerSenere(vedtak) && (
@@ -166,7 +165,6 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                         )}
                     </div>
                 )}
-
                 {behandlingstype === 'revurdering' &&
                     (vedtaketsBehandling as Revurdering) &&
                     erInformasjonsRevurdering(vedtaketsBehandling as Revurdering) && (
@@ -178,7 +176,6 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                         />
                     )}
             </Oppsummeringspanel>
-
             <Oppsummeringspanel
                 ikon={Oppsummeringsikon.Task}
                 farge={Oppsummeringsfarge.Blå}
@@ -213,7 +210,6 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                     utenVedtaksbrev
                 />
             )}
-
             {behandlingstype !== 'tilbakekrevingsbehandling' && (
                 <OppsummeringAvBeregningOgSimulering
                     eksterngrunnlagSkatt={
@@ -363,7 +359,6 @@ const PartialOppsummeringAvKlage = (props: { v: Vedtak; k: Klage }) => {
                     retning={'vertikal'}
                 />
             </div>
-
             <FormkravInfo klage={props.k} klagensVedtak={props.v} />
         </div>
     );
