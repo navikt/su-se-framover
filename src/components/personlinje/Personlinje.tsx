@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { fetchPerson } from '~src/api/personApi';
+import { hentEpsSaksIderForDenneSak } from '~src/api/sakApi';
 import { KjønnUkjent } from '~src/assets/Icons';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
@@ -14,6 +15,7 @@ import { Person, SivilstandTyper, Sivilstand as ISivilstand } from '~src/types/P
 import { showName, formatFnr } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
+import { createToast, ToastType, useToast } from '../toast/Toast';
 
 import messages from './personlinje-nb';
 import styles from './personlinje.module.less';
@@ -59,7 +61,7 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
                 {props.søker.sivilstand && (
                     <span className={styles.sivilstandAndSeperator}>
                         <Separator />
-                        <Sivilstand sivilstand={props.søker.sivilstand} />
+                        <Sivilstand sakId={props.sakInfo.sakId} sivilstand={props.søker.sivilstand} />
                     </span>
                 )}
             </div>
@@ -68,16 +70,46 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
     );
 };
 
-const Sivilstand = (props: { sivilstand: ISivilstand }) => {
+const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand }) => {
     const { formatMessage } = useI18n({ messages });
 
+    const { insert } = useToast();
     const [status, hentPerson] = useApiCall(fetchPerson);
+    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIderForDenneSak);
 
     useEffect(() => {
         if (props.sivilstand.relatertVedSivilstand) {
             hentPerson(props.sivilstand.relatertVedSivilstand);
         }
     }, []);
+
+    useEffect(() => {
+        if (props.sivilstand.relatertVedSivilstand) {
+            hentEpsSaksIder(props.sakId);
+        }
+    }, [props.sivilstand.relatertVedSivilstand]);
+
+    useEffect(() => {
+        if (RemoteData.isFailure(hentEpsSaksIderStatus)) {
+            insert(
+                createToast({
+                    type: ToastType.ERROR,
+                    duration: 5000,
+                    message: 'En feil skjedde ved sjekk om eps har sak',
+                }),
+            );
+        }
+
+        if (RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length > 1) {
+            insert(
+                createToast({
+                    type: ToastType.INFO,
+                    duration: 5000,
+                    message: 'Saken har flere EPS som har SU-uføre sak',
+                }),
+            );
+        }
+    }, [hentEpsSaksIderStatus._tag]);
 
     return (
         <span className={styles.sivilstand}>
@@ -102,7 +134,18 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                     (eps) => (
                         <span className={styles.epsInformasjon}>
                             <KjønnUkjent size="24px" />
-                            <BodyShort>{showName(eps.navn)}</BodyShort>
+                            {RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length === 1 ? (
+                                <Link
+                                    target="_blank"
+                                    to={Routes.saksoversiktValgtSak.createURL({
+                                        sakId: hentEpsSaksIderStatus.value[0],
+                                    })}
+                                >
+                                    <BodyShort>{showName(eps.navn)}</BodyShort>
+                                </Link>
+                            ) : (
+                                <BodyShort>{showName(eps.navn)}</BodyShort>
+                            )}
                             <CopyButton
                                 copyText={eps.fnr}
                                 activeText={formatMessage('ariaLabel.kopierteFnr')}
