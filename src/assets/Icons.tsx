@@ -6,6 +6,7 @@ import {
 } from '@navikt/aksel-icons';
 
 const iconWidth = '30px';
+
 interface Props {
     width?: string | number;
     className?: string;

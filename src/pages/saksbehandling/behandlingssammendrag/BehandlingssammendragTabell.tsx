@@ -121,21 +121,18 @@ const BehandlingssamendragTableRow = ({
                     setContextMenuVariables({
                         pos: { x: e.pageX, y: e.pageY },
                         toggled: true,
-                        onMenuClick: () => {
-                            return handleOnClick((sak) =>
-                                window.open(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }), '_blank'),
-                            );
-                        },
+                        onMenuClick: () =>
+                            handleOnClick((sak) => {
+                                window.open(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
+                            }),
                     });
                 }}
             >
                 <Button
                     variant="tertiary"
-                    onClick={() => {
-                        return handleOnClick((sak) =>
-                            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })),
-                        );
-                    }}
+                    onClick={() =>
+                        handleOnClick((sak) => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })))
+                    }
                     loading={RemoteData.isPending(hentSakStatus)}
                 >
                     {formatMessage('sak.seSak')}

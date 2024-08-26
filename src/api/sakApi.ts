@@ -166,3 +166,10 @@ export const bekreftFnrEndring = async (arg: {
         },
     });
 };
+
+export const hentEpsSaksIderForDenneSak = async (sakId: string): Promise<ApiClientResult<string[]>> => {
+    return apiClient<string[]>({
+        url: `/saker/${sakId}/epsSak`,
+        method: 'GET',
+    });
+};
