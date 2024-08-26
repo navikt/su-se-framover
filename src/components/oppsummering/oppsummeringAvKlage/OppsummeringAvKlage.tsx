@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Label, Heading, Button, Tag } from '@navikt/ds-react';
+import { BodyShort, Label, Heading, Button, VStack } from '@navikt/ds-react';
 import classNames from 'classnames';
 
 import * as DokumentApi from '~src/api/dokumentApi';
@@ -73,14 +73,19 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                         <Heading size="xsmall" level="6">
                             Utfallshistorikk
                         </Heading>
-                        {props.klage.klagevedtakshistorikk.map((vedtattUtfall, idx) => (
-                            <div key={`${props.klage.id} - ${idx}`}>
-                                <BodyShort>
-                                    {vedtattUtfall.utfall ?? 'Anke'} -{' '}
-                                    {DateUtils.formatDateTime(vedtattUtfall.opprettet)}
-                                </BodyShort>
-                            </div>
-                        ))}
+                        <VStack gap="2">
+                            {props.klage.klagevedtakshistorikk.map((vedtattUtfall, idx) => (
+                                <div key={`${props.klage.id} - ${idx}`}>
+                                    <BodyShort>{vedtattUtfall.utfall ?? 'Anke'}</BodyShort>
+                                    {vedtattUtfall.klageinstansMottok && (
+                                        <BodyShort>
+                                            Klageinstans mottok klagen:{' '}
+                                            {DateUtils.formatDateTime(vedtattUtfall.klageinstansMottok)}
+                                        </BodyShort>
+                                    )}
+                                </div>
+                            ))}
+                        </VStack>
                     </div>
                 )}
 
@@ -185,14 +190,6 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     verdi={props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet)}
                     retning={'vertikal'}
                 />
-            </div>
-
-            <div className={styles.klagevedtakshistorikkContainer}>
-                {props.klage.klagevedtakshistorikk.map((vedtattUtfall) => (
-                    <Tag key={vedtattUtfall.opprettet} variant="info">
-                        {vedtattUtfall.utfall} - {DateUtils.formatDateTime(vedtattUtfall.opprettet)}
-                    </Tag>
-                ))}
             </div>
 
             {props.klage.begrunnelse && (

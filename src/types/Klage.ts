@@ -129,6 +129,7 @@ export enum Utfall {
 export interface VedtattUtfall {
     utfall: Nullable<Utfall>;
     opprettet: string;
+    klageinstansMottok: Nullable<string>;
 }
 
 export enum KlageSteg {
