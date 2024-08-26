@@ -58,15 +58,75 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
                         text={props.sakInfo.saksnummer.toString()}
                     />
                 </span>
-                {props.søker.sivilstand && (
+                {props.søker.sivilstand ? (
                     <span className={styles.sivilstandAndSeperator}>
                         <Separator />
                         <Sivilstand sakId={props.sakInfo.sakId} sivilstand={props.søker.sivilstand} />
                     </span>
+                ) : (
+                    <EpsSakLinkUtenSivilstand sakId={props.sakInfo.sakId} />
                 )}
             </div>
             <PersonAdvarsel person={props.søker} />
         </div>
+    );
+};
+
+const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
+    const { insert } = useToast();
+
+    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIderForDenneSak);
+
+    useEffect(() => {
+        hentEpsSaksIder(props.sakId);
+    }, [props.sakId]);
+
+    useEffect(() => {
+        if (RemoteData.isFailure(hentEpsSaksIderStatus)) {
+            insert(
+                createToast({
+                    type: ToastType.ERROR,
+                    duration: 5000,
+                    message: 'En feil skjedde ved sjekk om eps har sak',
+                }),
+            );
+        }
+
+        if (RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length > 1) {
+            insert(
+                createToast({
+                    type: ToastType.INFO,
+                    duration: 5000,
+                    message: 'Saken har flere EPS som har SU-uføre sak',
+                }),
+            );
+        }
+    }, [hentEpsSaksIderStatus._tag]);
+
+    return pipe(
+        hentEpsSaksIderStatus,
+        RemoteData.fold(
+            () => null,
+            () => <Loader />,
+            () => null,
+            (epsSaker) => (
+                <div>
+                    {epsSaker.length === 1 ? (
+                        <Alert variant="info">
+                            <BodyShort>Saken har EPS registrert fra vedtak, men fant ikke fra PDL</BodyShort>
+                            <Link
+                                target="_blank"
+                                to={Routes.saksoversiktValgtSak.createURL({
+                                    sakId: epsSaker[0],
+                                })}
+                            >
+                                <BodyShort>Gå til EPS-sak</BodyShort>
+                            </Link>
+                        </Alert>
+                    ) : null}
+                </div>
+            ),
+        ),
     );
 };
 
@@ -116,7 +176,6 @@ const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand }) => {
             <BodyShort as="span">
                 {formatMessage('label.sivilstand')}: {formatSivilstandType(props.sivilstand.type, formatMessage)}
             </BodyShort>
-
             {pipe(
                 status,
                 RemoteData.fold(
