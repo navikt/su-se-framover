@@ -21,7 +21,6 @@ export interface Person {
         kanKontaktesDigitalt: boolean;
     }>;
     vergemål: Nullable<boolean>;
-    fullmakt: Nullable<boolean>;
     dødsdato: Nullable<string>;
 }
 

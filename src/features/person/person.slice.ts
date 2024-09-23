@@ -62,6 +62,5 @@ const localPersonStub = () =>
         sivilstand: null,
         kontaktinfo: null,
         vergemål: null,
-        fullmakt: null,
         dødsdato: null,
     });
