@@ -62,7 +62,7 @@
         "autoprefixer": "10.4.19",
         "classnames": "2.5.1",
         "core-js": "3.37.1",
-        "country-data-list": "1.3.0",
+        "country-data-list": "1.3.4",
         "date-fns": "3.6.0",
         "dayjs": "1.11.11",
         "fp-ts": "2.16.6",
