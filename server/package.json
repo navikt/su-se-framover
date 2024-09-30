@@ -23,7 +23,7 @@
         "express": "^4.17.1",
         "express-http-proxy": "^2.0.0",
         "express-session": "^1.17.2",
-        "helmet": "^7.0.0",
+        "helmet": "^8.0.0",
         "https-proxy-agent": "^7.0.0",
         "jsonwebtoken": "^9.0.0",
         "openid-client": "^5.0.2",
