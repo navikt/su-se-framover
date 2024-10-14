@@ -434,6 +434,9 @@ export default createSlice({
         builder.addCase(tilbakekrevingActions.behandlingsnotatTilbakekreving.fulfilled, (state, action) => {
             state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
         });
+        builder.addCase(tilbakekrevingActions.annullerKravgrunnlag.fulfilled, (state, action) => {
+            state.sak = RemoteData.success(action.payload);
+        });
 
         //---------------Vedtak-----------------//
         builder.addCase(VedtakActions.startNySøknadsbehandling.fulfilled, (state, action) => {

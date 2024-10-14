@@ -14,7 +14,9 @@ import {
     UnderkjennTilbakekrevingRequest,
     VurderTilbakekrevingsbehandlingRequest,
     BehandlingsnotatTilbakekrevingRequest,
+    AnnullerKravgunnlagTilbakekrevingRequest,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { Sak } from '~src/types/Sak';
 
 export const opprettNyTilbakekrevingsbehandling = createAsyncThunk<
     ManuellTilbakekrevingsbehandling,
@@ -133,6 +135,18 @@ export const behandlingsnotatTilbakekreving = createAsyncThunk<
     { rejectValue: ApiError }
 >('tilbakekreving/notat', async (args, thunkApi) => {
     const res = await tilbakekrevingsApi.behandlingsnotatTilbakekreving(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const annullerKravgrunnlag = createAsyncThunk<
+    Sak,
+    AnnullerKravgunnlagTilbakekrevingRequest,
+    { rejectValue: ApiError }
+>('tilbakekreving/kravgrunnlag/annuller', async (args, thunkApi) => {
+    const res = await tilbakekrevingsApi.annullerKravgrunnlag(args);
     if (res.status === 'ok') {
         return res.data;
     }
