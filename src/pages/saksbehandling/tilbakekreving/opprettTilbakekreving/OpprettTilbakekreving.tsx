@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Box, Button, Heading, Modal, Panel } from '@navikt/ds-react';
+import { BodyShort, Box, Button, Heading, Modal, Panel, VStack } from '@navikt/ds-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -62,11 +62,14 @@ const AnnullerTilbakekrevingModal = (props: {
     return (
         <Modal open={props.åpen} onClose={props.onClose} header={{ heading: 'Annullering av kravgrunnlag' }}>
             <Modal.Body>
-                <BodyShort>Er du sikker på at kravgrunnlaget skal bli annullert?</BodyShort>
-                {RemoteData.isFailure(annullerStatus) && <ApiErrorAlert error={annullerStatus.error} />}
+                <VStack gap="2">
+                    <BodyShort>Er du sikker på at kravgrunnlaget skal bli annullert?</BodyShort>
+                    {RemoteData.isFailure(annullerStatus) && <ApiErrorAlert error={annullerStatus.error} />}
+                </VStack>
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    loading={RemoteData.isPending(annullerStatus)}
                     variant="danger"
                     onClick={() => {
                         annullerKravgtunnlag(
