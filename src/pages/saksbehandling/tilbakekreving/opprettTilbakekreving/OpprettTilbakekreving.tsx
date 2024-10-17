@@ -78,7 +78,7 @@ const AnnullerTilbakekrevingModal = (props: {
                             () => {
                                 navigateToSakIntroWithMessage(
                                     navigate,
-                                    'Kravgrunnlaget er blitt schedulert for annullering.',
+                                    'Kravgrunnlaget er blitt annullert.',
                                     props.sakId,
                                 );
                             },

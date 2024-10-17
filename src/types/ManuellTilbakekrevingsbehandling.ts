@@ -161,6 +161,7 @@ export interface AnnullerKravgunnlagTilbakekrevingRequest {
     versjon: number;
 }
 export interface AnnullerKravgrunnlagTilbakekrevingResponse {
+    uteståendeKravgrunnlag: Nullable<Kravgrunnlag>;
     tilbakekrevingsbehandling: Nullable<ManuellTilbakekrevingsbehandling>;
 }
 

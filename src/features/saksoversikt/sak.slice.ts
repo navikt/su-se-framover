@@ -435,10 +435,21 @@ export default createSlice({
             state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
         });
         builder.addCase(tilbakekrevingActions.annullerKravgrunnlag.fulfilled, (state, action) => {
-            state.sak =
-                action.payload.tilbakekrevingsbehandling !== null
-                    ? oppdaterTilbakekrevingPåSak(state.sak, action.payload.tilbakekrevingsbehandling)
-                    : state.sak;
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((s) => ({
+                    ...s,
+                    uteståendeKravgrunnlag: action.payload.uteståendeKravgrunnlag,
+                    tilbakekrevinger:
+                        action.payload.tilbakekrevingsbehandling !== null
+                            ? s.tilbakekrevinger.map((t) =>
+                                  t.id === action.payload.tilbakekrevingsbehandling!.id
+                                      ? action.payload.tilbakekrevingsbehandling!
+                                      : t,
+                              )
+                            : s.tilbakekrevinger,
+                })),
+            );
         });
 
         //---------------Vedtak-----------------//
