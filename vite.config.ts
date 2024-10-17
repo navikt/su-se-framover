@@ -31,7 +31,7 @@ export default defineConfig({
             '/api': {
                 target: 'http://localhost:5678',
                 bypass: function (req) {
-                    if (req.url?.endsWith('.ts')) {
+                    if (req.url?.includes('.ts')) {
                         return req.url; // Do not proxy
                     }
                 },
@@ -47,10 +47,10 @@ export default defineConfig({
             },
         },
         port: 1234,
-        strictPort: true,
         hmr: {
             port: 1234,
         },
+        strictPort: true,
         middlewareMode: false,
     },
     root: './src/',

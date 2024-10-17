@@ -155,6 +155,15 @@ export interface BehandlingsnotatTilbakekrevingRequest {
     versjon: number;
     notat: Nullable<string>;
 }
+export interface AnnullerKravgunnlagTilbakekrevingRequest {
+    sakId: string;
+    kravgrunnlagHendelseId: string;
+    versjon: number;
+}
+export interface AnnullerKravgrunnlagTilbakekrevingResponse {
+    uteståendeKravgrunnlag: Nullable<Kravgrunnlag>;
+    tilbakekrevingsbehandling: Nullable<ManuellTilbakekrevingsbehandling>;
+}
 
 export enum TilbakekrevingSteg {
     Forhåndsvarsling = 'forhandsvarsling',
