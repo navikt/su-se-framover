@@ -9,7 +9,7 @@ import {
     RadioGroup,
     Select,
     TextField,
-    UNSAFE_FileUpload,
+    FileUpload,
     VStack,
 } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
@@ -172,7 +172,7 @@ const BrevPage = () => {
                             control={form.control}
                             name={'fileObject'}
                             render={({ field, fieldState }) => (
-                                <UNSAFE_FileUpload.Dropzone
+                                <FileUpload.Dropzone
                                     label="Last opp brevet"
                                     description={`Du kan laste opp PDF-filen. Maks 1 fil.`}
                                     accept=".pdf"
@@ -188,7 +188,7 @@ const BrevPage = () => {
                                 <Heading level="3" size="xsmall">
                                     Vedlegg (1)
                                 </Heading>
-                                <UNSAFE_FileUpload.Item
+                                <FileUpload.Item
                                     file={form.watch('fileObject')!.file}
                                     button={{
                                         action: 'delete',
