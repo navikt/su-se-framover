@@ -160,6 +160,9 @@ export interface AnnullerKravgunnlagTilbakekrevingRequest {
     kravgrunnlagHendelseId: string;
     versjon: number;
 }
+export interface AnnullerKravgrunnlagTilbakekrevingResponse {
+    tilbakekrevingsbehandling: Nullable<ManuellTilbakekrevingsbehandling>;
+}
 
 export enum TilbakekrevingSteg {
     Forhåndsvarsling = 'forhandsvarsling',

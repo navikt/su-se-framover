@@ -15,8 +15,8 @@ import {
     VurderTilbakekrevingsbehandlingRequest,
     BehandlingsnotatTilbakekrevingRequest,
     AnnullerKravgunnlagTilbakekrevingRequest,
+    AnnullerKravgrunnlagTilbakekrevingResponse,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { Sak } from '~src/types/Sak';
 
 export const opprettNyTilbakekrevingsbehandling = createAsyncThunk<
     ManuellTilbakekrevingsbehandling,
@@ -142,7 +142,7 @@ export const behandlingsnotatTilbakekreving = createAsyncThunk<
 });
 
 export const annullerKravgrunnlag = createAsyncThunk<
-    Sak,
+    AnnullerKravgrunnlagTilbakekrevingResponse,
     AnnullerKravgunnlagTilbakekrevingRequest,
     { rejectValue: ApiError }
 >('tilbakekreving/kravgrunnlag/annuller', async (args, thunkApi) => {

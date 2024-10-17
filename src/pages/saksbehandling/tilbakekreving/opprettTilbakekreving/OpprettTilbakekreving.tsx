@@ -10,6 +10,7 @@ import { annullerKravgrunnlag, opprettNyTilbakekrevingsbehandling } from '~src/f
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
+import { navigateToSakIntroWithMessage } from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
@@ -55,6 +56,7 @@ const AnnullerTilbakekrevingModal = (props: {
     åpen: boolean;
     onClose: () => void;
 }) => {
+    const navigate = useNavigate();
     const [annullerStatus, annullerKravgtunnlag] = useAsyncActionCreator(annullerKravgrunnlag);
 
     return (
@@ -74,7 +76,11 @@ const AnnullerTilbakekrevingModal = (props: {
                                 kravgrunnlagHendelseId: props.kravgrunnlagHendelseId,
                             },
                             () => {
-                                props.onClose();
+                                navigateToSakIntroWithMessage(
+                                    navigate,
+                                    'Kravgrunnlaget er blitt schedulert for annullering.',
+                                    props.sakId,
+                                );
                             },
                         );
                     }}
