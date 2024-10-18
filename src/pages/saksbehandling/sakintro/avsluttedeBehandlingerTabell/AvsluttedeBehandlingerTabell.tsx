@@ -124,9 +124,7 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                             ? formatDateTime(dataCellInfo.avsluttetTidspunkt)
                                             : '-'}
                                     </Table.DataCell>
-                                    <Table.DataCell>
-                                        {formatDateTime(dataCellInfo.mottattOpprettetTidspunkt)}
-                                    </Table.DataCell>
+                                    <Table.DataCell>{dataCellInfo.mottattOpprettetTidspunkt}</Table.DataCell>
                                     <Table.DataCell>
                                         {isSøknadMedEllerUtenBehandling(behandling) && (
                                             <div className={styles.lukketSøknadIkonDataCell}>

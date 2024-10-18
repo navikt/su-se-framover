@@ -37,6 +37,7 @@ export enum ApiErrorCode {
     FANT_IKKE_GJELDENDE_UTBETALING = 'kunne_ikke_hente_gjeldende_utbetaling',
     FANT_IKKE_JOURNALPOST = 'fant_ikke_journalpost',
     FANT_IKKE_KLAGE = 'fant_ikke_klage',
+    FANT_IKKE_KRAVGRUNNLAG = 'fant_ikke_kravgrunnlag',
     FANT_IKKE_PERSON = 'fant_ikke_person',
     FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN = 'fant_ikke_person_eller_saksbehandler_navn',
     FANT_IKKE_REGULERING = 'fant_ikke_regulering',
@@ -48,6 +49,7 @@ export enum ApiErrorCode {
     FANT_IKKE_VEDTAK = 'fant_ikke_vedtak',
     FANT_INGEN_UTBETALINGER = 'fant_ingen_utbetalinger',
     FANT_INGEN_UTBETALINGER_ETTER_STANSDATO = 'fant_ingen_utbetalinger_etter_stansdato',
+    FEIL_TILSTAND_FOR_Å_ANNULLERE_KRAVGRUNNLAG = 'feil_tilstand_for_å_annullere_kravgrunnlag',
     FEIL_VED_BESTILLING_AV_BREV = 'feil_ved_bestilling_av_brev',
     FEIL_VED_GENERERING_AV_DOKUMENT = 'feil_ved_generering_av_dokument',
     FEIL_VED_HENTING_AV_SAKSBEHANDLER_ELLER_ATTESTANT = 'feil_ved_henting_av_saksbehandler_eller_attestant',
@@ -81,6 +83,7 @@ export enum ApiErrorCode {
     HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING = 'har_allerede_en_åpen_søknadsbehandling',
     HAR_IKKE_EKTEFELLE = 'har_ikke_ektefelle',
     HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING = 'hele_behandlingsperioden_må_ha_vurderinger',
+    HENDELSEID_ER_IKKE_SISTE_PÅ_SAKEN = 'hendelseId_er_ikke_siste_på_saken',
 
     //I
     IKKE_GYLDIG_FØDSELSNUMMER = 'ikke_gyldig_fødselsnummer',
@@ -184,8 +187,9 @@ export enum ApiErrorCode {
     REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK = 'revurderingsårsak_ugyldig_årsak',
 
     //S
-    SAKSNUMMER_IKKE_GYLDIG = 'saksnummer_ikke_gyldig',
     SAK_HAR_ALLEREDE_SISTE_FØDSELSNUMMER = 'sak_har_allerede_siste_fødselsnummer',
+    SAKEN_HAR_IKKE_KRAVGRUNNLAG_SOM_KAN_ANNULLERES = 'saken_har_ikke_kravgrunnlag_som_kan_annulleres',
+    SAKSNUMMER_IKKE_GYLDIG = 'saksnummer_ikke_gyldig',
     SENERE_STØNADSPERIODE_EKSISTERER = 'senere_stønadsperiode',
     SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
     SISTE_UTBETALING_ER_IKKE_STANS = 'siste_utbetaling_er_ikke_stans',
@@ -204,6 +208,7 @@ export enum ApiErrorCode {
     SØKNAD_MANGLER_OPPGAVE = 'søknad_mangler_oppgave',
 
     //T
+    TEKNISK_FEIL_TILBAKEKREVINGSKOMPONENT = 'teknisk_feil_tilbakekrevingskomponent',
     TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST = 'teknisk_feil_ved_henting_av_journalpost',
     TJENESTEN_ER_IKKE_TILGJENGELIG = 'tjeneste_ikke_tilgjengelig',
     TYPE_OPPHOLDSTILLATELSE_ER_IKKE_UTFYLT = 'type_oppholdstillatelse_er_ikke_utfylt',

@@ -1,4 +1,4 @@
-import { ExclamationmarkTriangleIcon } from '@navikt/aksel-icons';
+import { ExclamationmarkTriangleFillIcon } from '@navikt/aksel-icons';
 import { Accordion, Alert, Button, Heading, Label, Modal } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
@@ -131,11 +131,10 @@ const DetaljertSimuleringsperiode = (props: { periode: SimuleringsperiodeOppsumm
                     <Label className={styles.beløp}>
                         {formatCurrency(props.periode.sumTilUtbetaling, { numDecimals: 0 })}
                     </Label>
+                    {props.periode.sumFeilutbetaling !== 0 || props.periode.sumReduksjonFeilkonto !== 0 ? (
+                        <ExclamationmarkTriangleFillIcon color="orange" />
+                    ) : undefined}
                 </div>
-                {/* TODO - color */}
-                {props.periode.sumFeilutbetaling !== 0 || props.periode.sumReduksjonFeilkonto !== 0 ? (
-                    <ExclamationmarkTriangleIcon />
-                ) : undefined}
             </Accordion.Header>
             <Accordion.Content>
                 <PeriodeOppsummering oppsummering={props.periode} />

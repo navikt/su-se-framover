@@ -51,12 +51,6 @@ export const getEtiketter = (person: Person) => {
             variant: 'warning',
         });
     }
-    if ('fullmakt' in person && person.fullmakt) {
-        etiketter.push({
-            text: 'Fullmakt',
-            variant: 'warning',
-        });
-    }
     if (person.dødsdato) {
         etiketter.push({
             text: `Død ${DateFns.format(new Date(person.dødsdato), 'dd.MM.yyyy')}`,

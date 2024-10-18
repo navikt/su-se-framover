@@ -36,15 +36,16 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.ER_BESLUTTET]: 'Revurderingen er allerede besluttet',
 
     //F
-    [ApiErrorCode.FANT_IKKE_ALDERSSAK]: 'Kunne ikke finne knyttning mellom fødselsnummer og fagsak',
     [ApiErrorCode.FANT_IKKE_AKTØR_ID]: 'Fant ikke AktørID',
+    [ApiErrorCode.FANT_IKKE_ALDERSSAK]: 'Kunne ikke finne knyttning mellom fødselsnummer og fagsak',
     [ApiErrorCode.FANT_IKKE_BEHANDLING]: 'Fant ikke behandlingen',
-    [ApiErrorCode.FANT_IKKE_GJELDENDE_VEDTAKSDATA_FOR_TIDLIGERE_PERIDOE]: 'Fant ikke data fra tidligere behandlinger',
     [ApiErrorCode.FANT_IKKE_GJELDENDE_STØNADSPERIODE]:
         'Kunne ikke sette innkallingsdato, ettersom vi ikke fant gjeldende stønadsperiode',
     [ApiErrorCode.FANT_IKKE_GJELDENDE_UTBETALING]: 'Kunne ikke hente gjeldende utbetaling',
+    [ApiErrorCode.FANT_IKKE_GJELDENDE_VEDTAKSDATA_FOR_TIDLIGERE_PERIDOE]: 'Fant ikke data fra tidligere behandlinger',
     [ApiErrorCode.FANT_IKKE_JOURNALPOST]: 'Fant ikke journalpost',
     [ApiErrorCode.FANT_IKKE_KLAGE]: 'Fant ikke klage',
+    [ApiErrorCode.FANT_IKKE_KRAVGRUNNLAG]: 'Teknisk feil - Fant ikke kravgrunnlag med angitt id',
     [ApiErrorCode.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'Fant ikke person eller saksbehandlers navn',
     [ApiErrorCode.FANT_IKKE_PERSON]: 'Fant ikke personen',
     [ApiErrorCode.FANT_IKKE_REGULERING]: 'Fant ikke regulering',
@@ -56,6 +57,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FANT_IKKE_VEDTAK]: 'Fant ikke vedtak',
     [ApiErrorCode.FANT_INGEN_UTBETALINGER_ETTER_STANSDATO]: 'Fant ingen utbetalinger etter stansdato',
     [ApiErrorCode.FANT_INGEN_UTBETALINGER]: 'Fant ingen utbetalinger',
+    [ApiErrorCode.FEIL_TILSTAND_FOR_Å_ANNULLERE_KRAVGRUNNLAG]:
+        'Tilbakekrevingsbehandlingen er i feil tilstand for å kunne annullere kravgrunnlag',
     [ApiErrorCode.FEIL_VED_BESTILLING_AV_BREV]: 'Feil ved bestilling av brev - prøv igjen senere',
     [ApiErrorCode.FEIL_VED_GENERERING_AV_DOKUMENT]: 'Feil ved generering av dokument',
     [ApiErrorCode.FEIL_VED_HENTING_AV_SAKSBEHANDLER_ELLER_ATTESTANT]:
@@ -94,6 +97,8 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
     [ApiErrorCode.HAR_IKKE_EKTEFELLE]: 'Har ikke ektefelle',
     [ApiErrorCode.HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING]: 'Hele behandlingsperioden må ha vurderinger',
+    [ApiErrorCode.HENDELSEID_ER_IKKE_SISTE_PÅ_SAKEN]:
+        "Id'en på på kravgrunnlaget som skal annulleres er ikke det siste kravgrunnlaget på saken. Prøv å refreshe nettleseren for å få fatt i siste kravgrunnlag",
 
     //I
     [ApiErrorCode.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
@@ -112,12 +117,12 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.INGEN_FORMUE_EPS_FOR_BOSITUASJONSPERIODE]: 'Formue for EPS mangler for en eller flere perioder',
     [ApiErrorCode.INGEN_FORMUE_FOR_BOSITUASJONSPERIODE]:
         'Formue mangler for en eller flere perioder hvor det eksisterer bosituasjon.',
-    [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
     [ApiErrorCode.INGEN_SKATTEGRUNNLAG_FOR_GITT_FNR_OG_ÅR]:
         'Ingen summert skattegrunnlag funnet på oppgitt personidentifikator og inntektsår',
-    [ApiErrorCode.INNSENDING_AV_SØKNAD_IKKE_TILLATT]: 'Innsending av søknad er ikke tillatt',
+    [ApiErrorCode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'Fant ingen vedtak som kan revurderes for angitt periode',
     [ApiErrorCode.INNEHOLDER_UFULLSTENDIG_BOSITUASJON]:
         'Behandlingen inneholder ufullstendig bosituasjon. Dette kan være fordi behandlingen har blitt utført før en teknisk endring som sammenslår "EPS søket i formue" & "Vurdering av Sats". Vennligst gå til "Bosituasjon og Sats" og oppdater det som er nødvendig.',
+    [ApiErrorCode.INNSENDING_AV_SØKNAD_IKKE_TILLATT]: 'Innsending av søknad er ikke tillatt',
 
     //J
     [ApiErrorCode.JOURNALPOST_ER_IKKE_ET_INNKOMMENDE_DOKUMENT]:
@@ -228,8 +233,10 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.REVURDERINGSÅRSAK_UGYLDIG_ÅRSAK]: 'Ugyldig årsak for revurdering',
 
     //S
-    [ApiErrorCode.SAKSNUMMER_IKKE_GYLDIG]: 'Saksnummer er ikke gyldig',
     [ApiErrorCode.SAK_HAR_ALLEREDE_SISTE_FØDSELSNUMMER]: 'Siste fødselsnummeret er allerede registrert på saken',
+    [ApiErrorCode.SAKEN_HAR_IKKE_KRAVGRUNNLAG_SOM_KAN_ANNULLERES]:
+        'Saken har ikke et aktivt kravgrunnlag som kan annulleres',
+    [ApiErrorCode.SAKSNUMMER_IKKE_GYLDIG]: 'Saksnummer er ikke gyldig',
     [ApiErrorCode.SENERE_STØNADSPERIODE_EKSISTERER]: 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
     [ApiErrorCode.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]:
         'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
@@ -253,12 +260,14 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.SØKNAD_MANGLER_OPPGAVE]: 'Søknad mangler oppgave',
 
     //T
+    [ApiErrorCode.TEKNISK_FEIL_TILBAKEKREVINGSKOMPONENT]: 'Teknisk feil mot tilbakekrevingskomponenten',
     [ApiErrorCode.TEKNISK_FEIL_VED_HENTING_AV_JOURNALPOST]:
         'Teknisk feil ved henting av journalpost fra sak og arkivfasade (forvaltes av Team Dokumentløsninger)',
     [ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG]: 'Klarte ikke kontakte tjenesten',
     [ApiErrorCode.TYPE_OPPHOLDSTILLATELSE_ER_IKKE_UTFYLT]: 'Type oppholdstillatelse er ikke utfylt',
 
     //U
+    [ApiErrorCode.UFORVENTET_FEIL_MOT_SKATT]: 'Kunne ikke hente skattemelding; uforventet feil',
     [ApiErrorCode.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'Uføregraden må være mellom 1 og 100',
     [ApiErrorCode.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'Uføregrad og/eller forventet inntekt mangler',
     [ApiErrorCode.UGYLDIG_BEREGNINGSGRUNNLAG]: 'Ugyldig beregningsgrunnlag',
@@ -294,13 +303,12 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UKJENT_FEIL_VED_HENTING_AV_JOURNALPOST]: 'Ukjent feil ved henting av journalpost',
     [ApiErrorCode.UKJENT_FEIL]: 'Ukjent feil',
     [ApiErrorCode.UKJENT_FRADRAGSTYPE]: 'Ukjent fradragstype',
-    [ApiErrorCode.UFORVENTET_FEIL_MOT_SKATT]: 'Kunne ikke hente skattemelding; uforventet feil',
     [ApiErrorCode.USPESIFISIERT_FRADRAG_KREVER_BESKRIVELSE]: 'Et fradrag som er "Annet" må spesifiseres',
-    [ApiErrorCode.UTDATERT_VERSJON]: 'Saksversjonen er utdatert. Vennligst prøv å refreshe siden.',
     [ApiErrorCode.UTBETALING_ALLEREDE_OPPHØRT]: 'Utbetaling allerede opphørt',
     [ApiErrorCode.UTBETALING_ALLEREDE_STANSET]: 'Utbetaling allerede stanset',
     [ApiErrorCode.UTDATERT_SAKSVERSJON]:
         'Saksversjonen er utdatert. Det har muligens skjedd en endring i bakgrunnen. Vennligst refresher nettleseren / hent saken på nytt.',
+    [ApiErrorCode.UTDATERT_VERSJON]: 'Saksversjonen er utdatert. Vennligst prøv å refreshe siden.',
     [ApiErrorCode.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'Fradrag mangler valuta',
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIV_KURS]: 'Fradrag har negativ kurs',
     [ApiErrorCode.UTENLANDSK_INNTEKT_NEGATIVT_BELØP]: 'Fradrag har negativt utenlandsbeløp',
