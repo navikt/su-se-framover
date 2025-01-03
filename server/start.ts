@@ -8,8 +8,8 @@ import * as AuthUtils from './auth/utils.js';
 import * as Config from './config.js';
 import { httpLogger, logger } from './logger.js';
 import setupProxy from './proxy.js';
-import routes from './routes.js';
 import redirectMiddleware from './redirect.js';
+import routes from './routes.js';
 
 const hotjarCsp = {
     imgSrc: ['http://*.hotjar.com', 'https://*.hotjar.com', 'http://*.hotjar.io', 'https://*.hotjar.io'],
@@ -58,7 +58,6 @@ export default async function startServer() {
                               "'self'",
                               'su-se-bakover.dev.adeo.no',
                               'su-se-bakover.nais.adeo.no',
-                              'amplitude.nav.no',
                               ...hotjarCsp.connectSrc,
                               'sentry.gc.nav.no',
                           ],

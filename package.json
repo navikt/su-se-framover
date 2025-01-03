@@ -58,7 +58,6 @@
         "@sentry/browser": "7.119.1",
         "@sentry/cli": "2.32.1",
         "@types/jest": "29.5.12",
-        "amplitude-js": "8.21.9",
         "autoprefixer": "10.4.19",
         "classnames": "2.5.1",
         "core-js": "3.37.1",
@@ -90,7 +89,6 @@
     },
     "devDependencies": {
         "@testing-library/react": "16.0.0",
-        "@types/amplitude-js": "8.16.5",
         "@types/lodash.debounce": "4.0.9",
         "@types/lodash.isequal": "4.5.8",
         "@types/react": "18.3.3",
