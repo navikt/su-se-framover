@@ -1,16 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Box, Button, Heading, Modal, Panel, VStack } from '@navikt/ds-react';
-import { useState } from 'react';
+import { Box, Button, Heading, Panel } from '@navikt/ds-react';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
-import { annullerKravgrunnlag, opprettNyTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
+import { opprettNyTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
-import { navigateToSakIntroWithMessage } from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
@@ -49,64 +47,66 @@ const OpprettTilbakekreving = (props: {
     );
 };
 
-const AnnullerTilbakekrevingModal = (props: {
-    sakId: string;
-    kravgrunnlagHendelseId: string;
-    saksversjon: number;
-    åpen: boolean;
-    onClose: () => void;
-}) => {
-    const navigate = useNavigate();
-    const [annullerStatus, annullerKravgtunnlag] = useAsyncActionCreator(annullerKravgrunnlag);
+//kommenterer ut annuller siden vi må prodsette noen endringer. Funksjonaliteten fungerer ikke i backend enda heller
+// const AnnullerTilbakekrevingModal = (props: {
+//     sakId: string;
+//     kravgrunnlagHendelseId: string;
+//     saksversjon: number;
+//     åpen: boolean;
+//     onClose: () => void;
+// }) => {
+//     const navigate = useNavigate();
+//     const [annullerStatus, annullerKravgtunnlag] = useAsyncActionCreator(annullerKravgrunnlag);
 
-    return (
-        <Modal open={props.åpen} onClose={props.onClose} header={{ heading: 'Annullering av kravgrunnlag' }}>
-            <Modal.Body>
-                <VStack gap="2">
-                    <BodyShort>Er du sikker på at kravgrunnlaget skal bli annullert?</BodyShort>
-                    {RemoteData.isFailure(annullerStatus) && <ApiErrorAlert error={annullerStatus.error} />}
-                </VStack>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button
-                    loading={RemoteData.isPending(annullerStatus)}
-                    variant="danger"
-                    onClick={() => {
-                        annullerKravgtunnlag(
-                            {
-                                sakId: props.sakId,
-                                versjon: props.saksversjon,
-                                kravgrunnlagHendelseId: props.kravgrunnlagHendelseId,
-                            },
-                            () => {
-                                navigateToSakIntroWithMessage(
-                                    navigate,
-                                    'Kravgrunnlaget er blitt annullert.',
-                                    props.sakId,
-                                );
-                            },
-                        );
-                    }}
-                >
-                    Ja, annuller
-                </Button>
-                <Button variant="secondary" onClick={props.onClose}>
-                    Nei, avbryt
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    );
-};
+//     return (
+//         <Modal open={props.åpen} onClose={props.onClose} header={{ heading: 'Annullering av kravgrunnlag' }}>
+//             <Modal.Body>
+//                 <VStack gap="2">
+//                     <BodyShort>Er du sikker på at kravgrunnlaget skal bli annullert?</BodyShort>
+//                     {RemoteData.isFailure(annullerStatus) && <ApiErrorAlert error={annullerStatus.error} />}
+//                 </VStack>
+//             </Modal.Body>
+//             <Modal.Footer>
+//                 <Button
+//                     loading={RemoteData.isPending(annullerStatus)}
+//                     variant="danger"
+//                     onClick={() => {
+//                         annullerKravgtunnlag(
+//                             {
+//                                 sakId: props.sakId,
+//                                 versjon: props.saksversjon,
+//                                 kravgrunnlagHendelseId: props.kravgrunnlagHendelseId,
+//                             },
+//                             () => {
+//                                 navigateToSakIntroWithMessage(
+//                                     navigate,
+//                                     'Kravgrunnlaget er blitt annullert.',
+//                                     props.sakId,
+//                                 );
+//                             },
+//                         );
+//                     }}
+//                 >
+//                     Ja, annuller
+//                 </Button>
+//                 <Button variant="secondary" onClick={props.onClose}>
+//                     Nei, avbryt
+//                 </Button>
+//             </Modal.Footer>
+//         </Modal>
+//     );
+// };
 
 const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunnlag: Kravgrunnlag }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    const [vilAnnulere, setVilAnnulere] = useState<boolean>(false);
+    //kommenterer ut annuller siden vi må prodsette noen endringer. Funksjonaliteten fungerer ikke i backend enda heller
+    // const [vilAnnulere, setVilAnnulere] = useState<boolean>(false);
     const [opprettStatus, opprett] = useAsyncActionCreator(opprettNyTilbakekrevingsbehandling);
 
     return (
         <>
-            {vilAnnulere && (
+            {/* {vilAnnulere && (
                 <AnnullerTilbakekrevingModal
                     åpen={vilAnnulere}
                     onClose={() => setVilAnnulere(false)}
@@ -114,7 +114,7 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                     sakId={props.sakId}
                     saksversjon={props.saksversjon}
                 />
-            )}
+            )} */}
             <Box
                 background={'bg-default'}
                 padding="4"
@@ -128,9 +128,9 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                 </div>
 
                 <div className={styles.knappContainer}>
-                    <Button variant="secondary" onClick={() => setVilAnnulere(true)}>
+                    {/* <Button variant="secondary" onClick={() => setVilAnnulere(true)}>
                         Annuler
-                    </Button>
+                    </Button> */}
                     <Button
                         loading={RemoteData.isPending(opprettStatus)}
                         onClick={() =>
