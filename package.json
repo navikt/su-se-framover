@@ -52,7 +52,7 @@
         "@formatjs/intl-numberformat": "8.10.3",
         "@hookform/resolvers": "3.1.0",
         "@navikt/aksel-icons": "7.2.1",
-        "@navikt/ds-css": "7.2.1",
+        "@navikt/ds-css": "7.17.1",
         "@navikt/ds-react": "7.2.1",
         "@reduxjs/toolkit": "2.2.7",
         "@sentry/browser": "7.119.1",
