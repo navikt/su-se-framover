@@ -1,21 +1,26 @@
+import { BodyLong, GuidePanel, Heading, Ingress, Panel } from '@navikt/ds-react';
 import { Navigate } from 'react-router-dom';
 
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 
-//import messages from './nb';
+import messages from './nb';
+import styles from './søknadsvelger.module.less';
 
 const Søknadsvelger = () => {
     const isPapirsøknad = location.search.includes('papirsoknad');
-    //const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
 
-    return (
-        <Navigate
-            replace
-            to={Routes.soknadtema.createURL({ papirsøknad: isPapirsøknad, soknadstema: Routes.URL_TEMA_UFØRE })}
-        />
-    );
+    if (process.env.NODE_ENV !== 'development') {
+        return (
+            <Navigate
+                replace
+                to={Routes.soknadtema.createURL({ papirsøknad: isPapirsøknad, soknadstema: Routes.URL_TEMA_UFØRE })}
+            />
+        );
+    }
 
-    /*
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -69,7 +74,6 @@ const Søknadsvelger = () => {
             </div>
         </div>
     );
-    */
 };
 
 export default Søknadsvelger;
