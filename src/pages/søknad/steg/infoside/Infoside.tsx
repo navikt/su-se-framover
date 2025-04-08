@@ -13,6 +13,7 @@ import styles from './infoside.module.less';
 
 const Infoside = () => {
     const { isPapirsøknad, sakstype } = useOutletContext<SøknadContext>();
+    console.log(sakstype);
     const nesteUrl = soknadPersonSøk.createURL({
         soknadstema: urlForSakstype(sakstype),
         papirsøknad: isPapirsøknad,
@@ -51,7 +52,6 @@ const Infoside = () => {
                     [Sakstype.Alder]: formatMessage('page.tittel.alder'),
                 })}
             </Heading>
-
             <section className={styles.section}>
                 <Ingress spacing>
                     {getSøknadstematekst(sakstype, {
@@ -74,7 +74,6 @@ const Infoside = () => {
                     </Link>
                 </BodyLong>
             </section>
-
             <section className={styles.section}>
                 <Heading level="2" size="small" spacing>
                     {formatMessage('henterInnInfo.ingress')}
@@ -100,7 +99,6 @@ const Infoside = () => {
                     </Link>
                 </BodyLong>
             </section>
-
             <section className={styles.section}>
                 <Heading level="2" size="small" spacing>
                     {formatMessage('viktigÅVite.ingress')}
@@ -122,7 +120,6 @@ const Infoside = () => {
                     })}
                 </BodyLong>
             </section>
-
             <LinkAsButton variant="primary" href={nesteUrl} className={styles.knapp}>
                 {formatMessage('knapp.neste')}
             </LinkAsButton>
