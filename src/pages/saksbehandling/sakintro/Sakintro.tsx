@@ -14,7 +14,6 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
 import { KlageStatus } from '~src/types/Klage';
-import { Sakstype } from '~src/types/Sak';
 import { erKlageAvsluttet, erKlageÅpen } from '~src/utils/klage/klageUtils';
 import {
     erTilbakekrevingAvbrutt,
@@ -135,7 +134,7 @@ const Sakintro = () => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    {harVedtak && props.sak.sakstype !== Sakstype.Alder && (
+                    {harVedtak && (
                         <NyBehandlingVelger
                             sakId={props.sak.id}
                             kanRevurdere={iverksatteInnvilgedeSøknader.length > 0}
