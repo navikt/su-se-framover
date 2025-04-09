@@ -10,9 +10,9 @@ import messages from './nb';
 import styles from './søknadsvelger.module.less';
 
 const Søknadsvelger = () => {
-    const isPapirsøknad = location.search.includes('papirsoknad');
     const user = useUserContext();
     const { formatMessage } = useI18n({ messages });
+    const isPapirsøknad = location.search.includes('papirsoknad');
 
     if (user.isProd) {
         return (
