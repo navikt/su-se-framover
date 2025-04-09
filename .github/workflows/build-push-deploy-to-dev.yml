@@ -6,9 +6,6 @@ on:
         - '**'
     workflow_dispatch:
 
-env:
-    image: ghcr.io/${{ github.repository }}/su-se-framover:${{ github.sha }}
-
 permissions: { }
 
 jobs:
@@ -16,7 +13,7 @@ jobs:
         name: build-push-docker-image
         runs-on: ubuntu-latest
         outputs:
-            image: ${{ env.image }}
+            image: ${{ steps.docker-build-push.outputs.image }}
         permissions:
             packages: 'write'
             contents: 'read'
@@ -49,13 +46,18 @@ jobs:
                   registry: ghcr.io
                   username: ${{ github.repository }}
                   password: ${{ secrets.GITHUB_TOKEN }}
-            - name: docker-build-push
+            - name: Build and publish Docker image
               if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
-              uses: docker/build-push-action@v5
+              uses: nais/docker-build-push@v0
+              id: docker-build-push
               with:
-                  context: .
-                  push: true
-                  tags: ${{ env.image }}
+                docker_context: .
+                team: supstonad
+                identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+                project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+                salsa: false
+                image_suffix: ${{ github.workflow }}
+                tag: ${{ env.GITHUB_REF_SLUG }}
 
     deploy-to-dev-fss:
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
@@ -71,7 +73,7 @@ jobs:
               env:
                   CLUSTER: dev-fss
                   RESOURCE: .nais/dev.yaml
-                  VAR: image=${{ env.image }}
+                  VAR: image=${{ needs.build-push-docker-image.outputs.image }}
 
     generate-draft-release:
         if: (github.ref == 'refs/heads/master')
