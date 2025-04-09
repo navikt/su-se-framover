@@ -2,6 +2,7 @@ import { BodyLong, GuidePanel, Heading, Ingress, Panel } from '@navikt/ds-react'
 import { Navigate } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { useUserContext } from '~src/context/userContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 
@@ -10,9 +11,10 @@ import styles from './søknadsvelger.module.less';
 
 const Søknadsvelger = () => {
     const isPapirsøknad = location.search.includes('papirsoknad');
+    const user = useUserContext();
     const { formatMessage } = useI18n({ messages });
 
-    if (process.env.NODE_ENV !== 'development') {
+    if (user.isProd) {
         return (
             <Navigate
                 replace
