@@ -25,7 +25,7 @@ const OppsummeringAvInntektOgPensjon = (props: {
             <OppsummeringsTrippel
                 label={formatMessage('inntektOgPensjon.forventerArbeidsinntekt')}
                 søkersVerdi={søkers.forventetInntekt ?? formatMessage('svar.nei')}
-                epsverdi={eps ? eps?.forventetInntekt ?? formatMessage('svar.nei') : null}
+                epsverdi={eps ? (eps?.forventetInntekt ?? formatMessage('svar.nei')) : null}
             />
             <OppsummeringsTrippel
                 label={formatMessage('inntektOgPensjon.andreYtelserINav')}
