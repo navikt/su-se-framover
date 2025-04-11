@@ -3,38 +3,21 @@ module.exports = {
     root: true,
     ignorePatterns: ['**/dist', '**/node_modules', '.idea'],
     parser: '@typescript-eslint/parser',
-    env: {
-        browser: true,
-        es6: true,
-    },
+    env: { browser: true, es6: true },
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
-        'plugin:prettier/recommended',
+        //nye prettier versjon kommer i konflikt med denne
+        //'plugin:prettier/recommended',
         'plugin:import/recommended',
         'plugin:import/typescript',
         'plugin:@typescript-eslint/recommended',
         'plugin:jsx-a11y/recommended',
         'plugin:react/jsx-runtime',
     ],
-    globals: {
-        Atomics: 'readonly',
-        SharedArrayBuffer: 'readonly',
-    },
-    parserOptions: {
-        ecmaFeatures: {
-            jsx: true,
-        },
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-    },
-    settings: {
-        react: {
-            version: 'detect',
-        },
-        'import/resolver': { typescript: {} },
-        'import/internal-regex': '^~',
-    },
+    globals: { Atomics: 'readonly', SharedArrayBuffer: 'readonly' },
+    parserOptions: { ecmaFeatures: { jsx: true }, ecmaVersion: 'latest', sourceType: 'module' },
+    settings: { react: { version: 'detect' }, 'import/resolver': { typescript: {} }, 'import/internal-regex': '^~' },
     plugins: ['react', '@typescript-eslint', 'jsx-a11y'],
     rules: {
         'no-unused-vars': 'off',
@@ -50,12 +33,7 @@ module.exports = {
                 alphabetize: { order: 'asc', caseInsensitive: true },
                 'newlines-between': 'always',
                 groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-                pathGroups: [
-                    {
-                        pattern: '~*/**',
-                        group: 'internal',
-                    },
-                ],
+                pathGroups: [{ pattern: '~*/**', group: 'internal' }],
                 pathGroupsExcludedImportTypes: [],
             },
         ],
@@ -63,12 +41,5 @@ module.exports = {
         'import/no-named-as-default-member': 0,
         'import/no-named-as-default': 0,
     },
-    overrides: [
-        {
-            files: ['**/*.test.js', '**/*.test.jsx'],
-            env: {
-                jest: true,
-            },
-        },
-    ],
+    overrides: [{ files: ['**/*.test.js', '**/*.test.jsx'], env: { jest: true } }],
 };

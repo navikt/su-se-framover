@@ -6,12 +6,7 @@ import { FormueTrippel } from '../oppsummeringAvVilkårOgGrunnlag/OppsummeringAv
 
 import messages from './OppsummeringAvSøknadinnhold-nb';
 
-const OppsummeringAvFormue = (props: {
-    formue: {
-        søkers: Formue;
-        eps?: Nullable<Formue>;
-    };
-}) => {
+const OppsummeringAvFormue = (props: { formue: { søkers: Formue; eps?: Nullable<Formue> } }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
