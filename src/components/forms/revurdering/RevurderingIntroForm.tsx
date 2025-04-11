@@ -1,12 +1,15 @@
 import { Alert, Checkbox, CheckboxGroup, Heading, Select, Textarea } from '@navikt/ds-react';
 import { Controller, FieldErrors } from 'react-hook-form';
+import { useOutletContext } from 'react-router-dom';
 
 import { PeriodeForm } from '~src/components/formElements/FormElements';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
 import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { NullablePeriode } from '~src/types/Periode';
 import { gyldigeÅrsaker, InformasjonSomRevurderes } from '~src/types/Revurdering';
+import { Sakstype } from '~src/types/Sak.ts';
 
 import messages from './RevurderingIntroForm-nb';
 import styles from './RevurderingIntroForm.module.less';
@@ -15,6 +18,17 @@ import { RevurderingIntroFormData, RevurderingIntroFormProps } from './Revurderi
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     const { formatMessage } = useI18n({ messages });
     const { form } = props;
+
+    const { sak } = useOutletContext<SaksoversiktContext>();
+
+    const informasjonSomRevurderes = () => {
+        const infoSomRevurderes = Object.values(InformasjonSomRevurderes);
+        if (sak.sakstype === Sakstype.Alder) {
+            return infoSomRevurderes.filter((info) => info !== InformasjonSomRevurderes.Uførhet);
+        }
+        // TODO filtrere familieforening og mer?
+        return infoSomRevurderes;
+    };
 
     return (
         <FormWrapper {...props}>
@@ -73,7 +87,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                     {...field}
                                 >
                                     <div className={styles.informasjonSomRevurderesCheckboxContainer}>
-                                        {Object.values(InformasjonSomRevurderes).map((i, idx) => (
+                                        {informasjonSomRevurderes().map((i, idx) => (
                                             <Checkbox
                                                 key={i}
                                                 id={
