@@ -143,8 +143,8 @@ const Søknadoppsummering = ({ søknad, sakstype }: { søknad: SøknadState; sak
                             verdi={
                                 søknad.boOgOpphold.borPåAdresse
                                     ? formatAdresse(søknad.boOgOpphold.borPåAdresse)
-                                    : ingenAdresseGrunnTekst(søknad.boOgOpphold.ingenAdresseGrunn, intl) ??
-                                      formatMessage('ubesvart')
+                                    : (ingenAdresseGrunnTekst(søknad.boOgOpphold.ingenAdresseGrunn, intl) ??
+                                      formatMessage('ubesvart'))
                             }
                         />
 
