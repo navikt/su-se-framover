@@ -24,10 +24,14 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     const informasjonSomRevurderes = () => {
         const infoSomRevurderes = Object.values(InformasjonSomRevurderes);
         if (sak.sakstype === Sakstype.Alder) {
-            return infoSomRevurderes.filter((info) => info !== InformasjonSomRevurderes.Uførhet);
+            return infoSomRevurderes.filter(
+                (info) => info !== InformasjonSomRevurderes.Uførhet && info !== InformasjonSomRevurderes.Flyktning,
+            );
         }
-        // TODO filtrere familieforening og mer?
-        return infoSomRevurderes;
+        return infoSomRevurderes.filter(
+            (info) =>
+                info !== InformasjonSomRevurderes.Familiegjenforening && info !== InformasjonSomRevurderes.Pensjon,
+        );
     };
 
     return (

@@ -210,6 +210,8 @@ export enum InformasjonSomRevurderes {
     Oppholdstillatelse = 'Oppholdstillatelse',
     PersonligOppmøte = 'PersonligOppmøte',
     Institusjonsopphold = 'Institusjonsopphold',
+    Familiegjenforening = 'Familiegjenforening',
+    Pensjon = 'Pensjon',
 }
 
 export enum Vurderingstatus {
