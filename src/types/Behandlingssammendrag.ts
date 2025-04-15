@@ -1,8 +1,10 @@
 import { Nullable } from '~src/lib/types';
+import { Sakstype } from '~src/types/Sak.ts';
 
 import { Periode } from './Periode';
 
 export interface Behandlingssammendrag {
+    sakType: Sakstype;
     saksnummer: string;
     typeBehandling: BehandlingssammendragType;
     status: BehandlingssammendragStatus;

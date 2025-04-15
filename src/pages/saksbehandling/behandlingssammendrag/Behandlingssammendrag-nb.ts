@@ -36,6 +36,7 @@ export default {
     'behandlingssammendrag.status': 'Status',
     'behandlingssammendrag.periode': 'Periode',
     'sak.saksnummer': 'Saksnummer',
+    'sak.saktype': 'Saktype',
     'sak.seSak': 'Se sak',
     'sak.åpneINyFane': 'Åpne sak i ny fane',
 };
