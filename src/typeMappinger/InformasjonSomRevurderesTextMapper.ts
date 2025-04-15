@@ -12,4 +12,6 @@ export const InformasjonSomRevurderesTextMapper: { [key in InformasjonSomRevurde
     [InformasjonSomRevurderes.Oppholdstillatelse]: 'Oppholdstillatelse',
     [InformasjonSomRevurderes.PersonligOppmøte]: 'Personlig oppmøte',
     [InformasjonSomRevurderes.Institusjonsopphold]: 'Institusjonsopphold',
+    [InformasjonSomRevurderes.Familiegjenforening]: 'Familiegjenforening',
+    [InformasjonSomRevurderes.Pensjon]: 'Pensjon',
 };
