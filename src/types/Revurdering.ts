@@ -177,6 +177,8 @@ export enum RevurderingOpprettelseSteg {
 
 export enum RevurderingGrunnlagOgVilkårSteg {
     Uførhet = 'ufore',
+    Pensjon = 'Pensjon',
+    Familiegjenforening = 'Familiegjenforening',
     Formue = 'formue',
     Utenlandsopphold = 'utenlandsopphold',
     Opplysningsplikt = 'opplysningsplikt',
