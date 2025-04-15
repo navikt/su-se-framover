@@ -66,7 +66,7 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
                     <Table.Body>
                         {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
                             <BehandlingssamendragTableRow
-                                key={behandlingssammendrag.behandlingId}
+                                key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.typeBehandling}`}
                                 behandlingssammendrag={behandlingssammendrag}
                                 setContextMenuVariables={setContextMenuVariables}
                             />
@@ -105,7 +105,7 @@ const BehandlingssamendragTableRow = ({
     };
 
     return (
-        <Table.Row key={behandlingssammendrag.behandlingId}>
+        <Table.Row key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.typeBehandling}`}>
             <Table.DataCell>{behandlingssammendrag.saksnummer}</Table.DataCell>
             <Table.DataCell>{formatMessage(behandlingssammendrag.typeBehandling)}</Table.DataCell>
             <Table.DataCell>{formatMessage(behandlingssammendrag.status)}</Table.DataCell>

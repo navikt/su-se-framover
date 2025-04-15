@@ -4,7 +4,6 @@ import { Periode } from './Periode';
 
 export interface Behandlingssammendrag {
     saksnummer: string;
-    behandlingId: string;
     typeBehandling: BehandlingssammendragType;
     status: BehandlingssammendragStatus;
     periode: Nullable<Periode<string>>;
