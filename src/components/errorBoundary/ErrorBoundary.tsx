@@ -1,5 +1,4 @@
-import * as Sentry from '@sentry/browser';
-import { Component, ErrorInfo, PropsWithChildren } from 'react';
+import { Component, PropsWithChildren } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 
@@ -15,14 +14,6 @@ class ErrorBoundary extends Component<PropsWithChildren, { hasError: boolean; er
 
     static getDerivedStateFromError(error: Error) {
         return { hasError: true, error };
-    }
-
-    componentDidCatch(error: Error | null, errorInfo: ErrorInfo) {
-        Sentry.withScope((scope) => {
-            scope.setExtras({ errorInfo });
-            const eventId = Sentry.captureException(error);
-            this.setState({ eventId });
-        });
     }
 
     render() {

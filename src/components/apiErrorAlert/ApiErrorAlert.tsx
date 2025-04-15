@@ -36,7 +36,6 @@ const konstruerMeldingForAlert = (formatMessage: MessageFormatter<typeof message
             return formatMessage(error.body.code);
         }
     } catch {
-        //TODO: her vil vi kanskje logge noe til sentry
         return `Ukjent feil - Original feil: ${JSON.stringify(error)}`;
     }
 };
