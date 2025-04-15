@@ -4,10 +4,10 @@ import classNames from 'classnames';
 import styles from './toKolonner.module.less';
 
 const ToKolonner = (props: {
-    tittel: string | JSX.Element;
+    tittel: string | React.ReactElement;
     children: {
-        left: JSX.Element;
-        right: JSX.Element | null;
+        left: React.ReactElement;
+        right: React.ReactElement | null;
     };
     width?: '50/50' | '60/40' | '40/60';
 }) => (

@@ -78,7 +78,7 @@ const periodeStyles = (
     v: VedtakPåTidslinjeType,
 ): {
     status: 'warning' | 'success' | 'danger' | 'info' | 'neutral';
-    ikon: JSX.Element;
+    ikon: React.ReactElement;
     className?: string;
 } => {
     switch (v) {

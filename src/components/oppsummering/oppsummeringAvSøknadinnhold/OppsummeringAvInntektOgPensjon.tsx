@@ -150,8 +150,8 @@ export const OppsummeringsTrippel = ({
     epsverdi,
 }: {
     label: string;
-    søkersVerdi: string | number | JSX.Element;
-    epsverdi?: Nullable<string | number | JSX.Element>;
+    søkersVerdi: string | number | React.ReactElement;
+    epsverdi?: Nullable<string | number | React.ReactElement>;
 }) => {
     return (
         <div className={styles.oppsummeringstrippel}>
