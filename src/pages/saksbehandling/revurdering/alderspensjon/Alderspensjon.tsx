@@ -1,4 +1,4 @@
-const Pensjon = () => {
+const Alderspensjon = () => {
     return (
         <div>
             <h2>Pensjon</h2>
@@ -6,4 +6,4 @@ const Pensjon = () => {
     );
 };
 
-export default Pensjon;
+export default Alderspensjon;

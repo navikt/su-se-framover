@@ -48,7 +48,7 @@ const Oppholdstillatelse = lazy(() => import('./oppholdstillatelse/LovligOpphold
 const FastOppholdPage = lazy(() => import('./fastOpphold/FastOppholdPage'));
 const FlyktningPage = lazy(() => import('./flyktning/FlyktningPage'));
 const Institusjonsopphold = lazy(() => import('./institusjonsopphold/Institusjonsopphold'));
-const PensjonPage = lazy(() => import('./pensjon/Pensjon'));
+const AlderspensjonPage = lazy(() => import('~src/pages/saksbehandling/revurdering/alderspensjon/Alderspensjon.tsx'));
 const FamiliegjenforeningPage = lazy(() => import('./familiegjenforening/Familiegjenforening'));
 
 const RevurderingPage = () => {
@@ -312,7 +312,7 @@ const GrunnlagOgVilkårSteg = (props: {
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.EndringAvFradrag && (
                 <EndringAvFradrag {...stegProps} />
             )}
-            {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Pensjon && <PensjonPage />}
+            {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Pensjon && <AlderspensjonPage />}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Familiegjenforening && (
                 <FamiliegjenforeningPage />
             )}

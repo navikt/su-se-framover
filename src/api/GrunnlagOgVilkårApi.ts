@@ -51,9 +51,9 @@ export async function lagreUføregrunnlag(arg: BehandlingstypeMedApiRequest<Ufø
     });
 }
 
-export async function lagreAldersgrunnlag(arg: AlderspensjonVilkårRequest) {
+export async function lagreAldersgrunnlag(arg: BehandlingstypeMedApiRequest<AlderspensjonVilkårRequest>) {
     return apiClient<Søknadsbehandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/pensjon`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/pensjon`,
         method: 'POST',
         body: arg.vurderinger,
     });

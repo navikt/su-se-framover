@@ -1,5 +1,6 @@
 import { Heading } from '@navikt/ds-react';
 
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
 import { AlderspensjonForm } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonForm';
 import { AlderspensjonFormData } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
 import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
@@ -41,6 +42,7 @@ const Alderspensjon = (
                         },
                     },
                 ],
+                behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             onSuccess,
         );

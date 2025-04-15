@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi.ts';
 import messages from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/alderspensjon-nb';
 import {
     AlderspensjonFormData,
@@ -12,11 +13,10 @@ import { useI18n } from '~src/lib/i18n';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 interface Props extends VilkårsvurderingBaseProps {
     save: (values: AlderspensjonFormData, onSuccess: () => void) => void;
-    savingState: ApiResult<Søknadsbehandling>;
+    savingState: ApiResult<VilkårOgGrunnlagApiResult>;
 }
 
 export const AlderspensjonForm = (props: Props) => {
