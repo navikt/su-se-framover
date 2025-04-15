@@ -112,8 +112,8 @@ const OppsummeringAvFormuegrunnlag = (props: { g: Formuegrunnlag }) => {
 /*
 export const FormueTrippel = (props: {
     label: string;
-    søkersVerdi: number | string | JSX.Element;
-    epsverdi?: Nullable<number | string | JSX.Element>;
+    søkersVerdi: number | string | React.ReactElement;
+    epsverdi?: Nullable<number | string | React.ReactElement>;
 }) => {
     return (
         <div className={styles.formueTripple}>
@@ -135,8 +135,8 @@ export const FormueTrippel = (props: {
 
 export const FormueTrippel = (props: {
     label: string;
-    søkersVerdi: number | string | JSX.Element;
-    epsverdi?: Nullable<number | string | JSX.Element>;
+    søkersVerdi: number | string | React.ReactElement;
+    epsverdi?: Nullable<number | string | React.ReactElement>;
 }) => {
     return (
         <div className={styles.formueTripple}>

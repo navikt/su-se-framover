@@ -6,8 +6,8 @@ interface Props<Kolonner extends Record<string, string>> {
         kolonner: Kolonner;
         defaultKolonneSorteresEtter: ValueOf<Kolonner>;
     };
-    tableHeader: () => JSX.Element;
-    tableBody: (k: ValueOf<Kolonner>, sortVerdi: AriaSortVerdi) => JSX.Element;
+    tableHeader: () => React.ReactElement;
+    tableBody: (k: ValueOf<Kolonner>, sortVerdi: AriaSortVerdi) => React.ReactElement;
 }
 
 type ValueOf<T> = T[keyof T];
