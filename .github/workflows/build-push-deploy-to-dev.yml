@@ -2,11 +2,11 @@ name: build-push-deploy-to-dev.yml
 
 on:
     push:
-      branches:
-        - '**'
+        branches:
+            - '**'
     workflow_dispatch:
 
-permissions: { }
+permissions: {}
 
 jobs:
     build-push-docker-image:
@@ -34,11 +34,6 @@ jobs:
             - name: build-server
               working-directory: server
               run: npm run build
-            - name: create-sentry-release
-              if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
-              run: npm run sentry-release
-              env:
-                  SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
             - name: docker-login
               if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
               uses: docker/login-action@v3
@@ -51,20 +46,20 @@ jobs:
               uses: nais/docker-build-push@v0
               id: docker-build-push
               with:
-                docker_context: .
-                team: supstonad
-                identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-                project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-                salsa: false
-                image_suffix: ${{ github.workflow }}
-                tag: ${{ env.GITHUB_REF_SLUG }}
+                  docker_context: .
+                  team: supstonad
+                  identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+                  project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+                  salsa: false
+                  image_suffix: ${{ github.workflow }}
+                  tag: ${{ env.GITHUB_REF_SLUG }}
 
     deploy-to-dev-fss:
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
         name: deploy-to-dev-fss
         permissions:
-          contents: read
-          id-token: write
+            contents: read
+            id-token: write
         needs: build-push-docker-image
         runs-on: ubuntu-latest
         steps:

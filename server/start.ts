@@ -59,7 +59,6 @@ export default async function startServer() {
                               'su-se-bakover.dev.adeo.no',
                               'su-se-bakover.nais.adeo.no',
                               ...hotjarCsp.connectSrc,
-                              'sentry.gc.nav.no',
                           ],
                           frameSrc: [...hotjarCsp.frameSrc],
                           fontSrc: ["'self'", 'fonts.gstatic.com', 'data:', ...hotjarCsp.fontSrc],
