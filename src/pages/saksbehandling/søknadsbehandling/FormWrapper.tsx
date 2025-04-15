@@ -64,11 +64,11 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
             className={props.className ?? ''}
             onSubmit={form.handleSubmit((values) => {
                 return props.neste.onClick(values, (res) => {
-                    props.neste.onSuccess && res
-                        ? props.neste.onSuccess(res)
-                        : props.neste?.url
-                          ? navigate(props.neste.url)
-                          : undefined;
+                    if (props.neste.onSuccess && res) {
+                        props.neste.onSuccess(res);
+                    } else if (props.neste?.url) {
+                        navigate(props.neste.url);
+                    }
                 });
             })}
         >

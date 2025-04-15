@@ -251,7 +251,7 @@ const OppsummeringAvKjøretøySpesifisering = (props: { kjøretøySpesifisering:
 const formatSkattTekniskMessage = (id: string, formatMessage: (id: keyof typeof messages) => string) => {
     try {
         return formatMessage(id as keyof typeof messages);
-    } catch (e) {
+    } catch {
         return id;
     }
 };

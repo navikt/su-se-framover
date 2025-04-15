@@ -120,7 +120,9 @@ export async function lagreOgSendFritekstDokument(arg: OpprettDokumentRequest): 
         formData.append('tittel', arg.tittel);
         formData.append('distribusjonstype', arg.distribusjonstype);
         formData.append('pdf', arg.pdf!);
-        arg.adresse && formData.append('adresse', JSON.stringify(arg.adresse));
+        if (arg.adresse) {
+            formData.append('adresse', JSON.stringify(arg.adresse));
+        }
 
         return apiClient({
             url: `/saker/${arg.sakId}/fritekstDokument/lagreOgSend`,
