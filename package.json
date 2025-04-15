@@ -54,7 +54,7 @@
         "@navikt/aksel-icons": "7.20.0",
         "@navikt/ds-css": "7.20.0",
         "@navikt/ds-react": "7.19.0",
-        "@reduxjs/toolkit": "2.2.7",
+        "@reduxjs/toolkit": "2.6.1",
         "@sentry/browser": "7.119.1",
         "@sentry/cli": "2.43.0",
         "@types/jest": "29.5.14",
