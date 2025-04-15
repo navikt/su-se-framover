@@ -122,14 +122,16 @@ const PersonligOppmøte = (
             advarselRef.current?.focus();
             return;
         }
-        res.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG
-            ? navigate(
-                  Routes.saksbehandlingSendTilAttestering.createURL({
-                      sakId: props.sakId,
-                      behandlingId: props.behandling.id,
-                  }),
-              )
-            : navigate(props.nesteUrl);
+        if (res.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG) {
+            navigate(
+                Routes.saksbehandlingSendTilAttestering.createURL({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                }),
+            );
+        } else {
+            navigate(props.nesteUrl);
+        }
     };
 
     return (

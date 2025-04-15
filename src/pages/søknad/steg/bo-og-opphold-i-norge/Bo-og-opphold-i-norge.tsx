@@ -242,13 +242,17 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 }
                                 onChange={(val) => {
                                     setFieldsToNull(['borPåAdresse', 'ingenAdresseGrunn']);
-                                    val === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE ||
-                                    val === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
-                                        ? form.setValue('ingenAdresseGrunn', val)
-                                        : field.onChange(
-                                              adresser.find((a) => a.radioValue.adresselinje === val)?.radioValue ??
-                                                  null,
-                                          );
+
+                                    if (
+                                        val === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE ||
+                                        val === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
+                                    ) {
+                                        form.setValue('ingenAdresseGrunn', val);
+                                    } else {
+                                        field.onChange(
+                                            adresser.find((a) => a.radioValue.adresselinje === val)?.radioValue ?? null,
+                                        );
+                                    }
                                 }}
                             >
                                 {adresser.map((a) => (

@@ -141,7 +141,9 @@ export interface DifferanseEtterRegulering extends ÅrsakForManuell {
     forventetBeløpEtterRegulering: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface YtelseErMidlertidigStanset extends ÅrsakForManuell {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ForventetInntektErStørreEnn0 extends ÅrsakForManuell {}
 export interface AutomatiskSendingTilUtbetalingFeilet extends ÅrsakForManuell {
     begrunnelse: string;

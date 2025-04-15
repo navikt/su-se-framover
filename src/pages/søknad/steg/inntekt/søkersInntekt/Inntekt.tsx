@@ -215,8 +215,9 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                             onChange={(val) => {
                                 field.onChange(val);
                                 if (val) {
-                                    form.watch('trygdeytelserIUtlandet').length === 0 &&
+                                    if (form.watch('trygdeytelserIUtlandet').length === 0) {
                                         form.setValue('trygdeytelserIUtlandet', [{ beløp: '', type: '', valuta: '' }]);
+                                    }
                                 } else {
                                     form.setValue('trygdeytelserIUtlandet', []);
                                 }
@@ -272,8 +273,9 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                             onChange={(val) => {
                                 field.onChange(val);
                                 if (val) {
-                                    form.watch('pensjonsInntekt').length === 0 &&
+                                    if (form.watch('pensjonsInntekt').length === 0) {
                                         form.setValue('pensjonsInntekt', [{ ordning: '', beløp: '' }]);
+                                    }
                                 } else {
                                     form.setValue('pensjonsInntekt', []);
                                 }
