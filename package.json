@@ -9,7 +9,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "eslint": "eslint src scripts --ext .tsx,.ts --report-unused-disable-directives",
+        "eslint": "eslint src --ext .tsx,.ts --report-unused-disable-directives",
         "lint": "npm run eslint",
         "preview": "vite preview",
         "postinstall": "cd server && npm ci",
