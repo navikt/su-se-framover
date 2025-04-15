@@ -48,6 +48,8 @@ const Oppholdstillatelse = lazy(() => import('./oppholdstillatelse/LovligOpphold
 const FastOppholdPage = lazy(() => import('./fastOpphold/FastOppholdPage'));
 const FlyktningPage = lazy(() => import('./flyktning/FlyktningPage'));
 const Institusjonsopphold = lazy(() => import('./institusjonsopphold/Institusjonsopphold'));
+const PensjonPage = lazy(() => import('./pensjon/Pensjon'));
+const FamiliegjenforeningPage = lazy(() => import('./familiegjenforening/Familiegjenforening'));
 
 const RevurderingPage = () => {
     const { sak } = useOutletContext<SaksoversiktContext>();
@@ -309,6 +311,10 @@ const GrunnlagOgVilkårSteg = (props: {
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.EndringAvFradrag && (
                 <EndringAvFradrag {...stegProps} />
+            )}
+            {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Pensjon && <PensjonPage />}
+            {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Familiegjenforening && (
+                <FamiliegjenforeningPage />
             )}
         </div>
     );
