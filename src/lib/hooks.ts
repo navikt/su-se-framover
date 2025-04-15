@@ -49,7 +49,9 @@ export function useAsyncActionCreator<Params, Returned>(
             if (!RemoteData.isPending(apiResult)) {
                 setApiResult(RemoteData.pending);
 
-                const action = await dispatch(actionCreator(args));
+                //Casten her kan kanskje føre til noen problemer. Ny oppdateringer av redux-toolkit 2.6.1 krever at args må være Params & undefined.
+                //Noe som ikke gir veldig mye mening siden den ikke kan være definert og ikke definert. Noe underlig 'under the hood' fører til denne typen.
+                const action = await dispatch(actionCreator(args as Params & undefined));
 
                 if (actionCreator.fulfilled.match(action)) {
                     setApiResult(RemoteData.success(action.payload));
