@@ -43,6 +43,9 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
                 tableHeader={() => (
                     <Table.Header>
                         <Table.Row>
+                            <Table.ColumnHeader sortKey="sakType" sortable>
+                                {formatMessage('sak.saktype')}
+                            </Table.ColumnHeader>
                             <Table.ColumnHeader sortKey="saksnummer" sortable>
                                 {formatMessage('sak.saksnummer')}
                             </Table.ColumnHeader>
@@ -106,6 +109,7 @@ const BehandlingssamendragTableRow = ({
 
     return (
         <Table.Row key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.typeBehandling}`}>
+            <Table.DataCell>{behandlingssammendrag.sakType}</Table.DataCell>
             <Table.DataCell>{behandlingssammendrag.saksnummer}</Table.DataCell>
             <Table.DataCell>{formatMessage(behandlingssammendrag.typeBehandling)}</Table.DataCell>
             <Table.DataCell>{formatMessage(behandlingssammendrag.status)}</Table.DataCell>
