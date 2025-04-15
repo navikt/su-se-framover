@@ -1,6 +1,7 @@
 import { Linjestatus, Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import * as Routes from '~src/lib/routes';
 import { Beregning } from '~src/types/Beregning';
+import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår.ts';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { OpplysningspliktBeksrivelse } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -129,6 +130,8 @@ export const erRevurderingIverksattMedTilbakekreving = (
 export const revurderingGrunnlagOgVilkårRekkefølge = [
     RevurderingGrunnlagOgVilkårSteg.Uførhet,
     RevurderingGrunnlagOgVilkårSteg.Flyktning,
+    RevurderingGrunnlagOgVilkårSteg.Pensjon,
+    RevurderingGrunnlagOgVilkårSteg.Familiegjenforening,
     RevurderingGrunnlagOgVilkårSteg.Bosituasjon,
     RevurderingGrunnlagOgVilkårSteg.FastOpphold,
     RevurderingGrunnlagOgVilkårSteg.Formue,
@@ -166,6 +169,10 @@ export const grunnlagOgVilkårStegTilInformasjonSomRevurderes = (
             return InformasjonSomRevurderes.PersonligOppmøte;
         case RevurderingGrunnlagOgVilkårSteg.Institusjonsopphold:
             return InformasjonSomRevurderes.Institusjonsopphold;
+        case RevurderingGrunnlagOgVilkårSteg.Pensjon:
+            return InformasjonSomRevurderes.Pensjon;
+        case RevurderingGrunnlagOgVilkårSteg.Familiegjenforening:
+            return InformasjonSomRevurderes.Familiegjenforening;
     }
 };
 
@@ -388,6 +395,31 @@ const informasjonSomRevurderesTilVilkårSteg = (r: InformasjonsRevurdering) => {
                                   : Linjestatus.Ingenting,
                         vilkår: r.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold,
                     };
+                case RevurderingGrunnlagOgVilkårSteg.Pensjon:
+                    return {
+                        somRevurderes: RevurderingGrunnlagOgVilkårSteg.Pensjon,
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.pensjon?.resultat === Aldersresultat.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.pensjon?.resultat ===
+                                    Aldersresultat.VilkårIkkeOppfylt
+                                  ? Linjestatus.IkkeOk
+                                  : Linjestatus.Ingenting,
+                        vilkår: r.grunnlagsdataOgVilkårsvurderinger.pensjon,
+                    };
+                case RevurderingGrunnlagOgVilkårSteg.Familiegjenforening:
+                    return {
+                        somRevurderes: RevurderingGrunnlagOgVilkårSteg.Familiegjenforening,
+                        status:
+                            r.grunnlagsdataOgVilkårsvurderinger.familiegjenforening?.resultat ===
+                            Vilkårstatus.VilkårOppfylt
+                                ? Linjestatus.Ok
+                                : r.grunnlagsdataOgVilkårsvurderinger.familiegjenforening?.resultat ===
+                                    Vilkårstatus.VilkårIkkeOppfylt
+                                  ? Linjestatus.IkkeOk
+                                  : Linjestatus.Ingenting,
+                        vilkår: r.grunnlagsdataOgVilkårsvurderinger.familiegjenforening,
+                    };
             }
         });
 };
@@ -438,6 +470,10 @@ const revurderingVilkårStegTilFormattedTittel = (steg: RevurderingGrunnlagOgVil
             return 'Uførhet';
         case RevurderingGrunnlagOgVilkårSteg.Utenlandsopphold:
             return 'Utenlandsopphold';
+        case RevurderingGrunnlagOgVilkårSteg.Pensjon:
+            return 'Pensjon';
+        case RevurderingGrunnlagOgVilkårSteg.Familiegjenforening:
+            return 'Familiegjenforening';
     }
 };
 
