@@ -6,6 +6,8 @@ Frontend for Su-Se som slår opp informasjon om brukere som har søkt om suppler
 
 Første gang:
 
+Kjør `get_started.sh`
+
 ```sh
 $ cp .env.template .env # for å sette opp lokale miljøvariabler
 $ npm install # installerer avhengigheter
@@ -31,20 +33,20 @@ Lokalt oppsett ligger i [./docker-compose.yml](), mens nais-oppsettet ligger i [
 
 Vi har erfart at det er lettere å bruke et GUI-verktøy når det kommer til Redis.
 
--   Linux: https://docs.redisdesktop.com/en/latest/install/
--   Mac: brew install --cask redisinsight
+- Linux: https://docs.redisdesktop.com/en/latest/install/
+- Mac: brew install --cask redisinsight
 
 #### Lokalt
 
--   Antar at du har kjørt `docker compose up` og at docker-containeren kjører lokalt.
--   Start opp RedisInsight. Koble til med hostname: `localhost` eller `127.0.0.1`. port: `6379`, username: `default` og passord: `subar` (ligger i docker-compose.yml)
+- Antar at du har kjørt `docker compose up` og at docker-containeren kjører lokalt.
+- Start opp RedisInsight. Koble til med hostname: `localhost` eller `127.0.0.1`. port: `6379`, username: `default` og passord: `subar` (ligger i docker-compose.yml)
 
 #### Via naisdevice i preprod
 
--   kubectx dev-fss
--   kubectl --namespace=supstonad get pods # kopier ut redis pod-navnet
--   kubectl --namespace=supstonad port-forward <pod> 6379:6379 # din_port:nais_port
--   Kobler til med hostname: localhost, port: <din_port>, default username og passord finner du ved å kjøre `env` inne i podden.
+- kubectx dev-fss
+- kubectl --namespace=supstonad get pods # kopier ut redis pod-navnet
+- kubectl --namespace=supstonad port-forward <pod> 6379:6379 # din_port:nais_port
+- Kobler til med hostname: localhost, port: <din_port>, default username og passord finner du ved å kjøre `env` inne i podden.
 
 ## Mock oauth2 server
 
@@ -118,7 +120,7 @@ Se [./src/index.html](), [./posthtml.config.js](), [./server/config.ts]() og [./
 
 ## Node og npm oppgradering
 
--   Må oppgradere .github/workflows (`build-push-deploy-to-dev.yml`) sin `node-version:`
--   I `package.json` og `server/package.json`: Endre `engines->node`
--   I `Dockerfile` endre `FROM .*:`
--   Lokalt, dersom du bruker nvm, `nvm install <version>; nvm use <version>; nvm alias default <version>;` Må muligens også oppdatere paths.
+- Må oppgradere .github/workflows (`build-push-deploy-to-dev.yml`) sin `node-version:`
+- I `package.json` og `server/package.json`: Endre `engines->node`
+- I `Dockerfile` endre `FROM .*:`
+- Lokalt, dersom du bruker nvm, `nvm install <version>; nvm use <version>; nvm alias default <version>;` Må muligens også oppdatere paths.
