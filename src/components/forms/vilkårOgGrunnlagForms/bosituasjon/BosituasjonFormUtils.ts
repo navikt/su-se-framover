@@ -43,19 +43,6 @@ export const eqBosituasjonGrunnlagFormData = struct<BosituasjonGrunnlagFormData>
     bosituasjoner: getEq(eqBosituasjonFormItemData),
 });
 
-export const eqBosituasjonFormItemDataUtenEpsAlder = struct<Omit<BosituasjonFormItemData, 'epsAlder'>>({
-    periode: eqNullable(eqPeriode),
-    harEPS: eqNullable(B.Eq),
-    epsFnr: eqNullable(S.Eq),
-    delerBolig: eqNullable(B.Eq),
-    erEpsFylt67: eqNullable(B.Eq),
-    erEPSUførFlyktning: eqNullable(B.Eq),
-});
-
-export const eqBosituasjonGrunnlagFormDataUtenEpsAlder = struct<BosituasjonGrunnlagFormData>({
-    bosituasjoner: getEq(eqBosituasjonFormItemDataUtenEpsAlder),
-});
-
 export const nyBosituasjon = (p?: Periode<string>): BosituasjonFormItemData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     harEPS: null,
@@ -80,18 +67,6 @@ export const bosituasjongrunnlagTilFormDataEllerNy = (
                   erEpsFylt67: erEpsFylt67(bo),
               }))
             : [nyBosituasjon(p)],
-});
-
-export const bosituasjonTilFormItemData = (bosituasjon: Bosituasjon): BosituasjonFormItemData => ({
-    periode: {
-        fraOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.fraOgMed),
-        tilOgMed: DateUtils.parseIsoDateOnly(bosituasjon.periode.tilOgMed),
-    },
-    harEPS: bosituasjon.fnr !== null,
-    epsFnr: bosituasjon.fnr,
-    delerBolig: bosituasjon.delerBolig,
-    erEpsFylt67: erEpsFylt67(bosituasjon),
-    erEPSUførFlyktning: bosituasjon.ektemakeEllerSamboerUførFlyktning,
 });
 
 export const bosituasjongrunnlagFormDataTilRequest = (args: {

@@ -26,9 +26,6 @@ export const erSøknadsbehandlingTilAttestering = (s: Søknadsbehandling) =>
 export const erSøknadsbehandlingUnderkjent = (s: Søknadsbehandling) =>
     s.status === SøknadsbehandlingStatus.UNDERKJENT_AVSLAG || s.status === SøknadsbehandlingStatus.UNDERKJENT_INNVILGET;
 
-export const erSøknadsbehandlingIverksatt = (s: Søknadsbehandling) =>
-    s.status === SøknadsbehandlingStatus.IVERKSATT_AVSLAG || s.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET;
-
 export const erTilAttestering = ({ status }: Søknadsbehandling) =>
     [SøknadsbehandlingStatus.TIL_ATTESTERING_AVSLAG, SøknadsbehandlingStatus.TIL_ATTESTERING_INNVILGET].includes(
         status,

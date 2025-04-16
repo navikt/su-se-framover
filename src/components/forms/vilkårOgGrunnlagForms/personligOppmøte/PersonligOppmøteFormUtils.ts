@@ -103,14 +103,6 @@ export const toPersonligOppmøteÅrsakInnsending = (
     return årsak!;
 };
 
-export enum ManglendeOppmøteGrunn {
-    SykMedLegeerklæringOgFullmakt = 'SykMedLegeerklæringOgFullmakt',
-    OppnevntVergeSøktPerPost = 'OppnevntVergeSøktPerPost',
-    KortvarigSykMedLegeerklæring = 'KortvarigSykdomMedLegeerklæring',
-    MidlertidigUnntakFraOppmøteplikt = 'MidlertidigUnntakFraOppmøteplikt',
-    BrukerIkkeMøttOppfyllerIkkeVilkår = 'BrukerIkkeMøttOppfyllerIkkeVilkår',
-}
-
 export enum HarMøttPersonlig {
     Ja = 'Ja',
     Nei = 'Nei',

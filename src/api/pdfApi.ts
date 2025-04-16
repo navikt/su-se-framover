@@ -99,19 +99,3 @@ export async function brevutkastForAvslagPgaManglendeDokumentasjon(arg: {
         bodyTransformer: (res) => res.blob(),
     });
 }
-
-export async function fetchBrevutkastForForhåndsvarselTilbakekreving(arg: {
-    sakId: string;
-    behandlingId: string;
-    fritekst: string;
-}): Promise<ApiClientResult<Blob>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/brevutkastForForhandsvarsel`,
-        method: 'POST',
-        request: { headers: new Headers({ Accept: 'application/pdf' }) },
-        body: {
-            brevtekst: arg.fritekst,
-        },
-        bodyTransformer: (res) => res.blob(),
-    });
-}
