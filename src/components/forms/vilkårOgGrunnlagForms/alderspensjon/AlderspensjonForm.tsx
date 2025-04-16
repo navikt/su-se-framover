@@ -1,118 +1,124 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import { Controller, useForm } from 'react-hook-form';
+import { ReactNode } from 'react';
+import { Controller } from 'react-hook-form';
 
-import { VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi.ts';
+import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
 import messages from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/alderspensjon-nb';
 import {
-    AlderspensjonFormData,
-    alderspensjonSchema,
+    AlderspensjonPeriodisertFormData,
+    nyVurderingsperiodeAlderspensjonMedEllerUtenPeriode,
 } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
-import { ApiResult } from '~src/lib/hooks';
+import { VilkårFormProps } from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagFormUtils.ts';
+import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
 import { useI18n } from '~src/lib/i18n';
+import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 
-interface Props extends VilkårsvurderingBaseProps {
-    save: (values: AlderspensjonFormData, onSuccess: () => void) => void;
-    savingState: ApiResult<VilkårOgGrunnlagApiResult>;
+interface Props extends VilkårFormProps<AlderspensjonPeriodisertFormData> {
+    begrensTilEnPeriode?: boolean;
+    skalIkkeKunneVelgePeriode?: boolean;
+    children?: ReactNode;
 }
 
 export const AlderspensjonForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
-    const form = useForm<AlderspensjonFormData>({
-        defaultValues: {
-            folketrygd:
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
-                    .folketrygd ?? null,
-            andreNorske:
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
-                    .andreNorske ?? null,
-            utenlandske:
-                props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
-                    .utenlandske ?? null,
-        },
-        resolver: yupResolver(alderspensjonSchema),
-    });
-
     return (
-        <FormWrapper
-            form={form}
-            neste={{
-                onClick: props.save,
-                savingState: props.savingState,
-                url: props.nesteUrl,
-            }}
-            tilbake={{
-                url: props.forrigeUrl,
-            }}
-            {...props}
-        >
+        <FormWrapper {...props}>
             <>
-                <Controller
-                    control={form.control}
-                    name={'folketrygd'}
-                    render={({ field, fieldState }) => (
-                        <RadioGroup
-                            {...field}
-                            legend={formatMessage('label.folketrygd')}
-                            error={fieldState.error?.message}
-                            value={field.value ?? ''}
-                        >
-                            <Radio id={field.name} value={PensjonsOpplysningerUtvidetSvar.JA} ref={field.ref}>
-                                {formatMessage('radio.label.ja')}
-                            </Radio>
-                            <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
-                                {formatMessage('radio.label.nei')}
-                            </Radio>
-                        </RadioGroup>
+                <MultiPeriodeVelger
+                    name="alderspensjon"
+                    controller={props.form.control}
+                    appendNyPeriode={nyVurderingsperiodeAlderspensjonMedEllerUtenPeriode}
+                    periodeConfig={{
+                        minDate: props.minOgMaxPeriode.fraOgMed,
+                        maxDate: props.minOgMaxPeriode.tilOgMed,
+                    }}
+                    getChild={(nameAndIdx: `alderspensjon.${number}`) => (
+                        <>
+                            <Controller
+                                control={props.form.control}
+                                name={`${nameAndIdx}.folketrygd`}
+                                render={({ field, fieldState }) => (
+                                    <RadioGroup
+                                        {...field}
+                                        legend={formatMessage('label.folketrygd')}
+                                        error={fieldState.error?.message}
+                                        value={field.value ?? ''}
+                                    >
+                                        <Radio
+                                            id={field.name}
+                                            value={PensjonsOpplysningerUtvidetSvar.JA}
+                                            ref={field.ref}
+                                        >
+                                            {formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
+                                            {formatMessage('radio.label.nei')}
+                                        </Radio>
+                                    </RadioGroup>
+                                )}
+                            />
+                            <Controller
+                                control={props.form.control}
+                                name={`${nameAndIdx}.andreNorske`}
+                                render={({ field, fieldState }) => (
+                                    <RadioGroup
+                                        {...field}
+                                        legend={formatMessage('label.andreNorske')}
+                                        error={fieldState.error?.message}
+                                        value={field.value ?? ''}
+                                    >
+                                        <Radio
+                                            id={field.name}
+                                            value={PensjonsOpplysningerUtvidetSvar.JA}
+                                            ref={field.ref}
+                                        >
+                                            {formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
+                                            {formatMessage('radio.label.nei')}
+                                        </Radio>
+                                        <Radio value={PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT}>
+                                            {formatMessage('radio.label.ikkeAktuelt')}
+                                        </Radio>
+                                    </RadioGroup>
+                                )}
+                            />
+                            <Controller
+                                control={props.form.control}
+                                name={`${nameAndIdx}.utenlandske`}
+                                render={({ field, fieldState }) => (
+                                    <RadioGroup
+                                        {...field}
+                                        legend={formatMessage('label.utenlandske')}
+                                        error={fieldState.error?.message}
+                                        value={field.value ?? ''}
+                                    >
+                                        <Radio
+                                            id={field.name}
+                                            value={PensjonsOpplysningerUtvidetSvar.JA}
+                                            ref={field.ref}
+                                        >
+                                            {formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
+                                            {formatMessage('radio.label.nei')}
+                                        </Radio>
+                                        <Radio value={PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT}>
+                                            {formatMessage('radio.label.ikkeAktuelt')}
+                                        </Radio>
+                                    </RadioGroup>
+                                )}
+                            />
+                        </>
                     )}
+                    {...props}
                 />
-                <Controller
-                    control={form.control}
-                    name={'andreNorske'}
-                    render={({ field, fieldState }) => (
-                        <RadioGroup
-                            {...field}
-                            legend={formatMessage('label.andreNorske')}
-                            error={fieldState.error?.message}
-                            value={field.value ?? ''}
-                        >
-                            <Radio id={field.name} value={PensjonsOpplysningerUtvidetSvar.JA} ref={field.ref}>
-                                {formatMessage('radio.label.ja')}
-                            </Radio>
-                            <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
-                                {formatMessage('radio.label.nei')}
-                            </Radio>
-                            <Radio value={PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT}>
-                                {formatMessage('radio.label.ikkeAktuelt')}
-                            </Radio>
-                        </RadioGroup>
-                    )}
-                />
-                <Controller
-                    control={form.control}
-                    name={'utenlandske'}
-                    render={({ field, fieldState }) => (
-                        <RadioGroup
-                            {...field}
-                            legend={formatMessage('label.utenlandske')}
-                            error={fieldState.error?.message}
-                            value={field.value ?? ''}
-                        >
-                            <Radio id={field.name} value={PensjonsOpplysningerUtvidetSvar.JA} ref={field.ref}>
-                                {formatMessage('radio.label.ja')}
-                            </Radio>
-                            <Radio value={PensjonsOpplysningerUtvidetSvar.NEI}>
-                                {formatMessage('radio.label.nei')}
-                            </Radio>
-                            <Radio value={PensjonsOpplysningerUtvidetSvar.IKKE_AKTUELT}>
-                                {formatMessage('radio.label.ikkeAktuelt')}
-                            </Radio>
-                        </RadioGroup>
-                    )}
-                />
+                {props.children}
+                {RemoteData.isSuccess(props.neste.savingState) && 'feilmeldinger' in props.neste.savingState.value && (
+                    <UtfallSomIkkeStøttes feilmeldinger={props.neste.savingState.value.feilmeldinger} />
+                )}
             </>
         </FormWrapper>
     );
