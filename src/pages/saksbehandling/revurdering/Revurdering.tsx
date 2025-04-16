@@ -312,7 +312,9 @@ const GrunnlagOgVilkårSteg = (props: {
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.EndringAvFradrag && (
                 <EndringAvFradrag {...stegProps} />
             )}
-            {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Pensjon && <AlderspensjonPage />}
+            {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Pensjon && (
+                <AlderspensjonPage {...stegProps} />
+            )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Familiegjenforening && (
                 <FamiliegjenforeningPage />
             )}
