@@ -30,7 +30,7 @@ jobs:
             - name: lint-and-typecheck
               run: npm run lint-and-typecheck
             - name: build-client
-              run: npm run build:frontend
+              run: npm run build
             - name: build-server
               working-directory: server
               run: npm run build
