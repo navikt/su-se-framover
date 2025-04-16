@@ -53,6 +53,7 @@
         "@navikt/ds-react": "7.19.0",
         "@reduxjs/toolkit": "2.6.1",
         "@types/jest": "29.5.14",
+        "@types/react-dom": "^19.1.2",
         "autoprefixer": "10.4.21",
         "classnames": "2.5.1",
         "core-js": "3.39.0",
