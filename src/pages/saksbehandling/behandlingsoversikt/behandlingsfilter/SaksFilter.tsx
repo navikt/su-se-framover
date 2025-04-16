@@ -1,4 +1,4 @@
-import { Box , Checkbox, Label } from '@navikt/ds-react';
+import { Box, Checkbox, Label } from '@navikt/ds-react';
 
 import { useI18n } from '~src/lib/i18n.ts';
 import messages from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/filter-nb.ts';
@@ -12,7 +12,6 @@ export const SaksFilter = ({
     saktypeFilter: Sakstypefilter;
     oppdaterSakstype: (key: keyof Sakstypefilter, verdi: boolean) => void;
 }) => {
-    //legge til oversettelse
     const { formatMessage } = useI18n({ messages });
     return (
         <Box padding="2">
