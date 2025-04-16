@@ -1,4 +1,6 @@
+import { Sakstypefilter } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter.tsx';
 import { BehandlingssammendragType, BehandlingssammendragStatus } from '~src/types/Behandlingssammendrag';
+import { Sakstype } from '~src/types/Sak.ts';
 
 export const behandlingssammendragTypeMessages: { [key in BehandlingssammendragType]: string } = {
     [BehandlingssammendragType.SØKNADSBEHANDLING]: 'Søknadsbehandling',
@@ -26,9 +28,15 @@ export const behandlingssammendragStatus: { [key in BehandlingssammendragStatus]
     [BehandlingssammendragStatus.AVSLUTTET]: 'Avsluttet',
 };
 
+export const sakstypeText: { [key in Sakstypefilter]: string } = {
+    [Sakstype.Alder]: 'Alder',
+    [Sakstype.Uføre]: 'Uføre',
+};
+
 export default {
     ...behandlingssammendragTypeMessages,
     ...behandlingssammendragStatus,
+    ...sakstypeText,
 
     'behandlingssammendrag.ingenBehandlinger': 'Ingen behandlinger',
     'behandlingssammendrag.behandling.startet': 'Behandling startet',

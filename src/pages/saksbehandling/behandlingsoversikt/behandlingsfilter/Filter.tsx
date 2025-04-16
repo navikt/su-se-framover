@@ -4,7 +4,9 @@ import * as DateFns from 'date-fns';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
+import { SaksFilter } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/SaksFilter.tsx';
 import { BehandlingssammendragStatus, BehandlingssammendragType } from '~src/types/Behandlingssammendrag';
+import { Sakstype } from '~src/types/Sak.ts';
 
 import messages from './filter-nb';
 import styles from './filter.module.less';
@@ -38,6 +40,11 @@ export type BehandlingssammendragResultatFilter = {
     [BehandlingssammendragStatus.AVSLUTTET]: boolean;
 };
 
+export type Sakstypefilter = {
+    [Sakstype.Uføre]: boolean;
+    [Sakstype.Alder]: boolean;
+};
+
 export interface FilterProps {
     tilOgMedState?: [Nullable<Date>, (date: Nullable<Date>) => void];
     fraOgMedState?: [Nullable<Date>, (date: Nullable<Date>) => void];
@@ -47,6 +54,8 @@ export interface FilterProps {
     oppdaterType?: (key: keyof BehandlingssammendragTypeFilter, verdi: boolean) => void;
     oppdaterStatus?: (key: keyof BehandlingssammendragStatusFilter, verdi: boolean) => void;
     oppdaterResultat?: (key: keyof BehandlingssammendragResultatFilter, verdi: boolean) => void;
+    saktypeFilter: Sakstypefilter;
+    oppdaterSakstype: (key: keyof Sakstypefilter, verdi: boolean) => void;
 }
 
 const tilOgMedErGyldig = (fraOgMed: Nullable<Date> | undefined, tilOgMed: Nullable<Date>) => {
@@ -87,6 +96,7 @@ export const Filter = ({ tilOgMedState, fraOgMedState, ...props }: FilterProps) 
                     )}
                 </div>
             )}
+            <SaksFilter saktypeFilter={props.saktypeFilter} oppdaterSakstype={props.oppdaterSakstype} />
             {props.type && (
                 <div>
                     <Label className={styles.label}>{formatMessage('behandlingstype')}</Label>

@@ -1,6 +1,7 @@
 import {
     behandlingssammendragStatus,
     behandlingssammendragTypeMessages,
+    sakstypeText,
 } from '~src/pages/saksbehandling/behandlingssammendrag/Behandlingssammendrag-nb';
 
 export default {
@@ -13,4 +14,5 @@ export default {
     datovalidering: 'Kan ikke være før fra og med dato',
     ...behandlingssammendragTypeMessages,
     ...behandlingssammendragStatus,
+    ...sakstypeText,
 };

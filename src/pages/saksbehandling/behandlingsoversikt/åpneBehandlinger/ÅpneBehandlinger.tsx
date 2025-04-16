@@ -11,13 +11,15 @@ import {
     hentFiltrerteVerdier,
     BehandlingssammendragStatusFilter,
     BehandlingssammendragTypeFilter,
-} from '~src/pages/saksbehandling/behandlingsoversikt/filter/Filter';
+    Sakstypefilter,
+} from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter';
 import BehandlingssammendragTabell from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
 import {
     Behandlingssammendrag,
     BehandlingssammendragStatus,
     BehandlingssammendragType,
 } from '~src/types/Behandlingssammendrag';
+import { Sakstype } from '~src/types/Sak.ts';
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
 
@@ -47,13 +49,23 @@ export const ÅpneBehandlinger = () => {
         [BehandlingssammendragStatus.ÅPEN]: false,
     });
 
+    const [sakstypevalg, setSakstype] = useState<Sakstypefilter>({
+        [Sakstype.Uføre]: false,
+        [Sakstype.Alder]: false,
+    });
+
+    //TODO: dette kan legges i redux evt struktureres annerledes så vi slipper å filtreringslogikken her.
     const filterBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {
         const typefilter = hentFiltrerteVerdier(type);
         const statusfilter = hentFiltrerteVerdier(status);
-
+        const saksfilter = hentFiltrerteVerdier(sakstypevalg);
         return behandlingssammendrag
             .filter((behandlingssammendrag) =>
                 typefilter.length ? typefilter.includes(behandlingssammendrag.typeBehandling) : true,
+            )
+            .filter((behandlingssammendrag) =>
+                //todo kanskje behandlingssammendrag.sakType as keyof Sakstypefilter ?
+                saksfilter.length ? saksfilter.includes(behandlingssammendrag.sakType) : true,
             )
             .filter((behandlingssammendrag) =>
                 statusfilter.length
@@ -69,6 +81,8 @@ export const ÅpneBehandlinger = () => {
                 status={status}
                 oppdaterStatus={(key, verdi) => setStatus({ ...status, [key]: verdi })}
                 oppdaterType={(key, verdi) => setType({ ...type, [key]: verdi })}
+                oppdaterSakstype={(key, verdi) => setSakstype({ ...sakstypevalg, [key]: verdi })}
+                saktypeFilter={sakstypevalg}
             />
 
             {pipe(

@@ -12,13 +12,15 @@ import {
     hentFiltrerteVerdier,
     BehandlingssammendragResultatFilter,
     BehandlingssammendragTypeFilter,
-} from '~src/pages/saksbehandling/behandlingsoversikt/filter/Filter';
+    Sakstypefilter,
+} from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter';
 import BehandlingssammendragTabell from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
 import {
     Behandlingssammendrag,
     BehandlingssammendragStatus,
     BehandlingssammendragType,
 } from '~src/types/Behandlingssammendrag';
+import { Sakstype } from '~src/types/Sak.ts';
 import { toDateOrNull } from '~src/utils/date/dateUtils';
 
 import AntallBehandlinger from '../antallBehandlinger/AntallBehandlinger';
@@ -58,9 +60,17 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragStatus.AVSLUTTET]: false,
     });
 
+    const [sakstypevalg, setSakstype] = useState<Sakstypefilter>({
+        [Sakstype.Uføre]: false,
+        [Sakstype.Alder]: false,
+    });
+
+    //TODO: dette kan legges i redux evt struktureres annerledes så vi slipper å filtreringslogikken her.
     const filtrerBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {
         const typefilter = hentFiltrerteVerdier(type);
         const resultatfilter = hentFiltrerteVerdier(resultat);
+        const saksfilter = hentFiltrerteVerdier(sakstypevalg);
+        //TODO: filtrere saksvalg
 
         return behandlingssammendrag
             .filter((behandlingssammendrag) =>
@@ -71,6 +81,10 @@ export const FerdigeBehandlinger = () => {
             )
             .filter((behandlingssammendrag) =>
                 typefilter.length ? typefilter.includes(behandlingssammendrag.typeBehandling) : true,
+            )
+            .filter((behandlingssammendrag) =>
+                //todo kanskje behandlingssammendrag.sakType as keyof Sakstypefilter ?
+                saksfilter.length ? saksfilter.includes(behandlingssammendrag.sakType) : true,
             )
             .filter((behandlingssammendrag) =>
                 resultatfilter.length
@@ -98,6 +112,8 @@ export const FerdigeBehandlinger = () => {
                         [key]: verdi,
                     });
                 }}
+                oppdaterSakstype={(key, verdi) => setSakstype({ ...sakstypevalg, [key]: verdi })}
+                saktypeFilter={sakstypevalg}
             />
             {pipe(
                 hentFerdigeBehandlingerStatus,
