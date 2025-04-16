@@ -1,12 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
 import { AlderspensjonForm } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonForm';
 import {
     AlderspensjonPeriodisertFormData,
     alderspensjonSchema,
+    eqAlderspensjonPeriodisertFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
 import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -27,14 +29,40 @@ const Alderspensjon = (
         tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
     },
 ) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [lagreAlderspensjongrunnlagStatus, lagreAlderspensjongrunnlag] = useAsyncActionCreator(
         GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag,
     );
 
-    // TODO må støtte perioder - kun lagre hvis endret
-    const handleSave = (values: AlderspensjonPeriodisertFormData, onSuccess: () => void) =>
+    const initial = {
+        alderspensjon: [
+            {
+                periode: lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode),
+                folketrygd:
+                    props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                        .folketrygd ?? null,
+                andreNorske:
+                    props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                        .andreNorske ?? null,
+                utenlandske:
+                    props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                        .utenlandske ?? null,
+            },
+        ],
+    };
+
+    const form = useForm<AlderspensjonPeriodisertFormData>({
+        defaultValues: initial,
+        resolver: yupResolver(alderspensjonSchema),
+    });
+
+    const handleSave = (values: AlderspensjonPeriodisertFormData, onSuccess: () => void, navigerUrl: string) => {
+        if (eqAlderspensjonPeriodisertFormData.equals(values, initial)) {
+            navigate(navigerUrl);
+            return;
+        }
         lagreAlderspensjongrunnlag(
             {
                 sakId: props.sakId,
@@ -53,27 +81,7 @@ const Alderspensjon = (
             },
             onSuccess,
         );
-
-    // TODO må støtte perioder
-    const form = useForm<AlderspensjonPeriodisertFormData>({
-        defaultValues: {
-            alderspensjon: [
-                {
-                    periode: lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode),
-                    folketrygd:
-                        props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
-                            .folketrygd ?? null,
-                    andreNorske:
-                        props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
-                            .andreNorske ?? null,
-                    utenlandske:
-                        props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
-                            .utenlandske ?? null,
-                },
-            ],
-        },
-        resolver: yupResolver(alderspensjonSchema),
-    });
+    };
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -83,7 +91,7 @@ const Alderspensjon = (
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
-                            onClick: handleSave,
+                            onClick: (values, onSuccess) => handleSave(values, onSuccess, props.nesteUrl),
                             url: props.nesteUrl,
                             savingState: lagreAlderspensjongrunnlagStatus,
                         }}
@@ -91,7 +99,7 @@ const Alderspensjon = (
                             url: props.forrigeUrl,
                         }}
                         lagreOgfortsettSenere={{
-                            onClick: handleSave,
+                            onClick: (values, onSuccess) => handleSave(values, onSuccess, props.avsluttUrl),
                             url: props.avsluttUrl,
                         }}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}

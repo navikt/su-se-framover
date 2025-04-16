@@ -1,11 +1,15 @@
-import { Nullable } from '~src/lib/types';
+import { getEq } from 'fp-ts/Array';
+import { struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
+
+import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { validerAtNullablePeriodeErUtfylt } from '~src/lib/validering';
 import {
     PensjonsOpplysningerSvar,
     PensjonsOpplysningerUtvidetSvar,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { Periode } from '~src/types/Periode.ts';
-import { lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils.ts';
+import { eqPeriode, lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils.ts';
 
 export interface AlderspensjonPeriodisertFormData {
     alderspensjon: AlderspensjonFormData[];
@@ -68,4 +72,15 @@ export const alderspensjonSchema = yup.object<AlderspensjonPeriodisertFormData>(
         )
         .min(1)
         .required(),
+});
+
+export const eqAlderspensjonFormData = struct<AlderspensjonFormData>({
+    periode: eqNullable(eqPeriode),
+    folketrygd: eqNullable(S.Eq),
+    andreNorske: eqNullable(S.Eq),
+    utenlandske: eqNullable(S.Eq),
+});
+
+export const eqAlderspensjonPeriodisertFormData = struct<AlderspensjonPeriodisertFormData>({
+    alderspensjon: getEq(eqAlderspensjonFormData),
 });
