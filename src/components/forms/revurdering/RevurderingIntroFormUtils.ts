@@ -1,10 +1,7 @@
-import { getEq } from 'fp-ts/Array';
-import { struct } from 'fp-ts/lib/Eq';
-import * as S from 'fp-ts/lib/string';
 import { UseFormReturn } from 'react-hook-form';
 
 import { ApiResult } from '~src/lib/hooks';
-import { Nullable, eqNullable } from '~src/lib/types';
+import { Nullable } from '~src/lib/types';
 import yup, { validerPeriodeTomEtterFom } from '~src/lib/validering';
 import { NullablePeriode, Periode } from '~src/types/Periode';
 import {
@@ -14,7 +11,6 @@ import {
     OpprettRevurderingRequest,
     OppdaterRevurderingRequest,
 } from '~src/types/Revurdering';
-import { eqPeriode } from '~src/utils/periode/periodeUtils';
 
 export interface RevurderingIntroFormData {
     periode: NullablePeriode;
@@ -22,13 +18,6 @@ export interface RevurderingIntroFormData {
     informasjonSomRevurderes: InformasjonSomRevurderes[];
     begrunnelse: Nullable<string>;
 }
-
-export const eqRevurderingIntroFormData = struct<RevurderingIntroFormData>({
-    periode: eqPeriode,
-    årsak: eqNullable(S.Eq),
-    informasjonSomRevurderes: getEq(S.Eq),
-    begrunnelse: eqNullable(S.Eq),
-});
 
 export const revurderingIntroFormDataTilOpprettRequest = (args: {
     sakId: string;

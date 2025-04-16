@@ -76,17 +76,6 @@ export type UfullstendigBosituasjon = HarEps | HarIkkeEps;
 
 export type Bosituasjon = FullstendigBosituasjon | UfullstendigBosituasjon;
 
-export const erBosituasjonFullstendig = (b: Bosituasjon): b is FullstendigBosituasjon => {
-    if (!b) return false;
-    return [
-        BosituasjonTyper.DELER_BOLIG_MED_VOKSNE,
-        BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING,
-        BosituasjonTyper.EPS_OVER_67,
-        BosituasjonTyper.EPS_UFØR_FLYKTNING,
-        BosituasjonTyper.ENSLIG,
-    ].includes(b.type);
-};
-
 export const bosituasjonPåDato = (bosituasjonsgrunnlag: Bosituasjon[], dato: string) =>
     bosituasjonsgrunnlag.find((bg) => bg.periode.fraOgMed <= dato && dato <= bg.periode.tilOgMed);
 
@@ -97,18 +86,6 @@ export const bosituasjonHarEps = (bosituasjon: Bosituasjon) =>
         BosituasjonTyper.EPS_UFØR_FLYKTNING,
         BosituasjonTyper.UFULLSTENDIG_HAR_EPS,
     ].includes(bosituasjon.type);
-
-export interface UfullstendigBosituasjonRequest {
-    sakId: string;
-    behandlingId: string;
-    epsFnr: Nullable<string>;
-}
-
-export interface FullstendigBosituasjonRequest {
-    sakId: string;
-    behandlingId: string;
-    bosituasjon: string;
-}
 
 export interface BosituasjongrunnlagRequest {
     sakId: string;

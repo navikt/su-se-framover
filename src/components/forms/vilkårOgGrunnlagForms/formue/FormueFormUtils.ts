@@ -87,8 +87,6 @@ export const verdierId: Array<keyof FormuegrunnlagVerdierFormData> = [
     'depositumskonto',
 ];
 
-export const nyFormueVilkår = () => ({ formue: [nyFormuegrunnlagMedEllerUtenPeriode()] });
-
 export const formueVilkårTilFormData = (
     formueVilkår: FormueVilkår,
     bosituasjonsgrunnlag: Bosituasjon[],
