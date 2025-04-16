@@ -1,4 +1,3 @@
-import { Sakstypefilter } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter.tsx';
 import { BehandlingssammendragType, BehandlingssammendragStatus } from '~src/types/Behandlingssammendrag';
 import { Sakstype } from '~src/types/Sak.ts';
 
@@ -28,7 +27,7 @@ export const behandlingssammendragStatus: { [key in BehandlingssammendragStatus]
     [BehandlingssammendragStatus.AVSLUTTET]: 'Avsluttet',
 };
 
-export const sakstypeText: { [key in Sakstypefilter]: string } = {
+export const sakstypeText: { [key in Sakstype]: string } = {
     [Sakstype.Alder]: 'Alder',
     [Sakstype.Uføre]: 'Uføre',
 };
