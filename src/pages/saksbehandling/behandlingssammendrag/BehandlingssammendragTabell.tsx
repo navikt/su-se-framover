@@ -106,6 +106,10 @@ const BehandlingssamendragTableRow = ({
             onSuccess(sak);
         });
     };
+    /*
+        TODO: Stor forbokstav i saktype..
+        TODO: Vise filtreringsboks for saktype i venstre meny
+     */
 
     return (
         <Table.Row key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.typeBehandling}`}>
