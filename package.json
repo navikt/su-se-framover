@@ -70,7 +70,7 @@
         "react-router-dom": "7.5.0",
         "redux": "5.0.1",
         "reset-css": "5.0.2",
-        "uuid": "10.0.0",
+        "uuid": "11.1.0",
         "yup": "0.29.3"
     },
     "devDependencies": {
