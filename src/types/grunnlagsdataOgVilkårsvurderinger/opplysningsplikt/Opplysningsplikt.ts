@@ -1,5 +1,3 @@
-import isEqual from 'lodash.isequal';
-
 import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
 
@@ -28,6 +26,3 @@ export interface OpplysningspliktRequest {
         beskrivelse: Nullable<string>;
     }>;
 }
-
-export const opplysningspliktErLik = (ny: Nullable<OpplysningspliktVilkår>, gammel: Nullable<OpplysningspliktVilkår>) =>
-    isEqual(ny, gammel);
