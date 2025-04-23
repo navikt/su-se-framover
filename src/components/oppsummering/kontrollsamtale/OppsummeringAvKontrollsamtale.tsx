@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ExternalLinkIcon, PencilWritingIcon } from '@navikt/aksel-icons';
+import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, Label, Modal, Select, TextField } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -126,7 +126,7 @@ const OppsummerKontrollsamtaleStatus = (props: {
                         variant="tertiary"
                         onClick={() => setEditStatus(true)}
                     >
-                        {kontrollsamtaleStatusTextMapper(props.kontrollsamtale.status)} <PencilWritingIcon />
+                        {kontrollsamtaleStatusTextMapper(props.kontrollsamtale.status)}
                     </Button>
                 ) : (
                     <BodyShort>{kontrollsamtaleStatusTextMapper(props.kontrollsamtale.status)}</BodyShort>
@@ -307,7 +307,7 @@ const OppsummerKontrollsamtaleInnkallingsdato = (props: {
                         variant="tertiary"
                         onClick={() => setEditStatus(true)}
                     >
-                        {formatDate(props.kontrollsamtale.innkallingsdato)} <PencilWritingIcon />
+                        {formatDate(props.kontrollsamtale.innkallingsdato)}
                     </Button>
                 ) : (
                     <BodyShort>{formatDate(props.kontrollsamtale.innkallingsdato)}</BodyShort>
@@ -420,7 +420,7 @@ const OppsummerKontrollsamtaleJournalpostKontrollnotat = (props: {
                         variant="tertiary"
                         onClick={() => setEditStatus(true)}
                     >
-                        {props.kontrollsamtale.journalpostIdKontrollnotat ?? 'Ikke funnet'} <PencilWritingIcon />
+                        {props.kontrollsamtale.journalpostIdKontrollnotat ?? 'Ikke funnet'}
                     </Button>
                 ) : (
                     <BodyShort>{props.kontrollsamtale.journalpostIdKontrollnotat ?? 'Ikke funnet'}</BodyShort>
