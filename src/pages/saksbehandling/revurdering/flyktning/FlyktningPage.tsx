@@ -21,7 +21,7 @@ import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurd
 
 import messages from './flyktning-nb';
 
-export function FlyktningPage(props: RevurderingStegProps) {
+function FlyktningPage(props: RevurderingStegProps) {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
@@ -101,3 +101,5 @@ export function FlyktningPage(props: RevurderingStegProps) {
         </ToKolonner>
     );
 }
+
+export default FlyktningPage;
