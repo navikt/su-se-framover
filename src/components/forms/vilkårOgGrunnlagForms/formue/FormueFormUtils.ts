@@ -300,7 +300,7 @@ const verdierFormDataValidering = yup
                 if (depositum == null) {
                     return false;
                 }
-                return depositum <= innskudd;
+                return depositum > innskudd;
             },
         ),
     })
