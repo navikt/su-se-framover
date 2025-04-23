@@ -16,7 +16,26 @@ import { formatMonthYear } from '~src/utils/date/dateUtils';
 import messages from './sakintro-nb';
 import styles from './utbetalinger.module.less';
 
-export const Utbetalinger = (props: {
+const Utbetalingsperioder = (props: { utbetalingsperioder: Utbetalingsperiode[] }) => {
+    const { formatMessage } = useI18n({ messages });
+    return (
+        <ol>
+            {props.utbetalingsperioder.map((u) => (
+                <li className={styles.utbetalingsperiode} key={`${u.fraOgMed}-${u.tilOgMed}-${u.type}`}>
+                    <BodyShort>
+                        {formatMonthYear(u.fraOgMed)} - {formatMonthYear(u.tilOgMed)}
+                    </BodyShort>
+                    <BodyShort>
+                        {u.beløp} {formatMessage('utbetalinger.periode.beløp.kr')}
+                    </BodyShort>
+                    <BodyShort>{formatMessage(u.type)}</BodyShort>
+                </li>
+            ))}
+        </ol>
+    );
+};
+
+const Utbetalinger = (props: {
     sakId: string;
     utbetalingsperioder: Utbetalingsperiode[];
     kanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
@@ -106,25 +125,6 @@ export const Utbetalinger = (props: {
                 </div>
             </Oppsummeringspanel>
         </div>
-    );
-};
-
-const Utbetalingsperioder = (props: { utbetalingsperioder: Utbetalingsperiode[] }) => {
-    const { formatMessage } = useI18n({ messages });
-    return (
-        <ol>
-            {props.utbetalingsperioder.map((u) => (
-                <li className={styles.utbetalingsperiode} key={`${u.fraOgMed}-${u.tilOgMed}-${u.type}`}>
-                    <BodyShort>
-                        {formatMonthYear(u.fraOgMed)} - {formatMonthYear(u.tilOgMed)}
-                    </BodyShort>
-                    <BodyShort>
-                        {u.beløp} {formatMessage('utbetalinger.periode.beløp.kr')}
-                    </BodyShort>
-                    <BodyShort>{formatMessage(u.type)}</BodyShort>
-                </li>
-            ))}
-        </ol>
     );
 };
 

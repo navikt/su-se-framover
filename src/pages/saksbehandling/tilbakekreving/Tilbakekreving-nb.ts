@@ -48,14 +48,6 @@ export default {
         'Behandlingen er sendt til attestering og oppgave i Gosys er schedulert til oppdatering',
     'oppsummeringTilbakekreving.sendTilAttestering': 'Send til attestering',
 
-    'visKravgrunnlagMedRefresh.modal.tittel': 'Oppdater kravgrunnlag',
-    'visKravgrunnlagMedRefresh.modal.body.text.p1':
-        'Dersom saken har fått et nytt kravgrunnlag, kan du oppdatere den på behandlingen.',
-    'visKravgrunnlagMedRefresh.modal.body.text.p2':
-        'Merk at behandlingen vil resette vurderingene, og tekst til vedtaksbrev.',
-    'visKravgrunnlagMedRefresh.modal.body.button.avbryt': 'Avbryt',
-    'visKravgrunnlagMedRefresh.modal.body.button.hent': 'Oppdater kravgrunnlag',
-
     'knapp.seBrev': 'Se brev',
     'knapp.tilbake': 'Tilbake',
 };

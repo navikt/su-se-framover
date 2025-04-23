@@ -101,5 +101,3 @@ export function FlyktningPage(props: RevurderingStegProps) {
         </ToKolonner>
     );
 }
-
-export default FlyktningPage;

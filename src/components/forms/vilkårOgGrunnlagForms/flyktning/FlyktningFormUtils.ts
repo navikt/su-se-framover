@@ -25,7 +25,7 @@ export interface VurderingsperioderFlyktningFormData {
     resultat: Nullable<Vilkårstatus>;
 }
 
-export const eqVurderingsperioderFlyktningFormData = struct<VurderingsperioderFlyktningFormData>({
+const eqVurderingsperioderFlyktningFormData = struct<VurderingsperioderFlyktningFormData>({
     periode: eqNullable(eqPeriode),
     resultat: eqNullable(S.Eq),
 });
@@ -34,7 +34,7 @@ export const eqFlyktningVilkårFormData = struct<FlyktningVilkårFormData>({
     flyktning: getEq(eqVurderingsperioderFlyktningFormData),
 });
 
-export const flyktningVilkårTilFormData = (f: FlyktningVilkår): FlyktningVilkårFormData => ({
+const flyktningVilkårTilFormData = (f: FlyktningVilkår): FlyktningVilkårFormData => ({
     flyktning: f.vurderinger.map(flyktningVurderingsperiodeTilFormData),
 });
 
@@ -43,14 +43,12 @@ export const flyktningVilkårTilFormDataEllerNy = (
     p?: Periode<string>,
 ): FlyktningVilkårFormData => (f ? flyktningVilkårTilFormData(f) : nyFlyktningVilkårMedEllerUtenPeriode(p));
 
-export const flyktningVurderingsperiodeTilFormData = (
-    f: VurderingsperiodeFlyktning,
-): VurderingsperioderFlyktningFormData => ({
+const flyktningVurderingsperiodeTilFormData = (f: VurderingsperiodeFlyktning): VurderingsperioderFlyktningFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     resultat: f.resultat,
 });
 
-export const nyFlyktningVilkårMedEllerUtenPeriode = (p?: Periode<string>): FlyktningVilkårFormData => ({
+const nyFlyktningVilkårMedEllerUtenPeriode = (p?: Periode<string>): FlyktningVilkårFormData => ({
     flyktning: [nyVurderingsperiodeFlyktningMedEllerUtenPeriode(p)],
 });
 

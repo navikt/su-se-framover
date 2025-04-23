@@ -26,7 +26,7 @@ export interface VurderingsperioderFastOppholdFormData {
     resultat: Nullable<Vilkårstatus>;
 }
 
-export const eqVurderingsperioderFastOppholdFormData = struct<VurderingsperioderFastOppholdFormData>({
+const eqVurderingsperioderFastOppholdFormData = struct<VurderingsperioderFastOppholdFormData>({
     periode: eqNullable(eqPeriode),
     resultat: eqNullable(S.Eq),
 });
@@ -35,7 +35,7 @@ export const eqFastOppholdVilkårFormData = struct<FastOppholdVilkårFormData>({
     fastOpphold: getEq(eqVurderingsperioderFastOppholdFormData),
 });
 
-export const fastOppholdVilkårTilFormData = (f: FastOppholdVilkår): FastOppholdVilkårFormData => ({
+const fastOppholdVilkårTilFormData = (f: FastOppholdVilkår): FastOppholdVilkårFormData => ({
     fastOpphold: f.vurderinger.map(fastOppholdVurderingsperiodeTilFormData),
 });
 
@@ -44,14 +44,14 @@ export const fastOppholdVilkårTilFormDataEllerNy = (
     p?: Periode<string>,
 ): FastOppholdVilkårFormData => (f ? fastOppholdVilkårTilFormData(f) : nyFastOppholdVilkårMedEllerUtenPeriode(p));
 
-export const fastOppholdVurderingsperiodeTilFormData = (
+const fastOppholdVurderingsperiodeTilFormData = (
     f: VurderingsperiodeFastOpphold,
 ): VurderingsperioderFastOppholdFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     resultat: f.resultat,
 });
 
-export const nyFastOppholdVilkårMedEllerUtenPeriode = (p?: Periode<string>): FastOppholdVilkårFormData => ({
+const nyFastOppholdVilkårMedEllerUtenPeriode = (p?: Periode<string>): FastOppholdVilkårFormData => ({
     fastOpphold: [nyVurderingsperiodeFastOppholdMedEllerUtenPeriode(p)],
 });
 
