@@ -1,7 +1,7 @@
 import { BodyShort, Heading, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 
-import VilkårvurderingStatusIcon from '~src/components/VilkårvurderingStatusIcon';
+import { VilkårvurderingStatusIcon } from '~src/components/VilkårvurderingStatusIcon';
 import { useI18n } from '~src/lib/i18n';
 import { VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 

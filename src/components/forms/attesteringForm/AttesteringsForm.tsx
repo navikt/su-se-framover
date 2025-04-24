@@ -4,7 +4,7 @@ import { Button, Radio, RadioGroup } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,

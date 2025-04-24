@@ -30,7 +30,7 @@ export interface BosituasjonFormItemData {
     erEPSUførFlyktning: Nullable<boolean>;
 }
 
-export const eqBosituasjonFormItemData = struct<BosituasjonFormItemData>({
+const eqBosituasjonFormItemData = struct<BosituasjonFormItemData>({
     periode: eqNullable(eqPeriode),
     harEPS: eqNullable(B.Eq),
     epsFnr: eqNullable(S.Eq),

@@ -21,7 +21,7 @@ import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurd
 
 import messages from './fastOpphold-nb';
 
-export function FastOppholdPage(props: RevurderingStegProps) {
+function FastOppholdPage(props: RevurderingStegProps) {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);

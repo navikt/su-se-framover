@@ -20,7 +20,7 @@ import messages from './HentOgVisSkattegrunnlag-nb';
 import styles from './HentOgVisSkattegrunnlag.module.less';
 import { FrioppslagFormData, frioppslagSchema, HentSkatteDataFor } from './HentOgVisSkattegrunnlagUtils';
 
-export const HentOfVisSkattegrunnlagForFrioppslag = () => {
+const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const { formatMessage } = useI18n({ messages });
 
     const [warning, setWarning] = useState<string>('');
