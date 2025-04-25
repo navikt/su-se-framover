@@ -65,5 +65,3 @@ export const VilkårResultatStatusIkon = (props: {
             return <WarningIcon width={'1.8rem'} />;
     }
 };
-
-export default VilkårvurderingStatusIcon;

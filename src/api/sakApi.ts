@@ -48,15 +48,6 @@ export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult
     return apiClient({ url: `/saker/info/${fnr}`, method: 'GET' });
 }
 
-export async function kallInnTilKontrollsamtale(sakId: string) {
-    return apiClient({
-        url: `/kontrollsamtale/kallInn`,
-        method: 'POST',
-        body: {
-            sakId: sakId,
-        },
-    });
-}
 export async function registrerUtenlandsopphold(
     arg: RegistrerUtenlandsoppholdRequest,
 ): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {

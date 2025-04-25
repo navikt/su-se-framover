@@ -87,8 +87,6 @@ export const verdierId: Array<keyof FormuegrunnlagVerdierFormData> = [
     'depositumskonto',
 ];
 
-export const nyFormueVilkår = () => ({ formue: [nyFormuegrunnlagMedEllerUtenPeriode()] });
-
 export const formueVilkårTilFormData = (
     formueVilkår: FormueVilkår,
     bosituasjonsgrunnlag: Bosituasjon[],
@@ -299,10 +297,11 @@ const verdierFormDataValidering = yup
             'Depositum kan ikke være større enn innskudd',
             function (depositum) {
                 const { innskudd } = this.parent;
-                if (depositum == null) {
+                if (!depositum) {
                     return false;
                 }
-                return depositum <= innskudd;
+
+                return parseInt(depositum, 10) <= parseInt(innskudd, 10);
             },
         ),
     })
