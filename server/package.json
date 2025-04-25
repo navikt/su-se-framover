@@ -6,6 +6,7 @@
     "type": "module",
     "scripts": {
         "start": "node dist/index.js",
+        "dev": "SU_SE_BAKOVER_AAD_APP_NAME=su_se_bakover tsx index.ts",
         "build": "tsc --project ./tsconfig.json",
         "typecheck": "tsc --noEmit"
     },

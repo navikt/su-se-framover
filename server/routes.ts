@@ -16,7 +16,7 @@ async function setup() {
         console.log('Setting up local development version');
         const server = await import('vite');
         const createServer = await server.createServer({
-            configFile: 'vite.config.ts',
+            configFile: '../vite.config.ts',
         });
 
         await createServer.listen();
