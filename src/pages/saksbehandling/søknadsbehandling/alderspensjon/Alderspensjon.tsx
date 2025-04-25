@@ -1,7 +1,15 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
 import { AlderspensjonForm } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonForm';
-import { AlderspensjonFormData } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
+import {
+    AlderspensjonPeriodisertFormData,
+    alderspensjonSchema,
+    eqAlderspensjonPeriodisertFormData,
+} from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
 import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -9,6 +17,7 @@ import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
+import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -20,13 +29,40 @@ const Alderspensjon = (
         tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
     },
 ) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const [lagreAlderspensjongrunnlagStatus, lagreAlderspensjongrunnlag] = useAsyncActionCreator(
         GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag,
     );
 
-    const handleSave = (values: AlderspensjonFormData, onSuccess: () => void) =>
+    const initial = {
+        alderspensjon: [
+            {
+                periode: lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode),
+                folketrygd:
+                    props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                        .folketrygd ?? null,
+                andreNorske:
+                    props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                        .andreNorske ?? null,
+                utenlandske:
+                    props.behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.vurderinger[0]?.pensjonsopplysninger
+                        .utenlandske ?? null,
+            },
+        ],
+    };
+
+    const form = useForm<AlderspensjonPeriodisertFormData>({
+        defaultValues: initial,
+        resolver: yupResolver(alderspensjonSchema),
+    });
+
+    const handleSave = (values: AlderspensjonPeriodisertFormData, onSuccess: () => void, navigerUrl: string) => {
+        if (eqAlderspensjonPeriodisertFormData.equals(values, initial)) {
+            navigate(navigerUrl);
+            return;
+        }
         lagreAlderspensjongrunnlag(
             {
                 sakId: props.sakId,
@@ -35,20 +71,43 @@ const Alderspensjon = (
                     {
                         periode: props.behandling.stønadsperiode!.periode,
                         pensjonsopplysninger: {
-                            folketrygd: values.folketrygd!,
-                            andreNorske: values.andreNorske!,
-                            utenlandske: values.utenlandske!,
+                            folketrygd: values.alderspensjon[0].folketrygd!,
+                            andreNorske: values.alderspensjon[0].andreNorske!,
+                            utenlandske: values.alderspensjon[0].utenlandske!,
                         },
                     },
                 ],
+                behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             onSuccess,
         );
+    };
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
-                left: <AlderspensjonForm save={handleSave} savingState={lagreAlderspensjongrunnlagStatus} {...props} />,
+                left: (
+                    <AlderspensjonForm
+                        form={form}
+                        minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
+                        neste={{
+                            onClick: (values, onSuccess) => handleSave(values, onSuccess, props.nesteUrl),
+                            url: props.nesteUrl,
+                            savingState: lagreAlderspensjongrunnlagStatus,
+                        }}
+                        tilbake={{
+                            url: props.forrigeUrl,
+                        }}
+                        lagreOgfortsettSenere={{
+                            onClick: (values, onSuccess) => handleSave(values, onSuccess, props.avsluttUrl),
+                            url: props.avsluttUrl,
+                        }}
+                        søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
+                        begrensTilEnPeriode
+                        skalIkkeKunneVelgePeriode
+                        {...props}
+                    />
+                ),
                 right: (
                     <>
                         <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>

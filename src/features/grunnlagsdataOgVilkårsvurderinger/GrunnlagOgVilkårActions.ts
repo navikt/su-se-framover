@@ -32,8 +32,8 @@ export const lagreUføregrunnlag = createAsyncThunk<
 });
 
 export const lagreAlderspensjongrunnlag = createAsyncThunk<
-    Søknadsbehandling,
-    AlderspensjonVilkårRequest,
+    GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult<OpprettetRevurdering>,
+    GrunnlagOgVilkårApi.BehandlingstypeMedApiRequest<AlderspensjonVilkårRequest>,
     { rejectValue: ApiError }
 >('behandling/pensjon/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreAldersgrunnlag(arg);
