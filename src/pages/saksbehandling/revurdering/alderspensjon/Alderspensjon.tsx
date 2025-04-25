@@ -18,10 +18,10 @@ import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/rev
 import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/sharedI18n-nb.ts';
 import { Aldersvurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår.ts';
 import { RevurderingStegProps } from '~src/types/Revurdering.ts';
-
-import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
-import messages from './alderspensjon-nb.ts';
 import * as DateUtils from '~src/utils/date/dateUtils';
+import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
+
+import messages from './alderspensjon-nb.ts';
 
 const Alderspensjon = (props: RevurderingStegProps) => {
     const navigate = useNavigate();
