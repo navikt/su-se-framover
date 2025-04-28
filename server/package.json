@@ -20,7 +20,7 @@
         "compression": "^1.7.4",
         "connect-redis": "^7.0.1",
         "cors": "^2.8.5",
-        "express": "~4.17.1",
+        "express": "~4.20.0",
         "express-http-proxy": "^2.0.0",
         "express-session": "^1.17.2",
         "https-proxy-agent": "^7.0.0",
