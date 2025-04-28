@@ -12,21 +12,12 @@ async function setup() {
     router.get('/isReady', (_req, res) => {
         res.send('READY');
     });
-    if (Config.isDev) {
-        console.log('Setting up local development version');
-        const server = await import('vite');
-        const createServer = await server.createServer({
-            configFile: 'vite.config.ts',
-        });
 
-        await createServer.listen();
-    } else {
-        router.use(express.static(Config.server.frontendDir));
+    router.use(express.static(Config.server.frontendDir));
 
-        router.get('*', (_req, res) => {
-            res.sendFile(Config.server.frontendDir + '/index.html');
-        });
-    }
+    router.get('*', (_req, res) => {
+        res.sendFile(Config.server.frontendDir + '/index.html');
+    });
 
     return router;
 }
