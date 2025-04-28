@@ -23,7 +23,6 @@
         "express": "~4.17.1",
         "express-http-proxy": "^2.0.0",
         "express-session": "^1.17.2",
-        "helmet": "^8.0.0",
         "https-proxy-agent": "^7.0.0",
         "openid-client": "^5.0.2",
         "passport": "^0.7.0",
@@ -41,7 +40,6 @@
         "@types/passport": "^1.0.7",
         "@types/pino-http": "^5.8.0",
         "@types/redis": "^4.0.11",
-        "dotenv": "^16.0.1",
         "typescript": "^5.0.4",
         "vite": "^6.0.6"
     },
