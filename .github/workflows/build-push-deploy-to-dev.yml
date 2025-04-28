@@ -48,8 +48,6 @@ jobs:
               with:
                   docker_context: .
                   team: supstonad
-                  identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-                  project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
                   salsa: false
                   image_suffix: ${{ github.workflow }}
                   tag: ${{ env.GITHUB_REF_SLUG }}
