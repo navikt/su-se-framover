@@ -9,7 +9,6 @@ async function setupEnv(): Promise<void> {
 }
 
 setupEnv().then(async () => {
-    console.log('Loaded .env file');
-    const express = await import('./express.js');
-    express.default();
+    const express = await import('./express.ts');
+    await express.default();
 });

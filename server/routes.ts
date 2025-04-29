@@ -14,6 +14,7 @@ async function setup() {
     });
 
     if (Config.isDev) {
+        //TODO: heller ha denne configen her?
         console.log('Setting up local development version');
         const server = await import('vite');
         const createServer = await server.createServer({
