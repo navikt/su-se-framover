@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import expressStart from './express.js';
 
 async function setupEnv(): Promise<void> {
     if (process.env.NODE_ENV === 'development') {
@@ -9,6 +10,5 @@ async function setupEnv(): Promise<void> {
 }
 
 setupEnv().then(async () => {
-    const express = await import('./express.ts');
-    await express.default();
+    await expressStart();
 });

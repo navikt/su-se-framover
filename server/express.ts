@@ -10,7 +10,7 @@ import setupProxy from './proxy.js';
 import redirectMiddleware from './redirect.js';
 import routes from './routes.js';
 
-export default async function start() {
+export default async function expressStart() {
     const app = express();
     logger.info(`Using log level: ${Config.server.logLevel}`);
 
