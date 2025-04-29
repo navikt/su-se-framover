@@ -6,6 +6,7 @@
     "type": "module",
     "scripts": {
         "start": "node dist/index.js",
+        "dev": "NODE_ENV=development tsx --tsconfig tsconfig.json index.ts",
         "build": "tsc --project ./tsconfig.json",
         "typecheck": "tsc --noEmit"
     },
@@ -40,7 +41,8 @@
         "@types/passport": "^1.0.7",
         "@types/pino-http": "^5.8.0",
         "@types/redis": "^4.0.11",
-        "typescript": "^5.0.4"
+        "typescript": "^5.0.4",
+        "dotenv": "^16.0.1"
     },
     "overrides": {
         "yaml@<2.2.2": "2.2.2"
