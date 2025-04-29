@@ -1,6 +1,3 @@
-import 'dotenv/config';
-import expressStart from './express.js';
-
 async function setupEnv(): Promise<void> {
     if (process.env.NODE_ENV === 'development') {
         console.log('Detected development environment, loading .env file');
@@ -10,5 +7,6 @@ async function setupEnv(): Promise<void> {
 }
 
 setupEnv().then(async () => {
-    await expressStart();
+    const server: { readonly default: () => Promise<void> } = await import('./express.js');
+    await server.default();
 });
