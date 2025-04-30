@@ -5,9 +5,7 @@ import { Aldersvurdering, MaskinellVurderingsresultat } from '~src/types/Aldersv
 
 import messages from './OppsummeringAvAldersvurdering-nb';
 
-//TODO: lage en faktisk oppsummering, of denne komponenten flytt et annet sted
-
-const AldersvurderingAdvarsel = (props: { a: Aldersvurdering }) => {
+const UføreVarsler = (props: { a: Aldersvurdering }) => {
     const { formatMessage } = useI18n({ messages });
 
     switch (props.a.maskinellVurderingsresultat) {
@@ -24,4 +22,4 @@ const AldersvurderingAdvarsel = (props: { a: Aldersvurdering }) => {
     }
 };
 
-export default AldersvurderingAdvarsel;
+export default UføreVarsler;
