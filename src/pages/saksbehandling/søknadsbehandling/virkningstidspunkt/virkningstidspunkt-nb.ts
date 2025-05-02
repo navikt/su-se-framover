@@ -22,4 +22,7 @@ export default {
         'Søker fyller 67 år i løpet av stønadsperioden. Hen kan få stønad til og med måneden hen fyller 67',
     'person.utenFødselsdato.fyller67VedAngittStønadsperiode':
         'Søker har ikke en registrert fødselsdato. Basert på fødselsåret, fyller søker, eller har allerede fylt 67 dette året',
+    'person.medFødselsdato.under67VedVirk': 'Søker er under 67 år i starten av stønadsperioden.',
+    'person.utenFødselsdato.under67VedVirk':
+        'Søker har ikke en registrert fødselsdato. Basert på fødselsåret er søker under 67 dette året',
 };

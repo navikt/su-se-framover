@@ -19,12 +19,17 @@ import { Nullable } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppSelector } from '~src/redux/Store';
 import { Fødsel } from '~src/types/Person';
+import { Sakstype } from '~src/types/Sak.ts';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { formatPeriodeMonthYear } from '~src/utils/periode/periodeUtils';
-import { alderSomPersonFyllerIÅr } from '~src/utils/person/personUtils';
+import {
+    alderSomPersonFyllerIÅr,
+    alderSomPersonFyllerIÅrDate,
+    alderSomPersonFyllerPåDato,
+} from '~src/utils/person/personUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedMessages from '../sharedI18n-nb';
@@ -55,6 +60,7 @@ const Virkningstidspunkt = (
     const navigate = useNavigate();
 
     const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
+
     const søkerState = useAppSelector((state) => state.personopplysninger.søker);
     const initialValues: VirkningstidspunktFormData = {
         periode: {
@@ -166,6 +172,8 @@ const Virkningstidspunkt = (
                                             <SaksbehandlerMåKontrollereStønadsperioden
                                                 stønadsperiodeTilOgMed={form.watch('periode.tilOgMed')}
                                                 søkersFødselsinformasjon={søker.fødsel}
+                                                sakstype={props.behandling.sakstype}
+                                                stønadsperiodeFraOgMed={form.watch('periode.fraOgMed')}
                                             />
 
                                             {((RemoteData.isFailure(status) &&
@@ -185,24 +193,25 @@ const Virkningstidspunkt = (
                                                               })
                                                             : null,
                                                     },
-                                                })) && (
-                                                <Controller
-                                                    control={form.control}
-                                                    name="harSaksbehandlerAvgjort"
-                                                    render={({ field }) => (
-                                                        <ConfirmationPanel
-                                                            className={styles.confirmationPanel}
-                                                            checked={field.value}
-                                                            label={formatMessage(
-                                                                'stønadsperiode.advarsel.checkbox.måBekreftes',
-                                                            )}
-                                                            onChange={() => field.onChange(!field.value)}
-                                                        >
-                                                            {formatMessage('stønadsperiode.advarsel.tekst')}
-                                                        </ConfirmationPanel>
-                                                    )}
-                                                />
-                                            )}
+                                                })) &&
+                                                props.behandling.sakstype === Sakstype.Uføre && (
+                                                    <Controller
+                                                        control={form.control}
+                                                        name="harSaksbehandlerAvgjort"
+                                                        render={({ field }) => (
+                                                            <ConfirmationPanel
+                                                                className={styles.confirmationPanel}
+                                                                checked={field.value}
+                                                                label={formatMessage(
+                                                                    'stønadsperiode.advarsel.checkbox.måBekreftes',
+                                                                )}
+                                                                onChange={() => field.onChange(!field.value)}
+                                                            >
+                                                                {formatMessage('stønadsperiode.advarsel.tekst')}
+                                                            </ConfirmationPanel>
+                                                        )}
+                                                    />
+                                                )}
 
                                             <Controller
                                                 name={`periode`}
@@ -298,39 +307,66 @@ const Virkningstidspunkt = (
 
 const SaksbehandlerMåKontrollereStønadsperioden = (props: {
     stønadsperiodeTilOgMed: Nullable<Date>;
+    stønadsperiodeFraOgMed: Nullable<Date>;
     søkersFødselsinformasjon: Nullable<Fødsel>;
+    sakstype: Sakstype;
 }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     if (!props.søkersFødselsinformasjon) {
         return <FødselsinfoAdvarsel message={formatMessage('person.harIkkeFødselsinformasjon')} />;
     } else if (!props.stønadsperiodeTilOgMed) {
-        return <div></div>;
+        return <></>;
     }
 
     if (props.søkersFødselsinformasjon.dato) {
-        return (
-            <FødselsdatoHandler
-                periodeTilOgMed={props.stønadsperiodeTilOgMed}
-                fødselsdato={props.søkersFødselsinformasjon.dato}
-            />
-        );
+        if (props.sakstype == Sakstype.Uføre) {
+            if (
+                er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned(
+                    props.stønadsperiodeTilOgMed,
+                    new Date(props.søkersFødselsinformasjon.dato),
+                )
+            ) {
+                return (
+                    <FødselsinfoAdvarsel
+                        message={formatMessage('person.medFødselsdato.fyller67VedAngittStønadsperiode')}
+                    />
+                );
+            }
+            return <></>;
+        } else {
+            if (
+                props.stønadsperiodeFraOgMed &&
+                alderSomPersonFyllerPåDato(
+                    props.stønadsperiodeFraOgMed,
+                    new Date(props.søkersFødselsinformasjon.dato),
+                ) < 67
+            ) {
+                return <FødselsinfoAdvarsel message={formatMessage('person.medFødselsdato.under67VedVirk')} />;
+            }
+            return <></>;
+        }
     }
-    if (fyller67PlusVedStønadsperiodeTilOgMed(props.stønadsperiodeTilOgMed, props.søkersFødselsinformasjon.år)) {
-        return (
-            <FødselsinfoAdvarsel message={formatMessage('person.utenFødselsdato.fyller67VedAngittStønadsperiode')} />
-        );
+    if (props.sakstype == Sakstype.Uføre) {
+        if (fyller67PlusVedStønadsperiodeTilOgMed(props.stønadsperiodeTilOgMed, props.søkersFødselsinformasjon.år)) {
+            return (
+                <FødselsinfoAdvarsel
+                    message={formatMessage('person.utenFødselsdato.fyller67VedAngittStønadsperiode')}
+                />
+            );
+        }
+    } else {
+        if (
+            props.stønadsperiodeFraOgMed &&
+            alderSomPersonFyllerIÅrDate(props.stønadsperiodeFraOgMed.getFullYear(), props.søkersFødselsinformasjon.år) <
+                67
+        ) {
+            return <FødselsinfoAdvarsel message={formatMessage('person.utenFødselsdato.under67VedVirk')} />;
+        }
+        return <></>;
     }
 
-    return <div></div>;
-};
-
-const FødselsdatoHandler = (props: { periodeTilOgMed: Date; fødselsdato: string }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
-    if (er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned(props.periodeTilOgMed, new Date(props.fødselsdato))) {
-        return <FødselsinfoAdvarsel message={formatMessage('person.medFødselsdato.fyller67VedAngittStønadsperiode')} />;
-    }
-    return <div></div>;
+    return <></>;
 };
 
 const FødselsinfoAdvarsel = (props: { message: string }) => {

@@ -3,11 +3,11 @@ import yup from '~src/lib/validering';
 import { Vilkårstatus } from '~src/types/Vilkår';
 
 export interface FamilieforeningFormData {
-    familieforening: Nullable<Vilkårstatus>;
+    familiegjenforening: Nullable<Vilkårstatus>;
 }
 
 export const familieforeningSchema = yup.object<FamilieforeningFormData>({
-    familieforening: yup
+    familiegjenforening: yup
         .mixed()
         .defined()
         .oneOf(

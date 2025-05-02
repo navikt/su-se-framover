@@ -2,6 +2,6 @@ import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/sharedI
 
 export default {
     ...sharedMessages,
-    'page.tittel': 'Familieforening',
+    'page.tittel': 'Familiegjenforening',
     'label.familieforening': 'Familiegjenforening med barn/barnebarn/nevø/niese og de har garantert underholdet?',
 };

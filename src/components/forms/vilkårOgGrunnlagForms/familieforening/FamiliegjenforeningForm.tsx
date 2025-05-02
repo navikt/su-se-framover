@@ -18,11 +18,11 @@ interface Props extends VilkårsvurderingBaseProps {
     avsluttUrl: string;
 }
 
-export const FamilieforeningForm = (props: Props) => {
+export const FamiliegjenforeningForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     const form = useForm<FamilieforeningFormData>({
         defaultValues: {
-            familieforening:
+            familiegjenforening:
                 props.behandling.grunnlagsdataOgVilkårsvurderinger.familiegjenforening?.vurderinger[0]?.resultat ??
                 null,
         },
@@ -44,7 +44,7 @@ export const FamilieforeningForm = (props: Props) => {
         >
             <Controller
                 control={form.control}
-                name={'familieforening'}
+                name={'familiegjenforening'}
                 render={({ field, fieldState }) => (
                     <RadioGroup
                         {...field}

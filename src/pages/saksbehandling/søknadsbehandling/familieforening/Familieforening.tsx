@@ -1,7 +1,7 @@
 import { Heading } from '@navikt/ds-react';
 
-import { FamilieforeningForm } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningForm';
 import { FamilieforeningFormData } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningFormUtils';
+import { FamiliegjenforeningForm } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamiliegjenforeningForm.tsx';
 import OppsummeringAvOppholdstillatelseAlder from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOppholdstillatelseAlder';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -32,7 +32,7 @@ const Familieforening = (
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                vurderinger: [{ status: values.familieforening! }],
+                vurderinger: [{ status: values.familiegjenforening! }],
             },
             onSuccess,
         );
@@ -41,7 +41,7 @@ const Familieforening = (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <FamilieforeningForm
+                    <FamiliegjenforeningForm
                         save={handleSave}
                         savingState={lagreFamilieforeninggrunnlagStatus}
                         {...props}
