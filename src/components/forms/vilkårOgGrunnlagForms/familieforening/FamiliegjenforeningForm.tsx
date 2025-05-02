@@ -12,11 +12,11 @@ import { Vilkårstatus } from '~src/types/Vilkår';
 
 import messages from './familieforening-nb';
 import {
-    FamilieforeningPeriodisertFormData,
+    FamilieforeningFormData,
     nyVurderingsperiodeFamiliegjenforeningMedEllerUtenPeriode,
 } from './FamilieforeningFormUtils';
 
-interface Props extends VilkårFormProps<FamilieforeningPeriodisertFormData> {
+interface Props extends VilkårFormProps<FamilieforeningFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
     children?: ReactNode;

@@ -4,11 +4,11 @@ import { Periode } from '~src/types/Periode.ts';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils.ts';
 
-export interface FamilieforeningPeriodisertFormData {
-    familiegjenforening: FamilieforeningFormData[];
+export interface FamilieforeningFormData {
+    familiegjenforening: FamilieforeningPeriodeFormData[];
 }
 
-export interface FamilieforeningFormData {
+export interface FamilieforeningPeriodeFormData {
     periode: {
         fraOgMed: Nullable<Date>;
         tilOgMed: Nullable<Date>;
@@ -18,16 +18,16 @@ export interface FamilieforeningFormData {
 
 export const nyVurderingsperiodeFamiliegjenforeningMedEllerUtenPeriode = (
     p?: Periode<string>,
-): FamilieforeningFormData => ({
+): FamilieforeningPeriodeFormData => ({
     periode: p ? lagDatePeriodeAvStringPeriode(p) : lagTomPeriode(),
     familiegjenforening: null,
 });
 
-export const familieforeningSchema = yup.object<FamilieforeningPeriodisertFormData>({
+export const familieforeningSchema = yup.object<FamilieforeningFormData>({
     familiegjenforening: yup
-        .array<FamilieforeningFormData>(
+        .array<FamilieforeningPeriodeFormData>(
             yup
-                .object<FamilieforeningFormData>({
+                .object<FamilieforeningPeriodeFormData>({
                     periode: validerAtNullablePeriodeErUtfylt,
                     familiegjenforening: yup
                         .mixed()

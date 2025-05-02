@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
 import {
-    FamilieforeningPeriodisertFormData,
+    FamilieforeningFormData,
     familieforeningSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningFormUtils';
 import { FamiliegjenforeningForm } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamiliegjenforeningForm.tsx';
@@ -22,7 +22,6 @@ import { VilkårsvurderingBaseProps } from '../types';
 
 import messages from './familieforening-nb';
 
-
 const Familieforening = (
     props: VilkårsvurderingBaseProps & {
         søknadInnhold: SøknadInnholdAlder;
@@ -35,7 +34,7 @@ const Familieforening = (
         GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag,
     );
 
-    const handleSave = (values: FamilieforeningPeriodisertFormData, onSuccess: () => void) =>
+    const handleSave = (values: FamilieforeningFormData, onSuccess: () => void) =>
         /*
         TODO
         if (eqAlderspensjonPeriodisertFormData.equals(values, initial)) {
@@ -47,13 +46,18 @@ const Familieforening = (
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                vurderinger: [{ status: values.familiegjenforening[0].familiegjenforening! }],
+                vurderinger: [
+                    {
+                        periode: props.behandling.stønadsperiode!.periode,
+                        status: values.familiegjenforening[0].familiegjenforening!,
+                    },
+                ],
                 behandlingstype: Behandlingstype.Søknadsbehandling,
             },
             onSuccess,
         );
 
-    const form = useForm<FamilieforeningPeriodisertFormData>({
+    const form = useForm<FamilieforeningFormData>({
         defaultValues: {
             familiegjenforening: [
                 {
