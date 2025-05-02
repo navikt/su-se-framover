@@ -57,7 +57,6 @@ const Alderspensjon = (props: RevurderingStegProps) => {
             navigate(navigerUrl);
             return;
         }
-        console.log(props.revurdering);
         lagreAlderspensjongrunnlag(
             {
                 sakId: props.sakId,

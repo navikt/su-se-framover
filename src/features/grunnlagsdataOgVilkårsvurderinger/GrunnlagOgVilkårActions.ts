@@ -16,7 +16,6 @@ import { PersonligOppmøteVilkårRequest } from '~src/types/grunnlagsdataOgVilk�
 import { UførevilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { UtenlandsoppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { OpprettetRevurdering } from '~src/types/Revurdering';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const lagreUføregrunnlag = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult<OpprettetRevurdering>,
@@ -44,8 +43,8 @@ export const lagreAlderspensjongrunnlag = createAsyncThunk<
 });
 
 export const lagreFamilieforeninggrunnlag = createAsyncThunk<
-    Søknadsbehandling,
-    Familiegjenforeningrequest,
+    GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult<OpprettetRevurdering>,
+    GrunnlagOgVilkårApi.BehandlingstypeMedApiRequest<Familiegjenforeningrequest>,
     { rejectValue: ApiError }
 >('behandling/familieforening/lagre', async (arg, thunkApi) => {
     const res = await GrunnlagOgVilkårApi.lagreFamilieforeningsgrunnlag(arg);

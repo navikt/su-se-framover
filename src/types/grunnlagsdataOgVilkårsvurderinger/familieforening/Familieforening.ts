@@ -18,7 +18,12 @@ export interface FamiliegjenforeningVurdering {
 export interface Familiegjenforeningrequest {
     sakId: string;
     behandlingId: string;
-    vurderinger: Array<{ status: Vilkårstatus }>;
+    vurderinger: FamiliegjenforeningPeriode[];
+}
+
+export interface FamiliegjenforeningPeriode {
+    periode: Periode<string>;
+    status: Vilkårstatus;
 }
 
 export const familiegjenforeningErLik = (ny: Nullable<Familiegjenforening>, gammel: Nullable<Familiegjenforening>) =>
