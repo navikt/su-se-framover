@@ -12,7 +12,7 @@ export const OppsummeringAvAlderspensjon = (props: { alderspensjon: Nullable<Ald
     const { formatMessage } = useI18n({ messages });
 
     return (
-        <div>
+        <>
             {alderspensjon == null ||
                 (alderspensjon.vurderinger.length < 1 && (
                     <OppsummeringPar
@@ -48,6 +48,6 @@ export const OppsummeringAvAlderspensjon = (props: { alderspensjon: Nullable<Ald
                     ))}
                 </ul>
             )}
-        </div>
+        </>
     );
 };
