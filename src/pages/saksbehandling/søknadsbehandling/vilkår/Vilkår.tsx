@@ -93,7 +93,7 @@ const Vilkår = () => {
                         <Familieforening
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
-                            nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
                             avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
                             sakId={sakId}
