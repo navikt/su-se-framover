@@ -22,7 +22,6 @@ const Familieforening = (
     },
 ) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
-
     const [lagreFamilieforeninggrunnlagStatus, lagreFamilieforeninggrunnlag] = useAsyncActionCreator(
         GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag,
     );

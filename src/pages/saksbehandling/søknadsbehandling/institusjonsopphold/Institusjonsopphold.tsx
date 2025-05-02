@@ -19,7 +19,9 @@ import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehan
 import { lagreInstitusjonsoppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes.ts';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
+import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
@@ -54,6 +56,17 @@ const Institusjonsopphold = (
         defaultValues: draft ?? initialValues,
         resolver: yupResolver(institusjonsoppholdFormSchema),
     });
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+        sakId: props.sakId,
+        behandlingId: props.behandling.id,
+    });
+    const formWatch = form.watch();
+    const lagNesteUrl = (): string => {
+        return formWatch.institusjonsopphold.some((e) => e.resultat === Vilkårstatus.VilkårIkkeOppfylt)
+            ? vedtakUrl
+            : props.nesteUrl;
+    };
+    const nesteUrl = lagNesteUrl();
 
     useDraftFormSubscribe(form.watch);
 
@@ -76,7 +89,7 @@ const Institusjonsopphold = (
 
     const handleNesteClick = async (values: InstitusjonsoppholdVilkårFormData, onSuccess: () => void) => {
         if (eqInstitusjonsoppholdFormData.equals(values, initialValues)) {
-            navigate(props.nesteUrl);
+            navigate(nesteUrl);
             return;
         }
 
@@ -104,7 +117,7 @@ const Institusjonsopphold = (
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
                             onClick: handleNesteClick,
-                            url: props.nesteUrl,
+                            url: nesteUrl,
                             savingState: status,
                         }}
                         tilbake={{
