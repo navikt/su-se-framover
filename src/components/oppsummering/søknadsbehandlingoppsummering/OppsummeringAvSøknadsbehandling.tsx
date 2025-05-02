@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import * as PdfApi from '~src/api/pdfApi';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { Sakstype } from '~src/types/Sak.ts';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
@@ -12,7 +13,7 @@ import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
 import UnderkjenteAttesteringer from '../../underkjenteAttesteringer/UnderkjenteAttesteringer';
-import AldersvurderingAdvarsel from '../OppsummeringAvAldersvurdering/OppsummeringAvAldersvurdering';
+import UføreVarsler from '../OppsummeringAvAldersvurdering/OppsummeringAvAldersvurdering';
 import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
@@ -90,8 +91,8 @@ const OppsummeringAvSøknadsbehandling = (props: {
                             <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
                         </div>
                     )}
-                    {props.behandling.aldersvurdering && (
-                        <AldersvurderingAdvarsel a={props.behandling.aldersvurdering} />
+                    {props.behandling.aldersvurdering && props.behandling.sakstype === Sakstype.Uføre && (
+                        <UføreVarsler a={props.behandling.aldersvurdering} />
                     )}
                 </div>
 
