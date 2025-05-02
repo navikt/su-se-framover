@@ -13,14 +13,6 @@ export const OppsummeringAvAlderspensjon = (props: { alderspensjon: Nullable<Ald
 
     return (
         <>
-            {alderspensjon == null ||
-                (alderspensjon.vurderinger.length < 1 && (
-                    <OppsummeringPar
-                        className={styles.oppsummeringAvResultat}
-                        label={formatMessage('vilkår.resultat')}
-                        verdi={formatMessage('grunnlag.ikkeVurdert')}
-                    />
-                ))}
             {alderspensjon && (
                 <ul>
                     {alderspensjon.vurderinger.map((vurdering) => (
