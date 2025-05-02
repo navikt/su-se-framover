@@ -10,6 +10,7 @@ import {
     alderspensjonSchema,
     eqAlderspensjonPeriodisertFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils.ts';
+import { OppsummeringAvAlderspensjon } from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvAlderspensjon.tsx';
 import ToKolonner from '~src/components/toKolonner/ToKolonner.tsx';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions.ts';
 import { useAsyncActionCreator } from '~src/lib/hooks.ts';
@@ -108,6 +109,7 @@ const Alderspensjon = (props: RevurderingStegProps) => {
                         <Heading size="large" level="2" spacing>
                             {formatMessage('gjeldende.overskrift')}
                         </Heading>
+                        <OppsummeringAvAlderspensjon alderspensjon={props.grunnlagsdataOgVilkårsvurderinger.pensjon} />
                     </>
                 ),
             }}
