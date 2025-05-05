@@ -106,6 +106,11 @@ const mapToVilkårsinformasjonAlder = (
     familieforening: GrunnlagsdataOgVilkårsvurderinger['familiegjenforening'],
 ): Vilkårsinformasjon[] => [
     {
+        status: getVilkårVurderingStatus(defaultVilkårstatusMapping, familieforening?.resultat),
+        vilkårtype: Vilkårtype.Familieforening,
+        erStartet: familieforening !== null,
+    },
+    {
         status: getVilkårVurderingStatus(
             {
                 [Aldersresultat.HarAlderssakTilBehandling]: VilkårVurderingStatus.Uavklart,
@@ -116,11 +121,6 @@ const mapToVilkårsinformasjonAlder = (
         ),
         vilkårtype: Vilkårtype.Alderspensjon,
         erStartet: pensjon !== null,
-    },
-    {
-        status: getVilkårVurderingStatus(defaultVilkårstatusMapping, familieforening?.resultat),
-        vilkårtype: Vilkårtype.Familieforening,
-        erStartet: familieforening !== null,
     },
 ];
 

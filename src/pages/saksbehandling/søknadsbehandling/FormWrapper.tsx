@@ -47,9 +47,9 @@ interface Props<T extends FieldValues, U> {
  */
 export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form, ...props }: Props<T, U>) => {
     const { formatMessage } = useI18n({ messages: stegSharedI18n });
+
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-
     const lagreOgFortsettSenereMedNeste = (values: T) =>
         props.lagreOgfortsettSenere!.onClick!(values, () =>
             props.neste.onClick(values, () => navigate(props.lagreOgfortsettSenere!.url)),
@@ -58,7 +58,6 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
         props.lagreOgfortsettSenere!.onClick!(values, () => navigate(props.lagreOgfortsettSenere!.url));
     const lagreOgFortsettSenereUtenOnClick = (values: T) =>
         props.neste.onClick!(values, () => navigate(props.lagreOgfortsettSenere!.url));
-
     return (
         <form
             className={props.className ?? ''}

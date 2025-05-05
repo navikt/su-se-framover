@@ -4,6 +4,8 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes.ts';
+import { isNotNullable } from '~src/lib/types.ts';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -20,6 +22,7 @@ interface Props extends VilkårsvurderingBaseProps {
 
 export const FamiliegjenforeningForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
+    const { sakId, behandlingId } = Routes.useRouteParams<typeof Routes.saksbehandlingVilkårsvurdering>();
     const form = useForm<FamilieforeningFormData>({
         defaultValues: {
             familiegjenforening:
@@ -28,6 +31,14 @@ export const FamiliegjenforeningForm = (props: Props) => {
         },
         resolver: yupResolver(familieforeningSchema),
     });
+    const vilkaarStatus = form.watch('familiegjenforening');
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({ sakId: sakId!, behandlingId: behandlingId! });
+    const nesteUrl = (): string => {
+        if (isNotNullable(vilkaarStatus)) {
+            return vilkaarStatus === Vilkårstatus.VilkårOppfylt ? props.nesteUrl : vedtakUrl;
+        }
+        return props.nesteUrl;
+    };
 
     return (
         <FormWrapper
@@ -35,7 +46,7 @@ export const FamiliegjenforeningForm = (props: Props) => {
             neste={{
                 onClick: props.save,
                 savingState: props.savingState,
-                url: props.nesteUrl,
+                url: nesteUrl(),
             }}
             tilbake={{
                 url: props.forrigeUrl,
