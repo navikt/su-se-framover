@@ -176,25 +176,25 @@ const Virkningstidspunkt = (
                                                 stønadsperiodeFraOgMed={form.watch('periode.fraOgMed')}
                                             />
 
-                                            {((RemoteData.isFailure(status) &&
-                                                status.error?.body?.code ===
-                                                    ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE) ||
-                                                skalViseBekreftelsesPanel({
-                                                    s: props.behandling,
-                                                    angittPeriode: {
-                                                        fraOgMed: form.watch('periode.fraOgMed')
-                                                            ? DateFns.formatISO(form.watch('periode.fraOgMed')!, {
-                                                                  representation: 'date',
-                                                              })
-                                                            : null,
-                                                        tilOgMed: form.watch('periode.tilOgMed')
-                                                            ? DateFns.formatISO(form.watch('periode.tilOgMed')!, {
-                                                                  representation: 'date',
-                                                              })
-                                                            : null,
-                                                    },
-                                                })) &&
-                                                props.behandling.sakstype === Sakstype.Uføre && (
+                                            {props.behandling.sakstype === Sakstype.Uføre &&
+                                                ((RemoteData.isFailure(status) &&
+                                                    status.error?.body?.code ===
+                                                        ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE) ||
+                                                    skalViseBekreftelsesPanel({
+                                                        s: props.behandling,
+                                                        angittPeriode: {
+                                                            fraOgMed: form.watch('periode.fraOgMed')
+                                                                ? DateFns.formatISO(form.watch('periode.fraOgMed')!, {
+                                                                      representation: 'date',
+                                                                  })
+                                                                : null,
+                                                            tilOgMed: form.watch('periode.tilOgMed')
+                                                                ? DateFns.formatISO(form.watch('periode.tilOgMed')!, {
+                                                                      representation: 'date',
+                                                                  })
+                                                                : null,
+                                                        },
+                                                    })) && (
                                                     <Controller
                                                         control={form.control}
                                                         name="harSaksbehandlerAvgjort"
