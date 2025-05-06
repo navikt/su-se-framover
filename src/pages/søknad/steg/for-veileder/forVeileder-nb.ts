@@ -1,7 +1,7 @@
 export default {
     'info.kontaktinfo.tittel': 'Kontaktinformasjon i kontakt- og reservasjonsregisteret',
     'info.kontaktinfo.mangler': 'Finner ingen registrert informasjon i kontakt- og reservasjonsregisteret',
-    'info.telefon.tittel': 'Telefonnummer i NAV',
+    'info.telefon.tittel': 'Registrert telefonnummer på søker i NAV',
     'info.telefon.body':
         'Hvis telefonnummer eller e-post ikke stemmer må dette enten oppdateres i kontakt-og reservasjonsregisteret eller registreres i NAV sin persondataløsning (PDL)',
     'info.kontaktform.tittel': 'Kontaktform',
