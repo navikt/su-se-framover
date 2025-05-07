@@ -13,7 +13,11 @@ const UføreVarsler = (props: { a: Aldersvurdering }) => {
             return null;
         case MaskinellVurderingsresultat.IKKE_RETT_PÅ_UFØRE:
             return <Alert variant="warning">{formatMessage('person.rettPåAlder')}</Alert>;
+        case MaskinellVurderingsresultat.IKKE_RETT_PÅ_ALDER:
+            return <Alert variant="warning">{formatMessage('person.rettPåUføre')}</Alert>;
         case MaskinellVurderingsresultat.RETT_PÅ_UFØRE:
+            return null;
+        case MaskinellVurderingsresultat.RETT_PÅ_ALDER:
             return null;
         case MaskinellVurderingsresultat.SKAL_IKKE_VURDERES:
             return null;
