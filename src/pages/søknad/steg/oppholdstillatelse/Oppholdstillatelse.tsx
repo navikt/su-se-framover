@@ -47,6 +47,24 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
             <SøknadSpørsmålsgruppe withoutLegend>
                 <Controller
                     control={form.control}
+                    name="familieforening"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('familieforening.label')}
+                            error={fieldState.error?.message}
+                            value={field.value}
+                        />
+                    )}
+                />
+                {form.watch('familieforening') && (
+                    <Alert variant="warning" className={sharedStyles.marginBottom}>
+                        {formatMessage('familieforening.info')}
+                    </Alert>
+                )}
+
+                <Controller
+                    control={form.control}
                     name="erNorskStatsborger"
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup
@@ -107,24 +125,6 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                 {form.watch('harOppholdstillatelse') === false && (
                     <Alert variant="warning" className={sharedStyles.marginBottom}>
                         {formatMessage('oppholdstillatelse.info')}
-                    </Alert>
-                )}
-
-                <Controller
-                    control={form.control}
-                    name="familieforening"
-                    render={({ field, fieldState }) => (
-                        <BooleanRadioGroup
-                            {...field}
-                            legend={formatMessage('familieforening.label')}
-                            error={fieldState.error?.message}
-                            value={field.value}
-                        />
-                    )}
-                />
-                {form.watch('familieforening') && (
-                    <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('familieforening.info')}
                     </Alert>
                 )}
 
