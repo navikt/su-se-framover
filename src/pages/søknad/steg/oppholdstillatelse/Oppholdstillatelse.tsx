@@ -75,12 +75,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                             value={field.value}
                             onChange={(val) => {
                                 field.onChange(val);
-                                setFieldsToNull([
-                                    'eøsborger',
-                                    'harOppholdstillatelse',
-                                    'familieforening',
-                                    'typeOppholdstillatelse',
-                                ]);
+                                setFieldsToNull(['eøsborger', 'harOppholdstillatelse', 'typeOppholdstillatelse']);
                             }}
                         />
                     )}
