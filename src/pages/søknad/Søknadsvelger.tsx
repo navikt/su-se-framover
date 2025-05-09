@@ -5,6 +5,7 @@ import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Rolle } from '~src/types/LoggedInUser.ts';
 
 import messages from './nb';
 import styles from './søknadsvelger.module.less';
@@ -14,7 +15,7 @@ const Søknadsvelger = () => {
     const { formatMessage } = useI18n({ messages });
     const isPapirsøknad = location.search.includes('papirsoknad');
 
-    if (user.isProd) {
+    if (user.roller.length === 1 && user.roller[0] === Rolle.Veileder) {
         return (
             <Navigate
                 replace
