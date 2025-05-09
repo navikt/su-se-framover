@@ -24,7 +24,7 @@ async function setup() {
     } else {
         router.use(express.static(Config.server.frontendDir));
 
-        router.get('*', (_req, res) => {
+        router.get('/{*splat}', (_req, res) => {
             res.sendFile(Config.server.frontendDir + '/index.html');
         });
     }
