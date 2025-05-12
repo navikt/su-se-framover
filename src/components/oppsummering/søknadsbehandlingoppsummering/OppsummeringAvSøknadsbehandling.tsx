@@ -101,6 +101,7 @@ const OppsummeringAvSøknadsbehandling = (props: {
                         grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
                         visesSidestiltMed={props.behandling.søknad.søknadInnhold}
                         eksterneGrunnlag={props.behandling.eksterneGrunnlag}
+                        sakstype={props.behandling.sakstype}
                     />
                 </div>
             </Oppsummeringspanel>

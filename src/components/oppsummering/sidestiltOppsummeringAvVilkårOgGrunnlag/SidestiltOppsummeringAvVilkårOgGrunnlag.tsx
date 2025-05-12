@@ -41,6 +41,7 @@ import {
     utenlandsoppholdErlik,
     UtenlandsoppholdVilkår,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Sakstype } from '~src/types/Sak.ts';
 import {
     Alderspensjon,
     Boforhold,
@@ -85,18 +86,25 @@ import OppsummeringAvUtenlandsopphold from '../oppsummeringAvVilkårOgGrunnlag/O
 import messages from './SidestiltOppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
 
+/*
+TODO:
+ 1. splitte ut accordions per ytelse og ta de ut av denne fila..
+ 2. skille mellom (grunnlagvilkår mot grunnlagvilkår) og (grunnlagvilkår mot søknadsdiff)
+ */
 const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     visesSidestiltMed: GrunnlagsdataOgVilkårsvurderinger | SøknadInnhold;
     eksterneGrunnlag?: EksterneGrunnlag;
+    sakstype: Sakstype;
 }) => {
     const { formatMessage } = useI18n({ messages });
 
     const sidestiltMedSøknad = sidestiltMedSøknadInnhold(props.visesSidestiltMed);
     const sidestiltMedGrunnlagOgVilkår = sidestiltMedGrunnlagsdataOgVilkårsvurderinger(props.visesSidestiltMed);
-
+    //isAldersøknad(props.visesSidestiltMed); denne kommer jo bare med en gang.... useless generic component
     return (
         <div>
+            {props.sakstype === Sakstype.Alder && <>Kun alder her...</>}
             <div className={styles.accordionOverskrift}>
                 {sidestiltMedSøknad ? (
                     <Heading size="medium">{formatMessage('accordion.overskrift.fraSaksbehandling')}</Heading>

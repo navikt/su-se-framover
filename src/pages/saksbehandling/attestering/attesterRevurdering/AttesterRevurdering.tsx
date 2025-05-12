@@ -24,6 +24,7 @@ import { useAppDispatch } from '~src/redux/Store';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { InformasjonsRevurdering, InformasjonsRevurderingStatus, Valg } from '~src/types/Revurdering';
+import { Sakstype } from '~src/types/Sak.ts';
 import {
     erRevurderingTilAttestering,
     harSimulering,
@@ -39,6 +40,7 @@ const AttesterRevurdering = (props: {
     sakInfo: {
         id: string;
         nummer: number;
+        sakstype: Sakstype;
     };
     revurdering: InformasjonsRevurdering;
 }) => {
@@ -133,6 +135,7 @@ const AttesterRevurdering = (props: {
                             <OppsummeringAvInformasjonsrevurdering
                                 revurdering={props.revurdering}
                                 grunnlagsdataOgVilkårsvurderinger={gjeldendeData.grunnlagsdataOgVilkårsvurderinger}
+                                sakstype={props.sakInfo.sakstype}
                             />
                         </div>
 

@@ -18,6 +18,7 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, RevurderingOppsummeringSteg, RevurderingSeksjoner } from '~src/types/Revurdering';
+import { Sakstype } from '~src/types/Sak.ts';
 
 import messages from './ForhåndsvarselForm-nb';
 import styles from './ForhåndsvarselForm.module.less';
@@ -41,6 +42,7 @@ const schema = yup.object<ForhåndsvarselFormData>({
 
 const ForhåndsvarselForm = (props: {
     sakId: string;
+    sakstype: Sakstype;
     revurdering: InformasjonsRevurdering;
     forrigeUrl: string;
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
@@ -148,6 +150,7 @@ const ForhåndsvarselForm = (props: {
                     <OppsummeringAvInformasjonsrevurdering
                         revurdering={props.revurdering}
                         grunnlagsdataOgVilkårsvurderinger={props.gjeldendeGrunnlagOgVilkår}
+                        sakstype={props.sakstype}
                     />
                 ),
             }}
