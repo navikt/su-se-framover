@@ -24,6 +24,7 @@ import {
     RevurderingSeksjoner,
     Valg,
 } from '~src/types/Revurdering';
+import { Sakstype } from '~src/types/Sak.ts';
 import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
 
 import revurderingMessages from '../../revurdering-nb';
@@ -65,6 +66,7 @@ const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
 
 const SendTilAttestering = (props: {
     sakId: string;
+    sakstype: Sakstype;
     revurdering: InformasjonsRevurdering;
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
@@ -238,6 +240,7 @@ const SendTilAttestering = (props: {
                     <OppsummeringAvInformasjonsrevurdering
                         revurdering={props.revurdering}
                         grunnlagsdataOgVilkårsvurderinger={props.gjeldendeGrunnlagOgVilkår}
+                        sakstype={props.sakstype}
                     />
                 ),
             }}

@@ -33,6 +33,7 @@ const RevurderingOppsummeringPage = (props: {
             {props.aktivSeksjonOgSteg.steg === RevurderingOppsummeringSteg.SendTilAttestering && (
                 <SendTilAttestering
                     sakId={props.sakId}
+                    sakstype={props.sakstype}
                     revurdering={props.revurdering}
                     gjeldendeGrunnlagOgVilkår={props.gjeldendeGrunnlagOgVilkår}
                 />
