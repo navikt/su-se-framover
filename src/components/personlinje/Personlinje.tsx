@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, CopyButton, Loader } from '@navikt/ds-react';
+import { Alert, BodyShort, CopyButton, Loader, Tag } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,8 +11,9 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Person, SivilstandTyper, Sivilstand as ISivilstand } from '~src/types/Person';
-import { showName, formatFnr } from '~src/utils/person/personUtils';
+import { Person, Sivilstand as ISivilstand, SivilstandTyper } from '~src/types/Person';
+import { Sakstype } from '~src/types/Sak.ts';
+import { formatFnr, showName } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 import { createToast, ToastType, useToast } from '../toast/Toast';
@@ -26,7 +27,7 @@ const Separator = () => (
     </BodyShort>
 );
 
-const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnummer: number } }) => {
+const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnummer: number; sakstype: Sakstype } }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -58,6 +59,12 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
                         text={props.sakInfo.saksnummer.toString()}
                     />
                 </span>
+                <Separator />
+                <BodyShort>
+                    <Tag variant={props.sakInfo.sakstype === Sakstype.Alder ? 'alt1' : 'alt2'}>
+                        {storFørsteBokstav(props.sakInfo.sakstype)}
+                    </Tag>
+                </BodyShort>
                 {props.søker.sivilstand ? (
                     <span className={styles.sivilstandAndSeperator}>
                         <Separator />
@@ -70,6 +77,10 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
             <PersonAdvarsel person={props.søker} />
         </div>
     );
+};
+
+const storFørsteBokstav = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
 const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
