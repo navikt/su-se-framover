@@ -90,6 +90,7 @@ import styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
 TODO:
  1. splitte ut accordions per ytelse og ta de ut av denne fila..
  2. skille mellom (grunnlagvilkår mot grunnlagvilkår) og (grunnlagvilkår mot søknadsdiff)
+ 3. rekkefølgen her bør henge sammen med rekkefølgen definert i vilkår.tsx
  */
 const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
@@ -101,7 +102,7 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
 
     const sidestiltMedSøknad = sidestiltMedSøknadInnhold(props.visesSidestiltMed);
     const sidestiltMedGrunnlagOgVilkår = sidestiltMedGrunnlagsdataOgVilkårsvurderinger(props.visesSidestiltMed);
-    //isAldersøknad(props.visesSidestiltMed); denne kommer jo bare med en gang.... useless generic component
+
     return (
         <div>
             {props.sakstype === Sakstype.Alder && <>Kun alder her...</>}
