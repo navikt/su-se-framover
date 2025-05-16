@@ -24,8 +24,7 @@ import styles from './attesterKlage.module.less';
 const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
-
-    const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
     const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.iverksattAvvist);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
