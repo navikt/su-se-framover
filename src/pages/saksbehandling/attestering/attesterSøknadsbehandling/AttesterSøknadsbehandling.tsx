@@ -25,7 +25,8 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
     const [underkjennStatus, attesteringUnderkjent] = useAsyncActionCreator(
         SøknadsbehandlingActions.attesteringUnderkjenn,
     );
-    const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
+
+    const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const redirectTilSaksoversikt = (message: string) => {
         Routes.navigateToSakIntroWithMessage(navigate, message, props.sak.id);
     };

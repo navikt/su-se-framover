@@ -61,7 +61,7 @@ const ManuellRegulering = () => {
         hentgjeldendeGrunnlagsdataOgVilkårsvurderinger,
     );
     const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
-    const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const navigate = useNavigate();
 
     const BackButton = () => (

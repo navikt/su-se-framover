@@ -98,7 +98,7 @@ const BehandlingssamendragTableRow = ({
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages });
-    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const handleOnClick = async (onSuccess: (sak: Sak) => void) => {
         dispatch(personSlice.default.actions.resetSøkerData());
         dispatch(sakSlice.default.actions.resetSak());

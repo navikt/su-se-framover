@@ -26,7 +26,7 @@ const Saksoversikt = () => {
 
     useEffect(() => {
         if (urlParams.sakId) {
-            dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
+            dispatch(sakSlice.fetchSakByIdEllerNummer({ sakId: urlParams.sakId }));
         }
     }, []);
 

@@ -50,7 +50,9 @@ const Reguleringsoversikt = (props: Props) => {
                             data,
                             arr.sortBy([sortByFnr]),
                             arr.mapWithIndex((index, { saksnummer, fnr, merknader }) => {
-                                const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+                                const [hentSakStatus, hentSak] = useAsyncActionCreator(
+                                    sakSlice.fetchSakByIdEllerNummer,
+                                );
                                 const navigate = useNavigate();
                                 const dispatch = useAppDispatch();
                                 return (

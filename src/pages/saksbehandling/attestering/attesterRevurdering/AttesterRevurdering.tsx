@@ -88,7 +88,7 @@ const AttesterRevurdering = (props: {
 
     const iverksettCallback = () => {
         iverksett({ sakId: props.sakInfo.id, revurderingId: props.revurdering.id }, () => {
-            dispatch(sakSlice.fetchSak({ saksnummer: props.sakInfo.nummer.toString() }));
+            dispatch(sakSlice.fetchSakByIdEllerNummer({ saksnummer: props.sakInfo.nummer.toString() }));
 
             Routes.navigateToSakIntroWithMessage(navigate, formatMessage('attester.iverksatt'), props.sakInfo.id);
         });
