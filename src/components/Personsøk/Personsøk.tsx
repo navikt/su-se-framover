@@ -116,7 +116,7 @@ const Personsøk = (props: Props) => {
                     )}
                 </div>
             </div>
-            {RemoteData.isSuccess(sakfnrstatus) && sakfnrstatus.value.length > 1 && (
+            {RemoteData.isSuccess(sakfnrstatus) && (
                 <>
                     <BodyShort>Brukeren har to saker registrert på seg, du må velge hvilken du vil gå til</BodyShort>
                     {sakfnrstatus.value.map((sak) => (
@@ -126,7 +126,7 @@ const Personsøk = (props: Props) => {
                                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
                             }}
                         >
-                            {sak.sakstype}
+                            Gå til sakstype {sak.sakstype}
                         </Button>
                     ))}
                 </>
