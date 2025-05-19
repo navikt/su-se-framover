@@ -13,7 +13,7 @@ import apiClient, { ApiClientResult } from './apiClient';
 
 export async function fetchSakForFnr(fnr: string): Promise<ApiClientResult<Sak[]>> {
     return apiClient({
-        url: `/saker/søk`,
+        url: `/saker/søk/fnr`,
         method: 'POST',
         body: {
             fnr: fnr,
