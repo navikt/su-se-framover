@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "compression": "^1.7.4",
-        "connect-redis": "^7.0.1",
+        "connect-redis": "^8.1.0",
         "cors": "^2.8.5",
         "express": "~5.1.0",
         "express-http-proxy": "~2.1.1",
