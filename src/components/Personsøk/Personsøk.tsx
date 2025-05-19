@@ -73,6 +73,12 @@ const Personsøk = (props: Props) => {
     };
 
     useEffect(() => {
+        if (RemoteData.isSuccess(sakfnrstatus) && sakfnrstatus.value.length === 1) {
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sakfnrstatus.value[0].id }));
+        }
+    }, [sakfnrstatus]);
+
+    useEffect(() => {
         props.onReset();
         resetsakfnr();
     }, []);
@@ -118,7 +124,7 @@ const Personsøk = (props: Props) => {
             </div>
             {RemoteData.isSuccess(sakfnrstatus) && (
                 <>
-                    <BodyShort>Brukeren har to saker registrert på seg, du må velge hvilken du vil gå til</BodyShort>
+                    <BodyShort>Velg en sak du vil gå til</BodyShort>
                     {sakfnrstatus.value.map((sak) => (
                         <Button
                             key={sak.id}
@@ -126,7 +132,7 @@ const Personsøk = (props: Props) => {
                                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
                             }}
                         >
-                            Gå til sakstype {sak.sakstype}
+                            Gå til sakstype {sak.sakstype}, saksnummer {sak.saksnummer}
                         </Button>
                     ))}
                 </>
