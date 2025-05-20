@@ -28,21 +28,30 @@ import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
-export const fetchSak = createAsyncThunk<
+export const fetchSakByIdEllerNummer = createAsyncThunk<
     Sak,
-    { fnr: string } | { sakId: string } | { saksnummer: string },
+    { sakId: string } | { saksnummer: string },
     { rejectValue: ApiError }
 >('sak/fetch', async (arg, thunkApi) => {
-    const res = await ('fnr' in arg
-        ? sakApi.fetchSakByFnr(arg.fnr)
-        : 'saksnummer' in arg
-          ? sakApi.fetchSakBySaksnummer(arg.saksnummer)
-          : sakApi.fetchSakBySakId(arg.sakId));
+    const res = await ('saksnummer' in arg
+        ? sakApi.fetchSakBySaksnummer(arg.saksnummer)
+        : sakApi.fetchSakBySakId(arg.sakId));
     if (res.status === 'ok') {
         return res.data;
     }
     return thunkApi.rejectWithValue(res.error);
 });
+
+export const fetchSakByFnr = createAsyncThunk<Sak[], { fnr: string }, { rejectValue: ApiError }>(
+    'sak/fetchfnr',
+    async (arg, thunkApi) => {
+        const res = await sakApi.fetchSakForFnr(arg.fnr);
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    },
+);
 
 export const hentÅpneBehandlinger = createAsyncThunk<Behandlingssammendrag[], void, { rejectValue: ApiError }>(
     'sak/apneBehandlinger',
@@ -147,7 +156,7 @@ export default createSlice({
         },
     },
     extraReducers: (builder) => {
-        handleAsyncThunk(builder, fetchSak, {
+        handleAsyncThunk(builder, fetchSakByIdEllerNummer, {
             pending: (state) => {
                 state.sak = RemoteData.pending;
             },
