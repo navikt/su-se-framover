@@ -16,6 +16,7 @@ import {
     RevurderingStatus,
     UtbetalingsRevurderingStatus,
 } from '~src/types/Revurdering';
+import { Sakstype } from '~src/types/Sak.ts';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import { erRevurderingIverksattMedTilbakekreving } from '~src/utils/revurdering/revurderingUtils';
@@ -97,6 +98,7 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
 const Oppsummeringsblokk = (props: {
     revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    sakstype: Sakstype;
 }) => {
     const { formatMessage } = useI18n({ messages });
     return (
@@ -110,6 +112,7 @@ const Oppsummeringsblokk = (props: {
                 <SidestiltOppsummeringAvVilkårOgGrunnlag
                     grunnlagsdataOgVilkårsvurderinger={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
                     visesSidestiltMed={props.grunnlagsdataOgVilkårsvurderinger}
+                    sakstype={props.sakstype}
                 />
             </div>
         </Oppsummeringspanel>
