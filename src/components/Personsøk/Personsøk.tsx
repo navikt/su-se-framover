@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { BodyShort, Button, Search } from '@navikt/ds-react';
+import { BodyShort, Button, Search, VStack } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -124,17 +124,22 @@ const Personsøk = (props: Props) => {
             </div>
             {RemoteData.isSuccess(sakfnrstatus) && (
                 <>
-                    <BodyShort>Velg en sak du vil gå til</BodyShort>
-                    {sakfnrstatus.value.map((sak) => (
-                        <Button
-                            key={sak.id}
-                            onClick={() => {
-                                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
-                            }}
-                        >
-                            Gå til sakstype {sak.sakstype}, saksnummer {sak.saksnummer}
-                        </Button>
-                    ))}
+                    <BodyShort>Velg hvilken sak du vil gå til</BodyShort>
+                    <VStack gap="2">
+                        {sakfnrstatus.value.map((sak) => (
+                            <div key={sak.id}>
+                                <p>Saksnummer {sak.saksnummer}</p>
+                                <Button
+                                    key={sak.id}
+                                    onClick={() => {
+                                        navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
+                                    }}
+                                >
+                                    Gå til sakstype {sak.sakstype}
+                                </Button>
+                            </div>
+                        ))}
+                    </VStack>
                 </>
             )}
         </>
