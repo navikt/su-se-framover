@@ -4,6 +4,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     //A
     [ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE]:
         'Systemet kan ikke garantere at angitt stønadsperiode og aldersvurdering henger sammen. Dette kan være fordi søker er 67 eller over ved angitt stønadsperiode, eller mangler fødslesinformasjon for å kunne gi et definitivt svar. Mulighet for å overstyre vurdering åpnes',
+    [ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_ALDER]:
+        'Systemet kan ikke garantere at angitt stønadsperiode og aldersvurdering henger sammen. Dette kan være fordi søker er under 67 ved angitt stønadsperiode, eller mangler fødslesinformasjon for å kunne gi et definitivt svar. Mulighet for å overstyre vurdering åpnes',
     [ApiErrorCode.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]: 'Kan ikke attestere egen saksbehandling',
     [ApiErrorCode.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',
     [ApiErrorCode.AVSTEMMING_FEILET]: 'Avstemming feilet',
