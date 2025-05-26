@@ -51,6 +51,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'Fant ikke person eller saksbehandlers navn',
     [ApiErrorCode.FANT_IKKE_PERSON]: 'Fant ikke personen',
     [ApiErrorCode.FANT_IKKE_REGULERING]: 'Fant ikke regulering',
+    [ApiErrorCode.REGULERING_HAR_UTDATERTE_PERIODER]:
+        'Periodene til regulering sine vilkårsvurderinger er utdatert. Hvis det er innvilget nye vedtak må reguleringen avbrytes og erstattes med ny revurdering.',
     [ApiErrorCode.FANT_IKKE_REVURDERING]: 'Fant ikke revurdering',
     [ApiErrorCode.FANT_IKKE_SAK_ELLER_FEIL_FORMAT]: 'Fant ikke sak, eller feil format på spørring',
     [ApiErrorCode.FANT_IKKE_SAK]: 'Fant ikke sak',
