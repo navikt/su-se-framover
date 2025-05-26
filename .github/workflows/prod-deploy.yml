@@ -17,6 +17,6 @@ jobs:
             - uses: actions/checkout@v4
             - uses: nais/deploy/actions/deploy@v2
               env:
-                  IMAGE: europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-build-push-deploy-to-dev.yml:${{ github.sha }}
+                  WORKLOAD_IMAGE: europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-build-push-deploy-to-dev.yml:${{ github.sha }}
                   CLUSTER: prod-fss
                   RESOURCE: .nais/prod.yaml
