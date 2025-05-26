@@ -49,7 +49,7 @@ jobs:
                   docker_context: .
                   team: supstonad
                   salsa: false
-                  image_suffix: ${{ github.workflow }}
+                  image_suffix: hestad
                   tag: ${{ env.GITHUB_REF_SLUG }}
 
     deploy-to-dev-fss:
