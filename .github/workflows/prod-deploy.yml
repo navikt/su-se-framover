@@ -7,7 +7,8 @@ on:
 permissions: { }
 
 env:
-    image: europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-build-push-deploy-to-dev.yml:${{ github.sha }}
+    image: europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
+#se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
 
 jobs:
     deploy_to_prod:
