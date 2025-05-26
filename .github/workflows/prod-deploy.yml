@@ -6,10 +6,6 @@ on:
 
 permissions: { }
 
-env:
-    image: europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
-#se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
-
 jobs:
     deploy_to_prod:
         name: Deploy to prod
@@ -21,5 +17,7 @@ jobs:
             - uses: actions/checkout@v4
             - uses: nais/deploy/actions/deploy@v2
               env:
+                  #se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
+                  VAR: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
                   CLUSTER: prod-fss
                   RESOURCE: .nais/prod.yaml
