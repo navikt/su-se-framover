@@ -50,7 +50,7 @@ jobs:
                   team: supstonad
                   salsa: false
                   image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
-                  tag: ${{ env.GITHUB_REF_SLUG }}
+                  tag: ${{ github.sha }}
 
     deploy-to-dev-fss:
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
