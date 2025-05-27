@@ -69,7 +69,7 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
                     <Table.Body>
                         {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
                             <BehandlingssamendragTableRow
-                                key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.typeBehandling}`}
+                                key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
                                 behandlingssammendrag={behandlingssammendrag}
                                 setContextMenuVariables={setContextMenuVariables}
                             />
@@ -98,7 +98,7 @@ const BehandlingssamendragTableRow = ({
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages });
-    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const handleOnClick = async (onSuccess: (sak: Sak) => void) => {
         dispatch(personSlice.default.actions.resetSøkerData());
         dispatch(sakSlice.default.actions.resetSak());

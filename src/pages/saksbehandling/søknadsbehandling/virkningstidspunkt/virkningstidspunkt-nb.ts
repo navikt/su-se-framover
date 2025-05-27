@@ -14,8 +14,10 @@ export default {
     'feil.kunneIkkeAvgjøreAlder': 'Kan ikke regne ut søkers alder',
 
     'stønadsperiode.advarsel.checkbox.måBekreftes': 'Jeg bekrefter angitt stønadsperiode',
-    'stønadsperiode.advarsel.tekst':
+    'stønadsperiode.advarsel.tekst.uføre':
         'Systemet har identifisert at søker er over 67, eller mangler fødselsinformasjon for å kunne gjøre en vurdering med angitt stønadsperiode',
+    'stønadsperiode.advarsel.tekst.alder':
+        'Systemet har identifisert at søker er under 67, eller mangler fødselsinformasjon for å kunne gjøre en vurdering med angitt stønadsperiode',
 
     'person.harIkkeFødselsinformasjon': 'Søker har ikke registrert fødselsinformasjon',
     'person.medFødselsdato.fyller67VedAngittStønadsperiode':

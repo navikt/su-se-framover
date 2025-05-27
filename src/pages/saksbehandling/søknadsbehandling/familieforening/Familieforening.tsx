@@ -13,8 +13,11 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes.ts';
+import { isNotNullable } from '~src/lib/types.ts';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
+import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
 
 import sharedMessages from '../sharedI18n-nb';
@@ -29,7 +32,6 @@ const Familieforening = (
     },
 ) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
-
     const [lagreFamilieforeninggrunnlagStatus, lagreFamilieforeninggrunnlag] = useAsyncActionCreator(
         GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag,
     );
@@ -71,6 +73,17 @@ const Familieforening = (
         resolver: yupResolver(familieforeningSchema),
     });
 
+    const { sakId, behandlingId } = Routes.useRouteParams<typeof Routes.saksbehandlingVilkårsvurdering>();
+
+    const vilkaarStatus = form.watch('familiegjenforening');
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({ sakId: sakId!, behandlingId: behandlingId! });
+    const nesteUrl = (): string => {
+        if (isNotNullable(vilkaarStatus)) {
+            return vilkaarStatus[0].familiegjenforening === Vilkårstatus.VilkårOppfylt ? props.nesteUrl : vedtakUrl;
+        }
+        return props.nesteUrl;
+    };
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -80,7 +93,7 @@ const Familieforening = (
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
                             onClick: (values, onSuccess) => handleSave(values, onSuccess),
-                            url: props.nesteUrl,
+                            url: nesteUrl(),
                             savingState: lagreFamilieforeninggrunnlagStatus,
                         }}
                         tilbake={{

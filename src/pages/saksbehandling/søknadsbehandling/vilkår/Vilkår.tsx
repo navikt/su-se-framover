@@ -83,18 +83,8 @@ const Vilkår = () => {
                             nesteUrl={
                                 props.sak.sakstype === Sakstype.Uføre
                                     ? vilkårUrl(Vilkårtype.Uførhet)
-                                    : vilkårUrl(Vilkårtype.Alderspensjon)
+                                    : vilkårUrl(Vilkårtype.Familieforening)
                             }
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === VilkårtypeAlder.Alderspensjon && isAldersøknad(behandling.søknad.søknadInnhold) && (
-                        <Alderspensjon
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Familieforening)}
-                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
@@ -102,10 +92,20 @@ const Vilkår = () => {
                     {vilkar === VilkårtypeAlder.Familieforening && isAldersøknad(behandling.søknad.søknadInnhold) && (
                         <Familieforening
                             behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
-                            nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
+                            nesteUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
                             avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}
+                            sakId={sakId}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                        />
+                    )}
+                    {vilkar === VilkårtypeAlder.Alderspensjon && isAldersøknad(behandling.søknad.søknadInnhold) && (
+                        <Alderspensjon
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Familieforening)}
+                            nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                            avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
@@ -137,7 +137,7 @@ const Vilkår = () => {
                             behandling={behandling}
                             forrigeUrl={
                                 isAldersøknad(behandling.søknad.søknadInnhold)
-                                    ? vilkårUrl(Vilkårtype.Familieforening)
+                                    ? vilkårUrl(Vilkårtype.Alderspensjon)
                                     : vilkårUrl(Vilkårtype.Flyktning)
                             }
                             nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}

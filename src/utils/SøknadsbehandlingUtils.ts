@@ -1,7 +1,9 @@
 import { Aldersvurdering, MaskinellVurderingsresultat } from '~src/types/Aldersvurdering';
+import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår.ts';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { Sakstype } from '~src/types/Sak.ts';
 import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
@@ -69,17 +71,30 @@ export const erSøknadsbehandlingÅpen = (s: Søknadsbehandling) =>
     erSøknadsbehandlingTilAttestering(s) ||
     erSøknadsbehandlingUnderkjent(s);
 
-export const erVilkårsvurderingerVurdertAvslag = (behandling: Søknadsbehandling) =>
-    behandling.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG ||
-    behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
-    behandling.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
-    behandling.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
-    behandling.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
-    behandling.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
-    behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
-        Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet ||
-    behandling.grunnlagsdataOgVilkårsvurderinger.formue?.resultat === FormueStatus.VilkårIkkeOppfylt ||
-    behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte?.resultat === Vilkårstatus.VilkårIkkeOppfylt;
+export const erVilkårsvurderingerVurdertAvslag = (behandling: Søknadsbehandling) => {
+    const fellesTilAvslag =
+        behandling.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.flyktning?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.lovligOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.fastOpphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold?.resultat === Vilkårstatus.VilkårIkkeOppfylt ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold?.status ===
+            Utenlandsoppholdstatus.SkalVæreMerEnn90DagerIUtlandet ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.formue?.resultat === FormueStatus.VilkårIkkeOppfylt ||
+        behandling.grunnlagsdataOgVilkårsvurderinger.personligOppmøte?.resultat === Vilkårstatus.VilkårIkkeOppfylt;
+
+    if (behandling.sakstype == Sakstype.Alder) {
+        const skalGaatilAvslagAlder =
+            behandling.grunnlagsdataOgVilkårsvurderinger.familiegjenforening?.resultat ===
+                Vilkårstatus.VilkårIkkeOppfylt ||
+            behandling.grunnlagsdataOgVilkårsvurderinger.pensjon?.resultat === Aldersresultat.VilkårIkkeOppfylt;
+
+        return fellesTilAvslag || skalGaatilAvslagAlder;
+    } else {
+        return fellesTilAvslag;
+    }
+};
 
 const hentSaksbehandlingssteg = (behandling: Søknadsbehandling) => {
     const vilkårsinformasjon = mapToVilkårsinformasjon(
@@ -148,4 +163,5 @@ export const harSøknadsbehandlingBehovForSaksbehandlerAvgjørelse = (s: Søknad
 
 export const maskinellVurderingGirBehovForSaksbehandlerAvgjørelse = (aldersvurdering: Aldersvurdering) =>
     aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.IKKE_RETT_PÅ_UFØRE ||
+    aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.IKKE_RETT_PÅ_ALDER ||
     aldersvurdering.maskinellVurderingsresultat === MaskinellVurderingsresultat.UKJENT;

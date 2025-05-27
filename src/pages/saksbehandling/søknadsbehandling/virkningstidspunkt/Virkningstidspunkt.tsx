@@ -176,10 +176,12 @@ const Virkningstidspunkt = (
                                                 stønadsperiodeFraOgMed={form.watch('periode.fraOgMed')}
                                             />
 
-                                            {((RemoteData.isFailure(status) &&
-                                                status.error?.body?.code ===
-                                                    ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE) ||
-                                                skalViseBekreftelsesPanel({
+                                            {(RemoteData.isFailure(status) &&
+                                                [
+                                                    ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE,
+                                                    ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_ALDER,
+                                                ].includes(status.error?.body?.code)) ||
+                                                (skalViseBekreftelsesPanel({
                                                     s: props.behandling,
                                                     angittPeriode: {
                                                         fraOgMed: form.watch('periode.fraOgMed')
@@ -193,8 +195,7 @@ const Virkningstidspunkt = (
                                                               })
                                                             : null,
                                                     },
-                                                })) &&
-                                                props.behandling.sakstype === Sakstype.Uføre && (
+                                                }) && (
                                                     <Controller
                                                         control={form.control}
                                                         name="harSaksbehandlerAvgjort"
@@ -207,11 +208,15 @@ const Virkningstidspunkt = (
                                                                 )}
                                                                 onChange={() => field.onChange(!field.value)}
                                                             >
-                                                                {formatMessage('stønadsperiode.advarsel.tekst')}
+                                                                {formatMessage(
+                                                                    props.behandling.sakstype === Sakstype.Alder
+                                                                        ? 'stønadsperiode.advarsel.tekst.alder'
+                                                                        : 'stønadsperiode.advarsel.tekst.uføre',
+                                                                )}
                                                             </ConfirmationPanel>
                                                         )}
                                                     />
-                                                )}
+                                                ))}
 
                                             <Controller
                                                 name={`periode`}

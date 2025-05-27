@@ -7,17 +7,16 @@ import {
     RegistrerUtenlandsoppholdRequest,
     AnnullerRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
-import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
+import { AlleredeGjeldendeSakForBruker, Sak } from '~src/types/Sak';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function fetchSakByFnr(fnr: string, type: Sakstype = Sakstype.Uføre): Promise<ApiClientResult<Sak>> {
+export async function fetchSakForFnr(fnr: string): Promise<ApiClientResult<Sak[]>> {
     return apiClient({
-        url: `/saker/søk`,
+        url: `/saker/søk/fnr`,
         method: 'POST',
         body: {
             fnr: fnr,
-            type: type.toString(),
         },
     });
 }

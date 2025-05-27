@@ -20,14 +20,7 @@ export const schema = yup.object<FormData>({
             is: false,
             then: yup.boolean().required('Fyll ut om du har oppholdstillatelse'),
         }),
-    familieforening: yup
-        .boolean()
-        .nullable()
-        .defined()
-        .when('harOppholdstillatelse', {
-            is: true,
-            then: yup.boolean().required('Fyll ut spørsmål om familieforening'),
-        }),
+    familieforening: yup.boolean().nullable().required('Fyll ut spørsmål om familieforening'),
     typeOppholdstillatelse: yup
         .mixed<Nullable<TypeOppholdstillatelse>>()
         .nullable()

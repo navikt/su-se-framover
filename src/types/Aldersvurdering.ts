@@ -9,4 +9,6 @@ export enum MaskinellVurderingsresultat {
     UKJENT = 'UKJENT',
     HISTORISK = 'HISTORISK',
     SKAL_IKKE_VURDERES = 'SKAL_IKKE_VURDERES',
+    RETT_PÅ_ALDER = 'RETT_PÅ_ALDER',
+    IKKE_RETT_PÅ_ALDER = 'IKKE_RETT_PÅ_ALDER',
 }

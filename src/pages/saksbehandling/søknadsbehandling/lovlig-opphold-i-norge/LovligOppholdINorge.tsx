@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import LovligOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
 import {
-    LovligOppholdVilkårFormData,
+    eqLovligOppholdVilkårFormData,
     lovligOppholdFormDataTilRequest,
     lovligOppholdFormSchema,
-    eqLovligOppholdVilkårFormData,
+    LovligOppholdVilkårFormData,
     lovligOppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdFormUtils';
 import OppsummeringAvOpphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOpphold';
@@ -19,10 +19,12 @@ import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehan
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes.ts';
 import {
     EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
     Søknadsbehandling,
 } from '~src/types/Søknadsbehandling';
+import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
@@ -69,17 +71,6 @@ const LovligOppholdINorge = (
         );
     };
 
-    const handleNesteClick = (
-        values: LovligOppholdVilkårFormData,
-        onSuccess: (behandling: Søknadsbehandling) => void,
-    ) => {
-        if (eqLovligOppholdVilkårFormData.equals(initialValues, values)) {
-            navigate(props.nesteUrl);
-            return;
-        }
-        save(values, onSuccess);
-    };
-
     const handleLagreOgFortsettSenereClick = (
         values: LovligOppholdVilkårFormData,
         onSuccess: (behandling: Søknadsbehandling) => void,
@@ -96,6 +87,28 @@ const LovligOppholdINorge = (
         resolver: yupResolver(lovligOppholdFormSchema),
     });
 
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+        sakId: props.sakId,
+        behandlingId: props.behandling.id,
+    });
+    const formWatch = form.watch();
+    const lagNesteUrl = (): string => {
+        return formWatch.lovligOpphold.some((e) => e.resultat === Vilkårstatus.VilkårIkkeOppfylt)
+            ? vedtakUrl
+            : props.nesteUrl;
+    };
+    const nesteUrl = lagNesteUrl();
+    const handleNesteClick = (
+        values: LovligOppholdVilkårFormData,
+        onSuccess: (behandling: Søknadsbehandling) => void,
+    ) => {
+        if (eqLovligOppholdVilkårFormData.equals(initialValues, values)) {
+            navigate(nesteUrl);
+            return;
+        }
+        save(values, onSuccess);
+    };
+
     useDraftFormSubscribe(form.watch);
 
     return (
@@ -107,7 +120,7 @@ const LovligOppholdINorge = (
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
                             onClick: handleNesteClick,
-                            url: props.nesteUrl,
+                            url: nesteUrl,
                             savingState: status,
                         }}
                         tilbake={{

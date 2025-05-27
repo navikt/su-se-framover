@@ -7,7 +7,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvUtbetalingsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/utbetalingsrevurdering/OppsummeringAvUtbetalingsrevurdering';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { fetchSak } from '~src/features/saksoversikt/sak.slice';
+import { fetchSakByIdEllerNummer } from '~src/features/saksoversikt/sak.slice';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -53,7 +53,7 @@ const GjenopptaOppsummering = (props: { revurdering?: UtbetalingsRevurdering }) 
 
     const iverksettOgGåVidere = () => {
         iverksettGjenopptak({ sakId: contextProps.sak.id, revurderingId: revurdering.id }, async () => {
-            await dispatch(fetchSak({ fnr: contextProps.sak.fnr }));
+            await dispatch(fetchSakByIdEllerNummer({ sakId: contextProps.sak.id }));
             Routes.navigateToSakIntroWithMessage(
                 navigate,
                 formatMessage('gjenoppta.notification'),

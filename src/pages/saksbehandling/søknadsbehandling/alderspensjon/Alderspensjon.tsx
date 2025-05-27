@@ -15,6 +15,8 @@ import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes.ts';
+import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår.ts';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
@@ -58,6 +60,23 @@ const Alderspensjon = (
         resolver: yupResolver(alderspensjonSchema),
     });
 
+    const formWatch = form.watch();
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+        sakId: props.sakId,
+        behandlingId: props.behandling.id,
+    });
+    const lagNesteUrl = (): string => {
+        return formWatch.alderspensjon.some(
+            (e) =>
+                e.andreNorske === PensjonsOpplysningerUtvidetSvar.NEI ||
+                e.folketrygd === PensjonsOpplysningerUtvidetSvar.NEI ||
+                e.utenlandske === PensjonsOpplysningerUtvidetSvar.NEI,
+        )
+            ? vedtakUrl
+            : props.nesteUrl;
+    };
+    const nesteUrl = lagNesteUrl();
+
     const handleSave = (values: AlderspensjonPeriodisertFormData, onSuccess: () => void, navigerUrl: string) => {
         if (eqAlderspensjonPeriodisertFormData.equals(values, initial)) {
             navigate(navigerUrl);
@@ -91,8 +110,8 @@ const Alderspensjon = (
                         form={form}
                         minOgMaxPeriode={lagDatePeriodeAvStringPeriode(props.behandling.stønadsperiode!.periode)}
                         neste={{
-                            onClick: (values, onSuccess) => handleSave(values, onSuccess, props.nesteUrl),
-                            url: props.nesteUrl,
+                            onClick: (values, onSuccess) => handleSave(values, onSuccess, nesteUrl),
+                            url: nesteUrl,
                             savingState: lagreAlderspensjongrunnlagStatus,
                         }}
                         tilbake={{

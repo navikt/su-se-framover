@@ -26,7 +26,7 @@ const Saksoversikt = () => {
 
     useEffect(() => {
         if (urlParams.sakId) {
-            dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
+            dispatch(sakSlice.fetchSakByIdEllerNummer({ sakId: urlParams.sakId }));
         }
     }, []);
 
@@ -55,7 +55,10 @@ const Saksoversikt = () => {
                         ),
                     ([søker, sak]) => (
                         <div className={styles.saksoversiktContainer}>
-                            <Personlinje søker={søker} sakInfo={{ sakId: sak.id, saksnummer: sak.saksnummer }} />
+                            <Personlinje
+                                søker={søker}
+                                sakInfo={{ sakId: sak.id, saksnummer: sak.saksnummer, sakstype: sak.sakstype }}
+                            />
                             <Saksvarsler sak={sak} søker={søker} />
                             <div className={styles.container}>
                                 <Outlet context={{ sak, søker }} />

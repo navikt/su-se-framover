@@ -19,7 +19,10 @@ export default function setup(authClient: OpenIdClient.Client) {
                 if (!options.headers) {
                     options.headers = {};
                 }
-                options.headers['Authorization'] = `Bearer ${accessToken}`;
+                options.headers = {
+                    ...options.headers,
+                    authorization: `Bearer ${accessToken}`,
+                };
                 return options;
             },
             proxyErrorHandler: (err, res, next) => {

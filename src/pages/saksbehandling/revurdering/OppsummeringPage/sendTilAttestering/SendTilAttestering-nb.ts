@@ -17,8 +17,7 @@ export default {
     'brevInput.innhold.placeholder': 'Skriv teksten her',
 
     brevtekst: 'Brevtekst',
-    'begrunnelse.vil.begrunne': 'Jeg ønsker å begrunne valget',
-    begrunnelse: 'Begrunnelse',
+    begrunnelse: 'Behandlingsnotat',
     'brevvalg.header': 'Valg for vedtaksbrev',
     'brevvalg.skal.det.sendes.brev': 'Skal det sendes vedtaksbrev til bruker?',
     'brevvalg.lagre': 'Lagre',

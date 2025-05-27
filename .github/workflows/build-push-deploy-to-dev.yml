@@ -49,8 +49,8 @@ jobs:
                   docker_context: .
                   team: supstonad
                   salsa: false
-                  image_suffix: ${{ github.workflow }}
-                  tag: ${{ env.GITHUB_REF_SLUG }}
+                  image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
+                  tag: ${{ github.sha }}
 
     deploy-to-dev-fss:
         if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')

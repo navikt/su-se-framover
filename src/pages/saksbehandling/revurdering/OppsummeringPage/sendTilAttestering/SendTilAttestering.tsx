@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { RadioGroup, Radio, Checkbox, Textarea } from '@navikt/ds-react';
+import { RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,6 @@ import styles from './SendTilAttestering.module.less';
 export interface BrevvalgFormData {
     valg: Valg;
     fritekst: Nullable<string>;
-    begrunnValg: boolean;
     begrunnelse: Nullable<string>;
 }
 
@@ -55,7 +54,6 @@ const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
                     ? 'Du må erstatte _____ med informasjon'
                     : 'Du må erstatte _____ med tall',
             ),
-        begrunnValg: yup.boolean(),
         begrunnelse: yup
             .string()
             .when('begrunnValg', {
@@ -123,10 +121,6 @@ const SendTilAttestering = (props: {
                 : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
                   ? formatMessage('opplysningsplikt.forhåndstekst')
                   : null,
-            begrunnValg:
-                props.revurdering.brevvalg.begrunnelse && props.revurdering.brevvalg.begrunnelse.length > 0
-                    ? true
-                    : false,
             begrunnelse: props.revurdering.brevvalg.begrunnelse,
         },
         resolver: yupResolver(brevvalgSchema(props.revurdering)),
@@ -221,34 +215,16 @@ const SendTilAttestering = (props: {
                                 )}
                                 <Controller
                                     control={form.control}
-                                    name={'begrunnValg'}
-                                    render={({ field }) => (
-                                        <Checkbox
-                                            name={field.name}
-                                            checked={field.value}
-                                            onChange={() => {
-                                                form.setValue('begrunnValg', !field.value);
-                                                form.setValue('begrunnelse', null);
-                                            }}
-                                        >
-                                            {formatMessage('begrunnelse.vil.begrunne')}
-                                        </Checkbox>
+                                    name={'begrunnelse'}
+                                    render={({ field, fieldState }) => (
+                                        <Textarea
+                                            {...field}
+                                            label={formatMessage('begrunnelse')}
+                                            value={field.value ?? ''}
+                                            error={fieldState.error?.message}
+                                        />
                                     )}
                                 />
-                                {watch.begrunnValg && (
-                                    <Controller
-                                        control={form.control}
-                                        name={'begrunnelse'}
-                                        render={({ field, fieldState }) => (
-                                            <Textarea
-                                                {...field}
-                                                label={formatMessage('begrunnelse')}
-                                                value={field.value ?? ''}
-                                                error={fieldState.error?.message}
-                                            />
-                                        )}
-                                    />
-                                )}
                             </div>
 
                             {RemoteData.isFailure(lagreBrevStatus) && <ApiErrorAlert error={lagreBrevStatus.error} />}

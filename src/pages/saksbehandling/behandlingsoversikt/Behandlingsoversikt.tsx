@@ -35,7 +35,7 @@ const Behandlingsoversikt = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const søker = useAppSelector((s) => s.personopplysninger.søker);
-    const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
     const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
@@ -58,12 +58,6 @@ const Behandlingsoversikt = () => {
                     onReset={() => {
                         dispatch(personSlice.default.actions.resetSøkerData());
                         resetSak();
-                    }}
-                    onFetchByFnr={(fnr) => {
-                        fetchPerson({ fnr });
-                        fetchSak({ fnr }, (res) => {
-                            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }));
-                        });
                     }}
                     onFetchBySaksnummer={(saksnummer) => {
                         fetchSak({ saksnummer }, (res) => {

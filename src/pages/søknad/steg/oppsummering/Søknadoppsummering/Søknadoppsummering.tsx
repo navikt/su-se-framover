@@ -416,12 +416,10 @@ const AlderspensjonOppsummering = ({
                     />
                 )}
 
-                {søknad.oppholdstillatelse.erNorskStatsborger === false && (
-                    <Oppsummeringsfelt
-                        label={formatMessage('familieforening.label')}
-                        verdi={booleanSvar(søknad.oppholdstillatelse.familieforening, formatMessage)}
-                    />
-                )}
+                <Oppsummeringsfelt
+                    label={formatMessage('familieforening.label')}
+                    verdi={booleanSvar(søknad.oppholdstillatelse.familieforening, formatMessage)}
+                />
 
                 {søknad.oppholdstillatelse.erNorskStatsborger === false && (
                     <Oppsummeringsfelt
