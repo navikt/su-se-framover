@@ -10,6 +10,7 @@
     "scripts": {
         "dev": "vite",
         "eslint": "eslint src --ext .tsx,.ts --report-unused-disable-directives",
+        "eslint-fix": "eslint src --ext .tsx,.ts --fix",
         "lint": "npm run eslint",
         "preview": "vite preview",
         "postinstall": "cd server && npm ci",

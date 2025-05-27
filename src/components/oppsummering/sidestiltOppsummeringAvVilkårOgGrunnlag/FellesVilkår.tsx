@@ -5,14 +5,47 @@ import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSø
 import OppsummeringAvForNav from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvForNav.tsx';
 import OppsummeringAvInnlagtPåInstitusjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon.tsx';
 import OppsummeringAvOpphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOpphold.tsx';
+import OppsummeringAvUtenlandsoppholdSøknad from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUtenlandsopphold.tsx';
+import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon.tsx';
+import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold.tsx';
+import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue.tsx';
+import OppsummeringAvFradrag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag.tsx';
+import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold.tsx';
 import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold.tsx';
+import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte.tsx';
+import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold.tsx';
 import messages from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag-nb.ts';
+import styles from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
+import { VilkårResultatStatusIkon } from '~src/components/VilkårvurderingStatusIcon.tsx';
 import { useI18n } from '~src/lib/i18n.ts';
 import { Nullable } from '~src/lib/types.ts';
+import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag.ts';
+import { Fradrag, fradragErlik } from '~src/types/Fradrag.ts';
+import {
+    Bosituasjon,
+    bosituasjonErlik,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag.ts';
+import {
+    fastOppholdErLik,
+    FastOppholdVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår.ts';
+import { formueErlik, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår.ts';
+import {
+    institusjonsoppholdErLik,
+    InstitusjonsoppholdVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold.ts';
 import {
     lovligOppholdErLik,
     LovligOppholdVilkår,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår.ts';
+import {
+    personligOppmøteErLik,
+    PersonligOppmøteVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår.ts';
+import {
+    utenlandsoppholdErlik,
+    UtenlandsoppholdVilkår,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold.ts';
 import {
     Boforhold,
     Formue,
@@ -21,39 +54,6 @@ import {
     Oppholdstillatelse,
     Utenlandsopphold,
 } from '~src/types/Søknadinnhold.ts';
-import styles from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
-import { VilkårResultatStatusIkon } from '~src/components/VilkårvurderingStatusIcon.tsx';
-import {
-    fastOppholdErLik,
-    FastOppholdVilkår,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår.ts';
-import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold.tsx';
-import {
-    institusjonsoppholdErLik,
-    InstitusjonsoppholdVilkår,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold.ts';
-import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold.tsx';
-import {
-    utenlandsoppholdErlik,
-    UtenlandsoppholdVilkår,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold.ts';
-import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold.tsx';
-import OppsummeringAvUtenlandsoppholdSøknad from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUtenlandsopphold.tsx';
-import { formueErlik, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår.ts';
-import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag.ts';
-import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue.tsx';
-import {
-    personligOppmøteErLik,
-    PersonligOppmøteVilkår,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår.ts';
-import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte.tsx';
-import {
-    Bosituasjon,
-    bosituasjonErlik,
-} from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag.ts';
-import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon.tsx';
-import { Fradrag, fradragErlik } from '~src/types/Fradrag.ts';
-import OppsummeringAvFradrag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag.tsx';
 
 export const AccordionItemLovligOpphold = (props: {
     lovligOppholdFraGrunnlag: Nullable<LovligOppholdVilkår>;

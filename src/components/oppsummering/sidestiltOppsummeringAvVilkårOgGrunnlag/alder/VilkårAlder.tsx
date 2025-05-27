@@ -9,14 +9,14 @@ import styles from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårO
 import { VilkårResultatStatusIkon } from '~src/components/VilkårvurderingStatusIcon.tsx';
 import { useI18n } from '~src/lib/i18n.ts';
 import { Nullable } from '~src/lib/types.ts';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger.ts';
-import { Alderspensjon, OppholdstillatelseAlder, SøknadInnhold, SøknadInnholdAlder } from '~src/types/Søknadinnhold.ts';
-import { isAldersøknad } from '~src/utils/søknad/søknadUtils.ts';
+import { Aldersvilkår, aldersvilkårErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår.ts';
 import {
     Familiegjenforening,
     familiegjenforeningErLik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening.ts';
-import { Aldersvilkår, aldersvilkårErLik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår.ts';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger.ts';
+import { Alderspensjon, OppholdstillatelseAlder, SøknadInnhold, SøknadInnholdAlder } from '~src/types/Søknadinnhold.ts';
+import { isAldersøknad } from '~src/utils/søknad/søknadUtils.ts';
 
 const AccordionItemFamiliegjenforening = (props: {
     familiegjenforeningFraGrunnlagsdata: Nullable<Familiegjenforening>;
