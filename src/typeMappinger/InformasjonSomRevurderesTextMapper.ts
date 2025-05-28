@@ -13,5 +13,5 @@ export const InformasjonSomRevurderesTextMapper: { [key in InformasjonSomRevurde
     [InformasjonSomRevurderes.PersonligOppmøte]: 'Personlig oppmøte',
     [InformasjonSomRevurderes.Institusjonsopphold]: 'Institusjonsopphold',
     [InformasjonSomRevurderes.Familiegjenforening]: 'Familiegjenforening',
-    [InformasjonSomRevurderes.Pensjon]: 'Pensjon',
+    [InformasjonSomRevurderes.Pensjon]: 'Alderspensjon',
 };
