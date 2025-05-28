@@ -24,6 +24,7 @@ import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
 import { InformasjonsRevurdering, Revurdering, TilbakekrevingsAvgjørelse } from '~src/types/Revurdering';
+import { Sak, Sakstype } from '~src/types/Sak.ts';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erBehandlingRevurdering, erBehandlingSøknadsbehandling } from '~src/utils/behandling/BehandlingUtils';
@@ -182,14 +183,13 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                 tittel={formatMessage('oppsummeringspanel.vedtak.behandling.info')}
             >
                 {behandlingstype === 'søknadsbehandling' && (
-                    <PartialOppsummeringAvSøknadsbehandling s={vedtaketsBehandling as Søknadsbehandling} />
+                    <PartialOppsummeringAvSøknadsbehandling
+                        s={vedtaketsBehandling as Søknadsbehandling}
+                        sakstype={sak.sakstype}
+                    />
                 )}
                 {behandlingstype === 'revurdering' && (
-                    <PartialOppsummeringAvRevurdering
-                        r={vedtaketsBehandling as Revurdering}
-                        sakId={sak.id}
-                        v={vedtak}
-                    />
+                    <PartialOppsummeringAvRevurdering r={vedtaketsBehandling as Revurdering} sak={sak} v={vedtak} />
                 )}
                 {behandlingstype === 'regulering' && (
                     <PartialOppsummeringAvRegulering r={vedtaketsBehandling as Regulering} />
@@ -226,7 +226,7 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
     );
 };
 
-const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling }) => {
+const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling; sakstype: Sakstype }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -251,18 +251,19 @@ const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling 
             <SidestiltOppsummeringAvVilkårOgGrunnlag
                 grunnlagsdataOgVilkårsvurderinger={props.s.grunnlagsdataOgVilkårsvurderinger}
                 visesSidestiltMed={props.s.søknad.søknadInnhold}
+                sakstype={props.sakstype}
             />
         </div>
     );
 };
 
-const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: Revurdering }) => {
+const PartialOppsummeringAvRevurdering = (props: { sak: Sak; v: Vedtak; r: Revurdering }) => {
     const { formatMessage } = useI18n({ messages });
     const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
 
     useEffect(() => {
         if (erInformasjonsRevurdering(props.r)) {
-            hentRevurderingSnapshot({ sakId: props.sakId, vedtakId: props.v.id });
+            hentRevurderingSnapshot({ sakId: props.sak.id, vedtakId: props.v.id });
         }
     }, []);
 
@@ -305,10 +306,11 @@ const PartialOppsummeringAvRevurdering = (props: { sakId: string; v: Vedtak; r: 
                     () => <></>,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (snapshot) => (
+                    (snapshotRevurderingGrunnlagsdataOgVilkår) => (
                         <SidestiltOppsummeringAvVilkårOgGrunnlag
                             grunnlagsdataOgVilkårsvurderinger={props.r.grunnlagsdataOgVilkårsvurderinger}
-                            visesSidestiltMed={snapshot}
+                            visesSidestiltMed={snapshotRevurderingGrunnlagsdataOgVilkår}
+                            sakstype={props.sak.sakstype}
                         />
                     ),
                 ),

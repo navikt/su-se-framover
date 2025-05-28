@@ -49,7 +49,10 @@ const Attestering = () => {
             </div>
             {søknadsbehandling && <AttesterSøknadsbehandling sak={sak} søknadsbehandling={søknadsbehandling} />}
             {revurdering && erInformasjonsRevurdering(revurdering) && (
-                <AttesterRevurdering sakInfo={{ id: sak.id, nummer: sak.saksnummer }} revurdering={revurdering} />
+                <AttesterRevurdering
+                    sakInfo={{ id: sak.id, nummer: sak.saksnummer, sakstype: sak.sakstype }}
+                    revurdering={revurdering}
+                />
             )}
             {klage && (
                 <AttesterKlage

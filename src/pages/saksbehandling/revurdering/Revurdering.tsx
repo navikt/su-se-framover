@@ -23,6 +23,7 @@ import {
     RevurderingSteg,
     Vurderingstatus,
 } from '~src/types/Revurdering';
+import { Sakstype } from '~src/types/Sak.ts';
 import {
     erInformasjonsRevurdering,
     revurderingTilFramdriftsindikatorSeksjoner,
@@ -100,6 +101,7 @@ const RevurderingPage = () => {
             {urlParams.seksjon !== RevurderingSeksjoner.Opprettelse && (
                 <RevurderingSeksjonerWrapper
                     sakId={sak.id}
+                    sakstype={sak.sakstype}
                     revurdering={påbegyntRevurdering}
                     seksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
                 />
@@ -110,6 +112,7 @@ const RevurderingPage = () => {
 
 const RevurderingSeksjonerWrapper = (props: {
     sakId: string;
+    sakstype: Sakstype;
     revurdering: InformasjonsRevurdering;
     seksjonOgSteg: {
         seksjon: RevurderingSeksjoner;
@@ -168,6 +171,7 @@ const RevurderingSeksjonerWrapper = (props: {
                     {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Oppsummering && (
                         <RevurderingOppsummeringPage
                             sakId={props.sakId}
+                            sakstype={props.sakstype}
                             revurdering={props.revurdering}
                             aktivSeksjonOgSteg={props.seksjonOgSteg}
                             seksjoner={seksjoner}
