@@ -37,13 +37,6 @@ const Familieforening = (
     );
 
     const handleSave = (values: FamilieforeningFormData, onSuccess: () => void) =>
-        /*
-        TODO
-        if (eqAlderspensjonPeriodisertFormData.equals(values, initial)) {
-            navigate(navigerUrl);
-            return;
-        }
-         */
         lagreFamilieforeninggrunnlag(
             {
                 sakId: props.sakId,
