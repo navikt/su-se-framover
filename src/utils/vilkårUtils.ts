@@ -5,9 +5,9 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVi
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sakstype } from '~src/types/Sak';
-import { SøknadsbehandlingStatus, Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
-import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
+import { Vilkårtype, VilkårtypeAlder, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
     Routes.saksbehandlingVilkårsvurdering.createURL({
@@ -57,6 +57,8 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Opphold i utlandet';
         case Vilkårtype.Beregning:
             return 'Beregning';
+        case VilkårtypeAlder.GammelNok:
+            return 'Alder';
     }
 };
 

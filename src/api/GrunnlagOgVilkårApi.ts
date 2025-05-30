@@ -1,3 +1,4 @@
+import { GammelNokRequest } from '~src/pages/saksbehandling/søknadsbehandling/gammelnok/GammelNok.tsx';
 import { Fradragsgrunnlagrequest } from '~src/types/Fradrag';
 import { AlderspensjonVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { BosituasjongrunnlagRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
@@ -42,6 +43,14 @@ const mapBehandlingstypeTilBaseUrl = (sakId: string, behandlingId: string, b: Be
             return `/saker/${sakId}/revurderinger/${behandlingId}`;
     }
 };
+
+export async function lagreGammelNokGrunnlag(arg: BehandlingstypeMedApiRequest<GammelNokRequest>) {
+    return apiClient<Søknadsbehandling>({
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/gammelnok`,
+        method: 'POST',
+        body: { skjema: arg.skjema },
+    });
+}
 
 export async function lagreUføregrunnlag(arg: BehandlingstypeMedApiRequest<UførevilkårRequest>) {
     return apiClient<VilkårOgGrunnlagApiResult<OpprettetRevurdering>>({
