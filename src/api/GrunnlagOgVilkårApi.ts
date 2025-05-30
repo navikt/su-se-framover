@@ -59,9 +59,9 @@ export async function lagreAldersgrunnlag(arg: BehandlingstypeMedApiRequest<Alde
     });
 }
 
-export async function lagreFamilieforeningsgrunnlag(arg: Familiegjenforeningrequest) {
+export async function lagreFamilieforeningsgrunnlag(arg: BehandlingstypeMedApiRequest<Familiegjenforeningrequest>) {
     return apiClient<Søknadsbehandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/familiegjenforening`,
+        url: `${mapBehandlingstypeTilBaseUrl(arg.sakId, arg.behandlingId, arg.behandlingstype)}/familiegjenforening`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
     });

@@ -361,7 +361,7 @@ export default createSlice({
         });
 
         builder.addCase(GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag.fulfilled, (state, action) => {
-            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+            state.sak = oppdaterBehandlingISak(state.sak, action.payload, action.meta.arg.behandlingstype);
         });
 
         builder.addCase(GrunnlagOgVilkårActions.lagreFlyktningVilkår.fulfilled, (state, action) => {

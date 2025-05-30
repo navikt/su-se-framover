@@ -320,7 +320,7 @@ const GrunnlagOgVilkårSteg = (props: {
                 <AlderspensjonPage {...stegProps} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Familiegjenforening && (
-                <FamiliegjenforeningPage />
+                <FamiliegjenforeningPage {...stegProps} />
             )}
         </div>
     );
