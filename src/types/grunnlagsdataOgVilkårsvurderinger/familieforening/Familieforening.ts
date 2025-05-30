@@ -10,20 +10,14 @@ export interface Familiegjenforening {
     resultat: Vilkårstatus;
 }
 
-export interface FamiliegjenforeningVurdering {
-    periode: Periode<string>;
-    resultat: Vilkårstatus;
-}
-
 export interface Familiegjenforeningrequest {
     sakId: string;
     behandlingId: string;
-    vurderinger: FamiliegjenforeningPeriode[];
+    vurderinger: FamiliegjenforeningVurdering[];
 }
-
-export interface FamiliegjenforeningPeriode {
+export interface FamiliegjenforeningVurdering {
     periode: Periode<string>;
-    status: Vilkårstatus;
+    resultat: Vilkårstatus;
 }
 
 export const familiegjenforeningErLik = (ny: Nullable<Familiegjenforening>, gammel: Nullable<Familiegjenforening>) =>

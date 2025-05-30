@@ -44,7 +44,7 @@ const Familieforening = (
                 vurderinger: [
                     {
                         periode: props.behandling.stønadsperiode!.periode,
-                        status: values.familiegjenforening[0].familiegjenforening!,
+                        resultat: values.familiegjenforening[0].familiegjenforening!,
                     },
                 ],
                 behandlingstype: Behandlingstype.Søknadsbehandling,

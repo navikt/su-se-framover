@@ -15,7 +15,7 @@ import { useI18n } from '~src/lib/i18n.ts';
 import messages from '~src/pages/saksbehandling/revurdering/alderspensjon/alderspensjon-nb.ts';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader.tsx';
 import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/sharedI18n-nb.ts';
-import { FamiliegjenforeningPeriode } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening.ts';
+import { FamiliegjenforeningVurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening.ts';
 import { RevurderingStegProps } from '~src/types/Revurdering.ts';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
@@ -38,8 +38,8 @@ const Familiegjenforening = (props: RevurderingStegProps) => {
                             fraOgMed: DateUtils.toIsoDateOnlyString(value.periode.fraOgMed!),
                             tilOgMed: DateUtils.toIsoDateOnlyString(value.periode.tilOgMed!),
                         },
-                        status: value.familiegjenforening,
-                    } as FamiliegjenforeningPeriode;
+                        resultat: value.familiegjenforening,
+                    } as FamiliegjenforeningVurdering;
                 }),
                 behandlingstype: Behandlingstype.Revurdering,
             },
