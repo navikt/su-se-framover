@@ -9,6 +9,7 @@ export enum VilkårtypeAlder {
     Alderspensjon = 'ALDERSPENSJON',
     Familieforening = 'FAMILIEFORENING',
     OppholdstillatelseAlder = 'OPPHOLDSTILLATELSE_ALDER',
+    GammelNok = 'GAMMEL_NOK',
 }
 
 export enum VilkårtypeUføre {

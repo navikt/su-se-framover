@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
 import * as GrunnlagOgVilkårApi from '~src/api/GrunnlagOgVilkårApi';
+import { GammelNokRequest } from '~src/pages/saksbehandling/søknadsbehandling/gammelnok/GammelNok.tsx';
 import { Fradragsgrunnlagrequest } from '~src/types/Fradrag';
 import { AlderspensjonVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { BosituasjongrunnlagRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
@@ -17,6 +18,19 @@ import { UførevilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderin
 import { UtenlandsoppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { OpprettetRevurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+
+export const lagreAlderVilkårAlder = createAsyncThunk<
+    GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult,
+    GrunnlagOgVilkårApi.BehandlingstypeMedApiRequest<GammelNokRequest>,
+    { rejectValue: ApiError }
+>('behandling/gammelnok/lagre', async (arg, thunkApi) => {
+    const res = await GrunnlagOgVilkårApi.lagreGammelNokGrunnlag(arg);
+
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const lagreUføregrunnlag = createAsyncThunk<
     GrunnlagOgVilkårApi.VilkårOgGrunnlagApiResult<OpprettetRevurdering>,
