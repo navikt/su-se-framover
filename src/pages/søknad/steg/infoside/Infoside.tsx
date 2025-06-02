@@ -13,7 +13,6 @@ import styles from './infoside.module.less';
 
 const Infoside = () => {
     const { isPapirsøknad, sakstype } = useOutletContext<SøknadContext>();
-    console.log(sakstype);
     const nesteUrl = soknadPersonSøk.createURL({
         soknadstema: urlForSakstype(sakstype),
         papirsøknad: isPapirsøknad,
