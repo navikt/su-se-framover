@@ -2,7 +2,6 @@ import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { useUserContext } from '~src/context/userContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
@@ -21,8 +20,7 @@ const index = () => {
     const location = useLocation();
     const isPapirsøknad = location.search.includes('papirsoknad');
     const temaIUrl = Routes.useRouteParams<typeof Routes.soknadtema>().soknadstema;
-    const user = useUserContext();
-    const sakstype = user.isProd ? Sakstype.Uføre : Routes.sakstypeFraTemaIUrl(temaIUrl);
+    const sakstype = Routes.sakstypeFraTemaIUrl(temaIUrl);
 
     return (
         <div className={styles.container}>
