@@ -4,6 +4,7 @@ import {
     Familiegjenforening,
     FamiliegjenforeningVurdering,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening';
+import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
@@ -38,17 +39,14 @@ const VurderingsperiodeFlyktningOppsummering = (props: {
     vurderingsperiodeFamiliegjenforening: FamiliegjenforeningVurdering;
 }) => {
     const { formatMessage } = useI18n({ messages });
-
+    const jaNei = props.vurderingsperiodeFamiliegjenforening.resultat === Vilkårstatus.VilkårOppfylt ? 'Nei' : 'Ja';
     return (
         <>
             <OppsummeringPar
                 label={formatMessage('periode')}
                 verdi={formatPeriode(props.vurderingsperiodeFamiliegjenforening.periode)}
             />
-            <OppsummeringPar
-                label={formatMessage('familiegjenforening.gjenforentMedFamilieMedlemmer')}
-                verdi={formatMessage(`bool.${props.vurderingsperiodeFamiliegjenforening.resultat}`)}
-            />
+            <OppsummeringPar label={formatMessage('familiegjenforening.gjenforentMedFamilieMedlemmer')} verdi={jaNei} />
         </>
     );
 };
