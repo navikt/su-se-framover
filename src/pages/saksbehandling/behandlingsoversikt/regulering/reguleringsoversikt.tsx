@@ -26,6 +26,9 @@ import styles from './regulering.module.less';
 const Reguleringsoversikt = () => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
+    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
 
@@ -67,11 +70,6 @@ const Reguleringsoversikt = () => {
                             data,
                             arr.sortBy([sortByFnr]),
                             arr.mapWithIndex((index, { saksnummer, fnr, fradragsKategori }) => {
-                                const [hentSakStatus, hentSak] = useAsyncActionCreator(
-                                    sakSlice.fetchSakByIdEllerNummer,
-                                );
-                                const navigate = useNavigate();
-                                const dispatch = useAppDispatch();
                                 return (
                                     <Table.Row key={index}>
                                         <Table.DataCell>{saksnummer}</Table.DataCell>
