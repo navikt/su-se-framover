@@ -8,6 +8,7 @@ import {
     familieforeningSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningFormUtils.ts';
 import { FamiliegjenforeningForm } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamiliegjenforeningForm.tsx';
+import OppsummeringAvFamiliegjenforening from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFamiliegjenforening.tsx';
 import ToKolonner from '~src/components/toKolonner/ToKolonner.tsx';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions.ts';
 import { useAsyncActionCreator } from '~src/lib/hooks.ts';
@@ -15,7 +16,7 @@ import { useI18n } from '~src/lib/i18n.ts';
 import messages from '~src/pages/saksbehandling/revurdering/alderspensjon/alderspensjon-nb.ts';
 import RevurderingsperiodeHeader from '~src/pages/saksbehandling/revurdering/revurderingsperiodeheader/RevurderingsperiodeHeader.tsx';
 import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/sharedI18n-nb.ts';
-import { FamiliegjenforeningPeriode } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening.ts';
+import { FamiliegjenforeningVurdering } from '~src/types/grunnlagsdataOgVilkårsvurderinger/familieforening/Familieforening.ts';
 import { RevurderingStegProps } from '~src/types/Revurdering.ts';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
@@ -38,8 +39,8 @@ const Familiegjenforening = (props: RevurderingStegProps) => {
                             fraOgMed: DateUtils.toIsoDateOnlyString(value.periode.fraOgMed!),
                             tilOgMed: DateUtils.toIsoDateOnlyString(value.periode.tilOgMed!),
                         },
-                        status: value.familiegjenforening,
-                    } as FamiliegjenforeningPeriode;
+                        resultat: value.familiegjenforening,
+                    } as FamiliegjenforeningVurdering;
                 }),
                 behandlingstype: Behandlingstype.Revurdering,
             },
@@ -91,6 +92,9 @@ const Familiegjenforening = (props: RevurderingStegProps) => {
                         <Heading size="large" level="2" spacing>
                             {formatMessage('gjeldende.overskrift')}
                         </Heading>
+                        <OppsummeringAvFamiliegjenforening
+                            familiegjenforening={props.grunnlagsdataOgVilkårsvurderinger.familiegjenforening}
+                        />
                     </>
                 ),
             }}
