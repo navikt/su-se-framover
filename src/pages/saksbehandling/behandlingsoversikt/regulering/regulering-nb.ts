@@ -1,11 +1,4 @@
-import { ReguleringMerknad } from '~src/types/Regulering';
-
-const merknadstekst = {
-    [ReguleringMerknad.Fosterhjemsgodtgjørelse]: 'Har fosterhjemsgodtgjørelse',
-};
-
 export default {
-    ...merknadstekst,
     resultat: '{antallManuelle} saker trenger manuell behandling. ',
     'resultat.startManuell': 'Start behandling av saker til manuell G-regulering',
     feil: 'En feil skjedde',

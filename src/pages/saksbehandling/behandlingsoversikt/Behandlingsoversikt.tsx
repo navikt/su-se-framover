@@ -39,6 +39,7 @@ const Behandlingsoversikt = () => {
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
     const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
+    //TODO: hvorfor ikke bare hente denne i reguleringssiden?
     const gjenståendeManuelleReguleringer = RemoteData.isSuccess(reguleringerOgMerknader)
         ? reguleringerOgMerknader.value
         : [];
@@ -111,7 +112,14 @@ const Behandlingsoversikt = () => {
                         <Nøkkeltall />
                     </Tabs.Panel>
                     <Tabs.Panel value={Tab.REGULERING}>
-                        <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
+                        <>
+                            {RemoteData.isFailure(reguleringerOgMerknader) && (
+                                <>
+                                    <ApiErrorAlert error={reguleringerOgMerknader.error} />
+                                </>
+                            )}
+                            <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
+                        </>
                     </Tabs.Panel>
                     <Tabs.Panel value={Tab.SKATT}>
                         <HentOgVisSkattegrunnlag />

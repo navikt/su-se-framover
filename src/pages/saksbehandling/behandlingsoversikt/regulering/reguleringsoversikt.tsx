@@ -49,7 +49,7 @@ const Reguleringsoversikt = (props: Props) => {
                         {pipe(
                             data,
                             arr.sortBy([sortByFnr]),
-                            arr.mapWithIndex((index, { saksnummer, fnr, merknader }) => {
+                            arr.mapWithIndex((index, { saksnummer, fnr, fradragsKategori }) => {
                                 const [hentSakStatus, hentSak] = useAsyncActionCreator(
                                     sakSlice.fetchSakByIdEllerNummer,
                                 );
@@ -100,9 +100,9 @@ const Reguleringsoversikt = (props: Props) => {
                                             )}
                                         </Table.DataCell>
                                         <Table.DataCell>
-                                            {merknader.map((m, index) => (
+                                            {fradragsKategori.map((fradrag, index) => (
                                                 <Tag variant="info" key={index}>
-                                                    {formatMessage(m)}
+                                                    {fradrag}
                                                 </Tag>
                                             ))}
                                         </Table.DataCell>
