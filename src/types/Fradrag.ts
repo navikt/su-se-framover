@@ -73,6 +73,62 @@ export enum VelgbareFradragskategorier {
     Annet = 'Annet',
 }
 
+type tagVarianter =
+    | 'warning'
+    | 'warning-filled'
+    | 'warning-moderate'
+    | 'error'
+    | 'error-filled'
+    | 'error-moderate'
+    | 'info'
+    | 'info-filled'
+    | 'info-moderate'
+    | 'success'
+    | 'success-filled'
+    | 'success-moderate'
+    | 'neutral'
+    | 'neutral-filled'
+    | 'neutral-moderate'
+    | 'alt1'
+    | 'alt1-filled'
+    | 'alt1-moderate'
+    | 'alt2'
+    | 'alt2-filled'
+    | 'alt2-moderate'
+    | 'alt3'
+    | 'alt3-filled'
+    | 'alt3-moderate';
+
+export const fradragTilLabelTag: Record<Fradragskategori, tagVarianter> = {
+    Alderspensjon: 'info',
+    Annet: 'info-filled',
+    Arbeidsavklaringspenger: 'error-filled',
+    Arbeidsinntekt: 'info-moderate',
+    AvtalefestetPensjon: 'success',
+    AvtalefestetPensjonPrivat: 'success-filled',
+    BeregnetFradragEPS: 'success-moderate',
+    BidragEtterEkteskapsloven: 'neutral',
+    Dagpenger: 'neutral-moderate',
+    ForventetInntekt: 'alt1',
+    Fosterhjemsgodtgjørelse: 'alt1-filled',
+    Gjenlevendepensjon: 'alt1-moderate',
+    Introduksjonsstønad: 'alt2',
+    Kapitalinntekt: 'alt2-filled',
+    Kontantstøtte: 'alt2-moderate',
+    Kvalifiseringsstønad: 'alt3',
+    NAVytelserTilLivsopphold: 'alt3-filled',
+    OffentligPensjon: 'alt3-moderate',
+    PrivatPensjon: 'info',
+    Sosialstønad: 'info-filled',
+    StatensLånekasse: 'info-moderate',
+    SupplerendeStønad: 'success',
+    Sykepenger: 'error',
+    Tiltakspenger: 'warning-moderate',
+    Uføretrygd: 'warning-filled',
+    UnderMinstenivå: 'warning',
+    Ventestønad: 'error-moderate',
+};
+
 export enum IkkeVelgbareFradragskategorier {
     NAVytelserTilLivsopphold = 'NAVytelserTilLivsopphold',
     ForventetInntekt = 'ForventetInntekt',

@@ -18,10 +18,13 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch } from '~src/redux/Store';
+import { fradragTilLabelTag } from '~src/types/Fradrag.ts';
 import { ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import messages from './regulering-nb';
 import styles from './regulering.module.less';
+
+
 
 const Reguleringsoversikt = () => {
     const { formatMessage } = useI18n({ messages });
@@ -116,7 +119,7 @@ const Reguleringsoversikt = () => {
                                         </Table.DataCell>
                                         <Table.DataCell>
                                             {fradragsKategori.map((fradrag, index) => (
-                                                <Tag variant="info" key={index}>
+                                                <Tag variant={fradragTilLabelTag[fradrag]} key={`${index}-${fradrag}`}>
                                                     {fradrag}
                                                 </Tag>
                                             ))}
