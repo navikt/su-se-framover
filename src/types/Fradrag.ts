@@ -44,7 +44,7 @@ export enum FradragTilhører {
 }
 
 export type Fradragskategori = VelgbareFradragskategorier | IkkeVelgbareFradragskategorier;
-
+//TODO: bruke denne?
 export enum VelgbareFradragskategorier {
     StatensLånekasse = 'StatensLånekasse',
     Sosialstønad = 'Sosialstønad',

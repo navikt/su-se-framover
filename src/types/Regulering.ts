@@ -36,11 +36,7 @@ export enum Reguleringsstatus {
 export interface ReguleringOversiktsstatus {
     saksnummer: number;
     fnr: string;
-    merknader: ReguleringMerknad[];
-}
-
-export enum ReguleringMerknad {
-    Fosterhjemsgodtgjørelse = 'Fosterhjemsgodtgjørelse',
+    merknader: Fradragskategori[];
 }
 
 export enum Reguleringstype {
