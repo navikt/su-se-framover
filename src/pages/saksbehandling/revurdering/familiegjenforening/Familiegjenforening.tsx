@@ -8,6 +8,7 @@ import {
     familieforeningSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningFormUtils.ts';
 import { FamiliegjenforeningForm } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamiliegjenforeningForm.tsx';
+import OppsummeringAvFamiliegjenforening from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFamiliegjenforening.tsx';
 import ToKolonner from '~src/components/toKolonner/ToKolonner.tsx';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions.ts';
 import { useAsyncActionCreator } from '~src/lib/hooks.ts';
@@ -91,6 +92,9 @@ const Familiegjenforening = (props: RevurderingStegProps) => {
                         <Heading size="large" level="2" spacing>
                             {formatMessage('gjeldende.overskrift')}
                         </Heading>
+                        <OppsummeringAvFamiliegjenforening
+                            familiegjenforening={props.grunnlagsdataOgVilkårsvurderinger.familiegjenforening}
+                        />
                     </>
                 ),
             }}
