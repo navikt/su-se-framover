@@ -111,7 +111,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                                 value={field.value}
                                 onChange={(val) => {
                                     field.onChange(val);
-                                    setFieldsToNull(['familieforening', 'typeOppholdstillatelse']);
+                                    setFieldsToNull(['typeOppholdstillatelse']);
                                 }}
                             />
                         )}
