@@ -38,8 +38,8 @@ const Behandlingsoversikt = () => {
     const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
-    //TODO: error handling på denne finnes ikke?
     const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
+    //TODO: hvorfor ikke bare hente denne i reguleringssiden?
     const gjenståendeManuelleReguleringer = RemoteData.isSuccess(reguleringerOgMerknader)
         ? reguleringerOgMerknader.value
         : [];
