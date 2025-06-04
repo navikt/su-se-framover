@@ -36,7 +36,7 @@ export enum Reguleringsstatus {
 export interface ReguleringOversiktsstatus {
     saksnummer: number;
     fnr: string;
-    merknader: Fradragskategori[];
+    fradragsKategori: Fradragskategori[];
 }
 
 export enum Reguleringstype {
