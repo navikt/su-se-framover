@@ -38,6 +38,7 @@ const Behandlingsoversikt = () => {
     const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
+    //TODO: error handling på denne finnes ikke?
     const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
     const gjenståendeManuelleReguleringer = RemoteData.isSuccess(reguleringerOgMerknader)
         ? reguleringerOgMerknader.value
@@ -111,7 +112,14 @@ const Behandlingsoversikt = () => {
                         <Nøkkeltall />
                     </Tabs.Panel>
                     <Tabs.Panel value={Tab.REGULERING}>
-                        <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
+                        <>
+                            {RemoteData.isFailure(reguleringerOgMerknader) && (
+                                <>
+                                    <ApiErrorAlert error={reguleringerOgMerknader.error} />
+                                </>
+                            )}
+                            <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
+                        </>
                     </Tabs.Panel>
                     <Tabs.Panel value={Tab.SKATT}>
                         <HentOgVisSkattegrunnlag />
