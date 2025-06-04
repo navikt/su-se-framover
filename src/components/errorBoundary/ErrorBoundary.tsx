@@ -1,6 +1,7 @@
 import { Component, PropsWithChildren } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import * as Routes from '~src/lib/routes';
 
 import SkjemaelementFeilmelding from '../formElements/SkjemaelementFeilmelding';
 
@@ -21,7 +22,7 @@ class ErrorBoundary extends Component<PropsWithChildren, { hasError: boolean; er
             return (
                 <div className={styles.container}>
                     <SkjemaelementFeilmelding>En feil har oppstått.</SkjemaelementFeilmelding>
-                    <LinkAsButton href="/" variant="primary">
+                    <LinkAsButton href={Routes.home.createURL()} variant="primary">
                         Tilbake
                     </LinkAsButton>
                     <hr />
