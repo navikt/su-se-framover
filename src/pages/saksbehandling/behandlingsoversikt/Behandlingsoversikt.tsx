@@ -1,17 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { NumberListIcon, CurrencyExchangeIcon, FileCheckmarkIcon, FileIcon, TableIcon } from '@navikt/aksel-icons';
 import { Heading, Tabs } from '@navikt/ds-react';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { hentReguleringsstatus } from '~src/api/reguleringApi';
 import { Person as PersonIkon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import HentOgVisSkattegrunnlag from '~src/components/hentOgVisSkattegrunnlag/HentOgVisSkattegrunnlag';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
-import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
@@ -38,15 +36,6 @@ const Behandlingsoversikt = () => {
     const [sakStatus, fetchSak, resetSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
-    const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
-    //TODO: hvorfor ikke bare hente denne i reguleringssiden?
-    const gjenståendeManuelleReguleringer = RemoteData.isSuccess(reguleringerOgMerknader)
-        ? reguleringerOgMerknader.value
-        : [];
-
-    useEffect(() => {
-        hentReguleringerOgMerknader({});
-    }, []);
 
     return (
         <div className={styles.saksoversiktForside}>
@@ -112,14 +101,7 @@ const Behandlingsoversikt = () => {
                         <Nøkkeltall />
                     </Tabs.Panel>
                     <Tabs.Panel value={Tab.REGULERING}>
-                        <>
-                            {RemoteData.isFailure(reguleringerOgMerknader) && (
-                                <>
-                                    <ApiErrorAlert error={reguleringerOgMerknader.error} />
-                                </>
-                            )}
-                            <Reguleringsoversikt reguleringsstatus={gjenståendeManuelleReguleringer} />
-                        </>
+                        <Reguleringsoversikt />
                     </Tabs.Panel>
                     <Tabs.Panel value={Tab.SKATT}>
                         <HentOgVisSkattegrunnlag />

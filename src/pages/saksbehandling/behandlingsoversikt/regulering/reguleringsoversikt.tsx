@@ -1,18 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { CalculatorIcon } from '@navikt/aksel-icons';
-import { Alert, Heading, Table, Tag, Button } from '@navikt/ds-react';
+import { Alert, Heading, Table, Tag, Button, Loader } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import { contramap } from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { hentReguleringsstatus } from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import ContextMenu from '~src/components/contextMenu/ContextMenu';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch } from '~src/redux/Store';
@@ -21,12 +23,27 @@ import { ReguleringOversiktsstatus } from '~src/types/Regulering';
 import messages from './regulering-nb';
 import styles from './regulering.module.less';
 
-interface Props {
-    reguleringsstatus: ReguleringOversiktsstatus[];
-}
-const Reguleringsoversikt = (props: Props) => {
+const Reguleringsoversikt = () => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
+
+    const [reguleringerOgMerknader, hentReguleringerOgMerknader] = useApiCall(hentReguleringsstatus);
+
+    useEffect(() => {
+        hentReguleringerOgMerknader({});
+    }, []);
+
+    if (RemoteData.isFailure(reguleringerOgMerknader)) {
+        return <ApiErrorAlert error={reguleringerOgMerknader.error} />;
+    }
+
+    if (RemoteData.isPending(reguleringerOgMerknader) || RemoteData.isInitial(reguleringerOgMerknader)) {
+        return <Loader />;
+    }
+
+    const gjenståendeManuelleReguleringer = RemoteData.isSuccess(reguleringerOgMerknader)
+        ? reguleringerOgMerknader.value
+        : [];
 
     const sortByFnr = pipe(
         S.Ord,
@@ -85,7 +102,7 @@ const Reguleringsoversikt = (props: Props) => {
                                                 onClick={async () => {
                                                     dispatch(personSlice.default.actions.resetSøkerData());
                                                     dispatch(sakSlice.default.actions.resetSak());
-                                                    hentSak({ saksnummer: saksnummer.toString() }, (sak) => {
+                                                    await hentSak({ saksnummer: saksnummer.toString() }, (sak) => {
                                                         navigate(
                                                             Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }),
                                                         );
@@ -125,7 +142,7 @@ const Reguleringsoversikt = (props: Props) => {
         <div className={styles.oversikt}>
             <Alert variant="success">
                 {formatMessage('resultat', {
-                    antallManuelle: props.reguleringsstatus.length,
+                    antallManuelle: gjenståendeManuelleReguleringer.length,
                 })}
             </Alert>
 
@@ -134,7 +151,7 @@ const Reguleringsoversikt = (props: Props) => {
                     <CircleWithIcon variant="yellow" icon={<CalculatorIcon />} />
                     {formatMessage('resultat.startManuell')}
                 </Heading>
-                <Reguleringstabell data={props.reguleringsstatus} />
+                <Reguleringstabell data={gjenståendeManuelleReguleringer} />
             </div>
         </div>
     );
