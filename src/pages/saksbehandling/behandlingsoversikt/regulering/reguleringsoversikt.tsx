@@ -102,7 +102,7 @@ const Reguleringsoversikt = (props: Props) => {
                                         <Table.DataCell>
                                             {merknader.map((m, index) => (
                                                 <Tag variant="info" key={index}>
-                                                    {formatMessage(m)}
+                                                    {m}
                                                 </Tag>
                                             ))}
                                         </Table.DataCell>
