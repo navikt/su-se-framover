@@ -59,8 +59,8 @@ const ScrollToTop = () => {
 
 const Root = () => (
     <Provider store={Store}>
-        <ErrorBoundary>
-            <BrowserRouter>
+        <BrowserRouter>
+            <ErrorBoundary>
                 <ContentWrapper>
                     <Suspense fallback={<Loader />}>
                         <Toaster />
@@ -68,8 +68,8 @@ const Root = () => (
                         <AppRoutes />
                     </Suspense>
                 </ContentWrapper>
-            </BrowserRouter>
-        </ErrorBoundary>
+            </ErrorBoundary>
+        </BrowserRouter>
     </Provider>
 );
 
