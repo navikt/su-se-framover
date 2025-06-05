@@ -29,6 +29,12 @@ import { ReguleringOversiktsstatus } from '~src/types/Regulering';
 import messages from './regulering-nb';
 import styles from './regulering.module.less';
 
+const hentFradragskategorier = () => {
+    return [...Object.keys(VelgbareFradragskategorier), ...Object.keys(IkkeVelgbareFradragskategorier)].sort((a, b) =>
+        a.localeCompare(b),
+    );
+};
+
 const Reguleringsoversikt = () => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
@@ -167,10 +173,7 @@ const Reguleringsoversikt = () => {
                     <div className={styles.filtreringsStyling}>
                         <Box padding="2">
                             <Label className={styles.label}>Fradragstyper</Label>
-                            {[
-                                ...Object.keys(VelgbareFradragskategorier),
-                                ...Object.keys(IkkeVelgbareFradragskategorier),
-                            ].map((value) => (
+                            {hentFradragskategorier().map((value) => (
                                 <Checkbox
                                     key={value}
                                     onChange={(e) => {
