@@ -58,7 +58,7 @@ const Reguleringsoversikt = () => {
 
     const filtrerteReguleringer = fradragsfilterList.size
         ? gjenståendeManuelleReguleringer.filter((regulering) => {
-              return regulering.fradragsKategori.some((fradrag) => fradragsfilterList.has(fradrag));
+              return regulering.fradragsKategori.every((fradrag) => fradragsfilterList.has(fradrag));
           })
         : gjenståendeManuelleReguleringer;
 
