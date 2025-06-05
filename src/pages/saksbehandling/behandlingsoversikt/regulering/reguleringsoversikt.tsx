@@ -56,11 +56,11 @@ const Reguleringsoversikt = () => {
         ? reguleringerOgMerknader.value
         : [];
 
-    const filtrerteReguleringer = gjenståendeManuelleReguleringer.filter((regulering) => {
-        regulering.fradragsKategori.some((fradrag) =>
-            fradragsfilterList.size ? fradragsfilterList.has(fradrag) : true,
-        );
-    });
+    const filtrerteReguleringer = fradragsfilterList.size
+        ? gjenståendeManuelleReguleringer.filter((regulering) => {
+              return regulering.fradragsKategori.some((fradrag) => fradragsfilterList.has(fradrag));
+          })
+        : gjenståendeManuelleReguleringer;
 
     const sortByFnr = pipe(
         S.Ord,
