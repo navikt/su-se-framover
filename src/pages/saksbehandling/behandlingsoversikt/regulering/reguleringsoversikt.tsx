@@ -164,7 +164,7 @@ const Reguleringsoversikt = () => {
                     {formatMessage('resultat.startManuell')}
                 </Heading>
                 <div className={styles.filterKolonne}>
-                    <div className={styles.filter}>
+                    <div className={styles.filtreringsStyling}>
                         <Box padding="2">
                             <Label className={styles.label}>Fradragstyper</Label>
                             {[
