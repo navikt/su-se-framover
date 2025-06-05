@@ -1,10 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { CalculatorIcon } from '@navikt/aksel-icons';
-import { Alert, Heading, Table, Tag, Button, Loader } from '@navikt/ds-react';
+import { Alert, Box, Button, Checkbox, Heading, Label, Loader, Table, Tag } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import { contramap } from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { hentReguleringsstatus } from '~src/api/reguleringApi.ts';
@@ -18,13 +18,16 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch } from '~src/redux/Store';
-import { fradragTilLabelTag } from '~src/types/Fradrag.ts';
+import {
+    Fradragskategori,
+    fradragTilLabelTag,
+    IkkeVelgbareFradragskategorier,
+    VelgbareFradragskategorier,
+} from '~src/types/Fradrag.ts';
 import { ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import messages from './regulering-nb';
 import styles from './regulering.module.less';
-
-
 
 const Reguleringsoversikt = () => {
     const { formatMessage } = useI18n({ messages });
@@ -39,6 +42,8 @@ const Reguleringsoversikt = () => {
         hentReguleringerOgMerknader({});
     }, []);
 
+    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(new Set());
+
     if (RemoteData.isFailure(reguleringerOgMerknader)) {
         return <ApiErrorAlert error={reguleringerOgMerknader.error} />;
     }
@@ -50,6 +55,12 @@ const Reguleringsoversikt = () => {
     const gjenståendeManuelleReguleringer = RemoteData.isSuccess(reguleringerOgMerknader)
         ? reguleringerOgMerknader.value
         : [];
+
+    const filtrerteReguleringer = fradragsfilterList.size
+        ? gjenståendeManuelleReguleringer.filter((regulering) => {
+              return regulering.fradragsKategori.some((fradrag) => fradragsfilterList.has(fradrag));
+          })
+        : gjenståendeManuelleReguleringer;
 
     const sortByFnr = pipe(
         S.Ord,
@@ -152,7 +163,45 @@ const Reguleringsoversikt = () => {
                     <CircleWithIcon variant="yellow" icon={<CalculatorIcon />} />
                     {formatMessage('resultat.startManuell')}
                 </Heading>
-                <Reguleringstabell data={gjenståendeManuelleReguleringer} />
+                <div className={styles.filterKolonne}>
+                    <div className={styles.filtreringsStyling}>
+                        <Box padding="2">
+                            <Label className={styles.label}>Fradragstyper</Label>
+                            {[
+                                ...Object.keys(VelgbareFradragskategorier),
+                                ...Object.keys(IkkeVelgbareFradragskategorier),
+                            ].map((value) => (
+                                <Checkbox
+                                    key={value}
+                                    onChange={(e) => {
+                                        const valgtFradrag = value as Fradragskategori;
+                                        const funnet = fradragsfilterList.has(valgtFradrag);
+                                        if (funnet) {
+                                            if (!e.target.checked) {
+                                                setfradragsFilter((prev) => {
+                                                    const updated = new Set(prev);
+                                                    updated.delete(valgtFradrag);
+                                                    return updated;
+                                                });
+                                            }
+                                        } else {
+                                            if (e.target.checked) {
+                                                setfradragsFilter((prev) => {
+                                                    const updated = new Set(prev);
+                                                    updated.add(valgtFradrag);
+                                                    return updated;
+                                                });
+                                            }
+                                        }
+                                    }}
+                                >
+                                    {value}
+                                </Checkbox>
+                            ))}
+                        </Box>
+                    </div>
+                    <Reguleringstabell data={filtrerteReguleringer} />
+                </div>
             </div>
         </div>
     );
