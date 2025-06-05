@@ -57,8 +57,11 @@ const Reguleringsoversikt = () => {
         : [];
 
     const filtrerteReguleringer = gjenståendeManuelleReguleringer.filter((regulering) => {
-        regulering.fradragsKategori.some((fradrag) => fradragsfilterList.has(fradrag));
+        regulering.fradragsKategori.some((fradrag) =>
+            fradragsfilterList.size ? fradragsfilterList.has(fradrag) : true,
+        );
     });
+
     const sortByFnr = pipe(
         S.Ord,
         contramap((r: ReguleringOversiktsstatus) => r.fnr),
