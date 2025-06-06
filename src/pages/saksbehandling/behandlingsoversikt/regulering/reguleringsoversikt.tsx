@@ -211,7 +211,7 @@ const Reguleringsoversikt = () => {
                                         }
                                     }}
                                 >
-                                    {value}
+                                    {formatMessage(value as Fradragskategori)}
                                 </Checkbox>
                             ))}
                         </Box>
