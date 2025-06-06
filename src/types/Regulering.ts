@@ -37,6 +37,7 @@ export interface ReguleringOversiktsstatus {
     saksnummer: number;
     fnr: string;
     fradragsKategori: Fradragskategori[];
+    årsakTilManuellRegulering: ÅrsakTilManuellReguleringKategori[];
 }
 
 export enum Reguleringstype {
@@ -44,7 +45,7 @@ export enum Reguleringstype {
     MANUELL = 'MANUELL',
 }
 
-export enum ÅrsakForManuellType {
+export enum ÅrsakTilManuellReguleringKategori {
     FradragMåHåndteresManuelt = 'FradragMåHåndteresManuelt',
     UtbetalingFeilet = 'UtbetalingFeilet',
     BrukerManglerSupplement = 'BrukerManglerSupplement',
@@ -65,7 +66,7 @@ export enum ÅrsakForManuellType {
 
 export interface ÅrsakForManuell {
     begrunnelse: Nullable<string>;
-    type: ÅrsakForManuellType;
+    type: ÅrsakTilManuellReguleringKategori;
 }
 
 export interface FradragMåHåndteresManuelt extends ÅrsakForManuell {

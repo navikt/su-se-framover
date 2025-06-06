@@ -37,12 +37,14 @@ import {
     SupplementInneholderIkkeFradraget,
     YtelseErMidlertidigStanset,
     ÅrsakForManuell,
-    ÅrsakForManuellType,
+    ÅrsakTilManuellReguleringKategori,
     FantIkkeVedtakForApril,
 } from '~src/types/Regulering';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { formatPeriode, formatPeriodeMedOptionalTilOgMed } from '~src/utils/periode/periodeUtils';
+
+import reguleringstext from '../behandlingsoversikt/regulering/regulering-nb';
 
 import messages from './manuellRegulering-nb';
 import styles from './manuellRegulering.module.less';
@@ -240,34 +242,41 @@ const ManuellRegulering = () => {
 export default ManuellRegulering;
 
 const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => {
+    const { formatMessage } = useI18n({ messages: { ...reguleringstext } });
     return props.årsaker.length > 0 ? (
         <Alert className={styles.advarsel} variant="warning">
             <Label>Reguleringen er til manuell behandling fordi: </Label>
             <ul className={styles.årsaksContainer}>
                 {props.årsaker.map((årsak, i) => {
                     switch (årsak.type) {
-                        case ÅrsakForManuellType.FradragMåHåndteresManuelt: {
+                        case ÅrsakTilManuellReguleringKategori.FradragMåHåndteresManuelt: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>Fradraget må håndteres manuelt av historiske grunner</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.FradragMåHåndteresManuelt)}
+                                    </BodyShort>
                                     <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.UtbetalingFeilet: {
+                        case ÅrsakTilManuellReguleringKategori.UtbetalingFeilet: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>Utbetaling feilet for behandlingen</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.UtbetalingFeilet)}
+                                    </BodyShort>
                                     <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.BrukerManglerSupplement: {
+                        case ÅrsakTilManuellReguleringKategori.BrukerManglerSupplement: {
                             const asserted = årsak as BrukerManglerSupplement;
 
                             return (
                                 <li key={i}>
-                                    <BodyShort>Bruker har ikke data fra ekstern kilde for fradraget</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.BrukerManglerSupplement)}
+                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
@@ -276,11 +285,15 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.SupplementInneholderIkkeFradraget: {
+                        case ÅrsakTilManuellReguleringKategori.SupplementInneholderIkkeFradraget: {
                             const asserted = årsak as SupplementInneholderIkkeFradraget;
                             return (
                                 <li key={i}>
-                                    <BodyShort>Data fra ekstern kilde inneholder ikke fradraget</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(
+                                            ÅrsakTilManuellReguleringKategori.SupplementInneholderIkkeFradraget,
+                                        )}
+                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
@@ -289,11 +302,11 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.MerEnn1Eps: {
+                        case ÅrsakTilManuellReguleringKategori.MerEnn1Eps: {
                             const asserted = årsak as SupplementInneholderIkkeFradraget;
                             return (
                                 <li key={i}>
-                                    <BodyShort>Data fra ekstern kilde inneholder flere EPS</BodyShort>
+                                    <BodyShort>{formatMessage(ÅrsakTilManuellReguleringKategori.MerEnn1Eps)}</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
@@ -302,11 +315,13 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.FinnesFlerePerioderAvFradrag: {
+                        case ÅrsakTilManuellReguleringKategori.FinnesFlerePerioderAvFradrag: {
                             const asserted = årsak as FinnesFlerePerioderAvFradrag;
                             return (
                                 <li key={i}>
-                                    <BodyShort>Funnet flere perioder av samme fradrag</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.FinnesFlerePerioderAvFradrag)}
+                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
@@ -315,11 +330,13 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.FradragErUtenlandsinntekt: {
+                        case ÅrsakTilManuellReguleringKategori.FradragErUtenlandsinntekt: {
                             const asserted = årsak as FradragErUtenlandsinntekt;
                             return (
                                 <li key={i}>
-                                    <BodyShort>Fradrag er markert som utenlandsk</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.FradragErUtenlandsinntekt)}
+                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
@@ -328,11 +345,13 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.FantIkkeVedtakForApril: {
+                        case ÅrsakTilManuellReguleringKategori.FantIkkeVedtakForApril: {
                             const asserted = årsak as FantIkkeVedtakForApril;
                             return (
                                 <li key={i}>
-                                    <BodyShort>Fant ikke eksterne vedtaket for april</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.FantIkkeVedtakForApril)}
+                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
                                         <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
@@ -341,13 +360,14 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.SupplementHarFlereVedtaksperioderForFradrag: {
+                        case ÅrsakTilManuellReguleringKategori.SupplementHarFlereVedtaksperioderForFradrag: {
                             const asserted = årsak as SupplementHarFlereVedtaksperioderForFradrag;
                             return (
                                 <li key={i}>
                                     <BodyShort>
-                                        Data fra ekstern kilde inneholdt flere vedtaksperioder for fradrag som kan
-                                        reguleres
+                                        {formatMessage(
+                                            ÅrsakTilManuellReguleringKategori.SupplementHarFlereVedtaksperioderForFradrag,
+                                        )}
                                     </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -365,13 +385,12 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.DifferanseFørRegulering: {
+                        case ÅrsakTilManuellReguleringKategori.DifferanseFørRegulering: {
                             const asserted = årsak as DifferanseFørRegulering;
                             return (
                                 <li key={i}>
                                     <BodyShort>
-                                        Differanse i beløp mellom eksterne kilde, og beløpet som er i fradraget før
-                                        regulering
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.DifferanseFørRegulering)}
                                     </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -387,13 +406,12 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.DifferanseEtterRegulering: {
+                        case ÅrsakTilManuellReguleringKategori.DifferanseEtterRegulering: {
                             const asserted = årsak as DifferanseEtterRegulering;
                             return (
                                 <li key={i}>
                                     <BodyShort>
-                                        Differanse i beløp mellom eksterne kilde, og beløpet som er i fradraget etter
-                                        regulering
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.DifferanseEtterRegulering)}
                                     </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
@@ -410,32 +428,24 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.YtelseErMidlertidigStanset: {
+                        case ÅrsakTilManuellReguleringKategori.YtelseErMidlertidigStanset: {
                             const asserted = årsak as YtelseErMidlertidigStanset;
                             return (
                                 <li key={i}>
-                                    <BodyShort>Ytelsen er midlertidig stanset</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.YtelseErMidlertidigStanset)}
+                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{asserted.begrunnelse}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.ForventetInntektErStørreEnn0: {
-                            return (
-                                <li key={i}>
-                                    <BodyShort>Forventet inntekt må justeres</BodyShort>
-                                    <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>{årsak.begrunnelse}</BodyShort>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        case ÅrsakForManuellType.AutomatiskSendingTilUtbetalingFeilet: {
+                        case ÅrsakTilManuellReguleringKategori.ForventetInntektErStørreEnn0: {
                             return (
                                 <li key={i}>
                                     <BodyShort>
-                                        Automatisk behandling av reguleringen feilet fordi utbetaling feilet
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.ForventetInntektErStørreEnn0)}
                                     </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse}</BodyShort>
@@ -443,21 +453,41 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.VedtakstidslinjeErIkkeSammenhengende: {
+                        case ÅrsakTilManuellReguleringKategori.AutomatiskSendingTilUtbetalingFeilet: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>Vedtakstidslinjen inneholder hull</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(
+                                            ÅrsakTilManuellReguleringKategori.AutomatiskSendingTilUtbetalingFeilet,
+                                        )}
+                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
-                        case ÅrsakForManuellType.DelvisOpphør: {
+                        case ÅrsakTilManuellReguleringKategori.VedtakstidslinjeErIkkeSammenhengende: {
+                            return (
+                                <li key={i}>
+                                    <BodyShort>
+                                        {formatMessage(
+                                            ÅrsakTilManuellReguleringKategori.VedtakstidslinjeErIkkeSammenhengende,
+                                        )}
+                                    </BodyShort>
+                                    <div className={styles.årsaksdetaljer}>
+                                        <BodyShort>{årsak.begrunnelse}</BodyShort>
+                                    </div>
+                                </li>
+                            );
+                        }
+                        case ÅrsakTilManuellReguleringKategori.DelvisOpphør: {
                             const asserted = årsak as DelvisOpphør;
                             return (
                                 <li key={i}>
-                                    <BodyShort>Saken er delvis opphørt</BodyShort>
+                                    <BodyShort>
+                                        {formatMessage(ÅrsakTilManuellReguleringKategori.DelvisOpphør)}
+                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>Opphørte perioder</BodyShort>
                                         <div className={styles.årsaksdetaljer}>
