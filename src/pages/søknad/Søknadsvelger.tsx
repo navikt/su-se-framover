@@ -1,5 +1,4 @@
 import { BodyLong, GuidePanel, Heading, Ingress, Panel } from '@navikt/ds-react';
-import { Navigate } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
@@ -15,7 +14,7 @@ const Søknadsvelger = () => {
     const { formatMessage } = useI18n({ messages });
     const isPapirsøknad = location.search.includes('papirsoknad');
 
-    if (user.roller.includes(Rolle.Saksbehandler)) {
+    if (user.roller.includes(Rolle.Saksbehandler) || user.roller.includes(Rolle.Veileder)) {
         return (
             <div className={styles.container}>
                 <div className={styles.content}>
@@ -70,12 +69,7 @@ const Søknadsvelger = () => {
             </div>
         );
     } else {
-        return (
-            <Navigate
-                replace
-                to={Routes.soknadtema.createURL({ papirsøknad: isPapirsøknad, soknadstema: Routes.URL_TEMA_UFØRE })}
-            />
-        );
+        return null;
     }
 };
 
