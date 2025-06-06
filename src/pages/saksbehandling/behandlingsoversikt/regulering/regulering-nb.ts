@@ -9,4 +9,22 @@ export default {
     'tabell.ekstraInformasjon': 'Ekstra informasjon',
     'tabell.årsakTilManuellRegulering': 'Årsak til manuell G-regulering',
     'tabell.lenke.knapp': 'Se sak',
+    FradragMåHåndteresManuelt: 'Fradraget må håndteres manuelt av historiske grunner',
+    UtbetalingFeilet: 'Utbetaling feilet for behandlingen',
+    BrukerManglerSupplement: 'Bruker har ikke data fra ekstern kilde for fradraget',
+    SupplementInneholderIkkeFradraget: 'Data fra ekstern kilde inneholder ikke fradraget',
+    FinnesFlerePerioderAvFradrag: 'Funnet flere perioder av samme fradrag',
+    FradragErUtenlandsinntekt: 'Fradrag er markert som utenlandsk',
+    SupplementHarFlereVedtaksperioderForFradrag:
+        'Data fra ekstern kilde inneholdt flere vedtaksperioder for fradrag som kan reguleresf',
+    DifferanseFørRegulering: 'Differanse i beløp mellom eksterne kilde, og beløpet som er i fradraget før regulering',
+    DifferanseEtterRegulering:
+        'Differanse i beløp mellom eksterne kilde, og beløpet som er i fradraget etter regulering',
+    YtelseErMidlertidigStanset: 'Ytelsen er midlertidig stanset',
+    ForventetInntektErStørreEnn0: 'Forventet inntekt må justeres',
+    AutomatiskSendingTilUtbetalingFeilet: 'Automatisk behandling av reguleringen feilet fordi utbetaling feilet',
+    VedtakstidslinjeErIkkeSammenhengende: 'Vedtakstidslinjen inneholder hull',
+    DelvisOpphør: 'Saken er delvis opphørt',
+    FantIkkeVedtakForApril: 'Fant ikke eksterne vedtaket for april',
+    MerEnn1Eps: 'Data fra ekstern kilde inneholder flere EPS',
 };

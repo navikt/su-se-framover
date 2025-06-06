@@ -150,7 +150,9 @@ const Reguleringsoversikt = () => {
                                                     </Tag>
                                                 ))}
                                             </Table.DataCell>
-                                            <Table.DataCell>{årsakTilManuellRegulering}</Table.DataCell>
+                                            <Table.DataCell>
+                                                {årsakTilManuellRegulering.map((årsak) => formatMessage(årsak))}
+                                            </Table.DataCell>
                                         </Table.Row>
                                     );
                                 },
