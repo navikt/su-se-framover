@@ -146,7 +146,7 @@ const Reguleringsoversikt = () => {
                                                         variant={fradragTilLabelTag[fradrag]}
                                                         key={`${index}-${fradrag}`}
                                                     >
-                                                        {fradrag}
+                                                        {formatMessage(fradrag)}
                                                     </Tag>
                                                 ))}
                                             </Table.DataCell>
