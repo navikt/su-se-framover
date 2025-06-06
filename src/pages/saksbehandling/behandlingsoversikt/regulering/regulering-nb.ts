@@ -7,5 +7,6 @@ export default {
     'tabell.lenke': 'Lenke',
     'tabell.fnr': 'Fødselsnummer',
     'tabell.ekstraInformasjon': 'Ekstra informasjon',
+    'tabell.årsakTilManuellRegulering': 'Årsak til manuell G-regulering',
     'tabell.lenke.knapp': 'Se sak',
 };

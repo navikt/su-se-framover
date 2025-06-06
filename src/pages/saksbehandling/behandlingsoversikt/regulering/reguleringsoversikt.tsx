@@ -29,7 +29,7 @@ import { ReguleringOversiktsstatus } from '~src/types/Regulering';
 import messages from './regulering-nb';
 import styles from './regulering.module.less';
 
-const hentFradragskategorier = () => {
+const hentFradragskategorierSortertAlfabetisk = () => {
     return [...Object.keys(VelgbareFradragskategorier), ...Object.keys(IkkeVelgbareFradragskategorier)].sort((a, b) =>
         a.localeCompare(b),
     );
@@ -85,67 +85,76 @@ const Reguleringsoversikt = () => {
                             <Table.HeaderCell>{formatMessage('tabell.fnr')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.lenke')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.ekstraInformasjon')}</Table.HeaderCell>
+                            <Table.HeaderCell>{formatMessage('tabell.årsakTilManuellRegulering')}</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {pipe(
                             data,
                             arr.sortBy([sortByFnr]),
-                            arr.mapWithIndex((index, { saksnummer, fnr, fradragsKategori }) => {
-                                return (
-                                    <Table.Row key={index}>
-                                        <Table.DataCell>{saksnummer}</Table.DataCell>
-                                        <Table.DataCell>{fnr}</Table.DataCell>
-                                        <Table.DataCell
-                                            onContextMenu={(e) => {
-                                                e.preventDefault();
-                                                setContextMenuVariables({
-                                                    pos: { x: e.pageX, y: e.pageY },
-                                                    toggled: true,
-                                                    onMenuClick: async () => {
+                            arr.mapWithIndex(
+                                (index, { saksnummer, fnr, fradragsKategori, årsakTilManuellRegulering }) => {
+                                    return (
+                                        <Table.Row key={index}>
+                                            <Table.DataCell>{saksnummer}</Table.DataCell>
+                                            <Table.DataCell>{fnr}</Table.DataCell>
+                                            <Table.DataCell
+                                                onContextMenu={(e) => {
+                                                    e.preventDefault();
+                                                    setContextMenuVariables({
+                                                        pos: { x: e.pageX, y: e.pageY },
+                                                        toggled: true,
+                                                        onMenuClick: async () => {
+                                                            dispatch(personSlice.default.actions.resetSøkerData());
+                                                            dispatch(sakSlice.default.actions.resetSak());
+                                                            hentSak({ saksnummer: saksnummer.toString() }, (sak) => {
+                                                                window.open(
+                                                                    Routes.saksoversiktValgtSak.createURL({
+                                                                        sakId: sak.id,
+                                                                    }),
+                                                                    '_blank',
+                                                                );
+                                                            });
+                                                        },
+                                                    });
+                                                }}
+                                            >
+                                                <Button
+                                                    variant="tertiary"
+                                                    onClick={async () => {
                                                         dispatch(personSlice.default.actions.resetSøkerData());
                                                         dispatch(sakSlice.default.actions.resetSak());
-                                                        hentSak({ saksnummer: saksnummer.toString() }, (sak) => {
-                                                            window.open(
+                                                        await hentSak({ saksnummer: saksnummer.toString() }, (sak) => {
+                                                            navigate(
                                                                 Routes.saksoversiktValgtSak.createURL({
                                                                     sakId: sak.id,
                                                                 }),
-                                                                '_blank',
                                                             );
                                                         });
-                                                    },
-                                                });
-                                            }}
-                                        >
-                                            <Button
-                                                variant="tertiary"
-                                                onClick={async () => {
-                                                    dispatch(personSlice.default.actions.resetSøkerData());
-                                                    dispatch(sakSlice.default.actions.resetSak());
-                                                    await hentSak({ saksnummer: saksnummer.toString() }, (sak) => {
-                                                        navigate(
-                                                            Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }),
-                                                        );
-                                                    });
-                                                }}
-                                                loading={RemoteData.isPending(hentSakStatus)}
-                                            >
-                                                {formatMessage('tabell.lenke.knapp')}
-                                            </Button>
-                                            {RemoteData.isFailure(hentSakStatus) && (
-                                                <ApiErrorAlert error={hentSakStatus.error} />
-                                            )}
-                                        </Table.DataCell>
-                                        <Table.DataCell>
-                                            {fradragsKategori.map((fradrag, index) => (
-                                                <Tag variant={fradragTilLabelTag[fradrag]} key={`${index}-${fradrag}`}>
-                                                    {fradrag}
-                                                </Tag>
-                                            ))}
-                                        </Table.DataCell>
-                                    </Table.Row>
-                                );
-                            }),
+                                                    }}
+                                                    loading={RemoteData.isPending(hentSakStatus)}
+                                                >
+                                                    {formatMessage('tabell.lenke.knapp')}
+                                                </Button>
+                                                {RemoteData.isFailure(hentSakStatus) && (
+                                                    <ApiErrorAlert error={hentSakStatus.error} />
+                                                )}
+                                            </Table.DataCell>
+                                            <Table.DataCell>
+                                                {fradragsKategori.map((fradrag, index) => (
+                                                    <Tag
+                                                        variant={fradragTilLabelTag[fradrag]}
+                                                        key={`${index}-${fradrag}`}
+                                                    >
+                                                        {fradrag}
+                                                    </Tag>
+                                                ))}
+                                            </Table.DataCell>
+                                            <Table.DataCell>{årsakTilManuellRegulering}</Table.DataCell>
+                                        </Table.Row>
+                                    );
+                                },
+                            ),
                         )}
                     </Table.Body>
                 </Table>
@@ -175,7 +184,7 @@ const Reguleringsoversikt = () => {
                     <div className={styles.filtreringsStyling}>
                         <Box padding="2">
                             <Label className={styles.label}>Fradragstyper</Label>
-                            {hentFradragskategorier().map((value) => (
+                            {hentFradragskategorierSortertAlfabetisk().map((value) => (
                                 <Checkbox
                                     key={value}
                                     onChange={(e) => {
