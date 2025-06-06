@@ -44,6 +44,8 @@ import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { formatPeriode, formatPeriodeMedOptionalTilOgMed } from '~src/utils/periode/periodeUtils';
 
+import reguleringstext from '../behandlingsoversikt/regulering/regulering-nb';
+
 import messages from './manuellRegulering-nb';
 import styles from './manuellRegulering.module.less';
 
@@ -51,8 +53,6 @@ interface FormData {
     uføre: Uføregrunnlag[];
     fradrag: FradragFormData[];
 }
-
-import reguleringstext from '../behandlingsoversikt/regulering/regulering-nb';
 
 const ManuellRegulering = () => {
     const { formatMessage } = useI18n({ messages });
