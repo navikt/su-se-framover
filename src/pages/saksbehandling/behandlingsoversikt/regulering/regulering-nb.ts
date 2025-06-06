@@ -1,3 +1,7 @@
+import {
+    ikkeVelgbareFradragskategoriMessages,
+    velgbareFradragskategoriMessages,
+} from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb.ts';
 import { ÅrsakTilManuellReguleringKategori } from '~src/types/Regulering.ts';
 
 const manuelleÅrsakerForRegulering: { [key in ÅrsakTilManuellReguleringKategori]: string } = {
@@ -37,4 +41,6 @@ export default {
     'tabell.årsakTilManuellRegulering': 'Årsak til manuell G-regulering',
     'tabell.lenke.knapp': 'Se sak',
     ...manuelleÅrsakerForRegulering,
+    ...velgbareFradragskategoriMessages,
+    ...ikkeVelgbareFradragskategoriMessages,
 };
