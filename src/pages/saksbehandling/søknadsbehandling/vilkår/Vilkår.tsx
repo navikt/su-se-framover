@@ -6,11 +6,15 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
+import { isNotNullable } from '~src/lib/types.ts';
 import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspensjon/Alderspensjon';
 import Beregning from '~src/pages/saksbehandling/søknadsbehandling/beregning/Beregning';
 import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/familieforening/Familieforening';
+import { GammelNok } from '~src/pages/saksbehandling/søknadsbehandling/gammelnok/GammelNok.tsx';
+import { alderPersonForUngSkalViseVilkårForAvslag } from '~src/pages/saksbehandling/søknadsbehandling/virkningstidspunkt/Alderssjekk.ts';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
+import * as DateUtils from '~src/utils/date/dateUtils.ts';
 import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/SøknadsbehandlingUtils';
 import { createVilkårUrl } from '~src/utils/vilkårUtils';
@@ -65,6 +69,15 @@ const Vilkår = () => {
         });
     }, []);
 
+    const skalViseAvslagsVilkårForUngForAlder =
+        behandling &&
+        isNotNullable(behandling.stønadsperiode) &&
+        props.søker.fødsel &&
+        alderPersonForUngSkalViseVilkårForAvslag({
+            stønadsperiodeFraOgMed: DateUtils.parseIsoDateOnly(behandling.stønadsperiode.periode.fraOgMed),
+            søkersFødselsinformasjon: props.søker.fødsel,
+        });
+
     return (
         <SøknadsbehandlingDraftProvider>
             <div className={styles.container}>
@@ -83,16 +96,33 @@ const Vilkår = () => {
                             nesteUrl={
                                 props.sak.sakstype === Sakstype.Uføre
                                     ? vilkårUrl(Vilkårtype.Uførhet)
-                                    : vilkårUrl(Vilkårtype.Familieforening)
+                                    : skalViseAvslagsVilkårForUngForAlder
+                                      ? vilkårUrl(VilkårtypeAlder.GammelNok)
+                                      : vilkårUrl(Vilkårtype.Familieforening)
                             }
                             sakId={sakId}
                             tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
+                    {vilkar === VilkårtypeAlder.GammelNok &&
+                        isAldersøknad(behandling.søknad.søknadInnhold) &&
+                        skalViseAvslagsVilkårForUngForAlder && (
+                            <GammelNok
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
+                                nesteUrl={vilkårUrl(Vilkårtype.Familieforening)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                            />
+                        )}
                     {vilkar === VilkårtypeAlder.Familieforening && isAldersøknad(behandling.søknad.søknadInnhold) && (
                         <Familieforening
                             behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
+                            forrigeUrl={
+                                skalViseAvslagsVilkårForUngForAlder
+                                    ? vilkårUrl(VilkårtypeAlder.GammelNok)
+                                    : vilkårUrl(Vilkårtype.Virkningstidspunkt)
+                            }
                             nesteUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
                             avsluttUrl={avsluttUrl}
                             søknadInnhold={behandling.søknad.søknadInnhold}

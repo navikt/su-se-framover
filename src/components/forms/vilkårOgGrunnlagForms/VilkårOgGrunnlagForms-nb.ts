@@ -36,6 +36,8 @@ export const ikkeVelgbareFradragskategoriMessages: { [key in IkkeVelgbareFradrag
 };
 
 export default {
+    'alder.gammelnok':
+        'Er vilkår §3 første ledd i Lov om supplerande stønad til personar med kort butid i Noreg oppfylt?',
     'uførhet.vilkår': 'Er vilkår §12-4 til §12-7 i folketrygdloven oppfylt?',
     'uførhet.input.uføregrad.label': 'Uføregrad',
     'uførhet.input.forventetInntekt.label': 'Forventet inntekt etter uførhet per år',

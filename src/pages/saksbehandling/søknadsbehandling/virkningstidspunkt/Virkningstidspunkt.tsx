@@ -1,23 +1,27 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, ConfirmationPanel, Heading, Loader } from '@navikt/ds-react';
+import { Alert, ConfirmationPanel, Heading } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import { RangePickerMonth } from '~src/components/inputs/datePicker/DatePicker';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
-import { nullableMap, pipe } from '~src/lib/fp';
+import { nullableMap } from '~src/lib/fp';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
-import { useAppSelector } from '~src/redux/Store';
+import {
+    forUngAlderEtterFødselsår,
+    forUngAlderFødselsinformasjonDato,
+} from '~src/pages/saksbehandling/søknadsbehandling/virkningstidspunkt/Alderssjekk.ts';
 import { Fødsel } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
@@ -25,11 +29,7 @@ import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { formatPeriodeMonthYear } from '~src/utils/periode/periodeUtils';
-import {
-    alderSomPersonFyllerIÅr,
-    alderSomPersonFyllerIÅrDate,
-    alderSomPersonFyllerPåDato,
-} from '~src/utils/person/personUtils';
+import { alderSomPersonFyllerIÅr } from '~src/utils/person/personUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedMessages from '../sharedI18n-nb';
@@ -59,9 +59,9 @@ const Virkningstidspunkt = (
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const navigate = useNavigate();
 
+    const { søker } = useOutletContext<SaksoversiktContext>();
     const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
 
-    const søkerState = useAppSelector((state) => state.personopplysninger.søker);
     const initialValues: VirkningstidspunktFormData = {
         periode: {
             fraOgMed: nullableMap(
@@ -143,174 +143,156 @@ const Virkningstidspunkt = (
 
     return (
         <>
-            {pipe(
-                søkerState,
-                RemoteData.fold(
-                    () => <Loader />,
-                    () => <Loader />,
-                    () => <></>,
-                    (søker) => (
-                        <ToKolonner tittel={formatMessage('page.tittel')}>
-                            {{
-                                left: (
-                                    <FormWrapper
-                                        form={form}
-                                        neste={{
-                                            onClick: handleNesteClick,
-                                            url: props.nesteUrl,
-                                            savingState: status,
-                                        }}
-                                        tilbake={{
-                                            url: props.forrigeUrl,
-                                        }}
-                                        lagreOgfortsettSenere={{
-                                            onClick: handleLagreOgFortsettSenereClick,
-                                            url: props.avsluttUrl,
-                                        }}
-                                    >
-                                        <>
-                                            <SaksbehandlerMåKontrollereStønadsperioden
-                                                stønadsperiodeTilOgMed={form.watch('periode.tilOgMed')}
-                                                søkersFødselsinformasjon={søker.fødsel}
-                                                sakstype={props.behandling.sakstype}
-                                                stønadsperiodeFraOgMed={form.watch('periode.fraOgMed')}
-                                            />
+            <ToKolonner tittel={formatMessage('page.tittel')}>
+                {{
+                    left: (
+                        <FormWrapper
+                            form={form}
+                            neste={{
+                                onClick: handleNesteClick,
+                                url: props.nesteUrl,
+                                savingState: status,
+                            }}
+                            tilbake={{
+                                url: props.forrigeUrl,
+                            }}
+                            lagreOgfortsettSenere={{
+                                onClick: handleLagreOgFortsettSenereClick,
+                                url: props.avsluttUrl,
+                            }}
+                        >
+                            <>
+                                <SjekkFødselsdatoMotVirk
+                                    stønadsperiodeTilOgMed={form.watch('periode.tilOgMed')}
+                                    søkersFødselsinformasjon={søker.fødsel}
+                                    sakstype={props.behandling.sakstype}
+                                    stønadsperiodeFraOgMed={form.watch('periode.fraOgMed')}
+                                />
 
-                                            {(RemoteData.isFailure(status) &&
-                                                [
-                                                    ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE,
-                                                    ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_ALDER,
-                                                ].includes(status.error?.body?.code)) ||
-                                                (skalViseBekreftelsesPanel({
-                                                    s: props.behandling,
-                                                    angittPeriode: {
-                                                        fraOgMed: form.watch('periode.fraOgMed')
-                                                            ? DateFns.formatISO(form.watch('periode.fraOgMed')!, {
-                                                                  representation: 'date',
-                                                              })
-                                                            : null,
-                                                        tilOgMed: form.watch('periode.tilOgMed')
-                                                            ? DateFns.formatISO(form.watch('periode.tilOgMed')!, {
-                                                                  representation: 'date',
-                                                              })
-                                                            : null,
-                                                    },
-                                                }) && (
-                                                    <Controller
-                                                        control={form.control}
-                                                        name="harSaksbehandlerAvgjort"
-                                                        render={({ field }) => (
-                                                            <ConfirmationPanel
-                                                                className={styles.confirmationPanel}
-                                                                checked={field.value}
-                                                                label={formatMessage(
-                                                                    'stønadsperiode.advarsel.checkbox.måBekreftes',
-                                                                )}
-                                                                onChange={() => field.onChange(!field.value)}
-                                                            >
-                                                                {formatMessage(
-                                                                    props.behandling.sakstype === Sakstype.Alder
-                                                                        ? 'stønadsperiode.advarsel.tekst.alder'
-                                                                        : 'stønadsperiode.advarsel.tekst.uføre',
-                                                                )}
-                                                            </ConfirmationPanel>
-                                                        )}
-                                                    />
-                                                ))}
-
-                                            <Controller
-                                                name={`periode`}
-                                                control={form.control}
-                                                render={({ field }) => (
-                                                    <RangePickerMonth
-                                                        name={'periode'}
-                                                        label={{
-                                                            fraOgMed: formatMessage('datovelger.fom.label'),
-                                                        }}
-                                                        value={field.value}
-                                                        onChange={(dato) => {
-                                                            field.onChange({
-                                                                fraOgMed: dato.fraOgMed,
-                                                                tilOgMed:
-                                                                    dato.fraOgMed && !dato.tilOgMed
-                                                                        ? DateFns.endOfMonth(
-                                                                              DateFns.addMonths(dato.fraOgMed, 11),
-                                                                          )
-                                                                        : dato.tilOgMed,
-                                                            });
-                                                        }}
-                                                        fromDate={TIDLIGST_MULIG_START_DATO}
-                                                        error={{
-                                                            fraOgMed: form.formState.errors.periode?.fraOgMed?.message,
-                                                            tilOgMed: form.formState.errors.periode?.tilOgMed?.message,
-                                                        }}
-                                                    />
-                                                )}
-                                            />
-                                        </>
-                                    </FormWrapper>
-                                ),
-                                right: (
-                                    <div className={sharedStyles.toKollonerRightContainer}>
-                                        <div>
-                                            <Heading size="small">{formatMessage('søker.personalia')}</Heading>
-                                            <OppsummeringPar
-                                                label={formatMessage('søker.fødselsdato')}
-                                                verdi={
-                                                    søker.fødsel?.dato
-                                                        ? formatDate(søker.fødsel?.dato)
-                                                        : formatMessage('feil.harIkkeFødselsdato')
-                                                }
-                                            />
-                                            <OppsummeringPar
-                                                label={formatMessage('søker.fødselsår')}
-                                                verdi={
-                                                    søker.fødsel?.år
-                                                        ? søker.fødsel.år
-                                                        : formatMessage('feil.harIkkeFødselsår')
-                                                }
-                                            />
-                                            {søker.fødsel?.alder ? (
-                                                <OppsummeringPar
-                                                    label={formatMessage('søker.alder')}
-                                                    verdi={søker.fødsel.alder}
-                                                />
-                                            ) : (
-                                                <OppsummeringPar
-                                                    label={formatMessage('søker.alder')}
-                                                    verdi={
-                                                        søker.fødsel?.år
-                                                            ? formatMessage('søker.årSøkerFyller', {
-                                                                  år: alderSomPersonFyllerIÅr(søker.fødsel.år),
-                                                                  detteÅret: new Date().getFullYear(),
-                                                              })
-                                                            : formatMessage('feil.kunneIkkeAvgjøreAlder')
-                                                    }
-                                                />
-                                            )}
-                                        </div>
-
-                                        <EksisterendeVedtaksinformasjon
-                                            eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
-                                            onSuccess={(data) => (
-                                                <OppsummeringPar
-                                                    label={formatMessage('eksisterendeInformasjon.stønadsperiode')}
-                                                    verdi={formatPeriodeMonthYear(data.periode)}
-                                                />
+                                {(RemoteData.isFailure(status) &&
+                                    [
+                                        ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE,
+                                        ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_ALDER,
+                                    ].includes(status.error?.body?.code)) ||
+                                    (skalViseBekreftelsesPanel({
+                                        s: props.behandling,
+                                        angittPeriode: {
+                                            fraOgMed: form.watch('periode.fraOgMed')
+                                                ? DateFns.formatISO(form.watch('periode.fraOgMed')!, {
+                                                      representation: 'date',
+                                                  })
+                                                : null,
+                                            tilOgMed: form.watch('periode.tilOgMed')
+                                                ? DateFns.formatISO(form.watch('periode.tilOgMed')!, {
+                                                      representation: 'date',
+                                                  })
+                                                : null,
+                                        },
+                                    }) && (
+                                        <Controller
+                                            control={form.control}
+                                            name="harSaksbehandlerAvgjort"
+                                            render={({ field }) => (
+                                                <ConfirmationPanel
+                                                    className={styles.confirmationPanel}
+                                                    checked={field.value}
+                                                    label={formatMessage(
+                                                        'stønadsperiode.advarsel.checkbox.måBekreftes',
+                                                    )}
+                                                    onChange={() => field.onChange(!field.value)}
+                                                >
+                                                    {formatMessage(
+                                                        props.behandling.sakstype === Sakstype.Alder
+                                                            ? 'stønadsperiode.advarsel.tekst.alder'
+                                                            : 'stønadsperiode.advarsel.tekst.uføre',
+                                                    )}
+                                                </ConfirmationPanel>
                                             )}
                                         />
-                                    </div>
-                                ),
-                            }}
-                        </ToKolonner>
+                                    ))}
+
+                                <Controller
+                                    name={`periode`}
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <RangePickerMonth
+                                            name={'periode'}
+                                            label={{
+                                                fraOgMed: formatMessage('datovelger.fom.label'),
+                                            }}
+                                            value={field.value}
+                                            onChange={(dato) => {
+                                                field.onChange({
+                                                    fraOgMed: dato.fraOgMed,
+                                                    tilOgMed:
+                                                        dato.fraOgMed && !dato.tilOgMed
+                                                            ? DateFns.endOfMonth(DateFns.addMonths(dato.fraOgMed, 11))
+                                                            : dato.tilOgMed,
+                                                });
+                                            }}
+                                            fromDate={TIDLIGST_MULIG_START_DATO}
+                                            error={{
+                                                fraOgMed: form.formState.errors.periode?.fraOgMed?.message,
+                                                tilOgMed: form.formState.errors.periode?.tilOgMed?.message,
+                                            }}
+                                        />
+                                    )}
+                                />
+                            </>
+                        </FormWrapper>
                     ),
-                ),
-            )}
+                    right: (
+                        <div className={sharedStyles.toKollonerRightContainer}>
+                            <div>
+                                <Heading size="small">{formatMessage('søker.personalia')}</Heading>
+                                <OppsummeringPar
+                                    label={formatMessage('søker.fødselsdato')}
+                                    verdi={
+                                        søker.fødsel?.dato
+                                            ? formatDate(søker.fødsel?.dato)
+                                            : formatMessage('feil.harIkkeFødselsdato')
+                                    }
+                                />
+                                <OppsummeringPar
+                                    label={formatMessage('søker.fødselsår')}
+                                    verdi={søker.fødsel?.år ? søker.fødsel.år : formatMessage('feil.harIkkeFødselsår')}
+                                />
+                                {søker.fødsel?.alder ? (
+                                    <OppsummeringPar label={formatMessage('søker.alder')} verdi={søker.fødsel.alder} />
+                                ) : (
+                                    <OppsummeringPar
+                                        label={formatMessage('søker.alder')}
+                                        verdi={
+                                            søker.fødsel?.år
+                                                ? formatMessage('søker.årSøkerFyller', {
+                                                      år: alderSomPersonFyllerIÅr(søker.fødsel.år),
+                                                      detteÅret: new Date().getFullYear(),
+                                                  })
+                                                : formatMessage('feil.kunneIkkeAvgjøreAlder')
+                                        }
+                                    />
+                                )}
+                            </div>
+
+                            <EksisterendeVedtaksinformasjon
+                                eksisterendeVedtaksinformasjon={props.tidligerePeriodeData}
+                                onSuccess={(data) => (
+                                    <OppsummeringPar
+                                        label={formatMessage('eksisterendeInformasjon.stønadsperiode')}
+                                        verdi={formatPeriodeMonthYear(data.periode)}
+                                    />
+                                )}
+                            />
+                        </div>
+                    ),
+                }}
+            </ToKolonner>
         </>
     );
 };
 
-const SaksbehandlerMåKontrollereStønadsperioden = (props: {
+//Hvis alderssjekkene for alder endres se også på alderPersonForUngSkalViseVilkårForAvslag
+const SjekkFødselsdatoMotVirk = (props: {
     stønadsperiodeTilOgMed: Nullable<Date>;
     stønadsperiodeFraOgMed: Nullable<Date>;
     søkersFødselsinformasjon: Nullable<Fødsel>;
@@ -341,17 +323,17 @@ const SaksbehandlerMåKontrollereStønadsperioden = (props: {
             return <></>;
         } else {
             if (
-                props.stønadsperiodeFraOgMed &&
-                alderSomPersonFyllerPåDato(
-                    props.stønadsperiodeFraOgMed,
-                    new Date(props.søkersFødselsinformasjon.dato),
-                ) < 67
+                forUngAlderFødselsinformasjonDato({
+                    stønadsperiodeFraOgMed: props.stønadsperiodeFraOgMed,
+                    søkerFødselsdato: props.søkersFødselsinformasjon.dato,
+                })
             ) {
                 return <FødselsinfoAdvarsel message={formatMessage('person.medFødselsdato.under67VedVirk')} />;
             }
             return <></>;
         }
     }
+
     if (props.sakstype == Sakstype.Uføre) {
         if (fyller67PlusVedStønadsperiodeTilOgMed(props.stønadsperiodeTilOgMed, props.søkersFødselsinformasjon.år)) {
             return (
@@ -362,9 +344,10 @@ const SaksbehandlerMåKontrollereStønadsperioden = (props: {
         }
     } else {
         if (
-            props.stønadsperiodeFraOgMed &&
-            alderSomPersonFyllerIÅrDate(props.stønadsperiodeFraOgMed.getFullYear(), props.søkersFødselsinformasjon.år) <
-                67
+            forUngAlderEtterFødselsår({
+                stønadsperiodeFraOgMed: props.stønadsperiodeFraOgMed,
+                fødselsår: props.søkersFødselsinformasjon.år,
+            })
         ) {
             return <FødselsinfoAdvarsel message={formatMessage('person.utenFødselsdato.under67VedVirk')} />;
         }
