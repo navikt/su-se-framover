@@ -4,7 +4,7 @@ import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 
 import { Nullable, eqNullable } from '~src/lib/types';
-import yup, { validateStringAsPositiveNumber } from '~src/lib/validering';
+import yup, { validateStringAsPositiveNumber, validerDesimalErPositivtTall } from '~src/lib/validering';
 import {
     Fradragskategori,
     VelgbareFradragskategorier,
@@ -126,7 +126,7 @@ const utenlandskInntekt = yup
         then: yup.object<UtenlandskInntektFormData>({
             beløpIUtenlandskValuta: validateStringAsPositiveNumber(),
             valuta: yup.string().required(),
-            kurs: validateStringAsPositiveNumber(),
+            kurs: validerDesimalErPositivtTall(),
         }),
         otherwise: yup.object<UtenlandskInntektFormData>(),
     });

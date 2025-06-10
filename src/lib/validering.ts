@@ -24,6 +24,24 @@ export const validateStringAsPositiveNumber = (name = 'feltet') =>
         .required()
         .label(name);
 
+export const validerDesimalErPositivtTall = (name = 'feltet') =>
+    yup
+        .string()
+        .test('strengSomTall', `${name} må være et tall et positiv tall`, function (value) {
+            if (value) {
+                const parsedAsFloast = Number.parseFloat(value);
+                if (isNaN(parsedAsFloast)) {
+                    return false;
+                } else {
+                    return parsedAsFloast > 0;
+                }
+            } else {
+                return false;
+            }
+        })
+        .required()
+        .label(name);
+
 export const validerAtNullablePeriodeErUtfylt = yup
     .object<NullablePeriode>({
         fraOgMed: yup.date().required().typeError('Dato må fylles inn!'),
