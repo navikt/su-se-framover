@@ -60,7 +60,7 @@ const Personsøk = (props: Props) => {
                 props.onFetchByFnr(formData.fnr);
             } else {
                 /*
-                    Hvis bare en sak navigerer vi direkte til den, ellers lar vi sb velge hvilken de vil gå til
+                    Hvis det bare finnes en sak navigerer vi direkte til den, ellers lar vi sb velge hvilken sak de vil gå til.
                  */
                 await fetchsakfnr({ fnr: formData.fnr });
                 if (RemoteData.isSuccess(sakfnrstatus)) {
