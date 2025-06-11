@@ -208,6 +208,7 @@ export enum ApiErrorCode {
     SØKNAD_ALLEREDE_LUKKET = 'søknad_er_allerede_lukket',
     SØKNAD_HAR_BEHANDLING = 'søknad_har_behandling',
     SØKNAD_MANGLER_OPPGAVE = 'søknad_mangler_oppgave',
+    SAK_FINNES_IKKE_FOR_PERSON = 'fant_ikke_sak_for_person_fnr',
 
     //T
     TEKNISK_FEIL_TILBAKEKREVINGSKOMPONENT = 'teknisk_feil_tilbakekrevingskomponent',

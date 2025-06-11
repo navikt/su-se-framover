@@ -126,29 +126,29 @@ const Personsøk = (props: Props) => {
                         ),
                     )}
                 </div>
+                {RemoteData.isSuccess(sakfnrstatus) && (
+                    <>
+                        <BodyShort>Velg hvilken sak du vil gå til</BodyShort>
+                        <VStack gap="2">
+                            {sakfnrstatus.value.map((sak) => (
+                                <div key={sak.id}>
+                                    <p>Saksnummer {sak.saksnummer}</p>
+                                    <Button
+                                        key={sak.id}
+                                        onClick={() => {
+                                            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
+                                        }}
+                                    >
+                                        Gå til sakstype {sak.sakstype}
+                                    </Button>
+                                </div>
+                            ))}
+                        </VStack>
+                    </>
+                )}
+                {RemoteData.isPending(sakfnrstatus) && <Loader />}
+                {RemoteData.isFailure(sakfnrstatus) && <ApiErrorAlert error={sakfnrstatus.error} />}
             </div>
-            {RemoteData.isSuccess(sakfnrstatus) && (
-                <>
-                    <BodyShort>Velg hvilken sak du vil gå til</BodyShort>
-                    <VStack gap="2">
-                        {sakfnrstatus.value.map((sak) => (
-                            <div key={sak.id}>
-                                <p>Saksnummer {sak.saksnummer}</p>
-                                <Button
-                                    key={sak.id}
-                                    onClick={() => {
-                                        navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
-                                    }}
-                                >
-                                    Gå til sakstype {sak.sakstype}
-                                </Button>
-                            </div>
-                        ))}
-                    </VStack>
-                </>
-            )}
-            {RemoteData.isPending(sakfnrstatus) && <Loader />}
-            {RemoteData.isFailure(sakfnrstatus) && <ApiErrorAlert error={sakfnrstatus.error} />}
         </>
     );
 };
