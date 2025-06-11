@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { BodyShort, Button, Search, VStack } from '@navikt/ds-react';
+import { BodyShort, Button, Loader, Search, VStack } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -147,6 +147,7 @@ const Personsøk = (props: Props) => {
                     </VStack>
                 </>
             )}
+            {RemoteData.isPending(sakfnrstatus) && <Loader />}
             {RemoteData.isFailure(sakfnrstatus) && <ApiErrorAlert error={sakfnrstatus.error} />}
         </>
     );
