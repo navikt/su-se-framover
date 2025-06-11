@@ -48,6 +48,7 @@ const Personsøk = (props: Props) => {
 
     const submitHandler = async (formData: PersonSøkFormData) => {
         props.onReset();
+        resetsakfnr();
 
         //fnr alltid 11 siffer
         const isFnr = removeSpaces(formData.fnr).length === 11;
@@ -55,8 +56,12 @@ const Personsøk = (props: Props) => {
 
         if (isFnr) {
             if (props.onFetchByFnr) {
+                //Legacy
                 props.onFetchByFnr(formData.fnr);
             } else {
+                /*
+                    Hvis bare en sak navigerer vi direkte til den, ellers lar vi sb velge hvilken de vil gå til
+                 */
                 await fetchsakfnr({ fnr: formData.fnr });
                 if (RemoteData.isSuccess(sakfnrstatus)) {
                     if (sakfnrstatus.value.length === 1) {
@@ -142,6 +147,7 @@ const Personsøk = (props: Props) => {
                     </VStack>
                 </>
             )}
+            {RemoteData.isFailure(sakfnrstatus) && <ApiErrorAlert error={sakfnrstatus.error} />}
         </>
     );
 };
