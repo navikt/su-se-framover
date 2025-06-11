@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { BodyShort, Button, Search, VStack } from '@navikt/ds-react';
+import { BodyShort, Button, Loader, Search, VStack } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -48,6 +48,7 @@ const Personsøk = (props: Props) => {
 
     const submitHandler = async (formData: PersonSøkFormData) => {
         props.onReset();
+        resetsakfnr();
 
         //fnr alltid 11 siffer
         const isFnr = removeSpaces(formData.fnr).length === 11;
@@ -55,8 +56,12 @@ const Personsøk = (props: Props) => {
 
         if (isFnr) {
             if (props.onFetchByFnr) {
+                //Legacy
                 props.onFetchByFnr(formData.fnr);
             } else {
+                /*
+                    Hvis det bare finnes en sak navigerer vi direkte til den, ellers lar vi sb velge hvilken sak de vil gå til.
+                 */
                 await fetchsakfnr({ fnr: formData.fnr });
                 if (RemoteData.isSuccess(sakfnrstatus)) {
                     if (sakfnrstatus.value.length === 1) {
@@ -121,27 +126,29 @@ const Personsøk = (props: Props) => {
                         ),
                     )}
                 </div>
+                {RemoteData.isSuccess(sakfnrstatus) && (
+                    <>
+                        <BodyShort>Velg hvilken sak du vil gå til</BodyShort>
+                        <VStack gap="2">
+                            {sakfnrstatus.value.map((sak) => (
+                                <div key={sak.id}>
+                                    <p>Saksnummer {sak.saksnummer}</p>
+                                    <Button
+                                        key={sak.id}
+                                        onClick={() => {
+                                            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
+                                        }}
+                                    >
+                                        Gå til sakstype {sak.sakstype}
+                                    </Button>
+                                </div>
+                            ))}
+                        </VStack>
+                    </>
+                )}
+                {RemoteData.isPending(sakfnrstatus) && <Loader />}
+                {RemoteData.isFailure(sakfnrstatus) && <ApiErrorAlert error={sakfnrstatus.error} />}
             </div>
-            {RemoteData.isSuccess(sakfnrstatus) && (
-                <>
-                    <BodyShort>Velg hvilken sak du vil gå til</BodyShort>
-                    <VStack gap="2">
-                        {sakfnrstatus.value.map((sak) => (
-                            <div key={sak.id}>
-                                <p>Saksnummer {sak.saksnummer}</p>
-                                <Button
-                                    key={sak.id}
-                                    onClick={() => {
-                                        navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }));
-                                    }}
-                                >
-                                    Gå til sakstype {sak.sakstype}
-                                </Button>
-                            </div>
-                        ))}
-                    </VStack>
-                </>
-            )}
         </>
     );
 };
