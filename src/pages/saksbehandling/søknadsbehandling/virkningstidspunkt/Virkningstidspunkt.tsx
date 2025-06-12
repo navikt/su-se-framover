@@ -176,12 +176,12 @@ const Virkningstidspunkt = (
                                                 stønadsperiodeFraOgMed={form.watch('periode.fraOgMed')}
                                             />
 
-                                            {(RemoteData.isFailure(status) &&
+                                            {((RemoteData.isFailure(status) &&
                                                 [
                                                     ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_UFØRE,
                                                     ApiErrorCode.ALDERSVURDERING_GIR_IKKE_RETT_PÅ_ALDER,
                                                 ].includes(status.error?.body?.code)) ||
-                                                (skalViseBekreftelsesPanel({
+                                                skalViseBekreftelsesPanel({
                                                     s: props.behandling,
                                                     angittPeriode: {
                                                         fraOgMed: form.watch('periode.fraOgMed')
@@ -195,28 +195,28 @@ const Virkningstidspunkt = (
                                                               })
                                                             : null,
                                                     },
-                                                }) && (
-                                                    <Controller
-                                                        control={form.control}
-                                                        name="harSaksbehandlerAvgjort"
-                                                        render={({ field }) => (
-                                                            <ConfirmationPanel
-                                                                className={styles.confirmationPanel}
-                                                                checked={field.value}
-                                                                label={formatMessage(
-                                                                    'stønadsperiode.advarsel.checkbox.måBekreftes',
-                                                                )}
-                                                                onChange={() => field.onChange(!field.value)}
-                                                            >
-                                                                {formatMessage(
-                                                                    props.behandling.sakstype === Sakstype.Alder
-                                                                        ? 'stønadsperiode.advarsel.tekst.alder'
-                                                                        : 'stønadsperiode.advarsel.tekst.uføre',
-                                                                )}
-                                                            </ConfirmationPanel>
-                                                        )}
-                                                    />
-                                                ))}
+                                                })) && (
+                                                <Controller
+                                                    control={form.control}
+                                                    name="harSaksbehandlerAvgjort"
+                                                    render={({ field }) => (
+                                                        <ConfirmationPanel
+                                                            className={styles.confirmationPanel}
+                                                            checked={field.value}
+                                                            label={formatMessage(
+                                                                'stønadsperiode.advarsel.checkbox.måBekreftes',
+                                                            )}
+                                                            onChange={() => field.onChange(!field.value)}
+                                                        >
+                                                            {formatMessage(
+                                                                props.behandling.sakstype === Sakstype.Alder
+                                                                    ? 'stønadsperiode.advarsel.tekst.alder'
+                                                                    : 'stønadsperiode.advarsel.tekst.uføre',
+                                                            )}
+                                                        </ConfirmationPanel>
+                                                    )}
+                                                />
+                                            )}
 
                                             <Controller
                                                 name={`periode`}
