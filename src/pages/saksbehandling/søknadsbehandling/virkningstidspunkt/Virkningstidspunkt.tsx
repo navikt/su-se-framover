@@ -59,7 +59,9 @@ const Virkningstidspunkt = (
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const navigate = useNavigate();
 
-    const [status, lagreVirkningstidspunkt] = useAsyncActionCreator(SøknadsbehandlingActions.lagreVirkningstidspunkt);
+    const [status, lagreVirkningstidspunkt, resetVirkApi] = useAsyncActionCreator(
+        SøknadsbehandlingActions.lagreVirkningstidspunkt,
+    );
 
     const søkerState = useAppSelector((state) => state.personopplysninger.søker);
     const initialValues: VirkningstidspunktFormData = {
@@ -140,6 +142,10 @@ const Virkningstidspunkt = (
             form.setValue('harSaksbehandlerAvgjort', false);
         }
     }, [props.behandling, form.watch('periode.fraOgMed'), form.watch('periode.tilOgMed')]);
+
+    useEffect(() => {
+        resetVirkApi();
+    }, [props.behandling, form.watch('periode.fraOgMed')]);
 
     return (
         <>
@@ -317,7 +323,6 @@ const SaksbehandlerMåKontrollereStønadsperioden = (props: {
     sakstype: Sakstype;
 }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
-
     if (!props.søkersFødselsinformasjon) {
         return <FødselsinfoAdvarsel message={formatMessage('person.harIkkeFødselsinformasjon')} />;
     } else if (!props.stønadsperiodeTilOgMed) {
