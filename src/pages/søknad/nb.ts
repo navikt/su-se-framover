@@ -36,6 +36,7 @@ export default {
     'velg-tittel': 'Supplerende stønad til personer med kort botid i Norge',
     'velg-grupper':
         'Supplerende stønad gis til to forskjellige grupper: <br></br><strong>Uføre flyktninger under 67 år</strong> og <strong>personer som har fylt 67 år</strong>',
+    'veileder-info': 'Veileder må søke digitalt for  begge gruppene. Se ',
     'alder-beskrivelse': 'Har du kort botid i Norge når du fyller 67 år kan du få supplerende stønad',
     'velg-alder-tittel': 'For personer som har fylt 67 år',
     'velg-ufør-tittel': 'For personer som er ufør flyktning under 67 år',
