@@ -1,4 +1,4 @@
-import { BodyLong, GuidePanel, Heading, Ingress, Panel } from '@navikt/ds-react';
+import { BodyLong, GuidePanel, Heading, Ingress, Panel , Link } from '@navikt/ds-react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
@@ -24,6 +24,15 @@ const Søknadsvelger = () => {
                                 strong: (text) => <strong>{text}</strong>,
                                 br: () => <br />,
                             })}
+                        </BodyLong>
+                        <BodyLong size="small">
+                            {formatMessage('veileder-info')}
+                            <Link
+                                target="_blank"
+                                href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Supplerende%20st%C3%B8nad.aspx?web=1"
+                            >
+                                servicerutine
+                            </Link>
                         </BodyLong>
                     </GuidePanel>
 
