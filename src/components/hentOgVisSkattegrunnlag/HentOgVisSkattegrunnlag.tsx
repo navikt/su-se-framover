@@ -107,7 +107,12 @@ const HentOfVisSkattegrunnlagForFrioppslag = () => {
                 setWarning('Valgt sakstype uføre med fagsystemId som ikke matcher uføre');
             }
 
-            if (watch.fagsystemId.length !== 0 && watch.fagsystemId.length !== 7 && watch.sakstype === Sakstype.Alder) {
+            if (
+                watch.fagsystemId.length !== 0 &&
+                watch.fagsystemId.length !== 7 &&
+                watch.fagsystemId.length !== 4 &&
+                watch.sakstype === Sakstype.Alder
+            ) {
                 setWarning(
                     'Valgt sakstype alder med ukjent format på fagsystemId - vennligst dobbeltsjekk at dette er riktig',
                 );
@@ -120,7 +125,7 @@ const HentOfVisSkattegrunnlagForFrioppslag = () => {
                 watch.fagsystemId.match('[0-9]{7}')
             ) {
                 setWarning(
-                    'Valgt sakstype alder med fagsystemId som kun inneholder tall. Vennligst dobbeltsjekk at dette er riktig',
+                    'Valgt sakstype alder med gammel fagsystemId som kun inneholder tall. Vennligst dobbeltsjekk at dette er riktig',
                 );
             }
 
