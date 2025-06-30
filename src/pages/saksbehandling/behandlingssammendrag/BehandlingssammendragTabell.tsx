@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import ContextMenu from '~src/components/contextMenu/ContextMenu';
 import { ContextMenuVariables } from '~src/components/contextMenu/ContextMenuUtils';
+import { storForBokstav } from '~src/components/personlinje/Personlinje.tsx';
 import SuTabell from '~src/components/tabell/SuTabell';
 import * as personSlice from '~src/features/person/person.slice';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -69,7 +70,7 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
                     <Table.Body>
                         {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
                             <BehandlingssamendragTableRow
-                                key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
+                                key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}${behandlingssammendrag.behandlingStartet}`}
                                 behandlingssammendrag={behandlingssammendrag}
                                 setContextMenuVariables={setContextMenuVariables}
                             />
@@ -106,14 +107,10 @@ const BehandlingssamendragTableRow = ({
             onSuccess(sak);
         });
     };
-    /*
-        TODO: Stor forbokstav i saktype..
-        TODO: Vise filtreringsboks for saktype i venstre meny
-     */
 
     return (
         <Table.Row key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.typeBehandling}`}>
-            <Table.DataCell>{behandlingssammendrag.sakType}</Table.DataCell>
+            <Table.DataCell>{storForBokstav(behandlingssammendrag.sakType)}</Table.DataCell>
             <Table.DataCell>{behandlingssammendrag.saksnummer}</Table.DataCell>
             <Table.DataCell>{formatMessage(behandlingssammendrag.typeBehandling)}</Table.DataCell>
             <Table.DataCell>{formatMessage(behandlingssammendrag.status)}</Table.DataCell>
