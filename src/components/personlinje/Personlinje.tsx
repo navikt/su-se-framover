@@ -62,7 +62,7 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
                 <Separator />
                 <BodyShort>
                     <Tag variant={props.sakInfo.sakstype === Sakstype.Alder ? 'alt1' : 'alt2'}>
-                        {storFørsteBokstav(props.sakInfo.sakstype)}
+                        {storForBokstav(props.sakInfo.sakstype)}
                     </Tag>
                 </BodyShort>
                 {props.søker.sivilstand ? (
@@ -79,7 +79,7 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
     );
 };
 
-const storFørsteBokstav = (str: string) => {
+export const storForBokstav = (str: string) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 };
 

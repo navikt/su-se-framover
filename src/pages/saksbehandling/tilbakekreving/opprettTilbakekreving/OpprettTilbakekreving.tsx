@@ -46,7 +46,7 @@ const OpprettTilbakekreving = (props: {
         </div>
     );
 };
-
+//TODO:
 //kommenterer ut annuller siden vi må prodsette noen endringer. Funksjonaliteten fungerer ikke i backend enda heller
 // const AnnullerTilbakekrevingModal = (props: {
 //     sakId: string;
