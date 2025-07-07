@@ -42,7 +42,7 @@
         "@types/pino-http": "^5.8.0",
         "@types/redis": "^4.0.11",
         "typescript": "^5.0.4",
-        "dotenv": "^16.0.1"
+        "dotenv": "^17.0.1"
     },
     "overrides": {
         "yaml@<2.2.2": "2.2.2"
