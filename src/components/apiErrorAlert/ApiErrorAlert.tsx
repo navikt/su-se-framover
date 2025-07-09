@@ -33,7 +33,7 @@ const konstruerMeldingForAlert = (formatMessage: MessageFormatter<typeof message
         if (Array.isArray(error.body)) {
             return error.body.map((err) => formatMessage(err.code));
         } else {
-            return formatMessage(error.body.code);
+            return `${formatMessage(error.body.code)} \n melding: ${error.body.message}`;
         }
     } catch {
         return `Ukjent feil - Original feil: ${JSON.stringify(error)}`;
