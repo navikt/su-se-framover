@@ -44,6 +44,7 @@ export const revurderingIntroFormDataTilOppdaterRequest = (args: {
         sakId: args.sakId,
         revurderingId: args.revurderingId,
         begrunnelse: args.values.begrunnelse!,
+        omgjøringsgrunn: args.values.omgjøringGrunn,
         informasjonSomRevurderes: args.values.informasjonSomRevurderes,
         periode: { fraOgMed: args.values.periode.fraOgMed!, tilOgMed: args.values.periode.tilOgMed! },
         årsak: args.values.årsak!,
