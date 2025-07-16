@@ -31,6 +31,7 @@ export async function opprettRevurdering(
             fraOgMed: formatISO(arg.periode.fraOgMed, { representation: 'date' }),
             tilOgMed: formatISO(arg.periode.tilOgMed, { representation: 'date' }),
             årsak: arg.årsak,
+            omgjøringsgrunn: arg.omgjøringsgrunn,
             informasjonSomRevurderes: arg.informasjonSomRevurderes,
             begrunnelse: arg.begrunnelse,
         },

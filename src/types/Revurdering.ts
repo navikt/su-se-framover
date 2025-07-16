@@ -256,6 +256,7 @@ export interface OpprettRevurderingRequest {
         tilOgMed: Date;
     };
     årsak: OpprettetRevurderingGrunn;
+    omgjøringsgrunn: Nullable<OmgjøringsGrunn>;
     informasjonSomRevurderes: InformasjonSomRevurderes[];
     begrunnelse: string;
 }
