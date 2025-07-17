@@ -54,7 +54,7 @@ export const revurderingIntroFormDataTilOppdaterRequest = (args: {
 export const revurderingIntroFormSchema = yup.object<RevurderingIntroFormData>({
     periode: validerPeriodeTomEtterFom,
     årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().required(),
-    omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().nullable().required(),
+    omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().nullable(),
     begrunnelse: yup.string().nullable().required(),
     informasjonSomRevurderes: yup
         .array<InformasjonSomRevurderes>(
