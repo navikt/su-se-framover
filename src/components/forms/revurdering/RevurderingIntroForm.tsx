@@ -8,12 +8,7 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { NullablePeriode } from '~src/types/Periode';
-import {
-    gyldigeÅrsaker,
-    InformasjonSomRevurderes,
-    OmgjøringsGrunn,
-    OpprettetRevurderingGrunn,
-} from '~src/types/Revurdering';
+import { erOmgjøring, gyldigeÅrsaker, InformasjonSomRevurderes, OmgjøringsGrunn } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak.ts';
 
 import messages from './RevurderingIntroForm-nb';
@@ -85,7 +80,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         />
                     </div>
 
-                    {form.watch('årsak') === OpprettetRevurderingGrunn.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN && (
+                    {erOmgjøring(form.watch('årsak')) && (
                         <>
                             <Controller
                                 control={form.control}

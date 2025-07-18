@@ -153,6 +153,29 @@ export enum OpprettetRevurderingGrunn {
     OMGJØRING_TRYGDERETTEN = 'OMGJØRING_TRYGDERETTEN',
 }
 
+export const erOmgjøring = (valgtÅrsak: Nullable<OpprettetRevurderingGrunn>): boolean => {
+    if (!valgtÅrsak) {
+        return false;
+    }
+    switch (valgtÅrsak) {
+        case OpprettetRevurderingGrunn.MELDING_FRA_BRUKER:
+        case OpprettetRevurderingGrunn.INFORMASJON_FRA_KONTROLLSAMTALE:
+        case OpprettetRevurderingGrunn.DØDSFALL:
+        case OpprettetRevurderingGrunn.ANDRE_KILDER:
+        case OpprettetRevurderingGrunn.REGULER_GRUNNBELØP:
+        case OpprettetRevurderingGrunn.MIGRERT:
+        case OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING:
+        case OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING:
+        case OpprettetRevurderingGrunn.IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON:
+            return false;
+        case OpprettetRevurderingGrunn.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN:
+        case OpprettetRevurderingGrunn.OMGJØRING_EGET_TILTAK:
+        case OpprettetRevurderingGrunn.OMGJØRING_KLAGE:
+        case OpprettetRevurderingGrunn.OMGJØRING_TRYGDERETTEN:
+            return true;
+    }
+};
+
 export enum OmgjøringsGrunn {
     NYE_OPPLYSNINGER = 'NYE_OPPLYSNINGER',
     FEIL_LOVANVENDELSE = 'FEIL_LOVANVENDELSE',
