@@ -74,7 +74,7 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
             ...oppsummeringselementerRevurdering,
             {
                 tittel: formatMessage('label.omgjøring'),
-                verdi: formatMessage(props.revurdering.omgjøringsgrunn),
+                verdi: formatMessage(props.revurdering.omgjøringsgrunn!),
             },
         ];
     }

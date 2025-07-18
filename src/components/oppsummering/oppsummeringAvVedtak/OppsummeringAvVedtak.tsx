@@ -259,7 +259,7 @@ const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling;
 };
 
 const PartialOppsummeringAvRevurdering = (props: { sak: Sak; v: Vedtak; r: Revurdering }) => {
-    const { formatMessage } = useI18n({ messages, ...omgjøringsgrunnerTekstMapper });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...omgjøringsgrunnerTekstMapper } });
     const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
 
     useEffect(() => {
@@ -289,7 +289,7 @@ const PartialOppsummeringAvRevurdering = (props: { sak: Sak; v: Vedtak; r: Revur
                 {erOmgjøring(props.r.årsak) && (
                     <OppsummeringPar
                         label={formatMessage('label.omgjøring')}
-                        verdi={formatMessage(props.r.omgjøringsgrunn)}
+                        verdi={formatMessage(props.r.omgjøringsgrunn!)}
                         retning={'vertikal'}
                     />
                 )}
