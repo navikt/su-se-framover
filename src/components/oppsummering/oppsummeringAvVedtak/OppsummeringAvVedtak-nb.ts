@@ -31,6 +31,7 @@ export default {
 
     'revurdering.startet': 'Revurdering startet',
     'revurdering.årsakForRevurdering': 'Årsak for revurdering',
+    'label.omgjøring': 'Omgjøringsgrunn',
     'revurdering.begrunnelse': 'Revurderingsbegrunnelse',
     'revurdering.skalTilbakekreves': 'Skal tilbakekreves',
     'revurdering.brevvalg.begrunnelse': 'Begrunnelse av vedtaksbrev',

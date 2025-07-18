@@ -12,6 +12,7 @@ export interface Revurdering<T extends RevurderingStatus = RevurderingStatus> ex
     periode: Periode<string>;
     saksbehandler: string;
     årsak: OpprettetRevurderingGrunn;
+    omgjøringsgrunn: Nullable<OmgjøringsGrunn>;
     begrunnelse: Nullable<string>;
 }
 
