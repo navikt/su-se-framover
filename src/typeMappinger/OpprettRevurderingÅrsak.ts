@@ -11,4 +11,7 @@ export const opprettRevurderingÅrsakTekstMapper: { [key in OpprettetRevurdering
     [OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING]: 'Mottatt kontrollerklæring',
     [OpprettetRevurderingGrunn.IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON]: 'Ikke mottatt etterspurt dokumentasjon',
     [OpprettetRevurderingGrunn.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN]: 'Omgjøring av vedtak fra klageinstansen',
+    [OpprettetRevurderingGrunn.OMGJØRING_EGET_TILTAK]: 'Omgjøring etter eget tiltakt',
+    [OpprettetRevurderingGrunn.OMGJØRING_KLAGE]: 'Omgjøring etter klage i førsteinstans',
+    [OpprettetRevurderingGrunn.OMGJØRING_TRYGDERETTEN]: 'Omgjøring etter trygderette',
 };
