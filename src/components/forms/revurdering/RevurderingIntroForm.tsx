@@ -8,7 +8,7 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { NullablePeriode } from '~src/types/Periode';
-import { gyldigeÅrsaker, InformasjonSomRevurderes } from '~src/types/Revurdering';
+import { erOmgjøring, gyldigeÅrsaker, InformasjonSomRevurderes, OmgjøringsGrunn } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak.ts';
 
 import messages from './RevurderingIntroForm-nb';
@@ -79,6 +79,33 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             )}
                         />
                     </div>
+
+                    {erOmgjøring(form.watch('årsak')) && (
+                        <>
+                            <Controller
+                                control={form.control}
+                                name={'omgjøringGrunn'}
+                                render={({ field: { value, ...field }, fieldState }) => (
+                                    <Select
+                                        id={field.name}
+                                        label={formatMessage('input.omgjøringsgrunn.label')}
+                                        error={fieldState.error?.message}
+                                        value={value ?? ''}
+                                        {...field}
+                                    >
+                                        <option value="" disabled>
+                                            {formatMessage('input.omgjøringsgrunn.value')}
+                                        </option>
+                                        {Object.values(OmgjøringsGrunn).map((grunn) => (
+                                            <option value={grunn} key={grunn}>
+                                                {formatMessage(grunn)}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                )}
+                            />
+                        </>
+                    )}
 
                     <Controller
                         control={form.control}

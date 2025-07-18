@@ -24,6 +24,7 @@ const OpprettRevurdering = (props: { sakId: string; minOgMaxPeriode: Periode }) 
         defaultValues: {
             periode: lagTomPeriode(),
             årsak: null,
+            omgjøringGrunn: null,
             informasjonSomRevurderes: [],
             begrunnelse: null,
         },
