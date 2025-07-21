@@ -9,6 +9,7 @@ import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/U
 import { pipe, maxBy } from '~src/lib/fp';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak.ts';
 import { Attestering } from '~src/types/Behandling';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
@@ -33,7 +34,12 @@ import styles from './oppsummeringsblokk.module.less';
 
 const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
     const { formatMessage } = useI18n({
-        messages: { ...sharedMessages, ...messages, ...omgjøringsgrunnerTekstMapper },
+        messages: {
+            ...sharedMessages,
+            ...messages,
+            ...opprettRevurderingÅrsakTekstMapper,
+            ...omgjøringsgrunnerTekstMapper,
+        },
     });
 
     let oppsummeringselementerRevurdering = [
