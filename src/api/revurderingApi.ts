@@ -136,6 +136,7 @@ export async function oppdaterRevurdering(
             årsak: arg.årsak,
             informasjonSomRevurderes: arg.informasjonSomRevurderes,
             begrunnelse: arg.begrunnelse,
+            omgjøringsgrunn: arg.omgjøringsgrunn,
         },
     });
 }

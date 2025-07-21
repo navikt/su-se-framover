@@ -33,6 +33,7 @@ const OppdaterRevurdering = (props: {
     const initialValues = {
         periode: lagDatePeriodeAvStringPeriode(props.revurdering.periode),
         årsak: props.revurdering.årsak,
+        omgjøringsgrunn: null,
         informasjonSomRevurderes: Object.keys(props.revurdering.informasjonSomRevurderes) as InformasjonSomRevurderes[],
         begrunnelse: props.revurdering.begrunnelse,
     };
