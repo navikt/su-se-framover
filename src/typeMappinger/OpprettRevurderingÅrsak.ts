@@ -10,8 +10,8 @@ export const opprettRevurderingÅrsakTekstMapper: { [key in OpprettetRevurdering
     [OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING]: 'Manglende kontrollerklæring',
     [OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING]: 'Mottatt kontrollerklæring',
     [OpprettetRevurderingGrunn.IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON]: 'Ikke mottatt etterspurt dokumentasjon',
-    [OpprettetRevurderingGrunn.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN]: 'Omgjøring av vedtak fra klageinstansen',
+    [OpprettetRevurderingGrunn.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN]: 'Omgjøring etter vedtak fra klageinstansen',
     [OpprettetRevurderingGrunn.OMGJØRING_EGET_TILTAK]: 'Omgjøring etter eget tiltak',
     [OpprettetRevurderingGrunn.OMGJØRING_KLAGE]: 'Omgjøring etter klage i førsteinstans',
-    [OpprettetRevurderingGrunn.OMGJØRING_TRYGDERETTEN]: 'Omgjøring etter trygderetten',
+    [OpprettetRevurderingGrunn.OMGJØRING_TRYGDERETTEN]: 'Omgjøring etter vedtak fra trygderetten',
 };
