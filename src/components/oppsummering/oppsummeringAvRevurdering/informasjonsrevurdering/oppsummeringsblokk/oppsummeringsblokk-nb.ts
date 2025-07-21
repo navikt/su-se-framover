@@ -8,6 +8,7 @@ export default {
     'label.startet': 'Revurdering startet',
     'label.årsak': 'Årsak for revurdering',
     'label.begrunnelse': 'Revurderingsbegrunnelse',
+    'label.omgjøring': 'Omgjøringsgrunn',
 
     'vurdering.opphør': 'Opphør',
     'vurdering.endring': 'Endring',

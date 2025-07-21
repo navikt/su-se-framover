@@ -7,6 +7,7 @@ import * as DokumentApi from '~src/api/dokumentApi';
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
 import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
@@ -23,7 +24,7 @@ import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
-import { InformasjonsRevurdering, Revurdering, TilbakekrevingsAvgjørelse } from '~src/types/Revurdering';
+import { erOmgjøring, InformasjonsRevurdering, Revurdering, TilbakekrevingsAvgjørelse } from '~src/types/Revurdering';
 import { Sak, Sakstype } from '~src/types/Sak.ts';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
@@ -258,7 +259,7 @@ const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling;
 };
 
 const PartialOppsummeringAvRevurdering = (props: { sak: Sak; v: Vedtak; r: Revurdering }) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...omgjøringsgrunnerTekstMapper } });
     const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
 
     useEffect(() => {
@@ -285,6 +286,13 @@ const PartialOppsummeringAvRevurdering = (props: { sak: Sak; v: Vedtak; r: Revur
                     verdi={formatMessage(props.r.årsak)}
                     retning={'vertikal'}
                 />
+                {erOmgjøring(props.r.årsak) && (
+                    <OppsummeringPar
+                        label={formatMessage('label.omgjøring')}
+                        verdi={formatMessage(props.r.omgjøringsgrunn!)}
+                        retning={'vertikal'}
+                    />
+                )}
                 {erRevurderingIverksattMedTilbakekreving(props.r) && (
                     <OppsummeringPar
                         label={formatMessage('revurdering.skalTilbakekreves')}

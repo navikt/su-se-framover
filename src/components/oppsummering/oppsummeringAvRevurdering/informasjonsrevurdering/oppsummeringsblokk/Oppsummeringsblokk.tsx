@@ -2,15 +2,18 @@ import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { pipe, maxBy } from '~src/lib/fp';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
+import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak.ts';
 import { Attestering } from '~src/types/Behandling';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
+    erOmgjøring,
     InformasjonsRevurdering,
     InformasjonsRevurderingStatus,
     RevurderingStatus,
@@ -30,43 +33,61 @@ import messages from './oppsummeringsblokk-nb';
 import styles from './oppsummeringsblokk.module.less';
 
 const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({
+        messages: {
+            ...sharedMessages,
+            ...messages,
+            ...opprettRevurderingÅrsakTekstMapper,
+            ...omgjøringsgrunnerTekstMapper,
+        },
+    });
+
+    let oppsummeringselementerRevurdering = [
+        {
+            tittel: formatMessage('label.resultat'),
+            verdi: statusTilTekst(props.revurdering.status, formatMessage),
+        },
+        {
+            tittel: formatMessage('label.saksbehandler'),
+            verdi: props.revurdering.saksbehandler,
+        },
+        {
+            tittel: formatMessage('label.attestant'),
+            verdi: pipe(
+                props.revurdering.attesteringer.filter((a) => a.underkjennelse === null),
+                maxBy(Ord.contramap((a: Attestering) => a.opprettet)(S.Ord)),
+                Option.fold(
+                    () => '-',
+                    (a) => a.attestant,
+                ),
+            ),
+        },
+        {
+            tittel: formatMessage('label.startet'),
+            verdi: DateUtils.formatDateTime(props.revurdering.opprettet),
+        },
+        {
+            tittel: formatMessage('label.periode'),
+            verdi: formatPeriode(props.revurdering.periode),
+        },
+        {
+            tittel: formatMessage('label.årsak'),
+            verdi: formatMessage(props.revurdering.årsak),
+        },
+    ];
+    if (erOmgjøring(props.revurdering.årsak)) {
+        oppsummeringselementerRevurdering = [
+            ...oppsummeringselementerRevurdering,
+            {
+                tittel: formatMessage('label.omgjøring'),
+                verdi: formatMessage(props.revurdering.omgjøringsgrunn!),
+            },
+        ];
+    }
     return (
         <div className={styles.introContainer}>
             <div className={styles.intro}>
-                {[
-                    {
-                        tittel: formatMessage('label.resultat'),
-                        verdi: statusTilTekst(props.revurdering.status, formatMessage),
-                    },
-                    {
-                        tittel: formatMessage('label.saksbehandler'),
-                        verdi: props.revurdering.saksbehandler,
-                    },
-                    {
-                        tittel: formatMessage('label.attestant'),
-                        verdi: pipe(
-                            props.revurdering.attesteringer.filter((a) => a.underkjennelse === null),
-                            maxBy(Ord.contramap((a: Attestering) => a.opprettet)(S.Ord)),
-                            Option.fold(
-                                () => '-',
-                                (a) => a.attestant,
-                            ),
-                        ),
-                    },
-                    {
-                        tittel: formatMessage('label.startet'),
-                        verdi: DateUtils.formatDateTime(props.revurdering.opprettet),
-                    },
-                    {
-                        tittel: formatMessage('label.periode'),
-                        verdi: formatPeriode(props.revurdering.periode),
-                    },
-                    {
-                        tittel: formatMessage('label.årsak'),
-                        verdi: formatMessage(props.revurdering.årsak),
-                    },
-                ].map((item) => (
+                {oppsummeringselementerRevurdering.map((item) => (
                     <div key={item.tittel}>
                         <OppsummeringPar label={item.tittel} verdi={item.verdi} retning={'vertikal'} />
                     </div>
