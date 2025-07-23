@@ -118,6 +118,8 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                 >
                                     <Table.DataCell>
                                         {formatMessage(`datacell.behandlingstype.${dataCellInfo.type}`)}
+                                        {dataCellInfo.erOmgjøring &&
+                                            ` ${formatMessage('datacell.behandlingstype.omgjøring')}`}
                                     </Table.DataCell>
                                     <Table.DataCell>
                                         {dataCellInfo.avsluttetTidspunkt

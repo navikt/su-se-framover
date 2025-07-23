@@ -57,6 +57,7 @@ export default {
     'datacell.behandlingstype.stans': 'Stans',
     'datacell.behandlingstype.gjenopptak': 'Gjenopptak',
     'datacell.behandlingstype.tilbakekreving': 'Tilbakekreving',
+    'datacell.behandlingstype.omgjøring': '(Omgjøring)',
 
     'datacell.status.-': '-',
     'datacell.status.nySøknad': 'Ny søknad',

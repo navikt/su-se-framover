@@ -1,9 +1,11 @@
-import { Modal , Heading, Select } from '@navikt/ds-react';
-import { useState } from 'react';
-import { FormProvider, useForm , Controller } from 'react-hook-form';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Modal, Heading, Select, Button, BodyShort } from '@navikt/ds-react';
+import { FormProvider, useForm, Controller } from 'react-hook-form';
 
+import { ApiResult } from '~src/lib/hooks.ts';
 import { useI18n } from '~src/lib/i18n.ts';
 import { OmgjøringsGrunn, OmgjøringsÅrsak, OpprettetRevurderingGrunn } from '~src/types/Revurdering.ts';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
 
 import messages from './omgjøringsmodal-nb.ts';
 
@@ -13,15 +15,18 @@ export interface Omgjøringsfom {
 }
 
 export const OmgjøringModal = ({
-    eråpen,
+    åpenModal,
+    setÅpenModal,
     startNyBehandling,
+    startNysøknadsbehandlingStatus,
 }: {
-    eråpen: boolean;
+    åpenModal: boolean;
+    setÅpenModal: (åpen: boolean) => void;
     startNyBehandling: (formdata: Omgjøringsfom) => void;
+    startNysøknadsbehandlingStatus: ApiResult<Søknadsbehandling>;
 }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const [åpenModal, setÅpenModal] = useState<boolean>(eråpen);
     const form = useForm<Omgjøringsfom>({});
     const { handleSubmit } = form;
     const onSubmit = (formdata: Omgjøringsfom) => {
@@ -31,16 +36,13 @@ export const OmgjøringModal = ({
         <Modal open={åpenModal} onClose={() => setÅpenModal(false)} aria-label={'omgjøringavslåttvedtak'}>
             <Modal.Header>
                 <Heading size="medium">Velg årsak og grunn for omgjøring</Heading>
+                <BodyShort>{formatMessage('info')}</BodyShort>
             </Modal.Header>
             <Modal.Body>
                 <FormProvider {...form}>
-                    <Heading level="2" size="small">
-                        Velg grunn
-                    </Heading>
-
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Controller
-                            rules={{ required: 'Omgjørignsårsak er obligatorisk' }}
+                            rules={{ required: 'Omgjøringsårsak er obligatorisk' }}
                             control={form.control}
                             name={'årsak'}
                             render={({ field: { value, ...field }, fieldState }) => (
@@ -85,6 +87,15 @@ export const OmgjøringModal = ({
                                 </Select>
                             )}
                         />
+                        <Button type="submit" loading={RemoteData.isPending(startNysøknadsbehandlingStatus)}>
+                            Lagre
+                        </Button>
+                        {RemoteData.isSuccess(startNysøknadsbehandlingStatus) && (
+                            <BodyShort>Omgjøringen ble opprettet, du kan nå lukke modalen</BodyShort>
+                        )}
+                        {RemoteData.isFailure(startNysøknadsbehandlingStatus) && (
+                            <BodyShort>Vi kunne ikke opprette omgjøringen nå</BodyShort>
+                        )}
                     </form>
                 </FormProvider>
             </Modal.Body>

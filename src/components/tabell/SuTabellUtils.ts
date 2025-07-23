@@ -61,6 +61,7 @@ export interface DataCellInfo {
     periode: string;
     mottattOpprettetTidspunkt: string;
     avsluttetTidspunkt: Nullable<string>;
+    erOmgjøring: boolean;
 }
 
 export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
@@ -79,6 +80,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
                 ? formatDate(b.søknad.søknadInnhold.forNav.mottaksdatoForSøknad)
                 : formatDateTime(b.søknad.opprettet),
             avsluttetTidspunkt: erSøknadLukket(b.søknad) ? b.søknad.lukket.tidspunkt : null,
+            erOmgjøring: b.søknadsbehandling !== undefined && 'årsak' in b.søknadsbehandling,
         };
     }
 
@@ -90,6 +92,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: formatPeriode(b.periode),
             mottattOpprettetTidspunkt: formatDateTime(b.opprettet),
             avsluttetTidspunkt: erReguleringAvsluttet(b) ? b.avsluttet.tidspunkt : null,
+            erOmgjøring: false,
         };
     }
 
@@ -102,6 +105,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: formatPeriode(b.periode),
             mottattOpprettetTidspunkt: formatDateTime(b.opprettet),
             avsluttetTidspunkt: erRevurderingAvsluttet(b) ? b.avsluttetTidspunkt : null,
+            erOmgjøring: false, //TODO: sjekke årsakstype
         };
     }
     if (isKlage(b)) {
@@ -113,6 +117,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: '-',
             mottattOpprettetTidspunkt: formatDateTime(b.opprettet),
             avsluttetTidspunkt: b.avsluttetTidspunkt,
+            erOmgjøring: false,
         };
     }
 
@@ -144,6 +149,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: '-',
             mottattOpprettetTidspunkt: b.opprettet,
             avsluttetTidspunkt: b.avsluttetTidspunkt,
+            erOmgjøring: false,
         };
     }
 

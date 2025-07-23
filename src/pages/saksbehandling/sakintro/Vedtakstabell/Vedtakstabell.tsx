@@ -254,16 +254,14 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                                 <Button
                                                     size="small"
                                                     variant="tertiary"
-                                                    loading={RemoteData.isPending(startNysøknadsbehandlingStatus)}
-                                                    onClick={() =>
-                                                        //åpne modal her...
-                                                        setÅpenModal(true)
-                                                    }
+                                                    onClick={() => setÅpenModal(true)}
                                                 >
                                                     {formatMessage('dataCell.startNyBehandling')}
                                                 </Button>
                                                 <OmgjøringModal
-                                                    eråpen={åpenModal}
+                                                    åpenModal={åpenModal}
+                                                    setÅpenModal={(åpen: boolean) => setÅpenModal(åpen)}
+                                                    startNysøknadsbehandlingStatus={startNysøknadsbehandlingStatus}
                                                     startNyBehandling={(form: Omgjøringsfom) =>
                                                         startNySøknadsbehandling({
                                                             sakId: props.sakId,
