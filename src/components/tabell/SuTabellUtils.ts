@@ -2,7 +2,7 @@ import { Nullable } from '~src/lib/types';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
-import { Revurdering } from '~src/types/Revurdering';
+import { erOmgjøring, Revurdering } from '~src/types/Revurdering';
 import { Søknad } from '~src/types/Søknad';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
@@ -105,7 +105,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: formatPeriode(b.periode),
             mottattOpprettetTidspunkt: formatDateTime(b.opprettet),
             avsluttetTidspunkt: erRevurderingAvsluttet(b) ? b.avsluttetTidspunkt : null,
-            erOmgjøring: false, //TODO: sjekke årsakstype
+            erOmgjøring: erOmgjøring(b.årsak),
         };
     }
     if (isKlage(b)) {
