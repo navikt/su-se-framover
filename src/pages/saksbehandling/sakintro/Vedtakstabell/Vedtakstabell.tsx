@@ -4,7 +4,7 @@ import { BodyShort, Button, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as VedtakActions from 'src/features/VedtakActions';
@@ -21,6 +21,7 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { OmgjøringModal, Omgjøringsfom } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/OmgjøringModal.tsx';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, KlageStatus } from '~src/types/Klage';
 import { Vedtak, VedtakType } from '~src/types/Vedtak';
@@ -54,6 +55,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
     const { insert } = useToast();
     const apiErrorMessages = useApiErrorMessages();
     const { formatMessage } = useI18n({ messages });
+    const [åpenModal, setÅpenModal] = useState<boolean>(false);
 
     const sorterTabell = (
         vedtak: VedtakOgOversendteKlager,
@@ -248,19 +250,29 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                     </Table.DataCell>
                                     <Table.DataCell>
                                         {isVedtak(vedtak) && vedtak.kanStarteNyBehandling && (
-                                            <Button
-                                                size="small"
-                                                variant="tertiary"
-                                                loading={RemoteData.isPending(startNysøknadsbehandlingStatus)}
-                                                onClick={() =>
-                                                    startNySøknadsbehandling({
-                                                        sakId: props.sakId,
-                                                        vedtakId: vedtak.id,
-                                                    })
-                                                }
-                                            >
-                                                {formatMessage('dataCell.startNyBehandling')}
-                                            </Button>
+                                            <>
+                                                <Button
+                                                    size="small"
+                                                    variant="tertiary"
+                                                    loading={RemoteData.isPending(startNysøknadsbehandlingStatus)}
+                                                    onClick={() =>
+                                                        //åpne modal her...
+                                                        setÅpenModal(true)
+                                                    }
+                                                >
+                                                    {formatMessage('dataCell.startNyBehandling')}
+                                                </Button>
+                                                <OmgjøringModal
+                                                    eråpen={åpenModal}
+                                                    startNyBehandling={(form: Omgjøringsfom) =>
+                                                        startNySøknadsbehandling({
+                                                            sakId: props.sakId,
+                                                            vedtakId: vedtak.id,
+                                                            body: form,
+                                                        })
+                                                    }
+                                                />
+                                            </>
                                         )}
                                     </Table.DataCell>
                                 </Table.Row>
