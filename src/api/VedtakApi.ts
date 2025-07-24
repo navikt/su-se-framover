@@ -12,7 +12,7 @@ export async function startNySøknadsbehandling(arg: {
         url: `/saker/${arg.sakId}/vedtak/${arg.vedtakId}/nySoknadsbehandling`,
         method: 'POST',
         body: {
-            årsak: arg.body.årsak,
+            omgjøringsårsak: arg.body.omgjøringsårsak,
             omgjøringsgrunn: arg.body.omgjøringGrunn,
         },
     });

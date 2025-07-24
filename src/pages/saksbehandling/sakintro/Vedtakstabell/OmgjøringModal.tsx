@@ -10,7 +10,7 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
 import messages from './omgjøringsmodal-nb.ts';
 
 export interface Omgjøringsfom {
-    årsak: OpprettetRevurderingGrunn;
+    omgjøringsårsak: OpprettetRevurderingGrunn;
     omgjøringGrunn: OmgjøringsGrunn;
 }
 
@@ -44,7 +44,7 @@ export const OmgjøringModal = ({
                         <Controller
                             rules={{ required: 'Omgjøringsårsak er obligatorisk' }}
                             control={form.control}
-                            name={'årsak'}
+                            name={'omgjøringsårsak'}
                             render={({ field: { value, ...field }, fieldState }) => (
                                 <Select
                                     id={field.name}
