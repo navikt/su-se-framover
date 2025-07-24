@@ -170,6 +170,8 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                                 >
                                     <Table.DataCell>
                                         {formatMessage(`datacell.behandlingstype.${dataCellInfo.type}`)}
+                                        {dataCellInfo.erOmgjøring &&
+                                            ` ${formatMessage('datacell.behandlingstype.omgjøring')}`}
                                     </Table.DataCell>
                                     <Table.DataCell>
                                         {formatMessage(`datacell.status.${dataCellInfo.status}`)}

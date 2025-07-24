@@ -2,7 +2,7 @@ import { Nullable } from '~src/lib/types';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
-import { Revurdering } from '~src/types/Revurdering';
+import { erOmgjøring, Revurdering } from '~src/types/Revurdering';
 import { Søknad } from '~src/types/Søknad';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
@@ -61,6 +61,7 @@ export interface DataCellInfo {
     periode: string;
     mottattOpprettetTidspunkt: string;
     avsluttetTidspunkt: Nullable<string>;
+    erOmgjøring: boolean;
 }
 
 export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
@@ -79,6 +80,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
                 ? formatDate(b.søknad.søknadInnhold.forNav.mottaksdatoForSøknad)
                 : formatDateTime(b.søknad.opprettet),
             avsluttetTidspunkt: erSøknadLukket(b.søknad) ? b.søknad.lukket.tidspunkt : null,
+            erOmgjøring: b.søknadsbehandling !== undefined && 'omgjøringsårsak' in b.søknadsbehandling,
         };
     }
 
@@ -90,6 +92,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: formatPeriode(b.periode),
             mottattOpprettetTidspunkt: formatDateTime(b.opprettet),
             avsluttetTidspunkt: erReguleringAvsluttet(b) ? b.avsluttet.tidspunkt : null,
+            erOmgjøring: false,
         };
     }
 
@@ -102,6 +105,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: formatPeriode(b.periode),
             mottattOpprettetTidspunkt: formatDateTime(b.opprettet),
             avsluttetTidspunkt: erRevurderingAvsluttet(b) ? b.avsluttetTidspunkt : null,
+            erOmgjøring: erOmgjøring(b.årsak),
         };
     }
     if (isKlage(b)) {
@@ -113,6 +117,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: '-',
             mottattOpprettetTidspunkt: formatDateTime(b.opprettet),
             avsluttetTidspunkt: b.avsluttetTidspunkt,
+            erOmgjøring: false,
         };
     }
 
@@ -144,6 +149,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             periode: '-',
             mottattOpprettetTidspunkt: b.opprettet,
             avsluttetTidspunkt: b.avsluttetTidspunkt,
+            erOmgjøring: false,
         };
     }
 

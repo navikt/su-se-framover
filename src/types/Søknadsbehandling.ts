@@ -1,5 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import { Periode } from '~src/types/Periode';
+import { OmgjøringsGrunn, OmgjøringsÅrsak } from '~src/types/Revurdering.ts';
 import { Simulering } from '~src/types/Simulering';
 
 import { Aldersvurdering } from './Aldersvurdering';
@@ -20,6 +21,8 @@ export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus>
     erLukket: boolean;
     aldersvurdering: Nullable<Aldersvurdering>;
     eksterneGrunnlag: EksterneGrunnlag;
+    omgjøringsårsak: Nullable<OmgjøringsÅrsak>;
+    omgjøringsgrunn: Nullable<OmgjøringsGrunn>;
 }
 
 export interface Stønadsperiode {
