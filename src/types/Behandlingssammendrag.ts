@@ -19,6 +19,7 @@ export enum BehandlingssammendragType {
     REGULERING = 'REGULERING',
     TILBAKEKREVING = 'TILBAKEKREVING',
     KRAVGRUNNLAG = 'KRAVGRUNNLAG',
+    OMGJØRING = 'OMGJØRING',
 }
 
 export enum BehandlingssammendragStatus {

@@ -33,6 +33,7 @@ export const ÅpneBehandlinger = () => {
     }, []);
 
     const [type, setType] = useState<BehandlingssammendragTypeFilter>({
+        [BehandlingssammendragType.OMGJØRING]: false,
         [BehandlingssammendragType.SØKNADSBEHANDLING]: false,
         [BehandlingssammendragType.REVURDERING]: false,
         [BehandlingssammendragType.KLAGE]: false,
