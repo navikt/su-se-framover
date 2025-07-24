@@ -21,7 +21,7 @@ export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus>
     erLukket: boolean;
     aldersvurdering: Nullable<Aldersvurdering>;
     eksterneGrunnlag: EksterneGrunnlag;
-    årsak: Nullable<OmgjøringsÅrsak>;
+    omgjøringsårsak: Nullable<OmgjøringsÅrsak>;
     omgjøringsgrunn: Nullable<OmgjøringsGrunn>;
 }
 
