@@ -46,6 +46,7 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragType.REGULERING]: false,
         [BehandlingssammendragType.TILBAKEKREVING]: false,
         [BehandlingssammendragType.KRAVGRUNNLAG]: false,
+        [BehandlingssammendragType.OMGJØRING]: false,
     });
 
     const [resultat, setResultat] = useState<BehandlingssammendragResultatFilter>({
