@@ -8,7 +8,7 @@ export const behandlingssammendragTypeMessages: { [key in BehandlingssammendragT
     [BehandlingssammendragType.REGULERING]: 'Regulering',
     [BehandlingssammendragType.TILBAKEKREVING]: 'Tilbakekreving',
     [BehandlingssammendragType.KRAVGRUNNLAG]: 'Kravgrunnlag',
-    [BehandlingssammendragType.OMGJØRING]: 'Omgjøring',
+    [BehandlingssammendragType.OMGJØRING]: 'Søknadsbehandling - Omgjøring',
 };
 
 export const behandlingssammendragStatus: { [key in BehandlingssammendragStatus]: string } = {
