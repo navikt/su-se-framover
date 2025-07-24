@@ -19,6 +19,7 @@ export type BehandlingssammendragTypeFilter = {
     [BehandlingssammendragType.TILBAKEKREVING]: boolean;
     [BehandlingssammendragType.KRAVGRUNNLAG]: boolean;
     [BehandlingssammendragType.OMGJØRING]: boolean;
+    [BehandlingssammendragType.REVURDERING_OMGJØRING]: boolean;
 };
 
 export type BehandlingssammendragStatusFilter = {
