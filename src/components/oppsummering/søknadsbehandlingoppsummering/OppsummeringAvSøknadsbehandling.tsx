@@ -64,6 +64,20 @@ const OppsummeringAvSøknadsbehandling = (props: {
                             verdi={formatPeriode(props.behandling.stønadsperiode!.periode)}
                             retning={'vertikal'}
                         />
+                        {props.behandling.omgjøringsårsak && props.behandling.omgjøringsgrunn && (
+                            <>
+                                <OppsummeringPar
+                                    label={formatMessage('label.årsak')}
+                                    verdi={formatMessage(props.behandling.omgjøringsårsak)}
+                                    retning={'vertikal'}
+                                />
+                                <OppsummeringPar
+                                    label={formatMessage('label.omgjøring')}
+                                    verdi={formatMessage(props.behandling.omgjøringsgrunn)}
+                                    retning={'vertikal'}
+                                />
+                            </>
+                        )}
                     </div>
 
                     {props.medBrevutkast && (
