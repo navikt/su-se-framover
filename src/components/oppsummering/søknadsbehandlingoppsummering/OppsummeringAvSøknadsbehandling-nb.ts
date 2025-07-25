@@ -1,3 +1,5 @@
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
+import { opprettOmgjøringÅrsakTekstMapper } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/omgjøringsmodal-nb.ts';
 import { søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper } from '~src/typeMappinger/SøknadsbehandlingStatus';
 
 export default {
@@ -20,6 +22,10 @@ export default {
     'knapp.vis': 'Vis brev',
 
     'virkningstidspunkt.tittel': 'Virkningstidspunkt',
+    'label.årsak': 'Årsak for revurdering',
+    'label.omgjøring': 'Omgjøringsgrunn',
 
     ...søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper,
+    ...opprettOmgjøringÅrsakTekstMapper,
+    ...omgjøringsgrunnerTekstMapper,
 };
