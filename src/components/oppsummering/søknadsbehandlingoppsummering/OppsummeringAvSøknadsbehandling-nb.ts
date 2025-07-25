@@ -22,7 +22,7 @@ export default {
     'knapp.vis': 'Vis brev',
 
     'virkningstidspunkt.tittel': 'Virkningstidspunkt',
-    'label.årsak': 'Årsak for revurdering',
+    'label.årsak': 'Årsak for ny behandling',
     'label.omgjøring': 'Omgjøringsgrunn',
 
     ...søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper,
