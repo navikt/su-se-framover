@@ -1,3 +1,4 @@
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
 import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
 import { reguleringstypeTekstMapper } from '~src/typeMappinger/ReguleringstypeMapper';
 import { vedtakMessages } from '~src/typeMappinger/VedtakTypeMapper';
@@ -46,8 +47,10 @@ export default {
 
     'bool.true': 'Ja',
     'bool.false': 'Nei',
+    'label.årsak': 'Årsak for ny behandling',
 
     ...opprettRevurderingÅrsakTekstMapper,
     ...vedtakMessages,
     ...reguleringstypeTekstMapper,
+    ...omgjøringsgrunnerTekstMapper,
 };

@@ -7,7 +7,6 @@ import * as DokumentApi from '~src/api/dokumentApi';
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
 import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
@@ -19,6 +18,7 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import { opprettOmgjøringÅrsakTekstMapper } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/omgjøringsmodal-nb.ts';
 import { Behandling } from '~src/types/Behandling';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
@@ -228,7 +228,7 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
 };
 
 const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling; sakstype: Sakstype }) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...opprettOmgjøringÅrsakTekstMapper } });
 
     return (
         <div>
@@ -248,6 +248,20 @@ const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling;
                     verdi={søknadMottatt(props.s.søknad)}
                     retning={'vertikal'}
                 />
+                {props.s.omgjøringsårsak && props.s.omgjøringsgrunn && (
+                    <>
+                        <OppsummeringPar
+                            label={formatMessage('label.årsak')}
+                            verdi={formatMessage(props.s.omgjøringsårsak)}
+                            retning={'vertikal'}
+                        />
+                        <OppsummeringPar
+                            label={formatMessage('label.omgjøring')}
+                            verdi={formatMessage(props.s.omgjøringsgrunn)}
+                            retning={'vertikal'}
+                        />
+                    </>
+                )}
             </div>
             <SidestiltOppsummeringAvVilkårOgGrunnlag
                 grunnlagsdataOgVilkårsvurderinger={props.s.grunnlagsdataOgVilkårsvurderinger}
@@ -259,7 +273,7 @@ const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling;
 };
 
 const PartialOppsummeringAvRevurdering = (props: { sak: Sak; v: Vedtak; r: Revurdering }) => {
-    const { formatMessage } = useI18n({ messages: { ...messages, ...omgjøringsgrunnerTekstMapper } });
+    const { formatMessage } = useI18n({ messages: { ...messages } });
     const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
 
     useEffect(() => {
