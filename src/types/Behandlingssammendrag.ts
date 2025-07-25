@@ -20,6 +20,7 @@ export enum BehandlingssammendragType {
     TILBAKEKREVING = 'TILBAKEKREVING',
     KRAVGRUNNLAG = 'KRAVGRUNNLAG',
     OMGJØRING = 'OMGJØRING', //Kun avslåtte omgjøringer
+    REVURDERING_OMGJØRING = 'REVURDERING_OMGJØRING',
 }
 
 export enum BehandlingssammendragStatus {
