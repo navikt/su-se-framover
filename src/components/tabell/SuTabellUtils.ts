@@ -80,7 +80,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
                 ? formatDate(b.søknad.søknadInnhold.forNav.mottaksdatoForSøknad)
                 : formatDateTime(b.søknad.opprettet),
             avsluttetTidspunkt: erSøknadLukket(b.søknad) ? b.søknad.lukket.tidspunkt : null,
-            erOmgjøring: b.søknadsbehandling !== undefined && 'omgjøringsårsak' in b.søknadsbehandling,
+            erOmgjøring: b.søknadsbehandling !== undefined && !!b.søknadsbehandling.omgjøringsårsak,
         };
     }
 
