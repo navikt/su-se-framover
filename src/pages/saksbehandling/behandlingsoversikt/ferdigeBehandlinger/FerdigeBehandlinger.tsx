@@ -14,6 +14,7 @@ import {
     BehandlingssammendragTypeFilter,
     Sakstypefilter,
 } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter';
+import { genererIdForElementer } from '~src/pages/saksbehandling/behandlingsoversikt/åpneBehandlinger/ÅpneBehandlinger.tsx';
 import BehandlingssammendragTabell from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
 import {
     Behandlingssammendrag,
@@ -123,16 +124,19 @@ export const FerdigeBehandlinger = () => {
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (behandlingssammendrag: Behandlingssammendrag[]) => (
-                        <div>
-                            <AntallBehandlinger
-                                behandlingssammendrag={filtrerBehandlingssammendrag(behandlingssammendrag)}
-                            />
-                            <BehandlingssammendragTabell
-                                tabelldata={filtrerBehandlingssammendrag(behandlingssammendrag)}
-                            />
-                        </div>
-                    ),
+                    (behandlingssammendrag: Behandlingssammendrag[]) => {
+                        const sammendragMedId = genererIdForElementer(behandlingssammendrag);
+                        return (
+                            <div>
+                                <AntallBehandlinger
+                                    behandlingssammendrag={filtrerBehandlingssammendrag(sammendragMedId)}
+                                />
+                                <BehandlingssammendragTabell
+                                    tabelldata={filtrerBehandlingssammendrag(sammendragMedId)}
+                                />
+                            </div>
+                        );
+                    },
                 ),
             )}
         </div>

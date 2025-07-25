@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -93,18 +94,28 @@ export const ÅpneBehandlinger = () => {
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (behandlingssammendrag: Behandlingssammendrag[]) => (
-                        <div>
-                            <AntallBehandlinger
-                                behandlingssammendrag={filterBehandlingssammendrag(behandlingssammendrag)}
-                            />
-                            <BehandlingssammendragTabell
-                                tabelldata={filterBehandlingssammendrag(behandlingssammendrag)}
-                            />
-                        </div>
-                    ),
+                    (behandlingssammendrag: Behandlingssammendrag[]) => {
+                        const sammendragMedId = genererIdForElementer(behandlingssammendrag);
+                        return (
+                            <div>
+                                <AntallBehandlinger
+                                    behandlingssammendrag={filterBehandlingssammendrag(sammendragMedId)}
+                                />
+                                <BehandlingssammendragTabell
+                                    tabelldata={filterBehandlingssammendrag(sammendragMedId)}
+                                />
+                            </div>
+                        );
+                    },
                 ),
             )}
         </div>
     );
+};
+
+export const genererIdForElementer = (sammendrag: Behandlingssammendrag[]) => {
+    return sammendrag.map((tabell) => ({
+        ...tabell,
+        id: uuid(),
+    }));
 };
