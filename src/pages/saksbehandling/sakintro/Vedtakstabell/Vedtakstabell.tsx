@@ -24,7 +24,9 @@ import * as Routes from '~src/lib/routes';
 import { OmgjøringModal, Omgjøringsfom } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/OmgjøringModal.tsx';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, KlageStatus } from '~src/types/Klage';
-import { Vedtak, VedtakType } from '~src/types/Vedtak';
+import { erOmgjøring, Revurdering } from '~src/types/Revurdering.ts';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
+import { Vedtak, VedtakType, VedtakTypeMedOmgjøring } from '~src/types/Vedtak';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
@@ -51,7 +53,12 @@ type VedtakOgOversendteKlager = Array<Vedtak | Klage>;
 const isOversendtKlage = (v: Vedtak | Klage): v is Klage => !('periode' in v);
 const isVedtak = (v: VedtakEllerOversendtKlage): v is Vedtak => 'periode' in v;
 
-const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakOgOversendteKlager }) => {
+const Vedtakstabell = (props: {
+    sakId: string;
+    vedtakOgOversendteKlager: VedtakOgOversendteKlager;
+    behandlinger: Søknadsbehandling[];
+    revurderinger: Revurdering[];
+}) => {
     const { insert } = useToast();
     const apiErrorMessages = useApiErrorMessages();
     const { formatMessage } = useI18n({ messages });
@@ -172,6 +179,34 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                 }
                             }, [hentDokumenterStatus]);
 
+                            const hentVedtakstype = (vedtak: Vedtak): VedtakType | VedtakTypeMedOmgjøring => {
+                                if (vedtak.type === VedtakType.ENDRING) {
+                                    const revurdering = props.revurderinger.find((r) => r.id === vedtak.behandlingId);
+                                    if (revurdering) {
+                                        if (erOmgjøring(revurdering.årsak)) {
+                                            return VedtakTypeMedOmgjøring.REVURDERING_OMGJØRING;
+                                        } else {
+                                            return vedtak.type;
+                                        }
+                                    } else {
+                                        return vedtak.type;
+                                    }
+                                }
+                                if (vedtak.type === VedtakType.SØKNAD) {
+                                    const behandling = props.behandlinger.find((b) => b.id === vedtak.behandlingId);
+                                    if (behandling) {
+                                        if (behandling.omgjøringsårsak) {
+                                            return VedtakTypeMedOmgjøring.SØKNAD_OMGJØRING;
+                                        } else {
+                                            return vedtak.type;
+                                        }
+                                    } else {
+                                        return vedtak.type;
+                                    }
+                                }
+                                return vedtak.type;
+                            };
+
                             return (
                                 <Table.Row key={vedtak.id}>
                                     <Table.DataCell>
@@ -179,7 +214,7 @@ const Vedtakstabell = (props: { sakId: string; vedtakOgOversendteKlager: VedtakO
                                             ? formatMessage(
                                                   `datacell.vedtakstype.${vedtak.status as KlageStatus.OVERSENDT}`,
                                               )
-                                            : formatMessage(`datacell.vedtakstype.${vedtak.type}`)}
+                                            : formatMessage(`datacell.vedtakstype.${hentVedtakstype(vedtak)}`)}
                                     </Table.DataCell>
                                     <Table.DataCell>
                                         {isOversendtKlage(vedtak)

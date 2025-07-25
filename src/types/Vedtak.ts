@@ -34,6 +34,11 @@ export enum VedtakType {
     TILBAKEKREVING = 'TILBAKEKREVING',
 }
 
+export enum VedtakTypeMedOmgjøring {
+    REVURDERING_OMGJØRING = 'REVURDERING_OMGJØRING',
+    SØKNAD_OMGJØRING = 'SØKNAD_OMGJØRING',
+}
+
 /**
  * Et dokuments livvsløp
  */

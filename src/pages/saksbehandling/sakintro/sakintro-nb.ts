@@ -96,6 +96,8 @@ export default {
     'datacell.brev.skalIkkeGenerere': 'Skal ikke sende brev',
     'datacell.brev.ikkeGenerert': 'Ikke generert',
 
+    'datacell.vedtakstype.REVURDERING_OMGJØRING': 'Revurdering(omgjøring)',
+    'datacell.vedtakstype.SØKNAD_OMGJØRING': 'Søknad(omgjøring)',
     'datacell.vedtakstype.SØKNAD': 'Søknad',
     'datacell.vedtakstype.AVSLAG': 'Søknad',
     'datacell.vedtakstype.ENDRING': 'Revurdering',
