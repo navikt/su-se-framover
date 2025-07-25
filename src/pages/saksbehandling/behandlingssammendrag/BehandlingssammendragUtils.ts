@@ -4,7 +4,7 @@ import * as S from 'fp-ts/string';
 
 import { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import { pipe } from '~src/lib/fp';
-import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
+import { Behandlingssammendrag, BehandlingssammendragMedId } from '~src/types/Behandlingssammendrag';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 export enum BehandlingssammendragKolonne {
@@ -16,7 +16,7 @@ export enum BehandlingssammendragKolonne {
 }
 
 export const sortTabell = (
-    behandlingssammendrag: Behandlingssammendrag[],
+    behandlingssammendrag: BehandlingssammendragMedId[],
     kolonne: BehandlingssammendragKolonne,
     sortVerdi: AriaSortVerdi,
 ) => {

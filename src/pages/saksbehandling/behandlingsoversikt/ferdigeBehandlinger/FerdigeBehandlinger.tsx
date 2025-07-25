@@ -14,9 +14,11 @@ import {
     BehandlingssammendragTypeFilter,
     Sakstypefilter,
 } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter';
+import { genererIdForElementer } from '~src/pages/saksbehandling/behandlingsoversikt/åpneBehandlinger/ÅpneBehandlinger.tsx';
 import BehandlingssammendragTabell from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
 import {
     Behandlingssammendrag,
+    BehandlingssammendragMedId,
     BehandlingssammendragStatus,
     BehandlingssammendragType,
 } from '~src/types/Behandlingssammendrag';
@@ -68,7 +70,9 @@ export const FerdigeBehandlinger = () => {
     });
 
     //TODO: dette kan legges i redux evt struktureres annerledes så vi slipper å filtreringslogikken her.
-    const filtrerBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {
+    const filtrerBehandlingssammendrag = (
+        behandlingssammendrag: BehandlingssammendragMedId[],
+    ): BehandlingssammendragMedId[] => {
         const typefilter = hentFiltrerteVerdier(type);
         const resultatfilter = hentFiltrerteVerdier(resultat);
         const saksfilter = hentFiltrerteVerdier(sakstypevalg);
@@ -123,16 +127,19 @@ export const FerdigeBehandlinger = () => {
                     () => <Loader />,
                     () => <Loader />,
                     (error) => <ApiErrorAlert error={error} />,
-                    (behandlingssammendrag: Behandlingssammendrag[]) => (
-                        <div>
-                            <AntallBehandlinger
-                                behandlingssammendrag={filtrerBehandlingssammendrag(behandlingssammendrag)}
-                            />
-                            <BehandlingssammendragTabell
-                                tabelldata={filtrerBehandlingssammendrag(behandlingssammendrag)}
-                            />
-                        </div>
-                    ),
+                    (behandlingssammendrag: Behandlingssammendrag[]) => {
+                        const sammendragMedId = genererIdForElementer(behandlingssammendrag);
+                        return (
+                            <div>
+                                <AntallBehandlinger
+                                    behandlingssammendrag={filtrerBehandlingssammendrag(sammendragMedId)}
+                                />
+                                <BehandlingssammendragTabell
+                                    tabelldata={filtrerBehandlingssammendrag(sammendragMedId)}
+                                />
+                            </div>
+                        );
+                    },
                 ),
             )}
         </div>

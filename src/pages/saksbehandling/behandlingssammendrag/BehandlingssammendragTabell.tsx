@@ -12,7 +12,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch } from '~src/redux/Store';
-import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
+import { BehandlingssammendragMedId } from '~src/types/Behandlingssammendrag';
 import { Sak } from '~src/types/Sak';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
@@ -21,7 +21,7 @@ import messages from './Behandlingssammendrag-nb';
 import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
-const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[] }) => {
+const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragMedId[] }) => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
 
@@ -69,7 +69,7 @@ const BehandlingssammendragTabell = (props: { tabelldata: Behandlingssammendrag[
                     <Table.Body>
                         {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
                             <BehandlingssamendragTableRow
-                                key={`${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
+                                key={`${behandlingssammendrag.id}${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
                                 behandlingssammendrag={behandlingssammendrag}
                                 setContextMenuVariables={setContextMenuVariables}
                             />
@@ -92,7 +92,7 @@ const BehandlingssamendragTableRow = ({
     behandlingssammendrag,
     setContextMenuVariables,
 }: {
-    behandlingssammendrag: Behandlingssammendrag;
+    behandlingssammendrag: BehandlingssammendragMedId;
     setContextMenuVariables: (contextMenuVariables: ContextMenuVariables) => void;
 }) => {
     const navigate = useNavigate();

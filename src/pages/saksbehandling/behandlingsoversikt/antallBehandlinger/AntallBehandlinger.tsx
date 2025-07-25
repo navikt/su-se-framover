@@ -1,7 +1,7 @@
 import { BodyShort, Label } from '@navikt/ds-react';
 
 import { useI18n } from '~src/lib/i18n';
-import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
+import { BehandlingssammendragMedId } from '~src/types/Behandlingssammendrag';
 
 import styles from './antallBehandlinger.module.less';
 
@@ -9,7 +9,7 @@ const messages = {
     behandlinger: 'behandlinger',
 };
 
-const AntallBehandlinger = (args: { behandlingssammendrag: Behandlingssammendrag[] }) => {
+const AntallBehandlinger = (args: { behandlingssammendrag: BehandlingssammendragMedId[] }) => {
     const { formatMessage } = useI18n({ messages });
     return args.behandlingssammendrag.length > 0 ? (
         <div className={styles.antallBehandlingerContainer}>
