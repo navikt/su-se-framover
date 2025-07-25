@@ -10,8 +10,11 @@ export interface Behandlingssammendrag {
     status: BehandlingssammendragStatus;
     periode: Nullable<Periode<string>>;
     behandlingStartet: Nullable<string>;
-    id: string; //genereres lokalt
 }
+
+export type BehandlingssammendragMedId = Behandlingssammendrag & {
+    id: string; //genereres lokalt
+};
 
 export enum BehandlingssammendragType {
     SØKNADSBEHANDLING = 'SØKNADSBEHANDLING',

@@ -18,6 +18,7 @@ import { genererIdForElementer } from '~src/pages/saksbehandling/behandlingsover
 import BehandlingssammendragTabell from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
 import {
     Behandlingssammendrag,
+    BehandlingssammendragMedId,
     BehandlingssammendragStatus,
     BehandlingssammendragType,
 } from '~src/types/Behandlingssammendrag';
@@ -69,7 +70,9 @@ export const FerdigeBehandlinger = () => {
     });
 
     //TODO: dette kan legges i redux evt struktureres annerledes så vi slipper å filtreringslogikken her.
-    const filtrerBehandlingssammendrag = (behandlingssammendrag: Behandlingssammendrag[]): Behandlingssammendrag[] => {
+    const filtrerBehandlingssammendrag = (
+        behandlingssammendrag: BehandlingssammendragMedId[],
+    ): BehandlingssammendragMedId[] => {
         const typefilter = hentFiltrerteVerdier(type);
         const resultatfilter = hentFiltrerteVerdier(resultat);
         const saksfilter = hentFiltrerteVerdier(sakstypevalg);
