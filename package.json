@@ -68,7 +68,7 @@
         "react-hook-form": "7.56.3",
         "react-intl": "7.1.11",
         "react-redux": "9.2.0",
-        "react-router-dom": "7.5.3",
+        "react-router-dom": "7.6.2",
         "redux": "5.0.1",
         "reset-css": "5.0.2",
         "uuid": "11.1.0",
