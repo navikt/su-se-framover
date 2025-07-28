@@ -59,11 +59,12 @@ const RevurderingPage = () => {
         utbetalinger: sak.utbetalinger,
         informasjonsRevurderinger: sak.revurderinger.filter(erInformasjonsRevurdering),
     };
+
     const { formatMessage } = useI18n({ messages: messages });
     const urlParams = routes.useRouteParams<typeof routes.revurderingSeksjonSteg>();
 
     const påbegyntRevurdering = props.informasjonsRevurderinger.find((r) => r.id === urlParams.revurderingId);
-
+    const harUteståendeKravgrunnlag = !!sak.uteståendeKravgrunnlag;
     if (props.utbetalinger.length === 0) {
         return (
             <div className={styles.revurderingContainer}>
@@ -104,6 +105,7 @@ const RevurderingPage = () => {
                     sakstype={sak.sakstype}
                     revurdering={påbegyntRevurdering}
                     seksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
+                    harUteståendeKravgrunnlag={harUteståendeKravgrunnlag}
                 />
             )}
         </div>
@@ -118,6 +120,7 @@ const RevurderingSeksjonerWrapper = (props: {
         seksjon: RevurderingSeksjoner;
         steg: RevurderingSteg;
     };
+    harUteståendeKravgrunnlag: boolean;
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: messages });
@@ -166,7 +169,11 @@ const RevurderingSeksjonerWrapper = (props: {
                         />
                     )}
                     {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.BeregningOgSimulering && (
-                        <RevurderingBeregnOgSimuler seksjoner={seksjoner} informasjonsRevurdering={props.revurdering} />
+                        <RevurderingBeregnOgSimuler
+                            seksjoner={seksjoner}
+                            informasjonsRevurdering={props.revurdering}
+                            harUteståendeKravgrunnlag={props.harUteståendeKravgrunnlag}
+                        />
                     )}
                     {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.Oppsummering && (
                         <RevurderingOppsummeringPage

@@ -22,7 +22,7 @@ const Attestering = () => {
     const revurdering = sak.revurderinger.find((r) => r.id === urlParams.behandlingId);
     const klage = sak.klager.find((k) => k.id === urlParams.behandlingId);
     const tilbakekreving = sak.tilbakekrevinger.find((t) => t.id === urlParams.behandlingId);
-
+    const harUteståendeKravgrunnlag = !!sak.uteståendeKravgrunnlag;
     if (!søknadsbehandling && !revurdering && !klage && !tilbakekreving) {
         return (
             <div>
@@ -52,6 +52,7 @@ const Attestering = () => {
                 <AttesterRevurdering
                     sakInfo={{ id: sak.id, nummer: sak.saksnummer, sakstype: sak.sakstype }}
                     revurdering={revurdering}
+                    harUteståendeKravgrunnlag={harUteståendeKravgrunnlag}
                 />
             )}
             {klage && (

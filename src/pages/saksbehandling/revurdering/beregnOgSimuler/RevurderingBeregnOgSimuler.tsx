@@ -34,6 +34,7 @@ import styles from './RevurderingBeregnOgSimuler.module.less';
 const RevurderingBeregnOgSimuler = (props: {
     informasjonsRevurdering: InformasjonsRevurdering;
     seksjoner: Seksjon[];
+    harUteståendeKravgrunnlag: boolean;
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
@@ -56,7 +57,7 @@ const RevurderingBeregnOgSimuler = (props: {
             });
         }
     }, [props.informasjonsRevurdering.id]);
-
+    //TODO: vise en advarsel her hvis åpent kravgrunnlag
     return (
         <div className={styles.container}>
             {pipe(
@@ -75,9 +76,16 @@ const RevurderingBeregnOgSimuler = (props: {
                         <div className={styles.successContainer}>
                             {harSimulering(res.revurdering) &&
                                 simuleringenInneholderFeilutbetaling(res.revurdering.simulering) && (
-                                    <Alert variant={'warning'}>
-                                        {formatMessage('simulering.feilutbetaling.alert')}
-                                    </Alert>
+                                    <>
+                                        <Alert variant={'warning'}>
+                                            {formatMessage('simulering.feilutbetaling.alert')}
+                                        </Alert>
+                                        {props.harUteståendeKravgrunnlag && (
+                                            <Alert variant={'warning'}>
+                                                {formatMessage('aapent.kravgrunnlag.alert')}
+                                            </Alert>
+                                        )}
+                                    </>
                                 )}
                             <Beregningblokk revurdering={res.revurdering} />
                             {res.feilmeldinger.length > 0 && <UtfallSomIkkeStøttes feilmeldinger={res.feilmeldinger} />}
