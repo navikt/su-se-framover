@@ -43,6 +43,7 @@ const AttesterRevurdering = (props: {
         sakstype: Sakstype;
     };
     revurdering: InformasjonsRevurdering;
+    harUteståendeKravgrunnlag: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const navigate = useNavigate();
@@ -111,7 +112,7 @@ const AttesterRevurdering = (props: {
         );
     };
 
-    const warnings = hentWarnings(props.revurdering);
+    const warnings = hentWarnings(props.revurdering, props.harUteståendeKravgrunnlag);
 
     return pipe(
         grunnlagsdataOgVilkårsvurderinger,
@@ -138,7 +139,6 @@ const AttesterRevurdering = (props: {
                                 sakstype={props.sakInfo.sakstype}
                             />
                         </div>
-
                         {warnings.length > 0 &&
                             warnings.map((w) => (
                                 <div key={w} className={styles.opphørsadvarsel}>
@@ -203,14 +203,21 @@ const AttesterRevurdering = (props: {
     );
 };
 
-const hentWarnings = (revurdering: InformasjonsRevurdering): Array<keyof typeof messages> => {
+const hentWarnings = (
+    revurdering: InformasjonsRevurdering,
+    harUteståendeKravgrunnlag: boolean,
+): Array<keyof typeof messages> => {
     const opphør = revurdering.status === InformasjonsRevurderingStatus.TIL_ATTESTERING_OPPHØRT;
     const warnings: Array<keyof typeof messages> = [];
+
     if (harSimulering(revurdering) && simuleringenInneholderFeilutbetaling(revurdering.simulering)) {
         warnings.push('simulering.feilutbetaling.alert');
     }
     if (opphør) {
         warnings.push('info.opphør');
+    }
+    if (harUteståendeKravgrunnlag) {
+        warnings.push('aapent.kravgrunnlag.alert');
     }
     return warnings;
 };
