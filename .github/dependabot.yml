@@ -87,14 +87,14 @@ updates:
             - "@types/express*"
             - "@types/express-session"
             - "@types/express-http-proxy"
-      middleware-proxy:
-        patterns:
-          - "compression"
-          - "cors"
-          - "https-proxy-agent"
-          - "connect-redis"
-          - "@types/compression"
-          - "@types/cors"
+        middleware-proxy:
+          patterns:
+            - "compression"
+            - "cors"
+            - "https-proxy-agent"
+            - "connect-redis"
+            - "@types/compression"
+            - "@types/cors"
 
     - package-ecosystem: 'github-actions'
       directory: '/'
