@@ -27,7 +27,7 @@
         "https-proxy-agent": "^7.0.0",
         "openid-client": "^5.0.2",
         "passport": "^0.7.0",
-        "pino": "~9.6.0",
+        "pino": "~9.7.0",
         "pino-http": "~10.4.0",
         "redis": "^4.1.0"
     },
