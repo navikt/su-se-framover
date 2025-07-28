@@ -4,23 +4,105 @@ updates:
     - package-ecosystem: npm
       directory: '/'
       schedule:
-          interval: weekly
-      open-pull-requests-limit: 0
+          interval: "weekly"
+      open-pull-requests-limit: 5
+      groups:
+        testing:
+          patterns:
+            - "jest"
+            - "ts-jest"
+            - "@types/jest"
+        react-ecosystem:
+          patterns:
+            - "react*"
+            - "@types/react*"
+            - "react-intl"
+            - "react-redux"
+            - "react-router-dom"
+            - "react-hook-form"
+        redux:
+          patterns:
+            - "redux"
+            - "@reduxjs/toolkit"
+        ds:
+          patterns:
+            - "@navikt/ds-*"
+            - "@navikt/aksel-icons"
+        eslint:
+          patterns:
+            - "prettier"
+            - "eslint"
+            - "husky"
+            - "eslint-*"
+            - "lint-staged"
+            - "@typescript-eslint/*"
+        utilities:
+          patterns:
+            - "lodash.*"
+            - "uuid"
+            - "@types/uuid"
+            - "date-fns"
+            - "fp-ts"
+            - "io-ts*"
+            - "country-data-list"
+        build-tools:
+          patterns:
+            - "vite*"
+            - "@vitejs/*"
+            - "nodemon"
+            - "less"
       ignore:
           - dependency-name: 'node'
           - dependency-name: 'yup'
-    - package-ecosystem: 'github-actions'
-      directory: '/'
-      schedule:
-          interval: daily
-      open-pull-requests-limit: 0
     - package-ecosystem: npm
       directory: '/server'
       schedule:
-          interval: weekly
-      open-pull-requests-limit: 20
+        interval: "weekly"
+      open-pull-requests-limit: 5
+      groups:
+        logging:
+          patterns:
+            - "pino"
+            - "pino-http"
+            - "@types/pino-http"
+        redis:
+          patterns:
+            - "redis"
+            - "@types/redis"
+        typescript-and-node:
+          patterns:
+            - "typescript"
+            - "@types/node"
+            - "dotenv"
+        authentication:
+          patterns:
+            - "openid-client"
+            - "passport"
+            - "@types/passport"
+        express-ecosystem:
+          patterns:
+            - "express"
+            - "express-session"
+            - "express-http-proxy"
+            - "@types/express*"
+            - "@types/express-session"
+            - "@types/express-http-proxy"
+      middleware-proxy:
+        patterns:
+          - "compression"
+          - "cors"
+          - "https-proxy-agent"
+          - "connect-redis"
+          - "@types/compression"
+          - "@types/cors"
+
+    - package-ecosystem: 'github-actions'
+      directory: '/'
+      schedule:
+          interval: "monthly"
+      open-pull-requests-limit: 5
     - package-ecosystem: 'docker'
       directory: '/'
       schedule:
-          interval: 'daily'
-      open-pull-requests-limit: 0
+          interval: "monthly"
+      open-pull-requests-limit: 5
