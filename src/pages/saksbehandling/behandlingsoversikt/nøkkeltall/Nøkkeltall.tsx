@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Label, Loader } from '@navikt/ds-react';
+import { Alert, BodyShort, Label, Loader } from '@navikt/ds-react';
 import { useEffect } from 'react';
 
 import { hentNøkkeltall } from '~src/api/nøkkeltallApi';
@@ -35,8 +35,11 @@ const Nøkkeltall = () => {
             () => <Loader />,
             (error) => <ApiErrorAlert error={error} />,
             (nøkkeltall) => {
-                const nøkkelTallForUføre = nøkkeltall.find((n) => n.sakstype === Sakstype.Uføre)!;
-                const nøkkelTallForAlder = nøkkeltall.find((n) => n.sakstype === Sakstype.Alder)!;
+                const nøkkelTallForUføre = nøkkeltall.find((n) => n.sakstype === Sakstype.Uføre);
+                const nøkkelTallForAlder = nøkkeltall.find((n) => n.sakstype === Sakstype.Alder);
+                if (!nøkkelTallForUføre || !nøkkelTallForAlder) {
+                    return <Alert variant="error">Nøkkeltall for sakstypene fantes ikke</Alert>;
+                }
                 return (
                     <div className={styles.nøkkeltall}>
                         <ul className={styles.list}>
