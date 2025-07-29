@@ -1,4 +1,7 @@
+import { Sakstype } from '~src/types/Sak.ts';
+
 export interface Nøkkeltall {
+    sakstype: Sakstype;
     søknader: Søknader;
     antallUnikePersoner: number;
     løpendeSaker: number;
