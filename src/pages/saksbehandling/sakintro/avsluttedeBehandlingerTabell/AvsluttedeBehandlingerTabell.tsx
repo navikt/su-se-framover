@@ -139,7 +139,7 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                     </Table.DataCell>
                                     <Table.DataCell>
                                         {isKlage(behandling) &&
-                                            behandling.avsluttet == AvsluttKlageStatus.ER_AVSLUTTET && (
+                                            behandling.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET && (
                                                 <BodyShort>{behandling.avsluttetBegrunnelse}</BodyShort>
                                             )}
                                         {isSøknadMedEllerUtenBehandling(behandling) &&
