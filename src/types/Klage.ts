@@ -21,6 +21,7 @@ export interface Klage {
     avsluttet: AvsluttKlageStatus;
     avsluttetTidspunkt: Nullable<string>;
     attesteringer: Attestering[];
+    avsluttetBegrunnelse: Nullable<string>;
 }
 
 export enum AvsluttKlageStatus {
