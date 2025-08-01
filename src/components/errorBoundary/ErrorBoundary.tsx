@@ -3,7 +3,7 @@ import StackTrace from 'stacktrace-js';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types.ts';
+import { Nullable } from '~src/lib/types';
 
 import SkjemaelementFeilmelding from '../formElements/SkjemaelementFeilmelding';
 
