@@ -1,20 +1,37 @@
-import { Component, PropsWithChildren } from 'react';
+import { Component, ErrorInfo, PropsWithChildren } from 'react';
+import StackTrace from 'stacktrace-js';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types.ts';
 
 import SkjemaelementFeilmelding from '../formElements/SkjemaelementFeilmelding';
 
 import styles from './errorBoundary.module.less';
 
-class ErrorBoundary extends Component<PropsWithChildren, { hasError: boolean; error?: Error; eventId?: string }> {
+interface ErrorBoundaryState {
+    hasError: boolean;
+    errorInfo?: {
+        componentStack?: Nullable<string>;
+        mappedStack: string;
+    } | null;
+}
+
+class ErrorBoundary extends Component<PropsWithChildren, ErrorBoundaryState> {
     constructor(props: PropsWithChildren) {
         super(props);
-        this.state = { hasError: false };
+        this.state = { hasError: false, errorInfo: undefined };
     }
 
-    static getDerivedStateFromError(error: Error) {
-        return { hasError: true, error };
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+        StackTrace.fromError(error).then((frames) => {
+            const mapped = frames.map((f) => f.toString()).join('\n');
+            this.setState({ errorInfo: { componentStack: errorInfo.componentStack, mappedStack: mapped } });
+        });
     }
 
     render() {
@@ -26,10 +43,12 @@ class ErrorBoundary extends Component<PropsWithChildren, { hasError: boolean; er
                         Tilbake
                     </LinkAsButton>
                     <hr />
-                    <div>
-                        Informasjon for utviklere:
-                        <pre className={styles.stackTrace}>{this.state.error?.stack}</pre>
-                    </div>
+                    {this.state.errorInfo && (
+                        <div>
+                            Informasjon for utviklere:
+                            <pre className={styles.stackTrace}>{this.state.errorInfo.mappedStack}</pre>
+                        </div>
+                    )}
                 </div>
             );
         }

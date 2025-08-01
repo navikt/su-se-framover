@@ -75,12 +75,12 @@ const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
             verdi: formatMessage(props.revurdering.årsak),
         },
     ];
-    if (erOmgjøring(props.revurdering.årsak)) {
+    if (erOmgjøring(props.revurdering.årsak) && props.revurdering.omgjøringsgrunn) {
         oppsummeringselementerRevurdering = [
             ...oppsummeringselementerRevurdering,
             {
                 tittel: formatMessage('label.omgjøring'),
-                verdi: formatMessage(props.revurdering.omgjøringsgrunn!),
+                verdi: formatMessage(props.revurdering.omgjøringsgrunn),
             },
         ];
     }
