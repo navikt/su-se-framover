@@ -24,6 +24,7 @@ export const velgbareFradragskategoriMessages: { [key in VelgbareFradragskategor
     [VelgbareFradragskategorier.Kapitalinntekt]: 'Kapitalinntekt',
     [VelgbareFradragskategorier.Fosterhjemsgodtgjørelse]: 'Fosterhjemsgodtgjørelse',
     [VelgbareFradragskategorier.Annet]: 'Annet',
+    [VelgbareFradragskategorier.Omstillingsstønad]: 'Omstillingsstønad',
     [VelgbareFradragskategorier.Tiltakspenger]: 'Tiltakspenger',
     [VelgbareFradragskategorier.Ventestønad]: 'Ventestønad',
 };
