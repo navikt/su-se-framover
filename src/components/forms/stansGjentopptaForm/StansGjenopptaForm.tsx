@@ -53,6 +53,11 @@ const StansGjenopptaForm = (props: Props) => {
                                     {formatMessage(OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING)}
                                 </option>
                             )}
+                            {!isStans(props.form.getValues()) && (
+                                <option value={OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL}>
+                                    {formatMessage(OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL)}
+                                </option>
+                            )}
                         </Select>
                     )}
                 />

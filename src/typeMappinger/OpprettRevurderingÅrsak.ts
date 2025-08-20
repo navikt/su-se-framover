@@ -9,6 +9,7 @@ export const opprettRevurderingÅrsakTekstMapper: { [key in OpprettetRevurdering
     [OpprettetRevurderingGrunn.REGULER_GRUNNBELØP]: 'G-regulering',
     [OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING]: 'Manglende kontrollerklæring',
     [OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING]: 'Mottatt kontrollerklæring',
+    [OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL]: 'Stanset ved en feil',
     [OpprettetRevurderingGrunn.IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON]: 'Ikke mottatt etterspurt dokumentasjon',
     [OpprettetRevurderingGrunn.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN]: 'Omgjøring etter vedtak fra klageinstansen',
     [OpprettetRevurderingGrunn.OMGJØRING_EGET_TILTAK]: 'Omgjøring etter eget tiltak',

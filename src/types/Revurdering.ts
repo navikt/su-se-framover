@@ -154,6 +154,7 @@ export enum OpprettetRevurderingGrunn {
     MIGRERT = 'MIGRERT',
     MANGLENDE_KONTROLLERKLÆRING = 'MANGLENDE_KONTROLLERKLÆRING',
     MOTTATT_KONTROLLERKLÆRING = 'MOTTATT_KONTROLLERKLÆRING',
+    STANSET_VED_EN_FEIL = 'STANSET_VED_EN_FEIL',
     IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON = 'IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON',
     OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN = OmgjøringsÅrsak.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN,
     OMGJØRING_EGET_TILTAK = OmgjøringsÅrsak.OMGJØRING_EGET_TILTAK,
@@ -174,6 +175,7 @@ export const erOmgjøring = (valgtÅrsak: Nullable<OpprettetRevurderingGrunn>): 
         case OpprettetRevurderingGrunn.MIGRERT:
         case OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING:
         case OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING:
+        case OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL:
         case OpprettetRevurderingGrunn.IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON:
             return false;
         case OpprettetRevurderingGrunn.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN:
@@ -197,6 +199,7 @@ export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
             OpprettetRevurderingGrunn.MIGRERT,
             OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING,
             OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING,
+            OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL,
         ].includes(x),
 );
 
