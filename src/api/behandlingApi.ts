@@ -79,6 +79,14 @@ export async function sendTilAttestering(arg: {
     });
 }
 
+export async function returSak(arg: { sakId: string; behandlingId: string }) {
+    return apiClient<Søknadsbehandling>({
+        //url: `$SØKNADSBEHANDLING_PATH/{behandlingId)/returSak`
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/returSak`,
+        method: 'PATCH',
+    });
+}
+
 export async function iverksett(arg: { sakId: string; behandlingId: string }) {
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/iverksett`,

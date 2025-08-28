@@ -60,6 +60,19 @@ export const sendTilAttestering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+/*export const taIRetur = createAsyncThunk<
+    Søknadsbehandling,
+    { sakId: string; behandlingId: string },
+    {rejectValue: ApiError}
+>('behandling/retur', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.taIRetur({ sakId, behandlingId });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});*/
+
+
 export const attesteringIverksett = createAsyncThunk<
     Søknadsbehandling,
     { sakId: string; behandlingId: string },
