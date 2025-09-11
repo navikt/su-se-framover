@@ -125,6 +125,7 @@ export enum Utfall {
     STADFESTELSE = 'STADFESTELSE',
     UGUNST = 'UGUNST',
     AVVIST = 'AVVIST',
+    HENLAGT = 'HENLAGT',
 }
 
 export interface VedtattUtfall {
