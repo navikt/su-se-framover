@@ -1,11 +1,6 @@
-import { OmgjørVedtakÅrsak, OmgjørVedtakUtfall, OpprettholdVedtakHjemmel, KlageVurderingType } from '~src/types/Klage';
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
+import { OmgjørVedtakUtfall, OpprettholdVedtakHjemmel, KlageVurderingType } from '~src/types/Klage';
 
-const omgjørVedtakÅrsakMessages: { [key in OmgjørVedtakÅrsak]: string } = {
-    [OmgjørVedtakÅrsak.FEIL_LOVANVENDELSE]: 'Feil lovanvendelse',
-    [OmgjørVedtakÅrsak.SAKSBEHADNLINGSFEIL]: 'Saksbehandlingsfeil',
-    [OmgjørVedtakÅrsak.ULIK_SKJØNNSVURDERING]: 'Ulik skjønnsvurdering',
-    [OmgjørVedtakÅrsak.NYTT_FAKTUM]: 'Nytt faktum',
-};
 const omgjørVedtakGunstMessages: { [key in OmgjørVedtakUtfall]: string } = {
     [OmgjørVedtakUtfall.TIL_GUNST]: 'Til gunst',
     [OmgjørVedtakUtfall.TIL_UGUNST]: 'Til ugunst',
@@ -39,7 +34,7 @@ export default {
 
     'form.omgjørVedtak.årsak.label': 'Årsak',
     'form.omgjørVedtak.årsak.velgÅrsak': 'Velg årsak',
-    ...omgjørVedtakÅrsakMessages,
+    ...omgjøringsgrunnerTekstMapper,
     ...omgjørVedtakGunstMessages,
     'form.opprettholdVedtak.hjemmel.label': 'Hjemmel',
     'form.opprettholdVedtak.hjemmel.velgHjemmel': 'Velg hjemmel',

@@ -1,4 +1,5 @@
 import { Nullable } from '~src/lib/types';
+import { OmgjøringsGrunn } from '~src/types/Revurdering.ts';
 
 import { Attestering } from './Behandling';
 
@@ -62,7 +63,7 @@ interface Vedtaksvurdering {
 }
 
 export interface Omgjør {
-    årsak: Nullable<OmgjørVedtakÅrsak>;
+    årsak: Nullable<OmgjøringsGrunn>;
     utfall: Nullable<OmgjørVedtakUtfall>;
 }
 
@@ -85,13 +86,6 @@ export type KlageErUnderskrevet = Svarord;
 export enum KlageVurderingType {
     OMGJØR = 'OMGJØR',
     OPPRETTHOLD = 'OPPRETTHOLD',
-}
-
-export enum OmgjørVedtakÅrsak {
-    FEIL_LOVANVENDELSE = 'FEIL_LOVANVENDELSE',
-    ULIK_SKJØNNSVURDERING = 'ULIK_SKJØNNSVURDERING',
-    SAKSBEHADNLINGSFEIL = 'SAKSBEHANDLINGSFEIL',
-    NYTT_FAKTUM = 'NYTT_FAKTUM',
 }
 
 export enum OmgjørVedtakUtfall {

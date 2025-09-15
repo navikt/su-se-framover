@@ -34,11 +34,11 @@ import {
     KlageSteg,
     Klage,
     OmgjørVedtakUtfall,
-    OmgjørVedtakÅrsak,
     OpprettholdVedtakHjemmel,
     KlageVurderingType,
     KlageStatus,
 } from '~src/types/Klage';
+import { OmgjøringsGrunn } from '~src/types/Revurdering.ts';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
@@ -47,7 +47,7 @@ import messages from './VurderingAvKlage-nb';
 import styles from './vurderingAvKlage.module.less';
 
 interface OmgjørFormData {
-    årsak: Nullable<OmgjørVedtakÅrsak>;
+    årsak: Nullable<OmgjøringsGrunn>;
     utfall: Nullable<OmgjørVedtakUtfall>;
 }
 
@@ -93,7 +93,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
         .when('klageVurderingType', {
             is: KlageVurderingType.OMGJØR,
             then: yup.object({
-                årsak: yup.string().oneOf(Object.values(OmgjørVedtakÅrsak)).required(),
+                årsak: yup.string().oneOf(Object.values(OmgjøringsGrunn)).required(),
                 utfall: yup.string().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
             }),
             otherwise: yup.object().nullable(),
@@ -251,12 +251,9 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         error={fieldState.error?.message}
                                         value={field.value ?? ''}
                                     >
-                                        {/*TODO: fjern false når vi har støtte for omgjør */}
-                                        {false && (
-                                            <Radio value={KlageVurderingType.OMGJØR}>
-                                                {formatMessage(KlageVurderingType.OMGJØR)}
-                                            </Radio>
-                                        )}
+                                        <Radio value={KlageVurderingType.OMGJØR}>
+                                            {formatMessage(KlageVurderingType.OMGJØR)}
+                                        </Radio>
                                         <Radio value={KlageVurderingType.OPPRETTHOLD}>
                                             {formatMessage(KlageVurderingType.OPPRETTHOLD)}
                                         </Radio>
@@ -366,7 +363,7 @@ const OmgjørVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }
                         error={fieldState.error?.message}
                     >
                         <option value={''}>{formatMessage('form.omgjørVedtak.årsak.velgÅrsak')}</option>
-                        {Object.values(OmgjørVedtakÅrsak).map((årsak) => (
+                        {Object.values(OmgjøringsGrunn).map((årsak) => (
                             <option value={årsak} key={årsak}>
                                 {formatMessage(årsak)}
                             </option>
