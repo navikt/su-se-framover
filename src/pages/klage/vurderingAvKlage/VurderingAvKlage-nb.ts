@@ -1,4 +1,4 @@
-import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
 import { OmgjørVedtakUtfall, OpprettholdVedtakHjemmel, KlageVurderingType } from '~src/types/Klage';
 
 const omgjørVedtakGunstMessages: { [key in OmgjørVedtakUtfall]: string } = {

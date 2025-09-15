@@ -23,7 +23,7 @@ import {
     Utfall,
     AvsluttKlageStatus,
 } from '~src/types/Klage';
-import { OmgjøringsGrunn } from '~src/types/Revurdering.ts';
+import { OmgjøringsGrunn } from '~src/types/Revurdering';
 
 export interface FormkravRequest {
     sakId: string;

@@ -1,5 +1,5 @@
-import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
-import { OmgjøringsÅrsak } from '~src/types/Revurdering.ts';
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
+import { OmgjøringsÅrsak } from '~src/types/Revurdering';
 
 export const opprettOmgjøringÅrsakTekstMapper: { [key in OmgjøringsÅrsak]: string } = {
     [OmgjøringsÅrsak.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN]: 'Omgjøring etter vedtak fra klageinstansen',

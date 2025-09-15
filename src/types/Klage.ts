@@ -1,5 +1,5 @@
 import { Nullable } from '~src/lib/types';
-import { OmgjøringsGrunn } from '~src/types/Revurdering.ts';
+import { OmgjøringsGrunn } from '~src/types/Revurdering';
 
 import { Attestering } from './Behandling';
 

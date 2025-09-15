@@ -38,7 +38,7 @@ import {
     KlageVurderingType,
     KlageStatus,
 } from '~src/types/Klage';
-import { OmgjøringsGrunn } from '~src/types/Revurdering.ts';
+import { OmgjøringsGrunn } from '~src/types/Revurdering';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
