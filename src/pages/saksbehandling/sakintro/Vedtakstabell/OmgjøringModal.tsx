@@ -1,17 +1,19 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Modal, Heading, Select, Button, BodyShort } from '@navikt/ds-react';
+import { Modal, Heading, Select, Button, BodyShort, Alert } from '@navikt/ds-react';
 import { FormProvider, useForm, Controller } from 'react-hook-form';
 
-import { ApiResult } from '~src/lib/hooks.ts';
-import { useI18n } from '~src/lib/i18n.ts';
-import { OmgjøringsGrunn, OmgjøringsÅrsak, OpprettetRevurderingGrunn } from '~src/types/Revurdering.ts';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
+import { ApiResult } from '~src/lib/hooks';
+import { useI18n } from '~src/lib/i18n';
+import { Klage } from '~src/types/Klage';
+import { OmgjøringsGrunn, OmgjøringsÅrsak } from '~src/types/Revurdering';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
-import messages from './omgjøringsmodal-nb.ts';
+import messages from './omgjøringsmodal-nb';
 
 export interface Omgjøringsfom {
-    omgjøringsårsak: OpprettetRevurderingGrunn;
+    omgjøringsårsak: OmgjøringsÅrsak;
     omgjøringGrunn: OmgjøringsGrunn;
+    klageId?: string;
 }
 
 export const OmgjøringModal = ({
@@ -19,19 +21,22 @@ export const OmgjøringModal = ({
     setÅpenModal,
     startNyBehandling,
     startNysøknadsbehandlingStatus,
+    klager,
 }: {
     åpenModal: boolean;
     setÅpenModal: (åpen: boolean) => void;
     startNyBehandling: (formdata: Omgjøringsfom) => void;
     startNysøknadsbehandlingStatus: ApiResult<Søknadsbehandling>;
+    klager: Klage[];
 }) => {
     const { formatMessage } = useI18n({ messages });
-
     const form = useForm<Omgjøringsfom>({});
     const { handleSubmit } = form;
     const onSubmit = (formdata: Omgjøringsfom) => {
         startNyBehandling(formdata);
     };
+
+    const omgjøringsgrunn = form.watch('omgjøringsårsak');
     return (
         <Modal open={åpenModal} onClose={() => setÅpenModal(false)} aria-label={'omgjøringavslåttvedtak'}>
             <Modal.Header>
@@ -64,6 +69,42 @@ export const OmgjøringModal = ({
                                 </Select>
                             )}
                         />
+                        {omgjøringsgrunn && omgjøringsgrunn !== OmgjøringsÅrsak.OMGJØRING_EGET_TILTAK && (
+                            <>
+                                {klager.length > 0 ? (
+                                    <Controller
+                                        control={form.control}
+                                        name={'klageId'}
+                                        rules={{
+                                            required: 'Klageid er obligatorisk for denne omgjøringsårsaken',
+                                        }}
+                                        render={({ field: { value, ...field }, fieldState }) => (
+                                            <Select
+                                                id={field.name}
+                                                label={formatMessage('klage.knyttet.mot')}
+                                                error={fieldState.error?.message}
+                                                value={value ?? ''}
+                                                {...field}
+                                            >
+                                                <option value="" disabled>
+                                                    {formatMessage('klage.mottattdato')}
+                                                </option>
+                                                {klager.map((klage) => (
+                                                    <option value={klage.id} key={klage.id}>
+                                                        {klage.datoKlageMottatt}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                        )}
+                                    />
+                                ) : (
+                                    <Alert variant="warning">
+                                        Finner ingen klager å knytte klageomgjøringen mot, dette er påkrevd for å få
+                                        opprettet en klageomgjøring
+                                    </Alert>
+                                )}
+                            </>
+                        )}
                         <Controller
                             rules={{ required: 'Omgjøringsgrunn er obligatorisk' }}
                             control={form.control}
@@ -94,7 +135,7 @@ export const OmgjøringModal = ({
                             <BodyShort>Omgjøringen ble opprettet, du kan nå lukke modalen</BodyShort>
                         )}
                         {RemoteData.isFailure(startNysøknadsbehandlingStatus) && (
-                            <BodyShort>Vi kunne ikke opprette omgjøringen nå</BodyShort>
+                            <BodyShort>{`Vi kunne ikke opprette omgjøringen nå. Feil: ${startNysøknadsbehandlingStatus.error.body.message}`}</BodyShort>
                         )}
                     </form>
                 </FormProvider>

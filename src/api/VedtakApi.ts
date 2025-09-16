@@ -14,6 +14,7 @@ export async function startNySøknadsbehandling(arg: {
         body: {
             omgjøringsårsak: arg.body.omgjøringsårsak,
             omgjøringsgrunn: arg.body.omgjøringGrunn,
+            klageId: arg.body.klageId,
         },
     });
 }
