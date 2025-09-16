@@ -9,7 +9,7 @@ import {
     IverksattRevurdering,
     OppdaterRevurderingRequest,
     OpprettetRevurdering,
-    OpprettetRevurderingGrunn,
+    OpprettetRevurderingÅrsak,
     OpprettRevurderingRequest,
     Revurdering,
     RevurderingTilAttestering,
@@ -41,7 +41,7 @@ export async function opprettRevurdering(
 export async function opprettStans(args: {
     sakId: string;
     fraOgMed: Date;
-    årsak: OpprettetRevurderingGrunn;
+    årsak: OpprettetRevurderingÅrsak;
     begrunnelse: string;
 }): Promise<ApiClientResult<StansAvYtelse>> {
     return apiClient({
@@ -59,7 +59,7 @@ export async function oppdaterStans(args: {
     sakId: string;
     revurderingId: string;
     fraOgMed: Date;
-    årsak: OpprettetRevurderingGrunn;
+    årsak: OpprettetRevurderingÅrsak;
     begrunnelse: string;
 }): Promise<ApiClientResult<StansAvYtelse>> {
     return apiClient({
@@ -75,7 +75,7 @@ export async function oppdaterStans(args: {
 
 export async function gjenoppta(args: {
     sakId: string;
-    årsak: OpprettetRevurderingGrunn;
+    årsak: OpprettetRevurderingÅrsak;
     begrunnelse: string;
 }): Promise<ApiClientResult<Gjenopptak>> {
     return apiClient({
@@ -91,7 +91,7 @@ export async function gjenoppta(args: {
 export async function oppdaterGjenopptak(args: {
     sakId: string;
     revurderingId: string;
-    årsak: OpprettetRevurderingGrunn;
+    årsak: OpprettetRevurderingÅrsak;
     begrunnelse: string;
 }): Promise<ApiClientResult<Gjenopptak>> {
     return apiClient({

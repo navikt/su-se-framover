@@ -5,7 +5,7 @@ import { Nullable } from '~src/lib/types';
 import yup, { validerPeriodeTomEtterFom } from '~src/lib/validering';
 import { NullablePeriode, Periode } from '~src/types/Periode';
 import {
-    OpprettetRevurderingGrunn,
+    OpprettetRevurderingÅrsak,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
     OpprettRevurderingRequest,
@@ -15,8 +15,9 @@ import {
 
 export interface RevurderingIntroFormData {
     periode: NullablePeriode;
-    årsak: Nullable<OpprettetRevurderingGrunn>;
+    årsak: Nullable<OpprettetRevurderingÅrsak>;
     omgjøringGrunn: Nullable<OmgjøringsGrunn>;
+    klageId: Nullable<string>;
     informasjonSomRevurderes: InformasjonSomRevurderes[];
     begrunnelse: Nullable<string>;
 }
@@ -32,6 +33,7 @@ export const revurderingIntroFormDataTilOpprettRequest = (args: {
         informasjonSomRevurderes: args.values.informasjonSomRevurderes,
         periode: { fraOgMed: args.values.periode.fraOgMed!, tilOgMed: args.values.periode.tilOgMed! },
         årsak: args.values.årsak!,
+        klageId: args.values.klageId,
     };
 };
 
@@ -48,12 +50,14 @@ export const revurderingIntroFormDataTilOppdaterRequest = (args: {
         informasjonSomRevurderes: args.values.informasjonSomRevurderes,
         periode: { fraOgMed: args.values.periode.fraOgMed!, tilOgMed: args.values.periode.tilOgMed! },
         årsak: args.values.årsak!,
+        klageId: null,
     };
 };
 
 export const revurderingIntroFormSchema = yup.object<RevurderingIntroFormData>({
     periode: validerPeriodeTomEtterFom,
-    årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().required(),
+    klageId: yup.string().nullable().required(),
+    årsak: yup.mixed<OpprettetRevurderingÅrsak>().nullable().required(),
     omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().nullable(),
     begrunnelse: yup.string().nullable().required(),
     informasjonSomRevurderes: yup

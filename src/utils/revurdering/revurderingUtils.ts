@@ -17,7 +17,7 @@ import {
     InformasjonsRevurderingStatus,
     IverksattRevurdering,
     OpprettetRevurdering,
-    OpprettetRevurderingGrunn,
+    OpprettetRevurderingÅrsak,
     Revurdering,
     RevurderingBeregnOgSimulerSteg,
     RevurderingGrunnlagOgVilkårSteg,
@@ -82,8 +82,8 @@ export const erRevurderingGjenopptak = (r: Revurdering): r is Gjenopptak =>
     r.status === UtbetalingsRevurderingStatus.IVERKSATT_GJENOPPTAK ||
     r.status === UtbetalingsRevurderingStatus.AVSLUTTET_GJENOPPTAK;
 
-export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
-    årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;
+export const erGregulering = (årsak: OpprettetRevurderingÅrsak): boolean =>
+    årsak === OpprettetRevurderingÅrsak.REGULER_GRUNNBELØP;
 
 export const erRevurderingAvsluttet = (
     r: Revurdering,

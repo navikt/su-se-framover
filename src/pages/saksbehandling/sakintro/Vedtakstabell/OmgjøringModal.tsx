@@ -36,7 +36,7 @@ export const OmgjøringModal = ({
         startNyBehandling(formdata);
     };
 
-    const omgjøringsgrunn = form.watch('omgjøringsårsak');
+    const omgjøringsÅrsak = form.watch('omgjøringsårsak');
     return (
         <Modal open={åpenModal} onClose={() => setÅpenModal(false)} aria-label={'omgjøringavslåttvedtak'}>
             <Modal.Header>
@@ -69,7 +69,7 @@ export const OmgjøringModal = ({
                                 </Select>
                             )}
                         />
-                        {omgjøringsgrunn && omgjøringsgrunn !== OmgjøringsÅrsak.OMGJØRING_EGET_TILTAK && (
+                        {omgjøringsÅrsak && omgjøringsÅrsak !== OmgjøringsÅrsak.OMGJØRING_EGET_TILTAK && (
                             <>
                                 {klager.length > 0 ? (
                                     <Controller

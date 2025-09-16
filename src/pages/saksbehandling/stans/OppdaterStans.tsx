@@ -12,7 +12,7 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
-import { OpprettetRevurderingGrunn } from '~src/types/Revurdering';
+import { OpprettetRevurderingÅrsak } from '~src/types/Revurdering';
 
 import styles from './StansStyles.module.less';
 
@@ -28,7 +28,7 @@ const OppdaterStans = () => {
         defaultValues: {
             stansDato: new Date(revurdering.periode.fraOgMed),
             begrunnelse: revurdering.begrunnelse ?? '',
-            årsak: revurdering.årsak as OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING,
+            årsak: revurdering.årsak as OpprettetRevurderingÅrsak.MANGLENDE_KONTROLLERKLÆRING,
         },
         resolver: yupResolver(stansGjenopptaSchema),
         context: { formType: 'stans' },

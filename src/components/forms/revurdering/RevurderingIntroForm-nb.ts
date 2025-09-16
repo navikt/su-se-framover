@@ -17,6 +17,9 @@ export default {
     'input.informasjonSomRevurderes.label': 'Hva vil du revurdere?',
     'info.bosituasjon': 'Ved boforhold kan det være relevant å endre inntekt og formue også',
 
+    'klage.knyttet.mot': 'Knytt mot klage',
+    'klage.mottattdato': 'Dato klage mottatt',
+
     ...opprettRevurderingÅrsakTekstMapper,
     ...InformasjonSomRevurderesTextMapper,
     ...omgjøringsgrunnerTekstMapper,
