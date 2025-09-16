@@ -58,6 +58,7 @@ const Vedtakstabell = (props: {
     vedtakOgOversendteKlager: VedtakOgOversendteKlager;
     behandlinger: Søknadsbehandling[];
     revurderinger: Revurdering[];
+    klager: Klage[];
 }) => {
     const { insert } = useToast();
     const apiErrorMessages = useApiErrorMessages();
@@ -294,6 +295,7 @@ const Vedtakstabell = (props: {
                                                     {formatMessage('dataCell.startNyBehandling')}
                                                 </Button>
                                                 <OmgjøringModal
+                                                    klager={props.klager}
                                                     åpenModal={åpenModal}
                                                     setÅpenModal={(åpen: boolean) => setÅpenModal(åpen)}
                                                     startNysøknadsbehandlingStatus={startNysøknadsbehandlingStatus}

@@ -15,6 +15,9 @@ export default {
     'input.omgjøringsgrunn.value': 'Velg en omgjøringsgrunn',
     info: 'Tidligere avslagsbehandling blir kopiert inn i omgjøringsbehandlingen, som dermed får status "vilkårsvurdert" og resultat "avslag". Vurder vilkårene på nytt, og oppdater saken med korrekt resultat.',
 
+    'klage.knyttet.mot': 'Knytt mot klage',
+    'klage.mottattdato': 'Dato klage mottatt',
+
     ...opprettOmgjøringÅrsakTekstMapper,
     ...omgjøringsgrunnerTekstMapper,
 };
