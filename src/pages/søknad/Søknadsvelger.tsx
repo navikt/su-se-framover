@@ -1,10 +1,10 @@
-import { BodyLong, GuidePanel, Heading, Ingress, Panel , Link } from '@navikt/ds-react';
+import { BodyLong, GuidePanel, Heading, Ingress, Panel, Link } from '@navikt/ds-react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Rolle } from '~src/types/LoggedInUser.ts';
+import { Rolle } from '~src/types/LoggedInUser';
 
 import messages from './nb';
 import styles from './søknadsvelger.module.less';

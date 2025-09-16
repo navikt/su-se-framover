@@ -1,4 +1,4 @@
-import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
 import { InformasjonSomRevurderesTextMapper } from '~src/typeMappinger/InformasjonSomRevurderesTextMapper';
 import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
 

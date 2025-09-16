@@ -15,7 +15,6 @@ import {
     KlageVurderingType,
     Omgjør,
     OmgjørVedtakUtfall,
-    OmgjørVedtakÅrsak,
     Oppretthold,
     OpprettholdVedtakHjemmel,
     KlageErUnderskrevet,
@@ -24,6 +23,7 @@ import {
     Utfall,
     AvsluttKlageStatus,
 } from '~src/types/Klage';
+import { OmgjøringsGrunn } from '~src/types/Revurdering';
 
 export interface FormkravRequest {
     sakId: string;
@@ -121,7 +121,7 @@ export const erKlageOmgjort = (
     vedtaksvurdering: {
         type: KlageVurderingType.OMGJØR;
         omgjør: {
-            årsak: OmgjørVedtakÅrsak;
+            årsak: OmgjøringsGrunn;
             utfall: OmgjørVedtakUtfall;
         };
         oppretthold: null;

@@ -23,7 +23,7 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
-import { AvsluttKlageStatus } from '~src/types/Klage.ts';
+import { AvsluttKlageStatus } from '~src/types/Klage';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import {

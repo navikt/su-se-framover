@@ -1,5 +1,5 @@
-import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
-import { opprettOmgjøringÅrsakTekstMapper } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/omgjøringsmodal-nb.ts';
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
+import { opprettOmgjøringÅrsakTekstMapper } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/omgjøringsmodal-nb';
 import { søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper } from '~src/typeMappinger/SøknadsbehandlingStatus';
 
 export default {
