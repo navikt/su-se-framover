@@ -12,7 +12,7 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
-import { OpprettetRevurderingGrunn, Revurdering } from '~src/types/Revurdering';
+import { OpprettetRevurderingÅrsak, Revurdering } from '~src/types/Revurdering';
 
 import styles from './Gjenoppta.module.less';
 
@@ -29,7 +29,7 @@ const OppdaterGjenoppta = () => {
     const form = useForm<GjenopptaFormData>({
         defaultValues: {
             begrunnelse: revurdering.begrunnelse,
-            årsak: revurdering.årsak as OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING,
+            årsak: revurdering.årsak as OpprettetRevurderingÅrsak.MOTTATT_KONTROLLERKLÆRING,
         },
         resolver: yupResolver(stansGjenopptaSchema),
         context: { formType: 'gjenoppta' },

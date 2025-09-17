@@ -8,7 +8,13 @@ import { useI18n } from '~src/lib/i18n';
 import { keyOf } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { NullablePeriode } from '~src/types/Periode';
-import { erOmgjøring, gyldigeÅrsaker, InformasjonSomRevurderes, OmgjøringsGrunn } from '~src/types/Revurdering';
+import {
+    erOmgjøring,
+    gyldigeÅrsaker,
+    InformasjonSomRevurderes,
+    OmgjøringsGrunn,
+    OpprettetRevurderingÅrsak,
+} from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak.ts';
 
 import messages from './RevurderingIntroForm-nb';
@@ -33,6 +39,8 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                 info !== InformasjonSomRevurderes.Familiegjenforening && info !== InformasjonSomRevurderes.Pensjon,
         );
     };
+
+    const revurderingsÅrsak = form.watch('årsak');
 
     return (
         <FormWrapper {...props}>
@@ -104,6 +112,42 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                     </Select>
                                 )}
                             />
+                        </>
+                    )}
+                    {revurderingsÅrsak && revurderingsÅrsak !== OpprettetRevurderingÅrsak.OMGJØRING_EGET_TILTAK && (
+                        <>
+                            {sak.klager.length > 0 ? (
+                                <Controller
+                                    control={form.control}
+                                    name={'klageId'}
+                                    rules={{
+                                        required: 'Klageid er obligatorisk for denne omgjøringsårsaken',
+                                    }}
+                                    render={({ field: { value, ...field }, fieldState }) => (
+                                        <Select
+                                            id={field.name}
+                                            label={formatMessage('klage.knyttet.mot')}
+                                            error={fieldState.error?.message}
+                                            value={value ?? ''}
+                                            {...field}
+                                        >
+                                            <option value="" disabled>
+                                                {formatMessage('klage.mottattdato')}
+                                            </option>
+                                            {sak.klager.map((klage) => (
+                                                <option value={klage.id} key={klage.id}>
+                                                    {klage.datoKlageMottatt}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    )}
+                                />
+                            ) : (
+                                <Alert variant="warning">
+                                    Finner ingen klager å knytte klageomgjøringen mot, dette er påkrevd for å få
+                                    opprettet en klageomgjøring
+                                </Alert>
+                            )}
                         </>
                     )}
 

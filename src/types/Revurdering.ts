@@ -11,7 +11,7 @@ export interface Revurdering<T extends RevurderingStatus = RevurderingStatus> ex
     status: T;
     periode: Periode<string>;
     saksbehandler: string;
-    årsak: OpprettetRevurderingGrunn;
+    årsak: OpprettetRevurderingÅrsak;
     omgjøringsgrunn: Nullable<OmgjøringsGrunn>;
     begrunnelse: Nullable<string>;
 }
@@ -145,7 +145,7 @@ export enum OmgjøringsÅrsak {
     OMGJØRING_TRYGDERETTEN = 'OMGJØRING_TRYGDERETTEN',
 }
 
-export enum OpprettetRevurderingGrunn {
+export enum OpprettetRevurderingÅrsak {
     MELDING_FRA_BRUKER = 'MELDING_FRA_BRUKER',
     INFORMASJON_FRA_KONTROLLSAMTALE = 'INFORMASJON_FRA_KONTROLLSAMTALE',
     DØDSFALL = 'DØDSFALL',
@@ -162,26 +162,26 @@ export enum OpprettetRevurderingGrunn {
     OMGJØRING_TRYGDERETTEN = OmgjøringsÅrsak.OMGJØRING_TRYGDERETTEN,
 }
 
-export const erOmgjøring = (valgtÅrsak: Nullable<OpprettetRevurderingGrunn>): boolean => {
+export const erOmgjøring = (valgtÅrsak: Nullable<OpprettetRevurderingÅrsak>): boolean => {
     if (!valgtÅrsak) {
         return false;
     }
     switch (valgtÅrsak) {
-        case OpprettetRevurderingGrunn.MELDING_FRA_BRUKER:
-        case OpprettetRevurderingGrunn.INFORMASJON_FRA_KONTROLLSAMTALE:
-        case OpprettetRevurderingGrunn.DØDSFALL:
-        case OpprettetRevurderingGrunn.ANDRE_KILDER:
-        case OpprettetRevurderingGrunn.REGULER_GRUNNBELØP:
-        case OpprettetRevurderingGrunn.MIGRERT:
-        case OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING:
-        case OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING:
-        case OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL:
-        case OpprettetRevurderingGrunn.IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON:
+        case OpprettetRevurderingÅrsak.MELDING_FRA_BRUKER:
+        case OpprettetRevurderingÅrsak.INFORMASJON_FRA_KONTROLLSAMTALE:
+        case OpprettetRevurderingÅrsak.DØDSFALL:
+        case OpprettetRevurderingÅrsak.ANDRE_KILDER:
+        case OpprettetRevurderingÅrsak.REGULER_GRUNNBELØP:
+        case OpprettetRevurderingÅrsak.MIGRERT:
+        case OpprettetRevurderingÅrsak.MANGLENDE_KONTROLLERKLÆRING:
+        case OpprettetRevurderingÅrsak.MOTTATT_KONTROLLERKLÆRING:
+        case OpprettetRevurderingÅrsak.STANSET_VED_EN_FEIL:
+        case OpprettetRevurderingÅrsak.IKKE_MOTTATT_ETTERSPURT_DOKUMENTASJON:
             return false;
-        case OpprettetRevurderingGrunn.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN:
-        case OpprettetRevurderingGrunn.OMGJØRING_EGET_TILTAK:
-        case OpprettetRevurderingGrunn.OMGJØRING_KLAGE:
-        case OpprettetRevurderingGrunn.OMGJØRING_TRYGDERETTEN:
+        case OpprettetRevurderingÅrsak.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN:
+        case OpprettetRevurderingÅrsak.OMGJØRING_EGET_TILTAK:
+        case OpprettetRevurderingÅrsak.OMGJØRING_KLAGE:
+        case OpprettetRevurderingÅrsak.OMGJØRING_TRYGDERETTEN:
             return true;
     }
 };
@@ -193,13 +193,13 @@ export enum OmgjøringsGrunn {
     FEIL_FAKTUM = 'FEIL_FAKTUM',
 }
 
-export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
+export const gyldigeÅrsaker = Object.values(OpprettetRevurderingÅrsak).filter(
     (x) =>
         ![
-            OpprettetRevurderingGrunn.MIGRERT,
-            OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING,
-            OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING,
-            OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL,
+            OpprettetRevurderingÅrsak.MIGRERT,
+            OpprettetRevurderingÅrsak.MANGLENDE_KONTROLLERKLÆRING,
+            OpprettetRevurderingÅrsak.MOTTATT_KONTROLLERKLÆRING,
+            OpprettetRevurderingÅrsak.STANSET_VED_EN_FEIL,
         ].includes(x),
 );
 
@@ -292,8 +292,9 @@ export interface OpprettRevurderingRequest {
         fraOgMed: Date;
         tilOgMed: Date;
     };
-    årsak: OpprettetRevurderingGrunn;
+    årsak: OpprettetRevurderingÅrsak;
     omgjøringsgrunn: Nullable<OmgjøringsGrunn>;
+    klageId: Nullable<string>;
     informasjonSomRevurderes: InformasjonSomRevurderes[];
     begrunnelse: string;
 }
