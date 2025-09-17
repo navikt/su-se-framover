@@ -10,6 +10,7 @@ const utbetalingsTypeTekstMapper: { [key in Utbetalingstype]: string } = {
 
 export default {
     'attestering.attester': 'Attester',
+    'dataCell.info.knapp.attestering.modal.tittel': 'Er du sikker på at du ønsker å returnere saken?',
 
     'saksoversikt.tittel': 'Saksnummer',
 
@@ -22,6 +23,9 @@ export default {
     'link.kontrollsamtale': 'Kontrollsamtale',
     'link.utenlandsopphold': 'Utenlandsopphold',
     'link.brev': 'Opprett nytt fritekstbrev',
+    'link.retur': 'Returner sak',
+
+    'bekreft.tittel': 'Bekreft',
 
     'utbetalinger.heading': 'Stønadsperioder',
 
@@ -86,9 +90,11 @@ export default {
     'datacell.info.knapp.startBehandling': 'Start behandling',
     'datacell.info.knapp.fortsettBehandling': 'Fortsett behandling',
     'datacell.info.knapp.avsluttBehandling': 'Avslutt behandling',
+    'datacell.info.knapp.ReturnerSak': 'Fortsett',
     'datacell.info.knapp.avbryt': 'Avbryt',
     'datacell.info.knapp.regulering.start': 'Start regulering',
     'dataCell.info.knapp.regulering.modal.tittel': 'Er du sikker på at du ønsker å lukke reguleringen?',
+
 
     'dataCell.seOppsummering': 'Se oppsummering',
     'dataCell.startNyBehandling': 'Start ny behandling',
