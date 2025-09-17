@@ -34,6 +34,7 @@ export async function opprettRevurdering(
             omgjøringsgrunn: arg.omgjøringsgrunn,
             informasjonSomRevurderes: arg.informasjonSomRevurderes,
             begrunnelse: arg.begrunnelse,
+            klageId: arg.klageId,
         },
     });
 }
