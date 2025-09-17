@@ -214,6 +214,12 @@ export async function underkjenn(
         },
     });
 }
+export async function returnerRevurdering(arg: { sakId: string; revurderingId: string }) {
+    return apiClient<Revurdering>({
+        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/returnerRevurdering`,
+        method: 'PATCH',
+    });
+}
 
 export async function iverksett(sakId: string, revurderingId: string): Promise<ApiClientResult<IverksattRevurdering>> {
     return apiClient({
