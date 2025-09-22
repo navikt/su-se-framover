@@ -234,6 +234,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         );
     }
 
+    const medhold = watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD;
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -265,9 +266,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                         {watch('klageVurderingType') === KlageVurderingType.OMGJØR && (
                             <OmgjørVedtakForm control={control} />
                         )}
-                        {watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD && (
-                            <OpprettholdVedtakForm control={control} />
-                        )}
+                        {medhold && <OpprettholdVedtakForm control={control} />}
 
                         <div className={styles.fritesktOgVisBrevContainer}>
                             <Controller
