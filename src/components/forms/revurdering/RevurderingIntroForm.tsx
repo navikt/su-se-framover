@@ -1,4 +1,5 @@
 import { Alert, Checkbox, CheckboxGroup, Heading, Select, Textarea } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { Controller, FieldErrors } from 'react-hook-form';
 import { useOutletContext } from 'react-router-dom';
 
@@ -21,6 +22,10 @@ import messages from './RevurderingIntroForm-nb';
 import styles from './RevurderingIntroForm.module.less';
 import { RevurderingIntroFormData, RevurderingIntroFormProps } from './RevurderingIntroFormUtils';
 
+export const kreverKlageId = (årsak: OpprettetRevurderingÅrsak | null) => {
+    return årsak && årsak !== OpprettetRevurderingÅrsak.OMGJØRING_EGET_TILTAK && erOmgjøring(årsak);
+};
+
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     const { formatMessage } = useI18n({ messages });
     const { form } = props;
@@ -41,6 +46,10 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     };
 
     const revurderingsÅrsak = form.watch('årsak');
+
+    useEffect(() => {
+        form.clearErrors();
+    }, [revurderingsÅrsak]);
 
     return (
         <FormWrapper {...props}>
@@ -88,7 +97,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         />
                     </div>
 
-                    {erOmgjøring(form.watch('årsak')) && (
+                    {erOmgjøring(revurderingsÅrsak) && (
                         <>
                             <Controller
                                 control={form.control}
@@ -114,15 +123,12 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             />
                         </>
                     )}
-                    {revurderingsÅrsak && revurderingsÅrsak !== OpprettetRevurderingÅrsak.OMGJØRING_EGET_TILTAK && (
+                    {kreverKlageId(revurderingsÅrsak) && (
                         <>
                             {sak.klager.length > 0 ? (
                                 <Controller
                                     control={form.control}
                                     name={'klageId'}
-                                    rules={{
-                                        required: 'Klageid er obligatorisk for denne omgjøringsårsaken',
-                                    }}
                                     render={({ field: { value, ...field }, fieldState }) => (
                                         <Select
                                             id={field.name}
