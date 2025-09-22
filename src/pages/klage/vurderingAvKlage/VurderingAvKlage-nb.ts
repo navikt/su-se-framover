@@ -41,7 +41,7 @@ export default {
     ...opprettholdVedtakHjemmelMessages,
 
     'form.vurdering.label': 'Vurdering',
-    'form.fritekst.label': 'Brev til bruker og klageinstans',
+    'form.klagebrev.label': 'Brev til bruker og klageinstans',
     'form.fritekst.hjelpeTekst': 'Se rutine på Navet',
 
     'knapp.seBrev': 'Se brev',

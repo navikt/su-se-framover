@@ -233,7 +233,9 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             </div>
         );
     }
-
+    //Omgjøring er medhold
+    const erMedhold = watch('klageVurderingType') === KlageVurderingType.OMGJØR;
+    const ikkeMedhold = watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD;
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -262,52 +264,49 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             />
                         </div>
 
-                        {watch('klageVurderingType') === KlageVurderingType.OMGJØR && (
-                            <OmgjørVedtakForm control={control} />
+                        {erMedhold && <OmgjørVedtakForm control={control} />}
+                        {ikkeMedhold && <OpprettholdVedtakForm control={control} />}
+                        {ikkeMedhold && (
+                            <div className={styles.fritesktOgVisBrevContainer}>
+                                <Controller
+                                    control={control}
+                                    name={'fritekstTilBrev'}
+                                    render={({ field, fieldState }) => (
+                                        <Textarea
+                                            {...field}
+                                            minRows={5}
+                                            label={
+                                                <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
+                                                    <Label>{formatMessage('form.klagebrev.label')}</Label>
+                                                    <HelpText>
+                                                        {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
+                                                        {/*eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                                                        {/*@ts-ignore */}
+                                                        <Label className={styles.hjelpetekst}>
+                                                            <DsReactLink href={hjelpetekstLink} target="_blank">
+                                                                {formatMessage('form.fritekst.hjelpeTekst')}
+                                                            </DsReactLink>
+                                                        </Label>
+                                                    </HelpText>
+                                                </div>
+                                            }
+                                            value={field.value ?? ''}
+                                            error={fieldState.error?.message}
+                                        />
+                                    )}
+                                />
+                                <Button
+                                    type="button"
+                                    className={styles.seBrevButton}
+                                    variant="secondary"
+                                    loading={RemoteData.isPending(brevStatus)}
+                                    onClick={() => onSeBrevClick(watch())}
+                                >
+                                    {formatMessage('knapp.seBrev')}
+                                </Button>
+                                {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
+                            </div>
                         )}
-                        {watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD && (
-                            <OpprettholdVedtakForm control={control} />
-                        )}
-
-                        <div className={styles.fritesktOgVisBrevContainer}>
-                            <Controller
-                                control={control}
-                                name={'fritekstTilBrev'}
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        {...field}
-                                        minRows={5}
-                                        label={
-                                            <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
-                                                <Label>{formatMessage('form.fritekst.label')}</Label>
-                                                <HelpText>
-                                                    {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
-                                                    {/*eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                                    {/*@ts-ignore */}
-                                                    <Label className={styles.hjelpetekst}>
-                                                        <DsReactLink href={hjelpetekstLink} target="_blank">
-                                                            {formatMessage('form.fritekst.hjelpeTekst')}
-                                                        </DsReactLink>
-                                                    </Label>
-                                                </HelpText>
-                                            </div>
-                                        }
-                                        value={field.value ?? ''}
-                                        error={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                            <Button
-                                type="button"
-                                className={styles.seBrevButton}
-                                variant="secondary"
-                                loading={RemoteData.isPending(brevStatus)}
-                                onClick={() => onSeBrevClick(watch())}
-                            >
-                                {formatMessage('knapp.seBrev')}
-                            </Button>
-                            {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
-                        </div>
 
                         <div className={styles.knapperContainer}>
                             <Button
