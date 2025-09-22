@@ -1,4 +1,5 @@
 import { Alert, Checkbox, CheckboxGroup, Heading, Select, Textarea } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { Controller, FieldErrors } from 'react-hook-form';
 import { useOutletContext } from 'react-router-dom';
 
@@ -45,6 +46,10 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     };
 
     const revurderingsÅrsak = form.watch('årsak');
+
+    useEffect(() => {
+        form.clearErrors();
+    }, [revurderingsÅrsak]);
 
     return (
         <FormWrapper {...props}>
