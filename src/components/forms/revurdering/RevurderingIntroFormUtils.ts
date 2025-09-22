@@ -11,7 +11,6 @@ import {
     OpprettRevurderingRequest,
     OppdaterRevurderingRequest,
     OmgjøringsGrunn,
-    erOmgjøring,
 } from '~src/types/Revurdering';
 
 export interface RevurderingIntroFormData {
@@ -57,16 +56,7 @@ export const revurderingIntroFormDataTilOppdaterRequest = (args: {
 
 export const revurderingIntroFormSchema = yup.object<RevurderingIntroFormData>({
     periode: validerPeriodeTomEtterFom,
-    klageId: yup
-        .mixed<Nullable<string>>() // prevents bad inference
-        .when('årsak', (årsak: OpprettetRevurderingÅrsak) => {
-            const kreverKlageId =
-                årsak !== null && årsak !== OpprettetRevurderingÅrsak.OMGJØRING_EGET_TILTAK && erOmgjøring(årsak);
-
-            return kreverKlageId
-                ? yup.string().nullable().required('Klageid er obligatorisk for denne omgjøringsårsaken')
-                : yup.string().nullable().notRequired();
-        }),
+    klageId: yup.mixed<Nullable<string>>().nullable(),
     årsak: yup.mixed<OpprettetRevurderingÅrsak>().nullable().required(),
     omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().nullable(),
     begrunnelse: yup.string().nullable().required(),
