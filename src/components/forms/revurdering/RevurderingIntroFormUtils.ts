@@ -12,6 +12,7 @@ import {
     OpprettRevurderingRequest,
     OppdaterRevurderingRequest,
     OmgjøringsGrunn,
+    erOmgjøring,
 } from '~src/types/Revurdering';
 
 export interface RevurderingIntroFormData {
@@ -63,7 +64,11 @@ export const revurderingIntroFormSchema = yup.object<RevurderingIntroFormData>({
             : yup.string().nullable();
     }),
     årsak: yup.mixed<OpprettetRevurderingÅrsak>().nullable().required(),
-    omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().nullable(),
+    omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().when('årsak', (revurderingÅrsak: OpprettetRevurderingÅrsak) => {
+        return erOmgjøring(revurderingÅrsak)
+            ? yup.string().nullable().required('Du må velge en omgjøringsgrunn')
+            : yup.string().nullable();
+    }),
     begrunnelse: yup.string().nullable().required(),
     informasjonSomRevurderes: yup
         .array<InformasjonSomRevurderes>(

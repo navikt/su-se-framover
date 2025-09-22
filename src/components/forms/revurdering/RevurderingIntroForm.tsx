@@ -92,7 +92,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         />
                     </div>
 
-                    {erOmgjøring(form.watch('årsak')) && (
+                    {erOmgjøring(revurderingsÅrsak) && (
                         <>
                             <Controller
                                 control={form.control}
