@@ -204,7 +204,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
     const { formatMessage } = useI18n({ messages });
     const [behandlingStatus, startBehandling] = useAsyncActionCreator(SøknadsbehandlingActions.startBehandling);
     const ref = useRef<HTMLDialogElement>(null);
-    const [returStatus, retur] = useApiCall(behandlingsApi.returSak);
+    const [returStatus, retur] = useApiCall(behandlingsApi.returnerSøknadsbehandling);
     const søknadsbehandling = props.b?.søknadsbehandling;
 
     if (props.b.søknadsbehandling && erSøknadsbehandlingTilAttestering(props.b.søknadsbehandling)) {
@@ -252,7 +252,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
                                         })
                                     }
                                 >
-                                    {formatMessage('datacell.info.knapp.ReturnerSak')}
+                                    {formatMessage('datacell.info.knapp.Fortsett')}
                                 </Button>
                             )}
                         </Modal.Footer>
@@ -418,7 +418,7 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
                                     });
                                 }}
                             >
-                                {formatMessage('datacell.info.knapp.ReturnerSak')}
+                                {formatMessage('datacell.info.knapp.Fortsett')}
                             </Button>
                         </Modal.Footer>
                     </Modal>
