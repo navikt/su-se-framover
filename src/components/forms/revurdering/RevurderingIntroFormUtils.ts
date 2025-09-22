@@ -1,5 +1,6 @@
 import { UseFormReturn } from 'react-hook-form';
 
+import { kreverKlageId } from '~src/components/forms/revurdering/RevurderingIntroForm';
 import { ApiResult } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import yup, { validerPeriodeTomEtterFom } from '~src/lib/validering';
@@ -56,7 +57,11 @@ export const revurderingIntroFormDataTilOppdaterRequest = (args: {
 
 export const revurderingIntroFormSchema = yup.object<RevurderingIntroFormData>({
     periode: validerPeriodeTomEtterFom,
-    klageId: yup.mixed<Nullable<string>>().nullable(),
+    klageId: yup.mixed<Nullable<string>>().when('årsak', (revurderingÅrsak: OpprettetRevurderingÅrsak) => {
+        return kreverKlageId(revurderingÅrsak)
+            ? yup.string().nullable().required('Klageid er obligatorisk for denne omgjøringsårsaken')
+            : yup.string().nullable();
+    }),
     årsak: yup.mixed<OpprettetRevurderingÅrsak>().nullable().required(),
     omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().nullable(),
     begrunnelse: yup.string().nullable().required(),

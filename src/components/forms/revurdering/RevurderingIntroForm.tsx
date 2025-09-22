@@ -21,6 +21,10 @@ import messages from './RevurderingIntroForm-nb';
 import styles from './RevurderingIntroForm.module.less';
 import { RevurderingIntroFormData, RevurderingIntroFormProps } from './RevurderingIntroFormUtils';
 
+export const kreverKlageId = (årsak: OpprettetRevurderingÅrsak | null) => {
+    return årsak && årsak !== OpprettetRevurderingÅrsak.OMGJØRING_EGET_TILTAK && erOmgjøring(årsak);
+};
+
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     const { formatMessage } = useI18n({ messages });
     const { form } = props;
@@ -114,41 +118,39 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             />
                         </>
                     )}
-                    {revurderingsÅrsak &&
-                        revurderingsÅrsak !== OpprettetRevurderingÅrsak.OMGJØRING_EGET_TILTAK &&
-                        erOmgjøring(revurderingsÅrsak) && (
-                            <>
-                                {sak.klager.length > 0 ? (
-                                    <Controller
-                                        control={form.control}
-                                        name={'klageId'}
-                                        render={({ field: { value, ...field }, fieldState }) => (
-                                            <Select
-                                                id={field.name}
-                                                label={formatMessage('klage.knyttet.mot')}
-                                                error={fieldState.error?.message}
-                                                value={value ?? ''}
-                                                {...field}
-                                            >
-                                                <option value="" disabled>
-                                                    {formatMessage('klage.mottattdato')}
+                    {kreverKlageId(revurderingsÅrsak) && (
+                        <>
+                            {sak.klager.length > 0 ? (
+                                <Controller
+                                    control={form.control}
+                                    name={'klageId'}
+                                    render={({ field: { value, ...field }, fieldState }) => (
+                                        <Select
+                                            id={field.name}
+                                            label={formatMessage('klage.knyttet.mot')}
+                                            error={fieldState.error?.message}
+                                            value={value ?? ''}
+                                            {...field}
+                                        >
+                                            <option value="" disabled>
+                                                {formatMessage('klage.mottattdato')}
+                                            </option>
+                                            {sak.klager.map((klage) => (
+                                                <option value={klage.id} key={klage.id}>
+                                                    {klage.datoKlageMottatt}
                                                 </option>
-                                                {sak.klager.map((klage) => (
-                                                    <option value={klage.id} key={klage.id}>
-                                                        {klage.datoKlageMottatt}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        )}
-                                    />
-                                ) : (
-                                    <Alert variant="warning">
-                                        Finner ingen klager å knytte klageomgjøringen mot, dette er påkrevd for å få
-                                        opprettet en klageomgjøring
-                                    </Alert>
-                                )}
-                            </>
-                        )}
+                                            ))}
+                                        </Select>
+                                    )}
+                                />
+                            ) : (
+                                <Alert variant="warning">
+                                    Finner ingen klager å knytte klageomgjøringen mot, dette er påkrevd for å få
+                                    opprettet en klageomgjøring
+                                </Alert>
+                            )}
+                        </>
+                    )}
 
                     <Controller
                         control={form.control}
