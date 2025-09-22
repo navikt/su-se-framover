@@ -1,1 +1,3 @@
+#!/bin/sh
+
 npm run test && npx lint-staged
