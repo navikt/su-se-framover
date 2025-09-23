@@ -22,7 +22,7 @@ export default {
     'link.kontrollsamtale': 'Kontrollsamtale',
     'link.utenlandsopphold': 'Utenlandsopphold',
     'link.brev': 'Opprett nytt fritekstbrev',
-    'link.retur': 'Returner sak',
+    'link.retur': 'Returner behandling',
 
     'bekreft.tittel': 'Bekreft',
 
