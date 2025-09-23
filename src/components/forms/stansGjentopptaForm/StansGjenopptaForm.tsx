@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { getDateErrorMessage } from '~src/lib/validering';
-import { Gjenopptak, OpprettetRevurderingGrunn, StansAvYtelse } from '~src/types/Revurdering';
+import { Gjenopptak, OpprettetRevurderingÅrsak, StansAvYtelse } from '~src/types/Revurdering';
 
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
 import { MonthPicker } from '../../inputs/datePicker/DatePicker';
@@ -44,18 +44,18 @@ const StansGjenopptaForm = (props: Props) => {
                         >
                             <option>{formatMessage('årsak.defaultValue')}</option>
                             {isStans(props.form.getValues()) && (
-                                <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
-                                    {formatMessage(OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING)}
+                                <option value={OpprettetRevurderingÅrsak.MANGLENDE_KONTROLLERKLÆRING}>
+                                    {formatMessage(OpprettetRevurderingÅrsak.MANGLENDE_KONTROLLERKLÆRING)}
                                 </option>
                             )}
                             {!isStans(props.form.getValues()) && (
-                                <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
-                                    {formatMessage(OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING)}
+                                <option value={OpprettetRevurderingÅrsak.MOTTATT_KONTROLLERKLÆRING}>
+                                    {formatMessage(OpprettetRevurderingÅrsak.MOTTATT_KONTROLLERKLÆRING)}
                                 </option>
                             )}
                             {!isStans(props.form.getValues()) && (
-                                <option value={OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL}>
-                                    {formatMessage(OpprettetRevurderingGrunn.STANSET_VED_EN_FEIL)}
+                                <option value={OpprettetRevurderingÅrsak.STANSET_VED_EN_FEIL}>
+                                    {formatMessage(OpprettetRevurderingÅrsak.STANSET_VED_EN_FEIL)}
                                 </option>
                             )}
                         </Select>

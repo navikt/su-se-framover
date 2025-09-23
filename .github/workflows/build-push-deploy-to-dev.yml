@@ -24,7 +24,7 @@ jobs:
                   persist-credentials: false
             - uses: actions/setup-node@v4.4.0
               with:
-                  node-version: '20.x'
+                  node-version: '22.x'
             - name: install-deps-client-and-server
               run: npm ci
             - name: lint-and-typecheck

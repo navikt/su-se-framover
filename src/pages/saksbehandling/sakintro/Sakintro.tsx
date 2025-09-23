@@ -175,6 +175,7 @@ const Sakintro = () => {
 
                         {props.sak.vedtak.length > 0 && (
                             <Vedtakstabell
+                                klager={props.sak.klager}
                                 revurderinger={props.sak.revurderinger}
                                 behandlinger={props.sak.behandlinger}
                                 sakId={props.sak.id}

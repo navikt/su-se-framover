@@ -1,7 +1,7 @@
 import { Box, Checkbox, Label } from '@navikt/ds-react';
 
-import { useI18n } from '~src/lib/i18n.ts';
-import messages from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/filter-nb.ts';
+import { useI18n } from '~src/lib/i18n';
+import messages from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/filter-nb';
 import styles from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/filter.module.less';
 import { Sakstypefilter } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter.tsx';
 

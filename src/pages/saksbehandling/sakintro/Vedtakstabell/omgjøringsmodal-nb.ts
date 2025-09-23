@@ -1,5 +1,5 @@
-import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
-import { OmgjøringsÅrsak } from '~src/types/Revurdering.ts';
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
+import { OmgjøringsÅrsak } from '~src/types/Revurdering';
 
 export const opprettOmgjøringÅrsakTekstMapper: { [key in OmgjøringsÅrsak]: string } = {
     [OmgjøringsÅrsak.OMGJØRING_VEDTAK_FRA_KLAGEINSTANSEN]: 'Omgjøring etter vedtak fra klageinstansen',
@@ -14,6 +14,9 @@ export default {
     'input.omgjøringsgrunn.label': 'Omgjøringsgrunn',
     'input.omgjøringsgrunn.value': 'Velg en omgjøringsgrunn',
     info: 'Tidligere avslagsbehandling blir kopiert inn i omgjøringsbehandlingen, som dermed får status "vilkårsvurdert" og resultat "avslag". Vurder vilkårene på nytt, og oppdater saken med korrekt resultat.',
+
+    'klage.knyttet.mot': 'Knytt mot klage',
+    'klage.mottattdato': 'Dato klage mottatt',
 
     ...opprettOmgjøringÅrsakTekstMapper,
     ...omgjøringsgrunnerTekstMapper,

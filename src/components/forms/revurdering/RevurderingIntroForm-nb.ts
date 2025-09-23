@@ -1,4 +1,4 @@
-import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb.ts';
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
 import { InformasjonSomRevurderesTextMapper } from '~src/typeMappinger/InformasjonSomRevurderesTextMapper';
 import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
 
@@ -16,6 +16,9 @@ export default {
     'input.begrunnelse.label': 'Begrunnelse',
     'input.informasjonSomRevurderes.label': 'Hva vil du revurdere?',
     'info.bosituasjon': 'Ved boforhold kan det være relevant å endre inntekt og formue også',
+
+    'klage.knyttet.mot': 'Knytt mot klage',
+    'klage.mottattdato': 'Dato klage mottatt',
 
     ...opprettRevurderingÅrsakTekstMapper,
     ...InformasjonSomRevurderesTextMapper,

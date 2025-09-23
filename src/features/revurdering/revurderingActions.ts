@@ -10,7 +10,7 @@ import {
     IverksattRevurdering,
     OppdaterRevurderingRequest,
     OpprettetRevurdering,
-    OpprettetRevurderingGrunn,
+    OpprettetRevurderingÅrsak,
     OpprettRevurderingRequest,
     Revurdering,
     RevurderingTilAttestering,
@@ -37,7 +37,7 @@ export const opprettStans = createAsyncThunk<
     {
         sakId: string;
         fraOgMed: Date;
-        årsak: OpprettetRevurderingGrunn;
+        årsak: OpprettetRevurderingÅrsak;
         begrunnelse: string;
     },
     { rejectValue: ApiError }
@@ -55,7 +55,7 @@ export const oppdaterStans = createAsyncThunk<
         sakId: string;
         revurderingId: string;
         fraOgMed: Date;
-        årsak: OpprettetRevurderingGrunn;
+        årsak: OpprettetRevurderingÅrsak;
         begrunnelse: string;
     },
     { rejectValue: ApiError }
@@ -71,7 +71,7 @@ export const gjenoppta = createAsyncThunk<
     Gjenopptak,
     {
         sakId: string;
-        årsak: OpprettetRevurderingGrunn;
+        årsak: OpprettetRevurderingÅrsak;
         begrunnelse: string;
     },
     { rejectValue: ApiError }
@@ -89,7 +89,7 @@ export const oppdaterGjenopptak = createAsyncThunk<
     {
         sakId: string;
         revurderingId: string;
-        årsak: OpprettetRevurderingGrunn;
+        årsak: OpprettetRevurderingÅrsak;
         begrunnelse: string;
     },
     { rejectValue: ApiError }

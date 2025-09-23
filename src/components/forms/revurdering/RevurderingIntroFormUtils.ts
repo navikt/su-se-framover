@@ -1,22 +1,25 @@
 import { UseFormReturn } from 'react-hook-form';
 
+import { kreverKlageId } from '~src/components/forms/revurdering/RevurderingIntroForm';
 import { ApiResult } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import yup, { validerPeriodeTomEtterFom } from '~src/lib/validering';
 import { NullablePeriode, Periode } from '~src/types/Periode';
 import {
-    OpprettetRevurderingGrunn,
+    OpprettetRevurderingÅrsak,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
     OpprettRevurderingRequest,
     OppdaterRevurderingRequest,
     OmgjøringsGrunn,
+    erOmgjøring,
 } from '~src/types/Revurdering';
 
 export interface RevurderingIntroFormData {
     periode: NullablePeriode;
-    årsak: Nullable<OpprettetRevurderingGrunn>;
+    årsak: Nullable<OpprettetRevurderingÅrsak>;
     omgjøringGrunn: Nullable<OmgjøringsGrunn>;
+    klageId: Nullable<string>;
     informasjonSomRevurderes: InformasjonSomRevurderes[];
     begrunnelse: Nullable<string>;
 }
@@ -32,6 +35,7 @@ export const revurderingIntroFormDataTilOpprettRequest = (args: {
         informasjonSomRevurderes: args.values.informasjonSomRevurderes,
         periode: { fraOgMed: args.values.periode.fraOgMed!, tilOgMed: args.values.periode.tilOgMed! },
         årsak: args.values.årsak!,
+        klageId: args.values.klageId,
     };
 };
 
@@ -48,13 +52,23 @@ export const revurderingIntroFormDataTilOppdaterRequest = (args: {
         informasjonSomRevurderes: args.values.informasjonSomRevurderes,
         periode: { fraOgMed: args.values.periode.fraOgMed!, tilOgMed: args.values.periode.tilOgMed! },
         årsak: args.values.årsak!,
+        klageId: null,
     };
 };
 
 export const revurderingIntroFormSchema = yup.object<RevurderingIntroFormData>({
     periode: validerPeriodeTomEtterFom,
-    årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().required(),
-    omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().nullable(),
+    klageId: yup.mixed<Nullable<string>>().when('årsak', (revurderingÅrsak: OpprettetRevurderingÅrsak) => {
+        return kreverKlageId(revurderingÅrsak)
+            ? yup.string().nullable().required('Klageid er obligatorisk for denne omgjøringsårsaken')
+            : yup.string().nullable();
+    }),
+    årsak: yup.mixed<OpprettetRevurderingÅrsak>().nullable().required(),
+    omgjøringGrunn: yup.mixed<OmgjøringsGrunn>().when('årsak', (revurderingÅrsak: OpprettetRevurderingÅrsak) => {
+        return erOmgjøring(revurderingÅrsak)
+            ? yup.string().nullable().required('Du må velge en omgjøringsgrunn')
+            : yup.string().nullable();
+    }),
     begrunnelse: yup.string().nullable().required(),
     informasjonSomRevurderes: yup
         .array<InformasjonSomRevurderes>(

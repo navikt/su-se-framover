@@ -1,15 +1,15 @@
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { OpprettetRevurderingGrunn } from '~src/types/Revurdering';
+import { OpprettetRevurderingÅrsak } from '~src/types/Revurdering';
 
 export interface StansFormData {
-    årsak: Nullable<OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING>;
+    årsak: Nullable<OpprettetRevurderingÅrsak.MANGLENDE_KONTROLLERKLÆRING>;
     stansDato: Nullable<Date>;
     begrunnelse: Nullable<string>;
 }
 
 export interface GjenopptaFormData {
-    årsak: Nullable<OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING>;
+    årsak: Nullable<OpprettetRevurderingÅrsak.MOTTATT_KONTROLLERKLÆRING>;
     begrunnelse: Nullable<string>;
 }
 
@@ -22,10 +22,10 @@ export const stansGjenopptaSchema = yup.object<StansGjenopptaFormData>({
     // @ts-ignore - den forstår ikke at valdiering per nå er helt OK
     årsak: yup.mixed().when('$formType', (formType, schema) => {
         if (formType === 'stans') {
-            return yup.mixed<OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING>().required();
+            return yup.mixed<OpprettetRevurderingÅrsak.MANGLENDE_KONTROLLERKLÆRING>().required();
         }
         if (formType === 'gjenoppta') {
-            return yup.mixed<OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING>().required();
+            return yup.mixed<OpprettetRevurderingÅrsak.MOTTATT_KONTROLLERKLÆRING>().required();
         }
 
         return schema;
