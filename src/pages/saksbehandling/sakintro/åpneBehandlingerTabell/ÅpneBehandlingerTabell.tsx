@@ -6,6 +6,7 @@ import * as S from 'fp-ts/string';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import * as behandlingsApi from '~src/api/behandlingApi';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -201,6 +202,9 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [behandlingStatus, startBehandling] = useAsyncActionCreator(SøknadsbehandlingActions.startBehandling);
+    const ref = useRef<HTMLDialogElement>(null);
+    const [returStatus, retur] = useApiCall(behandlingsApi.returSak);
+    const søknadsbehandling = props.b?.søknadsbehandling;
 
     if (props.b.søknadsbehandling && erSøknadsbehandlingTilAttestering(props.b.søknadsbehandling)) {
         if (user.isAttestant && user.navIdent !== props.b.søknadsbehandling.saksbehandler) {
@@ -218,9 +222,44 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
                 </LinkAsButton>
             );
         }
+        if (user.navIdent === props.b.søknadsbehandling.saksbehandler)
+            return (
+                <div>
+                    <Button variant="secondary" size="small" onClick={() => ref.current?.showModal()}>
+                        {formatMessage('link.retur')}
+                    </Button>
+
+                    <Modal
+                        ref={ref}
+                        header={{ heading: formatMessage('dataCell.info.knapp.attestering.modal.tittel') }}
+                    >
+                        <Modal.Body>
+                            {RemoteData.isFailure(returStatus) && <ApiErrorAlert error={returStatus.error} />}
+                        </Modal.Body>
+                        <Modal.Footer className={styles.knapper}>
+                            <Button variant="secondary" size="small" onClick={() => ref.current?.close()}>
+                                {formatMessage('datacell.info.knapp.avbryt')}
+                            </Button>
+                            {søknadsbehandling && (
+                                <Button
+                                    variant="primary"
+                                    type="button"
+                                    onClick={() =>
+                                        retur({ sakId: props.sakId, behandlingId: søknadsbehandling.id }, () => {
+                                            ref.current?.close();
+                                            location.reload();
+                                        })
+                                    }
+                                >
+                                    {formatMessage('datacell.info.knapp.ReturnerSak')}
+                                </Button>
+                            )}
+                        </Modal.Footer>
+                    </Modal>
+                </div>
+            );
         return <></>;
     }
-
     return (
         <>
             <div className={styles.dataCellButtonsContainer}>

@@ -3,7 +3,7 @@ import { statusFeilmeldinger } from '~src/components/apiErrorAlert/ApiErrorAlert
 export default {
     ...statusFeilmeldinger,
     'input.fnr.label': 'Fødselsnummer',
-    'knapp.hentSak': 'Hent sak',
+    'knapp.ReturnerSak': 'Returner sak',
     'knapp.tilbake': 'Tilbake',
 
     'lenke.seÅpneBehandlinger': 'Se åpne behandlinger',
