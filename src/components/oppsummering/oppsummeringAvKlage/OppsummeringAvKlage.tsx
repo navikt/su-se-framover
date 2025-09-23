@@ -45,7 +45,8 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
 
         return 'label.vurdering.ukjent';
     };
-
+    const erOmgjort = erKlageOmgjort(props.klage);
+    console.log(!erOmgjort && erKlageOversendt(props.klage));
     return (
         <div>
             <Oppsummeringspanel
@@ -88,37 +89,40 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                         </VStack>
                     </div>
                 )}
-
-                {erKlageOversendt(props.klage) ? (
-                    <div className={styles.seBrevContainer}>
-                        <Button
-                            variant="secondary"
-                            loading={RemoteData.isPending(hentDokumenterStatus)}
-                            onClick={() =>
-                                hentDokumenter({ id: props.klage.id, idType: DokumentIdType.Klage }, (dokumenter) =>
-                                    window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
-                                )
-                            }
-                        >
-                            {formatMessage('knapp.seBrev')}
-                        </Button>
-                        {RemoteData.isFailure(hentDokumenterStatus) && (
-                            <ApiErrorAlert error={hentDokumenterStatus.error} />
+                {!erOmgjort && (
+                    <>
+                        {erKlageOversendt(props.klage) ? (
+                            <div className={styles.seBrevContainer}>
+                                <Button
+                                    variant="secondary"
+                                    loading={RemoteData.isPending(hentDokumenterStatus)}
+                                    onClick={() =>
+                                        hentDokumenter(
+                                            { id: props.klage.id, idType: DokumentIdType.Klage },
+                                            (dokumenter) => window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
+                                        )
+                                    }
+                                >
+                                    {formatMessage('knapp.seBrev')}
+                                </Button>
+                                {RemoteData.isFailure(hentDokumenterStatus) && (
+                                    <ApiErrorAlert error={hentDokumenterStatus.error} />
+                                )}
+                            </div>
+                        ) : (
+                            <div className={styles.seBrevContainer}>
+                                <Button
+                                    variant="secondary"
+                                    loading={RemoteData.isPending(brevStatus)}
+                                    onClick={() => hentBrev({ sakId: props.klage.sakid, klageId: props.klage.id })}
+                                >
+                                    {formatMessage('knapp.seBrev')}
+                                </Button>
+                                {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
+                            </div>
                         )}
-                    </div>
-                ) : (
-                    <div className={styles.seBrevContainer}>
-                        <Button
-                            variant="secondary"
-                            loading={RemoteData.isPending(brevStatus)}
-                            onClick={() => hentBrev({ sakId: props.klage.sakid, klageId: props.klage.id })}
-                        >
-                            {formatMessage('knapp.seBrev')}
-                        </Button>
-                        {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
-                    </div>
+                    </>
                 )}
-
                 <UnderkjenteAttesteringer attesteringer={props.klage.attesteringer} />
             </Oppsummeringspanel>
         </div>
@@ -228,6 +232,11 @@ export const VurderInfo = (props: { klage: Klage }) => {
                         <OppsummeringPar
                             label={formatMessage('label.årsaksutfall')}
                             verdi={formatMessage(props.klage.vedtaksvurdering.omgjør.utfall)}
+                            retning={'vertikal'}
+                        />
+                        <OppsummeringPar
+                            label={formatMessage('label.begrunnelse')}
+                            verdi={props.klage.vedtaksvurdering.omgjør.begrunnelse}
                             retning={'vertikal'}
                         />
                     </>

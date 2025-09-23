@@ -51,5 +51,8 @@ export default {
 
     'page.tittel': 'Behandle klage',
 
+    'begrunnelse.label': 'Begrunnelse',
+    'begrunnelse.description': 'Skriv din begrunnelse her',
+
     'feil.ikkeRiktigTilstandForÅVurdere': 'Klagen er ikke i riktig tilstand for å vurdere',
 };

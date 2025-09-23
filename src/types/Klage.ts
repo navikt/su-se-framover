@@ -65,6 +65,7 @@ interface Vedtaksvurdering {
 export interface Omgjør {
     årsak: Nullable<OmgjøringsGrunn>;
     utfall: Nullable<OmgjørVedtakUtfall>;
+    begrunnelse: Nullable<string>;
 }
 
 export interface Oppretthold {

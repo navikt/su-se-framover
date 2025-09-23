@@ -5,6 +5,7 @@ export default {
     'label.saksbehandler': 'Saksbehandler',
     'label.klageMottatt': 'Klage opprettet',
     'label.årsaksutfall': 'Utfall',
+    'label.begrunnelse': 'Begrunnelse',
 
     'label.vurdering.tittel': 'VURDERING',
     'label.vurdering.avvist': 'Klagen avvist',
