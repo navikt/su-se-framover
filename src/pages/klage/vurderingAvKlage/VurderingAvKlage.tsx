@@ -95,8 +95,8 @@ const schema = yup.object<VurderingAvKlageFormData>({
         .when('klageVurderingType', {
             is: KlageVurderingType.OMGJØR,
             then: yup.object({
-                årsak: yup.string().nullable().oneOf(Object.values(OmgjøringsGrunn)).required(),
-                utfall: yup.string().nullable().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
+                årsak: yup.mixed<Nullable<string>>().oneOf(Object.values(OmgjøringsGrunn)).required(),
+                utfall: yup.mixed<Nullable<string>>().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
                 begrunnelse: yup.string().required('Må ha begrunnelse'),
             }),
             otherwise: yup.object().nullable(),

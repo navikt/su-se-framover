@@ -46,7 +46,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
         return 'label.vurdering.ukjent';
     };
     const erOmgjort = erKlageOmgjort(props.klage);
-    console.log(!erOmgjort && erKlageOversendt(props.klage));
+
     return (
         <div>
             <Oppsummeringspanel
