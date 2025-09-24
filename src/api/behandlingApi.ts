@@ -79,9 +79,9 @@ export async function sendTilAttestering(arg: {
     });
 }
 
-export async function returSak(arg: { sakId: string; behandlingId: string }) {
+export async function returnerSøknadsbehandling(arg: { sakId: string; behandlingId: string }) {
     return apiClient<Søknadsbehandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/returSak`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/returnerSøknadsbehandling`,
         method: 'PATCH',
     });
 }

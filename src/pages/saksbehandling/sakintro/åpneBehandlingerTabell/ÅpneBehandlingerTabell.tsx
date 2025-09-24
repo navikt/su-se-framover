@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import * as behandlingsApi from '~src/api/behandlingApi';
 import * as reguleringApi from '~src/api/reguleringApi';
+import * as revurderingApi from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
@@ -203,7 +204,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
     const { formatMessage } = useI18n({ messages });
     const [behandlingStatus, startBehandling] = useAsyncActionCreator(SøknadsbehandlingActions.startBehandling);
     const ref = useRef<HTMLDialogElement>(null);
-    const [returStatus, retur] = useApiCall(behandlingsApi.returSak);
+    const [returStatus, retur] = useApiCall(behandlingsApi.returnerSøknadsbehandling);
     const søknadsbehandling = props.b?.søknadsbehandling;
 
     if (props.b.søknadsbehandling && erSøknadsbehandlingTilAttestering(props.b.søknadsbehandling)) {
@@ -251,7 +252,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
                                         })
                                     }
                                 >
-                                    {formatMessage('datacell.info.knapp.ReturnerSak')}
+                                    {formatMessage('datacell.info.knapp.Fortsett')}
                                 </Button>
                             )}
                         </Modal.Footer>
@@ -370,6 +371,9 @@ const KlageKnapper = (props: { sakId: string; k: Klage }) => {
 const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
     const user = useUserContext();
     const { formatMessage } = useI18n({ messages });
+    const ref = useRef<HTMLDialogElement>(null);
+    const [returStatus, retur] = useApiCall(revurderingApi.returnerRevurdering);
+    const revurdering = props.r?.id;
 
     if (erRevurderingTilAttestering(props.r)) {
         if (user.isAttestant && user.navIdent !== props.r.saksbehandler) {
@@ -386,9 +390,42 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
                 </LinkAsButton>
             );
         }
-        return <></>;
-    }
+        if (user.navIdent === props.r.saksbehandler) {
+            return (
+                <div>
+                    <Button variant="secondary" size="small" onClick={() => ref.current?.showModal()}>
+                        {formatMessage('link.retur')}
+                    </Button>
 
+                    <Modal
+                        ref={ref}
+                        header={{ heading: formatMessage('dataCell.info.knapp.attestering.modal.tittel') }}
+                    >
+                        <Modal.Body>
+                            {RemoteData.isFailure(returStatus) && <ApiErrorAlert error={returStatus.error} />}
+                        </Modal.Body>
+                        <Modal.Footer className={styles.knapper}>
+                            <Button variant="secondary" size="small" onClick={() => ref.current?.close()}>
+                                {formatMessage('datacell.info.knapp.avbryt')}
+                            </Button>
+                            <Button
+                                variant="primary"
+                                type="button"
+                                onClick={() => {
+                                    retur({ sakId: props.sakId, revurderingId: revurdering }, () => {
+                                        ref.current?.close();
+                                        location.reload();
+                                    });
+                                }}
+                            >
+                                {formatMessage('datacell.info.knapp.Fortsett')}
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
+            );
+        }
+    }
     return (
         <div className={styles.dataCellButtonsContainer}>
             <LinkAsButton
