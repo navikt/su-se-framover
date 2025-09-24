@@ -123,6 +123,7 @@ export const erKlageOmgjort = (
         omgjør: {
             årsak: OmgjøringsGrunn;
             utfall: OmgjørVedtakUtfall;
+            begrunnelse: string;
         };
         oppretthold: null;
     };

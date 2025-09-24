@@ -49,6 +49,7 @@ import styles from './vurderingAvKlage.module.less';
 interface OmgjørFormData {
     årsak: Nullable<OmgjøringsGrunn>;
     utfall: Nullable<OmgjørVedtakUtfall>;
+    begrunnelse: Nullable<string>;
 }
 
 interface HjemmelFormData {
@@ -65,6 +66,7 @@ interface VurderingAvKlageFormData {
 const eqOmgjør = struct<OmgjørFormData>({
     årsak: eqNullable(S.Eq),
     utfall: eqNullable(S.Eq),
+    begrunnelse: eqNullable(S.Eq),
 });
 
 const eqOppretthold = struct<HjemmelFormData>({
@@ -93,8 +95,9 @@ const schema = yup.object<VurderingAvKlageFormData>({
         .when('klageVurderingType', {
             is: KlageVurderingType.OMGJØR,
             then: yup.object({
-                årsak: yup.string().oneOf(Object.values(OmgjøringsGrunn)).required(),
-                utfall: yup.string().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
+                årsak: yup.mixed<Nullable<string>>().oneOf(Object.values(OmgjøringsGrunn)).required(),
+                utfall: yup.mixed<Nullable<string>>().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
+                begrunnelse: yup.string().required('Må ha begrunnelse'),
             }),
             otherwise: yup.object().nullable(),
         }),
@@ -108,7 +111,15 @@ const schema = yup.object<VurderingAvKlageFormData>({
             }),
             otherwise: yup.object().nullable(),
         }),
-    fritekstTilBrev: yup.string().required().typeError('Feltet må fylles ut'),
+    fritekstTilBrev: yup
+        .mixed<Nullable<string>>()
+        .when('klageVurderingType', (klageVurderingType: KlageVurderingType) => {
+            if (klageVurderingType == KlageVurderingType.OMGJØR) {
+                return yup.string().nullable();
+            } else {
+                return yup.string().nullable().required('Brevet må ha tekst');
+            }
+        }),
 });
 
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
@@ -129,6 +140,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         omgjør: {
             årsak: props.klage.vedtaksvurdering?.omgjør?.årsak ?? null,
             utfall: props.klage.vedtaksvurdering?.omgjør?.utfall ?? null,
+            begrunnelse: props.klage.vedtaksvurdering?.omgjør?.begrunnelse ?? null,
         },
         oppretthold: {
             hjemmel: props.klage.vedtaksvurdering?.oppretthold?.hjemler ?? [],
@@ -155,6 +167,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                     ? {
                           årsak: data.omgjør.årsak ? data.omgjør.årsak : null,
                           utfall: data.omgjør.utfall,
+                          begrunnelse: data.omgjør.begrunnelse ? data.omgjør.begrunnelse : null,
                       }
                     : null,
             oppretthold:
@@ -234,6 +247,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         );
     }
 
+    const ikkeMedhold = watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD;
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -265,49 +279,50 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                         {watch('klageVurderingType') === KlageVurderingType.OMGJØR && (
                             <OmgjørVedtakForm control={control} />
                         )}
-                        {watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD && (
-                            <OpprettholdVedtakForm control={control} />
-                        )}
-
-                        <div className={styles.fritesktOgVisBrevContainer}>
-                            <Controller
-                                control={control}
-                                name={'fritekstTilBrev'}
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        {...field}
-                                        minRows={5}
-                                        label={
-                                            <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
-                                                <Label>{formatMessage('form.fritekst.label')}</Label>
-                                                <HelpText>
-                                                    {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
-                                                    {/*eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                                                    {/*@ts-ignore */}
-                                                    <Label className={styles.hjelpetekst}>
-                                                        <DsReactLink href={hjelpetekstLink} target="_blank">
-                                                            {formatMessage('form.fritekst.hjelpeTekst')}
-                                                        </DsReactLink>
-                                                    </Label>
-                                                </HelpText>
-                                            </div>
-                                        }
-                                        value={field.value ?? ''}
-                                        error={fieldState.error?.message}
+                        {ikkeMedhold && (
+                            <>
+                                <OpprettholdVedtakForm control={control} />
+                                <div className={styles.fritesktOgVisBrevContainer}>
+                                    <Controller
+                                        control={control}
+                                        name={'fritekstTilBrev'}
+                                        render={({ field, fieldState }) => (
+                                            <Textarea
+                                                {...field}
+                                                minRows={5}
+                                                label={
+                                                    <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
+                                                        <Label>{formatMessage('form.fritekst.label')}</Label>
+                                                        <HelpText>
+                                                            {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
+                                                            {/*eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                                                            {/*@ts-ignore */}
+                                                            <Label className={styles.hjelpetekst}>
+                                                                <DsReactLink href={hjelpetekstLink} target="_blank">
+                                                                    {formatMessage('form.fritekst.hjelpeTekst')}
+                                                                </DsReactLink>
+                                                            </Label>
+                                                        </HelpText>
+                                                    </div>
+                                                }
+                                                value={field.value ?? ''}
+                                                error={fieldState.error?.message}
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
-                            <Button
-                                type="button"
-                                className={styles.seBrevButton}
-                                variant="secondary"
-                                loading={RemoteData.isPending(brevStatus)}
-                                onClick={() => onSeBrevClick(watch())}
-                            >
-                                {formatMessage('knapp.seBrev')}
-                            </Button>
-                            {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
-                        </div>
+                                    <Button
+                                        type="button"
+                                        className={styles.seBrevButton}
+                                        variant="secondary"
+                                        loading={RemoteData.isPending(brevStatus)}
+                                        onClick={() => onSeBrevClick(watch())}
+                                    >
+                                        {formatMessage('knapp.seBrev')}
+                                    </Button>
+                                    {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
+                                </div>
+                            </>
+                        )}
 
                         <div className={styles.knapperContainer}>
                             <Button
@@ -388,6 +403,19 @@ const OmgjørVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }
                             </Radio>
                         ))}
                     </RadioGroup>
+                )}
+            />
+            <Controller
+                control={props.control}
+                name={'omgjør.begrunnelse'}
+                render={({ field, fieldState }) => (
+                    <Textarea
+                        {...field}
+                        label={formatMessage('begrunnelse.label')}
+                        value={field.value ?? ''}
+                        error={fieldState.error?.message}
+                        description={formatMessage('begrunnelse.description')}
+                    />
                 )}
             />
         </div>
