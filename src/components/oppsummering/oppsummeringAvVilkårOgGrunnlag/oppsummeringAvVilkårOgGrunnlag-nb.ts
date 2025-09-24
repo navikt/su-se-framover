@@ -17,7 +17,7 @@ export default {
     'uførhet.grunnlag.uføregrad': 'Uføregrad',
     'uførhet.grunnlag.forventetInntekt': 'Forventet inntekt etter uførhet',
 
-    'alderspensjon.søktOmAlderspensjon': 'Har søker søkt om 100 % alderspensjon og fått svar på søknaden??',
+    'alderspensjon.søktOmAlderspensjon': 'Har søker søkt om 100 % alderspensjon og fått svar på søknaden?',
     'alderspensjon.søktOmAndrePensjonsordninger':
         'Har søker søkt om andre norske pensjonsordninger og fått svar på søknaden?',
     'alderspensjon.søktOmPensjonIUtlandet': 'Har søker søkt om pensjon i utlandet og fått svar på søknaden?',
