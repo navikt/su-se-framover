@@ -50,9 +50,18 @@ export type DatacellStatus =
     | 'Vurdert'
     | 'Vedtaksbrev'
     | 'Forhåndsvarslet'
-    | 'Avbrutt';
+    | 'Avbrutt'
+    | 'Ferdigstilt';
 
-export type DataCellResultat = '-' | 'Avslag' | 'Innvilget' | 'Avvist' | 'Til vurdering' | 'Opphør' | 'Endring';
+export type DataCellResultat =
+    | '-'
+    | 'Avslag'
+    | 'Innvilget'
+    | 'Avvist'
+    | 'Til vurdering'
+    | 'Opphør'
+    | 'Endring'
+    | 'Ferdig';
 
 export interface DataCellInfo {
     type: 'søknad' | 'regulering' | 'revurdering' | 'klage' | 'stans' | 'gjenopptak' | 'tilbakekreving';

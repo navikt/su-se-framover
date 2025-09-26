@@ -73,13 +73,6 @@ const eqOppretthold = struct<HjemmelFormData>({
     hjemmel: A.getEq(S.Eq),
 });
 
-const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
-    klageVurderingType: eqNullable(S.Eq),
-    omgjør: eqOmgjør,
-    oppretthold: eqOppretthold,
-    fritekstTilBrev: eqNullable(S.Eq),
-});
-
 const schema = yup.object<VurderingAvKlageFormData>({
     klageVurderingType: yup
         .string()
@@ -120,6 +113,13 @@ const schema = yup.object<VurderingAvKlageFormData>({
                 return yup.string().nullable().required('Brevet må ha tekst');
             }
         }),
+});
+
+const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
+    klageVurderingType: eqNullable(S.Eq),
+    omgjør: eqOmgjør,
+    oppretthold: eqOppretthold,
+    fritekstTilBrev: eqNullable(S.Eq),
 });
 
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {

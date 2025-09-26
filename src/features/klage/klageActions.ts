@@ -124,6 +124,21 @@ export const sendTilAttestering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const ferdigstillOmgjøring = createAsyncThunk<
+    Klage,
+    { sakId: string; klageId: string },
+    { rejectValue: ApiError }
+>('klage/ferdigstill', async ({ sakId, klageId }, thunkApi) => {
+    const res = await klageApi.ferdigstill({
+        sakId,
+        klageId,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const oversend = createAsyncThunk<Klage, { sakId: string; klageId: string }, { rejectValue: ApiError }>(
     'klage/oversend',
     async ({ sakId, klageId }, thunkApi) => {

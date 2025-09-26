@@ -77,6 +77,7 @@ export default {
     'datacell.status.Vedtaksbrev': 'Vedtaksbrev',
     'datacell.status.Forhåndsvarslet': 'Forhåndsvarslet',
     'datacell.status.Avbrutt': 'Avbrutt',
+    'datacell.status.Ferdigstilt': 'Ferdigstilt',
 
     'datacell.resultat.-': '-',
     'datacell.resultat.Avslag': 'Avslag',
@@ -85,6 +86,7 @@ export default {
     'datacell.resultat.Til vurdering': 'Til vurdering',
     'datacell.resultat.Opphør': 'Opphør',
     'datacell.resultat.Endring': 'Endring',
+    'datacell.resultat.Ferdig': 'Ferdig',
 
     'datacell.info.knapp.startBehandling': 'Start behandling',
     'datacell.info.knapp.fortsettBehandling': 'Fortsett behandling',
