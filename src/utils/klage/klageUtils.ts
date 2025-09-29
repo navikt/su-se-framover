@@ -80,7 +80,8 @@ export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.
 
 export const erKlageIverksattAvvist = (k: Klage) => k.status === KlageStatus.IVERKSATT_AVVIST;
 
-export const erKlageAvsluttet = (k: Klage) => k.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET;
+export const erKlageAvsluttet = (k: Klage) =>
+    k.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET || k.status === KlageStatus.FERDIGSTILT_OMGJORT;
 
 export const erKlageVilkårsvurdertUtfyltEllerSenere = (k: Klage) =>
     k.status !== KlageStatus.OPPRETTET && k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT;
@@ -110,8 +111,10 @@ const erOversendtKlageFerdigbehandlet = (klage: Klage) =>
 
 /**Anser ikke en avsluttet klage som ferdigbehandlet */
 export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
-    return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage);
+    return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage) || erKlageOmgjortFerdigstilt(klage);
 };
+
+export const erKlageOmgjortFerdigstilt = (k: Klage) => k.status === KlageStatus.FERDIGSTILT_OMGJORT;
 
 export const erKlageÅpen = (k: Klage) => !erKlageFerdigbehandlet(k) && !erKlageAvsluttet(k);
 
