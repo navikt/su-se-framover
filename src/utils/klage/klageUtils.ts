@@ -3,25 +3,25 @@ import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 
 import { Linjestatus } from '~src/components/framdriftsindikator/Framdriftsindikator';
-import { pipe, maxBy } from '~src/lib/fp';
+import { maxBy, pipe } from '~src/lib/fp';
 import { MessageFormatter } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import klageNb from '~src/pages/klage/klage-nb';
 import {
-    KlageSteg,
+    AvsluttKlageStatus,
     Klage,
+    KlageErUnderskrevet,
+    KlageInnenforFristen,
     KlageStatus,
+    KlageSteg,
     KlageVurderingType,
     Omgjør,
     OmgjørVedtakUtfall,
     Oppretthold,
     OpprettholdVedtakHjemmel,
-    KlageErUnderskrevet,
-    KlageInnenforFristen,
-    VedtattUtfall,
     Utfall,
-    AvsluttKlageStatus,
+    VedtattUtfall,
 } from '~src/types/Klage';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 
@@ -80,7 +80,8 @@ export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.
 
 export const erKlageIverksattAvvist = (k: Klage) => k.status === KlageStatus.IVERKSATT_AVVIST;
 
-export const erKlageAvsluttet = (k: Klage) => k.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET;
+export const erKlageAvsluttet = (k: Klage) =>
+    k.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET || k.status === KlageStatus.FERDIGSTILT_OMGJORT;
 
 export const erKlageVilkårsvurdertUtfyltEllerSenere = (k: Klage) =>
     k.status !== KlageStatus.OPPRETTET && k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT;
@@ -110,8 +111,10 @@ const erOversendtKlageFerdigbehandlet = (klage: Klage) =>
 
 /**Anser ikke en avsluttet klage som ferdigbehandlet */
 export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
-    return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage);
+    return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage) || erKlageOmgjortFerdigstilt(klage);
 };
+
+export const erKlageOmgjortFerdigstilt = (k: Klage) => k.status === KlageStatus.FERDIGSTILT_OMGJORT;
 
 export const erKlageÅpen = (k: Klage) => !erKlageFerdigbehandlet(k) && !erKlageAvsluttet(k);
 
@@ -282,8 +285,8 @@ export const hentSisteVedtattUtfall = (vedtak: VedtattUtfall[]) =>
 export const splitStatusOgResultatFraKlage = (
     k: Klage,
 ): {
-    status: 'Opprettet' | 'Vilkårsvurdert' | '-' | 'Til attestering' | 'Oversendt' | 'Iverksatt';
-    resultat: '-' | 'Avvist' | 'Til vurdering';
+    status: 'Opprettet' | 'Vilkårsvurdert' | '-' | 'Til attestering' | 'Oversendt' | 'Iverksatt' | 'Ferdigstilt';
+    resultat: '-' | 'Avvist' | 'Til vurdering' | 'Ferdig';
 } => {
     switch (k.status) {
         case KlageStatus.OPPRETTET:
@@ -314,5 +317,7 @@ export const splitStatusOgResultatFraKlage = (
             return { status: 'Oversendt', resultat: '-' };
         case KlageStatus.IVERKSATT_AVVIST:
             return { status: 'Iverksatt', resultat: 'Avvist' };
+        case KlageStatus.FERDIGSTILT_OMGJORT:
+            return { status: 'Ferdigstilt', resultat: 'Ferdig' };
     }
 };

@@ -5,8 +5,10 @@ import Framdriftsindikator from '~src/components/framdriftsindikator/Framdriftsi
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { FerdigstillOmgjøringKlage } from '~src/pages/klage/sendKlageTilAttestering/FerdigstillOmgjøringKlage';
 import { KlageSteg } from '~src/types/Klage';
 import {
+    erKlageOmgjort,
     erKlageVilkårsvurdertUtfyltEllerSenere,
     getDefaultFramdriftsindikatorLinjer,
     getFramdriftsindikatorLinjer,
@@ -62,9 +64,12 @@ const Klage = () => {
                 )}
                 {urlParams.steg == KlageSteg.Vurdering && <VurderingAvKlage sakId={props.sak.id} klage={klage} />}
                 {urlParams.steg == KlageSteg.Avvisning && <AvvistKlage sakId={props.sak.id} klage={klage} />}
-                {urlParams.steg == KlageSteg.Oppsummering && (
-                    <SendKlageTilAttestering sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
-                )}
+                {urlParams.steg === KlageSteg.Oppsummering &&
+                    (erKlageOmgjort(klage) ? (
+                        <FerdigstillOmgjøringKlage sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
+                    ) : (
+                        <SendKlageTilAttestering sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
+                    ))}
             </div>
         </div>
     );

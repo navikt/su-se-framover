@@ -336,6 +336,10 @@ export default createSlice({
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
 
+        builder.addCase(klageActions.ferdigstillOmgjøring.fulfilled, (state, action) => {
+            state.sak = oppdaterKlageISak(state.sak, action.payload);
+        });
+
         builder.addCase(klageActions.oversend.fulfilled, (state, action) => {
             state.sak = oppdaterKlageISak(state.sak, action.payload);
         });
