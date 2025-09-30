@@ -11,7 +11,7 @@ services:
         restart: unless-stopped # Ønsker å starter container ved reboot maskin/docker
         hostname: mock-oauth2-server
     redis:
-        image: bitnami/redis:7.0.9
+        image: bitnamilegacy/redis:7.0.9
         ports:
             - 6379:6379
         container_name: redis
