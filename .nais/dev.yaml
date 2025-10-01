@@ -86,7 +86,7 @@ metadata:
     nais.io/run-as-group: "0" # Fix permissions for bitnami/redis
     nais.io/read-only-file-system: "false" # Fix permissions for bitnami/redis
 spec:
-  image: bitnami/redis:6.0
+  image: bitnamilegacy/redis:6.0
   port: 6379
   replicas: # A single Redis-app doesn't scale
     min: 1
