@@ -74,6 +74,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
                 }}
             />
             <OppsummeringAvSøknadsbehandling
+                sak={props.sak}
                 behandling={props.søknadsbehandling}
                 medBrevutkast={{ sakId: props.sak.id }}
             />

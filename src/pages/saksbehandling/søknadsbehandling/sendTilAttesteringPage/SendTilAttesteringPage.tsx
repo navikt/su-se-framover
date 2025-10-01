@@ -98,7 +98,7 @@ const SendTilAttesteringPage = () => {
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
         return (
             <form className={styles.vedtakContainer} onSubmit={form.handleSubmit(handleSubmit)}>
-                <OppsummeringAvSøknadsbehandling behandling={behandling} />
+                <OppsummeringAvSøknadsbehandling behandling={behandling} sak={props.sak} />
                 <div className={styles.fritekstareaOuterContainer}>
                     <div className={styles.fritekstareaContainer}>
                         <Controller
