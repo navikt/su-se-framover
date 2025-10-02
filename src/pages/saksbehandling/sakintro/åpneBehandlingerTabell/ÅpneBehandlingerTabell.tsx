@@ -103,6 +103,15 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
         }
     };
 
+    /*
+     * Behandling er en søknad/søknadsbehandling og om det er flere søknader den som ble mottatt først
+     */
+    const erSøknadsbehandlingOgFørsteÅpneMottatte = (søknadOgBehandling: SøknadMedEllerUtenBehandlinger) => {
+        return !props.tabellBehandlinger.some((b) => {
+            return isSøknadMedEllerUtenBehandling(b) && b.søknad.opprettet < søknadOgBehandling.søknad.opprettet;
+        });
+    };
+
     const DataCellButtons = (props: { sakId: string; b: TabellBehandling }) => {
         return (
             <div>
@@ -113,6 +122,7 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
                             søknad: props.b.søknad,
                             søknadsbehandling: props.b.søknadsbehandling,
                         }}
+                        førsteÅpne={erSøknadsbehandlingOgFørsteÅpneMottatte(props.b)}
                     />
                 )}
                 {isRevurdering(props.b) && <RevurderingKnapper sakId={props.sakId} r={props.b} />}
@@ -198,7 +208,11 @@ const ÅpneBehandlingerTabell = (props: { sakId: string; tabellBehandlinger: Tab
 
 export default ÅpneBehandlingerTabell;
 
-const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMedEllerUtenBehandlinger }) => {
+const SøknadOgSøknadsbehandlingKnapper = (props: {
+    sakId: string;
+    b: SøknadMedEllerUtenBehandlinger;
+    førsteÅpne: boolean;
+}) => {
     const user = useUserContext();
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
@@ -274,7 +288,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
                 >
                     {formatMessage('datacell.info.knapp.avsluttBehandling')}
                 </LinkAsButton>
-                {!props.b.søknadsbehandling && (
+                {props.førsteÅpne && !props.b.søknadsbehandling?.saksbehandler && (
                     <Button
                         size="small"
                         loading={RemoteData.isPending(behandlingStatus)}
@@ -293,7 +307,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: { sakId: string; b: SøknadMe
                         {formatMessage('datacell.info.knapp.startBehandling')}
                     </Button>
                 )}
-                {props.b.søknadsbehandling && (
+                {props.førsteÅpne && props.b.søknadsbehandling?.saksbehandler && (
                     <LinkAsButton
                         variant="primary"
                         size="small"
