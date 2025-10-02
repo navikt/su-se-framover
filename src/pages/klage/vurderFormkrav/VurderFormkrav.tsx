@@ -17,7 +17,14 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { KlageSteg, Svarord, Klage, KlageInnenforFristen, KlageErUnderskrevet } from '~src/types/Klage';
+import {
+    KlageSteg,
+    Svarord,
+    Klage,
+    KlageInnenforFristen,
+    KlageErUnderskrevet,
+    FremsattRettsligKlageinteresse,
+} from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import {
@@ -39,6 +46,7 @@ const eqFormData = struct<FormData>({
     innenforFristen: eqNullable(S.Eq),
     klagesDetPåKonkreteElementerIVedtaket: eqNullable(B.Eq),
     erUnderskrevet: eqNullable(S.Eq),
+    fremsattRettsligKlageinteresse: eqNullable(S.Eq),
 });
 
 interface Props {
@@ -52,6 +60,7 @@ interface FormData {
     innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
     erUnderskrevet: Nullable<KlageErUnderskrevet>;
+    fremsattRettsligKlageinteresse: Nullable<FremsattRettsligKlageinteresse>;
 }
 
 const schema = yup.object<FormData>({
@@ -63,6 +72,11 @@ const schema = yup.object<FormData>({
         .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
     klagesDetPåKonkreteElementerIVedtaket: yup.boolean().defined().required(),
     erUnderskrevet: yup
+        .string()
+        .defined()
+        .required()
+        .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
+    fremsattRettsligKlageinteresse: yup
         .string()
         .defined()
         .required()
@@ -80,6 +94,7 @@ const VurderFormkrav = (props: Props) => {
         innenforFristen: props.klage.innenforFristen,
         klagesDetPåKonkreteElementerIVedtaket: props.klage.klagesDetPåKonkreteElementerIVedtaket,
         erUnderskrevet: props.klage.erUnderskrevet,
+        fremsattRettsligKlageinteresse: props.klage.fremsattRettsligKlageinteresse,
     };
 
     const {
@@ -106,6 +121,7 @@ const VurderFormkrav = (props: Props) => {
                 innenforFristen: values.innenforFristen,
                 klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
                 erUnderskrevet: values.erUnderskrevet,
+                fremsattRettsligKlageinteresse: values.fremsattRettsligKlageinteresse,
             },
             () => {
                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
@@ -141,6 +157,7 @@ const VurderFormkrav = (props: Props) => {
                 innenforFristen: values.innenforFristen,
                 klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
                 erUnderskrevet: values.erUnderskrevet,
+                fremsattRettsligKlageinteresse: values.fremsattRettsligKlageinteresse,
             },
             () => {
                 bekreft(
@@ -202,6 +219,21 @@ const VurderFormkrav = (props: Props) => {
                                             )}`}</option>
                                         ))}
                                 </Select>
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="fremsattRettsligKlageinteresse"
+                            render={({ field, fieldState }) => (
+                                <RadioGroup
+                                    {...field}
+                                    legend={formatMessage('formkrav.fremsattrettslig.label.label')}
+                                    error={fieldState.error?.message}
+                                    value={field.value ?? ''}
+                                >
+                                    {fyllInRadioGruppe()}
+                                </RadioGroup>
                             )}
                         />
 
