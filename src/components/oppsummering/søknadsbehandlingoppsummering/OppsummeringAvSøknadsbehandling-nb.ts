@@ -18,12 +18,18 @@ export default {
 
     'feilmelding.ikkeGjortEnBeregning': 'Det er ikke gjort en beregning',
     'feil.fantIkkeSaksbehandlerNavn': 'Fant ikke saksbehandler navn',
+    'feilmelding.brevhentingFeilet': 'En feil skjedde under generering av brev',
 
     'knapp.vis': 'Vis brev',
+    'knapp.rediger': 'Rediger',
 
     'virkningstidspunkt.tittel': 'Virkningstidspunkt',
     'label.årsak': 'Årsak for ny behandling',
     'label.omgjøring': 'Omgjøringsgrunn',
+
+    'input.fritekst.label': 'Tekst til vedtaksbrev',
+
+    'vedtak.oppsummeringAvSøknad': 'Redigert vedtak er sendt til attestering og oppgave i Gosys er opprettet',
 
     ...søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper,
     ...opprettOmgjøringÅrsakTekstMapper,

@@ -1,5 +1,20 @@
 @import '@styles/variables.less';
 
+.vedtakContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: @spacing;
+
+    .vedtakSendtTilAttesteringAlertStripe {
+        margin-top: @spacing;
+    }
+
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+}
+
 .oppsummeringsContainer {
     max-width: 950px;
     > :not(:last-child) {
@@ -29,6 +44,12 @@
         width: @knappBredde;
     }
 }
+.redigerKnapp {
+    display: flex;
+    height: 48px;
+    margin-left: 50%;
+    margin-top: -5rem;
+}
 
 .underkjenteAttesteringerContainer {
     margin-bottom: @spacing-xs;
@@ -36,4 +57,23 @@
 
 .sidestiltOppsummeringContainer {
     margin-bottom: @spacing;
+}
+
+.fritekstareaOuterContainer {
+    width: 1000%;
+    justify-content: flex-start;
+}
+
+.fritekstareaContainer {
+    max-width: 30rem;
+    display: flex;
+    flex-direction: column;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
+.visBrevKnapp {
+    width: fit-content;
 }
