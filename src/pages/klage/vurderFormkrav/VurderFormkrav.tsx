@@ -228,7 +228,7 @@ const VurderFormkrav = (props: Props) => {
                             render={({ field, fieldState }) => (
                                 <RadioGroup
                                     {...field}
-                                    legend={formatMessage('formkrav.fremsattrettslig.label.label')}
+                                    legend={formatMessage('formkrav.fremsattrettslig.label')}
                                     error={fieldState.error?.message}
                                     value={field.value ?? ''}
                                 >
