@@ -10,6 +10,7 @@ import { Nullable } from '~src/lib/types';
 import klageNb from '~src/pages/klage/klage-nb';
 import {
     AvsluttKlageStatus,
+    FremsattRettsligKlageinteresse,
     Klage,
     KlageErUnderskrevet,
     KlageInnenforFristen,
@@ -32,6 +33,7 @@ export interface FormkravRequest {
     innenforFristen: Nullable<KlageInnenforFristen>;
     klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
     erUnderskrevet: Nullable<KlageErUnderskrevet>;
+    fremsattRettsligKlageinteresse: Nullable<FremsattRettsligKlageinteresse>;
 }
 
 export interface VurderingRequest {

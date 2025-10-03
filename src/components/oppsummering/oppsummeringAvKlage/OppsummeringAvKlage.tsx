@@ -194,6 +194,14 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     verdi={props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet)}
                     retning={'vertikal'}
                 />
+                <OppsummeringPar
+                    label={formatMessage('formkrav.fremsattrettslig.label')}
+                    verdi={
+                        props.klage.fremsattRettsligKlageinteresse &&
+                        formatMessage(props.klage.fremsattRettsligKlageinteresse)
+                    }
+                    retning={'vertikal'}
+                />
             </div>
 
             {props.klage.begrunnelse && (
