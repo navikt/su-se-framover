@@ -8,6 +8,7 @@ import { MessageFormatter } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import klageNb from '~src/pages/klage/klage-nb';
+import { BooleanMedBegrunnelse } from '~src/pages/klage/vurderFormkrav/VurderFormkrav';
 import {
     AvsluttKlageStatus,
     FremsattRettsligKlageinteresse,
@@ -31,7 +32,7 @@ export interface FormkravRequest {
     klageId: string;
     vedtakId: Nullable<string>;
     innenforFristen: Nullable<KlageInnenforFristen>;
-    klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
+    klagesDetPåKonkreteElementerIVedtaket: Nullable<BooleanMedBegrunnelse>;
     erUnderskrevet: Nullable<KlageErUnderskrevet>;
     fremsattRettsligKlageinteresse: Nullable<FremsattRettsligKlageinteresse>;
 }

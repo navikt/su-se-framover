@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore } from '@navikt/ds-react';
+import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore , Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
-import * as B from 'fp-ts/lib/boolean';
 import * as S from 'fp-ts/string';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,16 +14,9 @@ import * as klageActions from '~src/features/klage/klageActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { eqNullable, Nullable } from '~src/lib/types';
+import { eqBooleanMedBegrunnelse, eqNullable, eqSvarMedBegrunnelse, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import {
-    KlageSteg,
-    Svarord,
-    Klage,
-    KlageInnenforFristen,
-    KlageErUnderskrevet,
-    FremsattRettsligKlageinteresse,
-} from '~src/types/Klage';
+import { KlageSteg, Svarord, Klage } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import {
@@ -43,10 +35,10 @@ import styles from './vurderFormkrav.module.less';
 
 const eqFormData = struct<FormData>({
     vedtakId: eqNullable(S.Eq),
-    innenforFristen: eqNullable(S.Eq),
-    klagesDetPåKonkreteElementerIVedtaket: eqNullable(B.Eq),
-    erUnderskrevet: eqNullable(S.Eq),
-    fremsattRettsligKlageinteresse: eqNullable(S.Eq),
+    innenforFristen: eqNullable(eqSvarMedBegrunnelse),
+    klagesDetPåKonkreteElementerIVedtaket: eqNullable(eqBooleanMedBegrunnelse),
+    erUnderskrevet: eqNullable(eqSvarMedBegrunnelse),
+    fremsattRettsligKlageinteresse: eqNullable(eqSvarMedBegrunnelse),
 });
 
 interface Props {
@@ -55,32 +47,83 @@ interface Props {
     klage: Klage;
 }
 
+export type SvarMedBegrunnelse = {
+    svar: Svarord;
+    begrunnelse: Nullable<string>;
+};
+
+export type BooleanMedBegrunnelse = {
+    svar: boolean;
+    begrunnelse: Nullable<string>;
+};
+
 interface FormData {
     vedtakId: Nullable<string>;
-    innenforFristen: Nullable<KlageInnenforFristen>;
-    klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
-    erUnderskrevet: Nullable<KlageErUnderskrevet>;
-    fremsattRettsligKlageinteresse: Nullable<FremsattRettsligKlageinteresse>;
+    innenforFristen: Nullable<SvarMedBegrunnelse>;
+    klagesDetPåKonkreteElementerIVedtaket: Nullable<BooleanMedBegrunnelse>;
+    erUnderskrevet: Nullable<SvarMedBegrunnelse>;
+    fremsattRettsligKlageinteresse: Nullable<SvarMedBegrunnelse>;
+}
+
+function isValidSvarord(value: string | null | undefined): value is Svarord {
+    return typeof value === 'string' && Object.values(Svarord).includes(value as Svarord);
 }
 
 const schema = yup.object<FormData>({
     vedtakId: yup.string().defined().required(),
     innenforFristen: yup
-        .string()
-        .required()
+        .object<SvarMedBegrunnelse>()
         .defined()
-        .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
-    klagesDetPåKonkreteElementerIVedtaket: yup.boolean().defined().required(),
+        .when('svar', {
+            is: (svar: string | null | undefined) => isValidSvarord(svar),
+            then: yup.object({
+                svar: yup
+                    .string()
+                    .required('Svar må fylles ut')
+                    .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
+                begrunnelse: yup.string().nullable().notRequired(),
+            }),
+            otherwise: yup.object().nullable(),
+        }),
+    klagesDetPåKonkreteElementerIVedtaket: yup
+        .object<BooleanMedBegrunnelse>()
+        .defined()
+        .when('svar', {
+            is: (svar: boolean | null | undefined) => svar,
+            then: yup.object({
+                svar: yup.boolean().required('Svar må fylles ut'),
+                begrunnelse: yup.string().nullable().notRequired(),
+            }),
+            otherwise: yup.object().nullable(),
+        }),
     erUnderskrevet: yup
-        .string()
+        .object<SvarMedBegrunnelse>()
         .defined()
-        .required()
-        .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
+        .when('svar', {
+            is: (svar: string | null | undefined) => isValidSvarord(svar),
+            then: yup.object({
+                svar: yup
+                    .string()
+                    .required('Svar må fylles ut')
+                    .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
+                begrunnelse: yup.string().nullable().notRequired(),
+            }),
+            otherwise: yup.object().nullable(),
+        }),
     fremsattRettsligKlageinteresse: yup
-        .string()
+        .object<SvarMedBegrunnelse>()
         .defined()
-        .required()
-        .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
+        .when('svar', {
+            is: (svar: string | null | undefined) => isValidSvarord(svar),
+            then: yup.object({
+                svar: yup
+                    .string()
+                    .required('Svar må fylles ut')
+                    .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
+                begrunnelse: yup.string().nullable().notRequired(),
+            }),
+            otherwise: yup.object().nullable(),
+        }),
 });
 
 const VurderFormkrav = (props: Props) => {
@@ -224,7 +267,7 @@ const VurderFormkrav = (props: Props) => {
 
                         <Controller
                             control={control}
-                            name="fremsattRettsligKlageinteresse"
+                            name="fremsattRettsligKlageinteresse.svar"
                             render={({ field, fieldState }) => (
                                 <RadioGroup
                                     {...field}
@@ -239,10 +282,23 @@ const VurderFormkrav = (props: Props) => {
                                 </RadioGroup>
                             )}
                         />
+                        <Controller
+                            control={control}
+                            name="fremsattRettsligKlageinteresse.begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    {...field}
+                                    label={formatMessage('begrunnelse.label')}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    description={formatMessage('begrunnelse.description')}
+                                />
+                            )}
+                        />
 
                         <Controller
                             control={control}
-                            name="klagesDetPåKonkreteElementerIVedtaket"
+                            name="klagesDetPåKonkreteElementerIVedtaket.svar"
                             render={({ field, fieldState }) => (
                                 <BooleanRadioGroup
                                     legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
@@ -253,6 +309,19 @@ const VurderFormkrav = (props: Props) => {
                                         {formatMessage('formkrav.klagesPåKonkreteElementer.info')}
                                     </ReadMore>
                                 </BooleanRadioGroup>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="klagesDetPåKonkreteElementerIVedtaket.begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    {...field}
+                                    label={formatMessage('begrunnelse.label')}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    description={formatMessage('begrunnelse.description')}
+                                />
                             )}
                         />
 
@@ -273,6 +342,19 @@ const VurderFormkrav = (props: Props) => {
                                 </RadioGroup>
                             )}
                         />
+                        <Controller
+                            control={control}
+                            name="innenforFristen.begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    {...field}
+                                    label={formatMessage('begrunnelse.label')}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    description={formatMessage('begrunnelse.description')}
+                                />
+                            )}
+                        />
 
                         <Controller
                             control={control}
@@ -289,6 +371,19 @@ const VurderFormkrav = (props: Props) => {
                                     </ReadMore>
                                     {fyllInRadioGruppe()}
                                 </RadioGroup>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="erUnderskrevet.begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    {...field}
+                                    label={formatMessage('begrunnelse.label')}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    description={formatMessage('begrunnelse.description')}
+                                />
                             )}
                         />
 

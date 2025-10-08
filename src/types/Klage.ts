@@ -1,4 +1,5 @@
 import { Nullable } from '~src/lib/types';
+import { BooleanMedBegrunnelse, SvarMedBegrunnelse } from '~src/pages/klage/vurderFormkrav/VurderFormkrav';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 
 import { Attestering } from './Behandling';
@@ -13,7 +14,7 @@ export interface Klage {
     datoKlageMottatt: string;
     vedtakId: Nullable<string>;
     innenforFristen: Nullable<KlageInnenforFristen>;
-    klagesDetPåKonkreteElementerIVedtaket: Nullable<boolean>;
+    klagesDetPåKonkreteElementerIVedtaket: Nullable<BooleanMedBegrunnelse>;
     erUnderskrevet: Nullable<KlageErUnderskrevet>;
     fremsattRettsligKlageinteresse: Nullable<FremsattRettsligKlageinteresse>;
     begrunnelse: Nullable<string>;
@@ -83,9 +84,9 @@ export enum Svarord {
     NEI = 'NEI',
 }
 
-export type KlageInnenforFristen = Svarord;
-export type KlageErUnderskrevet = Svarord;
-export type FremsattRettsligKlageinteresse = Svarord;
+export type KlageInnenforFristen = SvarMedBegrunnelse;
+export type KlageErUnderskrevet = SvarMedBegrunnelse;
+export type FremsattRettsligKlageinteresse = SvarMedBegrunnelse;
 
 export enum KlageVurderingType {
     OMGJØR = 'OMGJØR',
