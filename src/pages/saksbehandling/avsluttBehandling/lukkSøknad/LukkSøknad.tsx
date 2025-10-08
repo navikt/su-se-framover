@@ -34,7 +34,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
     const { formatMessage } = useI18n({ messages: nb });
     const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(SøknadActions.lukkSøknad);
     const [avslagManglendeDokStatus, avslåPgaManglendeDok, resetAvslagManglendeDokStatus] = useAsyncActionCreator(
-        SøknadActions.avslagManglendeDokSøknad,
+        SøknadActions.avslåSøknad,
     );
 
     const submitStatus = pickRemoteData(søknadLukketStatus, avslagManglendeDokStatus);

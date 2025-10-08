@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
 import * as søknadApi from '~src/api/søknadApi';
-import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~src/api/søknadApi';
+import { AvslagBody, LukkSøknadBodyTypes } from '~src/api/søknadApi';
 import { Sak } from '~src/types/Sak';
 import { LukkSøknadResponse } from '~src/types/Søknad';
 
@@ -39,15 +39,15 @@ export const lukkSøknad = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const avslagManglendeDokSøknad = createAsyncThunk<
+export const avslåSøknad = createAsyncThunk<
     Sak,
     {
         søknadId: string;
-        body: AvslagManglendeDokType;
+        body: AvslagBody;
     },
     { rejectValue: ApiError }
 >('soknad/avslag', async (arg, thunkApi) => {
-    const res = await søknadApi.avslåSøknadPgaManglendeDokumentasjon(arg);
+    const res = await søknadApi.avslåSøknad(arg);
     if (res.status === 'ok') {
         return res.data;
     }

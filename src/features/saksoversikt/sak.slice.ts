@@ -227,7 +227,7 @@ export default createSlice({
             );
         });
 
-        builder.addCase(SøknadActions.avslagManglendeDokSøknad.fulfilled, (state, action) => {
+        builder.addCase(SøknadActions.avslåSøknad.fulfilled, (state, action) => {
             state.sak = RemoteData.success(action.payload);
         });
 
