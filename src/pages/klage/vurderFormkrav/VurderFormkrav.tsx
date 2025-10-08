@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Select, Loader, RadioGroup, Radio, Alert } from '@navikt/ds-react';
+import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as B from 'fp-ts/lib/boolean';
 import * as S from 'fp-ts/string';
@@ -232,6 +232,9 @@ const VurderFormkrav = (props: Props) => {
                                     error={fieldState.error?.message}
                                     value={field.value ?? ''}
                                 >
+                                    <ReadMore header={formatMessage('formkrav.readmore.label')}>
+                                        {formatMessage('formkrav.fremsattrettslig.info')}
+                                    </ReadMore>
                                     {fyllInRadioGruppe()}
                                 </RadioGroup>
                             )}
@@ -245,7 +248,11 @@ const VurderFormkrav = (props: Props) => {
                                     legend={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
                                     error={fieldState.error?.message}
                                     {...field}
-                                />
+                                >
+                                    <ReadMore header={formatMessage('formkrav.readmore.label')}>
+                                        {formatMessage('formkrav.klagesPåKonkreteElementer.info')}
+                                    </ReadMore>
+                                </BooleanRadioGroup>
                             )}
                         />
 
@@ -259,6 +266,9 @@ const VurderFormkrav = (props: Props) => {
                                     error={fieldState.error?.message}
                                     value={field.value ?? ''}
                                 >
+                                    <ReadMore header={formatMessage('formkrav.readmore.label')}>
+                                        {formatMessage('formkrav.innenforFrist.info')}
+                                    </ReadMore>
                                     {fyllInRadioGruppe()}
                                 </RadioGroup>
                             )}
@@ -274,6 +284,9 @@ const VurderFormkrav = (props: Props) => {
                                     error={fieldState.error?.message}
                                     value={field.value ?? ''}
                                 >
+                                    <ReadMore header={formatMessage('formkrav.readmore.label')}>
+                                        {formatMessage('formkrav.signert.info')}
+                                    </ReadMore>
                                     {fyllInRadioGruppe()}
                                 </RadioGroup>
                             )}
