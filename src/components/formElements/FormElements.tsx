@@ -14,6 +14,7 @@ import styles from './formElements.module.less';
 
 interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChange' | 'children' | 'disabled'> {
     value: Nullable<boolean> | undefined;
+    children: React.ReactNode;
     labels?: {
         true: string;
         false: string;
@@ -33,6 +34,7 @@ export const BooleanRadioGroup: ForwardRefExoticComponent<BooleanRadioGroupProps
                 value={value?.toString() ?? ''}
                 onChange={(val) => onChange(val === true.toString())}
             >
+                {props.children}
                 <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
                     {labels?.true ?? formatMessage('label.ja')}
                 </Radio>
