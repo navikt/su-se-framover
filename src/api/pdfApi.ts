@@ -1,5 +1,5 @@
 import apiClient, { ApiClientResult } from './apiClient';
-import { AvslagManglendeDokType } from './søknadApi';
+import { AvslagBody } from './søknadApi';
 
 export async function fetchBrevutkastForSøknadsbehandling(args: {
     sakId: string;
@@ -90,7 +90,7 @@ export async function hentBrevutkastForKlage(arg: { sakId: string; klageId: stri
 
 export async function brevutkastForAvslagPgaManglendeDokumentasjon(arg: {
     søknadId: string;
-    body: AvslagManglendeDokType;
+    body: AvslagBody;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/avslag/brevutkast`,
