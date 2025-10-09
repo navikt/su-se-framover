@@ -186,19 +186,19 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 />
                 <OppsummeringPar
                     label={formatMessage('formkrav.innenforFrist.label')}
-                    verdi={props.klage.innenforFristen && formatMessage(props.klage.innenforFristen)}
+                    verdi={props.klage.innenforFristen && formatMessage(props.klage.innenforFristen.svar)}
                     retning={'vertikal'}
                 />
                 <OppsummeringPar
                     label={formatMessage('formkrav.signert.label')}
-                    verdi={props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet)}
+                    verdi={props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet.svar)}
                     retning={'vertikal'}
                 />
                 <OppsummeringPar
                     label={formatMessage('formkrav.fremsattrettslig.label')}
                     verdi={
                         props.klage.fremsattRettsligKlageinteresse &&
-                        formatMessage(props.klage.fremsattRettsligKlageinteresse)
+                        formatMessage(props.klage.fremsattRettsligKlageinteresse.svar)
                     }
                     retning={'vertikal'}
                 />
@@ -215,6 +215,7 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
         </div>
     );
 };
+//slette             {props.klage.begrunnelse && (?
 
 export const VurderInfo = (props: { klage: Klage }) => {
     const { formatMessage } = useI18n({
