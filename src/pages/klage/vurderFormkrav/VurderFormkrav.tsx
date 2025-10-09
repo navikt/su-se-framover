@@ -66,9 +66,7 @@ interface FormData {
 }
 
 function isValidSvarord(value: string | null | undefined): value is Svarord {
-    const lol = typeof value === 'string' && Object.values(Svarord).includes(value as Svarord);
-    console.log(lol);
-    return lol;
+    return typeof value === 'string' && Object.values(Svarord).includes(value as Svarord);
 }
 
 const schema = yup.object<FormData>({
@@ -149,13 +147,11 @@ const VurderFormkrav = (props: Props) => {
         handleSubmit,
         control,
         watch,
-        formState: { isDirty, errors },
+        formState: { isDirty },
     } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
-
-    console.log('formState ', errors);
 
     const handleLagreFormkrav = (values: FormData) => {
         if (eqFormData.equals(values, initialValues)) {
