@@ -94,7 +94,7 @@ const schema = yup.object<FormData>({
         .when('svar', {
             is: (svar: boolean | null | undefined) => !svar,
             then: yup.object({
-                svar: yup.boolean().required('Svar må fylles ut'),
+                svar: yup.boolean().defined().required('Svar må fylles ut'),
                 begrunnelse: yup.string().nullable().notRequired(),
             }),
             otherwise: yup.object().nullable(),
@@ -107,6 +107,7 @@ const schema = yup.object<FormData>({
             then: yup.object({
                 svar: yup
                     .string()
+                    .defined()
                     .required('Svar må fylles ut')
                     .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
                 begrunnelse: yup.string().nullable().notRequired(),
@@ -121,6 +122,7 @@ const schema = yup.object<FormData>({
             then: yup.object({
                 svar: yup
                     .string()
+                    .defined()
                     .required('Svar må fylles ut')
                     .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
                 begrunnelse: yup.string().nullable().notRequired(),
