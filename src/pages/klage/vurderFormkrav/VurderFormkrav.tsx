@@ -66,7 +66,9 @@ interface FormData {
 }
 
 function isValidSvarord(value: string | null | undefined): value is Svarord {
-    return typeof value === 'string' && Object.values(Svarord).includes(value as Svarord);
+    const lol = typeof value === 'string' && Object.values(Svarord).includes(value as Svarord);
+    console.log(lol);
+    return lol;
 }
 
 const schema = yup.object<FormData>({
@@ -75,10 +77,11 @@ const schema = yup.object<FormData>({
         .object<SvarMedBegrunnelse>()
         .defined()
         .when('svar', {
-            is: (svar: string | null | undefined) => isValidSvarord(svar),
+            is: (svar: string | null | undefined) => !isValidSvarord(svar),
             then: yup.object({
                 svar: yup
                     .string()
+                    .defined()
                     .required('Svar må fylles ut')
                     .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
                 begrunnelse: yup.string().nullable().notRequired(),
@@ -89,7 +92,7 @@ const schema = yup.object<FormData>({
         .object<BooleanMedBegrunnelse>()
         .defined()
         .when('svar', {
-            is: (svar: boolean | null | undefined) => svar,
+            is: (svar: boolean | null | undefined) => !svar,
             then: yup.object({
                 svar: yup.boolean().required('Svar må fylles ut'),
                 begrunnelse: yup.string().nullable().notRequired(),
@@ -100,7 +103,7 @@ const schema = yup.object<FormData>({
         .object<SvarMedBegrunnelse>()
         .defined()
         .when('svar', {
-            is: (svar: string | null | undefined) => isValidSvarord(svar),
+            is: (svar: string | null | undefined) => !isValidSvarord(svar),
             then: yup.object({
                 svar: yup
                     .string()
@@ -114,7 +117,7 @@ const schema = yup.object<FormData>({
         .object<SvarMedBegrunnelse>()
         .defined()
         .when('svar', {
-            is: (svar: string | null | undefined) => isValidSvarord(svar),
+            is: (svar: string | null | undefined) => !isValidSvarord(svar),
             then: yup.object({
                 svar: yup
                     .string()
@@ -144,11 +147,13 @@ const VurderFormkrav = (props: Props) => {
         handleSubmit,
         control,
         watch,
-        formState: { isDirty },
+        formState: { isDirty, errors },
     } = useForm<FormData>({
         resolver: yupResolver(schema),
         defaultValues: initialValues,
     });
+
+    console.log('formState ', errors);
 
     const handleLagreFormkrav = (values: FormData) => {
         if (eqFormData.equals(values, initialValues)) {
