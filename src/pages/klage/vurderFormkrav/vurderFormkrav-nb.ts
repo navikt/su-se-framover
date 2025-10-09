@@ -11,7 +11,7 @@ export default {
     'formkrav.tittel': 'Vurder formkrav',
     'formkrav.innenforFrist.label': 'Er klagefristen overholdt?',
     'formkrav.innenforFrist.info':
-        'Etter SU-loven § 22, jf. folketrygdloven § 21-12 femte ledd er klagefristen seks uker. Etter forvaltningsloven § 29 begynner klagefristen å løpe fra det tidspunkt underretning om vedtaket er kommet frem til parten. Hvis klagefristen ikke er overholdt, må det vurderes om klagen likevel kan behandles jevnfør forvaltningsloven § 31.',
+        'Etter SU-loven § 22, jf. folketrygdloven § 21-12 femte ledd er klagefristen seks uker. Etter forvaltningsloven § 29 begynner klagefristen å løpe fra det tidspunkt underretning om vedtaket er kommet frem til parten. Hvis klagefristen ikke er overholdt, må det vurderes om klagen likevel kan behandles jamfør forvaltningsloven § 31.',
     'formkrav.klagesPåKonkreteElementer.label': 'Klages det på konkrete elementer i vedtaket?',
     'formkrav.klagesPåKonkreteElementer.info':
         'Etter forvaltningsloven § 32 skal klageren vise til vedtaket det klages over og hvilke endringer som ønskes. Klagen bør grunngis av klageren.',
