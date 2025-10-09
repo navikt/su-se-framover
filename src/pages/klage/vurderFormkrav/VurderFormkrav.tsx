@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore , Textarea } from '@navikt/ds-react';
+import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 import { Controller, useForm } from 'react-hook-form';
@@ -327,7 +327,7 @@ const VurderFormkrav = (props: Props) => {
 
                         <Controller
                             control={control}
-                            name="innenforFristen"
+                            name="innenforFristen.svar"
                             render={({ field, fieldState }) => (
                                 <RadioGroup
                                     {...field}
@@ -358,7 +358,7 @@ const VurderFormkrav = (props: Props) => {
 
                         <Controller
                             control={control}
-                            name="erUnderskrevet"
+                            name="erUnderskrevet.svar"
                             render={({ field, fieldState }) => (
                                 <RadioGroup
                                     {...field}
