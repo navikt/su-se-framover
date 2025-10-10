@@ -8,6 +8,7 @@ const svarordMessages: { [key in Svarord]: string } = {
 };
 
 export default {
+    'formkrav-klagefrist.tittel': 'Vurder formkrav og klagefrist',
     'formkrav.tittel': 'Vurder formkrav',
     'formkrav.innenforFrist.label': 'Er klagefristen overholdt?',
     'formkrav.innenforFrist.info':
