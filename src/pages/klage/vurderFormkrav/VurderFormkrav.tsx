@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore, Textarea , Heading } from '@navikt/ds-react';
+import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore, Textarea, Heading } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 import { Controller, useForm } from 'react-hook-form';
@@ -267,7 +267,9 @@ const VurderFormkrav = (props: Props) => {
                                 </Select>
                             )}
                         />
-
+                        <Heading level="2" size="medium" spacing>
+                            {formatMessage('klagefrist.tittel')}
+                        </Heading>
                         <Controller
                             control={control}
                             name="innenforFristen.svar"
