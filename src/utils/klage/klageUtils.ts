@@ -15,6 +15,7 @@ import {
     Klage,
     KlageErUnderskrevet,
     KlageInnenforFristen,
+    KlageMedOppretthold,
     KlageStatus,
     KlageSteg,
     KlageVurderingType,
@@ -81,6 +82,9 @@ export const erKlageTilAttesteringAvvist = (k: Klage) => k.status === KlageStatu
 
 export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.OVERSENDT;
 
+export const erKlageOversendtUtfylt = (k: Klage): k is KlageMedOppretthold =>
+    k.status === KlageStatus.OVERSENDT && k.vedtaksvurdering !== null && k.vedtaksvurdering.oppretthold !== null;
+
 export const erKlageIverksattAvvist = (k: Klage) => k.status === KlageStatus.IVERKSATT_AVVIST;
 
 export const erKlageAvsluttet = (k: Klage) =>
@@ -110,7 +114,7 @@ const erKlageINoenFormForVurdertOgUnderBehandling = (k: Klage) => {
 };
 
 const erOversendtKlageFerdigbehandlet = (klage: Klage) =>
-    erKlageOversendt(klage) && hentSisteVedtattUtfall(klage.klagevedtakshistorikk)?.utfall !== Utfall.RETUR;
+    erKlageOversendtUtfylt(klage) && hentSisteVedtattUtfall(klage.klagevedtakshistorikk)?.utfall !== Utfall.RETUR;
 
 /**Anser ikke en avsluttet klage som ferdigbehandlet */
 export const erKlageFerdigbehandlet = (klage: Klage): boolean => {

@@ -52,14 +52,15 @@ interface OmgjørFormData {
     begrunnelse: Nullable<string>;
 }
 
-interface HjemmelFormData {
+interface OpprettholdData {
     hjemmel: OpprettholdVedtakHjemmel[];
+    klagenotat: Nullable<string>;
 }
 
 interface VurderingAvKlageFormData {
     klageVurderingType: Nullable<KlageVurderingType>;
     omgjør: OmgjørFormData;
-    oppretthold: HjemmelFormData;
+    oppretthold: OpprettholdData;
     fritekstTilBrev: Nullable<string>;
 }
 
@@ -69,8 +70,9 @@ const eqOmgjør = struct<OmgjørFormData>({
     begrunnelse: eqNullable(S.Eq),
 });
 
-const eqOppretthold = struct<HjemmelFormData>({
+const eqOppretthold = struct<OpprettholdData>({
     hjemmel: A.getEq(S.Eq),
+    klagenotat: eqNullable(S.Eq),
 });
 
 const schema = yup.object<VurderingAvKlageFormData>({
@@ -95,12 +97,13 @@ const schema = yup.object<VurderingAvKlageFormData>({
             otherwise: yup.object().nullable(),
         }),
     oppretthold: yup
-        .object<HjemmelFormData>()
+        .object<OpprettholdData>()
         .defined()
         .when('klageVurderingType', {
             is: KlageVurderingType.OPPRETTHOLD,
-            then: yup.object<HjemmelFormData>({
+            then: yup.object<OpprettholdData>({
                 hjemmel: yup.array<OpprettholdVedtakHjemmel>().required(),
+                klagenotat: yup.string(),
             }),
             otherwise: yup.object().nullable(),
         }),
@@ -144,6 +147,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         },
         oppretthold: {
             hjemmel: props.klage.vedtaksvurdering?.oppretthold?.hjemler ?? [],
+            klagenotat: props.klage.vedtaksvurdering?.oppretthold?.klagenotat ?? null,
         },
         fritekstTilBrev: props.klage.fritekstTilBrev,
     };
@@ -174,6 +178,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
                     ? {
                           hjemler: data.oppretthold.hjemmel,
+                          klagenotat: data.oppretthold.klagenotat ? data.oppretthold.klagenotat : null,
                       }
                     : null,
             fritekstTilBrev: data.fritekstTilBrev,
@@ -445,6 +450,24 @@ const OpprettholdVedtakForm = (props: { control: Control<VurderingAvKlageFormDat
                             ))}
                         </div>
                     </CheckboxGroup>
+                )}
+            />
+            <Controller
+                control={props.control}
+                name={'oppretthold.klagenotat'}
+                render={({ field, fieldState }) => (
+                    <Textarea
+                        {...field}
+                        minRows={5}
+                        label={
+                            <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
+                                <Label>{formatMessage('form.opprettholdVedtak.klagenotat')}</Label>
+                            </div>
+                        }
+                        description={<div>{formatMessage('form.opprettholdVedtak.klagenotat.info')}</div>}
+                        value={field.value ?? ''}
+                        error={fieldState.error?.message}
+                    />
                 )}
             />
         </div>

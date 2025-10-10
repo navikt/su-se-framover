@@ -18,6 +18,6 @@ export default {
 
     'label.ja': 'Ja',
     'label.nei': 'Nei',
-
+    'klagenotat.info': 'Klagenotat',
     'knapp.seBrev': 'Se brev',
 };

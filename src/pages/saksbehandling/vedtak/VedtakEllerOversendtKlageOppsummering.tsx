@@ -6,7 +6,7 @@ import OppsummeringAvVedtak from '~src/components/oppsummering/oppsummeringAvVed
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { erKlageOversendt } from '~src/utils/klage/klageUtils';
+import { erKlageOversendtUtfylt } from '~src/utils/klage/klageUtils';
 
 import messages from './VedtakEllerOversendtKlageOppsummering-nb';
 import styles from './VedtakEllerOversendtKlageOppsummering.module.less';
@@ -24,7 +24,7 @@ const VedtakEllerOversendtKlageOppsummering = (props: {
 
     const klage = sak.klager.find((k) => k.id === behandlingId);
 
-    if (klage && erKlageOversendt(klage)) {
+    if (klage && erKlageOversendtUtfylt(klage)) {
         const klagensVedtak = sak.vedtak.find((v) => v.id === klage.vedtakId)!;
         return (
             <div className={styles.pageContainer}>

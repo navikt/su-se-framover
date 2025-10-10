@@ -37,6 +37,10 @@ export default {
     ...omgjøringsgrunnerTekstMapper,
     ...omgjørVedtakGunstMessages,
     'form.opprettholdVedtak.hjemmel.label': 'Hjemmel',
+    'klagenotat.info:': 'Klagenotat',
+    'form.opprettholdVedtak.klagenotat': 'Klagenotat',
+    'form.opprettholdVedtak.klagenotat.info':
+        'Klagenotat vil bli sendt over til klageinstans sammen med begrunnelsene fra formkrav_siden.',
     'form.opprettholdVedtak.hjemmel.velgHjemmel': 'Velg hjemmel',
     ...opprettholdVedtakHjemmelMessages,
 

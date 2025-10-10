@@ -27,6 +27,14 @@ export interface Klage {
     avsluttetBegrunnelse: Nullable<string>;
 }
 
+export interface KlageMedOppretthold extends Klage {
+    vedtaksvurdering: {
+        type: KlageVurderingType;
+        omgjør: Nullable<Omgjør>;
+        oppretthold: Oppretthold;
+    };
+}
+
 export enum AvsluttKlageStatus {
     KAN_AVSLUTTES = 'KAN_AVSLUTTES',
     ER_AVSLUTTET = 'ER_AVSLUTTET',
@@ -73,6 +81,7 @@ export interface Omgjør {
 
 export interface Oppretthold {
     hjemler: OpprettholdVedtakHjemmel[];
+    klagenotat: Nullable<string>;
 }
 
 /**
