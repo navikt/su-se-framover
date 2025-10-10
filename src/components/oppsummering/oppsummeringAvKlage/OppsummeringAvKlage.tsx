@@ -20,7 +20,7 @@ import { Klage, KlageStatus, KlageVurderingType } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
-import { erKlageOmgjort, erKlageOversendt } from '~src/utils/klage/klageUtils';
+import { erKlageOmgjort, erKlageOversendtUtfylt } from '~src/utils/klage/klageUtils';
 
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
 import styles from './oppsummeringAvKlage.module.less';
@@ -89,7 +89,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 )}
                 {!erOmgjort && (
                     <>
-                        {erKlageOversendt(props.klage) ? (
+                        {erKlageOversendtUtfylt(props.klage) ? (
                             <div className={styles.seBrevContainer}>
                                 <Button
                                     variant="secondary"
