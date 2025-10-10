@@ -8,7 +8,9 @@ const svarordMessages: { [key in Svarord]: string } = {
 };
 
 export default {
+    'formkrav-klagefrist.tittel': 'Vurder formkrav og klagefrist',
     'formkrav.tittel': 'Vurder formkrav',
+    'klagefrist.tittel': 'Klagefrist',
     'formkrav.innenforFrist.label': 'Er klagefristen overholdt?',
     'formkrav.innenforFrist.info':
         'Etter SU-loven § 22, jf. folketrygdloven § 21-12 femte ledd er klagefristen seks uker. Etter forvaltningsloven § 29 begynner klagefristen å løpe fra det tidspunkt underretning om vedtaket er kommet frem til parten. Hvis klagefristen ikke er overholdt, må det vurderes om klagen likevel kan behandles jamfør forvaltningsloven § 31.',

@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore, Textarea } from '@navikt/ds-react';
+import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore, Textarea, Heading } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 import { Controller, useForm } from 'react-hook-form';
@@ -241,7 +241,7 @@ const VurderFormkrav = (props: Props) => {
         ));
 
     return (
-        <ToKolonner tittel={formatMessage('formkrav.tittel')}>
+        <ToKolonner tittel={formatMessage('formkrav-klagefrist.tittel')}>
             {{
                 left: (
                     <form className={styles.form} onSubmit={handleSubmit(handleBekreftOgFortsettClick)}>
@@ -267,6 +267,43 @@ const VurderFormkrav = (props: Props) => {
                                 </Select>
                             )}
                         />
+                        <Heading level="2" size="medium" spacing>
+                            {formatMessage('klagefrist.tittel')}
+                        </Heading>
+                        <Controller
+                            control={control}
+                            name="innenforFristen.svar"
+                            render={({ field, fieldState }) => (
+                                <RadioGroup
+                                    {...field}
+                                    legend={formatMessage('formkrav.innenforFrist.label')}
+                                    error={fieldState.error?.message}
+                                    value={field.value ?? ''}
+                                >
+                                    <ReadMore header={formatMessage('formkrav.readmore.label')}>
+                                        {formatMessage('formkrav.innenforFrist.info')}
+                                    </ReadMore>
+                                    {fyllInRadioGruppe()}
+                                </RadioGroup>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="innenforFristen.begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    {...field}
+                                    label={formatMessage('begrunnelse.label')}
+                                    value={field.value ?? ''}
+                                    error={fieldState.error?.message}
+                                    description={formatMessage('begrunnelse.description')}
+                                />
+                            )}
+                        />
+
+                        <Heading level="2" size="medium" spacing>
+                            {formatMessage('formkrav.tittel')}
+                        </Heading>
 
                         <Controller
                             control={control}
@@ -317,37 +354,6 @@ const VurderFormkrav = (props: Props) => {
                         <Controller
                             control={control}
                             name="klagesDetPåKonkreteElementerIVedtaket.begrunnelse"
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    {...field}
-                                    label={formatMessage('begrunnelse.label')}
-                                    value={field.value ?? ''}
-                                    error={fieldState.error?.message}
-                                    description={formatMessage('begrunnelse.description')}
-                                />
-                            )}
-                        />
-
-                        <Controller
-                            control={control}
-                            name="innenforFristen.svar"
-                            render={({ field, fieldState }) => (
-                                <RadioGroup
-                                    {...field}
-                                    legend={formatMessage('formkrav.innenforFrist.label')}
-                                    error={fieldState.error?.message}
-                                    value={field.value ?? ''}
-                                >
-                                    <ReadMore header={formatMessage('formkrav.readmore.label')}>
-                                        {formatMessage('formkrav.innenforFrist.info')}
-                                    </ReadMore>
-                                    {fyllInRadioGruppe()}
-                                </RadioGroup>
-                            )}
-                        />
-                        <Controller
-                            control={control}
-                            name="innenforFristen.begrunnelse"
                             render={({ field, fieldState }) => (
                                 <Textarea
                                     {...field}
