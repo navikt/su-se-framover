@@ -1,11 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Label, Heading, Button, VStack } from '@navikt/ds-react';
-import classNames from 'classnames';
+import { BodyShort, Heading, Button, VStack } from '@navikt/ds-react';
 
 import * as DokumentApi from '~src/api/dokumentApi';
 import * as pdfApi from '~src/api/pdfApi';
 import { InformationIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/FormkravInfo';
+import { KlageInfo } from '~src/components/oppsummering/oppsummeringAvKlage/KlageInfo';
+import { VurderInfo } from '~src/components/oppsummering/oppsummeringAvKlage/VurderInfo';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -13,16 +15,12 @@ import Oppsummeringspanel, {
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import formkravMessages from '~src/pages/klage/vurderFormkrav/vurderFormkrav-nb';
-import vurderingMessages from '~src/pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, KlageStatus, KlageVurderingType } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
-import { erKlageOmgjort, erKlageOpprettholdt, erKlageOversendt } from '~src/utils/klage/klageUtils';
-
-import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
+import { erKlageOmgjort, erKlageOversendt } from '~src/utils/klage/klageUtils';
 
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
 import styles from './oppsummeringAvKlage.module.less';
@@ -125,141 +123,6 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 )}
                 <UnderkjenteAttesteringer attesteringer={props.klage.attesteringer} />
             </Oppsummeringspanel>
-        </div>
-    );
-};
-
-const KlageInfo = (props: { klage: Klage }) => {
-    const { formatMessage } = useI18n({ messages: oppsummeringMessages });
-
-    return (
-        <div className={classNames(styles.informasjonsContainer, styles.informasjonsContentContainer)}>
-            {[
-                {
-                    tittel: formatMessage('label.saksbehandler'),
-                    verdi: props.klage.saksbehandler,
-                },
-                {
-                    tittel: formatMessage('label.journalpostId'),
-                    verdi: props.klage.journalpostId,
-                },
-                {
-                    tittel: formatMessage('label.klageMottatt'),
-                    verdi: DateUtils.formatDate(props.klage.datoKlageMottatt),
-                },
-            ].map((item) => (
-                <OppsummeringPar key={item.tittel} label={item.tittel} verdi={item.verdi} retning={'vertikal'} />
-            ))}
-        </div>
-    );
-};
-
-export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
-    const { formatMessage } = useI18n({
-        messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
-    });
-
-    return (
-        <div className={styles.informasjonsContainer}>
-            <div className={styles.informasjonsContentContainer}>
-                <OppsummeringPar
-                    label={formatMessage('label.vedtak.type')}
-                    verdi={formatMessage(props.klagensVedtak.type)}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('label.vedtak.dato')}
-                    verdi={DateUtils.formatDateTime(props.klagensVedtak.opprettet)}
-                    retning={'vertikal'}
-                />
-            </div>
-            <div className={styles.informasjonsContentContainer}>
-                <OppsummeringPar
-                    label={formatMessage('formkrav.klagesPåKonkreteElementer.label')}
-                    verdi={
-                        props.klage.klagesDetPåKonkreteElementerIVedtaket
-                            ? formatMessage('label.ja')
-                            : formatMessage('label.nei')
-                    }
-                    retning={'vertikal'}
-                    className={styles.tekstMaxBredde}
-                />
-                <OppsummeringPar
-                    label={formatMessage('formkrav.innenforFrist.label')}
-                    verdi={props.klage.innenforFristen && formatMessage(props.klage.innenforFristen.svar)}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('formkrav.signert.label')}
-                    verdi={props.klage.erUnderskrevet && formatMessage(props.klage.erUnderskrevet.svar)}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('formkrav.fremsattrettslig.label')}
-                    verdi={
-                        props.klage.fremsattRettsligKlageinteresse &&
-                        formatMessage(props.klage.fremsattRettsligKlageinteresse.svar)
-                    }
-                    retning={'vertikal'}
-                />
-            </div>
-
-            {props.klage.begrunnelse && (
-                <OppsummeringPar
-                    label={formatMessage('formkrav.begrunnelse.label')}
-                    verdi={props.klage.begrunnelse}
-                    retning={'vertikal'}
-                    className={styles.formkravBegrunnelse}
-                />
-            )}
-        </div>
-    );
-};
-//slette             {props.klage.begrunnelse && (?
-
-export const VurderInfo = (props: { klage: Klage }) => {
-    const { formatMessage } = useI18n({
-        messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
-    });
-
-    return (
-        <div className={styles.informasjonsContainer}>
-            <div className={styles.informasjonsContentContainer}>
-                <OppsummeringPar
-                    label={formatMessage('form.vurdering.label')}
-                    verdi={formatMessage(props.klage.vedtaksvurdering!.type)}
-                    retning={'vertikal'}
-                />
-
-                {erKlageOmgjort(props.klage) ? (
-                    <>
-                        <OppsummeringPar
-                            label={formatMessage('form.omgjørVedtak.årsak.label')}
-                            verdi={formatMessage(props.klage.vedtaksvurdering.omgjør.årsak)}
-                            retning={'vertikal'}
-                        />
-                        <OppsummeringPar
-                            label={formatMessage('label.årsaksutfall')}
-                            verdi={formatMessage(props.klage.vedtaksvurdering.omgjør.utfall)}
-                            retning={'vertikal'}
-                        />
-                        <OppsummeringPar
-                            label={formatMessage('label.begrunnelse')}
-                            verdi={props.klage.vedtaksvurdering.omgjør.begrunnelse}
-                            retning={'vertikal'}
-                        />
-                    </>
-                ) : erKlageOpprettholdt(props.klage) ? (
-                    <div>
-                        <Label>{formatMessage('form.opprettholdVedtak.hjemmel.label')}</Label>
-                        <div className={styles.hjemlerContainer}>
-                            {props.klage.vedtaksvurdering.oppretthold.hjemler.map((hjemel) => (
-                                <BodyShort key={hjemel}>{formatMessage(hjemel)}</BodyShort>
-                            ))}
-                        </div>
-                    </div>
-                ) : null}
-            </div>
         </div>
     );
 };
