@@ -27,7 +27,7 @@ export default {
     'formkrav.fremsattrettslig.info':
         ' Etter forvaltningsloven § 28 er det bare part i saken eller annen med rettslig klageinteresse som kan klage på vedtaket. Den som uten å være part i saken har en nær tilknytning til saken, kan ha rettslig klageinteresse. Både parten og andre med rettslig klageinteresse kan etter forvaltningsloven § 12 la seg representere av advokat eller annen fullmektig.',
     'formkrav.vedtak.label': 'Vedtaket som er påklagd',
-    'formkrav.vedtak.option.default': 'Velg vedtak',
+    'formkrav.vedtak.option.default': 'Hvilket vedtak klages det på?',
     'formkrav.begrunnelse.label': 'Informasjon til attestant',
     'formkrav.begrunnelse.description': 'Unngå personsensitive opplysninger',
     'formkrav.button.tilbake': 'Tilbake',
@@ -35,7 +35,7 @@ export default {
     'formkrav.button.bekreftOgFortsett': 'Bekreft',
 
     'begrunnelse.label': 'Begrunnelse',
-    'begrunnelse.description': 'Skriv din begrunnelse her',
+    'begrunnelse.description': 'Skriv din begrunnelse her(valgfritt)',
 
     ...vedtakMessages,
     ...svarordMessages,
