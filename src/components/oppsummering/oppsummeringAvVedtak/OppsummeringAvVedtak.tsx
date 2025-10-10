@@ -1,45 +1,34 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Label, Loader } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { Button, Label } from '@navikt/ds-react';
 import { useOutletContext } from 'react-router-dom';
 
 import * as DokumentApi from '~src/api/dokumentApi';
-import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
+import { PartialOppsummeringAvKlage } from '~src/components/oppsummering/oppsummeringAvVedtak/PartialOppsummeringAvKlage';
+import { PartialOppsummeringAvRevurdering } from '~src/components/oppsummering/oppsummeringAvVedtak/PartialOppsummeringAvRevurdering';
+import { PartialOppsummeringAvSøknadsbehandling } from '~src/components/oppsummering/oppsummeringAvVedtak/PartialOppsummeringAvSøknadsbehandling';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-import { opprettOmgjøringÅrsakTekstMapper } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/omgjøringsmodal-nb.ts';
 import { Behandling } from '~src/types/Behandling';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { Regulering } from '~src/types/Regulering';
-import { erOmgjøring, InformasjonsRevurdering, Revurdering, TilbakekrevingsAvgjørelse } from '~src/types/Revurdering';
-import { Sak, Sakstype } from '~src/types/Sak.ts';
+import { InformasjonsRevurdering, Revurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erBehandlingRevurdering, erBehandlingSøknadsbehandling } from '~src/utils/behandling/BehandlingUtils';
-import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
-import { splitStatusOgResultatFraKlage } from '~src/utils/klage/klageUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
-import {
-    erInformasjonsRevurdering,
-    erRevurderingIverksattMedTilbakekreving,
-    splitStatusOgResultatFraRevurdering,
-} from '~src/utils/revurdering/revurderingUtils';
-import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
-import { splitStatusOgResultatFraSøkandsbehandling } from '~src/utils/SøknadsbehandlingUtils';
+import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 import {
     erDokumentGenerertEllerSenere,
     erDokumentIkkeGenerertEnda,
@@ -227,120 +216,6 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
     );
 };
 
-const PartialOppsummeringAvSøknadsbehandling = (props: { s: Søknadsbehandling; sakstype: Sakstype }) => {
-    const { formatMessage } = useI18n({ messages: { ...messages, ...opprettOmgjøringÅrsakTekstMapper } });
-
-    return (
-        <div>
-            <div className={styles.vedtakOgBehandlingInfoContainer}>
-                <OppsummeringPar
-                    label={formatMessage('behandling.resultat')}
-                    verdi={splitStatusOgResultatFraSøkandsbehandling(props.s).resultat}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('søknadsbehandling.startet')}
-                    verdi={formatDateTime(props.s.opprettet)}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('søknadsbehandling.søknadsdato')}
-                    verdi={søknadMottatt(props.s.søknad)}
-                    retning={'vertikal'}
-                />
-                {props.s.omgjøringsårsak && props.s.omgjøringsgrunn && (
-                    <>
-                        <OppsummeringPar
-                            label={formatMessage('label.årsak')}
-                            verdi={formatMessage(props.s.omgjøringsårsak)}
-                            retning={'vertikal'}
-                        />
-                        <OppsummeringPar
-                            label={formatMessage('label.omgjøring')}
-                            verdi={formatMessage(props.s.omgjøringsgrunn)}
-                            retning={'vertikal'}
-                        />
-                    </>
-                )}
-            </div>
-            <SidestiltOppsummeringAvVilkårOgGrunnlag
-                grunnlagsdataOgVilkårsvurderinger={props.s.grunnlagsdataOgVilkårsvurderinger}
-                visesSidestiltMed={props.s.søknad.søknadInnhold}
-                sakstype={props.sakstype}
-            />
-        </div>
-    );
-};
-
-const PartialOppsummeringAvRevurdering = (props: { sak: Sak; v: Vedtak; r: Revurdering }) => {
-    const { formatMessage } = useI18n({ messages: { ...messages } });
-    const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
-
-    useEffect(() => {
-        if (erInformasjonsRevurdering(props.r)) {
-            hentRevurderingSnapshot({ sakId: props.sak.id, vedtakId: props.v.id });
-        }
-    }, []);
-
-    return (
-        <div>
-            <div className={styles.vedtakOgBehandlingInfoContainer}>
-                <OppsummeringPar
-                    label={formatMessage('behandling.resultat')}
-                    verdi={splitStatusOgResultatFraRevurdering(props.r).resultat}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('revurdering.startet')}
-                    verdi={formatDateTime(props.r.opprettet)}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('revurdering.årsakForRevurdering')}
-                    verdi={formatMessage(props.r.årsak)}
-                    retning={'vertikal'}
-                />
-                {erOmgjøring(props.r.årsak) && (
-                    <OppsummeringPar
-                        label={formatMessage('label.omgjøring')}
-                        verdi={formatMessage(props.r.omgjøringsgrunn!)}
-                        retning={'vertikal'}
-                    />
-                )}
-                {erRevurderingIverksattMedTilbakekreving(props.r) && (
-                    <OppsummeringPar
-                        label={formatMessage('revurdering.skalTilbakekreves')}
-                        verdi={formatMessage(
-                            `bool.${props.r.tilbakekrevingsbehandling.avgjørelse === TilbakekrevingsAvgjørelse.TILBAKEKREV}`,
-                        )}
-                        retning={'vertikal'}
-                    />
-                )}
-            </div>
-            <OppsummeringPar
-                label={formatMessage('revurdering.begrunnelse')}
-                verdi={props.r.begrunnelse}
-                retning={'vertikal'}
-            />
-            {pipe(
-                revurderingSnapshot,
-                RemoteData.fold(
-                    () => <></>,
-                    () => <Loader />,
-                    (error) => <ApiErrorAlert error={error} />,
-                    (snapshotRevurderingGrunnlagsdataOgVilkår) => (
-                        <SidestiltOppsummeringAvVilkårOgGrunnlag
-                            grunnlagsdataOgVilkårsvurderinger={props.r.grunnlagsdataOgVilkårsvurderinger}
-                            visesSidestiltMed={snapshotRevurderingGrunnlagsdataOgVilkår}
-                            sakstype={props.sak.sakstype}
-                        />
-                    ),
-                ),
-            )}
-        </div>
-    );
-};
-
 const PartialOppsummeringAvRegulering = (props: { r: Regulering }) => {
     const { formatMessage } = useI18n({ messages });
     return (
@@ -350,40 +225,6 @@ const PartialOppsummeringAvRegulering = (props: { r: Regulering }) => {
                 verdi={formatMessage(props.r.reguleringstype)}
                 retning={'vertikal'}
             />
-        </div>
-    );
-};
-
-const PartialOppsummeringAvKlage = (props: { v: Vedtak; k: Klage }) => {
-    const { formatMessage } = useI18n({ messages });
-
-    return (
-        <div>
-            <div className={styles.vedtakOgBehandlingInfoContainer}>
-                <OppsummeringPar
-                    label={formatMessage('klage.behandlingStartet')}
-                    verdi={formatDateTime(props.k.opprettet)}
-                    retning={'vertikal'}
-                />
-            </div>
-            <div className={styles.vedtakOgBehandlingInfoContainer}>
-                <OppsummeringPar
-                    label={formatMessage('behandling.resultat')}
-                    verdi={splitStatusOgResultatFraKlage(props.k).resultat}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('klage.journalpostId')}
-                    verdi={props.k.journalpostId}
-                    retning={'vertikal'}
-                />
-                <OppsummeringPar
-                    label={formatMessage('klage.datoKlageMottatt')}
-                    verdi={formatDate(props.k.datoKlageMottatt)}
-                    retning={'vertikal'}
-                />
-            </div>
-            <FormkravInfo klage={props.k} klagensVedtak={props.v} />
         </div>
     );
 };
