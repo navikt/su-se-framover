@@ -4,6 +4,7 @@ import { BodyShort, Button, Table } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
+import { Link } from 'react-router-dom';
 
 import * as DokumentApi from '~src/api/dokumentApi';
 import { ErrorIcon } from '~src/assets/Icons';
@@ -22,10 +23,12 @@ import {
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import * as Routes from '~src/lib/routes';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { AvsluttKlageStatus } from '~src/types/Klage';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
+import { erKlageOmgjortFerdigstilt } from '~src/utils/klage/klageUtils';
 import {
     erDokumentGenerertEllerSenere,
     erDokumentIkkeGenerertEnda,
@@ -138,10 +141,26 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                         )}
                                     </Table.DataCell>
                                     <Table.DataCell>
-                                        {isKlage(behandling) &&
-                                            behandling.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET && (
-                                                <BodyShort>{behandling.avsluttetBegrunnelse}</BodyShort>
-                                            )}
+                                        {isKlage(behandling) && (
+                                            <>
+                                                {behandling.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET && (
+                                                    <BodyShort>{behandling.avsluttetBegrunnelse}</BodyShort>
+                                                )}
+                                                {erKlageOmgjortFerdigstilt(behandling) && (
+                                                    <>
+                                                        <Link
+                                                            to={Routes.vedtakEllerKlageOppsummering.createURL({
+                                                                sakId: behandling.sakid,
+                                                                vedtakEllerKlageId: behandling.id,
+                                                            })}
+                                                        >
+                                                            {formatMessage('dataCell.seOppsummering')}
+                                                        </Link>
+                                                    </>
+                                                )}
+                                            </>
+                                        )}
+
                                         {isSøknadMedEllerUtenBehandling(behandling) &&
                                             skalDokumentIkkeGenereres(behandling.søknad) && (
                                                 <BodyShort>{formatMessage('datacell.brev.skalIkkeGenerere')}</BodyShort>

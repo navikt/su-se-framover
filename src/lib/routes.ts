@@ -105,10 +105,10 @@ export const saksoversiktValgtSak: Route<{
 };
 
 //---------------Vedtak--------------------------------
-export const vedtaksoppsummering: Route<{ sakId: string; vedtakId: string }> = {
-    path: 'vedtak/:vedtakId/',
-    absPath: '/saksoversikt/:sakId/vedtak/:vedtakId/',
-    createURL: ({ sakId, vedtakId }) => `/saksoversikt/${sakId}/vedtak/${vedtakId}/`,
+export const vedtakEllerKlageOppsummering: Route<{ sakId: string; vedtakEllerKlageId: string }> = {
+    path: 'vedtak/:vedtakEllerKlageId/',
+    absPath: '/saksoversikt/:sakId/vedtak/:vedtakEllerKlageId/',
+    createURL: ({ sakId, vedtakEllerKlageId }) => `/saksoversikt/${sakId}/vedtak/${vedtakEllerKlageId}/`,
 };
 
 //---------------Søknadsbehandling & revurdering------

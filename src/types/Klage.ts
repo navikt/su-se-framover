@@ -35,6 +35,15 @@ export interface KlageMedOppretthold extends Klage {
     };
 }
 
+export interface FerdigstiltOmgjortKlage extends Klage {
+    vedtakId: string;
+    vedtaksvurdering: {
+        type: KlageVurderingType;
+        omgjør: Omgjør;
+        oppretthold: Nullable<Oppretthold>;
+    };
+}
+
 export enum AvsluttKlageStatus {
     KAN_AVSLUTTES = 'KAN_AVSLUTTES',
     ER_AVSLUTTET = 'ER_AVSLUTTET',

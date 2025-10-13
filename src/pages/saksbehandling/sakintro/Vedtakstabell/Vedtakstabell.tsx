@@ -230,9 +230,9 @@ const Vedtakstabell = (props: {
                                     <Table.DataCell>{formatDateTime(vedtak.opprettet)}</Table.DataCell>
                                     <Table.DataCell>
                                         <Link
-                                            to={Routes.vedtaksoppsummering.createURL({
+                                            to={Routes.vedtakEllerKlageOppsummering.createURL({
                                                 sakId: props.sakId,
-                                                vedtakId: vedtak.id,
+                                                vedtakEllerKlageId: vedtak.id,
                                             })}
                                         >
                                             {formatMessage('dataCell.seOppsummering')}
