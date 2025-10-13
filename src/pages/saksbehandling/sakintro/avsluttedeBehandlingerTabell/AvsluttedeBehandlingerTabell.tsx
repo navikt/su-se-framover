@@ -156,6 +156,9 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                                         >
                                                             {formatMessage('dataCell.seOppsummering')}
                                                         </Link>
+                                                        <BodyShort>
+                                                            {formatMessage('klage.ferdigstilt.omgjøring')}
+                                                        </BodyShort>
                                                     </>
                                                 )}
                                             </>

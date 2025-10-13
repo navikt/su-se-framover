@@ -126,6 +126,7 @@ export default {
     'datacell.resultat.AVVIST_KLAGE': 'Avvist',
     'datacell.resultat.OVERSENDT': 'Oversendt',
     'datacell.resultat.TILBAKEKREVING': '-',
+    'klage.ferdigstilt.omgjøring': '(Ferdigstilt omgjøring)',
 
     ...lukketSøknadBegrunnelser,
 };
