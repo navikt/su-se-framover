@@ -6,25 +6,28 @@ import OppsummeringAvVedtak from '~src/components/oppsummering/oppsummeringAvVed
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { erKlageOversendtUtfylt } from '~src/utils/klage/klageUtils';
+import { klageErOversendtEllerFerdigstilt } from '~src/utils/klage/klageUtils';
 
 import messages from './VedtakEllerOversendtKlageOppsummering-nb';
 import styles from './VedtakEllerOversendtKlageOppsummering.module.less';
 
-const VedtakEllerOversendtKlageOppsummering = (props: {
+/*
+    Klagene som kan bli vist frem her er de som er oversendt eller ferdigstilt.
+ */
+const VedtakEllerKlageOppsummering = (props: {
     vedtakEllerOversendtKlageId?: string;
     ikkeVisTilbakeKnapp?: boolean;
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const { sak } = useOutletContext<SaksoversiktContext>();
-    const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
+    const urlParams = Routes.useRouteParams<typeof Routes.vedtakEllerKlageOppsummering>();
 
-    const behandlingId = props.vedtakEllerOversendtKlageId ?? urlParams.vedtakId;
+    const behandlingId = props.vedtakEllerOversendtKlageId ?? urlParams.vedtakEllerKlageId;
 
     const klage = sak.klager.find((k) => k.id === behandlingId);
 
-    if (klage && erKlageOversendtUtfylt(klage)) {
+    if (klage && klageErOversendtEllerFerdigstilt(klage)) {
         const klagensVedtak = sak.vedtak.find((v) => v.id === klage.vedtakId)!;
         return (
             <div className={styles.pageContainer}>
@@ -60,4 +63,4 @@ const VedtakEllerOversendtKlageOppsummering = (props: {
     );
 };
 
-export default VedtakEllerOversendtKlageOppsummering;
+export default VedtakEllerKlageOppsummering;

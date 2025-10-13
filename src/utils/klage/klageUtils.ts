@@ -11,6 +11,7 @@ import klageNb from '~src/pages/klage/klage-nb';
 import { BooleanMedBegrunnelse } from '~src/pages/klage/vurderFormkrav/VurderFormkrav';
 import {
     AvsluttKlageStatus,
+    FerdigstiltOmgjortKlage,
     FremsattRettsligKlageinteresse,
     Klage,
     KlageErUnderskrevet,
@@ -82,6 +83,9 @@ export const erKlageTilAttesteringAvvist = (k: Klage) => k.status === KlageStatu
 
 export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.OVERSENDT;
 
+export const klageErOversendtEllerFerdigstilt = (k: Klage): boolean =>
+    k.status === KlageStatus.OVERSENDT || k.status === KlageStatus.FERDIGSTILT_OMGJORT;
+
 export const erKlageOversendtUtfylt = (k: Klage): k is KlageMedOppretthold =>
     k.status === KlageStatus.OVERSENDT && k.vedtaksvurdering !== null && k.vedtaksvurdering.oppretthold !== null;
 
@@ -121,7 +125,8 @@ export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
     return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage) || erKlageOmgjortFerdigstilt(klage);
 };
 
-export const erKlageOmgjortFerdigstilt = (k: Klage) => k.status === KlageStatus.FERDIGSTILT_OMGJORT;
+export const erKlageOmgjortFerdigstilt = (k: Klage): k is FerdigstiltOmgjortKlage =>
+    k.status === KlageStatus.FERDIGSTILT_OMGJORT;
 
 export const erKlageÅpen = (k: Klage) => !erKlageFerdigbehandlet(k) && !erKlageAvsluttet(k);
 
