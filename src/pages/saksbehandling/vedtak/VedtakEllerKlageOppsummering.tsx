@@ -24,7 +24,7 @@ const VedtakEllerKlageOppsummering = (props: {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtakEllerKlageOppsummering>();
 
     const behandlingId = props.vedtakEllerOversendtKlageId ?? urlParams.vedtakEllerKlageId;
-    console.log(urlParams);
+
     const klage = sak.klager.find((k) => k.id === behandlingId);
 
     if (klage && klageErOversendtEllerFerdigstilt(klage)) {
