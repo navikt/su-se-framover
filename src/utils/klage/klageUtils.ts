@@ -21,7 +21,6 @@ import {
     KlageSteg,
     KlageVurderingType,
     Omgjør,
-    OmgjørVedtakUtfall,
     Oppretthold,
     OpprettholdVedtakHjemmel,
     Utfall,
@@ -137,7 +136,6 @@ export const erKlageOmgjort = (
         type: KlageVurderingType.OMGJØR;
         omgjør: {
             årsak: OmgjøringsGrunn;
-            utfall: OmgjørVedtakUtfall;
             begrunnelse: string;
         };
         oppretthold: null;
