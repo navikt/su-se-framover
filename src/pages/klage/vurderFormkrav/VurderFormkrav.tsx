@@ -296,7 +296,6 @@ const VurderFormkrav = (props: Props) => {
                                     label={formatMessage('begrunnelse.label')}
                                     value={field.value ?? ''}
                                     error={fieldState.error?.message}
-                                    description={formatMessage('begrunnelse.description')}
                                 />
                             )}
                         />
@@ -331,7 +330,6 @@ const VurderFormkrav = (props: Props) => {
                                     label={formatMessage('begrunnelse.label')}
                                     value={field.value ?? ''}
                                     error={fieldState.error?.message}
-                                    description={formatMessage('begrunnelse.description')}
                                 />
                             )}
                         />
@@ -360,7 +358,6 @@ const VurderFormkrav = (props: Props) => {
                                     label={formatMessage('begrunnelse.label')}
                                     value={field.value ?? ''}
                                     error={fieldState.error?.message}
-                                    description={formatMessage('begrunnelse.description')}
                                 />
                             )}
                         />
@@ -391,7 +388,6 @@ const VurderFormkrav = (props: Props) => {
                                     label={formatMessage('begrunnelse.label')}
                                     value={field.value ?? ''}
                                     error={fieldState.error?.message}
-                                    description={formatMessage('begrunnelse.description')}
                                 />
                             )}
                         />

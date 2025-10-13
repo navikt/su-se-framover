@@ -34,8 +34,7 @@ export default {
     'formkrav.button.lagre': 'Lagre og fortsett senere',
     'formkrav.button.bekreftOgFortsett': 'Bekreft',
 
-    'begrunnelse.label': 'Begrunnelse',
-    'begrunnelse.description': 'Skriv din begrunnelse her(valgfritt)',
+    'begrunnelse.label': 'Begrunnelse (valgfritt)',
 
     ...vedtakMessages,
     ...svarordMessages,

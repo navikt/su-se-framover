@@ -40,7 +40,7 @@ export default {
     'klagenotat.info:': 'Klagenotat',
     'form.opprettholdVedtak.klagenotat': 'Klagenotat',
     'form.opprettholdVedtak.klagenotat.info':
-        'Klagenotat vil bli sendt over til klageinstans sammen med begrunnelsene fra formkrav_siden.',
+        'Klagenotat vil bli sendt over til klageinstans sammen med begrunnelsene fra formkrav-siden.',
     'form.opprettholdVedtak.hjemmel.velgHjemmel': 'Velg hjemmel',
     ...opprettholdVedtakHjemmelMessages,
 
