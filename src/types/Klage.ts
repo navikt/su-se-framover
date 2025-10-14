@@ -84,7 +84,6 @@ interface Vedtaksvurdering {
 
 export interface Omgjør {
     årsak: Nullable<OmgjøringsGrunn>;
-    utfall: Nullable<OmgjørVedtakUtfall>;
     begrunnelse: Nullable<string>;
 }
 
@@ -109,11 +108,6 @@ export type FremsattRettsligKlageinteresse = SvarMedBegrunnelse;
 export enum KlageVurderingType {
     OMGJØR = 'OMGJØR',
     OPPRETTHOLD = 'OPPRETTHOLD',
-}
-
-export enum OmgjørVedtakUtfall {
-    TIL_GUNST = 'TIL_GUNST',
-    TIL_UGUNST = 'TIL_UGUNST',
 }
 
 export enum OpprettholdVedtakHjemmel {

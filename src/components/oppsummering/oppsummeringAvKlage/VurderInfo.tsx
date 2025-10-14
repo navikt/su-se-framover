@@ -30,11 +30,6 @@ export const VurderInfo = (props: { klage: Klage }) => {
                             retning={'vertikal'}
                         />
                         <OppsummeringPar
-                            label={formatMessage('label.årsaksutfall')}
-                            verdi={formatMessage(props.klage.vedtaksvurdering.omgjør.utfall)}
-                            retning={'vertikal'}
-                        />
-                        <OppsummeringPar
                             label={formatMessage('label.begrunnelse')}
                             verdi={props.klage.vedtaksvurdering.omgjør.begrunnelse}
                             retning={'vertikal'}

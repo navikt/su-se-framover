@@ -30,14 +30,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import {
-    KlageSteg,
-    Klage,
-    OmgjørVedtakUtfall,
-    OpprettholdVedtakHjemmel,
-    KlageVurderingType,
-    KlageStatus,
-} from '~src/types/Klage';
+import { KlageSteg, Klage, OpprettholdVedtakHjemmel, KlageVurderingType, KlageStatus } from '~src/types/Klage';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
@@ -48,7 +41,6 @@ import styles from './vurderingAvKlage.module.less';
 
 interface OmgjørFormData {
     årsak: Nullable<OmgjøringsGrunn>;
-    utfall: Nullable<OmgjørVedtakUtfall>;
     begrunnelse: Nullable<string>;
 }
 
@@ -66,7 +58,6 @@ interface VurderingAvKlageFormData {
 
 const eqOmgjør = struct<OmgjørFormData>({
     årsak: eqNullable(S.Eq),
-    utfall: eqNullable(S.Eq),
     begrunnelse: eqNullable(S.Eq),
 });
 
@@ -91,7 +82,6 @@ const schema = yup.object<VurderingAvKlageFormData>({
             is: KlageVurderingType.OMGJØR,
             then: yup.object({
                 årsak: yup.mixed<Nullable<string>>().oneOf(Object.values(OmgjøringsGrunn)).required(),
-                utfall: yup.mixed<Nullable<string>>().oneOf(Object.values(OmgjørVedtakUtfall)).required(),
                 begrunnelse: yup.string().required('Må ha begrunnelse'),
             }),
             otherwise: yup.object().nullable(),
@@ -142,7 +132,6 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         klageVurderingType: props.klage.vedtaksvurdering?.type ?? null,
         omgjør: {
             årsak: props.klage.vedtaksvurdering?.omgjør?.årsak ?? null,
-            utfall: props.klage.vedtaksvurdering?.omgjør?.utfall ?? null,
             begrunnelse: props.klage.vedtaksvurdering?.omgjør?.begrunnelse ?? null,
         },
         oppretthold: {
@@ -170,7 +159,6 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 data.klageVurderingType === KlageVurderingType.OMGJØR
                     ? {
                           årsak: data.omgjør.årsak ? data.omgjør.årsak : null,
-                          utfall: data.omgjør.utfall,
                           begrunnelse: data.omgjør.begrunnelse ? data.omgjør.begrunnelse : null,
                       }
                     : null,
@@ -389,25 +377,6 @@ const OmgjørVedtakForm = (props: { control: Control<VurderingAvKlageFormData> }
                             </option>
                         ))}
                     </Select>
-                )}
-            />
-            <Controller
-                control={props.control}
-                name={'omgjør.utfall'}
-                render={({ field, fieldState }) => (
-                    <RadioGroup
-                        legend=""
-                        hideLegend
-                        {...field}
-                        error={fieldState.error?.message}
-                        value={field.value ?? ''}
-                    >
-                        {Object.values(OmgjørVedtakUtfall).map((utfall) => (
-                            <Radio value={utfall} key={utfall}>
-                                {formatMessage(utfall)}
-                            </Radio>
-                        ))}
-                    </RadioGroup>
                 )}
             />
             <Controller
