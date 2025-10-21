@@ -25,7 +25,7 @@ import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
-import { AvsluttKlageStatus } from '~src/types/Klage';
+import { KlageStatus } from '~src/types/Klage';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import { erKlageOmgjortFerdigstilt } from '~src/utils/klage/klageUtils';
@@ -143,7 +143,7 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                     <Table.DataCell>
                                         {isKlage(behandling) && (
                                             <>
-                                                {behandling.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET && (
+                                                {behandling.status === KlageStatus.AVSLUTTET && (
                                                     <BodyShort>{behandling.avsluttetBegrunnelse}</BodyShort>
                                                 )}
                                                 {erKlageOmgjortFerdigstilt(behandling) && (

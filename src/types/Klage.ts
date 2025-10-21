@@ -74,6 +74,7 @@ export enum KlageStatus {
 
     IVERKSATT_AVVIST = 'IVERKSATT_AVVIST',
     FERDIGSTILT_OMGJORT = 'FERDIGSTILT_OMGJORT',
+    AVSLUTTET = 'AVSLUTTET',
 }
 
 interface Vedtaksvurdering {

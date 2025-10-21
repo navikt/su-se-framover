@@ -91,7 +91,9 @@ export const erKlageOversendtUtfylt = (k: Klage): k is KlageMedOppretthold =>
 export const erKlageIverksattAvvist = (k: Klage) => k.status === KlageStatus.IVERKSATT_AVVIST;
 
 export const erKlageAvsluttet = (k: Klage) =>
-    k.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET || k.status === KlageStatus.FERDIGSTILT_OMGJORT;
+    k.avsluttet === AvsluttKlageStatus.ER_AVSLUTTET ||
+    k.status === KlageStatus.FERDIGSTILT_OMGJORT ||
+    k.status === KlageStatus.AVSLUTTET;
 
 export const erKlageVilkårsvurdertUtfyltEllerSenere = (k: Klage) =>
     k.status !== KlageStatus.OPPRETTET && k.status !== KlageStatus.VILKÅRSVURDERT_PÅBEGYNT;
@@ -295,7 +297,15 @@ export const hentSisteVedtattUtfall = (vedtak: VedtattUtfall[]) =>
 export const splitStatusOgResultatFraKlage = (
     k: Klage,
 ): {
-    status: 'Opprettet' | 'Vilkårsvurdert' | '-' | 'Til attestering' | 'Oversendt' | 'Iverksatt' | 'Ferdigstilt';
+    status:
+        | 'Opprettet'
+        | 'Vilkårsvurdert'
+        | '-'
+        | 'Til attestering'
+        | 'Oversendt'
+        | 'Iverksatt'
+        | 'Ferdigstilt'
+        | 'Avsluttet';
     resultat: '-' | 'Avvist' | 'Til vurdering' | 'Ferdig';
 } => {
     switch (k.status) {
@@ -329,5 +339,7 @@ export const splitStatusOgResultatFraKlage = (
             return { status: 'Iverksatt', resultat: 'Avvist' };
         case KlageStatus.FERDIGSTILT_OMGJORT:
             return { status: 'Ferdigstilt', resultat: 'Ferdig' };
+        case KlageStatus.AVSLUTTET:
+            return { status: 'Avsluttet', resultat: 'Ferdig' };
     }
 };
