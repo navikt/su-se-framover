@@ -86,10 +86,17 @@ export async function returnerSøknadsbehandling(arg: { sakId: string; behandlin
     });
 }
 
-export async function iverksett(arg: { sakId: string; behandlingId: string }) {
+export async function iverksett(arg: {
+    sakId: string;
+    behandlingId: string;
+    fritekst: string;
+}): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/iverksett`,
-        method: 'PATCH',
+        method: 'POST',
+        body: {
+            fritekst: arg.fritekst,
+        },
     });
 }
 
