@@ -68,7 +68,9 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
     return (
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
-                søknadsbehandling={props.søknadsbehandling}
+                behandlingsId={props.søknadsbehandling.id}
+                fritekst={props.søknadsbehandling.fritekstTilBrev}
+                redigerbartBrev={true}
                 sakId={props.sak.id}
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                 underkjenn={{

@@ -100,6 +100,9 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
     return (
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
+                behandlingsId={props.klage.id}
+                fritekst={props.klage.fritekstTilBrev ?? ''}
+                redigerbartBrev={false}
                 sakId={props.sakId}
                 iverksett={{
                     fn: iverksettCallback().callback,

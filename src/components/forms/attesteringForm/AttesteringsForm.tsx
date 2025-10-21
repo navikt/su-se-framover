@@ -18,7 +18,6 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
 
 import messages from './attesteringsForm-nb';
 import styles from './attesteringsForm.module.less';
@@ -56,7 +55,9 @@ const schema = yup.object<AttesteringFormData>({
 });
 
 interface Props {
-    søknadsbehandling: Søknadsbehandling;
+    fritekst: string;
+    behandlingsId: string;
+    redigerbartBrev: boolean;
     sakId: string;
     iverksett: {
         fn: (fritekstTiBrev: string) => void;
@@ -80,7 +81,7 @@ export const AttesteringsForm = (props: Props) => {
         resolver: yupResolver(schema),
         defaultValues: {
             beslutning: null,
-            fritekst: props.søknadsbehandling.fritekstTilBrev,
+            fritekst: props.fritekst,
         },
     });
 
@@ -153,66 +154,74 @@ export const AttesteringsForm = (props: Props) => {
                     </div>
                 </form>
             </Oppsummeringspanel>
-            <Oppsummeringspanel ikon={Oppsummeringsikon.Task} farge={Oppsummeringsfarge.Lilla} tittel={'Rediger Brev'}>
-                <div className={styles.brevContainer}>
-                    <Button
-                        variant="secondary"
-                        type="button"
-                        className={styles.knapper}
-                        onClick={() =>
-                            lastNedBrev({
-                                sakId: props.sakId,
-                                behandlingId: props.søknadsbehandling.id,
-                                fritekst: getValues('fritekst'),
-                            })
-                        }
-                        loading={RemoteData.isPending(hentBrevutkastStatus)}
-                    >
-                        {formatMessage('knapp.vis')}
-                    </Button>
-                    {RemoteData.isFailure(hentBrevutkastStatus) && <ApiErrorAlert error={hentBrevutkastStatus.error} />}
-                    <div className={styles.fritekstareaOuterContainer}>
-                        <div className={styles.fritekstareaContainer}>
-                            {RemoteData.isFailure(brevStatus) && (
-                                <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
-                            )}{' '}
-                            <div>
-                                {!showInput ? (
-                                    <Button
-                                        variant="secondary"
-                                        className={styles.knapper}
-                                        type="button"
-                                        onClick={() => {
-                                            setShowInput(true);
-                                        }}
-                                    >
-                                        {formatMessage('knapp.rediger')}
-                                        {RemoteData.isPending(brevStatus) && <Loader />}
-                                    </Button>
-                                ) : (
-                                    <Controller
-                                        control={control}
-                                        name="fritekst"
-                                        render={({ field }) => (
-                                            <Textarea
-                                                className={styles.fritekst}
-                                                label={formatMessage('input.fritekst.label')}
-                                                value={field.value ?? ''}
-                                                onChange={field.onChange}
-                                                onBlur={field.onBlur}
-                                                ref={field.ref}
-                                            />
-                                        )}
-                                    />
-                                )}
+            {props.redigerbartBrev && (
+                <Oppsummeringspanel
+                    ikon={Oppsummeringsikon.Task}
+                    farge={Oppsummeringsfarge.Lilla}
+                    tittel={'Rediger Brev'}
+                >
+                    <div className={styles.brevContainer}>
+                        <Button
+                            variant="secondary"
+                            type="button"
+                            className={styles.knapper}
+                            onClick={() =>
+                                lastNedBrev({
+                                    sakId: props.sakId,
+                                    behandlingId: props.behandlingsId,
+                                    fritekst: getValues('fritekst'),
+                                })
+                            }
+                            loading={RemoteData.isPending(hentBrevutkastStatus)}
+                        >
+                            {formatMessage('knapp.vis')}
+                        </Button>
+                        {RemoteData.isFailure(hentBrevutkastStatus) && (
+                            <ApiErrorAlert error={hentBrevutkastStatus.error} />
+                        )}
+                        <div className={styles.fritekstareaOuterContainer}>
+                            <div className={styles.fritekstareaContainer}>
                                 {RemoteData.isFailure(brevStatus) && (
                                     <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
-                                )}
+                                )}{' '}
+                                <div>
+                                    {!showInput ? (
+                                        <Button
+                                            variant="secondary"
+                                            className={styles.knapper}
+                                            type="button"
+                                            onClick={() => {
+                                                setShowInput(true);
+                                            }}
+                                        >
+                                            {formatMessage('knapp.rediger')}
+                                            {RemoteData.isPending(brevStatus) && <Loader />}
+                                        </Button>
+                                    ) : (
+                                        <Controller
+                                            control={control}
+                                            name="fritekst"
+                                            render={({ field }) => (
+                                                <Textarea
+                                                    className={styles.fritekst}
+                                                    label={formatMessage('input.fritekst.label')}
+                                                    value={field.value ?? ''}
+                                                    onChange={field.onChange}
+                                                    onBlur={field.onBlur}
+                                                    ref={field.ref}
+                                                />
+                                            )}
+                                        />
+                                    )}
+                                    {RemoteData.isFailure(brevStatus) && (
+                                        <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </Oppsummeringspanel>
+                </Oppsummeringspanel>
+            )}
         </div>
     );
 };
