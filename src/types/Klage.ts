@@ -126,6 +126,11 @@ export enum OpprettholdVedtakHjemmel {
     'SU_PARAGRAF_17' = 'SU_PARAGRAF_17',
     'SU_PARAGRAF_18' = 'SU_PARAGRAF_18',
     'SU_PARAGRAF_21' = 'SU_PARAGRAF_21',
+    'SU_PARAGRAF_22' = 'SU_PARAGRAF_22',
+    'FVL_PARAGRAF_28' = 'FVL_PARAGRAF_28',
+    'FVL_PARAGRAF_29' = 'FVL_PARAGRAF_29',
+    'FVL_PARAGRAF_31' = 'FVL_PARAGRAF_31',
+    'FVL_PARAGRAF_32' = 'FVL_PARAGRAF_32',
 }
 
 export enum Utfall {
