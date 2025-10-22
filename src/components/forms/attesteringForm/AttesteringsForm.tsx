@@ -36,7 +36,7 @@ enum Beslutning {
 }
 
 const schema = yup.object<AttesteringFormData>({
-    fritekst: yup.string().nullable().required(),
+    fritekst: yup.mixed<Nullable<string>>(),
     beslutning: yup.string().nullable().required().oneOf([Beslutning.IVERKSETT, Beslutning.UNDERKJENN]),
     grunn: yup.string<UnderkjennelseGrunn>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
@@ -183,7 +183,7 @@ export const AttesteringsForm = (props: Props) => {
                             <div className={styles.fritekstareaContainer}>
                                 {RemoteData.isFailure(brevStatus) && (
                                     <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
-                                )}{' '}
+                                )}
                                 <div>
                                     {!showInput ? (
                                         <Button
@@ -201,12 +201,13 @@ export const AttesteringsForm = (props: Props) => {
                                         <Controller
                                             control={control}
                                             name="fritekst"
-                                            render={({ field }) => (
+                                            render={({ field, fieldState }) => (
                                                 <Textarea
                                                     className={styles.fritekst}
                                                     label={formatMessage('input.fritekst.label')}
                                                     value={field.value ?? ''}
                                                     onChange={field.onChange}
+                                                    error={fieldState.error?.message}
                                                     onBlur={field.onBlur}
                                                     ref={field.ref}
                                                 />
