@@ -8,6 +8,7 @@ import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActi
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -31,9 +32,9 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
         Routes.navigateToSakIntroWithMessage(navigate, message, props.sak.id);
     };
 
-    const iverksettCallback = (fritekstTilBrev: string) => {
+    const iverksettCallback = (fritekstTilBrev: Nullable<string>) => {
         attesteringIverksett(
-            { sakId: props.sak.id, behandlingId: props.søknadsbehandling.id, fritekstTilBrev: fritekstTilBrev },
+            { sakId: props.sak.id, behandlingId: props.søknadsbehandling.id, fritekstTilBrev: fritekstTilBrev! },
             (res) => {
                 fetchSak({ sakId: res.sakId }, () => {
                     redirectTilSaksoversikt(formatMessage('status.iverksatt'));
