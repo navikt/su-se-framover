@@ -31,13 +31,16 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
         Routes.navigateToSakIntroWithMessage(navigate, message, props.sak.id);
     };
 
-    const iverksettCallback = () =>
-        attesteringIverksett({ sakId: props.sak.id, behandlingId: props.søknadsbehandling.id }, (res) => {
-            fetchSak({ sakId: res.sakId }, () => {
-                redirectTilSaksoversikt(formatMessage('status.iverksatt'));
-            });
-        });
-
+    const iverksettCallback = (fritekstTilBrev: string) => {
+        attesteringIverksett(
+            { sakId: props.sak.id, behandlingId: props.søknadsbehandling.id, fritekstTilBrev: fritekstTilBrev },
+            (res) => {
+                fetchSak({ sakId: res.sakId }, () => {
+                    redirectTilSaksoversikt(formatMessage('status.iverksatt'));
+                });
+            },
+        );
+    };
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) =>
         attesteringUnderkjent(
             {
@@ -47,7 +50,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
                 kommentar: kommentar,
             },
             () => {
-                redirectTilSaksoversikt(formatMessage('status.sendtTilbake'));
+                redirectTilSaksoversikt(formatMessage('status.underkjent'));
             },
         );
 
@@ -65,6 +68,9 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
     return (
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
+                behandlingsId={props.søknadsbehandling.id}
+                fritekst={props.søknadsbehandling.fritekstTilBrev}
+                redigerbartBrev={true}
                 sakId={props.sak.id}
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                 underkjenn={{
@@ -73,10 +79,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
                     underkjennelsesgrunner: Object.values(UnderkjennelseGrunnBehandling),
                 }}
             />
-            <OppsummeringAvSøknadsbehandling
-                behandling={props.søknadsbehandling}
-                medBrevutkast={{ sakId: props.sak.id }}
-            />
+            <OppsummeringAvSøknadsbehandling behandling={props.søknadsbehandling} />
         </div>
     );
 };

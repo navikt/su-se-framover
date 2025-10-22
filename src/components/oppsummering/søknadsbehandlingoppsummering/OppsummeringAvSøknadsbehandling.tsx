@@ -1,17 +1,12 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button } from '@navikt/ds-react';
 import classNames from 'classnames';
 
-import * as PdfApi from '~src/api/pdfApi';
-import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Sakstype } from '~src/types/Sak.ts';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import { søknadMottatt } from '~src/utils/søknad/søknadUtils';
 
-import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
 import UnderkjenteAttesteringer from '../../underkjenteAttesteringer/UnderkjenteAttesteringer';
 import UføreVarsler from '../OppsummeringAvAldersvurdering/OppsummeringAvAldersvurdering';
 import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
@@ -19,15 +14,11 @@ import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 
-import messages from './OppsummeringAvSøknadsbehandling-nb';
+import messages from './OppsummeringAvSøknadsbehandling-nb.ts';
 import styles from './OppsummeringAvSøknadsbehandling.module.less';
 
-const OppsummeringAvSøknadsbehandling = (props: {
-    behandling: Søknadsbehandling;
-    medBrevutkast?: { sakId: string };
-}) => {
+const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
-    const [hentBrevutkastStatus, hentBrevutkast] = useApiCall(PdfApi.fetchBrevutkastForSøknadsbehandling);
     const underkjenteAttesteringer = props.behandling.attesteringer.filter((att) => att.underkjennelse != null);
 
     return (
@@ -79,27 +70,6 @@ const OppsummeringAvSøknadsbehandling = (props: {
                             </>
                         )}
                     </div>
-
-                    {props.medBrevutkast && (
-                        <div className={styles.brevContainer}>
-                            <Button
-                                variant="secondary"
-                                type="button"
-                                onClick={() =>
-                                    hentBrevutkast(
-                                        { sakId: props.medBrevutkast!.sakId, behandlingId: props.behandling.id },
-                                        (b: Blob) => window.open(URL.createObjectURL(b)),
-                                    )
-                                }
-                                loading={RemoteData.isPending(hentBrevutkastStatus)}
-                            >
-                                {formatMessage('knapp.vis')}
-                            </Button>
-                            {RemoteData.isFailure(hentBrevutkastStatus) && (
-                                <ApiErrorAlert error={hentBrevutkastStatus.error} />
-                            )}
-                        </div>
-                    )}
                     {underkjenteAttesteringer.length > 0 && (
                         <div className={styles.underkjenteAttesteringerContainer}>
                             <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
@@ -119,7 +89,6 @@ const OppsummeringAvSøknadsbehandling = (props: {
                     />
                 </div>
             </Oppsummeringspanel>
-
             <OppsummeringAvBeregningOgSimulering
                 eksterngrunnlagSkatt={props.behandling.eksterneGrunnlag.skatt}
                 beregning={props.behandling.beregning}

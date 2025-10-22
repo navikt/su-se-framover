@@ -62,10 +62,10 @@ export const sendTilAttestering = createAsyncThunk<
 
 export const attesteringIverksett = createAsyncThunk<
     Søknadsbehandling,
-    { sakId: string; behandlingId: string },
+    { sakId: string; behandlingId: string; fritekstTilBrev: string },
     { rejectValue: ApiError }
->('behandling/iverksett', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await behandlingApi.iverksett({ sakId, behandlingId });
+>('behandling/iverksett', async ({ sakId, behandlingId, fritekstTilBrev }, thunkApi) => {
+    const res = await behandlingApi.iverksett({ sakId, behandlingId, fritekst: fritekstTilBrev });
     if (res.status === 'ok') {
         return res.data;
     }

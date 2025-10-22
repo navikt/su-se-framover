@@ -8,6 +8,11 @@
         margin-bottom: @spacing-xs;
     }
 }
+.redigerContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+}
 
 .knapperContainer {
     display: grid;
@@ -21,4 +26,23 @@
     flex-direction: column;
 
     gap: @spacing-xs;
+}
+.fritekstareaOuterContainer {
+    width: 100%;
+    justify-content: flex-start;
+}
+.fritekstareaContainer {
+    max-width: 30rem;
+    display: flex;
+    flex-direction: column;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
+.knapper {
+    display: grid;
+    grid-template-columns: repeat(1, @knappBredde);
+    margin: @spacing 0;
 }
