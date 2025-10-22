@@ -27,7 +27,7 @@ export interface AttesteringFormData {
     beslutning: Nullable<Beslutning>;
     grunn: Nullable<UnderkjennelseGrunn>;
     kommentar: Nullable<string>;
-    fritekst: string;
+    fritekst: Nullable<string>;
 }
 
 enum Beslutning {
@@ -36,7 +36,7 @@ enum Beslutning {
 }
 
 const schema = yup.object<AttesteringFormData>({
-    fritekst: yup.string().required(),
+    fritekst: yup.mixed<Nullable<string>>(),
     beslutning: yup.string().nullable().required().oneOf([Beslutning.IVERKSETT, Beslutning.UNDERKJENN]),
     grunn: yup.string<UnderkjennelseGrunn>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
@@ -60,7 +60,7 @@ interface Props {
     redigerbartBrev: boolean;
     sakId: string;
     iverksett: {
-        fn: (fritekstTiBrev: string) => void;
+        fn: (fritekstTiBrev: Nullable<string>) => void;
         status: ApiResult<unknown>;
     };
     underkjenn: {
@@ -169,7 +169,7 @@ export const AttesteringsForm = (props: Props) => {
                                 lastNedBrev({
                                     sakId: props.sakId,
                                     behandlingId: props.behandlingsId,
-                                    fritekst: getValues('fritekst'),
+                                    fritekst: getValues('fritekst')!,
                                 })
                             }
                             loading={RemoteData.isPending(hentBrevutkastStatus)}
@@ -183,7 +183,7 @@ export const AttesteringsForm = (props: Props) => {
                             <div className={styles.fritekstareaContainer}>
                                 {RemoteData.isFailure(brevStatus) && (
                                     <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
-                                )}{' '}
+                                )}
                                 <div>
                                     {!showInput ? (
                                         <Button
@@ -201,12 +201,13 @@ export const AttesteringsForm = (props: Props) => {
                                         <Controller
                                             control={control}
                                             name="fritekst"
-                                            render={({ field }) => (
+                                            render={({ field, fieldState }) => (
                                                 <Textarea
                                                     className={styles.fritekst}
                                                     label={formatMessage('input.fritekst.label')}
                                                     value={field.value ?? ''}
                                                     onChange={field.onChange}
+                                                    error={fieldState.error?.message}
                                                     onBlur={field.onBlur}
                                                     ref={field.ref}
                                                 />
