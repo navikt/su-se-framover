@@ -11,7 +11,7 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import { ApiResult, useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { ApiResult, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -95,7 +95,6 @@ export const AttesteringsForm = (props: Props) => {
         }
     };
 
-    const [hentBrevutkastStatus] = useApiCall(PdfApi.fetchBrevutkastForSøknadsbehandling);
     const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
     const [showInput, setShowInput] = useState(false);
 
@@ -170,15 +169,13 @@ export const AttesteringsForm = (props: Props) => {
                                     sakId: props.sakId,
                                     behandlingId: props.behandlingsId,
                                     fritekst: getValues('fritekst')!,
+                                    underAttestering: true,
                                 })
                             }
-                            loading={RemoteData.isPending(hentBrevutkastStatus)}
+                            //loading={RemoteData.isPending(hentBrevutkastStatus)}
                         >
                             {formatMessage('knapp.vis')}
                         </Button>
-                        {RemoteData.isFailure(hentBrevutkastStatus) && (
-                            <ApiErrorAlert error={hentBrevutkastStatus.error} />
-                        )}
                         <div className={styles.fritekstareaOuterContainer}>
                             <div className={styles.fritekstareaContainer}>
                                 {RemoteData.isFailure(brevStatus) && (

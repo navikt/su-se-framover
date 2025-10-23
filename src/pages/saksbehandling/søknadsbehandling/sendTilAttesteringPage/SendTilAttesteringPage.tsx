@@ -124,6 +124,7 @@ const SendTilAttesteringPage = () => {
                                     sakId: props.sak.id,
                                     behandlingId: behandling.id,
                                     fritekst: form.getValues().fritekst,
+                                    underAttestering: false,
                                 });
                             }}
                             size="small"
