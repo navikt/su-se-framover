@@ -1,28 +1,17 @@
 import apiClient, { ApiClientResult } from './apiClient';
 import { AvslagBody } from './søknadApi';
 
-export async function fetchBrevutkastForSøknadsbehandling(args: {
-    sakId: string;
-    behandlingId: string;
-}): Promise<ApiClientResult<Blob>> {
-    return apiClient({
-        url: `/saker/${args.sakId}/behandlinger/${args.behandlingId}/vedtaksutkast`,
-        method: 'GET',
-        request: { headers: new Headers({ Accept: 'application/pdf' }) },
-        bodyTransformer: (res) => res.blob(),
-    });
-}
-
 export async function fetchBrevutkastForSøknadsbehandlingWithFritekst(args: {
     sakId: string;
     behandlingId: string;
     fritekst: string;
+    underAttestering?: boolean;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${args.sakId}/behandlinger/${args.behandlingId}/vedtaksutkast`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
-        body: { fritekst: args.fritekst },
+        body: { fritekst: args.fritekst, underAttestering: args.underAttestering ?? false },
         bodyTransformer: (res) => res.blob(),
     });
 }
