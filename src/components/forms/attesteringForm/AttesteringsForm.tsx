@@ -172,7 +172,6 @@ export const AttesteringsForm = (props: Props) => {
                                     underAttestering: true,
                                 })
                             }
-                            //loading={RemoteData.isPending(hentBrevutkastStatus)}
                         >
                             {formatMessage('knapp.vis')}
                         </Button>
