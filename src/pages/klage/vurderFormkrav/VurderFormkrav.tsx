@@ -158,21 +158,26 @@ const VurderFormkrav = (props: Props) => {
             navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
+        const fjernObjektLagetFraRHF = (svar: SvarMedBegrunnelse | null) => (svar && svar.svar != null ? svar : null);
 
-        lagre(
-            {
-                sakId: props.sakId,
-                klageId: props.klage.id,
-                vedtakId: values.vedtakId,
-                innenforFristen: values.innenforFristen,
-                klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
-                erUnderskrevet: values.erUnderskrevet,
-                fremsattRettsligKlageinteresse: values.fremsattRettsligKlageinteresse,
-            },
-            () => {
-                navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-            },
-        );
+        const fjernObjektLagetFraRHFBool = (svar: BooleanMedBegrunnelse | null) =>
+            svar && svar.svar != null ? svar : null;
+
+        const sanitized = {
+            sakId: props.sakId,
+            klageId: props.klage.id,
+            vedtakId: values.vedtakId,
+            innenforFristen: fjernObjektLagetFraRHF(values.innenforFristen),
+            klagesDetPåKonkreteElementerIVedtaket: fjernObjektLagetFraRHFBool(
+                values.klagesDetPåKonkreteElementerIVedtaket,
+            ),
+            erUnderskrevet: fjernObjektLagetFraRHF(values.erUnderskrevet),
+            fremsattRettsligKlageinteresse: fjernObjektLagetFraRHF(values.fremsattRettsligKlageinteresse),
+        };
+
+        lagre(sanitized, () => {
+            navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        });
     };
 
     const skalNavigeresTilAvvisning = (k: Klage) => {
