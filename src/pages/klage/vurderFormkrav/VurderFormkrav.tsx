@@ -158,6 +158,8 @@ const VurderFormkrav = (props: Props) => {
             navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
+        //Ingen nested objekter kan være null i RHF så lenge et subfelt blir registrert. Obs her blir ikke kommentar lagret.
+        //Hvis behov kan vi endre til at kommentar blir lagret men det er rart å lagre det uten å ta stilling til spørsmålet. + Det krever endringer i modellen i backend som må være kompatibelt med at det er lagret ned null objekter for hele feltet
         const fjernObjektLagetFraRHF = (svar: SvarMedBegrunnelse | null) => (svar && svar.svar != null ? svar : null);
 
         const fjernObjektLagetFraRHFBool = (svar: BooleanMedBegrunnelse | null) =>

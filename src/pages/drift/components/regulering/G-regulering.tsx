@@ -299,7 +299,6 @@ const ReguleringsSupplementStandAlone = () => {
 
     const onClick = () => {
         if (!supplementValue) {
-            console.log('du hakke valgt hva du skal sende inn');
             return;
         }
         sendSupplement({ innhold: supplementValue });

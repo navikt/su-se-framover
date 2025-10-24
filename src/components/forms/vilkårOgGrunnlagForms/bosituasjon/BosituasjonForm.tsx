@@ -53,7 +53,6 @@ const BosituasjonForm = (props: Props) => {
                     }}
                     getChild={(nameAndIdx) => {
                         const watch = props.form.watch(nameAndIdx);
-                        console.log(watch.erEpsFylt67);
                         return (
                             <div>
                                 <EpsSkjermingModalOgPersonkort eps={epsStatus} søker={props.søker} />
