@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Table, Button } from '@navikt/ds-react';
+import { Alert, Button, HStack, Pagination, Table } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -21,10 +22,21 @@ import messages from './Behandlingssammendrag-nb';
 import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
+const pagineringslisteverdier = [2, 4, 10, 5, 50];
 const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragMedId[] }) => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
 
+    const [raderPerSide, setRaderPerSide] = useState<number>(2);
+    const [side, setSide] = useState<number>(1);
+    const antallSider = Math.ceil(props.tabelldata.length / raderPerSide);
+    let paginerteOppgaver = props.tabelldata;
+
+    useEffect(() => {
+        if (antallSider < side || paginerteOppgaver.length === 0) {
+            setSide(1);
+        }
+    }, [antallSider]);
     if (props.tabelldata.length === 0) {
         return (
             <Alert variant="info" className={styles.ingenResultater}>
@@ -35,6 +47,25 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
 
     return (
         <div>
+            <HStack gap="4" justify="center" align="center">
+                <Pagination page={side} onPageChange={setSide} count={antallSider} size="small" />
+                {raderPerSide && setRaderPerSide && (
+                    <select
+                        value={raderPerSide}
+                        onChange={(e) => {
+                            const size = Number(e.target.value);
+                            setRaderPerSide(size);
+                        }}
+                        title="Antall oppgaver som vises"
+                    >
+                        {pagineringslisteverdier.map((rowsPerPage) => (
+                            <option key={rowsPerPage} value={rowsPerPage}>
+                                Vis {rowsPerPage} oppgaver
+                            </option>
+                        ))}
+                    </select>
+                )}
+            </HStack>
             <SuTabell
                 kolonnerConfig={{
                     kolonner: BehandlingssammendragKolonne,
@@ -65,17 +96,21 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
                         </Table.Row>
                     </Table.Header>
                 )}
-                tableBody={(sortertKolonne, sortVerdi) => (
-                    <Table.Body>
-                        {sortTabell(props.tabelldata, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
-                            <BehandlingssamendragTableRow
-                                key={`${behandlingssammendrag.id}${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
-                                behandlingssammendrag={behandlingssammendrag}
-                                setContextMenuVariables={setContextMenuVariables}
-                            />
-                        ))}
-                    </Table.Body>
-                )}
+                tableBody={(sortertKolonne, sortVerdi) => {
+                    paginerteOppgaver = sortTabell(props.tabelldata, sortertKolonne, sortVerdi);
+                    paginerteOppgaver = paginerteOppgaver.slice((side - 1) * raderPerSide, side * raderPerSide);
+                    return (
+                        <Table.Body>
+                            {sortTabell(paginerteOppgaver, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
+                                <BehandlingssamendragTableRow
+                                    key={`${behandlingssammendrag.id}${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
+                                    behandlingssammendrag={behandlingssammendrag}
+                                    setContextMenuVariables={setContextMenuVariables}
+                                />
+                            ))}
+                        </Table.Body>
+                    );
+                }}
             />
             {contextMenuVariables.toggled && (
                 <Menu>

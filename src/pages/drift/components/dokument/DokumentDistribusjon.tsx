@@ -66,8 +66,6 @@ const DokumentDistribusjonsModal = (props: { visModal: boolean; onClose: () => v
         });
     };
 
-    console.log(form.formState.errors);
-
     return (
         <Modal
             aria-labelledby="Distribuer dokument"
