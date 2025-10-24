@@ -22,7 +22,7 @@ import messages from './Behandlingssammendrag-nb';
 import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
-const pagineringslisteverdier = [2, 4, 10, 5, 50];
+const pagineringslisteverdier = [10, 20, 30, 40, 50];
 const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragMedId[] }) => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
