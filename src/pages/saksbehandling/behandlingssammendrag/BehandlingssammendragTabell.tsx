@@ -99,7 +99,7 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
                     paginerteOppgaver = paginerteOppgaver.slice((side - 1) * oppgaverPerSide, side * oppgaverPerSide);
                     return (
                         <Table.Body>
-                            {sortTabell(paginerteOppgaver, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
+                            {paginerteOppgaver.map((behandlingssammendrag) => (
                                 <BehandlingssamendragTableRow
                                     key={`${behandlingssammendrag.id}${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
                                     behandlingssammendrag={behandlingssammendrag}
