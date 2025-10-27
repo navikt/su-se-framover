@@ -1,5 +1,6 @@
-import { InformationSquareIcon } from '~node_modules/@navikt/aksel-icons';
-import { Accordion } from '~node_modules/@navikt/ds-react';
+import { InformationSquareIcon } from '@navikt/aksel-icons';
+import { Accordion } from '@navikt/ds-react';
+
 import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon.tsx';
 import OppsummeringAvOppholdstillatelseAlder from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOppholdstillatelseAlder.tsx';
 import OppsummeringAvAldersvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvAldersvilkår.tsx';

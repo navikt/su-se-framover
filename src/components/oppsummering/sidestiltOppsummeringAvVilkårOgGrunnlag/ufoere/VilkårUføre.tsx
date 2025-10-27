@@ -1,6 +1,6 @@
+import { InformationSquareIcon } from '@navikt/aksel-icons';
 import { Accordion } from '@navikt/ds-react';
 
-import { InformationSquareIcon } from '~node_modules/@navikt/aksel-icons';
 import OppsummeringAvFlyktningstatus from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFlyktningstatus.tsx';
 import OppsummeringAvUføre from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUføre.tsx';
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning.tsx';

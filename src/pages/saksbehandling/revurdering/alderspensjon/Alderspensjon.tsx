@@ -1,8 +1,9 @@
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { yupResolver } from '~node_modules/@hookform/resolvers/yup';
-import { Heading } from '~node_modules/@navikt/ds-react';
-import { useForm } from '~node_modules/react-hook-form';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
 import { AlderspensjonForm } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonForm.tsx';
 import {

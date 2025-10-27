@@ -1,7 +1,8 @@
+
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '~node_modules/@navikt/ds-react';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~src/features/klage/klageActions';
