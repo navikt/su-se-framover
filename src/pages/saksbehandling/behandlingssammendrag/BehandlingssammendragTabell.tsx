@@ -22,12 +22,13 @@ import messages from './Behandlingssammendrag-nb';
 import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
-const pagineringslisteverdier = [10, 20, 30, 40, 50];
+const DEFAULT_PAGINERING_SIZE = 10;
+const pagineringslisteverdier = [DEFAULT_PAGINERING_SIZE, 20, 30, 40, 50];
 const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragMedId[] }) => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
 
-    const [oppgaverPerSide, setOppgaverPerSide] = useState<number>(10);
+    const [oppgaverPerSide, setOppgaverPerSide] = useState<number>(DEFAULT_PAGINERING_SIZE);
     const [side, setSide] = useState<number>(1);
     const antallSider = Math.ceil(props.tabelldata.length / oppgaverPerSide);
     let paginerteOppgaver = props.tabelldata;
