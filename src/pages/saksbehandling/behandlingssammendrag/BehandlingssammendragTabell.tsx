@@ -27,9 +27,9 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
 
-    const [raderPerSide, setRaderPerSide] = useState<number>(10);
+    const [oppgaverPerSide, setOppgaverPerSide] = useState<number>(10);
     const [side, setSide] = useState<number>(1);
-    const antallSider = Math.ceil(props.tabelldata.length / raderPerSide);
+    const antallSider = Math.ceil(props.tabelldata.length / oppgaverPerSide);
     let paginerteOppgaver = props.tabelldata;
 
     useEffect(() => {
@@ -50,10 +50,10 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
             <HStack gap="4" justify="center" align="center">
                 <Pagination page={side} onPageChange={setSide} count={antallSider} size="small" />
                 <select
-                    value={raderPerSide}
+                    value={oppgaverPerSide}
                     onChange={(e) => {
-                        const size = Number(e.target.value);
-                        setRaderPerSide(size);
+                        const antallOppgaverPerSide = Number(e.target.value);
+                        setOppgaverPerSide(antallOppgaverPerSide);
                     }}
                     title="Antall oppgaver som vises"
                 >
@@ -96,7 +96,7 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
                 )}
                 tableBody={(sortertKolonne, sortVerdi) => {
                     paginerteOppgaver = sortTabell(props.tabelldata, sortertKolonne, sortVerdi);
-                    paginerteOppgaver = paginerteOppgaver.slice((side - 1) * raderPerSide, side * raderPerSide);
+                    paginerteOppgaver = paginerteOppgaver.slice((side - 1) * oppgaverPerSide, side * oppgaverPerSide);
                     return (
                         <Table.Body>
                             {sortTabell(paginerteOppgaver, sortertKolonne, sortVerdi).map((behandlingssammendrag) => (
