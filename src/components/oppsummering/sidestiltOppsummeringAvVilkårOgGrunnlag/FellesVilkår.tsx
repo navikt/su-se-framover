@@ -1,5 +1,6 @@
-import { InformationSquareIcon } from '~node_modules/@navikt/aksel-icons';
-import { Accordion } from '~node_modules/@navikt/ds-react';
+import { InformationSquareIcon } from '@navikt/aksel-icons';
+import { Accordion } from '@navikt/ds-react';
+
 import OppsummeringAvBoforhold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold.tsx';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue.tsx';
 import OppsummeringAvForNav from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvForNav.tsx';

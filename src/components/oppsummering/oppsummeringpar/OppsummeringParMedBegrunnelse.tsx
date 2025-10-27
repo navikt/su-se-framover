@@ -1,6 +1,6 @@
+import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 
-import { BodyShort, Label } from '~node_modules/@navikt/ds-react';
 import styles from '~src/components/oppsummering/oppsummeringpar/oppsummeringPar.module.less';
 import { useI18n } from '~src/lib/i18n';
 import formkravMessages from '~src/pages/klage/vurderFormkrav/vurderFormkrav-nb';

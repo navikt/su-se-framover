@@ -1,4 +1,5 @@
-import { BodyShort, Label, Textarea } from '~node_modules/@navikt/ds-react';
+import { BodyShort, Label, Textarea } from '@navikt/ds-react';
+
 import oppsummeringMessages from '~src/components/oppsummering/oppsummeringAvKlage/oppsummeringAvKlage-nb';
 import styles from '~src/components/oppsummering/oppsummeringAvKlage/oppsummeringAvKlage.module.less';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';

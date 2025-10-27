@@ -1,8 +1,8 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { ReactNode } from 'react';
 import { Controller } from 'react-hook-form';
 
-import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
 import { VilkårFormProps } from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagFormUtils.ts';
 import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger.tsx';
 import { useI18n } from '~src/lib/i18n';

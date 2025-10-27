@@ -1,7 +1,8 @@
+
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Loader } from '@navikt/ds-react';
 import { useEffect } from 'react';
 
-import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
-import { Loader } from '~node_modules/@navikt/ds-react';
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import messages from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak-nb';

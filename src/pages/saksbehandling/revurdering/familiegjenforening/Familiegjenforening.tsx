@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 
-import { Heading } from '~node_modules/@navikt/ds-react';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
 import {
     FamilieforeningFormData,

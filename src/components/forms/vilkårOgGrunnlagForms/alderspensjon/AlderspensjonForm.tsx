@@ -1,8 +1,8 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { ReactNode } from 'react';
 import { Controller } from 'react-hook-form';
 
-import * as RemoteData from '~node_modules/@devexperts/remote-data-ts';
 import messages from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/alderspensjon-nb';
 import {
     AlderspensjonPeriodisertFormData,
