@@ -49,22 +49,20 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
         <div>
             <HStack gap="4" justify="center" align="center">
                 <Pagination page={side} onPageChange={setSide} count={antallSider} size="small" />
-                {raderPerSide && setRaderPerSide && (
-                    <select
-                        value={raderPerSide}
-                        onChange={(e) => {
-                            const size = Number(e.target.value);
-                            setRaderPerSide(size);
-                        }}
-                        title="Antall oppgaver som vises"
-                    >
-                        {pagineringslisteverdier.map((rowsPerPage) => (
-                            <option key={rowsPerPage} value={rowsPerPage}>
-                                Vis {rowsPerPage} oppgaver
-                            </option>
-                        ))}
-                    </select>
-                )}
+                <select
+                    value={raderPerSide}
+                    onChange={(e) => {
+                        const size = Number(e.target.value);
+                        setRaderPerSide(size);
+                    }}
+                    title="Antall oppgaver som vises"
+                >
+                    {pagineringslisteverdier.map((rowsPerPage) => (
+                        <option key={rowsPerPage} value={rowsPerPage}>
+                            Vis {rowsPerPage} oppgaver
+                        </option>
+                    ))}
+                </select>
             </HStack>
             <SuTabell
                 kolonnerConfig={{
