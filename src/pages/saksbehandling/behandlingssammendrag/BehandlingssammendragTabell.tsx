@@ -38,7 +38,7 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
         if (antallSider < side || paginerteOppgaver.length === 0) {
             setSide(1);
         }
-    }, [antallSider]);
+    }, [antallSider, paginerteOppgaver]);
     if (props.tabelldata.length === 0) {
         return (
             <Alert variant="info" className={styles.ingenResultater}>
