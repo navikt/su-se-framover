@@ -27,7 +27,7 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
 
-    const [raderPerSide, setRaderPerSide] = useState<number>(2);
+    const [raderPerSide, setRaderPerSide] = useState<number>(10);
     const [side, setSide] = useState<number>(1);
     const antallSider = Math.ceil(props.tabelldata.length / raderPerSide);
     let paginerteOppgaver = props.tabelldata;
