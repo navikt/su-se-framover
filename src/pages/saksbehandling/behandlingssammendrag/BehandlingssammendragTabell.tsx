@@ -24,6 +24,7 @@ import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
 export const DEFAULT_PAGINERING_SIZE = 10;
+export const pagineringslisteverdier = [DEFAULT_PAGINERING_SIZE, 20, 30, 40, 50];
 const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragMedId[] }) => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();

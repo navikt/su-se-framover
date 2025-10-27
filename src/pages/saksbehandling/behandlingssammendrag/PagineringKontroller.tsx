@@ -1,5 +1,5 @@
 import { HStack, Pagination } from '~node_modules/@navikt/ds-react';
-import { DEFAULT_PAGINERING_SIZE } from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
+import { pagineringslisteverdier } from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
 
 export interface Props {
     side: number;
@@ -9,7 +9,6 @@ export interface Props {
     setOppgaverPerSide: (oppgaverPerSide: number) => void;
 }
 
-export const pagineringslisteverdier = [DEFAULT_PAGINERING_SIZE, 20, 30, 40, 50];
 export const PagineringKontroller = ({ side, setSide, oppgaverPerSide, antallSider, setOppgaverPerSide }: Props) => {
     return (
         <HStack gap="4" justify="center" align="center">
