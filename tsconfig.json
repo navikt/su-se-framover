@@ -12,7 +12,7 @@
     // "sourceMap": true  (vi hadde denne før)
      "baseUrl": ".", // tillegg - vi hadde denne før
      "paths": { // tillegg
-        "~*": ["./*"], // vi brukte denne før: "~*": ["./*"]
+         "~src/*": ["./src/*"],// og denne"~*": ["./*"], // vi brukte denne før: "~*": ["./*"]
         "@styles/*": ["./src/styles/*"] // vi brukte denne før: "~*": ["./*"]
      },
     //  "typeRoots": ["./node_modules/@types", "./types"] (vi hadde denne før)
