@@ -102,7 +102,8 @@ export const ÅpneBehandlinger = () => {
                         return (
                             <div>
                                 <AntallBehandlinger
-                                    behandlingssammendrag={filterBehandlingssammendrag(sammendragMedId)}
+                                    filtrerteBehandlinger={filterBehandlingssammendrag(sammendragMedId)}
+                                    alleBehandligner={sammendragMedId}
                                 />
                                 <BehandlingssammendragTabell
                                     tabelldata={filterBehandlingssammendrag(sammendragMedId)}

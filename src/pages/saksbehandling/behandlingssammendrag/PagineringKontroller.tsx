@@ -1,4 +1,5 @@
-import { HStack, Pagination } from '~node_modules/@navikt/ds-react';
+import { HStack, Pagination } from '@navikt/ds-react';
+
 import { pagineringslisteverdier } from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';
 
 export interface Props {

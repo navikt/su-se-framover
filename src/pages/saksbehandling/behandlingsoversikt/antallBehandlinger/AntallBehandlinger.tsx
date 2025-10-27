@@ -9,11 +9,15 @@ const messages = {
     behandlinger: 'behandlinger',
 };
 
-const AntallBehandlinger = (args: { behandlingssammendrag: BehandlingssammendragMedId[] }) => {
+const AntallBehandlinger = (props: {
+    filtrerteBehandlinger: BehandlingssammendragMedId[];
+    alleBehandligner: BehandlingssammendragMedId[];
+}) => {
     const { formatMessage } = useI18n({ messages });
-    return args.behandlingssammendrag.length > 0 ? (
+    return props.filtrerteBehandlinger.length > 0 ? (
         <div className={styles.antallBehandlingerContainer}>
-            <Label>{args.behandlingssammendrag.length}</Label> <BodyShort>{formatMessage('behandlinger')}</BodyShort>
+            <Label>Viser {props.filtrerteBehandlinger.length}</Label>{' '}
+            <BodyShort>{`${formatMessage('behandlinger')} av totalt ${props.alleBehandligner.length}`}</BodyShort>
         </div>
     ) : null;
 };
