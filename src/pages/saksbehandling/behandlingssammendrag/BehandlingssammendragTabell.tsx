@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, HStack, Pagination, Table } from '@navikt/ds-react';
+import { Alert, Button, Table, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { PagineringKontroller } from '~src/pages/saksbehandling/behandlingssammendrag/PagineringKontroller';
 import { useAppDispatch } from '~src/redux/Store';
 import { BehandlingssammendragMedId } from '~src/types/Behandlingssammendrag';
 import { Sak } from '~src/types/Sak';
@@ -22,8 +23,7 @@ import messages from './Behandlingssammendrag-nb';
 import styles from './Behandlingssammendrag.module.less';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
-const DEFAULT_PAGINERING_SIZE = 10;
-const pagineringslisteverdier = [DEFAULT_PAGINERING_SIZE, 20, 30, 40, 50];
+export const DEFAULT_PAGINERING_SIZE = 10;
 const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragMedId[] }) => {
     const { formatMessage } = useI18n({ messages });
     const { Menu, contextMenuVariables, setContextMenuVariables } = ContextMenu();
@@ -48,76 +48,78 @@ const BehandlingssammendragTabell = (props: { tabelldata: BehandlingssammendragM
 
     return (
         <div>
-            <HStack gap="4" justify="center" align="center">
-                <Pagination page={side} onPageChange={setSide} count={antallSider} size="small" />
-                <select
-                    value={oppgaverPerSide}
-                    onChange={(e) => {
-                        const antallOppgaverPerSide = Number(e.target.value);
-                        setOppgaverPerSide(antallOppgaverPerSide);
+            <VStack gap="4">
+                <PagineringKontroller
+                    side={side}
+                    setSide={setSide}
+                    antallSider={antallSider}
+                    oppgaverPerSide={oppgaverPerSide}
+                    setOppgaverPerSide={setOppgaverPerSide}
+                />
+                <SuTabell
+                    kolonnerConfig={{
+                        kolonner: BehandlingssammendragKolonne,
+                        defaultKolonneSorteresEtter: BehandlingssammendragKolonne.behandlingStartet,
                     }}
-                    title="Antall oppgaver som vises"
-                >
-                    {pagineringslisteverdier.map((rowsPerPage) => (
-                        <option key={rowsPerPage} value={rowsPerPage}>
-                            Vis {rowsPerPage} oppgaver
-                        </option>
-                    ))}
-                </select>
-            </HStack>
-            <SuTabell
-                kolonnerConfig={{
-                    kolonner: BehandlingssammendragKolonne,
-                    defaultKolonneSorteresEtter: BehandlingssammendragKolonne.behandlingStartet,
-                }}
-                tableHeader={() => (
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.ColumnHeader sortKey="sakType" sortable>
-                                {formatMessage('sak.saktype')}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader sortKey="saksnummer" sortable>
-                                {formatMessage('sak.saksnummer')}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader sortKey="typeBehandling" sortable>
-                                {formatMessage('behandlingssammendrag.typeBehandling')}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader sortKey="status" sortable>
-                                {formatMessage('behandlingssammendrag.status')}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader sortKey="periode" sortable>
-                                {formatMessage('behandlingssammendrag.periode')}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader sortKey="behandlingStartet" sortable>
-                                {formatMessage('behandlingssammendrag.behandling.startet')}
-                            </Table.ColumnHeader>
-                            <Table.HeaderCell />
-                        </Table.Row>
-                    </Table.Header>
+                    tableHeader={() => (
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.ColumnHeader sortKey="sakType" sortable>
+                                    {formatMessage('sak.saktype')}
+                                </Table.ColumnHeader>
+                                <Table.ColumnHeader sortKey="saksnummer" sortable>
+                                    {formatMessage('sak.saksnummer')}
+                                </Table.ColumnHeader>
+                                <Table.ColumnHeader sortKey="typeBehandling" sortable>
+                                    {formatMessage('behandlingssammendrag.typeBehandling')}
+                                </Table.ColumnHeader>
+                                <Table.ColumnHeader sortKey="status" sortable>
+                                    {formatMessage('behandlingssammendrag.status')}
+                                </Table.ColumnHeader>
+                                <Table.ColumnHeader sortKey="periode" sortable>
+                                    {formatMessage('behandlingssammendrag.periode')}
+                                </Table.ColumnHeader>
+                                <Table.ColumnHeader sortKey="behandlingStartet" sortable>
+                                    {formatMessage('behandlingssammendrag.behandling.startet')}
+                                </Table.ColumnHeader>
+                                <Table.HeaderCell />
+                            </Table.Row>
+                        </Table.Header>
+                    )}
+                    tableBody={(sortertKolonne, sortVerdi) => {
+                        paginerteOppgaver = sortTabell(props.tabelldata, sortertKolonne, sortVerdi);
+                        paginerteOppgaver = paginerteOppgaver.slice(
+                            (side - 1) * oppgaverPerSide,
+                            side * oppgaverPerSide,
+                        );
+                        return (
+                            <Table.Body>
+                                {paginerteOppgaver.map((behandlingssammendrag) => (
+                                    <BehandlingssamendragTableRow
+                                        key={`${behandlingssammendrag.id}${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
+                                        behandlingssammendrag={behandlingssammendrag}
+                                        setContextMenuVariables={setContextMenuVariables}
+                                    />
+                                ))}
+                            </Table.Body>
+                        );
+                    }}
+                />
+                {contextMenuVariables.toggled && (
+                    <Menu>
+                        <button onClick={() => contextMenuVariables.onMenuClick?.()}>
+                            {formatMessage('sak.åpneINyFane')}
+                        </button>
+                    </Menu>
                 )}
-                tableBody={(sortertKolonne, sortVerdi) => {
-                    paginerteOppgaver = sortTabell(props.tabelldata, sortertKolonne, sortVerdi);
-                    paginerteOppgaver = paginerteOppgaver.slice((side - 1) * oppgaverPerSide, side * oppgaverPerSide);
-                    return (
-                        <Table.Body>
-                            {paginerteOppgaver.map((behandlingssammendrag) => (
-                                <BehandlingssamendragTableRow
-                                    key={`${behandlingssammendrag.id}${behandlingssammendrag.saksnummer}${behandlingssammendrag.sakType}${behandlingssammendrag.typeBehandling}${behandlingssammendrag.status}`}
-                                    behandlingssammendrag={behandlingssammendrag}
-                                    setContextMenuVariables={setContextMenuVariables}
-                                />
-                            ))}
-                        </Table.Body>
-                    );
-                }}
-            />
-            {contextMenuVariables.toggled && (
-                <Menu>
-                    <button onClick={() => contextMenuVariables.onMenuClick?.()}>
-                        {formatMessage('sak.åpneINyFane')}
-                    </button>
-                </Menu>
-            )}
+                <PagineringKontroller
+                    side={side}
+                    setSide={setSide}
+                    antallSider={antallSider}
+                    oppgaverPerSide={oppgaverPerSide}
+                    setOppgaverPerSide={setOppgaverPerSide}
+                />
+            </VStack>
         </div>
     );
 };
