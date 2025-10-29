@@ -21,8 +21,8 @@ import {
     KlageSteg,
     KlageVurderingType,
     Omgjør,
-    Oppretthold,
-    OpprettholdVedtakHjemmel,
+    OversendelseKabal,
+    KabalVedtakHjemmel,
     Utfall,
     VedtattUtfall,
 } from '~src/types/Klage';
@@ -42,7 +42,8 @@ export interface VurderingRequest {
     sakId: string;
     klageId: string;
     omgjør: Nullable<Omgjør>;
-    oppretthold: Nullable<Oppretthold>;
+    oppretthold: Nullable<OversendelseKabal>;
+    delvisomgjøringKa: Nullable<OversendelseKabal>;
     fritekstTilBrev: Nullable<string>;
 }
 
@@ -145,16 +146,29 @@ export const erKlageOmgjort = (
 } => {
     return k.vedtaksvurdering?.type === KlageVurderingType.OMGJØR;
 };
+
 export const erKlageOpprettholdt = (
     k: Klage,
 ): k is Klage & {
     vedtaksvurdering: {
         type: KlageVurderingType.OPPRETTHOLD;
         omgjør: null;
-        oppretthold: { hjemler: OpprettholdVedtakHjemmel[] };
+        oppretthold: { hjemler: KabalVedtakHjemmel[] };
     };
 } => {
     return k.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD;
+};
+
+export const erKlageDelvisOmgjortKA = (
+    k: Klage,
+): k is Klage & {
+    vedtaksvurdering: {
+        type: KlageVurderingType.DELVIS_OMGJØRING_KA;
+        omgjør: null;
+        oppretthold: { hjemler: KabalVedtakHjemmel[] };
+    };
+} => {
+    return k.vedtaksvurdering?.type === KlageVurderingType.DELVIS_OMGJØRING_KA;
 };
 
 export const hentSisteVurderteSteg = (k: Klage) => {

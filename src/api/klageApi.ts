@@ -51,6 +51,7 @@ export async function lagreVurderingAvKlage(arg: VurderingRequest): Promise<ApiC
         body: {
             omgjør: arg.omgjør,
             oppretthold: arg.oppretthold,
+            delvisomgjøringKa: arg.delvisomgjøringKa,
             fritekstTilBrev: arg.fritekstTilBrev,
         },
     });
