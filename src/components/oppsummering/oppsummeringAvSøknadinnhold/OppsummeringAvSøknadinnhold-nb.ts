@@ -17,7 +17,7 @@ export default {
     'uføre.vedtakOmUføretrygd': 'Har du fått vedtak om uføretrygd?',
     'flyktning.registrertSomFlyktning': 'Er du registrert som flyktning?',
 
-    'alderspensjon.søktOmAlderspensjon': 'Har du søkt om alderspensjon og fått svar på søknaden?',
+    'alderspensjon.søktOmAlderspensjon': 'Har du søkt om 100% alderspensjon og fått svar på søknaden?',
     'familiegjenforening.komTilNorgePgaFamiliegjenforening':
         'Kom du til Norge på grunn av familiegjenforening med barn, barnebarn, nevø eller niese, og fikk oppholdstillatelse med krav til underhold?',
 
