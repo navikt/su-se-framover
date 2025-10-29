@@ -23,7 +23,7 @@ export const VurderInfo = (props: { klage: Klage }) => {
                     retning={'vertikal'}
                 />
 
-                {erKlageOmgjort(props.klage) ? (
+                {erKlageOmgjort(props.klage) && (
                     <>
                         <OppsummeringPar
                             label={formatMessage('form.omgjørVedtak.årsak.label')}
@@ -36,7 +36,8 @@ export const VurderInfo = (props: { klage: Klage }) => {
                             retning={'vertikal'}
                         />
                     </>
-                ) : erKlageOpprettholdt(props.klage) || erKlageDelvisOmgjortKA(props.klage) ? (
+                )}
+                {erKlageOpprettholdt(props.klage) && (
                     <div>
                         <Label>{formatMessage('form.oversendelseKa.hjemmel.label')}</Label>
                         <div className={styles.hjemlerContainer}>
@@ -50,7 +51,22 @@ export const VurderInfo = (props: { klage: Klage }) => {
                             </Textarea>
                         </div>
                     </div>
-                ) : null}
+                )}
+                {erKlageDelvisOmgjortKA(props.klage) && (
+                    <div>
+                        <Label>{formatMessage('form.oversendelseKa.hjemmel.label')}</Label>
+                        <div className={styles.hjemlerContainer}>
+                            {props.klage.vedtaksvurdering.delvisOmgjøringKa.hjemler.map((hjemel) => (
+                                <BodyShort key={hjemel}>{formatMessage(hjemel)}</BodyShort>
+                            ))}
+                        </div>
+                        <div>
+                            <Textarea resize readOnly label={formatMessage('klagenotat.info')} maxRows={10}>
+                                {props.klage.vedtaksvurdering.delvisOmgjøringKa.klagenotat}
+                            </Textarea>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

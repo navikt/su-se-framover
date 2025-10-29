@@ -153,7 +153,7 @@ export const erKlageOpprettholdt = (
     vedtaksvurdering: {
         type: KlageVurderingType.OPPRETTHOLD;
         omgjør: null;
-        oppretthold: { hjemler: KabalVedtakHjemmel[] };
+        oppretthold: { hjemler: KabalVedtakHjemmel[]; klagenotat: Nullable<string> };
     };
 } => {
     return k.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD;
@@ -165,7 +165,7 @@ export const erKlageDelvisOmgjortKA = (
     vedtaksvurdering: {
         type: KlageVurderingType.DELVIS_OMGJØRING_KA;
         omgjør: null;
-        oppretthold: { hjemler: KabalVedtakHjemmel[] };
+        delvisOmgjøringKa: { hjemler: KabalVedtakHjemmel[]; klagenotat: Nullable<string> };
     };
 } => {
     return k.vedtaksvurdering?.type === KlageVurderingType.DELVIS_OMGJØRING_KA;
