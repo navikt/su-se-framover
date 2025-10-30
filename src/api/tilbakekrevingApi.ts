@@ -31,18 +31,6 @@ export async function opprettNyTilbakekrevingsbehandling(
     });
 }
 
-export async function opprettNyTilbakekrevingsbehandlingUtenKravrunnlag(
-    arg: OpprettNyTilbakekrevingsbehandlingRequest,
-): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
-    return apiClient({
-        url: `/saker/${arg.sakId}/tilbakekreving/uten_kravgrunnlag`,
-        method: 'POST',
-        body: {
-            versjon: arg.versjon,
-        },
-    });
-}
-
 export async function vurderTilbakekrevingsbehandling(
     arg: VurderTilbakekrevingsbehandlingRequest,
 ): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {

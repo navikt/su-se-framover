@@ -5,10 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
-import {
-    opprettNyTilbakekrevingsbehandling,
-    opprettNyTilbakekrevingsbehandlingUtenKravgrunnlag,
-} from '~src/features/TilbakekrevingActions';
+import { opprettNyTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
@@ -36,15 +33,11 @@ const OpprettTilbakekreving = (props: {
             </div>
 
             <div className={styles.mainContentContainer}>
-                {props.uteståendeKravgrunnlag ? (
-                    <KanTilbakekreves
-                        sakId={props.sakId}
-                        saksversjon={props.sakVersjon}
-                        kravgrunnlag={props.uteståendeKravgrunnlag}
-                    />
-                ) : (
-                    <UtenKravgrunnlag sakId={props.sakId} saksversjon={props.sakVersjon} />
-                )}
+                <KanTilbakekreves
+                    sakId={props.sakId}
+                    saksversjon={props.sakVersjon}
+                    kravgrunnlag={props.uteståendeKravgrunnlag}
+                />
             </div>
         </div>
     );
@@ -100,7 +93,7 @@ const OpprettTilbakekreving = (props: {
 //     );
 // };
 
-const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunnlag: Kravgrunnlag }) => {
+const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunnlag: Nullable<Kravgrunnlag> }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     //kommenterer ut annuller siden vi må prodsette noen endringer. Funksjonaliteten fungerer ikke i backend enda heller
@@ -125,10 +118,17 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                 borderRadius="small"
                 className={styles.panelContentContainer}
             >
-                <div>
-                    <Heading size="medium">{formatMessage('opprettelse.kanTilbakekreves.heading')}</Heading>
-                    <Heading size="small">{formatMessage('opprettelse.kanTilbakekreves.text')}</Heading>
-                </div>
+                {props.kravgrunnlag ? (
+                    <div>
+                        <Heading size="medium">{formatMessage('opprettelse.kanTilbakekreves.heading')}</Heading>
+                        <Heading size="small">{formatMessage('opprettelse.kanTilbakekreves.text')}</Heading>
+                    </div>
+                ) : (
+                    <div>
+                        <Heading size="medium">{formatMessage('opprettelse.utenKravrunnlag.heading')}</Heading>
+                        <Heading size="small">{formatMessage('opprettelse.utenKravrunnlag.text')}</Heading>
+                    </div>
+                )}
 
                 <div className={styles.knappContainer}>
                     {/* <Button variant="secondary" onClick={() => setVilAnnulere(true)}>
@@ -160,55 +160,6 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                 {RemoteData.isFailure(opprettStatus) && <ApiErrorAlert error={opprettStatus.error} />}
             </Box>
             <OppsummeringAvKravgrunnlag kravgrunnlag={props.kravgrunnlag} medPanel={{}} />
-        </>
-    );
-};
-
-const UtenKravgrunnlag = (props: { sakId: string; saksversjon: number }) => {
-    const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages });
-    const [opprettStatus, opprett] = useAsyncActionCreator(opprettNyTilbakekrevingsbehandlingUtenKravgrunnlag);
-
-    return (
-        <>
-            <Box
-                background={'bg-default'}
-                padding="4"
-                borderWidth="1"
-                borderRadius="small"
-                className={styles.panelContentContainer}
-            >
-                <div>
-                    <Heading size="medium">{formatMessage('opprettelse.uten.kravrunnlag.heading')}</Heading>
-                    <Heading size="small">{formatMessage('opprettelse.uten.kravrunnlag.text')}</Heading>
-                </div>
-
-                <div className={styles.knappContainer}>
-                    <Button
-                        loading={RemoteData.isPending(opprettStatus)}
-                        onClick={() =>
-                            opprett({ sakId: props.sakId, versjon: props.saksversjon }, (res) => {
-                                navigate(
-                                    routes.tilbakekrevingValgtBehandling.createURL({
-                                        sakId: props.sakId,
-                                        behandlingId: res.id,
-                                        steg: TilbakekrevingSteg.Forhåndsvarsling,
-                                    }),
-                                );
-                            })
-                        }
-                    >
-                        {formatMessage('opprettelse.uten.kravrunnlag.ny')}
-                    </Button>
-                    <LinkAsButton
-                        variant="tertiary"
-                        href={routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
-                    >
-                        {formatMessage('knapp.tilbake')}
-                    </LinkAsButton>
-                </div>
-                {RemoteData.isFailure(opprettStatus) && <ApiErrorAlert error={opprettStatus.error} />}
-            </Box>
         </>
     );
 };

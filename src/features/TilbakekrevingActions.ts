@@ -33,21 +33,6 @@ export const opprettNyTilbakekrevingsbehandling = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const opprettNyTilbakekrevingsbehandlingUtenKravgrunnlag = createAsyncThunk<
-    ManuellTilbakekrevingsbehandling,
-    OpprettNyTilbakekrevingsbehandlingRequest,
-    { rejectValue: ApiError }
->('tilbakekreving/opprett', async ({ sakId, versjon: saksversjon }, thunkApi) => {
-    const res = await tilbakekrevingsApi.opprettNyTilbakekrevingsbehandlingUtenKravrunnlag({
-        sakId,
-        versjon: saksversjon,
-    });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 export const vurderTilbakekrevingsbehandling = createAsyncThunk<
     ManuellTilbakekrevingsbehandling,
     VurderTilbakekrevingsbehandlingRequest,

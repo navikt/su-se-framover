@@ -10,12 +10,8 @@ export default {
     'opprettelse.kanTilbakekreves.heading': 'Saken har en aktiv kravgrunnlag som kan tilbakekreves',
     'opprettelse.kanTilbakekreves.text': 'Du kan starte en ny tilbakekrevingsbehandling',
 
-    'opprettelse.kanIkkeTilbakekreves.heading': 'Kan ikke tilbakekreves',
-    'opprettelse.kanIkkeTilbakekreves.text': 'Saken har ikke en aktiv kravgrunnlag som kan tilbakekreves.',
-
-    'opprettelse.uten.kravrunnlag.ny': 'Start tilbakekrevingsbehandling',
-    'opprettelse.uten.kravrunnlag.heading': 'Saken har en ingen aktiv kravgrunnlag som kan tilbakekreves',
-    'opprettelse.uten.kravrunnlag.text': 'Du kan starte en ny tilbakekrevingsbehandling for å forhåndsvarsle',
+    'opprettelse.utenKravrunnlag.heading': 'Saken har en ingen aktiv kravgrunnlag som kan tilbakekreves',
+    'opprettelse.utenKravrunnlag.text': 'Du kan starte en ny tilbakekrevingsbehandling for å forhåndsvarsle',
 
     'vurderTilbakekreving.tittel': 'Vurdering av kravgrunnlag',
     'vurderTilbakekreving.skalBeløpBliTilbakekrevd': 'Skal beløpet tilbakekreves?',
