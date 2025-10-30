@@ -73,7 +73,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
         .required()
         .oneOf(
             [KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD, KlageVurderingType.DELVIS_OMGJØRING_KA],
-            'Feltet må være "Omgjør", eller "Oppretthold"',
+            'Feltet må være "Omgjør", "Oppretthold" eller delvis omgjøring',
         ),
     omgjør: yup
         .object<OmgjørFormData>()
