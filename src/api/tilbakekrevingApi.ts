@@ -15,7 +15,6 @@ import {
     BehandlingsnotatTilbakekrevingRequest,
     AnnullerKravgunnlagTilbakekrevingRequest,
     AnnullerKravgrunnlagTilbakekrevingResponse,
-    TilbakekrevingsbehandlingUtenKravgrunnlag,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -34,7 +33,7 @@ export async function opprettNyTilbakekrevingsbehandling(
 
 export async function opprettNyTilbakekrevingsbehandlingUtenKravrunnlag(
     arg: OpprettNyTilbakekrevingsbehandlingRequest,
-): Promise<ApiClientResult<TilbakekrevingsbehandlingUtenKravgrunnlag>> {
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
     return apiClient({
         url: `/saker/${arg.sakId}/tilbakekreving/uten_kravgrunnlag`,
         method: 'POST',

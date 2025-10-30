@@ -7,6 +7,7 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
+import { Nullable } from '~src/lib/types.ts';
 import { Kravgrunnlag, Grunnlagsperiode } from '~src/types/Kravgrunnlag';
 import { formatDate, formatMonthYear } from '~src/utils/date/dateUtils';
 
@@ -16,7 +17,7 @@ import messages from './OppsummeringAvKravgrunnlag-nb';
 import styles from './OppsummeringAvKravgrunnlag.module.less';
 
 const OppsummeringAvKravgrunnlag = (props: {
-    kravgrunnlag?: Kravgrunnlag;
+    kravgrunnlag: Nullable<Kravgrunnlag>;
     basicBareMetaInfo?: { medTittel?: boolean };
     basicHeleKravgrunnlag?: { medTittel?: boolean };
     medPanel?: {

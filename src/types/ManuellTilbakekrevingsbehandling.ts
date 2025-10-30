@@ -9,25 +9,7 @@ export interface ManuellTilbakekrevingsbehandling {
     sakId: string;
     opprettet: string;
     opprettetAv: string;
-    kravgrunnlag: Kravgrunnlag; // TODO
-    status: TilbakekrevingsbehandlingStatus;
-    vurderinger: Nullable<VurderingMedKrav>;
-    forhåndsvarselsInfo: ForhåndsvarselsInfo[];
-    fritekst: Nullable<string>;
-    versjon: number;
-    sendtTilAttesteringAv: Nullable<string>;
-    attesteringer: Attestering[];
-    erKravgrunnlagUtdatert: boolean;
-    avsluttetTidspunkt: string;
-    notat: Nullable<string>;
-}
-
-// TODO nødvendig?? Heller gjøre den andre sin kravgrunnlag nullable?
-export interface TilbakekrevingsbehandlingUtenKravgrunnlag {
-    id: string;
-    sakId: string;
-    opprettet: string;
-    opprettetAv: string;
+    kravgrunnlag: Nullable<Kravgrunnlag>;
     status: TilbakekrevingsbehandlingStatus;
     vurderinger: Nullable<VurderingMedKrav>;
     forhåndsvarselsInfo: ForhåndsvarselsInfo[];
