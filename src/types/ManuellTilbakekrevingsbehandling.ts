@@ -9,7 +9,25 @@ export interface ManuellTilbakekrevingsbehandling {
     sakId: string;
     opprettet: string;
     opprettetAv: string;
-    kravgrunnlag: Kravgrunnlag;
+    kravgrunnlag: Kravgrunnlag; // TODO
+    status: TilbakekrevingsbehandlingStatus;
+    vurderinger: Nullable<VurderingMedKrav>;
+    forhåndsvarselsInfo: ForhåndsvarselsInfo[];
+    fritekst: Nullable<string>;
+    versjon: number;
+    sendtTilAttesteringAv: Nullable<string>;
+    attesteringer: Attestering[];
+    erKravgrunnlagUtdatert: boolean;
+    avsluttetTidspunkt: string;
+    notat: Nullable<string>;
+}
+
+// TODO nødvendig?? Heller gjøre den andre sin kravgrunnlag nullable?
+export interface TilbakekrevingsbehandlingUtenKravgrunnlag {
+    id: string;
+    sakId: string;
+    opprettet: string;
+    opprettetAv: string;
     status: TilbakekrevingsbehandlingStatus;
     vurderinger: Nullable<VurderingMedKrav>;
     forhåndsvarselsInfo: ForhåndsvarselsInfo[];
@@ -29,6 +47,7 @@ export interface ForhåndsvarselsInfo {
 
 export enum TilbakekrevingsbehandlingStatus {
     OPPRETTET = 'OPPRETTET',
+    OPPRETTET_UTEN_KRAVGRUNNLAG = 'OPPRETTET_UTEN_KRAVGRUNNLAG',
     FORHÅNDSVARSLET = 'FORHÅNDSVARSLET',
     VURDERT = 'VURDERT',
     VEDTAKSBREV = 'VEDTAKSBREV',
@@ -137,6 +156,7 @@ export interface UnderkjennTilbakekrevingRequest {
     kommentar: string;
     grunn: UnderkjennelseGrunnTilbakekreving;
 }
+
 export interface AvsluttTilbakekrevingRequest {
     versjon: number;
     sakId: string;
@@ -149,17 +169,20 @@ export interface OppdaterKravgrunnlagTilbakekrevingRequest {
     behandlingId: string;
     versjon: number;
 }
+
 export interface BehandlingsnotatTilbakekrevingRequest {
     sakId: string;
     behandlingId: string;
     versjon: number;
     notat: Nullable<string>;
 }
+
 export interface AnnullerKravgunnlagTilbakekrevingRequest {
     sakId: string;
     kravgrunnlagHendelseId: string;
     versjon: number;
 }
+
 export interface AnnullerKravgrunnlagTilbakekrevingResponse {
     uteståendeKravgrunnlag: Nullable<Kravgrunnlag>;
     tilbakekrevingsbehandling: Nullable<ManuellTilbakekrevingsbehandling>;

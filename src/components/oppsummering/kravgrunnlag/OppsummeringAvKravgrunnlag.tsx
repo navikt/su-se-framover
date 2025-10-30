@@ -16,7 +16,7 @@ import messages from './OppsummeringAvKravgrunnlag-nb';
 import styles from './OppsummeringAvKravgrunnlag.module.less';
 
 const OppsummeringAvKravgrunnlag = (props: {
-    kravgrunnlag: Kravgrunnlag;
+    kravgrunnlag?: Kravgrunnlag;
     basicBareMetaInfo?: { medTittel?: boolean };
     basicHeleKravgrunnlag?: { medTittel?: boolean };
     medPanel?: {
@@ -27,6 +27,9 @@ const OppsummeringAvKravgrunnlag = (props: {
     kompakt?: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    if (props.kravgrunnlag == null) {
+        return <Heading size={'medium'}>Det er ikke mottatt kravgrunnlag</Heading>;
+    }
 
     if (props.basicBareMetaInfo) {
         return (

@@ -1,11 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Box, Button, Heading, Panel } from '@navikt/ds-react';
+import { Box, Button, Heading } from '@navikt/ds-react';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
-import { opprettNyTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
+import {
+    opprettNyTilbakekrevingsbehandling,
+    opprettNyTilbakekrevingsbehandlingUtenKravgrunnlag,
+} from '~src/features/TilbakekrevingActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
@@ -40,7 +43,7 @@ const OpprettTilbakekreving = (props: {
                         kravgrunnlag={props.uteståendeKravgrunnlag}
                     />
                 ) : (
-                    <KanIkkeTilbakekreves sakId={props.sakId} />
+                    <UtenKravgrunnlag sakId={props.sakId} saksversjon={props.sakVersjon} />
                 )}
             </div>
         </div>
@@ -161,19 +164,52 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
     );
 };
 
-const KanIkkeTilbakekreves = (props: { sakId: string }) => {
+const UtenKravgrunnlag = (props: { sakId: string; saksversjon: number }) => {
+    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
-    return (
-        <Panel border className={styles.panelContentContainer}>
-            <div>
-                <Heading size="medium">{formatMessage('opprettelse.kanIkkeTilbakekreves.heading')}</Heading>
-                <Heading size="small">{formatMessage('opprettelse.kanIkkeTilbakekreves.text')}</Heading>
-            </div>
+    const [opprettStatus, opprett] = useAsyncActionCreator(opprettNyTilbakekrevingsbehandlingUtenKravgrunnlag);
 
-            <LinkAsButton variant="secondary" href={routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
-                {formatMessage('knapp.tilbake')}
-            </LinkAsButton>
-        </Panel>
+    return (
+        <>
+            <Box
+                background={'bg-default'}
+                padding="4"
+                borderWidth="1"
+                borderRadius="small"
+                className={styles.panelContentContainer}
+            >
+                <div>
+                    <Heading size="medium">{formatMessage('opprettelse.uten.kravrunnlag.heading')}</Heading>
+                    <Heading size="small">{formatMessage('opprettelse.uten.kravrunnlag.text')}</Heading>
+                </div>
+
+                <div className={styles.knappContainer}>
+                    <Button
+                        loading={RemoteData.isPending(opprettStatus)}
+                        onClick={() =>
+                            opprett({ sakId: props.sakId, versjon: props.saksversjon }, (res) => {
+                                navigate(
+                                    routes.tilbakekrevingValgtBehandling.createURL({
+                                        sakId: props.sakId,
+                                        behandlingId: res.id,
+                                        steg: TilbakekrevingSteg.Forhåndsvarsling,
+                                    }),
+                                );
+                            })
+                        }
+                    >
+                        {formatMessage('opprettelse.uten.kravrunnlag.ny')}
+                    </Button>
+                    <LinkAsButton
+                        variant="tertiary"
+                        href={routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+                    >
+                        {formatMessage('knapp.tilbake')}
+                    </LinkAsButton>
+                </div>
+                {RemoteData.isFailure(opprettStatus) && <ApiErrorAlert error={opprettStatus.error} />}
+            </Box>
+        </>
     );
 };
 

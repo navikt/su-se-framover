@@ -16,6 +16,7 @@ const Navigasjonsknapper = (props: {
         loading?: boolean;
         tekst?: string;
         onClick?: () => void;
+        disabled?: boolean;
     };
     tilbake?: {
         url?: string;
@@ -68,6 +69,7 @@ const Navigasjonsknapper = (props: {
                     }}
                     type={props.neste?.onClick ? 'button' : 'submit'}
                     loading={knappTrykket === 'neste' && props.neste?.loading}
+                    disabled={props.neste?.disabled}
                 >
                     {props.neste?.tekst ? props.neste?.tekst : formatMessage('knapp.neste')}
                 </Button>
