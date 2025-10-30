@@ -72,7 +72,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
         .defined()
         .required()
         .oneOf(
-            [KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD],
+            [KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD, KlageVurderingType.DELVIS_OMGJØRING_KA],
             'Feltet må være "Omgjør", eller "Oppretthold"',
         ),
     omgjør: yup
@@ -90,7 +90,8 @@ const schema = yup.object<VurderingAvKlageFormData>({
         .object<KabalData>()
         .defined()
         .when('klageVurderingType', {
-            is: KlageVurderingType.OPPRETTHOLD,
+            is: (val: KlageVurderingType | null) =>
+                val === KlageVurderingType.OPPRETTHOLD || val === KlageVurderingType.DELVIS_OMGJØRING_KA,
             then: yup.object<KabalData>({
                 hjemmel: yup.array<KabalVedtakHjemmel>().required(),
                 klagenotat: yup.string(),
@@ -258,7 +259,10 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         );
     }
 
-    const ikkeMedhold = watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD;
+    const klageVurderingTypeWatch = watch('klageVurderingType');
+    const ikkeMedhold =
+        klageVurderingTypeWatch === KlageVurderingType.OPPRETTHOLD ||
+        klageVurderingTypeWatch === KlageVurderingType.DELVIS_OMGJØRING_KA;
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -290,7 +294,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             />
                         </div>
 
-                        {watch('klageVurderingType') === KlageVurderingType.OMGJØR && (
+                        {klageVurderingTypeWatch === KlageVurderingType.OMGJØR && (
                             <OmgjørVedtakForm control={control} />
                         )}
                         {ikkeMedhold && (
