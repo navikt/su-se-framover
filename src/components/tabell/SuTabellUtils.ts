@@ -136,6 +136,7 @@ export const getDataCellInfo = (b: TabellBehandling): DataCellInfo => {
             status: (() => {
                 switch (b.status) {
                     case 'OPPRETTET':
+                    case 'OPPRETTET_UTEN_KRAVGRUNNLAG':
                         return 'Opprettet';
                     case 'FORHÅNDSVARSLET':
                         return 'Forhåndsvarslet';

@@ -65,6 +65,7 @@ export default {
     'datacell.status.-': '-',
     'datacell.status.nySøknad': 'Ny søknad',
     'datacell.status.Opprettet': 'Opprettet',
+    'datacell.status.Venter på kravgrunnlag': 'Venter på kravgrunnlag',
     'datacell.status.Vilkårsvurdert': 'Vilkårsvurdert',
     'datacell.status.Beregnet': 'Beregnet',
     'datacell.status.Simulert': 'Simulert',

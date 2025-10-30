@@ -133,6 +133,8 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                     tekst: form.watch('skalForhåndsvarsle')
                                         ? formatMessage('forhåndsvarsleTilbakekreving.navigering.sendOgFortsett')
                                         : undefined,
+                                    disabled:
+                                        props.tilbakekreving.kravgrunnlag == null && !form.watch('skalForhåndsvarsle'),
                                 }}
                                 fortsettSenere={{
                                     tekst: formatMessage('forhåndsvarsleTilbakekreving.navigering.fortsettSenere'),
