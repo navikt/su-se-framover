@@ -16,13 +16,12 @@ import {
     Klage,
     KlageErUnderskrevet,
     KlageInnenforFristen,
-    KlageMedOppretthold,
     KlageStatus,
     KlageSteg,
     KlageVurderingType,
     Omgjør,
-    Oppretthold,
-    OpprettholdVedtakHjemmel,
+    OversendelseKabal,
+    KabalVedtakHjemmel,
     Utfall,
     VedtattUtfall,
 } from '~src/types/Klage';
@@ -42,7 +41,8 @@ export interface VurderingRequest {
     sakId: string;
     klageId: string;
     omgjør: Nullable<Omgjør>;
-    oppretthold: Nullable<Oppretthold>;
+    oppretthold: Nullable<OversendelseKabal>;
+    delvisomgjøringKa: Nullable<OversendelseKabal>;
     fritekstTilBrev: Nullable<string>;
 }
 
@@ -85,8 +85,10 @@ export const erKlageOversendt = (k: Klage): boolean => k.status === KlageStatus.
 export const klageErOversendtEllerFerdigstilt = (k: Klage): boolean =>
     k.status === KlageStatus.OVERSENDT || k.status === KlageStatus.FERDIGSTILT_OMGJORT;
 
-export const erKlageOversendtUtfylt = (k: Klage): k is KlageMedOppretthold =>
-    k.status === KlageStatus.OVERSENDT && k.vedtaksvurdering !== null && k.vedtaksvurdering.oppretthold !== null;
+export const erKlageOversendtUtfylt = (k: Klage) =>
+    k.status === KlageStatus.OVERSENDT &&
+    k.vedtaksvurdering !== null &&
+    (erKlageOpprettholdt(k) || erKlageDelvisOmgjortKA(k));
 
 export const erKlageIverksattAvvist = (k: Klage) => k.status === KlageStatus.IVERKSATT_AVVIST;
 
@@ -141,6 +143,7 @@ export const erKlageOmgjort = (
             begrunnelse: string;
         };
         oppretthold: null;
+        delvisOmgjøringKa: null;
     };
 } => {
     return k.vedtaksvurdering?.type === KlageVurderingType.OMGJØR;
@@ -151,10 +154,24 @@ export const erKlageOpprettholdt = (
     vedtaksvurdering: {
         type: KlageVurderingType.OPPRETTHOLD;
         omgjør: null;
-        oppretthold: { hjemler: OpprettholdVedtakHjemmel[] };
+        delvisOmgjøringKa: null;
+        oppretthold: { hjemler: KabalVedtakHjemmel[]; klagenotat: Nullable<string> };
     };
 } => {
     return k.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD;
+};
+
+export const erKlageDelvisOmgjortKA = (
+    k: Klage,
+): k is Klage & {
+    vedtaksvurdering: {
+        type: KlageVurderingType.DELVIS_OMGJØRING_KA;
+        omgjør: null;
+        oppretthold: null;
+        delvisOmgjøringKa: { hjemler: KabalVedtakHjemmel[]; klagenotat: Nullable<string> };
+    };
+} => {
+    return k.vedtaksvurdering?.type === KlageVurderingType.DELVIS_OMGJØRING_KA;
 };
 
 export const hentSisteVurderteSteg = (k: Klage) => {

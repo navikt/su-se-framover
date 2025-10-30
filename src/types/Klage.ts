@@ -27,20 +27,13 @@ export interface Klage {
     avsluttetBegrunnelse: Nullable<string>;
 }
 
-export interface KlageMedOppretthold extends Klage {
-    vedtaksvurdering: {
-        type: KlageVurderingType;
-        omgjør: Nullable<Omgjør>;
-        oppretthold: Oppretthold;
-    };
-}
-
 export interface FerdigstiltOmgjortKlage extends Klage {
     vedtakId: string;
     vedtaksvurdering: {
         type: KlageVurderingType;
         omgjør: Omgjør;
-        oppretthold: Nullable<Oppretthold>;
+        oppretthold: Nullable<OversendelseKabal>;
+        delvisOmgjøringKa: Nullable<OversendelseKabal>;
     };
 }
 
@@ -80,7 +73,8 @@ export enum KlageStatus {
 interface Vedtaksvurdering {
     type: KlageVurderingType;
     omgjør: Nullable<Omgjør>;
-    oppretthold: Nullable<Oppretthold>;
+    oppretthold: Nullable<OversendelseKabal>;
+    delvisOmgjøringKa: Nullable<OversendelseKabal>;
 }
 
 export interface Omgjør {
@@ -88,8 +82,8 @@ export interface Omgjør {
     begrunnelse: Nullable<string>;
 }
 
-export interface Oppretthold {
-    hjemler: OpprettholdVedtakHjemmel[];
+export interface OversendelseKabal {
+    hjemler: KabalVedtakHjemmel[];
     klagenotat: Nullable<string>;
 }
 
@@ -109,9 +103,10 @@ export type FremsattRettsligKlageinteresse = SvarMedBegrunnelse;
 export enum KlageVurderingType {
     OMGJØR = 'OMGJØR',
     OPPRETTHOLD = 'OPPRETTHOLD',
+    DELVIS_OMGJØRING_KA = 'DELVIS_OMGJØRING_KA',
 }
 
-export enum OpprettholdVedtakHjemmel {
+export enum KabalVedtakHjemmel {
     'SU_PARAGRAF_3' = 'SU_PARAGRAF_3',
     'SU_PARAGRAF_4' = 'SU_PARAGRAF_4',
     'SU_PARAGRAF_5' = 'SU_PARAGRAF_5',

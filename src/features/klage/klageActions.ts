@@ -72,12 +72,13 @@ export const bekreftFormkrav = createAsyncThunk<Klage, { sakId: string; klageId:
 
 export const lagreVurderingAvKlage = createAsyncThunk<Klage, VurderingRequest, { rejectValue: ApiError }>(
     'klage/lagreVurderingAvKlage',
-    async ({ sakId, klageId, omgjør, oppretthold, fritekstTilBrev }, thunkApi) => {
+    async ({ sakId, klageId, omgjør, oppretthold, delvisomgjøringKa, fritekstTilBrev }, thunkApi) => {
         const res = await klageApi.lagreVurderingAvKlage({
             sakId,
             klageId,
             omgjør,
             oppretthold,
+            delvisomgjøringKa,
             fritekstTilBrev,
         });
         if (res.status === 'ok') {

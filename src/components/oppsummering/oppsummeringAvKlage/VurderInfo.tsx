@@ -7,7 +7,7 @@ import { useI18n } from '~src/lib/i18n';
 import formkravMessages from '~src/pages/klage/vurderFormkrav/vurderFormkrav-nb';
 import vurderingMessages from '~src/pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
 import { Klage } from '~src/types/Klage';
-import { erKlageOmgjort, erKlageOpprettholdt } from '~src/utils/klage/klageUtils';
+import { erKlageDelvisOmgjortKA, erKlageOmgjort, erKlageOpprettholdt } from '~src/utils/klage/klageUtils';
 
 export const VurderInfo = (props: { klage: Klage }) => {
     const { formatMessage } = useI18n({
@@ -23,7 +23,7 @@ export const VurderInfo = (props: { klage: Klage }) => {
                     retning={'vertikal'}
                 />
 
-                {erKlageOmgjort(props.klage) ? (
+                {erKlageOmgjort(props.klage) && (
                     <>
                         <OppsummeringPar
                             label={formatMessage('form.omgjørVedtak.årsak.label')}
@@ -36,9 +36,10 @@ export const VurderInfo = (props: { klage: Klage }) => {
                             retning={'vertikal'}
                         />
                     </>
-                ) : erKlageOpprettholdt(props.klage) ? (
+                )}
+                {erKlageOpprettholdt(props.klage) && (
                     <div>
-                        <Label>{formatMessage('form.opprettholdVedtak.hjemmel.label')}</Label>
+                        <Label>{formatMessage('form.oversendelseKa.hjemmel.label')}</Label>
                         <div className={styles.hjemlerContainer}>
                             {props.klage.vedtaksvurdering.oppretthold.hjemler.map((hjemel) => (
                                 <BodyShort key={hjemel}>{formatMessage(hjemel)}</BodyShort>
@@ -50,7 +51,22 @@ export const VurderInfo = (props: { klage: Klage }) => {
                             </Textarea>
                         </div>
                     </div>
-                ) : null}
+                )}
+                {erKlageDelvisOmgjortKA(props.klage) && (
+                    <div>
+                        <Label>{formatMessage('form.oversendelseKa.hjemmel.label')}</Label>
+                        <div className={styles.hjemlerContainer}>
+                            {props.klage.vedtaksvurdering.delvisOmgjøringKa.hjemler.map((hjemel) => (
+                                <BodyShort key={hjemel}>{formatMessage(hjemel)}</BodyShort>
+                            ))}
+                        </div>
+                        <div>
+                            <Textarea resize readOnly label={formatMessage('klagenotat.info')} maxRows={10}>
+                                {props.klage.vedtaksvurdering.delvisOmgjøringKa.klagenotat}
+                            </Textarea>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

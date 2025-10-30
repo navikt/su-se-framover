@@ -30,7 +30,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { KlageSteg, Klage, OpprettholdVedtakHjemmel, KlageVurderingType, KlageStatus } from '~src/types/Klage';
+import { KlageSteg, Klage, KabalVedtakHjemmel, KlageVurderingType, KlageStatus } from '~src/types/Klage';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
@@ -44,15 +44,15 @@ interface OmgjørFormData {
     begrunnelse: Nullable<string>;
 }
 
-interface OpprettholdData {
-    hjemmel: OpprettholdVedtakHjemmel[];
+interface KabalData {
+    hjemmel: KabalVedtakHjemmel[];
     klagenotat: Nullable<string>;
 }
 
 interface VurderingAvKlageFormData {
     klageVurderingType: Nullable<KlageVurderingType>;
     omgjør: OmgjørFormData;
-    oppretthold: OpprettholdData;
+    kabaldata: KabalData;
     fritekstTilBrev: Nullable<string>;
 }
 
@@ -61,7 +61,7 @@ const eqOmgjør = struct<OmgjørFormData>({
     begrunnelse: eqNullable(S.Eq),
 });
 
-const eqOppretthold = struct<OpprettholdData>({
+const eqKabalData = struct<KabalData>({
     hjemmel: A.getEq(S.Eq),
     klagenotat: eqNullable(S.Eq),
 });
@@ -72,8 +72,8 @@ const schema = yup.object<VurderingAvKlageFormData>({
         .defined()
         .required()
         .oneOf(
-            [KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD],
-            'Feltet må være "Omgjør", eller "Oppretthold"',
+            [KlageVurderingType.OMGJØR, KlageVurderingType.OPPRETTHOLD, KlageVurderingType.DELVIS_OMGJØRING_KA],
+            'Feltet må være "Omgjør", "Oppretthold" eller delvis omgjøring',
         ),
     omgjør: yup
         .object<OmgjørFormData>()
@@ -86,13 +86,14 @@ const schema = yup.object<VurderingAvKlageFormData>({
             }),
             otherwise: yup.object().nullable(),
         }),
-    oppretthold: yup
-        .object<OpprettholdData>()
+    kabaldata: yup
+        .object<KabalData>()
         .defined()
         .when('klageVurderingType', {
-            is: KlageVurderingType.OPPRETTHOLD,
-            then: yup.object<OpprettholdData>({
-                hjemmel: yup.array<OpprettholdVedtakHjemmel>().required(),
+            is: (val: KlageVurderingType | null) =>
+                val === KlageVurderingType.OPPRETTHOLD || val === KlageVurderingType.DELVIS_OMGJØRING_KA,
+            then: yup.object<KabalData>({
+                hjemmel: yup.array<KabalVedtakHjemmel>().required(),
                 klagenotat: yup.string(),
             }),
             otherwise: yup.object().nullable(),
@@ -111,7 +112,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
 const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
     klageVurderingType: eqNullable(S.Eq),
     omgjør: eqOmgjør,
-    oppretthold: eqOppretthold,
+    kabaldata: eqKabalData,
     fritekstTilBrev: eqNullable(S.Eq),
 });
 
@@ -128,15 +129,26 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const hjelpetekstLink =
         'https://navno.sharepoint.com/sites/fag-og-ytelser-pensjon-supplerende-stonad/SitePages/Midlertidig-rutine-for-klagebehandling---supplerende-st%C3%B8nad-til-uf%C3%B8re-flyktninger.aspx?OR=Teams-HL&CT=1645705340996&sourceId=&params=%7B%22AppName%22%3A%22Teams-Desktop%22%2C%22AppVersion%22%3A%2228%2F22010300411%22%7D';
 
+    const klageVurderingType = props.klage.vedtaksvurdering?.type;
     const initialValues = {
-        klageVurderingType: props.klage.vedtaksvurdering?.type ?? null,
+        klageVurderingType: klageVurderingType ?? null,
         omgjør: {
             årsak: props.klage.vedtaksvurdering?.omgjør?.årsak ?? null,
             begrunnelse: props.klage.vedtaksvurdering?.omgjør?.begrunnelse ?? null,
         },
-        oppretthold: {
-            hjemmel: props.klage.vedtaksvurdering?.oppretthold?.hjemler ?? [],
-            klagenotat: props.klage.vedtaksvurdering?.oppretthold?.klagenotat ?? null,
+        kabaldata: {
+            hjemmel:
+                klageVurderingType === KlageVurderingType.OPPRETTHOLD
+                    ? (props.klage.vedtaksvurdering?.oppretthold?.hjemler ?? [])
+                    : klageVurderingType === KlageVurderingType.DELVIS_OMGJØRING_KA
+                      ? (props.klage.vedtaksvurdering?.delvisOmgjøringKa?.hjemler ?? [])
+                      : [],
+            klagenotat:
+                klageVurderingType === KlageVurderingType.OPPRETTHOLD
+                    ? (props.klage.vedtaksvurdering?.oppretthold?.klagenotat ?? null)
+                    : klageVurderingType === KlageVurderingType.DELVIS_OMGJØRING_KA
+                      ? (props.klage.vedtaksvurdering?.delvisOmgjøringKa?.klagenotat ?? null)
+                      : null,
         },
         fritekstTilBrev: props.klage.fritekstTilBrev,
     };
@@ -165,8 +177,15 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             oppretthold:
                 data.klageVurderingType === KlageVurderingType.OPPRETTHOLD
                     ? {
-                          hjemler: data.oppretthold.hjemmel,
-                          klagenotat: data.oppretthold.klagenotat ? data.oppretthold.klagenotat : null,
+                          hjemler: data.kabaldata.hjemmel,
+                          klagenotat: data.kabaldata.klagenotat ? data.kabaldata.klagenotat : null,
+                      }
+                    : null,
+            delvisomgjøringKa:
+                data.klageVurderingType === KlageVurderingType.DELVIS_OMGJØRING_KA
+                    ? {
+                          hjemler: data.kabaldata.hjemmel,
+                          klagenotat: data.kabaldata.klagenotat ? data.kabaldata.klagenotat : null,
                       }
                     : null,
             fritekstTilBrev: data.fritekstTilBrev,
@@ -240,7 +259,10 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         );
     }
 
-    const ikkeMedhold = watch('klageVurderingType') === KlageVurderingType.OPPRETTHOLD;
+    const klageVurderingTypeWatch = watch('klageVurderingType');
+    const ikkeMedhold =
+        klageVurderingTypeWatch === KlageVurderingType.OPPRETTHOLD ||
+        klageVurderingTypeWatch === KlageVurderingType.DELVIS_OMGJØRING_KA;
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -264,12 +286,15 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         <Radio value={KlageVurderingType.OPPRETTHOLD}>
                                             {formatMessage(KlageVurderingType.OPPRETTHOLD)}
                                         </Radio>
+                                        <Radio value={KlageVurderingType.DELVIS_OMGJØRING_KA}>
+                                            {formatMessage(KlageVurderingType.DELVIS_OMGJØRING_KA)}
+                                        </Radio>
                                     </RadioGroup>
                                 )}
                             />
                         </div>
 
-                        {watch('klageVurderingType') === KlageVurderingType.OMGJØR && (
+                        {klageVurderingTypeWatch === KlageVurderingType.OMGJØR && (
                             <OmgjørVedtakForm control={control} />
                         )}
                         {ikkeMedhold && (
@@ -403,16 +428,16 @@ const OpprettholdVedtakForm = (props: { control: Control<VurderingAvKlageFormDat
         <div className={styles.formContainer}>
             <Controller
                 control={props.control}
-                name={'oppretthold.hjemmel'}
+                name={'kabaldata.hjemmel'}
                 render={({ field, fieldState }) => (
                     <CheckboxGroup
                         {...field}
-                        legend={formatMessage('form.opprettholdVedtak.hjemmel.label')}
+                        legend={formatMessage('form.oversendelseKa.hjemmel.label')}
                         value={[...(field.value ?? '')]}
                         error={fieldState.error?.message}
                     >
                         <div className={styles.hjemmelCheckboxgroup}>
-                            {Object.values(OpprettholdVedtakHjemmel).map((hjemmel) => (
+                            {Object.values(KabalVedtakHjemmel).map((hjemmel) => (
                                 <Checkbox value={hjemmel} key={hjemmel}>
                                     {formatMessage(hjemmel)}
                                 </Checkbox>
@@ -423,17 +448,17 @@ const OpprettholdVedtakForm = (props: { control: Control<VurderingAvKlageFormDat
             />
             <Controller
                 control={props.control}
-                name={'oppretthold.klagenotat'}
+                name={'kabaldata.klagenotat'}
                 render={({ field, fieldState }) => (
                     <Textarea
                         {...field}
                         minRows={5}
                         label={
                             <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
-                                <Label>{formatMessage('form.opprettholdVedtak.klagenotat')}</Label>
+                                <Label>{formatMessage('form.kabaldata.klagenotat')}</Label>
                             </div>
                         }
-                        description={<div>{formatMessage('form.opprettholdVedtak.klagenotat.info')}</div>}
+                        description={<div>{formatMessage('form.kabaldata.klagenotat.info')}</div>}
                         value={field.value ?? ''}
                         error={fieldState.error?.message}
                     />

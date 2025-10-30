@@ -12,6 +12,7 @@ import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/B
 import { Klage } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import {
+    erKlageDelvisOmgjortKA,
     erKlageINoenFormForAvvist,
     erKlageOpprettholdt,
     erKlageTilAttestering,
@@ -114,11 +115,12 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
                     underkjennelsesgrunner: Object.values(UnderkjennelseGrunnBehandling),
                 }}
                 radioTexts={{
-                    bekreftText: erKlageOpprettholdt(props.klage)
-                        ? formatMessage('radio.overførTilKlageinstans')
-                        : erKlageINoenFormForAvvist(props.klage)
-                          ? formatMessage('radio.godkjennAvvisning')
-                          : undefined,
+                    bekreftText:
+                        erKlageOpprettholdt(props.klage) || erKlageDelvisOmgjortKA(props.klage)
+                            ? formatMessage('radio.overførTilKlageinstans')
+                            : erKlageINoenFormForAvvist(props.klage)
+                              ? formatMessage('radio.godkjennAvvisning')
+                              : undefined,
                 }}
             />
             <OppsummeringAvKlage klage={props.klage} klagensVedtak={props.klagensVedtak} />
