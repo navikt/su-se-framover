@@ -27,24 +27,6 @@ export interface Klage {
     avsluttetBegrunnelse: Nullable<string>;
 }
 
-export interface KlageMedOppretthold extends Klage {
-    vedtaksvurdering: {
-        type: KlageVurderingType.OPPRETTHOLD;
-        omgjør: Nullable<Omgjør>;
-        oppretthold: OversendelseKabal;
-        delvisOmgjøringKa: Nullable<OversendelseKabal>;
-    };
-}
-
-export interface KlageDelvisOmgjøringKa extends Klage {
-    vedtaksvurdering: {
-        type: KlageVurderingType.DELVIS_OMGJØRING_KA;
-        omgjør: Nullable<Omgjør>;
-        oppretthold: Nullable<OversendelseKabal>;
-        delvisOmgjøringKa: OversendelseKabal;
-    };
-}
-
 export interface FerdigstiltOmgjortKlage extends Klage {
     vedtakId: string;
     vedtaksvurdering: {
