@@ -143,6 +143,7 @@ const SendTilAttestering = (props: {
         ) {
             lagreBrev(watch, () => void 0);
         }
+        form.clearErrors('fritekst');
     }, [watch.valg]);
 
     return (
