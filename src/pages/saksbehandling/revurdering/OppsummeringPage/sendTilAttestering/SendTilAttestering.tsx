@@ -54,7 +54,12 @@ const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
                 erRevurderingOpphørPgaManglendeDokumentasjon(revurdering)
                     ? 'Du må erstatte _____ med informasjon'
                     : 'Du må erstatte _____ med tall',
-            ),
+            )
+            .when('valg', {
+                is: Valg.SEND,
+                then: yup.string().required(),
+                otherwise: yup.string().nullable().notRequired(),
+            }),
         begrunnelse: yup
             .string()
             .when('begrunnValg', {
@@ -138,6 +143,7 @@ const SendTilAttestering = (props: {
         ) {
             lagreBrev(watch, () => void 0);
         }
+        form.clearErrors('fritekst');
     }, [watch.valg]);
 
     return (
