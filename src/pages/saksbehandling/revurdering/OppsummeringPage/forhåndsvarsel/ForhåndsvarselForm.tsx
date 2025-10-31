@@ -59,7 +59,6 @@ const ForhåndsvarselForm = (props: {
     const oppretterNyttForhåndsvarsel = form.watch('oppretterNyttForhåndsvarsel');
 
     useEffect(() => {
-        // Only clear errors when this specific field changes
         form.clearErrors('fritekst');
     }, [oppretterNyttForhåndsvarsel]);
 

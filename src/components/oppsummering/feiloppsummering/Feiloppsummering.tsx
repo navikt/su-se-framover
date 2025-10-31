@@ -13,7 +13,6 @@ interface Props extends Omit<ErrorSummaryProps, 'children'> {
 }
 
 const Feiloppsummering = ({ tittel, feil, ref, ...errorSummaryProps }: Props) => {
-    console.log('Feiloppsummering feil: ', feil);
     return (
         <ErrorSummary heading={tittel} {...errorSummaryProps} ref={ref}>
             {feil.map((f) => (
