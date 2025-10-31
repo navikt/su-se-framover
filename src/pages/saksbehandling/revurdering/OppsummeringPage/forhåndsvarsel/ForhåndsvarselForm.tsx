@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -55,6 +56,12 @@ const ForhåndsvarselForm = (props: {
         resolver: yupResolver(schema),
     });
     const watch = form.watch();
+    const oppretterNyttForhåndsvarsel = form.watch('oppretterNyttForhåndsvarsel');
+
+    useEffect(() => {
+        // Only clear errors when this specific field changes
+        form.clearErrors('fritekst');
+    }, [oppretterNyttForhåndsvarsel]);
 
     const [lagreForhåndsvarselStatus, lagreForhåndsvarsel] = useAsyncActionCreator(
         RevurderingActions.lagreForhåndsvarsel,
