@@ -30,7 +30,7 @@ const Avvist = (props: AvvistProps) => {
                         body: {
                             type: LukkSøknadBegrunnelse.Avvist,
                             brevConfig: {
-                                brevtype: AvvistBrevtyper.Fritekstsbrev,
+                                brevtype: AvvistBrevtyper.Vedtaksbrev,
                                 fritekst: props.fritekstValue ?? '',
                             },
                         },

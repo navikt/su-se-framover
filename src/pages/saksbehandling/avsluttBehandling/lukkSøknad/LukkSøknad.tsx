@@ -198,7 +198,7 @@ function lagBody(values: LukkSøknadOgAvsluttSøknadsbehandlingFormData): LukkS�
             return {
                 type: values.begrunnelse,
                 brevConfig: {
-                    brevtype: AvvistBrevtyper.Fritekstsbrev,
+                    brevtype: AvvistBrevtyper.Vedtaksbrev,
                     fritekst: values.avvist.fritekst!,
                 },
             };
