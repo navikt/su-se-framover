@@ -20,7 +20,7 @@ import styles from './OppsummeringAvSøknadsbehandling.module.less';
 const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
     const underkjenteAttesteringer = props.behandling.attesteringer.filter((att) => att.underkjennelse != null);
-
+    const innsendtAv = props.behandling.søknad.innsendtAv;
     return (
         <div className={styles.oppsummeringsContainer}>
             <Oppsummeringspanel
@@ -40,6 +40,7 @@ const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandlin
                             verdi={props.behandling.saksbehandler ?? formatMessage('feil.fantIkkeSaksbehandlerNavn')}
                             retning={'vertikal'}
                         />
+                        <OppsummeringPar label={formatMessage('innendt.av.overskrift')} verdi={innsendtAv} />
                         <OppsummeringPar
                             label={formatMessage('behandling.søknadsdato')}
                             verdi={søknadMottatt(props.behandling.søknad)}
