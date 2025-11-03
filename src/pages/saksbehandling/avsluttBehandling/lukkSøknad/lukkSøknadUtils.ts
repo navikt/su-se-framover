@@ -57,7 +57,6 @@ export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknad
                 avvist: yup.object({
                     fritekst: yup
                         .string()
-                        .nullable()
                         .defined()
                         .when('typeBrev', {
                             is: AvvistBrevtyper.Fritekstsbrev,
