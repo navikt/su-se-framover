@@ -9,6 +9,9 @@ export default {
     'søker.alder': 'Alder',
     'søker.årSøkerFyller': 'Fyller {år} i {detteÅret}',
 
+    'innendt.av.overskrift': 'Innsendt av',
+    'innsendt.ident': 'Ident',
+
     'feil.harIkkeFødselsdato': 'Fødselsdato er ikke registrert',
     'feil.harIkkeFødselsår': 'Fødselsår er ikke registrert',
     'feil.kunneIkkeAvgjøreAlder': 'Kan ikke regne ut søkers alder',
