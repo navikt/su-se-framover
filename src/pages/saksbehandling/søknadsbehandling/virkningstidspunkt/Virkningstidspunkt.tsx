@@ -58,7 +58,7 @@ const Virkningstidspunkt = (
 ) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const navigate = useNavigate();
-
+    const innsendtAv = props.behandling.søknad.innsendtAv;
     const [status, lagreVirkningstidspunkt, resetVirkApi] = useAsyncActionCreator(
         SøknadsbehandlingActions.lagreVirkningstidspunkt,
     );
@@ -259,6 +259,11 @@ const Virkningstidspunkt = (
                                 right: (
                                     <div className={sharedStyles.toKollonerRightContainer}>
                                         <div>
+                                            <Heading size="small">{formatMessage('innendt.av.overskrift')}</Heading>
+                                            <OppsummeringPar
+                                                label={formatMessage('innsendt.ident')}
+                                                verdi={innsendtAv}
+                                            />
                                             <Heading size="small">{formatMessage('søker.personalia')}</Heading>
                                             <OppsummeringPar
                                                 label={formatMessage('søker.fødselsdato')}
