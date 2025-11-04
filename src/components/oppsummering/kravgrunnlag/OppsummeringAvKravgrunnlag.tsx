@@ -29,7 +29,7 @@ const OppsummeringAvKravgrunnlag = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
     if (props.kravgrunnlag == null) {
-        return <Heading size={'medium'}>Det er ikke mottatt kravgrunnlag</Heading>;
+        return <Heading size={'medium'}>Tilbakekrevingsbehandling mangler kravgrunnlag</Heading>;
     }
 
     if (props.basicBareMetaInfo) {

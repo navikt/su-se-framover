@@ -7,7 +7,6 @@ import {
 
 export const erTilbakekrevingsbehandlingÅpen = (t: ManuellTilbakekrevingsbehandling): boolean =>
     t.status === TilbakekrevingsbehandlingStatus.OPPRETTET ||
-    t.status === TilbakekrevingsbehandlingStatus.OPPRETTET_UTEN_KRAVGRUNNLAG ||
     t.status === TilbakekrevingsbehandlingStatus.FORHÅNDSVARSLET ||
     t.status === TilbakekrevingsbehandlingStatus.VURDERT ||
     t.status === TilbakekrevingsbehandlingStatus.VEDTAKSBREV ||
