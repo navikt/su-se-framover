@@ -8,7 +8,7 @@ export interface LukkSøknadOgAvsluttSøknadsbehandlingFormData {
         datoSøkerTrakkSøknad: Nullable<string>;
     };
     avvist: {
-        fritekst: Nullable<string>;
+        fritekst: string;
     };
     manglendeDok: {
         fritekst: Nullable<string>;
@@ -21,7 +21,7 @@ export const lukkSøknadInitialValues = {
         datoSøkerTrakkSøknad: null,
     },
     avvist: {
-        fritekst: null,
+        fritekst: '',
     },
     manglendeDok: {
         fritekst: null,
@@ -57,16 +57,10 @@ export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknad
                 avvist: yup.object({
                     fritekst: yup
                         .string()
-                        .defined()
-                        .when('typeBrev', {
-                            is: AvvistBrevtyper.Fritekstsbrev,
-                            then: yup
-                                .string()
-                                .required()
-                                .min(1)
-                                .nullable(false)
-                                .typeError('Du må legge inn fritekst til brevet'),
-                        }),
+                        .required()
+                        .min(1)
+                        .nullable(false)
+                        .typeError('Du må legge inn fritekst til brevet'),
                 }),
             });
 

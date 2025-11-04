@@ -9,7 +9,7 @@ import styles from './lukkSøknad.module.less';
 
 interface AvvistProps {
     søknadId: string;
-    fritekstValue: string | null;
+    fritekstValue: string;
     fritekstError?: FieldError;
     onFritekstChange: (value: string) => void;
 }
@@ -18,7 +18,7 @@ const Avvist = (props: AvvistProps) => {
     return (
         <div className={styles.container}>
             <BrevInput
-                tekst={props.fritekstValue ?? ''}
+                tekst={props.fritekstValue}
                 onVisBrevClick={() =>
                     søknadApi.hentLukketSøknadsBrevutkast({
                         søknadId: props.søknadId,
@@ -26,7 +26,7 @@ const Avvist = (props: AvvistProps) => {
                             type: LukkSøknadBegrunnelse.Avvist,
                             brevConfig: {
                                 brevtype: AvvistBrevtyper.Vedtaksbrev,
-                                fritekst: props.fritekstValue ?? '',
+                                fritekst: props.fritekstValue,
                             },
                         },
                     })
