@@ -1,4 +1,5 @@
-import { BodyLong, GuidePanel, Heading, Ingress, Panel, Link } from '@navikt/ds-react';
+import { BodyLong, GuidePanel, Heading, Ingress, Panel, Link, Modal, BodyShort, Button } from '@navikt/ds-react';
+import { useRef, useState } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
@@ -13,6 +14,8 @@ const Søknadsvelger = () => {
     const user = useUserContext();
     const { formatMessage } = useI18n({ messages });
     const isPapirsøknad = location.search.includes('papirsoknad');
+    const ref = useRef<HTMLDialogElement>(null);
+    const [open, setOpen] = useState(false);
 
     if (user.roller.includes(Rolle.Saksbehandler) || user.roller.includes(Rolle.Veileder)) {
         return (
@@ -72,6 +75,41 @@ const Søknadsvelger = () => {
                             >
                                 {formatMessage('ufør-lenke')}
                             </LinkAsButton>
+                        </Panel>
+                        <Panel border>
+                            <Heading level="2" size="medium">
+                                {formatMessage('velg-kontrollsamtale-tittel')}
+                            </Heading>
+                            <Ingress>{formatMessage('kontrollsamtale-beskrivelse')}</Ingress>
+                            <Button variant="secondary" type="button" onClick={() => setOpen(true)}>
+                                {formatMessage('kontrollsamtale-lenke')}
+                            </Button>
+                            <Modal ref={ref} aria-label="Kontrollsamtale" open={open} onClose={() => setOpen(false)}>
+                                <Modal.Body>
+                                    <Heading size="medium" spacing>
+                                        Innsending av kontrollnotat
+                                    </Heading>
+                                    <form>
+                                        <BodyShort spacing>
+                                            Kontrollnotat kan ikke sendes inn herfra. Gå til{' '}
+                                            <Link href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Supplerende%20st%C3%B8nad.aspx?web=1">
+                                                servicerutinen
+                                            </Link>{' '}
+                                            for rutine for innsending
+                                        </BodyShort>
+                                        <BodyShort>
+                                            <strong>Obs!</strong> Har du ikke tilgang til Gosys, må du kontakte nærmeste
+                                            leder for å få tilgang. Søknad skal ikke brukes til å gi informasjon om
+                                            kontrollsamtaler.
+                                        </BodyShort>
+                                        <div style={{ marginTop: '1rem', textAlign: 'right' }}>
+                                            <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
+                                                Lukk
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </Modal.Body>
+                            </Modal>
                         </Panel>
                     </div>
                 </div>
