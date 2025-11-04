@@ -53,7 +53,7 @@ export const finnNesteTilbakekrevingsstegForSaksbehandling = (t: ManuellTilbakek
             return Routes.tilbakekrevingValgtBehandling.createURL({
                 sakId: t.sakId,
                 behandlingId: t.id,
-                steg: t.kravgrunnlag == null ? TilbakekrevingSteg.Forhåndsvarsling : TilbakekrevingSteg.Vurdering,
+                steg: t.kravgrunnlag === null ? TilbakekrevingSteg.Forhåndsvarsling : TilbakekrevingSteg.Vurdering,
             });
         case TilbakekrevingsbehandlingStatus.VURDERT:
             return Routes.tilbakekrevingValgtBehandling.createURL({
