@@ -43,6 +43,7 @@ export const erTilbakekrevingAvbrutt = (t: ManuellTilbakekrevingsbehandling): bo
 export const finnNesteTilbakekrevingsstegForSaksbehandling = (t: ManuellTilbakekrevingsbehandling) => {
     switch (t.status) {
         case TilbakekrevingsbehandlingStatus.OPPRETTET:
+        case TilbakekrevingsbehandlingStatus.OPPRETTET_UTEN_KRAVGRUNNLAG:
             return Routes.tilbakekrevingValgtBehandling.createURL({
                 sakId: t.sakId,
                 behandlingId: t.id,
@@ -52,7 +53,7 @@ export const finnNesteTilbakekrevingsstegForSaksbehandling = (t: ManuellTilbakek
             return Routes.tilbakekrevingValgtBehandling.createURL({
                 sakId: t.sakId,
                 behandlingId: t.id,
-                steg: TilbakekrevingSteg.Vurdering,
+                steg: t.kravgrunnlag === null ? TilbakekrevingSteg.Forhåndsvarsling : TilbakekrevingSteg.Vurdering,
             });
         case TilbakekrevingsbehandlingStatus.VURDERT:
             return Routes.tilbakekrevingValgtBehandling.createURL({
