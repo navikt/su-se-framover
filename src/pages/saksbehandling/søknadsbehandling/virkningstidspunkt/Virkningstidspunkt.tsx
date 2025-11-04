@@ -259,7 +259,7 @@ const Virkningstidspunkt = (
                                 right: (
                                     <div className={sharedStyles.toKollonerRightContainer}>
                                         <div>
-                                            <Heading size="small">{formatMessage('innendt.av.overskrift')}</Heading>
+                                            <Heading size="small">{formatMessage('innsendt.av.overskrift')}</Heading>
                                             <OppsummeringPar
                                                 label={formatMessage('innsendt.ident')}
                                                 verdi={innsendtAv}

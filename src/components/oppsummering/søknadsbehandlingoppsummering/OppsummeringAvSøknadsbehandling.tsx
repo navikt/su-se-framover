@@ -40,7 +40,11 @@ const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandlin
                             verdi={props.behandling.saksbehandler ?? formatMessage('feil.fantIkkeSaksbehandlerNavn')}
                             retning={'vertikal'}
                         />
-                        <OppsummeringPar label={formatMessage('innendt.av.overskrift')} verdi={innsendtAv} />
+                        <OppsummeringPar
+                            label={formatMessage('innsendt.av.overskrift')}
+                            verdi={innsendtAv}
+                            retning={'vertikal'}
+                        />
                         <OppsummeringPar
                             label={formatMessage('behandling.søknadsdato')}
                             verdi={søknadMottatt(props.behandling.søknad)}

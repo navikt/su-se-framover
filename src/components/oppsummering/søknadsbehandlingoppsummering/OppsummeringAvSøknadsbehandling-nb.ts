@@ -6,7 +6,7 @@ export default {
     'oppsummering.søknadsbehandling': 'Oppsummering av søknadsbehandling',
 
     'behandlet.av': 'Saksbehandler',
-    'innendt.av.overskrift': 'Innsendt av(ident)',
+    'innsendt.av.overskrift': 'Innsendt av(ident)',
 
     'vurdering.tittel': 'Vurdering',
     'vurdering.innvilgelse': 'Innvilgelse',

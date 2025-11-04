@@ -9,7 +9,7 @@ export default {
     'søker.alder': 'Alder',
     'søker.årSøkerFyller': 'Fyller {år} i {detteÅret}',
 
-    'innendt.av.overskrift': 'Innsendt av',
+    'innsendt.av.overskrift': 'Innsendt av',
     'innsendt.ident': 'Ident',
 
     'feil.harIkkeFødselsdato': 'Fødselsdato er ikke registrert',
