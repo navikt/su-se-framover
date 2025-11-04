@@ -25,16 +25,10 @@ export const getSakvarsler = (arg: { sak: Sak; søker: Person }): SakvarseltypeM
             }
         });
     }
-    if (arg.sak.uteståendeKravgrunnlag !== null) {
-        const varselÅpenTilbakekreving = varsel
-            .map((v) => v.type)
-            .includes(SakvarselType.NYTT_KRAVGRUNNLAG_MED_ÅPEN_TILBAKEKREVING);
-        if (!varselÅpenTilbakekreving) {
-            varsel.push({
-                type: SakvarselType.NYTT_KRAVGRUNNLAG_UTEN_ÅPEN_TILBAKEKREVING,
-            });
-        }
+    if (arg.sak.uteståendeKravgrunnlag !== null && !arg.sak.tilbakekrevinger.some(erTilbakekrevingsbehandlingÅpen)) {
+        varsel.push({
+            type: SakvarselType.NYTT_KRAVGRUNNLAG_UTEN_ÅPEN_TILBAKEKREVING,
+        });
     }
-
     return varsel;
 };
