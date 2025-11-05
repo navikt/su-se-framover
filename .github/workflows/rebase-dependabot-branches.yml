@@ -22,9 +22,11 @@ jobs:
         REPO: ${{ github.repository }}
       run: |
         echo "Fetching Dependabot PRs..."
-        prs=$(gh pr list --repo "$REPO" --state open --limit 100 --json number,author --jq '.[] | select(.author.login | test("^dependabot")) | .number')
-        
-        if [ -z "$prs" ]; then
+        prs=$(gh pr list --repo "$REPO" --state open --json number,author,headRefName,headRefOid \
+              | jq -r '.[] | select(.author.login=="app/dependabot") | "\(.number) \(.headRefName) \(.headRefOid)"')  
+  
+  
+       if [ -z "$prs" ]; then
           echo "No open Dependabot PRs found."
           exit 0
         fi
