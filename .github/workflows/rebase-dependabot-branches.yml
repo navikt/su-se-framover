@@ -47,8 +47,10 @@ jobs:
         
         if [ ${#failed_prs[@]} -ne 0 ]; then
           echo "The following PRs could not be rebased due to conflicts: ${failed_prs[*]}"
+          exit 1
         else
           echo "All Dependabot PRs rebased successfully."
+          exit 0
         fi
 
 
