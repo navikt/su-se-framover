@@ -28,17 +28,27 @@ jobs:
           exit 0
         fi
         
+        failed_prs=()
+        
         for pr in $prs; do
           echo "Requesting rebase for PR #$pr..."
           expected_sha=$(gh pr view "$pr" --repo "$REPO" --json headRefOid -q .headRefOid)
         
-          # Try the update and capture the response
           if ! gh api \
             -X POST \
             "repos/$REPO/pulls/$pr/update-branch" \
             -f expected_head_sha="$expected_sha"; then
-            echo "❌ Failed to rebase PR #$pr (likely due to conflicts)."
-            exit 1  # stop the workflow immediately
+            echo "⚠️ Failed to rebase PR #$pr (likely due to conflicts)."
+            failed_prs+=("$pr")
+          else
+            echo "✅ Successfully requested rebase for PR #$pr"
           fi
         done
+        
+        if [ ${#failed_prs[@]} -ne 0 ]; then
+          echo "The following PRs could not be rebased due to conflicts: ${failed_prs[*]}"
+        else
+          echo "All Dependabot PRs rebased successfully."
+        fi
+
 
