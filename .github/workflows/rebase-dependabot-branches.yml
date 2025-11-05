@@ -1,0 +1,44 @@
+name: rebase-dependabot-branches.yml
+#Auto Rebase Dependabot PRs
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  rebase-dependabot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Dependabot rebase on open PRs
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPO: ${{ github.repository }}
+      run: |
+        echo "Fetching Dependabot PRs..."
+        prs=$(gh pr list --repo "$REPO" --state open --json number,author --jq '.[] | select(.author.login=="dependabot[bot]") | .number')
+        
+        if [ -z "$prs" ]; then
+          echo "No open Dependabot PRs found."
+          exit 0
+        fi
+        
+        for pr in $prs; do
+          echo "Requesting rebase for PR #$pr..."
+          expected_sha=$(gh pr view "$pr" --repo "$REPO" --json headRefOid -q .headRefOid)
+        
+          # Try the update and capture the response
+          if ! gh api \
+            -X POST \
+            "repos/$REPO/pulls/$pr/update-branch" \
+            -f expected_head_sha="$expected_sha"; then
+            echo "❌ Failed to rebase PR #$pr (likely due to conflicts)."
+            exit 1  # stop the workflow immediately
+          fi
+        done
+
