@@ -27,8 +27,9 @@
         "tsc:watch": "tsc --watch --preserveWatchOutput"
     },
     "lint-staged": {
-        "*.{js,ts,tsx}": "eslint --cache --fix",
-        "*.{js,jsx,ts,tsx,md,html,css,less}": "prettier --write"
+      "*.{js,jsx,ts,tsx,md,html,css,less}": [
+        "biome check --apply"
+      ]
     },
     "repository": {
         "type": "git",
@@ -75,6 +76,7 @@
         "yup": "0.29.3"
     },
     "devDependencies": {
+        "@biomejs/biome": "^2.3.4",
         "@eslint/compat": "^1.4.1",
         "@eslint/eslintrc": "^3.3.1",
         "@eslint/js": "^9.39.1",

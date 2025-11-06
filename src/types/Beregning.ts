@@ -1,3 +1,4 @@
+// biome-ignore lint: Shadowing Array intentionally
 import * as Array from 'fp-ts/lib/Array';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as N from 'fp-ts/lib/number';

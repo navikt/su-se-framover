@@ -121,7 +121,7 @@ const Drift = () => {
                         onClose={() => {
                             setGrensesnittsavstemmingModalOpen(false);
                         }}
-                        aria-label=""
+                        aria-label="grensesnittavstemming"
                     >
                         <Modal.Body>
                             <div className={styles.modalContainer}>
@@ -180,7 +180,7 @@ const Drift = () => {
                         onClose={() => {
                             setKonsistensavtemmingModalOpen(false);
                         }}
-                        aria-label=""
+                        aria-label="konsistensavstemming"
                     >
                         <Modal.Body>
                             <div className={styles.modalContainer}>

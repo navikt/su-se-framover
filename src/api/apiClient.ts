@@ -37,7 +37,7 @@ type Method = 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE';
 export default async function apiClient<TSuccess>(arg: {
     url: string;
     method: Method;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: using any here for flexibility
     body?: Record<string, any>;
     request?: Partial<Request>;
     bodyTransformer?: (res: Response) => Promise<TSuccess>;
