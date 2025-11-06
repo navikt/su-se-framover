@@ -419,12 +419,6 @@ export default createSlice({
                 })),
             );
         });
-        /*
-        builder.addCase(tilbakekrevingActions.redigerForhåndsvarsel.fulfilled, (state, action) => {
-            state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
-        });
-
- */
         builder.addCase(tilbakekrevingActions.sendForhåndsvarsel.fulfilled, (state, action) => {
             state.sak = oppdaterTilbakekrevingPåSak(state.sak, action.payload);
         });

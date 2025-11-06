@@ -136,7 +136,6 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                         if (form.getValues('skalForhåndsvarsle')) {
                                             handleRedigertForhåndsvarsel(
                                                 {
-                                                    //skalSendeBrev: form.getValues('skalForhåndsvarsle'),
                                                     fritekst: form.getValues('fritekst')!,
                                                 },
                                                 () => void 0,
@@ -147,7 +146,6 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                 }}
                                 brev={{
                                     handleSeBrev: () =>
-                                        //TilbakekrevingApi.forhåndsvisForhåndsvarsel({
                                         forhåndsvis({
                                             sakId: props.sakId,
                                             behandlingId: props.tilbakekreving.id,
