@@ -83,6 +83,19 @@ export async function sendForhåndsvarsel(
     });
 }
 
+export async function redigerForhåndsvarsel(
+    arg: ForhåndsvarsleTilbakekrevingRequest,
+): Promise<ApiClientResult<ManuellTilbakekrevingsbehandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/tilbakekreving/${arg.behandlingId}/forhandsvarsel/rediger`,
+        method: 'POST',
+        body: {
+            versjon: arg.saksversjon,
+            fritekst: arg.fritekst,
+        },
+    });
+}
+
 export async function forhåndsvisVedtaksbrevTilbakekrevingsbehandling(
     arg: ForhåndsvisVedtaksbrevTilbakekrevingsbehandlingRequest,
 ): Promise<ApiClientResult<Blob>> {

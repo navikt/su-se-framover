@@ -57,6 +57,18 @@ export const sendForhåndsvarsel = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const redigerForhåndsvarsel = createAsyncThunk<
+    ManuellTilbakekrevingsbehandling,
+    ForhåndsvarsleTilbakekrevingRequest,
+    { rejectValue: ApiError }
+>('tilbakekreving/forhåndsvarsel', async (args, thunkApi) => {
+    const res = await tilbakekrevingsApi.redigerForhåndsvarsel(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const brevtekstTilbakekrevingsbehandling = createAsyncThunk<
     ManuellTilbakekrevingsbehandling,
     BrevtekstTilbakekrevingsbehandlingRequest,
