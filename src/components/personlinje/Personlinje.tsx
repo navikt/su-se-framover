@@ -11,15 +11,14 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Person, Sivilstand as ISivilstand, SivilstandTyper } from '~src/types/Person';
+import { Sivilstand as ISivilstand, Person, SivilstandTyper } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
 import { formatFnr, showName } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 import { createToast, ToastType, useToast } from '../toast/Toast';
-
-import messages from './personlinje-nb';
 import styles from './personlinje.module.less';
+import messages from './personlinje-nb';
 
 const Separator = () => (
     <BodyShort as="span" className={styles.separator}>

@@ -1,8 +1,8 @@
 import {
     CheckmarkCircleFillIcon,
-    XMarkOctagonFillIcon,
-    QuestionmarkDiamondFillIcon,
     DocPencilIcon,
+    QuestionmarkDiamondFillIcon,
+    XMarkOctagonFillIcon,
 } from '@navikt/aksel-icons';
 import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';

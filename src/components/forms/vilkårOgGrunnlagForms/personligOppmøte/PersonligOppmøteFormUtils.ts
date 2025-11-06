@@ -12,7 +12,7 @@ import {
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { Periode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { lagDatePeriodeAvStringPeriode, lagTomPeriode, eqPeriode } from '~src/utils/periode/periodeUtils';
+import { eqPeriode, lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils';
 
 export interface PersonligOppmøteVilkårFormData {
     personligOppmøte: VurderingsperiodePersonligOppmøteFormData[];

@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Fieldset } from '@navikt/ds-react';
-import { useRef, useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,9 +19,8 @@ import { kalkulerTotaltAntallDagerIUtlandet, toDateOrNull, toIsoDateOnlyString }
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
-
-import messages from './utenlandsopphold-nb';
 import styles from './utenlandsopphold.module.less';
+import messages from './utenlandsopphold-nb';
 
 interface Reiseperiode {
     utreisedato: string;

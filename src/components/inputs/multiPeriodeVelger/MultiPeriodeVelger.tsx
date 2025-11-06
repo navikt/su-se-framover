@@ -16,9 +16,8 @@ import {
 import { PeriodeForm } from '~src/components/formElements/FormElements';
 import { useI18n } from '~src/lib/i18n';
 import { NullablePeriode } from '~src/types/Periode';
-
-import messages from './multiPeriodeVelger-nb';
 import styles from './multiPeriodeVelger.module.less';
+import messages from './multiPeriodeVelger-nb';
 
 export type PartialName<T> = `${keyof T & string}.${number}`;
 

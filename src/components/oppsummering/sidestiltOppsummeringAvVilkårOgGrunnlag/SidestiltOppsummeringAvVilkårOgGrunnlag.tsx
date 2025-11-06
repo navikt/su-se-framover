@@ -17,9 +17,8 @@ import { EksterneGrunnlag } from '~src/types/EksterneGrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Sakstype } from '~src/types/Sak.ts';
 import { SøknadInnhold } from '~src/types/Søknadinnhold';
-
-import messages from './SidestiltOppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from './SidestiltOppsummeringAvVilkårOgGrunnlag-nb';
 
 /*
 TODO:

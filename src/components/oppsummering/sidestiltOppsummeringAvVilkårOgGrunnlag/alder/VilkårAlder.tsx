@@ -5,8 +5,8 @@ import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeri
 import OppsummeringAvOppholdstillatelseAlder from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOppholdstillatelseAlder.tsx';
 import OppsummeringAvAldersvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvAldersvilkår.tsx';
 import OppsummeringAvFamiliegjenforening from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFamiliegjenforening.tsx';
-import messages from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag-nb.ts';
 import styles from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag-nb.ts';
 import { VilkårResultatStatusIkon } from '~src/components/VilkårvurderingStatusIcon.tsx';
 import { useI18n } from '~src/lib/i18n.ts';
 import { Nullable } from '~src/lib/types.ts';

@@ -28,8 +28,8 @@ import messages from '../../Tilbakekreving-nb';
 
 import styles from './VurderTilbakekreving.module.less';
 import {
-    VurderTilbakekrevingFormData,
     eqVurderTilbakekrevingFormData,
+    VurderTilbakekrevingFormData,
     vurderTilbakekrevingSchema,
 } from './VurderTilbakekrevingUtils';
 

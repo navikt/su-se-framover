@@ -6,8 +6,8 @@ import { underkjennelsesGrunnTextMapper } from '~src/typeMappinger/Underkjennels
 import { UnderkjennelseGrunn } from '~src/types/Behandling';
 
 import { AttesteringFormData } from './AttesteringsForm';
-import messages from './attesteringsForm-nb';
 import styles from './attesteringsForm.module.less';
+import messages from './attesteringsForm-nb';
 
 const UnderkjennelsesForm = (props: {
     underkjennelsesgrunn: UnderkjennelseGrunn[];

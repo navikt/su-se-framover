@@ -22,17 +22,16 @@ import { toStringDateOrNull } from '~src/utils/date/dateUtils';
 
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
-
-import styles from './formueForm.module.less';
 import {
-    FormueVilkårFormData,
-    nyFormuegrunnlagMedEllerUtenPeriode,
-    verdierId,
     erFormueVilkårOppfylt,
-    regnUtFormuegrunnlagVerdier,
     FormuegrunnlagVerdierFormData,
+    FormueVilkårFormData,
     lagTomFormuegrunnlagVerdier,
+    nyFormuegrunnlagMedEllerUtenPeriode,
+    regnUtFormuegrunnlagVerdier,
+    verdierId,
 } from './FormueFormUtils';
+import styles from './formueForm.module.less';
 
 interface Props extends VilkårFormProps<FormueVilkårFormData> {
     begrensTilEnPeriode?: boolean;

@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Heading, Modal, Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
 
-import { resendstatistikkSøknadsbehandlingVedtak, resendSpesifikkVedtakstatistikk } from '~src/api/driftApi';
+import { resendSpesifikkVedtakstatistikk, resendstatistikkSøknadsbehandlingVedtak } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';

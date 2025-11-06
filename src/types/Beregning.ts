@@ -6,7 +6,7 @@ import * as S from 'fp-ts/lib/string';
 
 import { Nullable } from '~src/lib/types';
 
-import { Fradrag, eqFradragBortsettFraPeriode } from './Fradrag';
+import { eqFradragBortsettFraPeriode, Fradrag } from './Fradrag';
 import { Sats } from './Sats';
 
 export interface Beregning {

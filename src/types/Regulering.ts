@@ -1,7 +1,7 @@
 import { Nullable } from '~src/lib/types';
 
 import { Beregning } from './Beregning';
-import { FradragTilhører, Fradragskategori } from './Fradrag';
+import { Fradragskategori, FradragTilhører } from './Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Periode, PeriodeMedOptionalTilOgMed } from './Periode';
 import { Sakstype } from './Sak';

@@ -18,9 +18,8 @@ import { Nullable } from '~src/lib/types';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 import { showName } from '~src/utils/person/personUtils';
-
-import messages from './kvittering-nb';
 import styles from './kvittering.module.less';
+import messages from './kvittering-nb';
 
 const Kvittering = () => {
     const dispatch = useAppDispatch();

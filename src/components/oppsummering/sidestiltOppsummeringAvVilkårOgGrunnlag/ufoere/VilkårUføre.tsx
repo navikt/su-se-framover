@@ -5,17 +5,17 @@ import OppsummeringAvFlyktningstatus from '~src/components/oppsummering/oppsumme
 import OppsummeringAvUføre from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUføre.tsx';
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning.tsx';
 import OppsummeringAvUførevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre.tsx';
-import messages from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag-nb.ts';
 import styles from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag-nb.ts';
 import { VilkårResultatStatusIkon } from '~src/components/VilkårvurderingStatusIcon.tsx';
 import { useI18n } from '~src/lib/i18n.ts';
 import { Nullable } from '~src/lib/types.ts';
 import {
-    flyktningErLik,
     FlyktningVilkår,
+    flyktningErLik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/flyktning/FlyktningVilkår.ts';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger.ts';
-import { uføreErlik, UføreVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår.ts';
+import { UføreVilkår, uføreErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår.ts';
 import { Flyktningstatus, SøknadInnhold, SøknadInnholdUføre, Uførevedtak } from '~src/types/Søknadinnhold.ts';
 import { isUføresøknad } from '~src/utils/søknad/søknadUtils.ts';
 

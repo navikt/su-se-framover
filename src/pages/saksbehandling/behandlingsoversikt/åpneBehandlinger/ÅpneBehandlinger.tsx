@@ -8,10 +8,10 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import {
-    Filter,
-    hentFiltrerteVerdier,
     BehandlingssammendragStatusFilter,
     BehandlingssammendragTypeFilter,
+    Filter,
+    hentFiltrerteVerdier,
     Sakstypefilter,
 } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter';
 import BehandlingssammendragTabell from '~src/pages/saksbehandling/behandlingssammendrag/BehandlingssammendragTabell';

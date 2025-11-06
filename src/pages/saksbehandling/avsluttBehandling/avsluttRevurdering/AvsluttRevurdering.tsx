@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useEffect, useMemo } from 'react';
-import { Control, Controller, useForm, UseFormWatch } from 'react-hook-form';
+import { Control, Controller, UseFormWatch, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { hentDokumenter } from '~src/api/dokumentApi';
@@ -17,10 +17,9 @@ import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Revurdering } from '~src/types/Revurdering';
 
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
-
-import messages from './avsluttRevurdering-nb';
 import styles from './avsluttRevurdering.module.less';
-import { AvsluttRevurderingFormData, Brevvalg, avsluttRevurderingSchema } from './avsluttRevurderingUtils';
+import messages from './avsluttRevurdering-nb';
+import { AvsluttRevurderingFormData, avsluttRevurderingSchema, Brevvalg } from './avsluttRevurderingUtils';
 
 const AvsluttRevurdering = (props: { sakId: string; revurdering: Revurdering }) => {
     const navigate = useNavigate();

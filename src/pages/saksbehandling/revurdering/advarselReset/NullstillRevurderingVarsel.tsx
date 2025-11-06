@@ -1,10 +1,9 @@
-import { Button, Modal, Heading, BodyShort } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Modal } from '@navikt/ds-react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';
-
-import messages from './nullstillRevurderingVarsel-nb';
 import styles from './nullstillRevurderingVarsel.module.less';
+import messages from './nullstillRevurderingVarsel-nb';
 
 const NullstillRevurderingVarsel = (props: { isOpen: boolean; onClose: () => void; førsteStegUrl: string }) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });

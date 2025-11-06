@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
-import { Alert, BodyShort, Box, Button, HStack, Heading, Link, Loader, Modal, Tag, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Box, Button, Heading, HStack, Link, Loader, Modal, Tag, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -21,9 +21,8 @@ import { navigateToSakIntroWithMessage, saksoversiktValgtSak } from '~src/lib/ro
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
-
-import styles from './dokumenterPage.module.less';
 import DokumentHeader from './DokumentHeader';
+import styles from './dokumenterPage.module.less';
 
 const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();

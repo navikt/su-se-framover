@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Heading, Button, VStack } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, VStack } from '@navikt/ds-react';
 
 import * as DokumentApi from '~src/api/dokumentApi';
 import * as pdfApi from '~src/api/pdfApi';
@@ -21,9 +21,8 @@ import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
 import { erKlageOmgjort, erKlageOversendtUtfylt } from '~src/utils/klage/klageUtils';
-
-import oppsummeringMessages from './oppsummeringAvKlage-nb';
 import styles from './oppsummeringAvKlage.module.less';
+import oppsummeringMessages from './oppsummeringAvKlage-nb';
 
 const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({ messages: oppsummeringMessages });

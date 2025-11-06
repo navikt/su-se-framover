@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, BodyShort, Button, HelpText, Label, Textarea, Loader } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, HelpText, Label, Loader, Textarea } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -17,9 +17,8 @@ import { Klage, KlageStatus, KlageSteg } from '~src/types/Klage';
 import { erKlageAvvist } from '~src/utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
-
-import messages from './avvistKlage-nb';
 import styles from './avvistKlage.module.less';
+import messages from './avvistKlage-nb';
 
 interface AvvistKlageFormData {
     fritekstTilBrev: string;

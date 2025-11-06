@@ -7,9 +7,9 @@ import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import LovligOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
 import {
     eqLovligOppholdVilkårFormData,
+    LovligOppholdVilkårFormData,
     lovligOppholdFormDataTilRequest,
     lovligOppholdFormSchema,
-    LovligOppholdVilkårFormData,
     lovligOppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdFormUtils';
 import OppsummeringAvOpphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOpphold';

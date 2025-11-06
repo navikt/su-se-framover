@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import UtenlandsoppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdForm';
 import {
-    utenlandsoppholdFormSchema,
     UtenlandsoppholdVilkårFormData,
     utenlandsoppholdFormDataTilRequest,
+    utenlandsoppholdFormSchema,
     utenlandsoppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdFormUtils';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';

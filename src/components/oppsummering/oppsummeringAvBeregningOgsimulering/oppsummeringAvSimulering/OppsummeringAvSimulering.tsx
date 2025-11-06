@@ -9,14 +9,13 @@ import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/Op
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/beregning/beregning-nb';
-import { SimuleringsperiodeOppsummering, Simulering } from '~src/types/Simulering';
+import { Simulering, SimuleringsperiodeOppsummering } from '~src/types/Simulering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { groupWhile } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
-
-import messages from './OppsummeringAvSimulering-nb';
 import styles from './OppsummeringAvSimulering.module.less';
+import messages from './OppsummeringAvSimulering-nb';
 
 export const OppsummeringAvSimulering = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });

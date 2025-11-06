@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from '@navikt/ds-react';
 import { useRef } from 'react';
-import { Controller, useForm, UseFormReturn } from 'react-hook-form';
+import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
@@ -19,7 +19,7 @@ import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
 import PensjonsInntekter from '../pensonsinntekter/Pensjonsinntekter';
 import TrygdeytelserInputFelter from '../TrygdeytelserInputs/TrygdeytelserInputs';
-import { inntektsValideringSchema, FormData } from '../validering';
+import { FormData, inntektsValideringSchema } from '../validering';
 
 import messages from './inntekt-nb';
 

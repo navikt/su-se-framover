@@ -4,20 +4,19 @@ import { ErrorMessageAlert } from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useI18n } from '~src/lib/i18n';
 import {
     Grunnlag,
-    SkattegrunnlagForÅr,
     KjøretøySpesifisering,
     Skattegrunnlag,
+    SkattegrunnlagForÅr,
     Stadie,
-    Årsgrunnlag,
     StadieFeil,
+    Årsgrunnlag,
 } from '~src/types/skatt/Skatt';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { erStadie, erStadieFeil } from '~src/utils/SkattUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './OppsummeringAvSkattegrunnlag-nb';
 import styles from './OppsummeringAvSkattegrunnlag.module.less';
+import messages from './OppsummeringAvSkattegrunnlag-nb';
 
 const OppsummeringAvSkattegrunnlag = (props: { skattegrunnlag: Skattegrunnlag }) => {
     const { formatMessage } = useI18n({ messages });

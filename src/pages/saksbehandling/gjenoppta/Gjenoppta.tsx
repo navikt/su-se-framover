@@ -5,9 +5,8 @@ import { Route, Routes, useOutletContext } from 'react-router-dom';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
-
-import messages from './gjenoppta-nb';
 import styles from './Gjenoppta.module.less';
+import messages from './gjenoppta-nb';
 
 const OpprettGjenoppta = lazy(() => import('~src/pages/saksbehandling/gjenoppta/OpprettGjenoppta'));
 const OppdaterGjenoppta = lazy(() => import('~src/pages/saksbehandling/gjenoppta/OppdaterGjenoppta'));

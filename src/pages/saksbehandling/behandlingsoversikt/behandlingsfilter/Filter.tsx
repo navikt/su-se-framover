@@ -7,9 +7,8 @@ import { Nullable } from '~src/lib/types';
 import { SaksFilter } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/SaksFilter.tsx';
 import { BehandlingssammendragStatus, BehandlingssammendragType } from '~src/types/Behandlingssammendrag';
 import { Sakstype } from '~src/types/Sak.ts';
-
-import messages from './filter-nb';
 import styles from './filter.module.less';
+import messages from './filter-nb';
 
 export type BehandlingssammendragTypeFilter = {
     [BehandlingssammendragType.SØKNADSBEHANDLING]: boolean;

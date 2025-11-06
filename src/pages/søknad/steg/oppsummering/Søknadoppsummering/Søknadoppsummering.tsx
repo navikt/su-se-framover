@@ -1,13 +1,13 @@
 import {
+    AirplaneIcon,
     CalculatorIcon,
     EnvelopeClosedIcon,
     FileTextIcon,
     HouseIcon,
-    AirplaneIcon,
     PiggybankIcon,
 } from '@navikt/aksel-icons';
 import { Accordion } from '@navikt/ds-react';
-import { RawIntlProvider, FormattedDate } from 'react-intl';
+import { FormattedDate, RawIntlProvider } from 'react-intl';
 
 import { AlderssøknadState, SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
@@ -31,8 +31,8 @@ import InntektsOppsummering from '../components/InntektsOppsummering';
 import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
 import { ingenAdresseGrunnTekst } from './OppsummeringUtils';
-import oppsummeringMessages from './søknadsoppsummering-nb';
 import styles from './søknadsoppsummering.module.less';
+import oppsummeringMessages from './søknadsoppsummering-nb';
 
 const booleanSvar = (bool: Nullable<boolean>, formatMessage: MessageFormatter<typeof oppsummeringMessages>) =>
     bool ? formatMessage('ja') : bool === false ? formatMessage('nei') : formatMessage('ubesvart');

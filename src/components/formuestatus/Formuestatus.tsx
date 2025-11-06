@@ -4,9 +4,8 @@ import classNames from 'classnames';
 import { VilkårvurderingStatusIcon } from '~src/components/VilkårvurderingStatusIcon';
 import { useI18n } from '~src/lib/i18n';
 import { VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
-
-import messages from './formuestatus-nb';
 import styles from './formuestatus.module.less';
+import messages from './formuestatus-nb';
 
 const Formuestatus = (props: {
     bekreftetFormue: number;

@@ -16,8 +16,8 @@ import {
 } from '~src/utils/klage/klageUtils';
 
 import AvvistKlage from './avvistKlage/AvvistKlage';
-import messages from './klage-nb';
 import styles from './klage.module.less';
+import messages from './klage-nb';
 import SendKlageTilAttestering from './sendKlageTilAttestering/SendKlageTilAttestering';
 import VurderFormkrav from './vurderFormkrav/VurderFormkrav';
 import VurderingAvKlage from './vurderingAvKlage/VurderingAvKlage';

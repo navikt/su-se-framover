@@ -8,9 +8,8 @@ import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 
 const OppsummeringAvFamiliegjenforening = (props: { familiegjenforening: Nullable<Familiegjenforening> }) => {
     const { formatMessage } = useI18n({ messages });

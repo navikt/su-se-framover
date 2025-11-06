@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import InstitusjonsoppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdForm';
 import {
-    institusjonsoppholdFormSchema,
-    institusjonsoppholdFormDataTilRequest,
     InstitusjonsoppholdVilkårFormData,
+    institusjonsoppholdFormDataTilRequest,
+    institusjonsoppholdFormSchema,
     institusjonsoppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
 import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';

@@ -4,9 +4,8 @@ import { Aldersvilkår, Aldersvurdering } from '~src/types/grunnlagsdataOgVilkå
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 
 const OppsummeringAvAldersvilkår = (props: { aldersvilkår: Nullable<Aldersvilkår> }) => {
     const { formatMessage } = useI18n({ messages });

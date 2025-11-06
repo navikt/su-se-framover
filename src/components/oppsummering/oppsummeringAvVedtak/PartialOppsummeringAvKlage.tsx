@@ -1,6 +1,6 @@
 import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/FormkravInfo';
-import messages from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak-nb';
 import styles from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak.module.less';
+import messages from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak-nb';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { useI18n } from '~src/lib/i18n';
 import { Klage } from '~src/types/Klage';

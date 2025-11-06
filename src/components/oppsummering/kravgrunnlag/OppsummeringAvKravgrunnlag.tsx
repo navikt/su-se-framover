@@ -1,20 +1,19 @@
-import { Heading, Accordion } from '@navikt/ds-react';
+import { Accordion, Heading } from '@navikt/ds-react';
 import { AccordionItem } from '@navikt/ds-react/Accordion';
 import classNames from 'classnames';
 
 import Oppsummeringspanel, {
-    Oppsummeringsikon,
     Oppsummeringsfarge,
+    Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types.ts';
-import { Kravgrunnlag, Grunnlagsperiode } from '~src/types/Kravgrunnlag';
+import { Grunnlagsperiode, Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { formatDate, formatMonthYear } from '~src/utils/date/dateUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './OppsummeringAvKravgrunnlag-nb';
 import styles from './OppsummeringAvKravgrunnlag.module.less';
+import messages from './OppsummeringAvKravgrunnlag-nb';
 
 const OppsummeringAvKravgrunnlag = (props: {
     kravgrunnlag: Nullable<Kravgrunnlag>;

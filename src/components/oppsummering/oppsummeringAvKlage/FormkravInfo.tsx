@@ -1,5 +1,5 @@
-import oppsummeringMessages from '~src/components/oppsummering/oppsummeringAvKlage/oppsummeringAvKlage-nb';
 import styles from '~src/components/oppsummering/oppsummeringAvKlage/oppsummeringAvKlage.module.less';
+import oppsummeringMessages from '~src/components/oppsummering/oppsummeringAvKlage/oppsummeringAvKlage-nb';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { OppsummeringParMedBegrunnelse } from '~src/components/oppsummering/oppsummeringpar/OppsummeringParMedBegrunnelse';
 import { useI18n } from '~src/lib/i18n';

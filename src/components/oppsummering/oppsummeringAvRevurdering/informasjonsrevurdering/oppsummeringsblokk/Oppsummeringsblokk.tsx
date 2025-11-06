@@ -6,7 +6,7 @@ import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
-import { pipe, maxBy } from '~src/lib/fp';
+import { maxBy, pipe } from '~src/lib/fp';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb';
 import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettRevurderingÅrsak';
@@ -28,9 +28,8 @@ import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '../../../oppsummeringspanel/Oppsummeringspanel';
-
-import messages from './oppsummeringsblokk-nb';
 import styles from './oppsummeringsblokk.module.less';
+import messages from './oppsummeringsblokk-nb';
 
 const Intro = (props: { revurdering: InformasjonsRevurdering }) => {
     const { formatMessage } = useI18n({

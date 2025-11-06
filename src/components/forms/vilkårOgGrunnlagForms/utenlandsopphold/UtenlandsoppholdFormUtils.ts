@@ -6,15 +6,15 @@ import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { validerAtNullablePeriodeErUtfylt } from '~src/lib/validering';
 import {
     UtenlandsoppholdRequest,
-    utenlandsoppholdStatusTilVilkårStatus,
     UtenlandsoppholdVilkår,
-    vilkårStatusTilUtenlandsoppholdStatus,
+    utenlandsoppholdStatusTilVilkårStatus,
     VurderingsperiodeUtenlandsopphold,
+    vilkårStatusTilUtenlandsoppholdStatus,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Periode } from '~src/types/Periode';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { lagDatePeriodeAvStringPeriode, lagTomPeriode, eqPeriode } from '~src/utils/periode/periodeUtils';
+import { eqPeriode, lagDatePeriodeAvStringPeriode, lagTomPeriode } from '~src/utils/periode/periodeUtils';
 
 export interface UtenlandsoppholdVilkårFormData {
     utenlandsopphold: VurderingsperioderUtenlandsoppholdFormData[];

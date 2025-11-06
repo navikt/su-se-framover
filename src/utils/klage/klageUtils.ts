@@ -13,6 +13,7 @@ import {
     AvsluttKlageStatus,
     FerdigstiltOmgjortKlage,
     FremsattRettsligKlageinteresse,
+    KabalVedtakHjemmel,
     Klage,
     KlageErUnderskrevet,
     KlageInnenforFristen,
@@ -21,7 +22,6 @@ import {
     KlageVurderingType,
     Omgjør,
     OversendelseKabal,
-    KabalVedtakHjemmel,
     Utfall,
     VedtattUtfall,
 } from '~src/types/Klage';

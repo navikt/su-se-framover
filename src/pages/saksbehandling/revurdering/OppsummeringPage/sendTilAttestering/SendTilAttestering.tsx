@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { RadioGroup, Radio, Textarea } from '@navikt/ds-react';
+import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -28,9 +28,8 @@ import { Sakstype } from '~src/types/Sak.ts';
 import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
 
 import revurderingMessages from '../../revurdering-nb';
-
-import messages from './SendTilAttestering-nb';
 import styles from './SendTilAttestering.module.less';
+import messages from './SendTilAttestering-nb';
 
 export interface BrevvalgFormData {
     valg: Valg;

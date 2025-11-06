@@ -3,9 +3,8 @@ import { BodyShort, Label } from '@navikt/ds-react';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { InntektOgPensjon } from '~src/types/Søknadinnhold';
-
-import messages from './OppsummeringAvSøknadinnhold-nb';
 import styles from './OppsummeringAvSøknadinnhold.module.less';
+import messages from './OppsummeringAvSøknadinnhold-nb';
 
 const OppsummeringAvInntektOgPensjon = (props: {
     inntektOgPensjon: {

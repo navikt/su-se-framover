@@ -7,9 +7,8 @@ import { soknadPersonSøk, urlForSakstype } from '~src/lib/routes';
 import { SøknadContext } from '~src/pages/søknad';
 import { getSøknadstematekst } from '~src/pages/søknad/utils';
 import { Sakstype } from '~src/types/Sak';
-
-import messages from './infoside-nb';
 import styles from './infoside.module.less';
+import messages from './infoside-nb';
 
 const Infoside = () => {
     const { isPapirsøknad, sakstype } = useOutletContext<SøknadContext>();

@@ -20,9 +20,8 @@ import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, RevurderingOppsummeringSteg, RevurderingSeksjoner } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak.ts';
-
-import messages from './ForhåndsvarselForm-nb';
 import styles from './ForhåndsvarselForm.module.less';
+import messages from './ForhåndsvarselForm-nb';
 
 interface ForhåndsvarselFormData {
     oppretterNyttForhåndsvarsel: boolean;

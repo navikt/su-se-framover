@@ -10,10 +10,9 @@ import { Gjenopptak, OpprettetRevurderingÅrsak, StansAvYtelse } from '~src/type
 
 import ApiErrorAlert from '../../apiErrorAlert/ApiErrorAlert';
 import { MonthPicker } from '../../inputs/datePicker/DatePicker';
-
-import messages from './StansGjenopptaForm-nb';
 import styles from './StansGjenopptaForm.module.less';
-import { StansGjenopptaFormData, isStans } from './StansGjenopptaFormUtils';
+import messages from './StansGjenopptaForm-nb';
+import { isStans, StansGjenopptaFormData } from './StansGjenopptaFormUtils';
 
 interface Props<T extends StansGjenopptaFormData = StansGjenopptaFormData> {
     form: UseFormReturn<T>;

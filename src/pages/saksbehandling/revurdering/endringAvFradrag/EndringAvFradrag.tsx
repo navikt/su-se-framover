@@ -37,9 +37,8 @@ import Navigasjonsknapper from '../../../../components/navigasjonsknapper/Naviga
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
-
-import messages from './endringAvFradrag-nb';
 import styles from './endringAvFradrag.module.less';
+import messages from './endringAvFradrag-nb';
 
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];

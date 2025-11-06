@@ -18,15 +18,15 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
 import AvslåttSøknad from './avslag/AvslåttSøknad';
-import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
+import nb from './lukkSøknad-nb';
 import {
     AvsluttSøknadsbehandlingBegrunnelse,
     AvvistBrevtyper,
     getLukkSøknadValidationSchema,
-    lukkSøknadInitialValues,
     LukkSøknadOgAvsluttSøknadsbehandlingFormData,
     LukkSøknadOgAvsluttSøknadsbehandlingType,
+    lukkSøknadInitialValues,
 } from './lukkSøknadUtils';
 import Trukket from './Trukket';
 
