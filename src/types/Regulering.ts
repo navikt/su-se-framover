@@ -66,6 +66,7 @@ export enum ÅrsakTilManuellReguleringKategori {
 
 export interface YtelseErMidlertidigStanset extends ÅrsakForManuell {}
 
+//TODO: SOS kan disse slettes?
 export interface ForventetInntektErStørreEnn0 extends ÅrsakForManuell {}
 export interface AutomatiskSendingTilUtbetalingFeilet extends ÅrsakForManuell {
     begrunnelse: string;
