@@ -28,7 +28,7 @@
     },
     "lint-staged": {
       "*.{js,jsx,ts,tsx,md,html,css,less}": [
-        "biome format"
+        "biome check"
       ]
     },
     "repository": {
