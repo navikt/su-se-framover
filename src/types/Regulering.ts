@@ -64,6 +64,16 @@ export enum ÅrsakTilManuellReguleringKategori {
     MerEnn1Eps = 'MerEnn1Eps',
 }
 
+export interface YtelseErMidlertidigStanset extends ÅrsakForManuell {}
+
+export interface ForventetInntektErStørreEnn0 extends ÅrsakForManuell {}
+export interface AutomatiskSendingTilUtbetalingFeilet extends ÅrsakForManuell {
+    begrunnelse: string;
+}
+export interface VedtakstidslinjeErIkkeSammenhengende extends ÅrsakForManuell {
+    begrunnelse: string;
+}
+
 export interface ÅrsakForManuell {
     begrunnelse: Nullable<string>;
     type: ÅrsakTilManuellReguleringKategori;
