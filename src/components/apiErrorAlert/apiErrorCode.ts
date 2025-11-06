@@ -17,7 +17,6 @@ export enum ApiErrorCode {
     BREVVALG_IKKE_TILLATT = 'brevvalg_ikke_tillatt',
 
     //D
-    DATO_MÅ_VÆRE_FØRSTE_I_MND = 'dato_må_være_første_i_mnd',
     DELER_BOLIG_MED_ER_IKKE_UTFYLT = 'deler_bolig_med_er_ikke_utfylt',
     DELVIS_OPPHØR = 'delvis_opphør',
     DEPOSITUM_HØYERE_ENN_INNSKUDD = 'depositum_høyere_enn_innskudd',
@@ -240,7 +239,6 @@ export enum ApiErrorCode {
     UGYLDIG_PERIODE_FOM = 'ugyldig_periode_fom',
     UGYLDIG_PERIODE_START_SLUTT = 'ugyldig_periode_start_slutt',
     UGYLDIG_PERIODE_TOM = 'ugyldig_periode_tom',
-    UGYLDIG_STATUSOVERGANG_KONTROLLSAMTALE = 'ugyldig_statusovergang_kontrollsamtale',
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
     UGYLDIG_TILSTAND_FOR_OPPDATERING = 'ugyldig_tilstand_for_oppdatering',
     UGYLDIG_VALG = 'ugyldig_valg',
