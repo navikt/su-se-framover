@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "eslint": "biome check",
-    "eslint-fix": "biome format --write",
+    "eslint-fix": "biome check --write",
     "lint": "biome check",
     "preview": "vite preview",
     "postinstall": "cd server && npm ci",
