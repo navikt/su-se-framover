@@ -48,5 +48,12 @@ export default {
     'ufør-lenke': 'Start søknad for uføre flyktninger',
     'kontrollsamtale-lenke': 'Innsending av kontrollnotat',
     'velg-undertittel': 'Velg søknaden som passer for deg',
+
+    'innsending-kontrollnotat': 'Innsending av kontrollnotat',
+    'servicerutine-link': 'Kontrollnotat kan ikke sendes inn herfra. Gå til ',
+    'servicerutine-link-videre': ' for rutine for innsending.',
+    'kontrollsamtale.advarsel':
+        ' <strong>Obs!</strong> Har du ikke tilgang til Gosys, må du kontakte nærmeste leder for å få tilgang.' +
+        ' Søknad skal ikke brukes til å gi informasjon om kontrollsamtaler.',
     ...steg,
 };

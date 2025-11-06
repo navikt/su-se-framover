@@ -87,20 +87,23 @@ const Søknadsvelger = () => {
                             <Modal ref={ref} aria-label="Kontrollsamtale" open={open} onClose={() => setOpen(false)}>
                                 <Modal.Body>
                                     <Heading size="medium" spacing>
-                                        Innsending av kontrollnotat
+                                        {formatMessage('innsending-kontrollnotat')}
                                     </Heading>
                                     <form>
                                         <BodyShort spacing>
-                                            Kontrollnotat kan ikke sendes inn herfra. Gå til{' '}
-                                            <Link href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Supplerende%20st%C3%B8nad.aspx?web=1">
-                                                servicerutinen
-                                            </Link>{' '}
-                                            for rutine for innsending
+                                            {formatMessage('servicerutine-link')}
+                                            <Link
+                                                target="_blank"
+                                                href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Supplerende%20st%C3%B8nad.aspx?web=1"
+                                            >
+                                                servicerutine
+                                            </Link>
+                                            {formatMessage('servicerutine-link-videre')}
                                         </BodyShort>
                                         <BodyShort>
-                                            <strong>Obs!</strong> Har du ikke tilgang til Gosys, må du kontakte nærmeste
-                                            leder for å få tilgang. Søknad skal ikke brukes til å gi informasjon om
-                                            kontrollsamtaler.
+                                            {formatMessage('kontrollsamtale.advarsel', {
+                                                strong: (text) => <strong>{text}</strong>,
+                                            })}
                                         </BodyShort>
                                         <div style={{ marginTop: '1rem', textAlign: 'right' }}>
                                             <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
