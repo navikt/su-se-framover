@@ -101,7 +101,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                 label={formatMessage('forventerInntekt.beløp')}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                 autoFocus
                             />
                         )}
@@ -142,7 +142,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                     error={fieldState.error?.message}
                                     autoComplete="off"
                                     // Dette elementet vises ikke ved sidelast
-                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                     autoFocus
                                 />
                             )}
@@ -196,7 +196,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                                 error={fieldState.error?.message}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                 autoFocus
                             />
                         )}

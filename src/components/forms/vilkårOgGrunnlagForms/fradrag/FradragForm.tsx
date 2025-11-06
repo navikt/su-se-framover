@@ -194,7 +194,6 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
             </ul>
             <div>
                 {/* Ts klager på at vi ikke returnerer en full objekt av typen T, selv om vi bare ønsker at komponentet skal håndtere FradragFormData. */}
-                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                 {/* @ts-ignore */}
                 <Button variant="secondary" type="button" size="small" onClick={() => append(nyFradrag())}>
                     {fields.length === 0

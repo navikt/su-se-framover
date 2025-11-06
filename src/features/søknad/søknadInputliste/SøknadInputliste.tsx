@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, OverridableComponent, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
