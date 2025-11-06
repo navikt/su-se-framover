@@ -40,9 +40,20 @@ export default {
     'alder-beskrivelse': 'Har du kort botid i Norge når du fyller 67 år kan du få supplerende stønad',
     'velg-alder-tittel': 'For personer som har fylt 67 år',
     'velg-ufør-tittel': 'For personer som er ufør flyktning under 67 år',
+    'velg-kontrollsamtale-tittel': 'Gi informasjon om kontrollsamtale',
     'ufør-beskrivelse': 'Er du ufør og har flyktningsstatus kan du få supplerende stønad',
+    'kontrollsamtale-beskrivelse':
+        'Sende kontrollnotat med informasjon om personen innkalt til samtale på lokalkontoret',
     'alder-lenke': 'Start søknad for person over 67 år',
     'ufør-lenke': 'Start søknad for uføre flyktninger',
+    'kontrollsamtale-lenke': 'Innsending av kontrollnotat',
     'velg-undertittel': 'Velg søknaden som passer for deg',
+
+    'innsending-kontrollnotat': 'Innsending av kontrollnotat',
+    'servicerutine-link': 'Kontrollnotat kan ikke sendes inn herfra. Gå til ',
+    'servicerutine-link-videre': ' for rutine for innsending.',
+    'kontrollsamtale.advarsel':
+        ' <strong>Obs!</strong> Har du ikke tilgang til Gosys, må du kontakte nærmeste leder for å få tilgang.' +
+        ' Søknad skal ikke brukes til å gi informasjon om kontrollsamtaler.',
     ...steg,
 };
