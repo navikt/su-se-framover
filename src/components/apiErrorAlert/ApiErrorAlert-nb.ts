@@ -23,7 +23,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.BREVVALG_IKKE_TILLATT]: 'Det er ikke tillatt å velge om brev skal sendes ut eller ikke',
 
     //D
-    [ApiErrorCode.DATO_MÅ_VÆRE_FØRSTE_I_MND]: 'Dato må være den første i måneden',
     [ApiErrorCode.DELER_BOLIG_MED_ER_IKKE_UTFYLT]: 'Forventet at hvem søker deler bolig med skulle være utfylt',
     [ApiErrorCode.DELVIS_OPPHØR]: 'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     [ApiErrorCode.DEPOSITUM_HØYERE_ENN_INNSKUDD]: 'Depositumsbeløpet er høyere enn innskuddsbeløpet',
@@ -297,8 +296,6 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_PERIODE_START_SLUTT]: 'Startmåned må være før, eller lik sluttmåned',
     [ApiErrorCode.UGYLDIG_PERIODE_TOM]: 'Perioder kan kun slutte siste dagen i måneden',
     [ApiErrorCode.UGYLDIG_PERIODE]: 'Ugyldig periode',
-    [ApiErrorCode.UGYLDIG_STATUSOVERGANG_KONTROLLSAMTALE]:
-        'Kunne ikke oppdatere da kontrollsamtalen er i en ugyldig tilstand',
     [ApiErrorCode.UGYLDIG_TILSTAND_FOR_OPPDATERING]: 'Ugyldig tilstand for oppdatering',
     [ApiErrorCode.UGYLDIG_TILSTAND]: 'Ugyldig tilstand',
     [ApiErrorCode.UGYLDIG_VALG]: 'Ugyldig valg av beslutning for forhåndsvarsel',
