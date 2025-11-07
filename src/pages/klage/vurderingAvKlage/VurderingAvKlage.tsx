@@ -226,12 +226,11 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     };
 
     const handleLagreVurderingAvKlageClick = (data: VurderingAvKlageFormData) => {
-        console.log('før eqtest');
         if (eqVurderingAvKlageFormData.equals(data, initialValues)) {
             navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
-        console.log('lagrer data: ', data);
+
         lagreVurderingAvKlage(lagOpprettholdApiBody(data), () => {
             navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
         });
